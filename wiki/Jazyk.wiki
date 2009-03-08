@@ -1,0 +1,26 @@
+#summary featury jazyka
+
+= Zposob videnia sveta =
+
+Co vsetko moze robot vidiet
+zatial - 
+       steny
+       strela
+       ostatni hraci
+
+=Reprezentacia=
+
+Robot vzdy vsetko vo svojom blizsie-neskor-definovanom rozsahu vidi, uzivatel sa na to moze pytat funkciou see(), ktora by mala fungovat ako pole, vracia kolko toho v dany moment vidi 
+* see(3) je objekt, ktory si robot vsimol az ako posledneho (objekty zoradene podla vzdialenosti, podla uhlu, (ten ktory je priamo v smere, ktorym sa robot diva,m je napadnejsi ako ten , co je niekde na pohranici vedomia, hoc aj blizsie.
+Zaver - \ 1  /
+         \  2  cisla oznacuju poradie botov
+          \/
+* TODO v pripade extremne nudenia sa - fuzziness?
+
+=vlastnosti objektov=
+
+*isPlayer() //ma to dve nohy a hybe sa
+*isMissile() strela
+*isWall()
+
+samotna
