@@ -12,9 +12,11 @@ zatial -
 
 Robot vzdy vsetko vo svojom blizsie-neskor-definovanom rozsahu vidi, uzivatel sa na to moze pytat funkciou see(), ktora by mala fungovat ako pole, vracia kolko toho v dany moment vidi 
 * see(3) je objekt, ktory si robot vsimol az ako posledneho (objekty zoradene podla vzdialenosti, podla uhlu, (ten ktory je priamo v smere, ktorym sa robot diva,m je napadnejsi ako ten , co je niekde na pohranici vedomia, hoc aj blizsie.
-Zaver - \ 1  /
-         \  2  cisla oznacuju poradie botov
-          \/
+Zaver - cisla oznacuju poradie botov
+ \\ 1  // ...
+  \\  2/  
+   \\//
+
 * TODO v pripade extremne nudenia sa - fuzziness?
 
 =vlastnosti objektov=
@@ -23,4 +25,4 @@ Zaver - \ 1  /
 *isMissile() strela
 *isWall()
 
-samotna
+move vyhazduje int, ci sa podarilo pohnut v danom smere aleboo nie //stena a podobne
