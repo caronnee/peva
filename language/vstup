@@ -1,0 +1,40 @@
+var left, rigth;
+
+function rek(a)
+{
+	if (a == 1) return 1;
+	return a+ rek(a-1);
+}
+
+function x(var a, var b) //budeme varovat?
+{
+	return a+b;
+}
+
+function dodge()
+{
+	if(rigth == 2) rigth = 2;
+	move(left);
+	shoot(45); //bez returnu
+}
+
+main() // komentar
+{
+	move(10);
+	shoot(22);
+	array a[10];
+	for (a = 0; a< 66; a++)
+	{
+	turn (rigth);
+	shoot(23);
+	if (see()!=0) //see by malo vratit kolko veci vidi, ktore ho zaujimaju
+	{
+		if (see(3).isPlayer()) return;
+		if (see(3).isMissile()) dodge();
+		see(2).x; //suradnice daneho objektu
+		see(2).y;
+		see(2).isMoving();
+	}
+	else rek(3);	//bude to povoleen, akurat sa to nikde nespracuje
+	}
+}
