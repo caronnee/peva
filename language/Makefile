@@ -1,10 +1,10 @@
-all:countchar 
+all:parser 
 
-countchar:countchar.cpp count.h count2.h
-	$(CXX) countchar.cpp -o countchar
+parser:parser.cpp header1.h tokens.h
+	$(CXX) parser.cpp -o parser
 	
-countchar.cpp:countchar.lex
+parser.cpp:parser.lex
 	flex -Cf -b -p -p -o $@ $<
 
 distclean:
-	rm countchar.cpp countchar.o
+	rm parser.cpp parser.o
