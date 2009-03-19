@@ -1,4 +1,4 @@
-var left, rigth;
+var left, right; //povolene komentare, bool aj integer su naprosto stejne
 
 function rek(a)
 {
