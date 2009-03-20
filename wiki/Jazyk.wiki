@@ -17,13 +17,16 @@ Zaver - cisla oznacuju poradie botov
   \\  2/  
    \\//
 
-* TODO v pripade extremne nudenia sa - fuzziness?
+/* TODO v pripade extremne nudenia sa - fuzziness?
 
-=vlastnosti objektov=
+=Vlastnosti objektov=
 
 * isPlayer() //ma to dve nohy a hybe sa
+
 * isMissile() strela
+
 * isWall()
+
 Su to vlastne prvky jazyka, raspektive objektov, 
 Uzivatel nema pravo vytvarat ziadne dalsie classy ai=ni nic podobne, len cisto naprogramovat logiku, preto je to umiestnene ako samostatne prikazy jazyka
 
