@@ -27,7 +27,21 @@ Zaver - cisla oznacuju poradie botov
 
 * isWall()
 
+* isMoving() -zavisi na botovi, ak dotycny objekt videl hybat sa pred casom, blizsie definovanym vo vlastnostiach bota
+
 Su to vlastne prvky jazyka, raspektive objektov, 
+Risene samostatne az po BISONOVI
+
+=Vlastnosti botov=
+
+* viditelnost
+
+* pamat na moving
+
+* dostrel/rozptyl
+
+* pocet zivotov
+
 Uzivatel nema pravo vytvarat ziadne dalsie classy ai=ni nic podobne, len cisto naprogramovat logiku, preto je to umiestnene ako samostatne prikazy jazyka
 
 move vyhazduje int, ci sa podarilo pohnut v danom smere aleboo nie //stena a podobne
