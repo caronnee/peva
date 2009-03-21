@@ -1,4 +1,4 @@
-var left, right; //povolene komentare, bool aj integer su naprosto stejne
+ var left, right; //povolene komentare, bool aj integer su naprosto stejne
 
 function rek(a)
 {
@@ -31,7 +31,7 @@ main() // komentar
 	{
 		if (see(3).isPlayer()) return;
 		if (see(3).isMissile()) dodge();
-		see(2).x; //suradnice daneho objektu
+		see().x; //suradnice daneho objektu
 		see(2).y;
 		see(2).isMoving();
 	}
