@@ -42,6 +42,10 @@ Risene samostatne az po BISONOVI
 
 * pocet zivotov
 
-Uzivatel nema pravo vytvarat ziadne dalsie classy ai=ni nic podobne, len cisto naprogramovat logiku, preto je to umiestnene ako samostatne prikazy jazyka
+Uzivatel nema pravo vytvarat ziadne dalsie classy ani nic podobne, len cisto naprogramovat logiku, preto je to umiestnene ako samostatne prikazy jazyka
 
 move vyhazduje int, ci sa podarilo pohnut v danom smere aleboo nie //stena a podobne
+
+Bot ma obmedzenu pamat, musi sa kontrolovat, ci jeho pamat nie je zaplnena
+
+Aj ked existuje trieda object, tak si ju bot nebude smiet vytvarat, ponevadz by mu bola nanic - nemoze na nu furt pouzivat is_moving, lebo ho nemusi vidiet, dalej ma dynamicky menene pole a vidi nejaky object, moze si porovnat jeho ID, ktore je v ramci celej hry unikatne //predpoklada sa, ze neprekrocim maxint, coz je pomerne tazke
