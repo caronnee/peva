@@ -9,6 +9,7 @@
 %{
 	#include "tokens.h"
 	#include "header1.h"
+	#include "bison.hpp"
 
 int line = 1;
 %}
@@ -20,9 +21,7 @@ WHITESPACE		[ \r\t\f]
 {WHITESPACE}+					;
 
 point 						return TOKEN_POINT;
-var 						{
-							return TOKEN_VAR;
-						}
+var 					{	printf("var!\n");return TOKEN_VAR;}
 function	 	 	 	 	return TOKEN_FUNCTION;
 array 						return TOKEN_ARRAY;
 else 						return TOKEN_ELSE;
@@ -66,17 +65,3 @@ run|shoot|wait|walk|see				return TOKEN_BOT_ACTION;
 }
 \n	line++;
 .	printf("ERROR!Line %d, %s\n", line, yylex);
-%%
-
-int main(int argc, char ** argv)
-{
-	if((yyin = fopen(argv[1],"r"))==0)
-		return -1;
-	int tok;
-	printf("..Processing...");
-	while((tok = yylex())!=0)
-	{
-//		printf("mam token %d\n", tok);
-	}
-	return 0;
-}
