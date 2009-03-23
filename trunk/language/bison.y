@@ -101,8 +101,11 @@ command:	TOKEN_BOT_ACTION TOKEN_SEMICOLON
 	|TOKEN_RETURN call_fce
 	|TOKEN_BREAK TOKEN_SEMICOLON
 	|call_fce
+	|TOKEN_VAR names TOKEN_SEMICOLON
+	|TOKEN_ARRAY array_names TOKEN_SEMICOLON
+	|TOKEN_POINT names TOKEN_SEMICOLON
       	;
-call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR TOKEN_SEMICOLON
+call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR block_of_instructions
 	;
 call_parameters: expression
 	 |call_parameters TOKEN_COMMA expression
@@ -117,7 +120,18 @@ init: TOKEN_VAR TOKEN_IDENTIFIER TOKEN_ASSIGN expression
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression
 	|TOKEN_IDENTIFIER TOKEN_LSBRA expression TOKEN_RSBRA TOKEN_ASSIGN expression
     	;
-expression_base: TOKEN_IDENTIFIER
+variable: TOKEN_IDENTIFIER
+	|TOKEN_IDENTIFIER array_access
+	|TOKEN_IDENTIFIER TOKEN_DOT call_fce //tuto musi byt funkcia, co odpoveda
+	|TOKEN_IDENTIFIER array_access TOKEN_DOT call_fce
+	;
+array_access: TOKEN_LSBRA exps TOKEN_RSBRA
+	|array_access TOKEN_LSBRA exps TOKEN_RSBRA
+	;
+exps: expression
+	| exps TOKEN_COMMA expression
+	;
+expression_base: variable 
 	|number
 	|call_fce
 	|TOKEN_LPAR expression TOKEN_RPAR
