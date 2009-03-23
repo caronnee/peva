@@ -9,6 +9,8 @@ parser.o: parser.cpp header1.h tokens.h
 bison.o:bison.cpp
 	${CXX} ${CPPFLAGS} -o $@ -c $<
 
+bison.hpp:bison.cpp
+
 parser.cpp:parser.lex bison.hpp
 	flex -Cf -b -p -p -o $@ $<
 
@@ -16,4 +18,4 @@ bison.cpp: bison.y
 	bison --report=all -d -b bis -o $@ $<
 
 distclean:
-	rm *.o bparser parser.cpp bison.cpp
+	rm *.o bparser parser.cpp bison.cpp bison.hpp
