@@ -1,7 +1,7 @@
 all:bparser 
 
 bparser:parser.o bison.o
-	$(CXX) $(LDFLAGS) parser.o bison.o 
+	$(CXX) $(LDFLAGS) parser.o bison.o -o bparser 
 
 parser.o: parser.cpp header1.h tokens.h
 	${CXX} ${CPPFLAGS} ${CFLAGS} -o $@ -c parser.cpp
@@ -9,11 +9,11 @@ parser.o: parser.cpp header1.h tokens.h
 bison.o:bison.cpp
 	${CXX} ${CPPFLAGS} -o $@ -c $<
 
-parser.cpp:parser.lex
+parser.cpp:parser.lex bison.hpp
 	flex -Cf -b -p -p -o $@ $<
 
 bison.cpp: bison.y
-	bison --report=all -d -o $@ $<
+	bison --report=all -d -b bis -o $@ $<
 
 distclean:
-	rm parser.cpp parser.o
+	rm *.o bparser parser.cpp bison.cpp

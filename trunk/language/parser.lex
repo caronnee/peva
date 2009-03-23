@@ -20,8 +20,9 @@ WHITESPACE		[ \r\t\f]
 
 {WHITESPACE}+					;
 
+main						return TOKEN_MAIN;
 point 						return TOKEN_POINT;
-var 					{	printf("var!\n");return TOKEN_VAR;}
+var 						return TOKEN_VAR;
 function	 	 	 	 	return TOKEN_FUNCTION;
 array 						return TOKEN_ARRAY;
 else 						return TOKEN_ELSE;
@@ -38,7 +39,6 @@ return						return TOKEN_RETURN;
 \, 						return TOKEN_COMMA;
 \.						return TOKEN_DOT;
 \=\= 						return TOKEN_EQ;		
-\: 						return TOKEN_COLON;
 \( 						return TOKEN_LPAR;
 \) 						return TOKEN_RPAR;
 \[						return TOKEN_LSBRA;
