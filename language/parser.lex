@@ -28,8 +28,6 @@ array 						return TOKEN_ARRAY;
 else 						return TOKEN_ELSE;
 while 						return TOKEN_WHILE;
 do						return TOKEN_DO;		/* do */
-repeat 						return TOKEN_REPEAT;
-until						return TOKEN_UNTIL;
 for 						return TOKEN_FOR;
 \|\|						return TOKEN_OR;		/* or */
 if						return TOKEN_IF;		/* if */
