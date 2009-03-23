@@ -21,7 +21,8 @@
 %token TOKEN_WHILE
 %token TOKEN_DO
 %token TOKEN_FOR
-%token TOKEN_OR
+%token TOKEN_BOOL_AND
+%token TOKEN_BOOL_OR
 %token TOKEN_NOT
 %token TOKEN_RETURN
 %token TOKEN_BREAK
@@ -65,8 +66,8 @@ params:	/*	ziadne parametre	*/
 	| TOKEN_POINT names TOKEN_SEMICOLON
 	;
 array_names: TOKEN_IDENTIFIER
-	   |array_names TOKEN_COMMA TOKEN_IDENTIFIER
-	|TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
+	|array_names TOKEN_COMMA TOKEN_IDENTIFIER
+	|TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA /*pre definovanie kolko pola bude volneho, aby sa nezahltila pamat*/
 	|array_names TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
 	;
 names:	TOKEN_IDENTIFIER
@@ -128,12 +129,18 @@ expression_add: expression_mul
 	|expression_add TOKEN_OPER_SIGNADD expression_base
 	;
 expression:	expression_add
-	  ;
-expression_bool:expression
+	;
+expression_bool_base: expression
 	|expression TOKEN_OPER_REL expression
 	|expression TOKEN_EQ expression
+	|expression TOKEN_NOT expression
 	;
-
+expression_bool_or: expression_bool_base
+	| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
+	;
+expression_bool: expression_bool_or
+	| expression_bool TOKEN_BOOL_AND expression_bool_or
+	;
 %%
 
 extern FILE * yyin;

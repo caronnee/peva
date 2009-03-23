@@ -29,7 +29,6 @@ else 						return TOKEN_ELSE;
 while 						return TOKEN_WHILE;
 do						return TOKEN_DO;		/* do */
 for 						return TOKEN_FOR;
-\|\|						return TOKEN_OR;		/* or */
 if						return TOKEN_IF;		/* if */
 not 						return TOKEN_NOT;
 return						return TOKEN_RETURN;
@@ -48,7 +47,9 @@ run|shoot|wait|walk|see				return TOKEN_BOT_ACTION;
 [0-9]+(\.[0-9]+)?([Ee][\+\-]?[0-9]+)?		return TOKEN_REAL;
 \<|\>|\<=|\>=|!= 				return TOKEN_OPER_REL;
 \+|\- 						return TOKEN_OPER_SIGNADD;
-\*|\/|\%|&&					return TOKEN_OPER_MUL;
+\*|\/|\%|&|\|					return TOKEN_OPER_MUL;
+&&						return TOKEN_BOOL_AND;
+\|\|						return TOKEN_BOOL_OR;
 \{						return TOKEN_BEGIN;
 \}						return TOKEN_END;
 \/\/		BEGIN(COMMENT_LINE);
