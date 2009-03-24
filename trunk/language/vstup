@@ -27,10 +27,15 @@ main() // komentar
 	{
 	turn (rigth);
 	shoot(23);
-	if (see()!=0) //see by malo vratit kolko veci vidi, ktore ho zaujimaju
+	if (see()!=0) //see by malo vratit kolko veci vidi, ktore ho zaujimaju, steny su tam skoro vzdy, takze to sa do toho nerata
 	{
 		if (see(3).isMissile()) dodge();
-		r = see().get_x(); //suradnice daneho objektu
+		r = see(4).get_x(); //suradnice daneho objektu
+		shoot(location(44,55).get_x(),location(44,55).get_y());
+		while ( run(forward) == 1 )
+		{
+			if (see(forward).isPlayer()) shoot(forward);
+		}
 	}
 	else rek(3);	//bude to povoleen, akurat sa to nikde nespracuje
 	}
