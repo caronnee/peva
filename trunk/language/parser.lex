@@ -20,6 +20,8 @@ WHITESPACE		[ \r\t\f]
 
 {WHITESPACE}+					;
 
+\/\/		BEGIN(COMMENT_LINE);
+\/\*		BEGIN(COMMENT);
 main						return TOKEN_MAIN;
 point 						return TOKEN_POINT;
 var 						return TOKEN_VAR;
@@ -41,7 +43,8 @@ return						return TOKEN_RETURN;
 \[						return TOKEN_LSBRA;
 \] 						return TOKEN_RSBRA;
 = 						return TOKEN_ASSIGN;
-run|shoot|wait|walk|see				return TOKEN_BOT_ACTION;
+\+\+						return TOKEN_PLUSPLUS;
+\-\-						return TOKEN_MINUSMINUS;
 [A-Za-z]+[A-Z_a-z0-9]* 				return TOKEN_IDENTIFIER;
 [0-9]+		 	 	 	 	return TOKEN_UINT;
 [0-9]+(\.[0-9]+)?([Ee][\+\-]?[0-9]+)?		return TOKEN_REAL;
@@ -52,7 +55,6 @@ run|shoot|wait|walk|see				return TOKEN_BOT_ACTION;
 \|\|						return TOKEN_BOOL_OR;
 \{						return TOKEN_BEGIN;
 \}						return TOKEN_END;
-\/\/		BEGIN(COMMENT_LINE);
 <COMMENT_LINE>
 {
 \n	{BEGIN(INITIAL);line++;}
@@ -61,6 +63,8 @@ run|shoot|wait|walk|see				return TOKEN_BOT_ACTION;
 <COMMENT>
 {
 \*\/	BEGIN(INITIAL);
+\n	{line++;};
+.	;
 }
 \n	line++;
 .	printf("ERROR!Line %d, %s\n", line, yylex);

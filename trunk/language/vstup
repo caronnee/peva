@@ -3,19 +3,19 @@
 function rek(a)
 {
 	if (a == 1) return 1;
-	return a+ rek(a-1);
+	return a + rek(2);
 }
 
-function x(var a, var b) //budeme varovat?
+/*function x(var a, var b) //budeme varovat?
 {
 	return a+b;
-}
+}*/
 
 function dodge()
 {
-	if(rigth == 2) rigth = 2;
+	if(rigth == 2) rigth = 4;
 	move(left);
-	shoot(45); //bez returnu
+	shoot(xx); //bez returnu
 }
 
 main() // komentar
@@ -29,11 +29,8 @@ main() // komentar
 	shoot(23);
 	if (see()!=0) //see by malo vratit kolko veci vidi, ktore ho zaujimaju
 	{
-		if (see(3).isPlayer()) return;
 		if (see(3).isMissile()) dodge();
-		see().x; //suradnice daneho objektu
-		see(2).y;
-		see(2).isMoving();
+		r = see().get_x(); //suradnice daneho objektu
 	}
 	else rek(3);	//bude to povoleen, akurat sa to nikde nespracuje
 	}
