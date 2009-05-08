@@ -62,9 +62,10 @@
 program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions
 	;
 params:	/*	ziadne parametre	*/
-      	| TOKEN_VAR names TOKEN_SEMICOLON
-	| TOKEN_ARRAY array_names TOKEN_SEMICOLON
-	| TOKEN_POINT names TOKEN_SEMICOLON
+      	| params TOKEN_VAR names TOKEN_SEMICOLON
+	| params TOKEN_ARRAY TOKEN_POINT array_names TOKEN_SEMICOLON
+	| params TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON
+	| params TOKEN_POINT names TOKEN_SEMICOLON
 	;
 array_names: TOKEN_IDENTIFIER
 	|array_names TOKEN_COMMA TOKEN_IDENTIFIER
@@ -105,7 +106,8 @@ command:TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLO
 	|TOKEN_BREAK TOKEN_SEMICOLON
 	|call_fce TOKEN_SEMICOLON
 	|TOKEN_VAR names TOKEN_SEMICOLON
-	|TOKEN_ARRAY array_names TOKEN_SEMICOLON
+	|TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON
+	|TOKEN_ARRAY TOKEN_POINT array_names TOKEN_SEMICOLON
 	|TOKEN_POINT names TOKEN_SEMICOLON
 	|assign TOKEN_SEMICOLON
 	|variable TOKEN_PLUSPLUS
@@ -121,11 +123,11 @@ variable_left: TOKEN_IDENTIFIER /* musi byt pole, point alebo nejaka ina shopna 
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 	;
 call_parameters: expression
-	 | /* zoadny parameter */
+	 | /* ziadny parameter */
 	 |call_parameters TOKEN_COMMA expression
 	;
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched
-       | command
+	| command
 	|block_of_instructions
 	;
 unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
