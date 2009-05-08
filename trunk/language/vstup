@@ -1,4 +1,5 @@
- var left, right; //povolene komentare, bool aj integer su naprosto stejne
+var left, right; //povolene komentare, bool aj integer su naprosto stejne
+array point h;
 
 function rek(a)
 {
@@ -8,6 +9,8 @@ function rek(a)
 
 /*function x(var a, var b) //budeme varovat?
 {
+	a = 3;
+	b = 4;
 	return a+b;
 }*/
 
@@ -22,7 +25,7 @@ main() // komentar
 {
 	move(10);
 	shoot(22);
-	array a[10];
+	array var a[10];
 	for (a = 0; a< 66; a++)
 	{
 	turn (rigth);
