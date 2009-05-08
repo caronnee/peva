@@ -67,3 +67,20 @@ void Destroy()
 	TTF_Quit();
 	SDL_Quit();
 }
+
+Game::Game()
+{
+	state = 0;
+	res_x = res_y = 0;// a pod.
+};
+
+int Game::user_input()
+{
+	switch (state)
+	{
+	case SET_RESOLUTION:
+	{
+		
+	}
+	}
+}

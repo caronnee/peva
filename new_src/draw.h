@@ -22,54 +22,28 @@ SDL_Event event;
 
 //--------------------draw procedures------------
 bool Init(); //initne g_screen a pod
-bool Destroy();
 void Toggle_screen(); //change from full screen to window screen and vice-versa
+bool Destroy();
 //------------types od 'menus'----------
-
-class Set_Map_Resolution:Menu_item
+enum Menus
 {
-};
-class Create_map:Menu_item
-{
-	int create_map(int x, int y);
-};
-class Menu_item
-{
-	std::string name;
-	Menu * next_menu;
-public:
-	Menu_item(std::string name, Menu * next);
-	int User_input();//determine what to do after user input (keyboard, mouse )
-	void Draw_menu();
-	virtual void choosed() = 0; //co spravi, ak je volba tymto potvrdena
+	SET_RESOLUTION,
+	CREATE_MAP,
+	PLAY,
+	JOIN,
+	HOST,
+	EXIT
 }
-class Menu
+class Game
 {
-	std::vector <Menu_item *> items;
+	int state;
+	int res_y, res_x;
+//	Board gameboard;
+	int set_resolution();
+	int play();
+	int join();
+	int host();
 public:
-	Menu();
-	void add(Menu_item* it);
+	Game();
+	int user_input(); //vracia do ktoreho menu sa mame dostat, 0 ak zostat
 }
-class Main_manu:Menu_item
-{
-	std::string menu[] = {"Play","Host","Join","Create_map","Settings","Exit"};
-	int Host(); //hostovanie hry
-	int Play();//draws a game
-	int Join_game();//joins a game on some port
-	int Settings();//user can change initial resolution, fullscren resolution, keyboard event(????);timeout
-	int End();//do you really want to quit?
-public:
-}
-
-
-class Game_state //abstract class
-{
-public:
-	Game_state();
-	virtual Draw() = 0;
-	virtual User_input() = 0;	
-	virtual Switch_menu() = 0;
-};
-class Game : game_statea //obsahuje vsetky veci pre hru, gameboard atd;
-{
-};
