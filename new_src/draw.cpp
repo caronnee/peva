@@ -1,19 +1,24 @@
+#include <sstream>
 #include "draw.h"
-#include <string>
 
-//skoro globalne premenne, ale prin inkludovani sa ndostanu az ho hlahvneho programu, takze by to malo fachat
-
-bool Init()
+void Window::Init_default()
+{
+	font = DEFAULT_FONT;
+	font_size = DEFAULT_FONT_SIZE;
+	resolution_width = DEFAULT_WIN_WIDTH;
+	resolution_heigth = DEFAULT_WIN_HEIGTH;
+}
+bool Window::Init()
 {
 	// Inicializace SDL
 	if(SDL_Init(SDL_SUBSYSTEMS) == -1)
 	{
-		cerr << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
+		std::cerr << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
 		return false;
 	}
-	SDL_Surface* icon=IMG_Load("./images/icon.png");
+	SDL_Surface* icon=IMG_Load(ICON);
 	if (icon!=NULL)
-	
+	{
 		SDL_WM_SetIcon(icon,NULL);
 		SDL_FreeSurface(icon);
 	} // TODO! co ak zmenim resolution? Ntreba mi potom tam rozvnako zmenit ja toto?
@@ -21,42 +26,74 @@ bool Init()
 	// Inicializace SDL_ttf
 	if(TTF_Init() == -1)
 	{
-		cerr << "Unable to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+		std::cerr << "Unable to initialize SDL_ttf: " << TTF_GetError() << std::endl;
 		return false;
 	}
-	g_font = TTF_OpenFont("./fonts/sfd/DejaVuSansCondensed.ttf", 16);
+	g_font = TTF_OpenFont(font.c_str(), font_size);
 	if(!g_font)
 	{
-		cerr << "Unable to open font: " << TTF_GetError() << std::endl;
+		std::cout << font << std::endl;
+		std::cerr << "__Unable to open font: " << TTF_GetError() << std::endl;
 		return false;
 	}	
-	g_screen = SDL_SetVideoMode(WIN_WIDTH, WIN_HEIGHT, WIN_BPP, WIN_FLAGS);
+	g_screen = SDL_SetVideoMode(resolution_width, resolution_heigth, WIN_BPP, WIN_FLAGS);
 
 	if(g_screen == NULL)
 	{
-		cerr << "Unable to set video, resolution: " << WIN_WIDTH << WIN_HEIGHT << ", " << TTF_GetError() << std::endl;
+		std::cerr << "Unable to set video, resolution: " << resolution_width << resolution_heigth << ", " << SDL_GetError() << std::endl;
 		return false;
 	}
 	SDL_WM_SetCaption(WIN_TITLE, NULL);
+	SDL_Rect ** r = SDL_ListModes(g_screen->format,WIN_FLAGS|SDL_FULLSCREEN);
+	int i =0;
+	if (r == NULL ) { std::cout << "awekfgajesgfbewa" <<std::endl; return false;}
+	if (r == (SDL_Rect**) -1 ) { std::cout << "mmmmmm" <<std::endl; }
+	std::cout << "podoprujem mody fullscreenu: " << std::endl;
+	printf("Available Modes\n");
+	for (i=0; r[i]; ++i)
+		std::cout << r[i]->w << " " <<  r[i]->h << std::endl;
+//	std::cout << "::" << r[0]->x <<std::endl;
+/*	while (r[i]!=NULL)
+	{
+	//	std::cout << r[i]->x << std::endl;
+		i++;
+	}*/
 	return true;
 }
 
-int Toggle_screen()
+int Window::Toggle_screen()
 {
 	if (WIN_FLAGS && SDL_FULLSCREEN) //z fullscreenu do okna
 	{
-		WIN_FLAGS &= ~SDL_FULLSCREEN;
+//		WIN_FLAGS &= !SDL_FULLSCREEN;
 	} 
-	else WIN_FLAGS |= SDL_FULLSCREEN; //opacne
+//	else WIN_FLAGS |= SDL_FULLSCREEN; //opacne
 	if( SDL_WM_ToggleFullScreen(g_screen) ==0) //nepodarilo sa to cez funkciu
 	{
 		std::cout<<"Nepodarilo zmenit rozlisenie!"<<std::endl;
 		SDL_FreeSurface(g_screen);
-		Init();
+		return Init();
 		}
+	return true;
 }; //TODO! zatial nepouzite, jelikoz musim este checkovat, ci sa mi to nahodou nezblazni
 
-void Destroy()
+unsigned int Window::convert(std::string s)
+{
+	unsigned number =0;
+	std::istringstream convertor(s);
+	convertor >> number;
+	return number;
+}
+void Window::set_resolution(std::string res)
+{
+//	resolution_width = 
+}
+void Window::set_timeout(std::string time){}
+void Window::set_font(std::string res){}
+void Window::set_font_size(std::string res){}
+void Window::set_background(std::string res){}
+
+void Window::Destroy()
 {
 	// Ak bol nejaky kod, uprace po nom 
 	if(g_font != NULL)
@@ -66,21 +103,4 @@ void Destroy()
 	}
 	TTF_Quit();
 	SDL_Quit();
-}
-
-Game::Game()
-{
-	state = 0;
-	res_x = res_y = 0;// a pod.
-};
-
-int Game::user_input()
-{
-	switch (state)
-	{
-	case SET_RESOLUTION:
-	{
-		
-	}
-	}
 }
