@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 		o << "timeout=" << DEFAULT_TIMEOUT << std::endl;
 		o.close();	
 		w.Init_default();
+	}
 	else {
 		std::string line;
 		char buffer[256];
@@ -38,8 +39,12 @@ int main(int argc, char *argv[])
 			if (pos == std::string::npos) continue;
 			std::string name = line.substr(0,pos);
 			std::string par = line.substr(pos+1);
-			std::cout << name << ":"<< par <<std::endl;
-			if (name == "resolution") std::cout << "resolution!";
+			std::cout << name << std::endl;
+			if (name == "resolution") w.set_resolution(par);
+			if (name == "font_size") w.set_font_size(par);
+			if (name == "font") w.set_font(par);
+			if (name == "background") w.set_background(par);
+			if (name == "timeout") w.set_timeout(par);
 		}
 		config.close();
 	}
@@ -51,7 +56,7 @@ int main(int argc, char *argv[])
 	while (!w.state.empty())
 	{
 		//draw sa vola vnutri funkcie
-//		w.state.top().process();
+		w.state.top()->process();
 	}
 	w.Destroy();
 	return 0;

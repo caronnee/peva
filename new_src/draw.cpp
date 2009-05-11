@@ -1,6 +1,26 @@
 #include <sstream>
 #include "draw.h"
 
+Main::Main(Window * w_)
+{
+	std::cout << "HE>??" <<std::endl;
+	w = w_;
+	std::cout << "moja adresa je" << (int)this <<std::endl;
+}
+void Main::process()
+{ 
+	std::cout<<"popping"<<std::endl;
+	w->state.pop();
+}
+Main::~Main()throw (){ }
+
+Window:: Window()
+{
+	
+	main_menu = new Main(this);
+	std::cout << "gr!" <<std::endl;
+}
+
 void Window::Init_default()
 {
 	font = DEFAULT_FONT;
@@ -45,19 +65,14 @@ bool Window::Init()
 	}
 	SDL_WM_SetCaption(WIN_TITLE, NULL);
 	SDL_Rect ** r = SDL_ListModes(g_screen->format,WIN_FLAGS|SDL_FULLSCREEN);
-	int i =0;
+	/*int i =0;
 	if (r == NULL ) { std::cout << "awekfgajesgfbewa" <<std::endl; return false;}
 	if (r == (SDL_Rect**) -1 ) { std::cout << "mmmmmm" <<std::endl; }
 	std::cout << "podoprujem mody fullscreenu: " << std::endl;
 	printf("Available Modes\n");
 	for (i=0; r[i]; ++i)
-		std::cout << r[i]->w << " " <<  r[i]->h << std::endl;
-//	std::cout << "::" << r[0]->x <<std::endl;
-/*	while (r[i]!=NULL)
-	{
-	//	std::cout << r[i]->x << std::endl;
-		i++;
-	}*/
+		std::cout << r[i]->w << " " <<  r[i]->h << std::endl;*/
+	state.push(main_menu);
 	return true;
 }
 
@@ -79,6 +94,7 @@ int Window::Toggle_screen()
 
 unsigned int Window::convert(std::string s)
 {
+	std::cout << s<< std::endl;
 	unsigned number =0;
 	std::istringstream convertor(s);
 	convertor >> number;
@@ -86,12 +102,26 @@ unsigned int Window::convert(std::string s)
 }
 void Window::set_resolution(std::string res)
 {
-//	resolution_width = 
+	unsigned int pos = res.find("x");
+	resolution_width = convert(res.substr(0,pos));
+	resolution_heigth = convert ( res.substr(pos+1)); //ocheckovat, ci sa to da, ci nemam corrupted file!
 }
-void Window::set_timeout(std::string time){}
-void Window::set_font(std::string res){}
-void Window::set_font_size(std::string res){}
-void Window::set_background(std::string res){}
+void Window::set_timeout(std::string time)
+{
+	timeout = convert(time);
+}
+void Window::set_font(std::string s)
+{
+	font = s;
+}
+void Window::set_font_size(std::string s)
+{
+	font_size = convert(s);
+}
+void Window::set_background(std::string res)
+{
+	background = IMG_Load(res.c_str());
+}
 
 void Window::Destroy()
 {
@@ -103,4 +133,5 @@ void Window::Destroy()
 	}
 	TTF_Quit();
 	SDL_Quit();
+//	delete main_menu;
 }

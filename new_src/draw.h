@@ -27,6 +27,8 @@
 #define DEFAULT_BACKGROUND "./images/background.png"
 #define DEFAULT_TIMEOUT 100
 
+
+class Window;
 //-------------------- Draw variables-----------
 enum Menus
 {
@@ -38,11 +40,28 @@ enum Menus
 	GAME_EXIT
 };
 
-struct Window_state
+class Menu
 {
-	void (* process)();
+	public:
+		virtual void process(void) = 0;
+};
+class Main:public Menu
+{
+	Window * w;
+	public:
+		Main(Window * w_);
+		virtual void process(void);
+		virtual ~Main()throw();
 };
 
+class Main:public Menu
+{
+	Window * w;
+	public:
+		Main(Window * w_);
+		virtual void process(void);
+		virtual ~Main()throw();
+};
 class Window
 {
 	std::string font;
@@ -50,6 +69,7 @@ class Window
 	TTF_Font * g_font;//main font
 	int font_size;
 	SDL_Surface * background; //background pre hlavne okno 
+	unsigned int timeout;
 	SDL_Event event;
 	int resolution_width, resolution_heigth;
 	// pomocne funkcie
@@ -58,8 +78,9 @@ class Window
 	void play();
 	void join();
 	void host();
-	void main();
+	Main* main_menu;
 public:
+	Window();
 	void Default(); //vytvori defaultnu sirku, dlzku, jazyk a pod.
 	bool Init(); //initne g_screen, nacita background a pod.
 	int Toggle_screen(); //change from full screen to window screen and vice-versa
@@ -72,5 +93,5 @@ public:
 	void set_font(std::string res);
 	void set_font_size(std::string res);
 	void set_background(std::string res);
-	std::stack<Window_state> state;
+	std::stack<Menu *> state;
 };
