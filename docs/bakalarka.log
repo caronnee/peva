@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2009.2.16)  17 FEB 2009 02:28
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.2.16)  12 MAY 2009 08:09
 entering extended mode
  %&-line parsing enabled.
 **bakalarka.tex
@@ -261,35 +261,122 @@ Package babel Warning: No hyphenation patterns were loaded for
 Package babel Info: Making ^ an active character on input line 86.
 Package babel Info: Making " an active character on input line 89.
 Package babel Info: Making ' an active character on input line 92.
+)) (/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-texlive/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks16
+\ex@=\dimen104
 ))
-No file bakalarka.aux.
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen105
+)
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count89
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count90
+\leftroot@=\count91
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count92
+\DOTSCASE@=\count93
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen106
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count94
+\c@MaxMatrixCols=\count95
+\dotsspace@=\muskip10
+\c@parentequation=\count96
+\dspbrk@lvl=\count97
+\tag@help=\toks17
+\row@=\count98
+\column@=\count99
+\maxfields@=\count100
+\andhelp@=\toks18
+\eqnshift@=\dimen107
+\alignsep@=\dimen108
+\tagshift@=\dimen109
+\tagwidth@=\dimen110
+\totwidth@=\dimen111
+\lineht@=\dimen112
+\@envbody=\toks19
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(/usr/share/texmf-texlive/tex/latex/amscls/amsthm.sty
+Package: amsthm 2004/08/06 v2.20
+\thm@style=\toks21
+\thm@bodyfont=\toks22
+\thm@headfont=\toks23
+\thm@notefont=\toks24
+\thm@headpunct=\toks25
+\thm@preskip=\skip46
+\thm@postskip=\skip47
+\thm@headsep=\skip48
+\dth@everypar=\toks26
+) (./bakalarka.aux)
 \openout1 = `bakalarka.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+
 [1
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 34--37
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 10000) in paragraph at lines 37--40
 
  []
 
-[1]
-No file bakalarka.toc.
+[1] (./bakalarka.toc
+LaTeX Font Info:    Try loading font information for U+msa on input line 4.
+ (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 4.
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+))
 \tf@toc=\write3
 \openout3 = `bakalarka.toc'.
 
-[2
+ [2
 
 ]
 Kapitola 1.
@@ -301,38 +388,336 @@ Kapitola 2.
 
 ]
 Kapitola 3.
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+[]\OT1/cmr/m/n/10.95 stav rob-o-ta po in-
+ []
+
+
+Underfull \hbox (badness 4792) in paragraph at lines 71--71
+[]\OT1/cmr/m/n/10.95 Z[4] ale-bo typy
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+\OT1/cmr/m/n/10.95 FOR-WARD,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+\OT1/cmr/m/n/10.95 BACK-WARD,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+[]\OT1/cmr/m/n/10.95 (IS, IP+1, HP,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+\OT1/cmr/m/n/10.95 x+(0,1),y+(0,1), na-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+[]\OT1/cmr/m/n/10.95 (
+ []
+
+
+Overfull \hbox (4.78375pt too wide) in paragraph at lines 71--71
+\OT1/cmr/m/n/10.95 Fronta.pop().insert(bot),
+ []
+
+
+Underfull \hbox (badness 4608) in paragraph at lines 72--72
+[]\OT1/cmr/m/n/10.95 -(default pa-ram-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 72--72
+\OT1/cmr/m/n/10.95 e-ter = FOR-
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 73--73
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--73
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 73--73
+\OT1/cmr/m/n/10.95 Hit-points, X, Y, na-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--73
+[]\OT1/cmr/m/n/10.95 (FrontaUdalosti.pop().
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--73
+\OT1/cmr/m/n/10.95 in-sert(bot), Ma-pa,
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 74--74
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+\OT1/cmr/m/n/10.95 Hit-points, X, Y,
+ []
+
+
+Underfull \hbox (badness 4792) in paragraph at lines 75--75
+[]\OT1/cmr/m/n/10.95 Z[4] ale-bo typy
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 75--75
+\OT1/cmr/m/n/10.95 FOR-WARD,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 75--75
+\OT1/cmr/m/n/10.95 BACK-WARD,
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 75--75
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 75--75
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 76--76
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--76
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 76--76
+\OT1/cmr/m/n/10.95 Hit-points, X, Y, na-
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 77--77
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--77
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 77--77
+\OT1/cmr/m/n/10.95 Hit-points, X, Y, na-
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 78--78
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--78
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 78--78
+\OT1/cmr/m/n/10.95 Hit-points, X, Y, na-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--78
+[]\OT1/cmr/m/n/10.95 (FrontaUdalosti.pop()
+ []
+
+
+Underfull \hbox (badness 3302) in paragraph at lines 78--78
+\OT1/cmr/m/n/10.95 in-sert( bot, strela ),
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 79--79
+[]\OT1/cmr/m/n/10.95 (InstruktionStack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--79
+\OT1/cmr/m/n/10.95 struc-tion-point-er+1,
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 79--79
+\OT1/cmr/m/n/10.95 Hit-points, X, Y, na-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--79
+[]\OT1/cmr/m/n/10.95 (FrontaUdalosti.pop()
+ []
+
+
+Underfull \hbox (badness 3302) in paragraph at lines 79--79
+\OT1/cmr/m/n/10.95 in-sert( bot, strela ),
+ []
+
+
+Overfull \hbox (1.72481pt too wide) in paragraph at lines 82--82
+[]\OT1/cmr/m/n/10.95 (InstruktionStack,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--82
+\OT1/cmr/m/n/10.95 In-struc-tion-point-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--82
+\OT1/cmr/m/n/10.95 er - LA-BEL,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+[]\OT1/cmr/m/n/10.95 (InstruktionStack +
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+\OT1/cmr/m/n/10.95 Func-tion-Stack, In-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+\OT1/cmr/m/n/10.95 struc-tion-point-er =
+ []
+
+
+Underfull \hbox (badness 3557) in paragraph at lines 83--83
+\OT1/cmr/m/n/10.95 At-Func-tion-Stack, Hit-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--84
+[]\OT1/cmr/m/n/10.95 (InstruktionStack
+ []
+
+
+Underfull \hbox (badness 5008) in paragraph at lines 84--84
+\OT1/cmr/m/n/10.95 - Func-tion-Stack,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--84
+\OT1/cmr/m/n/10.95 In-struc-tion-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--84
+\OT1/cmr/m/n/10.95 point-er = At-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--84
+\OT1/cmr/m/n/10.95 Pre-vi-ousState,
+ []
+
+
+Overfull \hbox (86.33856pt too wide) in paragraph at lines 65--87
+ [][] 
+ []
+
+
+LaTeX Warning: Float too large for page by 214.30031pt on input line 87.
+
+
+Overfull \hbox (66.3206pt too wide) in paragraph at lines 58--88
+\OT1/cmr/m/n/10.95 Stav rob-o-ta vzh-ladom na svet charak-ter-izu-je ^^Tsestica
+: (In-struk-tion-Stack,Instructionpointer,
+ []
+
+
+Overfull \hbox (44.12729pt too wide) in paragraph at lines 96--109
+ [][] 
+ []
+
+
+Overfull \hbox (20.14812pt too wide) in paragraph at lines 92--110
+\OT1/cmr/m/n/10.95 V^^Sysledok pro-gra-mu, ktor^^Seho in^^Tstrukcie robot vykon
+^^Sava, je z^^Savisl^^Sy na konkr^^Setnom
+ []
+
+
+Overfull \hbox (2.45638pt too wide) in paragraph at lines 114--125
+ [][] 
+ []
+
+
+Overfull \hbox (7.06886pt too wide) in paragraph at lines 127--130
+\OT1/cmr/m/n/10.95 Tak^^Syto robot nie je schopn^^Sy si za-p-a-ta[]t jedin^^Su 
+pre-menn^^Su a ani vra-cat n^^Savratov^^Se
+ []
+
 [5
 
-]
+] [6] [7] [8]
 Kapitola 4.
-[6
-
-]
-Kapitola 5.
-[7
-
-]
-Kapitola 6.
-[8
-
-]
-Kapitola 7.
 [9
 
 ]
-
-LaTeX Warning: Empty `thebibliography' environment on input line 67.
-
+Kapitola 5.
 [10
+
+]
+Kapitola 6.
+[11
+
+]
+Kapitola 7.
+[12
+
+]
+
+LaTeX Warning: Empty `thebibliography' environment on input line 141.
+
+[13
 
 ] (./bakalarka.aux) ) 
 Here is how much of TeX's memory you used:
- 817 strings out of 95087
- 8900 string characters out of 1183278
- 60508 words of memory out of 1500000
- 4048 multiletter control sequences out of 10000+50000
- 6362 words of font info for 23 fonts, out of 1200000 for 2000
+ 1795 strings out of 95086
+ 19807 string characters out of 1183255
+ 81930 words of memory out of 1500000
+ 4973 multiletter control sequences out of 10000+50000
+ 11027 words of font info for 41 fonts, out of 1200000 for 2000
  28 hyphenation exceptions out of 8191
- 24i,4n,24p,166b,135s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 27i,11n,24p,776b,225s stack positions out of 5000i,500n,6000p,200000b,5000s
+</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx10.pf
+b></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf
+-texlive/fonts/type1/bluesky/cm/cmr10.pfb>
+Output written on bakalarka.pdf (14 pages, 51004 bytes).
+PDF statistics:
+ 60 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-Output written on bakalarka.dvi (11 pages, 3204 bytes).
