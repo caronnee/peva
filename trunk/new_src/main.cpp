@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 			std::string par = line.substr(pos+1);
 			std::cout << name << std::endl;
 			if (name == "resolution") w.set_resolution(par);
-			if (name == "font_size") w.set_font_size(par);
+			if (name == "font-size") w.set_font_size(par);
 			if (name == "font") w.set_font(par);
 			if (name == "background") w.set_background(par);
 			if (name == "timeout") w.set_timeout(par);
@@ -55,10 +55,9 @@ int main(int argc, char *argv[])
 	}
 	while (!w.state.empty())
 	{
-		//draw sa vola vnutri funkcie
+		w.state.top()->draw();
 		w.state.top()->process();
 	}
 	w.Destroy();
 	return 0;
 }
-
