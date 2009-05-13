@@ -24,9 +24,8 @@
 #define DEFAULT_WIN_HEIGTH 480
 #define DEFAULT_FONT "./fonts/sfd/DejaVuSansCondensed.ttf"
 #define DEFAULT_FONT_SIZE 12
-#define DEFAULT_BACKGROUND "./images/background.png"
+#define DEFAULT_BACKGROUND "../images/background.png"
 #define DEFAULT_TIMEOUT 100
-
 
 class Window;
 //-------------------- Draw variables-----------
@@ -43,34 +42,71 @@ enum Menus
 class Menu
 {
 	public:
+		int iterator;//kolko sme toho naalokovali
+		std::string name;
+		Window * w;
+		std::string get_name();
 		virtual void process(void) = 0;
+		virtual void draw()=0; //skuska dedicnosti! par potomkov bude pouzit stejnu fciu ako Menu
 };
 class Main:public Menu
 {
-	Window * w;
-	public:
-		Main(Window * w_);
-		virtual void process(void);
-		virtual ~Main()throw();
+	Menu * menus[4]; 
+public:
+	Main(Window * w_);
+	virtual void process(void);
+	virtual void draw();
+	virtual ~Main()throw();
+}; //----------
+class Settings:public Menu
+{
+	std::string names[3]; //nastavit timeouti, resolution, background. TODO!
+public:
+	Settings(Window * w_);
+	virtual void process(void);
+	virtual void draw();
+	virtual ~Settings()throw();
 };
 
-class Main:public Menu
+class Host:public Menu
 {
-	Window * w;
-	public:
-		Main(Window * w_);
-		virtual void process(void);
-		virtual ~Main()throw();
+public:
+	Host(Window * w_);
+	virtual void process(void);
+	virtual void draw();
+	virtual ~Host()throw();
 };
+class Join:public Menu
+{
+public:
+	Join(Window * w_);
+	virtual void process(void);
+	virtual void draw();
+	virtual ~Join()throw();
+};
+class Play:public Menu
+{
+public:
+	Play(Window * w_);
+	virtual void process(void);
+	virtual void draw();
+	virtual ~Play()throw();
+};
+
+/*class Map: public Menu //vytvaranie mapy
+{
+	int creation;//ci bolo zadane resolution alebo nie;
+public:
+	Map(Window * w_);
+	virtual void process(void);
+	virtual void draw();
+	virtual ~Map()throw();
+};*/
+
 class Window
 {
 	std::string font;
-	SDL_Surface * g_screen;
-	TTF_Font * g_font;//main font
-	int font_size;
-	SDL_Surface * background; //background pre hlavne okno 
 	unsigned int timeout;
-	SDL_Event event;
 	int resolution_width, resolution_heigth;
 	// pomocne funkcie
 //	Board gameboard;
@@ -80,12 +116,14 @@ class Window
 	void host();
 	Main* main_menu;
 public:
+	int font_size;
+	SDL_Surface * background; //background pre hlavne okno 
+	TTF_Font * g_font;//main font
+	SDL_Event event;
 	Window();
-	void Default(); //vytvori defaultnu sirku, dlzku, jazyk a pod.
 	bool Init(); //initne g_screen, nacita background a pod.
 	int Toggle_screen(); //change from full screen to window screen and vice-versa
 	void Destroy();
-public:
 	void Init_default();
 	unsigned int convert(std::string);
 	void set_resolution(std::string res);
