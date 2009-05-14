@@ -2,8 +2,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[slovak]{babel}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage[dvips]{graphicx}
+%\usepackage{psfrag}
+
 \begin{document}
 \begin{titlepage}
 \begin{center}
@@ -42,92 +46,18 @@ V Prahe \today
 \begin{flushright}
 Eva Pešková
 \end{flushright}
+\newtheorem{definicia}{Značenie}
 \tableofcontents
 \chapter{Uvod}% na com sa to skusa, preco, co je hlanym  cielom, apod.
 \chapter{Analýza}
+\input ./sdl.tex
 \section{Codewars a jeho alternativy}
 \subsection {Robowars}
 \subsection {Pogamut}
 \section{Problem optimalnej strategie viacerych hracov}
 \section{Prakticke vyuzitie}
-\chapter{Implementácia prostredia}
-\section{Hracia plocha} % z coho sa sklada
-\subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
-\subsection{Vlastnosti stien} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
-\section{Jazyk hry a priebeh hry} %bison, preco
-Po načítaní všetkých robotov, ich programov sa hra klada z trojice (FrontaUdalosti, Mapa, ŽiviBoti). Samotná hra prebieha tak, že pokiaľ existujú živí boti, spracuje sa nsledujúca udalost z FrontyUdalosti. O zaradenie zpať a prípadné vymazanie sa v prípade úmrtia sa objekty starajú sami.\\
-Objekty = steny, boti, strely. \\
-Stav robota vzhladom na svet charakterizuje šestica: (InstruktionStack,Instructionpointer, Hitpoints, X, Y, natocenie)\\
-Jednotlivé inštrukcie sa prejavia takto (zatial nepredpokladame koliziu):
-\begin{table}[ht]
-\caption{Vplyv robota na svet}   % title of Table
-\centering                          % used for centering table
-\begin{tabular}{|p{3cm}|p{3cm}|p{4cm}|p{4cm}|}        
-\hline\hline                        %inserts double horizontal lines
-Instrukcia & parameter & stav robota po instrukcii & Stav sveta po instrukcii\\    % inserts table
-%heading
-\hline                              % inserts single horizontal line
-Viditelne instrukcie vzhladom na svet\\\hline
-step & Z[4] alebo typy FORWARD, BACKWARD, LEFT, RIGTH & (IS, IP+1, HP, x+(0,1),y+(0,1), natocenie) & ( Fronta.pop().insert(bot), Mapa, ZiviBoti)\\\hline
-step & -(default parameter = FORWARD) & rovnako & rovnako\\\hline %run nevediem! to iste ako preplanovanie za menej casu
-turnLeft & - & (InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, natocenie+1)&(FrontaUdalosti.pop(). insert(bot), Mapa, ŽiviBoti)\\ \hline
-turnRight  & - & (InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, natocenie-1)&(FrontaUdalosti, Mapa, ŽiviBoti)\\\hline
-turn  & Z[4] alebo typy FORWARD, BACKWARD, LEFT, RIGTH & (InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, NoveNatocenie)&(FrontaUdalosti, Mapa, ŽiviBoti)\\\hline
-see & - &  (InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, natocenie) & rovnaky efekt\\\hline %run nevediem! to iste ako preplanovanie za menej casu
-see & [0-9]+ &(InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, natocenie)& rovnaky efekt \\\hline 
-shoot & [0-9]+, [0-9]+ &(InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, natocenie)& (FrontaUdalosti.pop() insert( bot, strela ), Mapa, ŽiviBoti) \\\hline 
-shoot & [0-9]+ &(InstruktionStack, Instructionpointer+1, Hitpoints, X, Y, natocenie)& (FrontaUdalosti.pop() insert( bot, strela ), Mapa, ŽiviBoti) \\\hline 
-\hline
-\newpage
-JUMP & (InstruktionStack, Instructionpointer - LABEL, Hitpoints, X, Y, natocenie) & žiadny efekt až na preplánovanie \\ \hline               % inserting body of the table
-CALL & FunctioName & (InstruktionStack + FunctionStack, Instructionpointer = AtFunctionStack, Hitpoints, X, Y, natocenie)& žiadny efekt až na preplánovanie \\\hline
-EndFunction & (InstruktionStack - FunctionStack, Instructionpointer = AtPreviousState, Hitpoints, X, Y, natocenie)& žiadny efekt až na preplánovanie \\\hline
-\hline                              %inserts single line
-\end{tabular}
-\end{table}
-
-\subsection{Priebeh penalizacie za instrukciu}
-\subsection{Detekcia zacyklenia}
-\section{Vlastnosti robotov}
-Výsledok programu, ktorého inštrukcie robot vykonáva, je závislý na konkrétnom type robota. Typ robota je definovaný niekoľkými parametrami, ktoré si bežný užívateľ samostatne na začiatku hry definuje == UholViditelnost, PolomerViditelnosti, Obrana, Hitpoints, TypStrely, VelkostPamate==\\
-\begin{table}[ht]
-\caption{Vlastnosti robota}   % title of Table
-\centering                          % used for centering table
-\begin{tabular}{ | c | p{10cm} |}            % centered columns (4 columns)
-\hline\hline                        %inserts double horizontal lines
-Vlastnost & Vplyv \\   % inserts table
-%heading
-\hline                              % inserts single horizontal line
-polomer viditeľnosti & Robot dokáže na určitú vzdialenosť rozpoznať object, táto vlastnosť určuje, koľko políčok dopredu v priamom smere( v smere, akým je bot aktualne otočený) vidí. Tento počet sa pod iným uhlom o niečo zmení,\\\hline               % inserting body of the table
-uhol viditeľnosti & maximálny rozptyl viditeľnosti - robot nevidí celý kruh okolo seba, ale iba určitú výseč \\\hline
-Obrana & Obranne cislo bota. Pouziva sa pri strete s nejakou prekazkou. Viz kolizie. \\\hline
-Hitpoints  & životnost bota, akonahle klesne na nulu, z fronty akcií sa jeho nasledujúca akcia odstráni a robot mizne do prepadlišťa dejin\\\hline [1ex]         % [1ex] adds vertical space
-Typ strely & Strela je sa definuje podobne ako samotný bot, ale ma iné parametre\\\hline
-\hline                              %inserts single line
-\end{tabular}
-\label{table:vlastnosti}          % is used to refer this table in the text
-\end{table}
-
-\begin{table}[ht]
-\caption{Vlastnosti Strely}   % title of Table
-\centering                          % used for centering table
-\begin{tabular}{ | c | p{10cm} |}            % centered columns (4 columns)
-\hline\hline                        %inserts double horizontal lines
-Vlastnost & Vplyv \\   % inserts table
-%heading
-\hline                              % inserts single horizontal line
-Odrážavost & definuje, ako moc sa strela od steny odrazí, v podstate je to to iste ako hmotnosť\\ \hline
-Rýchlosť & definuje preplanovanie vo fronte akcií\\ \hline
-Hitpoints  & dolet strely, ten sa znižuje s poctom tikov a súčasne kolíziami\\ \hline
-Utok & Utocne cislo bota, pouziva sa pri utok, viz kolizie \\ \hline
-\hline                              %inserts single line
-\end{tabular}
-\end{table}
-
-Užívateľ si typ strely definuje tak, že dostane k dispozícií určitź počet bodv a tie musí medzi jednotlive volby rozdeliť\\
-Bot premýšla tak, že sa nechá bežat dovtedy, kým z jeho program nenarazí na inštrukciu, ktorá by ovplyvnila svet, alebo kým neprsiahne timeout. Ak presiahne timeout, preruší sa, preplánuje vo fronte udalostí ďalej (presnejšie o TIMEOUT tikov ďalej)\\
-Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamať. Takýto robot nie je schopný si zapatať jedinú premennú a ani vracat návratové hodnoty, teda v kóde programu by nemali byť definované žiadne funkcie, ale iba procedúry.Je nutné povedať, že funkcie a procedúry sa v žiadnom prípade nechovajú ako premenné a teda nezaberajú robotovi pamať. Teda v tomto prípade dojde k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že nemá povolené napriklad strieľanie, pretože to je funkcia, ktorá potrebuje za každých okolností parametre.
-\section{Sietova komunikacia}
+\input impl.tex
+\chapter{Sietova komunikacia}
 \chapter{Výber a popis testovaných algoritmov}
 \section{Algoritmus 1}
 \section{Algoritmus 2}
