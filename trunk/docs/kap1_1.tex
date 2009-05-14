@@ -1,0 +1,93 @@
+\newpage
+\section{Ako písa» zlo¾itej¹ie vz»ahy}
+
+\begin{equation}
+{\cal R} = \{ J_{\pi}= (0,\pi(1),\pi(2),\dots,\pi(m),0): \pi \in \Pi(M) \}
+\end{equation}
+
+\begin{equation}
+g_2(R) = max\{T_{\pi(k)} + \delta_{\pi(k)} + d_{\pi(k),\pi(k+1)} - T_{\pi(k+1)}^Z :  k \in M-\{m\} \}
+\end{equation}
+
+{\Large Takto dlh¹ie vz»ahy:}
+
+\begin{eqnarray}
+c(J_\pi) & = & C_J(d_{0,\pi(1)}+ \sum_{k=1}^{m-1}d_{\pi(k),\pi(k+1)}
+ + d_{\pi(m),0}) \nonumber \\
+         &   & C_P\sum_{k=1}^{m-1} (T_{\pi(k+1)} - T_{\pi(k)} 
+	 - \delta_{\pi(k)} - d_{\pi(k),\pi(k+1)}) 
+\end{eqnarray}
+
+\medskip
+
+\begin{equation}
+ T_{\pi(1)} = d_{max},\quad
+ T_{\pi(k)} = T_{\pi(k-1)} + 1 + d_{max} \quad \forall k\in M-\{m\}
+\end{equation}
+
+ 
+\begin{eqnarray}
+q_i  & \le & Q \\
+max \{ t_i^Z, t_0^Z + \delta_Nq_i  + d_{0,i} \}  & \le  &  
+min \{ t_i^K - \delta_Vq_i, t_0^K - \delta_Vq_i - d_{i,0} \} \label{uhlie0}
+\end{eqnarray}
+
+\begin{eqnarray} \label{uhlie3}
+t_0^Z + \delta_N(q_i + q_j) + d_{0,i}& \le & T_i \nonumber \\ 
+t_i^Z & \le & T_i \nonumber \\
+T_i + \delta_Vq_i  & \le & t_i^K \nonumber \\
+t_j^Z & \le & T_i + \delta_Vq_i + d_{i,j} \nonumber \\  
+T_i + \delta_V(q_i + q_j) + d_{i,j} & \le & t_j^K  \nonumber \\  
+T_i + \delta_V(q_i + q_j) + d_{i,j} + d_{j,0} & \le  &  t_0^K
+\end{eqnarray}
+
+\begin{eqnarray} \label{uhlie4}
+ \alpha_i  & = & max \{ t_0^Z + \delta_N(q_i+q_j) + d_{0,i}, t_i^Z, 
+ t_j^Z - \delta_Vq_i -d_{i,j} \} \\
+ \beta_i  & = & min \{ t_i^K - \delta_Vq_i, 
+ t_j^K - \delta_V(q_i+q_j) - d_{i,j}, t_0^Z - \delta_V(q_i+q_j) - d_{i,j} -
+ d_{j,0} \} 
+\end{eqnarray}
+
+Nakoµko sme predokladali rozvrh $R_0$ je v¾dy prípustný, staèí ak budeme
+maximalizova» úsporu $s_{ij}$ získanú spojením jeho jázd $J_i$ a $J_j$
+do jazdy $J_{ij}$ vyjadrenú èíslom  
+\begin{equation}\label{uhlie6}
+   s_{ij} = \left\{
+              \begin{array}{ll}
+	        C_V(d_{i0}+d_{0j}-d_{ij}) + C_F & \mbox{ak}\ i \ne j, \alpha_i \le \beta_i \\  
+	        -\infty & \mbox{ak ináè}
+	      \end{array}
+            \right. 
+\end{equation}
+
+Z rie¹enia úlohy najcenej¹ieho párenia v ohodnotenom grafe $G=(V,H)$ 
+s mno¾inou vrcholov $V=Z$ a mno¾inou hrán $H$ a ohodnotením hrany $\{i,j\}$ 
+èíslom $\gamma_{ij}$
+\begin{eqnarray} \label{uhlie6a}
+ H & = &  \{ \{i,j\}: \gamma_{ij} \ge 0, i<j, i\in V, j\in V \}\\
+ \gamma_{ij}  & = & max \{s_{ij},s_{ji}\}
+\end{eqnarray}
+Potom páriacej hrane $\{i,j\}\in X$ zodpovedá jazda $J_{ij}$ ak
+$s_{ij}=\gamma_{ij}$ alebo jazda $J_{ji}$ ak $s_{ij}<\gamma_{ij}$.
+Najcennej¹ie párenie mo¾no hµada» aj ako rie¹enie nasledujúcej 
+úlohy bivalentného programovania:
+\begin{alignat}{2} \label{uhlie7a}
+\max c(X) = \max &\sum_{i\in Z}\sum_{j\in Z, i<j} \gamma_{ij}x_{ij} && \\ 
+&\sum_{i\in Z} x_{ij} = 1 && \forall j\in Z \label{uhlie7b} \\
+&\sum_{j\in Z} x_{ij} = 1 && \forall i\in Z\\
+&x_{ij} = x_{ji}  &&  \forall i\in Z, \forall j\in Z, i<j\\
+&x_{ij} \in \{0,1\}  && \forall i\in Z, \forall j\in Z \label{uhlie7c}
+\end{alignat} 
+¥ubovoµné párenie $X$ v grafe $G=(V,H)$ získame z prípustného rie¹enia 
+úlohy t.j. rie¹enia (\ref{uhlie7b}) a¾ (\ref{uhlie7c}) takto:
+\begin{equation} \label{uhlie7}
+ X = \{ \{i,j\}: x_{ij}=1, i<j, \{i,j\}\in H \}
+\end{equation}
+Pre prípustné rozvrhy $R\in \cal R$ dostávame 
+\begin{eqnarray} \label{uhlie8}
+ c(R) & = & c(R_0) - c(X) = \sum_{i\in Z}(d_{0i}+d_{i0})C_V+|Z|C_F 
+ -(\sum_{\{i,j\}\in X}\gamma_{ij}C_V + |X|C_F|) \nonumber\\
+ & = & \sum_{i\in Z, \{i,.\}\notin X }(d_{0i}+d_{i0})C_V +(|Z|-|X|)C_F \nonumber\\
+ & + & \sum_{\{i,.\}\in X }min\{d_{i0}+d_{ij}+d_{j0},d_{0j}+d_{ji}+d_{i0}\}C_V 
+\end{eqnarray}
