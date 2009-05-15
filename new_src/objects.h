@@ -1,9 +1,13 @@
 #include <SDL/SDL.h>
-#include "board.h"
+//#include "board.h"
 
-struct Type
+struct Type_bot
 {
-	int sigth, attack, defense, misille, exit; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
+	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
+}
+struct Type_missille
+{
+	int attack, hitpoints; //a tak podobne, TODO!
 }
 struct Position
 {
@@ -13,32 +17,13 @@ struct Position
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
 protected:
-	SDL_Surface * show;
+	SDL_Surface * image;
 	Position position;
-	int hit_points,interval; //zdravie a interval, po jakom sa naplanuje dalsia akcia
+	int hit_points,ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
 public:
 	Object();
 	virtual void damage(Object sender) = 0;
-	virtual void action(Walls *** game) = 0;
+//	virtual void action(Walls *** game) = 0;
+	SDL_Surface * show();
 };
 
-class Bot : Object
-{
-	SDL_Surface ** show_phases ;
-	Type type;
-	Table defs;
-	Stack Num;
-	Stack instruction;
-public:
-	Bot(Type b);
-	void damage(Object sender);
-	void action(Walls *** board);
-};
-class Misille : Object
-{
-	int feature;
-public:
-	Misille();
-	void damage(Object sender);
-	void action(Walls *** board);
-};
