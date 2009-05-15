@@ -20,24 +20,17 @@
 #define ICON "./images/icon.png"
 
 //defaults:
-#define DEFAULT_WIN_WIDTH 500
+#define DEFAULT_WIN_WIDTH 600
 #define DEFAULT_WIN_HEIGTH 480
 #define DEFAULT_FONT "./fonts/sfd/DejaVuSansCondensed.ttf"
-#define DEFAULT_FONT_SIZE 12
+#define DEFAULT_FONT_SIZE 16
 #define DEFAULT_BACKGROUND "../images/background.png"
 #define DEFAULT_TIMEOUT 100
 
+#define NUMBEROFMENUS 5
+#define NUMCHARS 11
 class Window;
 //-------------------- Draw variables-----------
-enum Menus
-{
-	SETTINGS,
-	CREATE_MAP,
-	PLAY,
-	JOIN,
-	HOST,
-	GAME_EXIT
-};
 
 class Menu
 {
@@ -46,12 +39,13 @@ class Menu
 		std::string name;
 		Window * w;
 		std::string get_name();
+		void tapestry();
 		virtual void process(void) = 0;
 		virtual void draw()=0; //skuska dedicnosti! par potomkov bude pouzit stejnu fciu ako Menu
 };
 class Main:public Menu
 {
-	Menu * menus[4]; 
+	Menu * menus[NUMBEROFMENUS]; 
 public:
 	Main(Window * w_);
 	virtual void process(void);
@@ -92,16 +86,25 @@ public:
 	virtual void draw();
 	virtual ~Play()throw();
 };
-
-/*class Map: public Menu //vytvaranie mapy
+class Create_map:public Menu
 {
-	int creation;//ci bolo zadane resolution alebo nie;
+	bool set,x;
+	int begin_x, begin_y;
+	SDL_Surface * text;
+	int text_width;
+	SDL_Surface * resol[NUMCHARS]; //0-9+x
+	int resol_width[NUMCHARS];
+	int resolX,resolY, number_written; //max 5x5 cifier?
+	std::string written_x, written_y;
+	void process_map();
+	void process_resolution();
+	void reset();
 public:
-	Map(Window * w_);
+	Create_map(Window * w_);
 	virtual void process(void);
 	virtual void draw();
-	virtual ~Map()throw();
-};*/
+	virtual ~Create_map()throw();
+};
 
 class Window
 {
@@ -131,5 +134,6 @@ public:
 	void set_font(std::string res);
 	void set_font_size(std::string res);
 	void set_background(std::string res);
+	SDL_Color normal, light;
 	std::stack<Menu *> state;
 };
