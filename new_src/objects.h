@@ -22,7 +22,7 @@ protected:
 	int hit_points,ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
 public:
 	Object();
-	virtual void damage(Object * sender) = 0;
+//	virtual void damage(Object * sender) = 0;
 //	virtual void action(Walls *** game) = 0;
 	SDL_Surface * show();
 };

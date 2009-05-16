@@ -1,35 +1,39 @@
-#include "objects.h"
+#include "wall.h"
+#include <iostream>
 
-Wall::Wall() {} //zatial pedvhodca nerobi nic
+Tile::Tile() 
+{
+	image = IMG_Load("../images/FreeTile.png");
+} 
 
 SolidWall::SolidWall()
 {
-	show = IMG_Load("../images/SolidWall.png");//kedze je to iba v konstruktore, mozno si to mozem dovolit
-	if (show == NULL) //crash!
+	image = IMG_Load("../images/SolidWall.png");//kedze je to iba v konstruktore, mozno si to mozem dovolit
+	if (image == NULL) //crash!
 	{
 		std::cerr << "Image of solid wall not found!)";
 	}
 }
 TrapWall::TrapWall()
 {
-	show = IMG_Load("../images/TrapWall.png");
-	if (show == NULL) //crash!o
+	image = IMG_Load("../images/TrapWall.png");
+	if (image == NULL) //crash!o
 	{
 		std::cerr << "Image of trap wall not found!)";
 	}
 }
 PushableWall::PushableWall()
 {
-	show = IMG_Load("../images/PushableWall.png");
-	if (show == NULL) //crash!o
+	image = IMG_Load("../images/PushableWall.png");
+	if (image == NULL) //crash!o
 	{
 		std::cerr << "Image of pushable wall not found!)";
 	}
 }
 ExitWall::ExitWall()
 {
-	show = IMG_Load("../images/ExitWall.png");
-	if (show == NULL) //crash!o
+	image = IMG_Load("../images/ExitWall.png");
+	if (image == NULL) //crash!o
 	{
 		std::cerr << "Image of exit wall not found!)";
 	}
