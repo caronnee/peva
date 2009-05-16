@@ -66,6 +66,7 @@ void Main::process()
 				break;
 			}
 	}
+	draw();
 }
 void Main::draw()
 {
@@ -101,11 +102,12 @@ void Main::draw()
 	}
 	SDL_Flip(g_screen);
 }
-Main::~Main()throw (){ std::cout << "deleting!"; 
-for (int i =0; i < NUMBEROFMENUS; i++)
+Main::~Main()throw ()
 {
-	delete menus[i];
-}
+	for (int i =0; i < NUMBEROFMENUS; i++)
+	{
+		delete menus[i];
+	}
 }
 
 Join::Join(Window *w_)
@@ -190,19 +192,25 @@ Create_map::Create_map(Window *w_)
 {
 	name = "Create map";
 	w = w_;
-	set = false;
-	x = false;
-
+	map= NULL;
 	std::string txt = "Write map resolution:";
 	text = TTF_RenderText_Solid(w->g_font,txt.c_str(),w->normal);//resize 2.krat
 	TTF_SizeText(w->g_font,txt.c_str(),&text_width,NULL);
 	if (text == NULL)  std::cout << "hejdgfjlg";
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
+	selected = IMG_Load("../images/selected.png");
+//	selected_x = 
 	for (int i =0; i< NUMCHARS; i++)
 	{
 		resol[i] = TTF_RenderText_Solid(w->g_font,s[i].c_str(),w->normal);
 		TTF_SizeText(w->g_font,s[i].c_str(),&resol_width[i],NULL);
-	}//TODO! po esc spat na reslution a resize
+	}//TODO! po esc spat na resolution a resize
+	tiles[FreeTile] = new Tile();
+	tiles[SolidWall_] = new SolidWall();
+	tiles[TrapWall_] = new TrapWall();
+	tiles[PushableWall_] = new PushableWall();
+	tiles[ExitWall_] = new ExitWall();
+	reset();
 }
 void Create_map::reset()
 {
@@ -210,34 +218,81 @@ void Create_map::reset()
 	x = false;
 	written_x = "";
 	written_y = "";
+	if (map!=NULL)
+	{
+		for (int i =0; i< resolX; i++)
+			delete map[i];
+		delete[] map; //TODO ocheckovat!
+	}
+	map = NULL;
+	begin_x = 0;
+	begin_y = 0;
+	window_begin_x = 0;
+	window_begin_y = 0;
+}
+void Create_map::draw_resol()
+{
+	SDL_Rect r;
+	std::cout << "Drawing resolution screen" <<std::endl;
+	r.x = (g_screen->w >> 1) - (text_width >> 1);
+	r.y = (g_screen->h >> 1) - TTF_FontLineSkip(w->g_font)*2;
+	SDL_BlitSurface (text, NULL, g_screen, &r);
+	r.y+=TTF_FontLineSkip(w->g_font);
+	for (unsigned int i = 0; i< written_x.size(); i++)
+	{
+		SDL_BlitSurface(resol[written_x[i] - '0'], NULL,g_screen, &r);
+		r.x+=resol_width[written_x[i] - '0'];//potom to vycentrovat, samostatna funkcia
+	}
+	SDL_BlitSurface(resol[NUMCHARS - 1], NULL,g_screen, &r);
+	r.x+=resol_width[NUMCHARS - 1];//potom to vycentrovat, samostatna funkcia
+	for (unsigned int i = 0; i< written_y.size(); i++)
+	{
+		SDL_BlitSurface(resol[written_y[i] - '0'], NULL,g_screen, &r);
+		r.x+=resol_width[written_y[i] - '0'];// TODO potom to vycentrovat, samostatna funkcia
+	}
 }
 void Create_map::draw()
 {
-	SDL_Rect r;
-	tapestry();
-	if (set == false)
+	tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
+	if (set == false) draw_resol();
+	else
 	{
-	std::cout << "Drawing resolution screen" <<std::endl;
-		begin_x = (g_screen->w >> 1) - (text_width >> 1);
-		begin_y = (g_screen->h >> 1) - TTF_FontLineSkip(w->g_font)*2;
-		r.x = begin_x;
-		r.y = begin_y;
-		SDL_BlitSurface (text, NULL, g_screen, &r);
-		r.y+=TTF_FontLineSkip(w->g_font);
-		for (unsigned int i = 0; i< written_x.size(); i++)
+		//TODO vysvietit tu, o sa ma zmazat/ zmaze sa to procese klikom lavym tlacitkom
+		//nakresli pole
+		int max_width = (resolX*IMG_WIDTH < g_screen->w - 2*IMG_WIDTH)?resolX*IMG_WIDTH:g_screen->w - 2*IMG_WIDTH;
+		int max_heigth = (resolY*IMG_HEIGHT < g_screen->h - 2*IMG_HEIGHT)?resolX*IMG_HEIGHT:g_screen->h - 2*IMG_HEIGHT;
+		SDL_Rect rect;
+		rect.x = window_begin_x;
+		rect.y = window_begin_y; //od jakeho pixelu mame zacinat
+		int tile_x = begin_x;
+		int tile_y = begin_y;
+		while (rect.y < max_heigth)
 		{
-			SDL_BlitSurface(resol[written_x[i] - '0'], NULL,g_screen, &r);
-			r.x+=resol_width[written_x[i] - '0'];//potom to vycentrovat, samostatna funkcia
+			while (rect.x < max_width)
+			{
+				if (map[tile_x][tile_y]!=FreeTile)
+				{
+					for (int i = 0; i < NumberOfWalls_; i++)
+					{
+						if (map[tile_x][tile_y] & (1<<i))
+							SDL_BlitSurface(tiles[i]->show(),NULL,g_screen, &rect); //mutacie vidielny len ten prvy povrch
+					}
+				}
+				else SDL_BlitSurface(tiles[FreeTile]->show(),NULL,g_screen,&rect);
+				rect.x+=IMG_WIDTH;
+			}
+			rect.x = begin_x;
+			rect.y += IMG_HEIGHT;
 		}
-		SDL_BlitSurface(resol[NUMCHARS - 1], NULL,g_screen, &r);
-		r.x+=resol_width[NUMCHARS - 1];//potom to vycentrovat, samostatna funkcia
-		for (unsigned int i = 0; i< written_y.size(); i++)
+		//dokreslime panel
+		rect.x = max_width+(IMG_WIDTH)/2;
+		rect.y = IMG_HEIGHT/2;
+		for (int i =1 ; i< NumberOfWalls_; i++) //bez grass
 		{
-			SDL_BlitSurface(resol[written_y[i] - '0'], NULL,g_screen, &r);
-			r.x+=resol_width[written_y[i] - '0'];//potom to vycentrovat, samostatna funkcia
+			SDL_BlitSurface(tiles[i]->show(),NULL,g_screen,&rect);
+			rect.y+=3*IMG_HEIGHT/2;
 		}
 	}
-
 	SDL_Flip(g_screen);
 }
 void Create_map::process_resolution()
@@ -249,70 +304,40 @@ void Create_map::process_resolution()
 				switch(w->event.key.keysym.sym)
 				{
 					case SDLK_0: 
-						{
-							if (!x) written_x+='0'; 
-							else written_y+='0';
-							break;
-						}
 					case SDLK_1: 
-						{
-							if (!x) written_x+='1'; 
-							else written_y+='1';
-							break;
-						}
 					case SDLK_2: 
-						{
-							if (!x) written_x+='2'; 
-							else written_y+='2';
-							break;
-						}
 					case SDLK_3: 
-						{
-							if (!x) written_x+='3'; 
-							else written_y+='3';
-							break;
-						}
 					case SDLK_4: 
-						{
-							if (!x) written_x+='4'; 
-							else written_y+='4';
-							break;
-						}
 					case SDLK_5: 
-						{
-							if (!x) written_x+='5'; 
-							else written_y+='5';
-							break;
-						}
 					case SDLK_6: 
-						{
-							if (!x) written_x+='6'; 
-							else written_y+='6';
-							break;
-						}
 					case SDLK_7: 
-						{
-							if (!x) written_x+='7'; 
-							else written_y+='7';
-							break;
-						}
 					case SDLK_8: 
-						{
-							if (!x) written_x+='8'; 
-							else written_y+='8';
-							break;
-						}
 					case SDLK_9: 
 						{
-							if (!x) written_x+='9'; 
-							else written_y+='9';
+							if (!x) written_x+=w->event.key.keysym.sym; 
+							else written_y+=w->event.key.keysym.sym;
 							break;
 						}
-					case SDLK_RETURN: { set = true; break; }
+					case SDLK_RETURN: 
+						{ 
+							set = true;
+							resolX = convert(written_x);
+							resolY = convert(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000
+							map = new unsigned int*[resolX];
+							for (int i =0; i< resolX; i++)
+							{
+								map[i] = new unsigned int[resolY];//TODO checking memory
+								for (int j = 0; j < resolY; j++)
+									map[i][j] = 0;//nic tam zatial nie je
+							} //TODO cetrovanie
+							break; 
+						}
+					case SDLK_RIGHT:
 					case SDLK_x: { x = true; break;}
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
+							reset();
 							w->state.pop();
 							break;
 						}
@@ -327,6 +352,7 @@ void Create_map::process_resolution()
 
 void Create_map::process_map()
 {
+	//TODO if SLD_KEY PRESSED, do last action
 	switch (w->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -336,6 +362,7 @@ void Create_map::process_map()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						     {
+							     reset();
 							     w->state.pop();
 							     break;
 						     }
@@ -347,6 +374,17 @@ void Create_map::process_map()
 				break;
 			}
 		case SDL_MOUSEBUTTONDOWN:
+			{
+				switch (w->event.button.button)
+				{
+					case SDL_BUTTON_LEFT:
+						{
+							break;
+						}
+					default:
+						break;
+				}
+			}
 		case SDL_MOUSEBUTTONUP:
 		case SDL_MOUSEMOTION:
 			{
@@ -358,8 +396,14 @@ void Create_map::process_map()
 void Create_map::process()
 {
 	if (SDL_WaitEvent(&w->event) == 0){w->state.pop();return;}
-	if (set) process_map();
-	else process_resolution();	
+	if (set) {
+		process_map();
+	}
+	else 
+	{
+		process_resolution();
+		draw();//TODO opravit iba tu cast screenu, co sa pokazila
+	}
 }
 
 Create_map::~Create_map()throw(){};
@@ -522,7 +566,7 @@ int Window::Toggle_screen()
 	return true;
 }; //TODO! zatial nepouzite, jelikoz musim este checkovat, ci sa mi to nahodou nezblazni
 
-unsigned int Window::convert(std::string s)
+unsigned int convert(std::string s)
 {
 	std::cout << s<< std::endl;
 	unsigned number =0;

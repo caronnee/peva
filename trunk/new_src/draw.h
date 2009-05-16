@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include "wall.h"
 
 //send a messages during a game?In play method
 
@@ -31,6 +32,8 @@
 #define NUMCHARS 11
 class Window;
 //-------------------- Draw variables-----------
+
+unsigned int convert(std::string); //TODO do help functions
 
 class Menu
 {
@@ -88,16 +91,26 @@ public:
 };
 class Create_map:public Menu
 {
-	bool set,x;
+	bool set,x; //x = oddelovac u resolution
+	bool mouse_down; //bola vybrana/ uklada sa tile
+
 	int begin_x, begin_y;
+	int window_begin_x, window_begin_y; //centrovanie do stredu
+
 	SDL_Surface * text;
+	SDL_Surface * selected;
 	int text_width;
+	int selected_x, selected_y;
+
+	Tile * tiles[NumberOfWalls_];
+	unsigned int ** map; //maximalne 32 druhov stien, na mape prave 1object, take to nevadi
 	SDL_Surface * resol[NUMCHARS]; //0-9+x
 	int resol_width[NUMCHARS];
 	int resolX,resolY, number_written; //max 5x5 cifier?
 	std::string written_x, written_y;
 	void process_map();
 	void process_resolution();
+	void draw_resol();
 	void reset();
 public:
 	Create_map(Window * w_);
@@ -128,7 +141,6 @@ public:
 	int Toggle_screen(); //change from full screen to window screen and vice-versa
 	void Destroy();
 	void Init_default();
-	unsigned int convert(std::string);
 	void set_resolution(std::string res);
 	void set_timeout(std::string res);
 	void set_font(std::string res);

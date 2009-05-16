@@ -53,9 +53,9 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
+	w.state.top()->draw();
 	while (!w.state.empty())
 	{
-		w.state.top()->draw();
 		w.state.top()->process();
 	}
 	w.Destroy();
