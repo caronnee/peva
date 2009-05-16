@@ -4,15 +4,15 @@
 struct Type_bot
 {
 	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
-}
+};
 struct Type_missille
 {
 	int attack, hitpoints; //a tak podobne, TODO!
-}
+};
 struct Position
 {
-	int x, int y;
-}
+	int x, y;
+};
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
@@ -22,7 +22,7 @@ protected:
 	int hit_points,ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
 public:
 	Object();
-	virtual void damage(Object sender) = 0;
+	virtual void damage(Object * sender) = 0;
 //	virtual void action(Walls *** game) = 0;
 	SDL_Surface * show();
 };

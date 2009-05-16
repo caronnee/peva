@@ -1,3 +1,5 @@
+#include "objects.h"
+
 Wall::Wall() {} //zatial pedvhodca nerobi nic
 
 SolidWall::SolidWall()
@@ -22,5 +24,13 @@ PushableWall::PushableWall()
 	if (show == NULL) //crash!o
 	{
 		std::cerr << "Image of pushable wall not found!)";
+	}
+}
+ExitWall::ExitWall()
+{
+	show = IMG_Load("../images/ExitWall.png");
+	if (show == NULL) //crash!o
+	{
+		std::cerr << "Image of exit wall not found!)";
 	}
 }
