@@ -1,11 +1,11 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=cslatex 2009.5.12)  14 MAY 2009 02:18
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2009.5.12)  14 MAY 2009 15:43
 entering extended mode
  %&-line parsing enabled.
 **bakalarka.tex
 (./bakalarka.tex
 LaTeX2e <2005/12/01>
-Loading CZ hyphenation patterns: Pavel Sevecek, v3, 1995
-Loading SK hyphenation patterns: Jana Chlebikova, 1992
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, czech, slovak, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/report.cls
 Document Class: report 2005/09/16 v1.4f Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size11.clo
@@ -26,8 +26,8 @@ File: size11.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
 )
 (/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
 Package: inputenc 2006/05/05 v1.1b Input encoding file
-\inpenc@prehook=\toks16
-\inpenc@posthook=\toks17
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
 
 (/usr/share/texmf-texlive/tex/latex/base/utf8.def
 File: utf8.def 2006/03/30 v1.1i UTF-8 support for inputenc
@@ -214,8 +214,6 @@ File: ot1enc.dfu 2006/03/30 v1.1i UTF-8 support for inputenc
    defining Unicode char U+201C (decimal 8220)
    defining Unicode char U+201D (decimal 8221)
 )
-Now handling font encoding IL2 ...
-... no UTF-8 mapping file for font encoding IL2
 Now handling font encoding OMS ...
 ... processing UTF-8 mapping file for font encodingOMS
 
@@ -246,28 +244,19 @@ Now handling font encoding U ...
 (/usr/share/texmf-texlive/tex/generic/babel/babel.sty
 Package: babel 2005/11/23 v3.8h The Babel package
 
-(/usr/share/texmf-texlive/tex/generic/babel/babel.def
-File: babel.def 2005/11/23 v3.8h Babel common definitions
-
-(/usr/share/texmf-texlive/tex/generic/babel/switch.def
-File: switch.def 2005/11/23 v3.8h Babel language switching mechanism
-)
-\babel@savecnt=\count88
-\U@D=\dimen103
-)
 (/usr/share/texmf-texlive/tex/generic/babel/slovak.ldf
 Language: slovak 2005/03/31 v1.3a Slovak support from the babel system
 
-
-Package babel Warning: No hyphenation patterns were loaded for
-(babel)                the language `Slovak'
-(babel)                I will use the patterns loaded for \language=0 instead.
-
-\l@slovak = a dialect from \language0
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2005/11/23 v3.8h Babel common definitions
+\babel@savecnt=\count88
+\U@D=\dimen103
+)
 Package babel Info: Making ^ an active character on input line 86.
 Package babel Info: Making " an active character on input line 89.
 Package babel Info: Making ' an active character on input line 92.
-)) (/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
+))
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2000/07/18 v2.13 AMS math features
 \@mathmargin=\skip43
 
@@ -277,7 +266,7 @@ Package: amstext 2000/06/29 v2.01
 
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0
-\@emptytoks=\toks18
+\@emptytoks=\toks16
 \ex@=\dimen104
 ))
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
@@ -307,21 +296,21 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 \dotsspace@=\muskip10
 \c@parentequation=\count96
 \dspbrk@lvl=\count97
-\tag@help=\toks19
+\tag@help=\toks17
 \row@=\count98
 \column@=\count99
 \maxfields@=\count100
-\andhelp@=\toks20
+\andhelp@=\toks18
 \eqnshift@=\dimen107
 \alignsep@=\dimen108
 \tagshift@=\dimen109
 \tagwidth@=\dimen110
 \totwidth@=\dimen111
 \lineht@=\dimen112
-\@envbody=\toks21
+\@envbody=\toks19
 \multlinegap=\skip44
 \multlinetaggap=\skip45
-\mathdisplay@stack=\toks22
+\mathdisplay@stack=\toks20
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
@@ -337,22 +326,22 @@ Package: amssymb 2002/01/22 v2.2d
 )
 (/usr/share/texmf-texlive/tex/latex/amscls/amsthm.sty
 Package: amsthm 2004/08/06 v2.20
-\thm@style=\toks23
-\thm@bodyfont=\toks24
-\thm@headfont=\toks25
-\thm@notefont=\toks26
-\thm@headpunct=\toks27
+\thm@style=\toks21
+\thm@bodyfont=\toks22
+\thm@headfont=\toks23
+\thm@notefont=\toks24
+\thm@headpunct=\toks25
 \thm@preskip=\skip46
 \thm@postskip=\skip47
 \thm@headsep=\skip48
-\dth@everypar=\toks28
+\dth@everypar=\toks26
 )
 (/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
 (/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
-\KV@toks@=\toks29
+\KV@toks@=\toks27
 )
 (/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
 Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
@@ -371,6 +360,12 @@ File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 \Gin@req@height=\dimen113
 \Gin@req@width=\dimen114
 )
+(/usr/share/texmf-texlive/tex/latex/psfrag/psfrag.sty
+Package: psfrag 1998/04/11 v3.04 PSfrag (MCG)
+\pfg@pcount=\count101
+\pfg@scount=\count102
+\pfg@temp=\write3
+)
 No file bakalarka.aux.
 \openout1 = `bakalarka.aux'.
 
@@ -379,8 +374,6 @@ LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for IL2/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
@@ -391,15 +384,21 @@ LaTeX Font Info:    ... okay on input line 11.
 [1
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 41--44
+Overfull \hbox (15.6434pt too wide) in paragraph at lines 41--43
+[]\OT1/cmr/m/n/10.95 Prehlasujem, ^^Tze som svo-ju ba-kal^^Sarsku pr^^Sacu nap^
+^S^^Psala sa-mos-tat-ne a v^^Syhradne
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--43
 
  []
 
-\c@definicia=\count101
+\c@definicia=\count103
 [1]
 No file bakalarka.toc.
-\tf@toc=\write3
-\openout3 = `bakalarka.toc'.
+\tf@toc=\write4
+\openout4 = `bakalarka.toc'.
 
 [2
 
@@ -413,51 +412,42 @@ Kapitola 2.
 
 ]) (./impl.tex [5]
 Kapitola 3.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 10.
+(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 10.
 
-Overfull \hbox (1.2896pt too wide) in paragraph at lines 6--8
-\OT1/cmr/m/n/10.95 Po na ^^Tc^^S^^Ptan^^S^^P v^^Tsetk^^Sych robotov, ich pro-gr
-amov sa hra kla-da z tro-jice (FrontaU-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 6--8
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 9--11
-
+Overfull \hbox (10.55544pt too wide) in paragraph at lines 17--18
+[]\OT1/cmr/m/it/10.95 VS je z^^Sasobn^^S^^Pk v^^Tsetk^^Sych na-lo-ado-van^^Sych
+ hodn^ot, pa-ra-met-rov a n^^Savratov^^Sych
  []
 
 [6
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 26.
+LaTeX Font Info:    Try loading font information for U+msa on input line 35.
  (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 26.
+LaTeX Font Info:    Try loading font information for U+msb on input line 35.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
-Underfull \hbox (badness 10000) in paragraph at lines 24--34
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 41--42
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
 []$\OML/cmm/m/it/10.95 < IS; IP\OT1/cmr/m/n/10.95 [\OML/cmm/m/it/10.95 last\OT1
 /cmr/m/n/10.95 ] +
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 42--43
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
 []$\OML/cmm/m/it/10.95 <
  []
 
 
-Overfull \hbox (213.87434pt too wide) in paragraph at lines 42--43
+Overfull \hbox (213.87434pt too wide) in paragraph at lines 51--52
 \OML/cmm/m/it/10.95 IS:push\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 function[]al
 l\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ; IP:push\OT1/cmr/m/n/10.95 (\OML/cmm/
 m/it/10.95 Function\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ; VS; t:add\OT1/cmr/
@@ -466,92 +456,82 @@ m/n/10.95 (\OML/cmm/m/it/10.95 FunctionValues\OT1/cmr/m/n/10.95 ) \OML/cmm/m/it
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 43--44
+Underfull \hbox (badness 10000) in paragraph at lines 52--53
 []$\OML/cmm/m/it/10.95 <
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
 []$\OML/cmm/m/it/10.95 < IS; IP\OT1/cmr/m/n/10.95 [\OML/cmm/m/it/10.95 last\OT1
 /cmr/m/n/10.95 ] +
  []
 
 
-Overfull \hbox (3.3848pt too wide) in paragraph at lines 44--45
+Overfull \hbox (3.3848pt too wide) in paragraph at lines 53--54
 \OT1/cmr/m/n/10.95 +\OML/cmm/m/it/10.95 ; VS; t:SetInactive\OT1/cmr/m/n/10.95 (
 \OML/cmm/m/it/10.95 name\OT1/cmr/m/n/10.95 ) \OML/cmm/m/it/10.95 >$| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
+Underfull \hbox (badness 10000) in paragraph at lines 54--55
 []$\OML/cmm/m/it/10.95 < IS; IP\OT1/cmr/m/n/10.95 [\OML/cmm/m/it/10.95 last\OT1
 /cmr/m/n/10.95 ] +
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 47--48
+Underfull \hbox (badness 10000) in paragraph at lines 56--57
 []$\OML/cmm/m/it/10.95 < IS; IP \OMS/cmsy/m/n/10.95 ^^@
  []
 
 [7]
 
-LaTeX Warning: Reference `thinking' on page 8 undefined on input line 63.
+LaTeX Warning: Reference `thinking' on page 8 undefined on input line 73.
 
 
-LaTeX Warning: Reference `thinking' on page 8 undefined on input line 65.
+LaTeX Warning: Reference `thinking' on page 8 undefined on input line 75.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 62--73
-
- []
-
-
-Overfull \hbox (44.12729pt too wide) in paragraph at lines 81--94
+File: thinking.eps Graphic file (type eps)
+<thinking.eps> [8]
+Overfull \hbox (771.98927pt too wide) in paragraph at lines 92--104
  [][] 
  []
 
 
-Overfull \hbox (20.14812pt too wide) in paragraph at lines 77--95
-\OT1/cmr/m/n/10.95 V^^Sysledok pro-gra-mu, ktor^^Seho in^^Tstrukcie robot vykon
-^^Sava, je z^^Savisl^^Sy na konkr^^Setnom
- []
-
-
-Overfull \hbox (2.45638pt too wide) in paragraph at lines 99--110
+Overfull \hbox (107.3842pt too wide) in paragraph at lines 109--120
  [][] 
  []
 
 )
-Overfull \hbox (7.06886pt too wide) in paragraph at lines 112--60
-\OT1/cmr/m/n/10.95 Tak^^Syto robot nie je schopn^^Sy si za-p-a-ta[]t jedin^^Su 
-pre-menn^^Su a ani vra-cat n^^Savratov^^Se
+Overfull \hbox (7.06886pt too wide) in paragraph at lines 122--59
+\OT1/cmr/m/n/10.95 Tak^^Syto ro-bot nie je schopn^^Sy si za-pa-ta[]t je-din^^Su
+ pre-menn^^Su a ani vra-cat n^^Savratov^^Se
  []
 
-[8] [9]
+[9] [10]
 Kapitola 4.
-[10
-
-]
-Kapitola 5.
 [11
 
 ]
-Kapitola 6.
+Kapitola 5.
 [12
 
 ]
-Kapitola 7.
+Kapitola 6.
 [13
 
 ]
-Kapitola 8.
+Kapitola 7.
 [14
 
 ]
-
-LaTeX Warning: Empty `thebibliography' environment on input line 71.
-
+Kapitola 8.
 [15
+
+]
+
+LaTeX Warning: Empty `thebibliography' environment on input line 70.
+
+[16
 
 ] (./bakalarka.aux)
 
@@ -562,12 +542,12 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 2149 strings out of 94962
- 24408 string characters out of 1181767
- 84495 words of memory out of 1500000
- 5430 multiletter control sequences out of 10000+50000
+ 2189 strings out of 95026
+ 24778 string characters out of 1181962
+ 80147 words of memory out of 1500000
+ 5369 multiletter control sequences out of 10000+50000
  11373 words of font info for 42 fonts, out of 1200000 for 2000
- 24 hyphenation exceptions out of 8191
- 27i,11n,24p,1051b,223s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 33 hyphenation exceptions out of 8191
+ 27i,10n,24p,1051b,263s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on bakalarka.dvi (16 pages, 20904 bytes).
+Output written on bakalarka.dvi (17 pages, 20208 bytes).
