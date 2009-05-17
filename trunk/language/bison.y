@@ -5,8 +5,9 @@
 	#define YYSTYPE Lval 
 	#define YYLTYPE unsigned
 	#define YYLLOC_DEFAULT(cur, rhs, n)	do { if(n) (cur)=(rhs)[1]; else (cur)=(rhs)[0]; } while(0)
-	#define YYERROR_VERBOSE 1
-    static void yyerror( const char *m);
+
+	#define YYERROR_VERBOSE 1		
+	static void yyerror(YYLTYPE *line, int* ctx, const char *m);
 
 %}
 
@@ -55,6 +56,8 @@
 %start program
 %error-verbose
 %pure-parser
+%parse-param {int *ctx}
+%lex-param {int *ctx}
 %locations
 
 %%
@@ -78,12 +81,12 @@ names:	TOKEN_IDENTIFIER
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number 
 	;
 declare_functions: /*	ziadne deklarovane funkcie	*/
-	|d_f
+	|declare_function_
 	;
-d_f:	TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
-	|d_f TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+declare_function_:	TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+	|declare_function_ TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
 	|TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
-	|d_f TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+	|declare_function_ TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
 	;
 number:TOKEN_OPER_SIGNADD TOKEN_REAL
       |TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -179,9 +182,10 @@ expression_bool: expression_bool_or
 %%
 
 extern FILE * yyin;
-static void yyerror(const char * message)
+
+static void yyerror(unsigned *line, int* ctx, const char *message)
 {
-	printf("Co to, co to? %s\n", message);
+	printf("Co to, co to? %s, line %d\n", message, *line);
 }
 
 int main(int argc, char ** argv)
@@ -198,7 +202,8 @@ if((yyin=fopen(argv[1], "r"))==0)
 	return 16;
     }
 
-yyparse();
+int q;
+yyparse(&q);
     fclose(yyin);
 	return 0;	
 }
