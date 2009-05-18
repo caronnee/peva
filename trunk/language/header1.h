@@ -5,7 +5,7 @@
 
 struct Lval {
 	int number;
-	std::string idents; //+mozno este nejake sa njdu
+	std::string ident; //+mozno este nejake sa njdu
 	float f_number;
 };
 

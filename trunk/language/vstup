@@ -1,6 +1,7 @@
 var left, right; //povolene komentare, bool aj integer su naprosto stejne
 array point h;
 
+@
 function rek(a)
 {
 	if (a == 1) return 1;
