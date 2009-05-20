@@ -199,14 +199,16 @@ Create_map::Create_map(Window *w_)
 	if (text == NULL)  std::cout << "hejdgfjlg";
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
 	selected = IMG_Load("../images/selected.png");
-//	selected_x = 
+	if (selected == NULL)
+		std::cerr << "uaaaa";
 	for (int i =0; i< NUMCHARS; i++)
 	{
 		resol[i] = TTF_RenderText_Solid(w->g_font,s[i].c_str(),w->normal);
 		TTF_SizeText(w->g_font,s[i].c_str(),&resol_width[i],NULL);
 	}//TODO! po esc spat na resolution a resize
 	
-	rects[LEFT].w = rects[RIGHT].w = rects[UP].w = rects[DOWN].w = 15;//15 pixelov, obr neskor
+	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
+	rects[UP].w = rects[DOWN].w = g_screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[CHOOSE].w = 2*IMG_WIDTH; //TODO! co aj sa to bude menit? Da sa z SDL_Surface zistit vyska sirka, TODO!
 	rects[MAP].w = g_screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = g_screen->w /3;
@@ -238,12 +240,13 @@ Create_map::Create_map(Window *w_)
 	tiles[PushableWall_] = new PushableWall();
 	tiles[ExitWall_] = new ExitWall();
 	int pom = rects[CHOOSE].y + IMG_HEIGHT/2;
-	for (int i =0; i< NumberOfWalls_; i++)
+	for (int i =1; i< NumberOfWalls_; i++)
 	{
 		tile_rect[i].x = rects[CHOOSE].x+ IMG_WIDTH/2;
 		tile_rect[i].y = pom;
 		pom+=3*IMG_HEIGHT/2; //TODO konstanta
 	}
+	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	reset();
 }
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
@@ -257,12 +260,16 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 		&& (y < r[i].y + r[i].h))
 			return i;
 	}
-	return -1;
+	std::cout <<x << " medzi " << rects[UP].x << " " <<rects[UP].x + rects[UP].w << " " << std::endl;
+	std::cout <<y << " medzi " << rects[UP].y << " " <<rects[UP].y + rects[UP].h << " " << std::endl;
+	return i;
 }
 void Create_map::reset()
 {
 	set = false;
 	x = false;
+	select = NumberOfWalls_;
+	mouse_down = false;
 	written_x = "";
 	written_y = "";
 	if (map!=NULL)
@@ -280,7 +287,6 @@ void Create_map::reset()
 void Create_map::draw_resol()
 {
 	SDL_Rect r;
-	std::cout << "Drawing resolution screen" <<std::endl;
 	r.x = (g_screen->w >> 1) - (text_width >> 1);
 	r.y = (g_screen->h >> 1) - TTF_FontLineSkip(w->g_font)*2;
 	SDL_BlitSurface (text, NULL, g_screen, &r);
@@ -305,6 +311,7 @@ int min(int x, int y)
 }
 void Create_map::draw()
 {
+	std::cout <<"drawing";
 	tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
 	if (set == false)
 	{
@@ -321,7 +328,7 @@ void Create_map::draw()
 		SDL_Rect rect;//TODO dokreslit sipky
 		rect.x = window_begin_x;
 		rect.y = window_begin_y; //od jakeho pixelu mame zacinat
-		int tile_x = begin_x;
+		int tile_x = begin_x; //jake x-ove sa vykresli
 		int tile_y = begin_y;
 		while (rect.y < max_heigth)
 		{
@@ -337,15 +344,22 @@ void Create_map::draw()
 				}
 				else SDL_BlitSurface(tiles[FreeTile]->show(),NULL,g_screen,&rect);
 				rect.x+=IMG_WIDTH;
+				tile_x++;
 			}
 			rect.x = window_begin_x;
 			rect.y += IMG_HEIGHT;
+			tile_y++;
+			tile_x = begin_x;
 		}
 		//dokreslime panel
 		SDL_SetClipRect(g_screen, NULL);
 		for (int i =1 ; i< NumberOfWalls_; i++) //bez grass
 		{
 			SDL_BlitSurface(tiles[i]->show(),NULL,g_screen,&tile_rect[i]);
+		}
+		if (select < NumberOfWalls_)
+		{
+			SDL_BlitSurface(selected,NULL,g_screen,&tile_rect[select]);
 		}
 
 	}
@@ -385,7 +399,7 @@ void Create_map::process_resolution()
 						{ 
 							set = true;
 							resolX = convert(written_x);
-							resolY = convert(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000
+							resolY = convert(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
 							map = new unsigned int*[resolX];
 							for (int i =0; i< resolX; i++)
 							{
@@ -443,6 +457,59 @@ void Create_map::process_map()
 				{
 					case SDL_BUTTON_LEFT:
 						{
+							int number = get_rect(w->event.button.x, w->event.button.y,rects,NumberOfMapDivision);
+							switch (number)
+							{
+								case  MAP:{
+										  if (select < NumberOfWalls_) //mame nieco vyebrane
+										  {
+											  int x, y;
+											  x = w->event.button.x - rects[MAP].x;
+											  y = w->event.button.y - rects[MAP].y;
+											  std::cout << begin_x + x/IMG_WIDTH <<" " << begin_y + y/IMG_HEIGHT <<std::endl;
+											  map[begin_x + x/IMG_WIDTH][begin_y + y/IMG_HEIGHT] |= (1 << select);
+											  std::cout << "hodnota:" << map[begin_x + x/IMG_WIDTH][begin_y + y/IMG_HEIGHT];
+											  draw();
+										  }
+										  break;
+									  }
+								case  SAVE:{std::cout << "save" <<std::endl;
+										   break;}
+								case  GENERATE:{std::cout << "generate" <<std::endl;
+										  break;}
+								case  EXIT:{std::cout << "exit" <<std::endl;
+										  break;}
+								case  CHOOSE:{std::cout << "choose" <<std::endl;
+										     int wall = get_rect(w->event.button.x,w->event.button.y, tile_rect, NumberOfWalls_);
+										     switch (wall)
+										     {
+											     case SolidWall_:
+												     std::cout << "S";
+												     break;
+											     case ExitWall_: std::cout<< "E";
+													break;
+											     case PushableWall_: std::cout << "pushable";
+														break;
+											     case TrapWall_: std::cout <<"T";
+													     break;
+											     default: std::cout << "ble!";
+										     }
+										     if (wall < NumberOfWalls_)
+										     {
+											    select = wall;
+										     }
+										     draw();
+										  break;}
+								case  LEFT:{std::cout << "left" <<std::endl;
+										  break;}
+								case  UP:{std::cout << "up" <<std::endl;
+										  break;}
+								case  DOWN:{std::cout << "down" <<std::endl;
+										  break;}
+								case  RIGHT:{std::cout << "right" <<std::endl;
+										  break;}
+								default: std::cout  << "HE?" << std::endl;
+							}
 							break;
 						}
 					default:
@@ -450,7 +517,10 @@ void Create_map::process_map()
 				}
 			}
 		case SDL_MOUSEBUTTONUP:
-		case SDL_MOUSEMOTION:
+			{
+				mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
+			}
+		case SDL_MOUSEMOTION: //ina ak je stale pressed
 			{
 				break;
 			}
@@ -470,7 +540,7 @@ void Create_map::process()
 	}
 }
 
-Create_map::~Create_map()throw(){};
+Create_map::~Create_map()throw(){}; //TODO uvolnovanie premennych
 
 Play::Play(Window *w_)
 {

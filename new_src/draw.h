@@ -113,12 +113,15 @@ class Create_map:public Menu
 	SDL_Surface * text;
 	SDL_Surface * selected;
 	int text_width;
-	int selected_x, selected_y;
+	int select;
 	int get_rect(int x, int y, SDL_Rect * r,int max);
 
-	Tile * tiles[NumberOfWalls_];
+	Tile * tiles[NumberOfWalls_ -1];
 	SDL_Rect tile_rect[NumberOfWalls_];
 	SDL_Rect rects[NumberOfMapDivision];
+/*	SDL_Rect ** map_rects;
+	int map_rects_number;
+	int offset_x, offset_y;*/
 	unsigned int ** map; //maximalne 32 druhov stien, na mape prave 1object, take to nevadi
 	SDL_Surface * resol[NUMCHARS]; //0-9+x
 	int resol_width[NUMCHARS];
