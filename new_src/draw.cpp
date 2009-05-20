@@ -23,7 +23,7 @@ Main::Main(Window * w_)
 {
 	iterator = 0;
 	w = w_; //akonahle sa vytvori, tak sa vykresli to, co sa ma
-	menus[0] = new Play(w_);
+	menus[0] = new Play(w_); //TODO zmenit na add a tak podobne, aby to bolo dynamicke
 	menus[1] = new Host(w_);
 	menus[2] = new Join(w_);
 	menus[3] = new Settings(w_);
@@ -205,12 +205,59 @@ Create_map::Create_map(Window *w_)
 		resol[i] = TTF_RenderText_Solid(w->g_font,s[i].c_str(),w->normal);
 		TTF_SizeText(w->g_font,s[i].c_str(),&resol_width[i],NULL);
 	}//TODO! po esc spat na resolution a resize
+	
+	rects[LEFT].w = rects[RIGHT].w = rects[UP].w = rects[DOWN].w = 15;//15 pixelov, obr neskor
+	rects[CHOOSE].w = 2*IMG_WIDTH; //TODO! co aj sa to bude menit? Da sa z SDL_Surface zistit vyska sirka, TODO!
+	rects[MAP].w = g_screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
+	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = g_screen->w /3;
+//Mono by si kazda classa mohla precitat svoj vlastny konfigurat, ak nejaky je
+
+	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;//TODO!
+	rects[CHOOSE].h = g_screen->h - rects[EXIT].h;
+	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
+	rects[LEFT].h = rects[RIGHT].h = g_screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
+	rects[MAP].h = g_screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
+
+	rects[LEFT].x = rects[SAVE].x = 0;
+	rects[UP].x = rects[DOWN].x = rects[LEFT].w;
+	rects[MAP].x = rects[LEFT].x + rects[LEFT].w;
+	rects[RIGHT].x = rects[MAP].x + rects[MAP].w;
+	rects[CHOOSE].x = rects[RIGHT].x + rects[RIGHT].w;
+	rects[GENERATE].x = rects[SAVE].x + rects[SAVE].w; //na jednej urovni
+	rects[EXIT].x = rects[GENERATE].x + rects[GENERATE].w;
+
+	rects[UP].y = 0;
+	rects[CHOOSE].y = 0; 
+	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
+	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
+	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
+
 	tiles[FreeTile] = new Tile();
 	tiles[SolidWall_] = new SolidWall();
 	tiles[TrapWall_] = new TrapWall();
 	tiles[PushableWall_] = new PushableWall();
 	tiles[ExitWall_] = new ExitWall();
+	int pom = rects[CHOOSE].y + IMG_HEIGHT/2;
+	for (int i =0; i< NumberOfWalls_; i++)
+	{
+		tile_rect[i].x = rects[CHOOSE].x+ IMG_WIDTH/2;
+		tile_rect[i].y = pom;
+		pom+=3*IMG_HEIGHT/2; //TODO konstanta
+	}
 	reset();
+}
+int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
+{
+	int i;
+	for (i = 0; i < max; i++)
+	{
+		if ((x >=r[i].x) 
+		&& (x< r[i].x + r[i].w)
+		&& (y >= r[i].y)
+		&& (y < r[i].y + r[i].h))
+			return i;
+	}
+	return -1;
 }
 void Create_map::reset()
 {
@@ -227,8 +274,8 @@ void Create_map::reset()
 	map = NULL;
 	begin_x = 0;
 	begin_y = 0;
-	window_begin_x = 0;
-	window_begin_y = 0;
+	window_begin_x = rects[MAP].x;
+	window_begin_y = rects[MAP].y;
 }
 void Create_map::draw_resol()
 {
@@ -251,17 +298,27 @@ void Create_map::draw_resol()
 		r.x+=resol_width[written_y[i] - '0'];// TODO potom to vycentrovat, samostatna funkcia
 	}
 }
+int min(int x, int y)
+{
+	if (x < y) return x;
+	return y;
+}
 void Create_map::draw()
 {
 	tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
-	if (set == false) draw_resol();
+	if (set == false)
+	{
+		draw_resol();
+	}
 	else
 	{
 		//TODO vysvietit tu, o sa ma zmazat/ zmaze sa to procese klikom lavym tlacitkom
 		//nakresli pole
-		int max_width = (resolX*IMG_WIDTH < g_screen->w - 2*IMG_WIDTH)?resolX*IMG_WIDTH:g_screen->w - 2*IMG_WIDTH;
-		int max_heigth = (resolY*IMG_HEIGHT < g_screen->h - 2*IMG_HEIGHT)?resolX*IMG_HEIGHT:g_screen->h - 2*IMG_HEIGHT;
-		SDL_Rect rect;
+		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
+		int max_width = rects[MAP].x + min(rects[MAP].w,IMG_WIDTH*resolX);
+		int max_heigth = rects[MAP].y + min(rects[MAP].h, IMG_HEIGHT*resolY);
+		SDL_SetClipRect(g_screen,&rects[MAP]);
+		SDL_Rect rect;//TODO dokreslit sipky
 		rect.x = window_begin_x;
 		rect.y = window_begin_y; //od jakeho pixelu mame zacinat
 		int tile_x = begin_x;
@@ -281,17 +338,16 @@ void Create_map::draw()
 				else SDL_BlitSurface(tiles[FreeTile]->show(),NULL,g_screen,&rect);
 				rect.x+=IMG_WIDTH;
 			}
-			rect.x = begin_x;
+			rect.x = window_begin_x;
 			rect.y += IMG_HEIGHT;
 		}
 		//dokreslime panel
-		rect.x = max_width+(IMG_WIDTH)/2;
-		rect.y = IMG_HEIGHT/2;
+		SDL_SetClipRect(g_screen, NULL);
 		for (int i =1 ; i< NumberOfWalls_; i++) //bez grass
 		{
-			SDL_BlitSurface(tiles[i]->show(),NULL,g_screen,&rect);
-			rect.y+=3*IMG_HEIGHT/2;
+			SDL_BlitSurface(tiles[i]->show(),NULL,g_screen,&tile_rect[i]);
 		}
+
 	}
 	SDL_Flip(g_screen);
 }
@@ -318,6 +374,13 @@ void Create_map::process_resolution()
 							else written_y+=w->event.key.keysym.sym;
 							break;
 						}
+					case SDLK_BACKSPACE:
+						{
+							if ((!x)&&(written_x.length())) written_x.erase(written_x.length()-1,1);
+							if (x && (written_y.length())) written_y.erase(written_y.length()-1,1);
+
+							break;
+						}
 					case SDLK_RETURN: 
 						{ 
 							set = true;
@@ -334,6 +397,7 @@ void Create_map::process_resolution()
 						}
 					case SDLK_RIGHT:
 					case SDLK_x: { x = true; break;}
+					case SDLK_LEFT:{x = false;break;}
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{

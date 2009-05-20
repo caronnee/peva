@@ -91,6 +91,19 @@ public:
 };
 class Create_map:public Menu
 {
+	enum Map_divide
+	{
+		MAP = 0,
+		SAVE,
+		GENERATE,
+		EXIT,
+		CHOOSE,
+		LEFT,
+		UP,
+		RIGHT,
+		DOWN,
+		NumberOfMapDivision
+	};
 	bool set,x; //x = oddelovac u resolution
 	bool mouse_down; //bola vybrana/ uklada sa tile
 
@@ -101,8 +114,11 @@ class Create_map:public Menu
 	SDL_Surface * selected;
 	int text_width;
 	int selected_x, selected_y;
+	int get_rect(int x, int y, SDL_Rect * r,int max);
 
 	Tile * tiles[NumberOfWalls_];
+	SDL_Rect tile_rect[NumberOfWalls_];
+	SDL_Rect rects[NumberOfMapDivision];
 	unsigned int ** map; //maximalne 32 druhov stien, na mape prave 1object, take to nevadi
 	SDL_Surface * resol[NUMCHARS]; //0-9+x
 	int resol_width[NUMCHARS];
