@@ -1,13 +1,19 @@
 \chapter{Implementácia prostredia}
 \section{Hracia plocha} % z coho sa sklada
 \subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
-\subsection{Vlastnosti stien} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
 \section{Jazyk hry a priebeh hry} %bison, preco
 
 \begin{definicia}
-Stav robota vzhľadom na svet charakterizuje šestica: (InstructionPointer IP, Hitpoints HP, VisualMemory vm, Direction direct), kde 
+Cieľom určenia robota nazývam políčko na mape sveta, kam sa má robot dostat. Teda ak je pozícia robota rovnaká ako pozícia tohoto cieľu, hra končí. Týchto cieľov môže byť viac. V prípade viacerých cieľových oblastí má užívateľ možnosť zvoliť voľbu \it{Vlastný Exit}, kde sa každému robotomi priradí práve jedna cieľová pozícia a to tá najvzdialenesia od jeho výskytu v mape po začatí hry.
+Pod vzdialenosťou rozumiem veľkosť obsahu obdĺžnika generovaného cieľom a výskytom robota. %TODO preco?
+\end{definicia}
+
+Samotná hra prebieha tak, že roboti vykonávajú užívateľom definovaný kód až do okamžiku, keď dosiahnu cieľ určenia alebo kým zostane na bojisku maximálne jeden robot. Cieľ môže byť pre každého robota rozdielny a je súčasťou mapy sveta. Hra nie je zabezpečená proti nekonečne dlhotrvajúcim cyklom (napríklad keď každý robot stojí na mieste), predpokladá sa v tomto prípade vstup od uživateľa, ktorým hru prerusí.
+
+\begin{definicia}
+Stav robota vzhľadom na svet charakterizuje štvorica: (InstructionPointer IP, Hitpoints HP, VisualMemory vm, Direction direct), kde 
 \begin{itemize}
-\item InstructionPointer je odkaz do +struk=tury programu robota hovoriaci, ktorá inštrukcia je na rade
+\item InstructionPointer je odkaz do štruktúry programu robota hovoriaci, ktorá inštrukcia je na rade
 \item HP je nezáporné celé číslo popisujúce životnosť robota
 \item VirtualMemory je štruktúra obsahujúca objekty v zornom poli od posledného volania funkcie 'see()', volanej bez parametrov 
 \end{itemize}
@@ -17,6 +23,7 @@ Stav robota s ohľadom na inštrukcie, ktore vykonáva, charakterizuje (PointerS
 \item VS je zásobník všetkých naloadovaných hodnôt, parametrov  a návratových adries z funkcií
 \item Memory je zoznam všetký doteraz definovaných premenných a funkcií
 \end{itemize}
+\label{StavRobota}
 \end{definicia}
 
 \begin{definicia} 
@@ -28,48 +35,75 @@ Tick je jednotka virtuálneho času sveta. Timeout je počet tickov,ktoré má r
 \end{definicia}
 
 \begin{definicia} 
-Svet je je trojica <FrontaUdalosti, Bojisko, Aktívni roboti>, kde FrontaUdalosti je fronta objektov, ktoré sú na rade, aby zmenili časť sveta. Presný spôsob definovania poradia je popísaný neskôr.
+Svet je je dvojica $< FrontaUdalosti, Bojisko >$, kde FrontaUdalosti je fronta objektov, ktoré sú na rade, aby komunikovali so svetom. Presný spôsob definovania poradia tejto komunikácie je popísaný neskôr. Objekty v tejto fronte sa počas priebehu boja menia, napríklad pribúdajú a zanikajú strely, ktoré sú podla \ref{defobjekty} tiež objektami.
 \end{definicia}
-Popis jednotlivých inštrukcií a ich vplyv na svet je symbolicky popísaný takto: (bez aramterov, ktoré nemajú vplyv na svet):\\
-prikazy komunikujúce so svetom:\\
-$ step \left\{ \begin{array}{ll} Svet: & <f.pop()+reschedule(objekt),m.reinsert(objekt), b> \\ Bot: & < IS, IP + 1, HP, x+direct.y, y+ direct.y, direct> \end{array}\right.  $\\
-$ turnLeft \left\{ \begin{array}{lc} Svet: & <f.pop()+reschedule(objekt),m, b> \\ Bot: & < IS, IP + 1, Hp, x, y, NewDirect)> \end{array}\right.  $\\
-$ turnRight \left\{ \begin{array}{lc} Svet: & <f.pop()+reschedule(objekt),m, b> \\ Bot: & < IS, IP + 1, Hp, x, y, NewDirect)> \end{array}\right.  $\\
-$turn  \left\{\begin{array}{lc} Svet: & <f.pop()+reschedule(objekt),m,b> \\ Bot: & <IS, IP+1, Hp, X, Y, NewDirect)> \end{array}\right. $\\
-$see  \left\{\begin{array}{lc} Svet: & <f.pop()+reschedule(objekt),m,b> \\ Bot: & <IS, IP+1, Hp, X, Y, NewDirect)> \end{array}\right. $\\
-$shoot \left\{\begin{array}{lc} Svet: & <f.pop()+reschedule(objekt,Strela),m,b> \\ Bot: & <IS, IP+1, Hp, X, Y, NewDirect)> \end{array}\right. $\\
+
+Pre všetky nasledujúc inštrukcie interagujúce so svetom predpokladajme, že svet je v stave $<FrontaUdalosti, Bojisko>$, kde FrontaUdalostí je postupnosť objektov $(robot X, objekt1, objekt2, objekt3,...objektN)$ a Bojisko je dvojrozmerná matica popisujúca, aké objekty sú na akých pozíciach.
+Popis jednotlivých inštrukcií a ich vplyv na svet je symbolicky popísaný takto: (bez parameterov, ktoré nemajú vplyv na svet):\\
+\newline
+step:\begin {itemize}
+\item Svet:$ < NewQueue, m.reinsert(X) > $
+\item Bot: $ < NewIP, HP, direct> $
+\end {itemize}
+turnLeft, turnRight \begin{itemize}
+\item $Svet:  <NewQueue, m>$
+\item $Bot:  < NewIP, Hp, NewDirect)>$
+\end{itemize}
+turn  \begin{itemize}
+\item $Svet:  < NewQueue, m > $
+\item $Bot:   < NewIP, Hp, NewDirect)> $
+\end {itemize}
+see  \begin{itemize}
+\item $Svet:  <NewQueue,m> $
+\item $ Bot:  < NewIP, Hp, NewDirect)> $
+\end {itemize}
+shoot \begin {itemize}
+\item $ Svet:  < AddQueue, m> $ 
+\item $ Bot:  < NewIP, Hp, Direct)>  $
+\end {itemize}
 \indent
-Ďalšie ištrukcie vôbec nekomunikujú so svetom, preto sú uvedene oddelene. Tieto inštrukcie robot vykonáva počas svojho premýšľania. Keďze tým robot vobec nepotrebuje vedieť o objektov sveta iných než je on sám, po prevedení takýchto inštrukcií sa meni stav robota takto:
+kde NewQueue je \\ $(Objekt_1, Objekt_2, ..., Objekt_K, X, Objekt_{k+1},.., Objekt_N)$, NewIP je nový ukazateľ do programu robota, nie nutn odlišný od predošlého, NewDirect je číslo 1-4 označujúce aktuálne natočenie robota, reinsert je funkcia, ktorá sa pokúsi robotom pohnut v mape, ak sa nedá vyvolá sa ošetrenie kolízií a AddQueue je\\ $(Objekt_1, Objekt_2, ...,Object_{strela},..., Objekt_K, X, Objekt_{k+1},.., Objekt_N)$ (strela bude na rade typicky pred robotom, ktorý j vypustil, pretože ten robot sa preplánuje, ale strela ešte na rade nebola, tak mś vyššiu prioritu.)
+Ďalšie inštrukcie vôbec nekomunikujú so svetom, preto sú uvedené oddelene. Tieto inštrukcie robot vykonáva počas svojho premýšľania. Keďze tým robot vobec nepotrebuje vedieť o objektov sveta iných než je on sám, po prevedení takýchto inštrukcií sa meni stav robota podla tabuľky \ref{VnutroBota},kde IP+1 znamená posun v atuálneho pointera v programe robota o jednu inštrukciu ďalej, AddedIP je uloženie aktuálneho pointera na inštrukciu a vyhlásenie iného pointera za aktuálny (typicky začiatok pricedúry alebo funkcie), VariablesAdded je pamať robota rozrastená o premenné danej funkcie alebo procedúry v danom zanorení, ClearVariables je označenie premennych definovaných v tomto bloku za neplatné, LoadByName je uloženie hodnoty volanej premennej na ValueStack, AddedResult je uloženie výsledku aritmetických operácií na ValueStack a DeleteIP je zrušenie aktuálneho pointera na funkciu a obnovenie predchádzajúceho na inštrukiu, pre ktrou bol prerušený. RemoveValue je spracovanie hodnoty zo ValueStacku a teda jej odobranie a odobranie premennej, do ktorej sa priradzuje.
 
 \begin{table}[ht]
 \centering
 \caption{Vnutorné príkazy robota}
-\begin{tabular}{l p{5cm} }
+\begin{tabular}{|l|p{5cm}|}
 \hline\hline
 Inštrukcia & Stav bota po inštrukcii \\
-store,aritmeticke+relacne operácie & $ <IS, IP[last]++, VS.add(result), t>$ \\
-Call &  $ <IS.push(function_call), IP.push(Function), VS, t.add(FunctionValues)> $ \\
-EndBlock & $ <IS.SetFree(block), IP[last]++, VS, t> $ \\
-Destroy & $ <IS, IP[last]++, VS, t.SetInactive(name)>$ \\
-Load & $ <IS, IP[last] ++, VS.push(name), t > $\\
-Label & $ <IS, IP[last] ++, VS, t > $\\
-Jump & $ <IS, IP-sizeof(jump), VS, t >$\\
+store & $ IP+1,RemoveParameters$\\
+aritmeticke+relacne operácie & $IP+1,AddedResult,m$ \\
+Call &  $ AddedIP,VS,VariablesAdded$\\
+StartBlock & $IP+1,VS,m$\\
+EndBlock & $IP+1,VS,ClearVariables$\\
+Load & $ IP+1,LoadByName,m$\\
+Label & $ IP+1,VS,m$\\
+Jump & $ DeleteIP,VS,t$\\
+\hline
 \end{tabular}
+\label{VnutroBota}
 \end{table}
 
-%\hline
-%JUMP & (InstruktionStack, Instructionpointer - LABEL, Hitpoints, X, Y, natocenie) & žiadny efekt až na preplánovanie \\ \hline               % inserting body of the table
-%CALL & FunctioName & (InstruktionStack + FunctionStack, Instructionpointer = AtFunctionStack, Hitpoints, X, Y, natocenie)& žiadny efekt až na preplánovanie \\\hline
-%EndFunction & (InstruktionStack - FunctionStack, Instructionpointer = AtPreviousState, Hitpoints, X, Y, natocenie)& žiadny efekt až na preplánovanie \\\hline
-%\hline                              %inserts single line
-%\end{tabular}
-%\end{table}
-
-\subsection{Priebeh penalizacie za instrukciu}
+\subsection{Vlastnosti stien} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
+Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú kominikovať s mapou. Sú to:\\
+\begin{itemize}
+\item zvláštne políčko Exit, na ktoré sa má robot dostať. Pokiaľ je políčok viac, a nie je difinované inak, robot sa musí dostať do toho najvzdialenejšieho exitu od miesta, kde začínal.
+\item MovableWall, touto stenou je možné pohnúť, ak na políčku za za ňou v smere pohybu nič nie je.
+\item TrapWall. Táto stena vždy na náhodný počet tikov zmizne a znova sa objaví. V prípade, že sa v okamžiku jej objavenia je na jej políčku nachádza iný objekt, ráta sa to ako kolízia, viz neskôr.%TODO referencia
+\item SolidWall, obyčajná stena bez špeciálnych vlastností.
+\end {itemize}
+Steny sa dajú kombinovať, to znamená, že napríklad východ sa môže pohybovať alebo miznúť. 
+\subsection{Viditeľnost robota}
+V úvode si užívateľ má možnost nastavit dve premenné, ktoré ovplyvňujú to, ako ďaleko bud robot vidieť. Sú to premenné  'uhol' a 'vzdialenoť'. Tieto premenné sa navzájom ovlyvňujú a teda počet bodov, ktorý sa medzi nich má rozdeliť, je nezávislý na počte bodov u ostatných vlastností robota. Maximálna veľkosť \'vzdialenosti\' je 32, uhol môže byť až $90\,^{\circ}$. Uhol je zadávaný v stupňoch aby sa predišlo načítavanie reálnych hodnôt a tým k strate informácií.
+\begin{definicia}
+Pod zorným poľom robota rozumieme kruhovú výseč o polomere 'vzdialenosti'.Robot vidí objekt v okamihu, ked vidí stred políčka, na ktorom objekt stojí a úsečka spájajúca tieto dva body nepretína žiadny ďalší objekt.
+\end{definicia}
+Vzdialenosť a uhol určujú obdĺžnik, ktorý obsahuje presnú polovicu zorného poľa robota.a Tento obdĺžnik môže mať vzhľadom na podmienku o zadávaní vzialenosti a uhla maximálne obsah 32. Pri vytváraní robota sa vygeneruje obdĺžnik a každému políčku sa priradí maska. Nech má obdĺžnik rozmery (x,y) a jeho dolný ľavý vrchol je na pozícií (0,0), čo je v podstate pozícia bota. Táto maska sa potom spočíta tak, že na vygeneruje úsečka spájajúca(0,0) postupne so všetkými stredmi políčok hornom trojuholníku. Každému políčku potom priradíme 32-bitovú masku, kde jedničky sú na pozíciach čísla toho políčka, cez ktoré táto úsečka prechádzala. Druhá polovica je presne symetrická, teda masky tejto polovičky nemusíme počítať zvlášť. Potom na zistenie, ktoré objekt sú viditeľné a ktoré nie, stačí v mape prejst tento obdĺžnik 2x (raz doľava a raz doprava) s počiatočnou maskou nulovou a v prípade, že sa na i-tom políčku zhoduje maska políčka s majou maskou binárne sčítanou s maskou políčka, na to políčko obot vidí. Ak tam je ďalej objekt, nastaví sa v skúšobnej maske na i.tom mieste nula, inak jedna. Ak sa masku nezhodujú, potom robot na toto políčko nevidí a skúšobná maska bude mať na i-tom mieste nulu.
+\indent
+\subsection{Priebeh penalizácie za inštrukciu}
 \begin{definicia}
 Penalizáciou za inštrukciu nazývam počet tikov, ktoré robot stratí, ak inštrukciu vykoná. Pre rôzne inštrukcie môže byť rôzna.
 \end{definicia}
-\indent
 V okamihu, keď je na rade vo fronte udalostí nejaký robot, začne robot premýšlať, akú ďalšiu akciu by mal so svetom spraviť. Podľa toho, ako dlho mu 'premýšľanie' sa potom zaradí do plánovaných objektov, viz \ref{thinking}. Dĺžka tejto akcie sa ale pre rovnaký počet inštrukcií pre dvoch rôznych botov môže a typicky bude líšiť. Je to spôsobené tým, že každá inštrukcia môže mať rozdielnu penalizáciu za vykonanie. Napríklad samostatné vykoanie inštrukcie 'step' musí byť niekoľko krát rýchlejšie ako povedzme inštrukcia, ktorá naloaduje hodnotu premennej, obzvlášť ak táto premenná už dlho loadovaná nebola. Ďalej inštrukcia, ktorá zavolá užívateľom definovanú funkciu, zaberie viac procerového času vzhladom na to, ćo musí spraviť so zásobníkom robota, a preto je táto skutočnosť zohľadnená. Podobne napríklad inštrukcie pre násobenie a delenie su zlošitejšie ako proste sčitanie a preto sú viac penalizované.\\
 \indent
 Robotovi môže týmto spôsobom samozrejme vypršať čas. V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá svojej možnosti interagovat so svetom a preplánuje sa. Preplánovanie prebieha tým spôsobom, že sa spočíta, kolko svojho času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnejcasovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. Samotné inštrukcie majú penalizáciu síce nenulovú, ale najmenšiu, čo odpovedá tomu, že je to pre bota prirodzená inštrukcia a zároveň sa tým zamedzuje tomu, aby robot v prípade samých takýchto inštrukcií nepustil na radu ostatné objekty. Objekty iné ako robot majú rovnako penalizáciu, ale vždy menšiu ako je timeout. Každý takýto objekt má ale už iba funkciu interagujúcu so svetom, takze sa po prevedení tejto akcie zase preplánujú.
