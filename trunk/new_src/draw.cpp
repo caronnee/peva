@@ -311,7 +311,6 @@ int min(int x, int y)
 }
 void Create_map::draw()
 {
-	std::cout <<"drawing";
 	tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
 	if (set == false)
 	{
@@ -345,10 +344,14 @@ void Create_map::draw()
 				else SDL_BlitSurface(tiles[FreeTile]->show(),NULL,g_screen,&rect);
 				rect.x+=IMG_WIDTH;
 				tile_x++;
+				if (tile_x == resolX)
+					break;
 			}
 			rect.x = window_begin_x;
 			rect.y += IMG_HEIGHT;
 			tile_y++;
+			if (tile_y == resolY)
+				break;
 			tile_x = begin_x;
 		}
 		//dokreslime panel
@@ -457,6 +460,7 @@ void Create_map::process_map()
 				{
 					case SDL_BUTTON_LEFT:
 						{
+							mouse_down = true;
 							int number = get_rect(w->event.button.x, w->event.button.y,rects,NumberOfMapDivision);
 							switch (number)
 							{
@@ -466,9 +470,9 @@ void Create_map::process_map()
 											  int x, y;
 											  x = w->event.button.x - rects[MAP].x;
 											  y = w->event.button.y - rects[MAP].y;
-											  std::cout << begin_x + x/IMG_WIDTH <<" " << begin_y + y/IMG_HEIGHT <<std::endl;
+											  if((begin_x + x/IMG_WIDTH >= resolX)|| (begin_y + y/IMG_HEIGHT >= resolY))
+												  return;
 											  map[begin_x + x/IMG_WIDTH][begin_y + y/IMG_HEIGHT] |= (1 << select);
-											  std::cout << "hodnota:" << map[begin_x + x/IMG_WIDTH][begin_y + y/IMG_HEIGHT];
 											  draw();
 										  }
 										  break;
@@ -500,13 +504,23 @@ void Create_map::process_map()
 										     }
 										     draw();
 										  break;}
-								case  LEFT:{std::cout << "left" <<std::endl;
+								case  LEFT:{ begin_x--; 
+										   if (begin_x < 0) begin_x = 0;
+										   draw();
 										  break;}
-								case  UP:{std::cout << "up" <<std::endl;
+								case  UP:{ begin_y--;
+										 if (begin_y < 0) begin_y = 0;
+										   draw();
 										  break;}
-								case  DOWN:{std::cout << "down" <<std::endl;
+								case  DOWN:{begin_y++;
+										   if (begin_y + rects[MAP].h/IMG_HEIGHT > resolY )
+											   begin_y--;
+										   draw();
 										  break;}
-								case  RIGHT:{std::cout << "right" <<std::endl;
+								case  RIGHT:{begin_x++;
+										    if (begin_x > resolX - rects[MAP].w/IMG_WIDTH)
+											    begin_x--;
+										   draw();
 										  break;}
 								default: std::cout  << "HE?" << std::endl;
 							}
@@ -522,6 +536,7 @@ void Create_map::process_map()
 			}
 		case SDL_MOUSEMOTION: //ina ak je stale pressed
 			{
+				//stejna fcia
 				break;
 			}
 	}
@@ -529,7 +544,7 @@ void Create_map::process_map()
 
 void Create_map::process()
 {
-	if (SDL_WaitEvent(&w->event) == 0){w->state.pop();return;}
+	if (SDL_WaitEvent(&w->event) == 0){w->state.pop();return;}//movement!
 	if (set) {
 		process_map();
 	}
