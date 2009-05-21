@@ -10,7 +10,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	Window w;
+	Graphic g;
+	Window w(&g);
 	ifstream config;
 	config.open(CONFIG);
 	if(!config.good())
@@ -26,7 +27,6 @@ int main(int argc, char *argv[])
 		o << "background=" << DEFAULT_BACKGROUND << std::endl;
 		o << "timeout=" << DEFAULT_TIMEOUT << std::endl;
 		o.close();	
-		w.Init_default();
 	}
 	else {
 		std::string line;
@@ -39,10 +39,9 @@ int main(int argc, char *argv[])
 			if (pos == std::string::npos) continue;
 			std::string name = line.substr(0,pos);
 			std::string par = line.substr(pos+1);
-			std::cout << name << std::endl;
-			if (name == "resolution") w.set_resolution(par);
-			if (name == "font-size") w.set_font_size(par);
-			if (name == "font") w.set_font(par);
+			if (name == "resolution") g.set_resolution(par);
+			if (name == "font-size") g.set_font_size(par);
+			if (name == "font") g.set_font(par);
 			if (name == "background") w.set_background(par);
 			if (name == "timeout") w.set_timeout(par);
 		}
@@ -58,6 +57,7 @@ int main(int argc, char *argv[])
 	{
 		w.state.top()->process();
 	}
-	w.Destroy();
+	g.Destroy();
+	w.Destroy(); //odalokovavanie premennych a podobne
 	return 0;
 }

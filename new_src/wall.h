@@ -1,3 +1,5 @@
+#ifndef __WALLS__
+#define __WALLS__
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "objects.h"
@@ -44,3 +46,4 @@ public:
 	ExitWall();
 	//virtual void damage(Object * sender);
 };
+#endif

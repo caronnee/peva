@@ -1,3 +1,5 @@
+#ifndef __OBJECTS__
+#define __OBJECTS__
 #include <SDL/SDL.h>
 //#include "board.h"
 
@@ -26,4 +28,4 @@ public:
 //	virtual void action(Walls *** game) = 0;
 	SDL_Surface * show();
 };
-
+#endif

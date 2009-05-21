@@ -1,8 +1,6 @@
 #include <vector>
 #include <SDL/SDL.h>
 
-extern SDL_Surface * g_screen;
-
 class Board
 {
 	int min_y;
