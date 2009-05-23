@@ -20,8 +20,15 @@ class Create_map:public Menu
 		NumberOfMapDivision
 	};
 
+	enum Win_type
+	{
+		RESOLUTION = 0,
+		DRAW,
+		SAVING
+	};
 	Window * w;
-	bool set,x; //x = oddelovac u resolution
+	Win_type state;
+	bool x; //x = oddelovac u resolution
 	bool mouse_down; //bola vybrana/ uklada sa tile
 
 	int begin_x, begin_y;
@@ -36,6 +43,13 @@ class Create_map:public Menu
 	Tile * tiles[NumberOfWalls_ -1];
 	SDL_Rect tile_rect[NumberOfWalls_];
 	SDL_Rect rects[NumberOfMapDivision];
+
+	SDL_Surface * info_o;
+	std::string info;
+	int info_width;
+	std::string file_name;
+	SDL_Rect file_r;
+
 /*	SDL_Rect ** map_rects;
 	int map_rects_number;
 	int offset_x, offset_y;*/
@@ -47,6 +61,8 @@ class Create_map:public Menu
 	void process_map();
 	void process_resolution();
 	void draw_resol();
+	void saving();
+	bool save();
 	void reset();
 public:
 	Create_map(Window * w_);

@@ -51,6 +51,7 @@ bool Graphic::Init()
 		std::cerr << "Unable to open font: " << TTF_GetError() << std::endl;
 		return false;
 	}	
+	SDL_EnableUNICODE(true);
 	//SDL_Rect ** r = SDL_ListModes(g->g_screen->format,WIN_FLAGS|SDL_FULLSCREEN);
 	/*int i =0;
 	  if (r == NULL ) { std::cout << "awekfgajesgfbewa" <<std::endl; return false;}
@@ -94,6 +95,7 @@ void Graphic::set_font_size(std::string s)
 //------------------------------------------------WINDOW-----------------------------------------------------
 Window:: Window(Graphic * g_)
 {
+	back = DEFAULT_BACKGROUND;
 	timeout = DEFAULT_TIMEOUT;
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	g = g_;
@@ -103,6 +105,7 @@ bool Window::Init()
 {
 	// Inicializace SDL
 	bool b = g->Init();
+	std::cout << "__" <<back << std::endl;
 	background = IMG_Load(back.c_str());
 	if (background == NULL) std::cout << "Backgound image not found!" <<std::endl;
 	main_menu = new Main(this); //TODO  nieco ako set_main
@@ -151,6 +154,7 @@ void Window::set_timeout(std::string time)
 
 void Window::set_background(std::string res)
 {
+	std::cout << "found" << std::endl;
 	back = res;
 }
 
