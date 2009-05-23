@@ -251,20 +251,74 @@ void Create_map::process_resolution()
 			}
 	}
 }
-bool Create_map::save() // vracia ci sa podarilo zapamatat do subory alebo nie
+bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 {
-	//TODO slovnikova metoda
+	//TODO uistit sa, ze to podpurujeme, ak nie, iny format (napriklad cisto textovy, fuj!:)
+	xmlDocPtr doc = NULL;
+	xmlNodePtr root_node = NULL;
+
+	LIBXML_TEST_VERSION;
+
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root_node = xmlNewNode(NULL,BAD_CAST "map");
+	xmlDocSetRootElement(doc, root_node);
+
+	xmlNewProp(root_node, BAD_CAST "width", BAD_CAST written_x.c_str());
+	xmlNewProp(root_node, BAD_CAST "heigth", BAD_CAST written_y.c_str());
+	
+	int x = 0, y = 0;
+	int write_x, write_y;
+	bool found = false;
+	xmlNodePtr tile = NULL;
+	xmlNodePtr line = NULL;
+	std::string walls[] = {"FreeTile","Solid Wall","Pushable Wall","Trap Wall","Exit"};//TODO dat to do statit niekam medzi walls
+	int from,to;
+	for (int i = 1; i< NumberOfWalls_; i++)
+	{
+		int wall = 1 << i;
+		tile = xmlNewChild(root_node,NULL,BAD_CAST walls[i].c_str(),NULL);
+		for (y = 0; y < resolY; y++)
+		{
+			for (x = 0; x < resolX; x++)
+			{
+				if ((map[x][y] & wall)&&(!found)) //prva najdena
+				{
+					from = x;
+					found = true;
+				}
+				if ((!(map[x][y]&wall)) && (found))
+				{
+					if (line == NULL) //ak sme este nic nenasli, privesim line
+					{
+						std::string l= "line" + deconvert(y);
+						line = xmlNewChild(tile,NULL,BAD_CAST l.c_str(),NULL);
+					}
+					xmlNodePtr n;
+					std::string range = deconvert(from) + "-"+ deconvert(x);
+					n = xmlNewChild(line,NULL,BAD_CAST "range",BAD_CAST range.c_str());
+					found = false;
+				}
+			}
+			line = NULL;
+		}
+	}
+
+
+	xmlSaveFormatFileEnc(file_name.c_str(),doc, "UTF-8",1);
+
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
 	return true;
 }
 void Create_map::saving()
 {
 	//napis do stredu vyzvus menom, meno nesmie byt viac ako povedzme 8 pismen
-	SDL_WaitEvent(&w->g->event);
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
 			{
-				switch (w->g->event.key.keysym.sym)
+				Uint16 znak = w->g->event.key.keysym.unicode;
+				switch(znak)
 				{
 					case SDLK_ESCAPE:
 						{
@@ -282,23 +336,38 @@ void Create_map::saving()
 							w->state.pop();
 							break;
 						}
-					case SDLK_LSHIFT:case SDLK_RSHIFT: break;
 					default:
 						{
-							std::cout << "here!"<<std::endl;
-							std::cout << "znak:" << (int)w->g->event.key.keysym.unicode;
-							file_name+=w->g->event.key.keysym.sym; //TODO zistit ako funuje unicode
+							std::string temp;
+							if (znak!=0)
+								file_name+=(char) w->g->event.key.keysym.unicode; //TODO zistit ako funuje unicode
+							if (temp==file_name)
+							{
+								break;
+							}
+
 							SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
+							if (s == NULL)
+								std::cout << "something's reeealy realy wrong" <<std::endl;
 							SDL_Rect r = file_r;
 							r.y+=TTF_FontLineSkip(w->g->g_font);
 							SDL_BlitSurface(s, NULL, w->g->g_screen, &r);
 							SDL_Flip(w->g->g_screen);
+							std::cout << "blitted" <<std::endl;
+							SDL_FreeSurface(s);
+							break;
 						}
 				}
-				std::cout << "OK!" <<std::endl;
+				break;
+			}
+		case SDL_QUIT:
+			{
+				while(!w->state.empty())
+					w->state.pop();
 			}
 	}
 }
+
 void Create_map::process_map()
 {
 	//TODO if SLD_KEY PRESSED, do last action
@@ -432,6 +501,7 @@ void Create_map::process()
 	}
 	if (state == SAVING)
 	{
+		std::cout << "start saving function" << std::endl;
 		saving();
 	}
 }
