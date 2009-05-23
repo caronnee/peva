@@ -1,10 +1,10 @@
 CFLAGS=-O0 -g -Wall
-LDFLAGS= `sdl-config --cflags --libs`  -lSDL_ttf -lSDL_image
+LDFLAGS= `sdl-config --cflags --libs` -lSDL_ttf -lSDL_image `xml2-config --cflags --libs`
 
 all: codewars
 
 distclean: 
-		rm -f codewars *.o
+		rm -f codewars *.o codewars.config
 
 codewars: game.o draw.o objects.o wall.o help.o create.o main_menu.o other.o
 		g++ $(LDFLAGS) -o codewars game.o draw.o wall.o objects.o create.o main_menu.o other.o help.o
@@ -25,7 +25,7 @@ help.o:help_functions.h help_functions.cpp
 		g++ -c $(CFLAGS) -o help.o help_functions.cpp
 
 create.o:create_map.h create_map.cpp
-		g++ -c $(CFLAGS) -o create.o create_map.cpp
+		g++ -c `xml2-config --cflags` -o create.o create_map.cpp
 
 main_menu.o:main_menu.h main_menu.cpp
 		g++ -c $(CFLAGS) -o main_menu.o main_menu.cpp

@@ -1,3 +1,5 @@
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include "create_map.h"
 #include "help_functions.h"
 
@@ -19,7 +21,17 @@ Create_map::Create_map(Window *w_)
 		resol[i] = TTF_RenderText_Solid(w->g->g_font,s[i].c_str(),w->g->normal);
 		TTF_SizeText(w->g->g_font,s[i].c_str(),&resol_width[i],NULL);
 	}//TODO! po esc spat na resolution a resize
-	
+
+	info = "Zadajte meno suboru";
+	info_width;
+	TTF_SizeText(w->g->g_font,info.c_str(),&info_width,NULL); 
+	info_o = TTF_RenderText_Solid(w->g->g_font,info.c_str(), w->g->normal);//TODO prehodit do kontruktora
+
+	file_r.y = w->g->g_screen-> h/2 - 2*TTF_FontLineSkip(w->g->g_font);
+	file_r.x = w->g->g_screen->w /2 - info_width/2;
+	file_r.w = info_width+20;
+	file_r.h = 3*TTF_FontLineSkip(w->g->g_font);
+
 	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
 	rects[UP].w = rects[DOWN].w = w->g->g_screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[CHOOSE].w = 2*IMG_WIDTH; //TODO! co aj sa to bude menit? Da sa z SDL_Surface zistit vyska sirka, TODO!
@@ -79,7 +91,8 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 }
 void Create_map::reset()
 {
-	set = false;
+	state = RESOLUTION;
+	file_name = "";
 	x = false;
 	select = NumberOfWalls_;
 	mouse_down = false;
@@ -120,7 +133,7 @@ void Create_map::draw_resol()
 void Create_map::draw()
 {
 	w->tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
-	if (set == false)
+	if (state == RESOLUTION)
 	{
 		draw_resol();
 	}
@@ -208,7 +221,7 @@ void Create_map::process_resolution()
 						}
 					case SDLK_RETURN: 
 						{ 
-							set = true;
+							state = DRAW;
 							resolX = convert(written_x);
 							resolY = convert(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
 							map = new unsigned int*[resolX];
@@ -238,7 +251,54 @@ void Create_map::process_resolution()
 			}
 	}
 }
-
+bool Create_map::save() // vracia ci sa podarilo zapamatat do subory alebo nie
+{
+	//TODO slovnikova metoda
+	return true;
+}
+void Create_map::saving()
+{
+	//napis do stredu vyzvus menom, meno nesmie byt viac ako povedzme 8 pismen
+	SDL_WaitEvent(&w->g->event);
+	switch (w->g->event.type)
+	{
+		case SDL_KEYDOWN:
+			{
+				switch (w->g->event.key.keysym.sym)
+				{
+					case SDLK_ESCAPE:
+						{
+							reset();
+							w->state.pop();
+							break;
+						}
+					case SDLK_RETURN:
+						{
+							if (!save())
+								do 
+									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis!
+								while (w->g->event.type != SDL_KEYDOWN);
+							reset();
+							w->state.pop();
+							break;
+						}
+					case SDLK_LSHIFT:case SDLK_RSHIFT: break;
+					default:
+						{
+							std::cout << "here!"<<std::endl;
+							std::cout << "znak:" << (int)w->g->event.key.keysym.unicode;
+							file_name+=w->g->event.key.keysym.sym; //TODO zistit ako funuje unicode
+							SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
+							SDL_Rect r = file_r;
+							r.y+=TTF_FontLineSkip(w->g->g_font);
+							SDL_BlitSurface(s, NULL, w->g->g_screen, &r);
+							SDL_Flip(w->g->g_screen);
+						}
+				}
+				std::cout << "OK!" <<std::endl;
+			}
+	}
+}
 void Create_map::process_map()
 {
 	//TODO if SLD_KEY PRESSED, do last action
@@ -286,7 +346,14 @@ void Create_map::process_map()
 										  break;
 									  }
 								case  SAVE:{std::cout << "save" <<std::endl;
-										   break;}
+										   SDL_Rect r = file_r;
+										   SDL_FillRect(w->g->g_screen, &r,0);
+										   r.x+=10;
+										   SDL_BlitSurface(info_o,NULL,w->g->g_screen,&r);
+										   SDL_Flip(w->g->g_screen);
+										   state = SAVING;
+										   break;
+									   }
 								case  GENERATE:{std::cout << "generate" <<std::endl;
 										  break;}
 								case  EXIT:{std::cout << "exit" <<std::endl;
@@ -353,13 +420,19 @@ void Create_map::process_map()
 void Create_map::process()
 {
 	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}//movement!
-	if (set) {
+	if (state == DRAW) {
 		process_map();
+		return;
 	}
-	else 
+	if (state == RESOLUTION)
 	{
 		process_resolution();
 		draw();//TODO opravit iba tu cast screenu, co sa pokazila
+		return;
+	}
+	if (state == SAVING)
+	{
+		saving();
 	}
 }
 
