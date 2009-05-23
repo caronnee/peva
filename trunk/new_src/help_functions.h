@@ -7,4 +7,5 @@ int min(int x, int y);
 
 unsigned int convert(std::string s);
 
+std::string deconvert(int i);
 #endif
