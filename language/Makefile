@@ -25,3 +25,6 @@ biflex.o:parser_functions.h parser_functions.cpp
 
 distclean:
 	rm -f *.o bparser parser.cpp bison.cpp bison.hpp
+
+run:
+	./bparser vstup

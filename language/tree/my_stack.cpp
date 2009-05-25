@@ -6,6 +6,11 @@ Instruction::Instruction(InstructionType t, std::string p)
 	instruction = t;
 	parameter = p;
 }
+
+Location::Location(int x_, int y_)
+{
+	x = x_; y = y_;
+}
 Node::Node() //toto sa normalne nebude pouzivat
 {
 	last_access = 0;

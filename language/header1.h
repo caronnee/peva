@@ -33,7 +33,7 @@ struct Lval {
 	int number;
 	std::string ident; //+mozno este nejake sa njdu
 	float f_number;
-	std::vector<Array> arrays;
+	std::vector<int> ranges;
 	//block
 	Instructions block;
 	std::vector<Node *> names;
