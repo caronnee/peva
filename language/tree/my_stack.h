@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-#define MaxItems 5
+#define MaxItems 2
 
 enum InstructionType
 {
@@ -14,6 +14,7 @@ enum InstructionType
 	InstructionLabel, //kam ma skocit po nejakom jumpe
 	IntructionReturn,
 	IntructionLeaveBlock,//zneplatni vsetky premenne deklarovane v tomto bloku, deklarovanie spravene bisonom
+	InstructionStartBlok,
 
 	IntructionLess,
 	IntructionMore,
@@ -51,40 +52,57 @@ struct Instruction
 	std::string parameter;
 	Instruction(InstructionType t, std::string s);
 };
+
+struct Node;
+
+struct Array
+{
+	int size;
+	Type t;
+	std::vector<Node> values;
+};
+
+struct Point
+{
+	int x, y;
+};
 struct Node //policko stromu
 {
 	std::string name;
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
 	Type type;
-	int ProgramPointer;//na jake miesto v stacku sa zara
 	int active; //bola deklarovana v danom bloku
 	int IntegerValue;
 	float RealNumber;
-	//array
-//	Position LocationValue;
+	Array * array;
+	Point LocationValue;
 //	Object objectValue;
 	Node();
 	Node(std::string s,Type t);
 };
+
 struct Tree
 {
 	bool inner_node;
 	int depth;
 	Tree * next[256];//TODO dyamicke linkovanie
-	std::list<Node> items;//potom budeme posielat & ako adresu -> ok
+	std::list<Node *> items;//ukazatel z jednoducheho dovodu -> inak je to prasarna, vyparsovavat z listu:)
 	Tree();
 	Tree(int d);
 };
-struct BotProgram
+typedef std::vector<Instruction> Instructions;
+typedef std::vector<Node *> Values;
+struct Program
 {
 	std::string alphabet;
 	Tree defined;//root burst stromu
-	std::vector<Instruction> instructions;//obrovsky switch na to co ma s cim robit
-	std::vector<Node * > valueStack;//stack ukazatelov do stromu
+	Instructions instructions;//obrovsky switch na to co ma s cim robit
+	Values values;//stack ukazatelov do stromu
 
-	BotProgram();
+	Program();
 	void output(Tree * t);
 	int find_index(char a);
 	Tree * find_string(std::string);
-	void add_string(std::string name,Type type);
+	Node * add_string(std::string name,Type type);
+	std::list<Node * > const_numbers; //aby sme pokazde nemuseli pridavat 
 };
