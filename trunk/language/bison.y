@@ -14,7 +14,7 @@
 
 /* keywords */
 %token TOKEN_MAIN
-%token TOKEN_POINT
+%token TOKEN_LOCATION
 %token TOKEN_OBJECT
 %token TOKEN_VAR
 %token TOKEN_FUNCTION
@@ -49,17 +49,18 @@
 %token TOKEN_MINUSMINUS
 
 /* group tokens */
-%token TOKEN_OPER_REL
+%token<operation> TOKEN_OPER_REL
 
-%token TOKEN_OPER_SIGNADD
-%token TOKEN_OPER_MUL
+%token<operation> TOKEN_OPER_SIGNADD
+%token<operation> TOKEN_OPER_MUL
 
 %type<names> params
 %type<block> block_of_instructions
 %type<names> names
 %type<names> point_name
 %type<names> array_names
-%type<node> number;
+%type<node> number
+%type<ranges> ranges
 
 %start program
 %error-verbose
@@ -74,22 +75,27 @@ program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_ins
 	;
 params:	/*	ziadne parametre	*/ {$$.clear()}
       	| params TOKEN_VAR names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
-	| params TOKEN_POINT point_name TOKEN_SEMICOLON {add(program, $3, TypeLocation);}
+	| params TOKEN_LOCATION point_name TOKEN_SEMICOLON {}//tot sa vyriesi samo, kedze vieme, ze ide o point
 	| params TOKEN_OBJECT names TOKEN_SEMICOLON {add(program, $3, TypeObject);}
-	| params TOKEN_ARRAY TOKEN_POINT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_POINT);}
-	| params TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_POINT);}
-	| params TOKEN_ARRAY TOKEN_OBJECT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_POINT);}
+	| params TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON  {add_array($4, TypeLocation);}
+	| params TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
+	| params TOKEN_ARRAY TOKEN_OBJECT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
 	;
+//OK
 point_name: TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
-	  TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN number TOKEN_COMMA number TOKEN_END //to, ze to bude real alebo cos, sa vyriesi neskor
-	  ;
-array_names: TOKEN_IDENTIFIER 
-	|array_names TOKEN_COMMA TOKEN_IDENTIFIER
-	|TOKEN_IDENTIFIER ranges /*pre definovanie kolko pola bude volneho, aby sa nezahltila pamat*/
-	|array_names TOKEN_IDENTIFIER ranges
+	| TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END {add(program,$1,Location($4,$6));}
+	| point_name TOKEN_COMMA TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
+	| point_name TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END  {add(program, $3, Location($6,$8));}
 	;
-ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
-      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
+//OK
+array_names: TOKEN_IDENTIFIER {$$.push_back(add_array(program, $1));}
+	|array_names TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back(add_array(program,$3));$$=$1;}
+	|TOKEN_IDENTIFIER ranges {$$.push_back(add_array(program, $1, $2));}/*pre definovanie kolko pola bude volneho, aby sa nezahltila pamat*/
+	|array_names TOKEN_IDENTIFIER ranges {$1.push_back(add_array(program,$2,$3));$$ = $1;}
+	;
+//OK
+ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA {$$.clear();$$.push_back($2);}
+      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $1.push_back($3); $$ = $1;}
 	;
 names:	TOKEN_IDENTIFIER {add(program, $1, TypeUndefined);}
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN number // {add(program, $1);}
@@ -109,7 +115,7 @@ number:TOKEN_OPER_SIGNADD TOKEN_REAL
       |TOKEN_REAL
       |TOKEN_UINT
 	;
-block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ 
+block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ {$$.clear();}
 	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */
 	|TOKEN_BEGIN commands TOKEN_END /* neprazdne instrukcie*/
 	;
@@ -126,8 +132,8 @@ command:TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLO
 	|call_fce TOKEN_SEMICOLON
 	|TOKEN_VAR names TOKEN_SEMICOLON
 	|TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON
-	|TOKEN_ARRAY TOKEN_POINT array_names TOKEN_SEMICOLON
-	|TOKEN_POINT names TOKEN_SEMICOLON
+	|TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON
+	|TOKEN_LOCATION names TOKEN_SEMICOLON
 	|assign TOKEN_SEMICOLON
 	|variable TOKEN_PLUSPLUS
 	|variable TOKEN_MINUSMINUS

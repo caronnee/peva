@@ -59,14 +59,15 @@ struct Node;
 
 struct Array
 {
-	int size;
+	std::vector<int> range; //pre viacrozmenre pole
 	Type t;
 	std::vector<Node> values;
 };
 
-struct Point
+struct Location
 {
 	int x, y;
+	Location(int x = 0, int y = 0);
 };
 struct Node //policko stromu
 {
@@ -77,8 +78,8 @@ struct Node //policko stromu
 	int IntegerValue;
 	float RealNumber;
 	Array * array;
-	Point LocationValue;
-//	Object objectValue;
+	Location LocationValue;
+//	Object * objectValue;
 	Node();
 	Node(std::string s,Type t);
 };
