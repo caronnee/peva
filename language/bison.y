@@ -1,19 +1,21 @@
 %{
 	#include "header1.h"
 	#include <stdio.h>
+	#include "parser_functions.h"
 
 	#define YYSTYPE Lval 
 	#define YYLTYPE unsigned
 	#define YYLLOC_DEFAULT(cur, rhs, n)	do { if(n) (cur)=(rhs)[1]; else (cur)=(rhs)[0]; } while(0)
 
 	#define YYERROR_VERBOSE 1		
-	static void yyerror(YYLTYPE *line, int* ctx, const char *m);
+	static void yyerror(YYLTYPE *line, Program* ctx, const char *m);
 
 %}
 
 /* keywords */
 %token TOKEN_MAIN
 %token TOKEN_POINT
+%token TOKEN_OBJECT
 %token TOKEN_VAR
 %token TOKEN_FUNCTION
 %token TOKEN_ARRAY
@@ -24,20 +26,18 @@
 %token TOKEN_FOR
 %token TOKEN_BOOL_AND
 %token TOKEN_BOOL_OR
-%token TOKEN_NOT
 %token TOKEN_RETURN
 %token TOKEN_BREAK
 
 /* literals */
-%token TOKEN_IDENTIFIER
-%token TOKEN_UINT
-%token TOKEN_REAL
+%token<ident> TOKEN_IDENTIFIER
+%token<number> TOKEN_UINT
+%token<f_number> TOKEN_REAL
 
 /* delimiters */
 %token TOKEN_SEMICOLON
 %token TOKEN_DOT
 %token TOKEN_COMMA
-%token TOKEN_EQ
 %token TOKEN_LPAR
 %token TOKEN_RPAR
 %token TOKEN_LSBRA
@@ -50,34 +50,50 @@
 
 /* group tokens */
 %token TOKEN_OPER_REL
+
 %token TOKEN_OPER_SIGNADD
 %token TOKEN_OPER_MUL
+
+%type<names> params
+%type<block> block_of_instructions
+%type<names> names
+%type<names> point_name
+%type<names> array_names
+%type<node> number;
 
 %start program
 %error-verbose
 %pure-parser
-%parse-param {int *ctx}
-%lex-param {int *ctx}
+%parse-param {Program *program}
+%lex-param {Program *program}
 %locations
 
 %%
 
-program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions
+program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // {add_main_code(program, block_of_instructions);}
 	;
-params:	/*	ziadne parametre	*/
-      	| params TOKEN_VAR names TOKEN_SEMICOLON
-	| params TOKEN_ARRAY TOKEN_POINT array_names TOKEN_SEMICOLON
-	| params TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON
-	| params TOKEN_POINT names TOKEN_SEMICOLON
+params:	/*	ziadne parametre	*/ {$$.clear()}
+      	| params TOKEN_VAR names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
+	| params TOKEN_POINT point_name TOKEN_SEMICOLON {add(program, $3, TypeLocation);}
+	| params TOKEN_OBJECT names TOKEN_SEMICOLON {add(program, $3, TypeObject);}
+	| params TOKEN_ARRAY TOKEN_POINT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_POINT);}
+	| params TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_POINT);}
+	| params TOKEN_ARRAY TOKEN_OBJECT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_POINT);}
 	;
-array_names: TOKEN_IDENTIFIER
+point_name: TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
+	  TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN number TOKEN_COMMA number TOKEN_END //to, ze to bude real alebo cos, sa vyriesi neskor
+	  ;
+array_names: TOKEN_IDENTIFIER 
 	|array_names TOKEN_COMMA TOKEN_IDENTIFIER
-	|TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA /*pre definovanie kolko pola bude volneho, aby sa nezahltila pamat*/
-	|array_names TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
+	|TOKEN_IDENTIFIER ranges /*pre definovanie kolko pola bude volneho, aby sa nezahltila pamat*/
+	|array_names TOKEN_IDENTIFIER ranges
 	;
-names:	TOKEN_IDENTIFIER
-	|TOKEN_IDENTIFIER TOKEN_ASSIGN number
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER 
+ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
+      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA
+	;
+names:	TOKEN_IDENTIFIER {add(program, $1, TypeUndefined);}
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN number // {add(program, $1);}
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER {add(program, $3, TypeUndefined);}
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number 
 	;
 declare_functions: /*	ziadne deklarovane funkcie	*/
@@ -117,7 +133,7 @@ command:TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLO
 	|variable TOKEN_MINUSMINUS
       	;
 assign: variable_left TOKEN_ASSIGN variable
-	|variable_left TOKEN_ASSIGN number
+	|variable_left TOKEN_ASSIGN number //TODO anonymna premenna, nestoji mnoho
 	;
 variable_left: TOKEN_IDENTIFIER /* musi byt pole, point alebo nejaka ina shopna struktura */
 	| TOKEN_IDENTIFIER array_access
@@ -170,8 +186,6 @@ expression:	expression_add
 	;
 expression_bool_base: expression
 	|expression TOKEN_OPER_REL expression
-	|expression TOKEN_EQ expression
-	|expression TOKEN_NOT expression
 	;
 expression_bool_or: expression_bool_base
 	| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
@@ -183,28 +197,30 @@ expression_bool: expression_bool_or
 
 extern FILE * yyin;
 
-static void yyerror(unsigned *line, int* ctx, const char *message)
+static void yyerror(unsigned *line,Program* ctx, const char *message)
 {
 	printf("Co to, co to? %s, line %d\n", message, *line);
 }
 
 int main(int argc, char ** argv)
 {
-if(argc<2)
-    {
-	puts("Kde mam vstup, ha?\n");
-	return 16;
-    }
+	if(argc<2)
+    	{
+		puts("Kde mam vstup, ha?\n");
+		return 16;
+    	}
 
-if((yyin=fopen(argv[1], "r"))==0)
-    {
-	puts("Vstup je divny\n");
-	return 16;
-    }
+	if((yyin=fopen(argv[1], "r"))==0)
+    	{
+		puts("Vstup je divny\n");
+		return 16;
+    	}
 
-int q;
-yyparse(&q);
-    fclose(yyin);
+	Program q;
+	q.add_string(".", TypeUndefined);//anonymna premenna
+	yyparse(&q);
+    	fclose(yyin);
+	q.output(&q.defined);
 	return 0;	
 }
 

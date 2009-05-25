@@ -2,7 +2,7 @@
 
 #define POHYB 4
 
-Dvojica::Dvojica()
+Dvojica::Dvojica() //TODO position
 	{
 		x=rand();
 		y=rand();
@@ -49,16 +49,6 @@ Delty& Delty::operator=(const Delty& a) //idelanejsie, aby vracala referenciu na
 		this->velkost=a.velkost;
 		return *this;
 	}
-	/*void add(Delty a)
-	{
-		//dojdi na koniec a tam pridaj a
-		Delty* x=this;
-		while (x->next!=NULL)
-		{
-			x=x->next;
-		}
-		x->next=new Delty(a);
-	}*/
 void Had::vytvorDelty()
 	{
 		//potom vytvorit na to nejaky algoritm	

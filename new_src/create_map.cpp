@@ -308,7 +308,51 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
-	return true;
+	return true; //TODO checkovanie, ci sa to podarilo
+}
+void Create_map::generuj(Position resolution)
+{
+	//zaplnime to solidnymi stenami vsetko
+	int exits = 0;//musi byt aspon jeden exit
+	for (int i = 0; i < width; i++)
+		for (int j = 0; j < heigth; j++)
+			map[i][j] = SolidWall_;
+	//vypocitaj, kolko hadov by sa na to hodilo
+	Snakes snake(resolution);//automaticky random x,y zaciatok, vitality 
+	//zivotnost, to, ze existuje cesta k cielu sa vygeneruje jednoducho, iba vedla zozratych stien sa generuju exity
+	Position p1,p2,n; //normal
+	//Snake je normalny had, Snakes je list hadov
+	while(!snake.empty())
+	{
+		p1 = p2 = snake.location();
+		n.x = snake.direction().y;
+		n.y = snake.direction().y * (-1); //normala
+		int type = srand()%(2*NumberOfWalls_);
+		for (int i =0; i< snake.robust(); i++)
+		{
+			map[p1.x][p1.y] = FreeTile;
+			map[p2.x][p2.y] = FreeTile;
+			p1+=n;
+			p2-=n;
+			p1.clip(resolution);
+			p2.clip(resolution);
+		}
+		if (type < NumberOfWalls_)
+		{	
+			int where = srand()%3;
+			       if ((where & 2) && (map[p1.x][p1.y]!=FreeTile))
+			       {
+				       map[p1.x][p1.y] &= ~(1 << type);
+				       map[p1.x][p1.y] |= 1 << type;
+			       }
+			       if ((where & 1) && (map[p2.x][p2.y]!=FreeTile))
+			       {
+				       map[p2.x][p2.y] &= ~(1 << SolidWall_);
+				       map[p2.x][p2.y] |= 1 << type;
+			       }
+		}
+		snake.pohyb();//ak sa v pohne x_krat, vytvor dalsieho mensieho
+	}
 }
 void Create_map::saving()
 {

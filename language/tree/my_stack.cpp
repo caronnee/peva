@@ -50,26 +50,30 @@ Program::Program()
 {
 	alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";//vsetky znaky, co a poauzivame v identifikatoroch
 	alphabet = quicksort(alphabet);//zasortime aby sme mohli pouzivat pulenie intervalu
+	error = false;//TODO pridat errorou hlasku
 }
 int Program::find_index(char a)
 {
 	int max = alphabet.length(); //za hranicu uz nesmie skocit
 	int min = 0; //zaciatok
 	int index = (max-min)/2;
-	while ((max - min) > 1) //ked uz je jedna, presli sme vsetko a nie je tam
+	std::cout << alphabet <<std::endl;
+		std::cout << min << " " << index <<" " << max <<std::endl;
+	while (max>min) //ked uz je jedna, presli sme vsetko a nie je tam
 	{
 		if (alphabet[index] == a)
 			return index;
 		if (alphabet[index] > a)
 		{
 			max = index; //viac ako za indexom to nebude
-			index-=(max-min)/2;
+			index-=(max-min)/2+1;
 		}
 		if (alphabet[index] < a)
 		{
 			min = index;
-			index+=(max-min)/2;
+			index+=(max-min)/2+1;
 		}
+		std::cout << min << " " << index <<" " << max <<std::endl;
 	}
 	return -1; //nenasiel sa 
 }
@@ -94,7 +98,7 @@ Tree * Program::find_string(std::string s)
 	return t;
 }
 /*
- *Vracia ukazovatel na strom, v ktorom je ulozena nasa hodnota
+ *Vracia ukazovatel na samotny uzzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
 Node * Program::add_string(std::string s, Type type)
 {
@@ -120,19 +124,22 @@ Node * Program::add_string(std::string s, Type type)
 		{
 			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
 			{
+				std::cout << "here!" << std::endl;
 				split++;//TODO ocheckovat
 				n.splice(n.begin(),t->items,t->items.begin());
 				continue;
 			}
+			std::cout << t->items.front()->name <<"  " << t->depth << std::endl;
 			int pointer = find_index(t->items.front()->name[t->depth]);
 		 	if (t->next[pointer]==NULL) //
 			{
 				split++;
 				splitted = pointer;
 				t->next[pointer] = new Tree(t->depth+1);
+				break;
 			}
-			Tree * nxt = t->next[pointer];
-			nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
+	//		Tree * nxt = t->next[pointer];
+	//		nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
 		}
 		t->items.swap(n);
 		if ( split == 1 )

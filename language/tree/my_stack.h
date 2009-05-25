@@ -1,3 +1,5 @@
+#ifndef ___STACK___
+#define ___STACK___
 #include <list>
 #include <vector>
 #include <string>
@@ -94,6 +96,7 @@ typedef std::vector<Instruction> Instructions;
 typedef std::vector<Node *> Values;
 struct Program
 {
+	bool error;
 	std::string alphabet;
 	Tree defined;//root burst stromu
 	Instructions instructions;//obrovsky switch na to co ma s cim robit
@@ -106,3 +109,4 @@ struct Program
 	Node * add_string(std::string name,Type type);
 	std::list<Node * > const_numbers; //aby sme pokazde nemuseli pridavat 
 };
+#endif
