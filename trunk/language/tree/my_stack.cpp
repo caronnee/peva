@@ -11,16 +11,13 @@ Node::Node() //toto sa normalne nebude pouzivat
 	last_access = 0;
 	type = TypeUndefined;
 	int active = 0;//ked ju bison vytvori, este niej aktivana
-	ProgramPointer = -1;
-	//location, obejct, real numbers a pod, nahodne cisla
+	//location, object, real numbers a pod, nahodne cisla
 }
 Node::Node(std::string s,Type t)
 {
 	last_access = 0;
 	type = TypeUndefined;
 	int active = 0;//ked ju bison vytvori, este niej aktivana
-	ProgramPointer = -1;
-
 	name = s;
 	type = t;
 }
@@ -49,12 +46,12 @@ std::string quicksort(std::string s)
 		else s2+=s[i];
 	return quicksort(s1) + s[0] + quicksort(s2);
 }
-BotProgram::BotProgram()
+Program::Program()
 {
 	alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";//vsetky znaky, co a poauzivame v identifikatoroch
 	alphabet = quicksort(alphabet);//zasortime aby sme mohli pouzivat pulenie intervalu
 }
-int BotProgram::find_index(char a)
+int Program::find_index(char a)
 {
 	int max = alphabet.length(); //za hranicu uz nesmie skocit
 	int min = 0; //zaciatok
@@ -76,7 +73,7 @@ int BotProgram::find_index(char a)
 	}
 	return -1; //nenasiel sa 
 }
-Tree * BotProgram::find_string(std::string s)
+Tree * Program::find_string(std::string s)
 {
 	Tree* t  = &defined;
 	int i =0;
@@ -96,16 +93,19 @@ Tree * BotProgram::find_string(std::string s)
 	}
 	return t;
 }
-void BotProgram::add_string(std::string s, Type type)
+/*
+ *Vracia ukazovatel na strom, v ktorom je ulozena nasa hodnota
+ */
+Node * Program::add_string(std::string s, Type type)
 {
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
-	Node d(s,type);
-	std::list<Node>::iterator iter;
+	Node * d = new Node(s,type);
+	std::list<Node*>::iterator iter;
 	for (iter = t->items.begin(); 
 		iter!=t->items.end(); 
 		iter++)
 	{
-		if (iter->name == s) break;//kontrola, co tam nieco take uz nie je
+		if ((*iter)->name == s) break;//kontrola, co tam nieco take uz nie je
 	}
 	std::cout << "Adding string " << s <<std::endl;
 	t->items.push_back(d);
@@ -115,21 +115,20 @@ void BotProgram::add_string(std::string s, Type type)
 		//burst!
 		t->inner_node = true;
 		int splitted = -1,split = 0;
-		std::cout << "Burstujem!" <<std::endl;
-		std::list<Node> n;
+		std::list<Node *> n;
 		while (!(t->items.empty()))
 		{
-			if (t->items.begin()->name.length() == t->depth) //ak sa neda dalej
+			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
 			{
+				split++;//TODO ocheckovat
 				n.splice(n.begin(),t->items,t->items.begin());
 				continue;
 			}
-			int pointer = find_index(t->items.begin()->name[t->depth]);
+			int pointer = find_index(t->items.front()->name[t->depth]);
 		 	if (t->next[pointer]==NULL) //
 			{
 				split++;
 				splitted = pointer;
-				std::cerr << "creating "<< std::endl;
 				t->next[pointer] = new Tree(t->depth+1);
 			}
 			Tree * nxt = t->next[pointer];
@@ -142,13 +141,12 @@ void BotProgram::add_string(std::string s, Type type)
 			t = t->next[splitted];
 		}
 	}
+	return d;
 }
-void BotProgram::output(Tree * t)
+void Program::output(Tree * t)
 {
-	if (t == &defined) std::cout << "jadskyfgkewjygf " <<std::endl;
-	std::cout << "v hlbke " << t->depth <<std::endl;
-	for (std::list<Node>::iterator i = t->items.begin();i!=t->items.end(); i++)
-		std::cout << "prvok s menom:" << i->name <<std::endl;
+	for (std::list<Node*>::iterator i = t->items.begin();i!=t->items.end(); i++)
+		std::cout << "prvok s menom:" << (*i)->name <<std::endl;
 	for (int i = 0; i < 256; i++)
 	{
 		if (t->next[i]!=NULL)
