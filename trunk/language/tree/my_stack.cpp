@@ -59,27 +59,33 @@ Program::Program()
 }
 int Program::find_index(char a)
 {
-	int max = alphabet.length(); //za hranicu uz nesmie skocit
+	int max = alphabet.length()-1; //za hranicu uz nesmie skocit
 	int min = 0; //zaciatok
+	std::cout << "hladam znak:" << a << std::endl;
 	int index = (max-min)/2;
 	std::cout << alphabet <<std::endl;
-		std::cout << min << " " << index <<" " << max <<std::endl;
-	while (max>min) //ked uz je jedna, presli sme vsetko a nie je tam
+//	std::cout << min << " " << index <<" " << max <<std::endl;
+	while ((max-min)>1) //ked uz je jedna, presli sme vsetko a nie je tam
 	{
 		if (alphabet[index] == a)
 			return index;
 		if (alphabet[index] > a)
 		{
 			max = index; //viac ako za indexom to nebude
-			index-=(max-min)/2+1;
+			index-=(max-min)/2;
 		}
 		if (alphabet[index] < a)
 		{
 			min = index;
-			index+=(max-min)/2+1;
+			index+=(max-min)/2;
 		}
-		std::cout << min << " " << index <<" " << max <<std::endl;
+//		std::cout << alphabet[min] << " " << alphabet[index] <<" " << alphabet[max] <<std::endl;
 	}
+//	std::cout << "OUT" << std::endl;
+	if (alphabet[min] == a)
+		return min;
+	if (alphabet[max] == a)
+		return max;
 	return -1; //nenasiel sa 
 }
 Tree * Program::find_string(std::string s)
@@ -92,7 +98,7 @@ Tree * Program::find_string(std::string s)
 		int pointer = find_index(s[i]);
 		if (t->next[pointer]==NULL)
 		{
-			std::cout <<"creating " << pointer <<std::endl;
+			std::cout <<"creating pointer" << pointer <<std::endl;
 			t->next[pointer] = new Tree(t->depth+1);
 		}
 		t = t->next[pointer];
