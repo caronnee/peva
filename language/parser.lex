@@ -25,7 +25,8 @@ WHITESPACE		[ \r\t\f]
 \/\*						BEGIN(COMMENT);
 main						{*l = line; return TOKEN_MAIN; };
 location					{*l = line;return TOKEN_LOCATION; };
-var 						{*l = line;return TOKEN_VAR; };
+real 						{*l = line;return TOKEN_VAR_REAL; };
+integer						{*l = line;return TOKEN_VAR_INT; };
 function	 	 	 	 	{*l = line;return TOKEN_FUNCTION; };
 array{WHITESPACE}+of				{*l = line;return TOKEN_ARRAY; };
 else 						{*l = line;return TOKEN_ELSE; };

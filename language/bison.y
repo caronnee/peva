@@ -16,7 +16,8 @@
 %token TOKEN_MAIN
 %token TOKEN_LOCATION
 %token TOKEN_OBJECT
-%token TOKEN_VAR
+%token TOKEN_VAR_REAL
+%token TOKEN_VAR_INT
 %token TOKEN_FUNCTION
 %token TOKEN_ARRAY
 %token TOKEN_IF
@@ -74,11 +75,13 @@
 program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // {add_main_code(program, block_of_instructions);}
 	;
 params:	/*	ziadne parametre	*/ {$$.clear()}
-      	| params TOKEN_VAR names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
+      	| params TOKEN_VAR_REAL names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
+      	| params TOKEN_VAR_INT names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
 	| params TOKEN_LOCATION point_name TOKEN_SEMICOLON {}//tot sa vyriesi samo, kedze vieme, ze ide o point
 	| params TOKEN_OBJECT names TOKEN_SEMICOLON {add(program, $3, TypeObject);}
 	| params TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON  {add_array($4, TypeLocation);}
-	| params TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
+	| params TOKEN_ARRAY TOKEN_VAR_REAL array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
+	| params TOKEN_ARRAY TOKEN_VAR_INT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
 	| params TOKEN_ARRAY TOKEN_OBJECT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
 	;
 //OK
@@ -124,20 +127,25 @@ commands: matched
 	| unmatched
 	| commands unmatched
 	;
-command:TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON command TOKEN_RPAR block_of_instructions 
+command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
 	|TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON
 	|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
+	|TOKEN_RETURN TOKEN_SEMICOLON
 	|TOKEN_BREAK TOKEN_SEMICOLON
-	|call_fce TOKEN_SEMICOLON
-	|TOKEN_VAR names TOKEN_SEMICOLON
-	|TOKEN_ARRAY TOKEN_VAR array_names TOKEN_SEMICOLON
+	|TOKEN_VAR_REAL names TOKEN_SEMICOLON
+	|TOKEN_VAR_INT names TOKEN_SEMICOLON
+	|TOKEN_ARRAY TOKEN_VAR_REAL array_names TOKEN_SEMICOLON
+	|TOKEN_ARRAY TOKEN_VAR_INT array_names TOKEN_SEMICOLON
 	|TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON
 	|TOKEN_LOCATION names TOKEN_SEMICOLON
-	|assign TOKEN_SEMICOLON
-	|variable TOKEN_PLUSPLUS
-	|variable TOKEN_MINUSMINUS
+	|simple_command TOKEN_SEMICOLON
       	;
+simple_command:	assign 
+	|variable TOKEN_PLUSPLUS 
+	|variable TOKEN_MINUSMINUS 
+	|variable 
+	;
 assign: variable_left TOKEN_ASSIGN variable
 	|variable_left TOKEN_ASSIGN number //TODO anonymna premenna, nestoji mnoho
 	;
@@ -159,15 +167,16 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 	 |TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command 
 	 |TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched
 	;
-init: TOKEN_VAR TOKEN_IDENTIFIER TOKEN_ASSIGN expression
+init: 		TOKEN_VAR_INT TOKEN_IDENTIFIER TOKEN_ASSIGN expression
+    	|TOKEN_VAR_REAL TOKEN_IDENTIFIER TOKEN_ASSIGN expression
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression
 	|TOKEN_IDENTIFIER TOKEN_LSBRA expression TOKEN_RSBRA TOKEN_ASSIGN expression
     	;
 variable: TOKEN_IDENTIFIER
 	|TOKEN_IDENTIFIER array_access
-	|TOKEN_IDENTIFIER TOKEN_DOT call_fce //tuto musi byt funkcia, co odpoveda danemu identifierovi, napr see(3).IsMoving()
-	|TOKEN_IDENTIFIER array_access TOKEN_DOT call_fce
-	|call_fce TOKEN_DOT call_fce // prave na tie veci ako see(3).isplayer
+	|call_fce
+	|variable TOKEN_DOT TOKEN_IDENTIFIER //tuto musi byt funkcia, co odpoveda danemu identifierovi, napr see(3).IsMoving()
+	|variable TOKEN_DOT call_fce
 	;
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 	|array_access TOKEN_LSBRA exps TOKEN_RSBRA
@@ -177,7 +186,6 @@ exps: expression
 	;
 expression_base: variable 
 	|number
-	|call_fce
 	|variable TOKEN_MINUSMINUS
 	|variable TOKEN_PLUSPLUS
 	|TOKEN_LPAR expression TOKEN_RPAR
@@ -226,7 +234,7 @@ int main(int argc, char ** argv)
 	q.add_string(".", TypeUndefined);//anonymna premenna
 	yyparse(&q);
     	fclose(yyin);
-	q.output(&q.defined);
+//	q.output(&q.defined);
 	return 0;	
 }
 
