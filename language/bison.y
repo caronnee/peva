@@ -1,6 +1,6 @@
 %{
 	#include "header1.h"
-	#include <stdio.h>
+	#include <iostream>
 	#include "parser_functions.h"
 
 	#define YYSTYPE Lval 
@@ -234,7 +234,7 @@ int main(int argc, char ** argv)
 	q.add_string(".", TypeUndefined);//anonymna premenna
 	yyparse(&q);
     	fclose(yyin);
-//	q.output(&q.defined);
+	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
+	q.output(&q.defined);
 	return 0;	
 }
-

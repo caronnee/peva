@@ -61,7 +61,6 @@ int Program::find_index(char a)
 {
 	int max = alphabet.length()-1; //za hranicu uz nesmie skocit
 	int min = 0; //zaciatok
-	std::cout << "hladam znak:" << a << std::endl;
 	int index = (max-min)/2;
 	std::cout << alphabet <<std::endl;
 //	std::cout << min << " " << index <<" " << max <<std::endl;
@@ -92,13 +91,11 @@ Tree * Program::find_string(std::string s)
 {
 	Tree* t  = &defined;
 	int i =0;
-	std::cout << "looking for string " << s << std::endl;
 	while (t->inner_node == true)
 	{
 		int pointer = find_index(s[i]);
 		if (t->next[pointer]==NULL)
 		{
-			std::cout <<"creating pointer" << pointer <<std::endl;
 			t->next[pointer] = new Tree(t->depth+1);
 		}
 		t = t->next[pointer];
@@ -122,7 +119,6 @@ Node * Program::add_string(std::string s, Type type)
 	{
 		if ((*iter)->name == s) break;//kontrola, co tam nieco take uz nie je
 	}
-	std::cout << "Adding string " << s <<std::endl;
 	t->items.push_back(d);
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
@@ -133,24 +129,22 @@ Node * Program::add_string(std::string s, Type type)
 		std::list<Node *> n;
 		while (!(t->items.empty()))
 		{
+			std::cout <<t->items.size() << std::endl;
 			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
 			{
-				std::cout << "here!" << std::endl;
 				split++;//TODO ocheckovat
 				n.splice(n.begin(),t->items,t->items.begin());
 				continue;
 			}
-			std::cout << t->items.front()->name <<"  " << t->depth << std::endl;
 			int pointer = find_index(t->items.front()->name[t->depth]);
 		 	if (t->next[pointer]==NULL) //
 			{
 				split++;
 				splitted = pointer;
 				t->next[pointer] = new Tree(t->depth+1);
-				break;
 			}
-	//		Tree * nxt = t->next[pointer];
-	//		nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
+			Tree * nxt = t->next[pointer];
+			nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
 		}
 		t->items.swap(n);
 		if ( split == 1 )
