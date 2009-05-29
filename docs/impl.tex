@@ -1,11 +1,24 @@
 \chapter{Implementácia prostredia}
 \section{Hracia plocha} % z coho sa sklada
+Na začiatku hry sa vygeneruje mapa s veľkostou, ktorú zadá užívatel alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{kap}. 
 \subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
 \section{Jazyk hry a priebeh hry} %bison, preco
+Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{kap}. Ďalej celú túto koštrukciu nazývam bojisko. V tomto okamihu je hra pripravená na spustenie. V závislosti na veľkosti bojiska sa čaká na odpovedajúce mnoštvo robotov, ktorí sa zapoja do hry. Toto množstvo je defaultne obmedzené iba zdola. Na zdôvodnenie tohoto rozhodnutia je nutné spomenúť základné vlastnosti programu. 
+\begin{itemize}
+\item Roboti majú za úlohu doraziť na isté miesto označené stenou ExitWall, o ktorom nie je dopredu nič známe. Informácia o tomto cieli je zámerne utajená z toho dôvodu, že ExitWall tam nemusí byť žiadna. Ak by bol totiž garantovaný cieľ, kód robotov by bol prednostne venovaný rôznym vyhľadávacím algoritmom, čímž by sa znížila funkčnosť programu. Teda ak cieľ nie je garantovaný, nastávajú dve možnosti, ako to tom informovať robota:\begin{itemize}
+\item za cieľ by sa simulovalo ľubovoľné políčko, ktoré je mimo mapy. V tomto prípade by robot prinajlepšom cyklicky prehľadával celú mapu, čo je v podstate to isté akoby pozíciu vôbec nepoznal.
+\item za cieľ by sa vybralo políčko patriace mape. V tom prípade 
+\end{itemize}
+\item Je zabezpečená spravodlivosť pre robotov. To znamená,
+\end{itemize}
 
+v  že pri neprimarane veľkých mapách bude trvať príliš dlho, než sa roboti vobec  
+Nastavenie toho, ze roboti so takto obmedzení, a dá prenastaviť v settings.%TODO rozpisat v+setky menu, +co kde robia
+\subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
+\section{Jazyk hry a priebeh hry} %bison, preco
 \begin{definicia}
-Cieľom určenia robota nazývam políčko na mape sveta, kam sa má robot dostat. Teda ak je pozícia robota rovnaká ako pozícia tohoto cieľu, hra končí. Týchto cieľov môže byť viac. V prípade viacerých cieľových oblastí má užívateľ možnosť zvoliť voľbu \it{Vlastný Exit}, kde sa každému robotomi priradí práve jedna cieľová pozícia a to tá najvzdialenesia od jeho výskytu v mape po začatí hry.
-Pod vzdialenosťou rozumiem veľkosť obsahu obdĺžnika generovaného cieľom a výskytom robota. %TODO preco?
+Cieľom určenia robota nazývam políčko na mape sveta, kam sa má robot dostať. Teda ak je pozícia robota rovnaká ako pozícia tohoto cieľu, hra končí. Týchto cieľov môže byť viac. V prípade viacerých cieľových oblastí má užívateľ možnosť zvoliť voľbu \it{Vlastný Exit}, kde sa každému robotomi priradí práve jedna cieľová pozícia a to tá najvzdialenesia od jeho výskytu v mape po začatí hry.
+Pod vzdialenosťou rozumiem veľkosť obsahu obdĺžnika v vrcholmi cieľom a výskytom robota. %TODO preco?
 \end{definicia}
 
 Samotná hra prebieha tak, že roboti vykonávajú užívateľom definovaný kód až do okamžiku, keď dosiahnu cieľ určenia alebo kým zostane na bojisku maximálne jeden robot. Cieľ môže byť pre každého robota rozdielny a je súčasťou mapy sveta. Hra nie je zabezpečená proti nekonečne dlhotrvajúcim cyklom (napríklad keď každý robot stojí na mieste), predpokladá sa v tomto prípade vstup od uživateľa, ktorým hru prerusí.
