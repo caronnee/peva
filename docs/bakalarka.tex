@@ -1,14 +1,19 @@
-\documentclass[a4paper,11pt,final]{report}
+\documentclass[12pt,notitlepage]{report}
+\pagestyle{plain}
+\frenchspacing 
 \usepackage[utf8]{inputenc}
 \usepackage[slovak]{babel}
+\usepackage{a4wide}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{graphicx}
 \usepackage{psfrag}
+\usepackage{vmargin}
 
 \begin{document}
+
 \begin{titlepage}
 \begin{center}
 \vspace{1.5in}
@@ -23,7 +28,7 @@
 \par
 \vspace{0.5in}
 Codewars, vojna robotov
-\par
+7G\par
 \vfill
 Katedra softwarového inžinierstva
 \par
@@ -65,7 +70,7 @@ Eva Pešková
 \section{Algoritmus 2}
 \section{Algoritmus 3}
 \chapter{Testovanie}
-\chapter{Vylepšenia}
+\input todo.tex
 \chapter{Záver}
 \newpage
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}
@@ -74,4 +79,16 @@ Eva Pešková
 Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
 {\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
 \end{thebibliography}
+\begin{tabular}{|l|c|c|c|c|c|} 
+     \hline 
+     {\bf Program} & {\bf Výsledek} & {\bf Odhad chyby} & {\bf Pøesnost} & {\bf Poèet uzlù} &  {\bf FLAG/IFLAG} \\ 
+     \hline                    
+     \hline 
+     Maple  & \textbf{0,0890738559} & -         & -     & -  & -    \\ 
+     \hline 
+     QUANC8 & \textbf{0,0890738503} & 0,49e-08  & 1e-07 & 33 & 0,00 \\ 
+     \hline 
+     Q1DA   & \textbf{0,0890738520} & 0,56e-06  & 1e-05 & 60 & 0    \\ 
+     \hline 
+     \end{tabular}
 \end{document}
