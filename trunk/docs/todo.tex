@@ -1,0 +1,11 @@
+\chapter{Vylepšenia}
+V tejto kapitole by som chcela poukazať na to, čo všetko v programe ešt eni ej zahrnute, čo by sa naopak nehodilo a čo nie je implementované zámerne.
+V samotnom priebehu hry by možmno bolo vhodné, aby sa jednotlivý robot , ktorý je na rade(alebo iba robot vedený z daného počítača) hovoril, ako u neho prebiehajú inštrukcie. Tento sposob je vhodný pre debugovanie, ale rozhodne nie je nutný.
+V prípade viditelnoti kódu pre všetkých:
+Pre a proti - za hovorí fakt, že je to vhodné pre debugovanie
+Proti - prezrádzal by sa kód neurčeným osobám(protihráčom), ktorí by potom mohli nájsť lepšiu stratégiu nie vlastným pozorovaním, ale zo znalosti kódu, čo nie je úplne zámerom.
+V prípade kódu pre iba jedného:
+za - zvýši sa debugvateľnoť jedného kódu, ale zase keďže sieťová implementácia je robená tak, že hlavný server iba rozposiela informácie o všetkých robotoch na bojisku, musel by súčasne s každou vykonávanou inštrukciou posielať informáciu o tom, že sa vykonala, čo považujem za mrhanie sieťovým potenciálom. druhá možnosť je, že by sieť bola robená tak, že akonáhle príde na radu robot, posle sa informácia dotyčnémi stroju, ten vykoná inštrukcie, výsledky si bude schovávať pre seba a serveru pošle iba výslednú inštrukciu. tento spôsob sa zdá vhodný, ale ešte nie je implementovaný:)
+
+škálovateľnosť:
+užívateľ by mal možnosť zadať ďalšie podmienky, kedy robot úspešne skončí svoju misiu, napríklad Visit(x,y,z), VisitSequence(a,b,c), move(x,y) atd, tu by boli tiež prípustné forcykly  a while a pod., ale tieto pravidlá by boli zavazne pre vsetkých účastníkov.
