@@ -1,0 +1,4 @@
+cslatex ./bakalarka.tex
+cslatex ./bakalarka.tex
+dvips bakalarka.dvi
+evince bakalarka.ps &
