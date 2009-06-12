@@ -1,3 +1,5 @@
+//TODO mozno este jedna treasurewall, cez kpru ide strielat a ktora pridava body,koniec vdety ked su pstatni mrtvi, ked sa vyzbiera vsetko a niekto zapadne do exitu, odomknuty exit po vyzbierani vsetkeho...uzivatelom toto definovane
+//pri pisani kodu este jeda special funkcia exit(EXIT & Bonus <=30 & killed == 5). ALL_EXIT, (vsetky exity alebo navzialenejsi...
 #ifndef __WALLS__
 #define __WALLS__
 #include <SDL/SDL.h>
