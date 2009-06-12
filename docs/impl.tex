@@ -1,5 +1,5 @@
 \chapter{Implementácia prostredia}
-Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Je potrebné zaistiť spravodlivosť pri vykonávaní programu. Robot totiž môže počítať s vlastnými premennými, na ktore nepotrebuje dáta bojiska. Zaistenie spravodilvosti v tomto prípade teda znamená, aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
+Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Je potrebné zaistiť spravodlivosť pri vykonávaní programu. Robot totiž môže počítať s vlastnými premennými, na ktore nepotrebuje dáta bojiska. Zaistenie spravodlvosti v tomto prípade teda znamená, aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
 \section{Priebeh penalizácie za inštrukciu}
 \begin{definicia}
 Tick je jednotka virtuálneho času sveta. Timeout je počet tickov,ktoré má robot k dispozícii na premýšľanie a tento čas (ďalej nazývaný timeout) nesmie prekročiť.
@@ -10,7 +10,7 @@ Penalizáciou za inštrukciu nazývam počet tikov, ktoré robot stratí, ak in�
 \end{definicia}
 
 \begin{definicia}
-Programom robota nazývam postupnosť inštrukcií, ProgramPointer je ukazateľ na inštrukciu v programe. Akú konkrétne, bude vysvetlené neskôr.
+Programom robota sa nazýva postupnosť inštrukcií, ProgramPointer je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísay v \ref{TODO}.
 \end{definicia}
 
 Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na ktorý práve ukazuje jeho ProgramPointer. Ako je naznačené na \ref{thinking}, robot pokračuje vo vykonávaní inštrukcií až kým nenarazí na takú, ktorá interaguje s bojiskom. Výsledok takejto inštrukcie nie je možné zistiť z dostupných informácií a teda je nutné o ďalšie data požiadať bojisko. Podľa veľkosti penalizovania sa potom R zaradí do plánovaných objektov, viz \ref{timeline}. Dĺžka tejto akcie sa ale pre rovnaký počet inštrukcií pre dvoch rôznych botov môže a typicky bude líšiť. Je to spôsobené tým, že každá inštrukcia môže mať rozdielnu penalizáciu za vykonanie. Napríklad samostatné vykonanie inštrukcie 'step' musí byť niekoľko krát rýchlejšie ako povedzme inštrukcia, ktorá naloaduje hodnotu premennej, obzvlášť ak táto premenná už dlho loadovaná nebola. Ďalej inštrukcia, ktorá zavolá užívateľom definovanú funkciu, zaberie viac procerového času vzhladom na to, čo musí spraviť so zásobníkom robota, a preto je táto skutočnosť zohľadnená. Podobne napríklad inštrukcie pre násobenie a delenie su zlošitejšie ako prosté sčitanie a preto sú viac penalizované. Penalizácia prebieha podľa tabuľky \ref{penal}, v ktorej používam nasledujúce funkcie:
@@ -23,18 +23,18 @@ Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na kt
 \begin{table}[ht]
 \centering
 \caption{Výpočet penalizácie inštrukcie}
-\begin{tabular}{c | c }
+\begin{tabular}{|c | c |}
 \hline
 Inštrukcia & Penalizácia \\
 \hline
 Jump & SizeOfJump\\
 Store & 1 \\
-TPlus & 1 \\
-TMinus & 1 \\
-TMultiply & 2 \\
-TDivide & 4 \\
-TLess & 1 \\
-TLessEqual & 2 \\ %kontroluje sa aj real/integer!
+Plus & 1 \\
+Minus & 1 \\
+Multiply & 2 \\
+Divide & 4 \\
+Less & 1 \\
+LessEqual & 2 \\ %kontroluje sa aj real/integer!
 Call &  SizeOfFunction \\
 StartBlock & 0 \\ %iba zvysi aktuane zanorenie
 EndBlock &  SizeOfCleaned \\
@@ -46,8 +46,9 @@ step & 1\\
 see & 3\\
 shoot & 1\\
 turn & 1\\ 
+\hline
 \end {tabular}
-\label{table:penal}
+\label{penal}
 \end{table}
 
 \begin{figure}
@@ -63,8 +64,21 @@ V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá, 
 Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
 
 \subsection{Preplánovanie}
-Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhsie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play. Samotné inštrukcie interagujúce s bojiskom  majú jednu z najmenších penalizácií, čo odpovedá tomu, že je to pre bota prirodzená akcia. \\
+Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhšie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play. Samotné inštrukcie interagujúce s bojiskom  majú jednu z najmenších penalizácií, čo odpovedá tomu, že je to pre bota akoby prirodzená akcia(žodpovedá to skutočnosti,že človek sa obvykle rýchlejšie pohne ako vypoćíta mocninu dvoch) \\
 V tomto prípade sa za kľúč, podľa ktorého sa objekty usporadúvajú, považuje čas od začiatku behu hry. Problém ale nastáva v okamihu, keď tento čas pretečie. Vzhľadom na to, že celkový čas simulácie je ukladaný do 64-bitového integeru, je možnosť, že by tento čas pretiekol, krajne neprijateľný, pretože celkový čas by bol vačší ako niekoľko tisíc rokov:)\\
+Otázkou zostáva, ako implementovať túto časovú líniu tak, aby celý program nepůsobil trhane, teda aby v okamihu, keď robot rozmýšľa, ostatné objekty, ktoré sú na rade, sa mohli pohybova+t, keďže samotné premýšľanie sa ich nedotýka. Existuje niekoľko možností:
+\begin{itemize}
+\item Z robotovho programu sa približne odhadne, koľko budei minimálne premýšlať a po tomto čase sa pozrie, či výpočet dobehol. Ak nie, bude musieť čakať, ak áno, pokračuje sa s zozbrazovaním akcií, ktoré sú výsledkom inštrukcií objektov. \\
+Výhody tohoto prístupu:\begin{itemize}
+	\item Je zachovaná správna postupnosť akcií, to znamená, že nie sú závislé na procesore a jeho súčasnej vyťaženosti.
+	\item 
+	\end{itemize}
+Nevýhody:\begin {itemize}
+	\item Odhad sa můze od skutočnej penalizácie líšiť stovky tickov (napríklad v prípade u podmieneného skoku sa načíta funkcia, ktorá stoji ohromne moc, kým v druhej vetve sa robot okamžite pohne), tým by vznikali nechcené prestoje a simulácia by sa v istých situáciách trhala
+	\item 
+	\end{itemize}
+\end{itemize}
+Kód robota sa za jeho života nemení. 
 
 \section{Hracia plocha} % z coho sa sklada
 Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{kap}. Ďalej celú túto konštrukciu nazývam bojisko. V tomto okamihu je hra pripravená na spustenie. V závislosti na veľkosti bojiska sa čaká na odpovedajúce množštvo robotov, ktorí sa zapoja do hry. Toto množstvo je defaultne obmedzené iba zdola. Na zdôvodnenie tohoto rozhodnutia je nutné spomenúť základné vlastnosti programu. 
