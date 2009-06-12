@@ -1,5 +1,5 @@
 \chapter{Implementácia prostredia}
-Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robot a skladá z postupnosti základných inštrukcií, ako sú detailnejšie vysvetlené nižšie. Je potrebné zaistiť spravodlivosť pri vykonávaní programu, to znamená aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou ako samotným priebehom.
+Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Je potrebné zaistiť spravodlivosť pri vykonávaní programu. Robot totiž môže počítať s vlastnými premennými, na ktore nepotrebuje dáta bojiska. Zaistenie spravodilvosti v tomto prípade teda znamená, aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
 \section{Priebeh penalizácie za inštrukciu}
 \begin{definicia}
 Tick je jednotka virtuálneho času sveta. Timeout je počet tickov,ktoré má robot k dispozícii na premýšľanie a tento čas (ďalej nazývaný timeout) nesmie prekročiť.
@@ -20,7 +20,6 @@ Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na kt
 \item SizeOfCleaned: počet premených, ktoré sa stali odchodom z bloku príkazov neplatnými
 \item LastLoaded: počet tickov, ktoré ubehli od posledného loadovania
 \end{itemize}
-
 \begin{table}[ht]
 \centering
 \caption{Výpočet penalizácie inštrukcie}
@@ -57,15 +56,20 @@ turn & 1\\
 \caption {Priebeh premýšľania u robota}
 \label{thinking}
 \end{figure}
+
 Robotovi môže týmto spôsobom samozrejme vypršať čas, veľkosť jeho premýšľania dosiahne hodnoty timeout.%TODO ref
-V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá, preplánuje sa a uvoľni miesto nasledujúcemu objektu. 
+V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá, preplánuje sa a uvoľní miesto nasledujúcemu objektu. 
 \newline
 Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
+
 \subsection{Preplánovanie}
-Preplánovanie prebieha tým spôsobom, že sa spočíta, koľko svojho času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. Samotné inštrukcie majú penalizáciu síce nenulovú, ale najmenšiu, čo odpovedá tomu, že je to pre bota prirodzená inštrukcia a zároveň sa tým zamedzuje tomu, aby robot v prípade samých takýchto inštrukcií nepustil na radu ostatné objekty. Objekty iné ako robot majú rovnako penalizáciu, ale vždy menšiu ako je timeout. Každý takýto objekt má ale už iba funkciu interagujúcu so svetom, takze sa po prevedení tejto akcie zase preplánujú.
+Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhsie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play. Samotné inštrukcie interagujúce s bojiskom  majú jednu z najmenších penalizácií, čo odpovedá tomu, že je to pre bota prirodzená akcia. \\
+V tomto prípade sa za kľúč, podľa ktorého sa objekty usporadúvajú, považuje čas od začiatku behu hry. Problém ale nastáva v okamihu, keď tento čas pretečie. Vzhľadom na to, že celkový čas simulácie je ukladaný do 64-bitového integeru, je možnosť, že by tento čas pretiekol, krajne neprijateľný, pretože celkový čas by bol vačší ako niekoľko tisíc rokov:)\\
+
 \section{Hracia plocha} % z coho sa sklada
 Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{kap}. Ďalej celú túto konštrukciu nazývam bojisko. V tomto okamihu je hra pripravená na spustenie. V závislosti na veľkosti bojiska sa čaká na odpovedajúce množštvo robotov, ktorí sa zapoja do hry. Toto množstvo je defaultne obmedzené iba zdola. Na zdôvodnenie tohoto rozhodnutia je nutné spomenúť základné vlastnosti programu. 
-garantovaný, nastávajú dve možnosti, ako to tom informovať robota:\begin{itemize}
+garantovaný, nastávajú dve možnosti, ako to tom informovať robota:
+\begin{itemize}
 \item za cieľ by sa simulovalo ľubovoľné políčko, ktoré je mimo mapy. V tomto prípade by robot prinajlepšom cyklicky prehľadával celú mapu, čo je v podstate to isté akoby pozíciu vôbec nepoznal.
 \item za cieľ by sa vybralo políčko patriace mape. V tom prípade 
 \item Je zabezpečená spravodlivosť pre robotov. To znamená

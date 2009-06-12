@@ -57,6 +57,7 @@
 
 %type<names> params
 %type<block> block_of_instructions
+%type<block> commands
 %type<names> names
 %type<names> point_name
 %type<names> array_names
@@ -100,8 +101,9 @@ array_names: TOKEN_IDENTIFIER {$$.push_back(add_array(program, $1));}
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA {$$.clear();$$.push_back($2);}
       	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $1.push_back($3); $$ = $1;}
 	;
+
 names:	TOKEN_IDENTIFIER {add(program, $1, TypeUndefined);}
-	|TOKEN_IDENTIFIER TOKEN_ASSIGN number // {add(program, $1);}
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN number // {add(program, $1,$3);} //oba uzle vyrvori, jeden normal, fruhy vo value, load X loaY store
      	|names TOKEN_COMMA TOKEN_IDENTIFIER {add(program, $3, TypeUndefined);}
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number 
 	;
@@ -113,14 +115,14 @@ declare_function_:	TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR b
 	|TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
 	|declare_function_ TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
 	;
-number:TOKEN_OPER_SIGNADD TOKEN_REAL
-      |TOKEN_OPER_SIGNADD TOKEN_UINT
+number:TOKEN_OPER_SIGNADD TOKEN_REAL //{st+real_true;}
+      |TOKEN_OPER_SIGNADD TOKEN_UINT // {set_real_false;}
       |TOKEN_REAL
       |TOKEN_UINT
 	;
 block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ {$$.clear();}
-	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */
-	|TOKEN_BEGIN commands TOKEN_END /* neprazdne instrukcie*/
+	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */ {$$.clear();}
+	|TOKEN_BEGIN commands TOKEN_END /* neprazdne instrukcie*/ {$$ = $2;}
 	;
 commands: matched
 	| commands matched
@@ -194,7 +196,7 @@ expression_mul:expression_base
 	|expression_mul TOKEN_OPER_MUL expression_base
 	;
 expression_add: expression_mul
-	|expression_add TOKEN_OPER_SIGNADD expression_base
+	|expression_add TOKEN_OPER_SIGNADD expression_mul
 	;
 expression:	expression_add
 	;
