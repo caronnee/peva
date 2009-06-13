@@ -68,14 +68,15 @@ Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spoč
 V tomto prípade sa za kľúč, podľa ktorého sa objekty usporadúvajú, považuje čas od začiatku behu hry. Problém ale nastáva v okamihu, keď tento čas pretečie. Vzhľadom na to, že celkový čas simulácie je ukladaný do 64-bitového integeru, je možnosť, že by tento čas pretiekol, krajne neprijateľný, pretože celkový čas by bol vačší ako niekoľko tisíc rokov:)\\
 Otázkou zostáva, ako implementovať túto časovú líniu tak, aby celý program nepůsobil trhane, teda aby v okamihu, keď robot rozmýšľa, ostatné objekty, ktoré sú na rade, sa mohli pohybova+t, keďže samotné premýšľanie sa ich nedotýka. Existuje niekoľko možností:
 \begin{itemize}
-\item Z robotovho programu sa približne odhadne, koľko budei minimálne premýšlať a po tomto čase sa pozrie, či výpočet dobehol. Ak nie, bude musieť čakať, ak áno, pokračuje sa s zozbrazovaním akcií, ktoré sú výsledkom inštrukcií objektov. \\
+\item Z robotovho programu sa približne odhadne, koľko budei minimálne premýšlať a po tomto čase sa pozrie, či výpočet dobehol. Ak nie, bude musieť čakať, ak áno, pokračuje sa s zozbrazovaním akcií, ktoré sú výsledkom inštrukcií objektov. 
 Výhody tohoto prístupu:\begin{itemize}
-	\item Je zachovaná správna postupnosť akcií, to znamená, že nie sú závislé na procesore a jeho súčasnej vyťaženosti.
-	\item 
+	\item Plus: Je zachovaná správna postupnosť akcií, to znamená, že nie sú závislé na procesore a jeho súčasnej vyťaženosti.
+	\item Minus: Odhad sa můze od skutočnej penalizácie líšiť stovky tickov (napríklad v prípade u podmieneného skoku sa načíta funkcia, ktorá stoji ohromne moc, kým v druhej vetve sa robot okamžite pohne), tým by vznikali nechcené prestoje a simulácia by sa v istých situáciách trhala.
 	\end{itemize}
-Nevýhody:\begin {itemize}
-	\item Odhad sa můze od skutočnej penalizácie líšiť stovky tickov (napríklad v prípade u podmieneného skoku sa načíta funkcia, ktorá stoji ohromne moc, kým v druhej vetve sa robot okamžite pohne), tým by vznikali nechcené prestoje a simulácia by sa v istých situáciách trhala
-	\item 
+\item Dopredu sa nasimuluje časť priebeh hry a na výstup sa púšťajú už iba výsledky. Výhody a nevýhody:
+	\begin{itemize}
+	\item Plus: Simulácia sa bude zatrhávať maximálne raz za čas, v okamihu, keď ešte nebudú pripravné data, čo sa 
+	\item Minus: na jednoprocesorovych architekturach ma tento spôsob rovnaký efekt ako keď sa súčasne vykresľujú oneskorené výsledky a súčasne poćítajú aktuálne časové línie.
 	\end{itemize}
 \end{itemize}
 Kód robota sa za jeho života nemení. 
