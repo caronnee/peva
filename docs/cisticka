@@ -1,3 +1,5 @@
+rm *toc
+rm *aux
 cslatex ./bakalarka.tex
 cslatex ./bakalarka.tex
 dvips bakalarka.dvi
