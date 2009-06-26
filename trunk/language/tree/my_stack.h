@@ -6,6 +6,8 @@
 
 #define MaxItems 2
 
+class Object;//TODO potom zmazat a pridat v inklude
+
 enum InstructionType
 {
 	IntructionLoad = 0,//loaduje premennu
@@ -59,7 +61,7 @@ struct Node;
 
 struct Array
 {
-	std::vector<int> range; //pre viacrozmenre pole
+	int range; //rozmer pola
 	Type t;
 	std::vector<Node> values;
 };
@@ -69,7 +71,7 @@ struct Location
 	int x, y;
 	Location(int x = 0, int y = 0);
 };
-struct Node //policko stromu
+struct Node // struktura premennych
 {
 	std::string name;
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
@@ -79,7 +81,7 @@ struct Node //policko stromu
 	float RealNumber;
 	Array * array;
 	Location LocationValue;
-//	Object * objectValue;
+	Object * ObjectValue;
 	Node();
 	Node(std::string s,Type t);
 };
@@ -88,7 +90,7 @@ struct Tree
 {
 	bool inner_node;
 	int depth;
-	Tree * next[256];//TODO dyamicke linkovanie
+	Tree * next[256];//TODO dynamicke linkovanie
 	std::list<Node *> items;//ukazatel z jednoducheho dovodu -> inak je to prasarna, vyparsovavat z listu:)
 	Tree();
 	Tree(int d);
