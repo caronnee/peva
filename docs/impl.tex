@@ -184,7 +184,9 @@ Pod zorným poľom robota rozumieme kruhovú výseč o polomere 'vzdialenosti'.R
 \end{definicia}
 Vzdialenosť a uhol určujú obdĺžnik, ktorý obsahuje presnú polovicu zorného poľa robota.a Tento obdĺžnik môže mať vzhľadom na podmienku o zadávaní vzialenosti a uhla maximálne obsah 32. Pri vytváraní robota sa vygeneruje obdĺžnik a každému políčku sa priradí maska. Nech má obdĺžnik rozmery (x,y) a jeho dolný ľavý vrchol je na pozícií (0,0), čo je v podstate pozícia bota. Táto maska sa potom spočíta tak, že na vygeneruje úsečka spájajúca(0,0) postupne so všetkými stredmi políčok hornom trojuholníku. Každému políčku potom priradíme 32-bitovú masku, kde jedničky sú na pozíciach čísla toho políčka, cez ktoré táto úsečka prechádzala. Druhá polovica je presne symetrická, teda masky tejto polovičky nemusíme počítať zvlášť. Potom na zistenie, ktoré objekt sú viditeľné a ktoré nie, stačí v mape prejst tento obdĺžnik 2x (raz doľava a raz doprava) s počiatočnou maskou nulovou a v prípade, že sa na i-tom políčku zhoduje maska políčka s majou maskou binárne sčítanou s maskou políčka, na to políčko obot vidí. Ak tam je ďalej objekt, nastaví sa v skúšobnej maske na i.tom mieste nula, inak jedna. Ak sa masku nezhodujú, potom robot na toto políčko nevidí a skúšobná maska bude mať na i-tom mieste nulu.
 \indent
-
+\subsection{Priebeh výpočtu robota} %co je povolene a ako sa to riesi implementacne
+..\\
+Zaujímavejšie je to pri volaní funkcie, ktorá má defaultný parameter. Pretože sa predpokladá, že program bude prístupný aj pre obyčaných užívateľov, je možné u funkcie definovať aj explicitnú hodnotu a to nezávisle na poradí parametrov. T.j. explicitné hodnota môže byť zadaná ako prvý a tretí parameter, ale nie ako druhý. Takáto funkcia sa nadefinuje podobne ako v C/C++, napríklad : \\\center $ function distance(integer x=3, integer y=2, integer radius, Location l) $ \\ je funkcia, ktorá bude napr
 \subsection{Detekcia zacyklenia}
 
 \section{Vlastnosti robotov}

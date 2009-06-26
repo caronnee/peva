@@ -62,6 +62,12 @@ Eva Pešková
 \subsection {Pogamut}
 \section{Problem optimalnej strategie viacerych hracov}
 \section{Prakticke vyuzitie}
+Súčasná implementácia poskytule dosť širokú škálu použitia. Napríklad:\\
+	\begin{itemize}
+	\item V okamihu dobre vygenerovaného bludiska sa dá použit na vizualizáciu niektorých algoritmov, napríklad na vyhľadávanie v stromoch a tak zistiť optimálnosť algoritmu vzhľadom na architekturu stroja
+	\item Program môže simulovať stratégiu robota pri vykonávaní určitéj úlohy, hodí sa povedzme na predmet typu EuroBot
+	\item Pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup v rokoch 2005-2008%todo zistit spravne roky 
+	\end{itemize}
 \input impl.tex
 \section {Burst tree uchovávajúci informácie o premenných a funkciách} 
 \chapter{Sietova komunikacia}
@@ -78,17 +84,7 @@ Eva Pešková
 \bibitem{trees}
 Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
 {\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
+\bibitem{vm}
+http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
 \end{thebibliography}
-\begin{tabular}{|l|c|c|c|c|c|} 
-     \hline 
-     {\bf Program} & {\bf Výsledek} & {\bf Odhad chyby} & {\bf Pøesnost} & {\bf Poèet uzlù} &  {\bf FLAG/IFLAG} \\ 
-     \hline                    
-     \hline 
-     Maple  & \textbf{0,0890738559} & -         & -     & -  & -    \\ 
-     \hline 
-     QUANC8 & \textbf{0,0890738503} & 0,49e-08  & 1e-07 & 33 & 0,00 \\ 
-     \hline 
-     Q1DA   & \textbf{0,0890738520} & 0,56e-06  & 1e-05 & 60 & 0    \\ 
-     \hline 
-     \end{tabular}
 \end{document}

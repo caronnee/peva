@@ -1,5 +1,6 @@
 %{
 	#include "header1.h"
+	#include "./tree/my_stack.h"
 	#include <iostream>
 	#include "parser_functions.h"
 
@@ -59,10 +60,11 @@
 %type<block> block_of_instructions
 %type<block> commands
 %type<names> names
-%type<names> point_name
+%type<names> location_name
 %type<names> array_names
 %type<node> number
 %type<ranges> ranges
+%type<ident> function_header
 
 %start program
 %error-verbose
@@ -70,7 +72,6 @@
 %parse-param {Program *program}
 %lex-param {Program *program}
 %locations
-
 %%
 
 program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // {add_main_code(program, block_of_instructions);}
@@ -78,18 +79,18 @@ program	: params declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_ins
 params:	/*	ziadne parametre	*/ {$$.clear()}
       	| params TOKEN_VAR_REAL names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
       	| params TOKEN_VAR_INT names TOKEN_SEMICOLON {add(program,$3, TypeInteger);}
-	| params TOKEN_LOCATION point_name TOKEN_SEMICOLON {}//tot sa vyriesi samo, kedze vieme, ze ide o point
+	| params TOKEN_LOCATION location_name TOKEN_SEMICOLON {}//tot sa vyriesi samo, kedze vieme, ze ide o location
 	| params TOKEN_OBJECT names TOKEN_SEMICOLON {add(program, $3, TypeObject);}
 	| params TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON  {add_array($4, TypeLocation);}
 	| params TOKEN_ARRAY TOKEN_VAR_REAL array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
 	| params TOKEN_ARRAY TOKEN_VAR_INT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
 	| params TOKEN_ARRAY TOKEN_OBJECT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
 	;
-//OK
-point_name: TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
+//TODO OK
+location_name: TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
 	| TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END {add(program,$1,Location($4,$6));}
-	| point_name TOKEN_COMMA TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
-	| point_name TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END  {add(program, $3, Location($6,$8));}
+	| location_name TOKEN_COMMA TOKEN_IDENTIFIER {add(program,$1,TypeLocation);}
+	| location_name TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END  {add(program, $3, Location($6,$8));}
 	;
 //OK
 array_names: TOKEN_IDENTIFIER {$$.push_back(add_array(program, $1));}
@@ -101,24 +102,26 @@ array_names: TOKEN_IDENTIFIER {$$.push_back(add_array(program, $1));}
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA {$$.clear();$$.push_back($2);}
       	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $1.push_back($3); $$ = $1;}
 	;
-
-names:	TOKEN_IDENTIFIER {add(program, $1, TypeUndefined);}
-	|TOKEN_IDENTIFIER TOKEN_ASSIGN number // {add(program, $1,$3);} //oba uzle vyrvori, jeden normal, fruhy vo value, load X loaY store
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER {add(program, $3, TypeUndefined);}
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number 
+//TODO OK
+names:	TOKEN_IDENTIFIER { $$.push_back($1); }
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN number { $$.push_back($1); } //TODO vytvori druhy uzol ako konstantu a instrukciu //Rovno dana hodnota, potom sa to spracuje, a le nebude to uz viditelne
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back($2);$$ = $1;}
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number {$1.push_back($2);$$ = $1;} //TODO stejne ako predtym, instrukcia
 	;
 declare_functions: /*	ziadne deklarovane funkcie	*/
 	|declare_function_
 	;
-declare_function_:	TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
-	|declare_function_ TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
-	|TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
-	|declare_function_ TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; }
 	;
-number:TOKEN_OPER_SIGNADD TOKEN_REAL //{st+real_true;}
-      |TOKEN_OPER_SIGNADD TOKEN_UINT // {set_real_false;}
-      |TOKEN_REAL
-      |TOKEN_UINT
+declare_function_:	function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions //TODO zistit, ci mu nevadi instrukcia
+	|declare_function_ function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+	|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+	|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions /* pozor! parameter uz definovany!*/
+	;
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL //{st+real_true;}
+      	|TOKEN_OPER_SIGNADD TOKEN_UINT // {set_real_false;}
+      	|TOKEN_REAL
+      	|TOKEN_UINT
 	;
 block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ {$$.clear();}
 	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */ {$$.clear();}
@@ -149,9 +152,9 @@ simple_command:	assign
 	|variable 
 	;
 assign: variable_left TOKEN_ASSIGN variable
-	|variable_left TOKEN_ASSIGN number //TODO anonymna premenna, nestoji mnoho
+	|variable_left TOKEN_ASSIGN number { add_instuction(new IntructionLoad(variable_left))} 
 	;
-variable_left: TOKEN_IDENTIFIER /* musi byt pole, point alebo nejaka ina shopna struktura */
+variable_left: TOKEN_IDENTIFIER /* musi byt pole, location alebo nejaka ina shopna struktura */
 	| TOKEN_IDENTIFIER array_access
 	;
 
