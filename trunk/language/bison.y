@@ -68,9 +68,9 @@
 program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // {add_main_code(program, block_of_instructions);}
 	;
 global_variables:	/*	ziadne parametre	*/ //{$$.clear()}
-	|local_variables
-//	|global_variables local_variables
+	|global_variables local_variables
 	;
+
 local_variables: TOKEN_VAR_REAL names TOKEN_SEMICOLON //{add(program,$3, TypeInteger);}
       	| TOKEN_VAR_INT names TOKEN_SEMICOLON //{add(program,$3, TypeInteger);}
 	| TOKEN_LOCATION location_name TOKEN_SEMICOLON //{}//tot sa vyriesi samo, kedze vieme, ze ide o location
@@ -135,12 +135,7 @@ command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOL
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 	|TOKEN_RETURN TOKEN_SEMICOLON
 	|TOKEN_BREAK TOKEN_SEMICOLON
-	|TOKEN_VAR_REAL names TOKEN_SEMICOLON
-	|TOKEN_VAR_INT names TOKEN_SEMICOLON
-	|TOKEN_ARRAY TOKEN_VAR_REAL array_names TOKEN_SEMICOLON
-	|TOKEN_ARRAY TOKEN_VAR_INT array_names TOKEN_SEMICOLON
-	|TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON
-	|TOKEN_LOCATION names TOKEN_SEMICOLON
+	|local_variables
 	|simple_command TOKEN_SEMICOLON
       	;
 simple_command:	assign 
