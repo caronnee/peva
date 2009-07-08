@@ -31,14 +31,18 @@ enum Operation
 struct Lval {
 	Operation operation;
 	int number;
-	std::string ident; //+mozno este nejake sa njdu
+
+	std::string ident; 
+	std::vector<std::string> idents;
+
 	float f_number;
+
 	std::vector<int> ranges;
-	//block
+
 	Instructions block;
-	std::vector<Node *> names;
-	bool is_integer;
+
 	Node * node;
+	std::vector<Node *> nodes;
 };
 
 // lex interface

@@ -62,8 +62,8 @@ struct Node;
 struct Array
 {
 	int range; //rozmer pola
-	Type t;
-	std::vector<Node> values;
+	Type type;
+	Node* value;
 };
 
 struct Location
@@ -97,6 +97,7 @@ struct Tree
 };
 typedef std::vector<Instruction> Instructions;
 typedef std::vector<Node *> Values;
+
 struct Program
 {
 	bool error;
