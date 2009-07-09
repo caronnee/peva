@@ -1,0 +1,291 @@
+rm -f *.o bparser parser.cpp bison.cpp bison.hpp
+bison --report=all -d -b bis -o bison.cpp bison.y
+flex -Cf -b -p -p -o parser.cpp parser.lex
+g++   -o parser.o -c parser.cpp
+g++  -o bison.o -c bison.cpp
+g++  -o bot.o -c ./tree/my_stack.cpp
+g++  -o biflex.o -c parser_functions.cpp
+g++  parser.o bison.o bot.o biflex.o -o bparser
+./bparser vstup
+looking for string .
+Adding string .
+------------------------------------------start--------------------------------------------------------------------
+prvok s menom:.
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string left
+Adding string left
+------------------------------------------start--------------------------------------------------------------------
+prvok s menom:.
+prvok s menom:left
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string right
+Adding string right
+---------------before---------------------------start--------------------------------------------------------------------
+prvok s menom:.
+prvok s menom:left
+prvok s menom:right
+END 
+---------------before-----------------------end------------------------------------------------------------------------
+3
+hladam znak:.
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+2
+hladam znak:l
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+1
+hladam znak:r
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+-----in-------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+END 
+-------in-------------------------------end------------------------------------------------------------------------
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string a
+hladam znak:a
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+creating pointer38
+Adding string a
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string xxx
+hladam znak:x
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+creating pointer61
+Adding string xxx
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+Down:61
+prvok s menom:xxx
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string qqqq
+hladam znak:q
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+creating pointer54
+Adding string qqqq
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:54
+prvok s menom:qqqq
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+Down:61
+prvok s menom:xxx
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string qaq
+hladam znak:q
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+Adding string qaq
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:54
+prvok s menom:qqqq
+prvok s menom:qaq
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+Down:61
+prvok s menom:xxx
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string yyy
+hladam znak:y
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+creating pointer62
+Adding string yyy
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:54
+prvok s menom:qqqq
+prvok s menom:qaq
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+Down:61
+prvok s menom:xxx
+END 
+UP!
+Down:62
+prvok s menom:yyy
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+looking for string a
+hladam znak:a
+.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+Adding string a
+------------------------------------------start--------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:54
+prvok s menom:qqqq
+prvok s menom:qaq
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+Down:61
+prvok s menom:xxx
+END 
+UP!
+Down:62
+prvok s menom:yyy
+END 
+UP!
+END 
+--------------------------------------end------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Down:0
+prvok s menom:.
+END 
+UP!
+Down:38
+prvok s menom:a
+prvok s menom:a
+END 
+UP!
+Down:49
+prvok s menom:left
+END 
+UP!
+Down:54
+prvok s menom:qqqq
+prvok s menom:qaq
+END 
+UP!
+Down:55
+prvok s menom:right
+END 
+UP!
+Down:61
+prvok s menom:xxx
+END 
+UP!
+Down:62
+prvok s menom:yyy
+END 
+UP!
+END 

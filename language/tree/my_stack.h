@@ -3,10 +3,12 @@
 #include <list>
 #include <vector>
 #include <string>
+#include "./tree.h"
+#include "./instructions.h"
+#include "./typedefs.h"
+#include "./node.h"
 
 #define MaxItems 2
-
-class Object;//TODO potom zmazat a pridat v inklude
 
 enum InstructionType
 {
@@ -35,75 +37,13 @@ enum InstructionType
 	IntructionMultiply,
 	NumberOfInstructions //TODO pridat instrukcie na varovanie
 };
-enum Type
-{
-	TypeUndefined = 0,
-	TypeInteger,
-	TypeReal,
-	TypeObject,
-	TypeLocation,
-	TypeArray,
-	TypeFunction,
-	TypeProcedure,
-	NumberOfTypes
-};
-
-std::string quicksort(std::string s);
-
-struct Instruction
-{
-	InstructionType instruction;
-	std::string parameter;
-	Instruction(InstructionType t, std::string s);
-};
-
-struct Node;
-
-struct Array
-{
-	int range; //rozmer pola
-	Type type;
-	Node* value;
-};
-
-struct Location
-{
-	int x, y;
-	Location(int x = 0, int y = 0);
-};
-struct Node // struktura premennych
-{
-	std::string name;
-	unsigned int last_access; //z  tohoto sa vypocita penalizacia
-	Type type;
-	int active; //bola deklarovana v danom bloku
-	int IntegerValue;
-	float RealNumber;
-	Array * array;
-	Location LocationValue;
-	Object * ObjectValue;
-	Node();
-	Node(std::string s,Type t);
-};
-
-struct Tree
-{
-	bool inner_node;
-	int depth;
-	Tree * next[256];//TODO dynamicke linkovanie
-	std::list<Node *> items;//ukazatel z jednoducheho dovodu -> inak je to prasarna, vyparsovavat z listu:)
-	Tree();
-	Tree(int d);
-};
-typedef std::vector<Instruction> Instructions;
-typedef std::vector<Node *> Values;
 
 struct Program
 {
 	bool error;
 	std::string alphabet;
 	Tree defined;//root burst stromu
-	Instructions instructions;//obrovsky switch na to co ma s cim robit
+	Instructions instructions; //kope prdefinovanych instrukcii
 	Values values;//stack ukazatelov do stromu
 
 	Program();

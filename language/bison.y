@@ -70,7 +70,7 @@ program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR bl
 global_variables:	/*	ziadne parametre	*/ //{$$.clear()}
 	|global_variables local_variables
 	;
-
+//local variables nema ziadne navratove hodnoty, leboiba pridava cisla
 local_variables: TOKEN_VAR_REAL names TOKEN_SEMICOLON //{add(program,$3, TypeInteger);}
       	| TOKEN_VAR_INT names TOKEN_SEMICOLON //{add(program,$3, TypeInteger);}
 	| TOKEN_LOCATION location_name TOKEN_SEMICOLON //{}//tot sa vyriesi samo, kedze vieme, ze ide o location
