@@ -8,36 +8,6 @@
 #include "./typedefs.h"
 #include "./node.h"
 
-#define MaxItems 2
-
-enum InstructionType
-{
-	IntructionLoad = 0,//loaduje premennu
-	IntructionStore,
-	IntructionCall,
-	IntructionTjump,
-	IntructionJump,
-	InstructionLabel, //kam ma skocit po nejakom jumpe
-	IntructionReturn,
-	IntructionLeaveBlock,//zneplatni vsetky premenne deklarovane v tomto bloku, deklarovanie spravene bisonom
-	InstructionStartBlok,
-
-	IntructionLess,
-	IntructionMore,
-	IntructionLessEqual,
-	IntructionMoreEqual,
-	IntructionNotEqual,
-	IntructionEqual,
-
-	IntructionPlusPlus,
-	IntructionMinusMinus,
-	IntructionPlus,
-	IntructionMinus,
-	IntructionDivide,
-	IntructionMultiply,
-	NumberOfInstructions //TODO pridat instrukcie na varovanie
-};
-
 struct Program
 {
 	bool error;
@@ -50,7 +20,9 @@ struct Program
 	void output(Tree * t);
 	int find_index(char a);
 	Tree * find_string(std::string);
-	Node * add_string(std::string name,Type type);
-	std::list<Node * > const_numbers; //aby sme pokazde nemuseli pridavat 
+	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
+	/* Vracia, ci sa podarilo rpidat alebo nie*/
+	bool  add(std::string name, Node * n);
+	Node * create_type(Type t);
 };
 #endif
