@@ -17,6 +17,16 @@ enum Type
 	TypeProcedure,
 	NumberOfTypes
 };
+struct Create_type
+{
+	int range;
+	Create_type * data_type;
+	Type type;
+	Create_type();
+	Create_type(Type t, int rang = 0);
+	Create_type(const Create_type& t);
+	~Create_type() throw();
+};
 
 std::string quicksort(std::string s);
 
@@ -26,8 +36,8 @@ struct Node;
 struct Array
 {
 	int range; //rozmer pola
-	Type type;
-	Node* value;
+	Type element_type;
+	std::vector<Node> elements;
 };
 
 struct Location
@@ -48,5 +58,6 @@ struct Node // struktura premennych
 	Object * ObjectValue;
 	Node();
 	Node(std::string s,Type t);
+	Node (Create_type t);
 };
 #endif

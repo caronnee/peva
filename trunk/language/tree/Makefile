@@ -19,5 +19,8 @@ instructions.o:instructions.h instructions.cpp
 	g++ ${CPPFLAGS} ${CFLAGS} -o instructions.o -c instructions.cpp
 
 distclean:
-	rm *.o tree
+	rm -f *.o tree
+
+run:
+	./tree
 

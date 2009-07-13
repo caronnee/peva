@@ -1,6 +1,7 @@
 #include "my_stack.h"
 #include <iostream>
 
+#define MaxItems 3
 Program::Program()
 {
 	alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";//vsetky znaky, co a poauzivame v identifikatoroch
@@ -58,18 +59,24 @@ Tree * Program::find_string(std::string s)
 /*
  *Vracia ukazovatel na samotny uzzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
-Node * Program::add_string(std::string s, Type type)
+bool Program::add(std::string s, Node *n)
 {
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
-	Node * d = new Node(s,type);
+	n->name = s;
+	std::cout << "\t" << s <<std::endl; 
 	std::list<Node*>::iterator iter;
 	for (iter = t->items.begin(); 
 		iter!=t->items.end(); 
 		iter++)
 	{
-		if ((*iter)->name == s) break;//kontrola, co tam nieco take uz nie je
-	}
-	t->items.push_back(d);
+		if ((*iter)->name == s) {
+
+			std::cout << "uz tam je "<< s <<std::endl;
+			exit(5);
+		}//kontrola, co tam nieco take uz nie je
+
+	} //TODO zatial to bolo naprosto nanic
+	t->items.push_back(n);
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
@@ -79,7 +86,8 @@ Node * Program::add_string(std::string s, Type type)
 		std::list<Node *> n;
 		while (!(t->items.empty()))
 		{
-			std::cout <<t->items.size() << std::endl;
+			std::cout <<t->items.size() <<" : "<< t->items.front()->name<< std::endl;
+//			getc(stdin);
 			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
 			{
 				split++;//TODO ocheckovat
@@ -96,6 +104,7 @@ Node * Program::add_string(std::string s, Type type)
 			Tree * nxt = t->next[pointer];
 			nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
 		}
+		std::cout <<" enddd"<<n.size();
 		t->items.swap(n);
 		if ( split == 1 )
 		{
@@ -103,7 +112,7 @@ Node * Program::add_string(std::string s, Type type)
 			t = t->next[splitted];
 		}
 	}
-	return d;
+	return true;
 }
 void Program::output(Tree * t)
 {
