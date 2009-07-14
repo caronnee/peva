@@ -43,6 +43,9 @@ struct Lval {
 
 	Node * node;
 	std::vector<Node *> nodes;
+
+	std::vector< Array *> arrays;
+	Array * array;
 };
 
 // lex interface

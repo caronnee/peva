@@ -13,7 +13,7 @@ struct Program
 	bool error;
 	std::string alphabet;
 	Tree defined;//root burst stromu
-	Instructions instructions; //kope prdefinovanych instrukcii
+	Instructions instructions; //kopa predefinovanych instrukcii
 	Values values;//stack ukazatelov do stromu
 
 	Program();
