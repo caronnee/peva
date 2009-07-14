@@ -57,6 +57,7 @@
 
 %type<idents> names
 %type<type> simple_type
+%type<type> complex_type
 
 %start program
 %error-verbose
@@ -68,22 +69,23 @@
 
 program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // { add_main_code(program, block_of_instructions); }
 	;
+
 //OK, neprepaguje sa hore
 global_variables:	/*	ziadne parametre	*/ 
 	|global_variables local_variables /*Uz pridane parametre*/
 	;
 //OK
-local_variables:  simple_type names TOKEN_SEMICOLON // { add(program,$2, $1); }
-	| complex_type names TOKEN_SEMICOLON // { set_element_type(program, $3, $2); }
+local_variables:  simple_type names TOKEN_SEMICOLON {  add_variables(program, $2, $1);}
+	| complex_type names TOKEN_SEMICOLON  { add_variables(program, $2,$1); }
 	;
-
+//OK
 simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
     	|TOKEN_VAR_INT { $$ = Create_type(TypeInteger); }
 	|TOKEN_LOCATION{ $$ = Create_type(TypeLocation); }
 	|TOKEN_OBJECT{ $$ = Create_type(TypeObject); }
 	;
-complex_type: simple_type ranges
-	|complex_type simple_type ranges
+//OK
+complex_type: simple_type ranges { $$ = $2.composite($1); }
 	;
 
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $$.clear();$$.push_back($2); }
@@ -226,8 +228,8 @@ int main(int argc, char ** argv)
     	}
 
 	Program q;
-	Node n(TypeUndefined);
-	q.add(".", &n);//anonymna premenna
+	Create_type t;
+	q.add(".", t);//anonymna premenna
 	yyparse(&q);
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;

@@ -17,6 +17,12 @@ Create_type::Create_type(const Create_type & t)
 	data_type = NULL;
 	type = t.type;
 }
+Create_type& Create_type::composite ( Create_type t)
+{
+	Create_type comp(*this);
+	comp.data_type = new Create_type(t);
+	return comp;// BLBOST
+}
 Create_type::~Create_type() throw()
 {
 	if (data_type!=NULL)
@@ -46,7 +52,7 @@ Node::Node(std::string s, Create_type t)
 			type = TypeUndefined;
 			return; //TODO exception
 		}
-		for (int i =0; i<t.range; i++)
+		for (int i =0; i < t.range; i++)
 		{
 			array = new Array();
 			array->elements.push_back(Node(s,*t.data_type));
