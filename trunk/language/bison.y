@@ -60,6 +60,8 @@
 %type<type> complex_type
 %type<type> ranges
 
+%type<ident> function_header
+
 %start program
 %error-verbose
 %pure-parser
@@ -106,10 +108,13 @@ values: number
 	| values TOKEN_COMMA TOKEN_IDENTIFIER
 	| values TOKEN_COMMA number
 	;
+
+//OK
 declare_functions: /*	ziadne deklarovane funkcie	*/
-	|declare_function_ //nic pridane, vyriesilo sa predtym
+	|declare_function_
 	;
-function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER //{ $$ = $2; }
+
+function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; }
 	;
 
 declare_function_:	function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  //{ reg($1, $3, $5); } //register name, parameter_list, block
