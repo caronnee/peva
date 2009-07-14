@@ -56,6 +56,7 @@
 %token<operation> TOKEN_MINUSMINUS
 
 %type<idents> names
+%type<type> simple_type
 
 %start program
 %error-verbose
@@ -76,10 +77,10 @@ local_variables:  simple_type names TOKEN_SEMICOLON // { add(program,$2, $1); }
 	| complex_type names TOKEN_SEMICOLON // { set_element_type(program, $3, $2); }
 	;
 
-simple_type: TOKEN_VAR_REAL
-    	|TOKEN_VAR_INT
-	|TOKEN_LOCATION
-	|TOKEN_OBJECT
+simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
+    	|TOKEN_VAR_INT { $$ = Create_type(TypeInteger); }
+	|TOKEN_LOCATION{ $$ = Create_type(TypeLocation); }
+	|TOKEN_OBJECT{ $$ = Create_type(TypeObject); }
 	;
 complex_type: simple_type ranges
 	|complex_type simple_type ranges
@@ -88,6 +89,7 @@ complex_type: simple_type ranges
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $$.clear();$$.push_back($2); }
       	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $1.push_back($3); $$ = $1; }
 	;
+
 names:	TOKEN_IDENTIFIER //{ $$.push_back($1); }
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN number { $$.push_back($1); } //TODO pridat instrukciu
      	|names TOKEN_COMMA TOKEN_IDENTIFIER //{ $1.push_back($2);$$ = $1; }

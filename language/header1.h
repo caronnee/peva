@@ -46,6 +46,8 @@ struct Lval {
 
 	std::vector< Array *> arrays;
 	Array * array;
+
+	Create_type type;
 };
 
 // lex interface
