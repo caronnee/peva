@@ -22,5 +22,6 @@ distclean:
 	rm -f *.o tree
 
 run:
+	make
 	./tree
 

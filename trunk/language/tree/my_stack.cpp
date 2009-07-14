@@ -59,6 +59,7 @@ Tree * Program::find_string(std::string s)
 /*
  *Vracia ukazovatel na samotny uzzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
+
 bool Program::add(std::string s, Node *n)
 {
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera

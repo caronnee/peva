@@ -60,53 +60,49 @@
 %start program
 %error-verbose
 %pure-parser
-%parse-param {Program *program}
-%lex-param {Program *program}
+%parse-param { Program *program }
+%lex-param { Program *program }
 %locations
 %%
 
-program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // {add_main_code(program, block_of_instructions);}
+program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // { add_main_code(program, block_of_instructions); }
 	;
-global_variables:	/*	ziadne parametre	*/ //{$$.clear()}
-	|global_variables local_variables
-	;
-//local variables nema ziadne navratove hodnoty, leboiba pridava cisla
-local_variables: TOKEN_VAR_REAL names TOKEN_SEMICOLON //{add(program,$3, TypeInteger);}
-      	| TOKEN_VAR_INT names TOKEN_SEMICOLON //{add(program,$3, TypeInteger);}
-	| TOKEN_LOCATION location_name TOKEN_SEMICOLON //{}//tot sa vyriesi samo, kedze vieme, ze ide o location
-	| TOKEN_OBJECT names TOKEN_SEMICOLON //{add(program, $3, TypeObject);}
-	| TOKEN_ARRAY TOKEN_LOCATION array_names TOKEN_SEMICOLON  //{add_array($4, TypeLocation);}
-	| TOKEN_ARRAY TOKEN_VAR_REAL array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
-	| TOKEN_ARRAY TOKEN_VAR_INT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
-	| TOKEN_ARRAY TOKEN_OBJECT array_names TOKEN_SEMICOLON // {add_array(program,$2,$4, TYPE_LOCATION);}
-	;
-//TODO OK
-location_name: TOKEN_IDENTIFIER //{add(program,$1,TypeLocation);}
-	| TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END //{add(program,$1,Location($4,$6));}
-	| location_name TOKEN_COMMA TOKEN_IDENTIFIER //{add(program,$1,TypeLocation);}
-	| location_name TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_END  //{add(program, $3, Location($6,$8));}
+//OK, neprepaguje sa hore
+global_variables:	/*	ziadne parametre	*/ 
+	|global_variables local_variables /*Uz pridane parametre*/
 	;
 //OK
-array_names: TOKEN_IDENTIFIER //{$$.push_back(add_array(program, $1));}
-	|array_names TOKEN_COMMA TOKEN_IDENTIFIER //{$1.push_back(add_array(program,$3));$$=$1;}
-	|TOKEN_IDENTIFIER ranges //{$$.push_back(add_array(program, $1, $2));}/*pre definovanie kolko pola bude volneho, aby sa nezahltila pamat*/
-	|array_names TOKEN_IDENTIFIER ranges //{$1.push_back(add_array(program,$2,$3));$$ = $1;}
+local_variables:  simple_type names TOKEN_SEMICOLON // { add(program,$2, $1); }
+	| complex_type names TOKEN_SEMICOLON // { set_element_type(program, $3, $2); }
 	;
-//OK
-ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{$$.clear();$$.push_back($2);}
-      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $1.push_back($3); $$ = $1;}
+
+simple_type: TOKEN_VAR_REAL
+    	|TOKEN_VAR_INT
+	|TOKEN_LOCATION
+	|TOKEN_OBJECT
 	;
-//TODO OK
+complex_type: simple_type ranges
+	|complex_type simple_type ranges
+	;
+
+ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $$.clear();$$.push_back($2); }
+      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $1.push_back($3); $$ = $1; }
+	;
 names:	TOKEN_IDENTIFIER //{ $$.push_back($1); }
-	|TOKEN_IDENTIFIER TOKEN_ASSIGN number //{ $$.push_back($1); } //TODO vytvori druhy uzol ako konstantu a instrukciu //Rovno dana hodnota, potom sa to spracuje, ale nebude to uz viditelne
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER //{$1.push_back($2);$$ = $1;}
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number //{$1.push_back($2);$$ = $1;} //TODO stejne ako predtym, instrukcia
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN number { $$.push_back($1); } //TODO pridat instrukciu
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER //{ $1.push_back($2);$$ = $1; }
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number //{ $1.push_back($2);$$ = $1; } //TODO stejne ako predtym, instrukcia
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END //{ $1.push_back($2);$$ = $1; } //TODO stejne ako predtym, instrukcia
 	;
-//OK
+
+values: number
+      	| TOKEN_IDENTIFIER
+	| values TOKEN_COMMA TOKEN_IDENTIFIER
+	| values TOKEN_COMMA number
+	;
 declare_functions: /*	ziadne deklarovane funkcie	*/
 	|declare_function_ //nic pridane, vyriesilo sa predtym
 	;
-//OK
 function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER //{ $$ = $2; }
 	;
 
@@ -120,9 +116,9 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL
       	|TOKEN_REAL
       	|TOKEN_UINT
 	;
-block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ //{$$.clear();}
-	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */ //{$$.clear();}
-	|TOKEN_BEGIN commands TOKEN_END /* neprazdne instrukcie*/ //{$$ = $2;}
+block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ //{ $$.clear(); }
+	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */ //{ $$.clear(); }
+	|TOKEN_BEGIN commands TOKEN_END /* neprazdne instrukcie*/ //{ $$ = $2; }
 	;
 commands: matched
 	| commands matched
@@ -144,7 +140,7 @@ simple_command:	assign
 	|variable 
 	;
 assign: variable_left TOKEN_ASSIGN variable
-	|variable_left TOKEN_ASSIGN number //{ add_instuction(new IntructionLoad(variable_left))} 
+	|variable_left TOKEN_ASSIGN number //{ add_instuction(new IntructionLoad(variable_left)) } 
 	;
 variable_left: TOKEN_IDENTIFIER /* musi byt pole, location alebo nejaka ina shopna struktura */
 	| TOKEN_IDENTIFIER array_access
@@ -228,7 +224,8 @@ int main(int argc, char ** argv)
     	}
 
 	Program q;
-	q.add_string(".", TypeUndefined);//anonymna premenna
+	Node n(TypeUndefined);
+	q.add(".", &n);//anonymna premenna
 	yyparse(&q);
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;

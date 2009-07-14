@@ -10,8 +10,8 @@ int main(int c, char** r)
 	std::string a = ".0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ_abcdefghijklmnopqrstuvxyz";
 	for (int i =0; i< 11; i++)
 		b.add(s[i],new Node(t));
-//	std::cout << "zacinam vypisovat:" << b.defined.depth << std::endl;
-/*	b.output(&b.defined);
+	std::cout << "zacinam vypisovat:" << b.defined.depth << std::endl;
+	b.output(&b.defined);
 /*	for (int i =0; i< b.alphabet.length(); i++)
 	{
 		std::cout << b.find_index(b.alphabet[i]) << std::endl;
