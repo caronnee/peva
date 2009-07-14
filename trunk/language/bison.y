@@ -58,6 +58,7 @@
 %type<idents> names
 %type<type> simple_type
 %type<type> complex_type
+%type<type> ranges
 
 %start program
 %error-verbose
@@ -87,16 +88,17 @@ simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
 //OK
 complex_type: simple_type ranges { $$ = $2.composite($1); }
 	;
-
-ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $$.clear();$$.push_back($2); }
-      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA //{ $1.push_back($3); $$ = $1; }
+//OK
+ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$ = Create_type(TypeArray,$2); }
+      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { Create_type t(TypeArray,$3); $$ = $1.composite(t); }
 	;
 
-names:	TOKEN_IDENTIFIER //{ $$.push_back($1); }
+//OK TODO
+names:	TOKEN_IDENTIFIER { $$.push_back($1); }
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN number { $$.push_back($1); } //TODO pridat instrukciu
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER //{ $1.push_back($2);$$ = $1; }
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number //{ $1.push_back($2);$$ = $1; } //TODO stejne ako predtym, instrukcia
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END //{ $1.push_back($2);$$ = $1; } //TODO stejne ako predtym, instrukcia
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER { $1.push_back($3); $$ = $1; }
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
 	;
 
 values: number

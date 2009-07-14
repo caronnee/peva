@@ -25,7 +25,6 @@ struct Create_type
 	Create_type();
 	Create_type(Type t, int rang = 0);
 	Create_type(const Create_type& t);
-	~Create_type() throw();
 	Create_type & composite (Create_type t);
 };
 

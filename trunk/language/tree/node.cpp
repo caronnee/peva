@@ -17,20 +17,14 @@ Create_type::Create_type(const Create_type & t)
 	data_type = NULL;
 	type = t.type;
 }
+
 Create_type& Create_type::composite ( Create_type t)
 {
 	Create_type comp(*this);
-	comp.data_type = new Create_type(t);
-	return comp;// BLBOST
+	comp.data_type = &t;
+	return *this;// 
 }
-Create_type::~Create_type() throw()
-{
-	if (data_type!=NULL)
-	{
-		delete data_type;
-	}
-	data_type = NULL;
-}
+
 Location::Location(int x_, int y_)
 {
 	x = x_; y = y_;
