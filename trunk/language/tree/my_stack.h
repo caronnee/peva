@@ -21,8 +21,8 @@ struct Program
 	int find_index(char a);
 	Tree * find_string(std::string);
 	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
-	/* Vracia, ci sa podarilo rpidat alebo nie*/
-	bool  add(std::string name, Node * n);
+	/* Vracia, ci sa podarilo pridat alebo nie*/
+	bool add(std::string name, Create_type t);
 	Node * create_type(Type t);
 };
 #endif

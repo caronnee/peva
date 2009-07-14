@@ -60,10 +60,9 @@ Tree * Program::find_string(std::string s)
  *Vracia ukazovatel na samotny uzzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
 
-bool Program::add(std::string s, Node *n)
+bool Program::add(std::string s, Create_type type)
 {
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
-	n->name = s;
 	std::cout << "\t" << s <<std::endl; 
 	std::list<Node*>::iterator iter;
 	for (iter = t->items.begin(); 
@@ -76,8 +75,8 @@ bool Program::add(std::string s, Node *n)
 			exit(5);
 		}//kontrola, co tam nieco take uz nie je
 
-	} //TODO zatial to bolo naprosto nanic
-	t->items.push_back(n);
+	} //TODO nejaka rozumnejsia metoda
+	t->items.push_back(new Node(s, type));
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
