@@ -26,6 +26,7 @@ struct Create_type
 	Create_type(Type t, int rang = 0);
 	Create_type(const Create_type& t);
 	~Create_type() throw();
+	Create_type & composite (Create_type t);
 };
 
 std::string quicksort(std::string s);
@@ -58,6 +59,6 @@ struct Node // struktura premennych
 	Object * ObjectValue;
 	Node();
 	Node(std::string s,Type t);
-	Node (Create_type t);
+	Node (std::string s,Create_type t);
 };
 #endif

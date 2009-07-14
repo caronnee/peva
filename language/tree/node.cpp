@@ -36,7 +36,7 @@ Node::Node() //toto sa normalne nebude pouzivat
 	int active = 0;//ked ju bison vytvori, este niej aktivana
 	//location, object, real numbers a pod, nahodne cisla
 }
-Node::Node(Create_type t)
+Node::Node(std::string s, Create_type t)
 {
 	type = t.type;
 	if (t.type == TypeArray)
@@ -49,7 +49,7 @@ Node::Node(Create_type t)
 		for (int i =0; i<t.range; i++)
 		{
 			array = new Array();
-			array->elements.push_back(Node(*t.data_type));
+			array->elements.push_back(Node(s,*t.data_type));
 		}
 	}
 }
