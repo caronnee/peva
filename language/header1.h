@@ -27,6 +27,10 @@ enum Operation
 	OperationBoolOr,
 	OperationBoolNot
 };
+struct expr
+{
+	Type output;
+};
 
 struct Lval {
 	Operation operation;
@@ -48,6 +52,8 @@ struct Lval {
 	Array * array;
 
 	Create_type type;
+
+	Instructions instructions;
 };
 
 // lex interface
