@@ -46,6 +46,7 @@ struct Location
 	Location(int x = 0, int y = 0);
 };
 struct Node // struktura premennych
+//AK type_function albo Type Procedure, hodnota ulozena v integer_value
 {
 	std::string name;
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia

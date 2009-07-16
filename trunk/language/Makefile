@@ -29,8 +29,8 @@ tree.o:./tree/tree.cpp ./tree/tree.h
 node.o:./tree/node.cpp ./tree/node.h
 	${CXX} ${CFLAGS} -o $@ -c ./tree/node.cpp
 
-instructions.o: ./tree/instructions.h ./tree/instructions.cpp
-	${CXX} ${CFLAGS} -o $@ -c ./tree/instructions.cpp
+instructions.o: instructions.h instructions.cpp
+	${CXX} ${CFLAGS} -o $@ -c instructions.cpp
 
 distclean:
 	rm -f *.o bparser parser.cpp bison.cpp bison.hpp

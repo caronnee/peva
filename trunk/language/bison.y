@@ -61,6 +61,11 @@
 %type<type> ranges
 
 %type<ident> function_header
+%type<node> values
+
+%type<instructions> commands
+%type<instructions> matched
+%type<instructions> unmatched
 
 %start program
 %error-verbose
@@ -103,7 +108,7 @@ names:	TOKEN_IDENTIFIER { $$.push_back($1); }
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
 	;
 
-values: number
+values: number// {add_instruction(IntructionLoad);}
       	| TOKEN_IDENTIFIER
 	| values TOKEN_COMMA TOKEN_IDENTIFIER
 	| values TOKEN_COMMA number
@@ -114,28 +119,33 @@ declare_functions: /*	ziadne deklarovane funkcie	*/
 	|declare_function_
 	;
 
-function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; }
+function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER // { $$ = $2; enter(program, $2); } //pre prgram, aby vedel, ze ma zanorenie
 	;
 
-declare_function_:	function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  //{ reg($1, $3, $5); } //register name, parameter_list, block
-	|declare_function_ function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions //{ reg($2, $4, $6); } /* pozor! parameter uz definovany!*/
+declare_function_:	function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  //{ reg($1, $3, $5); leave(); } //register name, parameter_list, block
+	|declare_function_ function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions //{ reg($2, $4, $6); }
 	|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions //{ reg($1, $4); } 
-	|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions //{ reg($2, $5); } /* pozor! parameter uz definovany!*/
+	|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions //{ reg($2,NULL, $5); } /* pozor! parameter uz definovany! ?*/
 	;
-number:		TOKEN_OPER_SIGNADD TOKEN_REAL 
-      	|TOKEN_OPER_SIGNADD TOKEN_UINT 
-      	|TOKEN_REAL
-      	|TOKEN_UINT
+
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL //{ add_instruction(IntructionRLoad, $2); } //load realu do 
+      	|TOKEN_OPER_SIGNADD TOKEN_UINT//{ if (TOKEN_OPER_SIGNADD == MINUS) {$2*=-1;} add_instruction(IntructionILoad, $2); } 
+      	|TOKEN_REAL//{ add_instruction(IntructionRLoad, $1); } 
+      	|TOKEN_UINT//{ add_instruction(IntructionILoad, $1); } 
 	;
-block_of_instructions: TOKEN_BEGIN TOKEN_END /* prazdno */ //{ $$.clear(); }
-	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  /* ziadna instrukcia */ //{ $$.clear(); }
-	|TOKEN_BEGIN commands TOKEN_END /* neprazdne instrukcie*/ //{ $$ = $2; }
+
+//OK, niet co zkazit
+block_of_instructions: TOKEN_BEGIN TOKEN_END //{ $$.clear(); }
+	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  //{ $$.clear(); }
+	|TOKEN_BEGIN commands TOKEN_END //{ $$ = $2; }
 	;
-commands: matched
-	| commands matched
-	| unmatched
-	| commands unmatched
+
+commands: matched {$$ = $1;}
+	| commands matched { $$ = $1; for(int i = 0; i< $2.size(); i++){$$.push_back($2[i]);} }
+	| unmatched {$$ = $1;}
+	| commands unmatched { $$ = $1; for(int i = 0; i< $2.size(); i++){$$.push_back($2[i]);}  }
 	;
+
 command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
 	|TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON
 	|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
@@ -145,15 +155,15 @@ command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOL
 	|local_variables
 	|simple_command TOKEN_SEMICOLON
       	;
-simple_command:	assign 
-	|variable TOKEN_PLUSPLUS 
-	|variable TOKEN_MINUSMINUS 
-	|variable 
+simple_command:	assign {$$ = $1;}
+	|variable TOKEN_PLUSPLUS// { load_var(program, $1); p->add_instruction(IntructionLoad)} //switch type & load + instruction ++ 
+	|variable TOKEN_MINUSMINUS //{ load_var(program, $1); p->add_instruction(IntructionLoad)} //switch type & load + instruction ++ 
+	|variable //{ load_var(program, $1); } //switch type & load + instruction ++ 
 	;
-assign: variable_left TOKEN_ASSIGN variable
+assign: variable_left TOKEN_ASSIGN variable { }
 	|variable_left TOKEN_ASSIGN number //{ add_instuction(new IntructionLoad(variable_left)) } 
 	;
-variable_left: TOKEN_IDENTIFIER /* musi byt pole, location alebo nejaka ina shopna struktura */
+variable_left: TOKEN_IDENTIFIER 
 	| TOKEN_IDENTIFIER array_access
 	;
 

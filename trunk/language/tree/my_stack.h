@@ -4,9 +4,17 @@
 #include <vector>
 #include <string>
 #include "./tree.h"
-#include "./instructions.h"
+#include "../instructions.h"
 #include "./typedefs.h"
 #include "./node.h"
+
+struct Value
+{
+	Type t;
+	int integer_value;
+	float real_value;
+	std::string string_value;
+};
 
 struct Program
 {
