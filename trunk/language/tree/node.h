@@ -17,6 +17,9 @@ enum Type
 	TypeProcedure,
 	NumberOfTypes
 };
+
+bool is_simple();
+
 struct Create_type
 {
 	int range;
@@ -61,5 +64,6 @@ struct Node // struktura premennych
 	Node(std::string s,Type t);
 	Node (std::string s,Create_type t);
 	Node * clone(); //TODO
+	int size();
 };
 #endif
