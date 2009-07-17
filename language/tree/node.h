@@ -60,5 +60,6 @@ struct Node // struktura premennych
 	Node();
 	Node(std::string s,Type t);
 	Node (std::string s,Create_type t);
+	Node * clone(); //TODO
 };
 #endif
