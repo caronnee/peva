@@ -15,8 +15,8 @@ tree.o: tree.cpp tree.h
 stack.o:my_stack.h my_stack.cpp
 	g++ ${CPPFLAGS} ${CFLAGS} -o stack.o -c my_stack.cpp
 
-instructions.o:instructions.h instructions.cpp
-	g++ ${CPPFLAGS} ${CFLAGS} -o instructions.o -c instructions.cpp
+instructions.o: ../instructions.h ../instructions.cpp
+	g++ ${CPPFLAGS} ${CFLAGS} -o instructions.o -c ../instructions.cpp
 
 distclean:
 	rm -f *.o tree
