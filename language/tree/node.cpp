@@ -1,5 +1,7 @@
 #include "node.h"
 
+static Type simple[] = { TypeInteger, TypeReal, TypeObject };
+
 Create_type::Create_type()
 {
 	type = TypeUndefined;
@@ -25,6 +27,15 @@ Create_type& Create_type::composite ( Create_type t)
 	return *this;// 
 }
 
+bool is_simple(Type t)
+{
+	for (int i =0; i< sizeof(simple)/sizeof(Type); i++)
+	{
+		if (simple[i] == t)
+			return true;
+	}
+	return false;
+}
 Location::Location(int x_, int y_)
 {
 	x = x_; y = y_;
@@ -52,6 +63,19 @@ Node::Node(std::string s, Create_type t)
 			array->elements.push_back(Node(s,*t.data_type));
 		}
 	}
+}
+int Node::size() //kolko v zasoniku ma preskocit, aby sa dostal na zaciatok
+{
+	if (is_simple(this->type))
+	{
+		return 1;
+	}
+	int size = 0;
+	for (int i =0; i< array->elements.size(); i++)
+	{
+		size +=array->elements[i].size();
+	}
+	return size;
 }
 Node::Node(std::string s,Type t)
 {
