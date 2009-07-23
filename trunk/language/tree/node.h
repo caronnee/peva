@@ -4,6 +4,7 @@
 #include <string> 
 #include <vector>
 #include <list>
+#include "typedefs.h"
 
 enum Type
 {
@@ -48,16 +49,18 @@ struct Location
 	int x, y;
 	Location(int x = 0, int y = 0);
 };
+
 struct Node // struktura premennych
-//AK type_function albo Type Procedure, hodnota ulozena v integer_value
 {
 	std::string name;
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
+	std::vector<std::string> parameter_list;
 	Type type;
 	int active; //bola deklarovana v danom bloku
 	int IntegerValue;
 	float RealNumber;
 	Array * array;
+	Function * function;
 	Location LocationValue;
 	Object * ObjectValue;
 	Node();
