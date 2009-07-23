@@ -2,6 +2,8 @@
 #define __BISON_HELP__
 
 #include "./tree/my_stack.h"
+#include "./header1.h"
+
 typedef std::vector<std::string> strings;
 void add_variables(Program * p, strings s, Create_type t);
 /*void add(Program * p, std::vector<std::string>, Type t);
@@ -16,4 +18,5 @@ Node * add_array(Program *p, std::string s, std::vector<int> range, Type t);
 Node * add_array(Program *p, std::string s);
 void add_array(std::vector<Node *> n, Type t);
 */
+Instruction * operRel(Operation op);
 #endif

@@ -8,6 +8,30 @@
 #include "./typedefs.h"
 #include "./node.h"
 
+template class pair<class Key, class Val>
+{
+	Key key;
+	Val val;
+};
+
+enum Parameter_type
+{
+	PARAMETER_BY_REFERENCE,
+	PARAMETER_BY_VALUE
+};
+
+struct Parameter_entry
+{
+	std::string name;
+	Parameter_type;
+}
+struct Functions
+{
+	std::string name;
+	std::vector<Parameter_entry> parameters;
+	int begin; //kde to zacina v stacku
+};
+
 struct Value
 {
 	Type t;
@@ -28,6 +52,7 @@ struct Program
 	Program();
 	void output(Tree * t);
 	int find_index(char a);
+	std::vector<Functions> functions;
 	Tree * find_string(std::string);
 	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
 	/* Vracia, ci sa podarilo pridat alebo nie*/

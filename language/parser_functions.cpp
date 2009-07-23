@@ -98,3 +98,20 @@ void create_array(Node *node, std::vector<int> range)
 		n->array->values.resize(r,Node(n->name,t)); //tu sa to samozrejme inicializuje spravne
 	}
 }*/
+Instruction * operRel(Operation op)
+{
+	switch(op)
+	{
+		case OperationLess:
+			return new InstructionLess();
+		case OperationLessEqual:
+			return new InstructionLessEqual();
+		case OperationEqual:
+			return new InstructionEqual();
+		case OperationGreater:
+			return new InstructionGreater();
+		case OperationGreaterEqual:
+			return InstructionGreaerEqual();
+			default return NULL;
+	}
+}
