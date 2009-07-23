@@ -54,7 +54,6 @@ struct Node // struktura premennych
 {
 	std::string name;
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
-	std::vector<std::string> parameter_list;
 	Type type;
 	int active; //bola deklarovana v danom bloku
 	int IntegerValue;
@@ -69,4 +68,9 @@ struct Node // struktura premennych
 	Node * clone(); //TODO
 	int size();
 };
+struct Nodes
+{
+	Create_type t;
+	std::vector<Node *> nodes_in_depth;
+}
 #endif
