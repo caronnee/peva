@@ -66,6 +66,7 @@
 %type<instructions> commands
 %type<instructions> matched
 %type<instructions> unmatched
+%type<instructions> local_variables
 
 %start program
 %error-verbose
@@ -84,10 +85,21 @@ global_variables:	/*	ziadne parametre	*/
 	|global_variables local_variables /*Uz pridane parametre*/
 	;
 
-//OK, instrukcie s tym uz nic nerobia, TODO mali by robit, minimalne to zdrzat
-local_variables:  simple_type names TOKEN_SEMICOLON {  add_variables(program, $2, $1);}
-	| complex_type names TOKEN_SEMICOLON  { add_variables(program, $2,$1); }
+//OK, instrukcie s tym uz nic nerobia
+type:	  simple_type { $$ = $1;}
+	| complex_type { $$ = $1; }
 	;
+//OK
+local_variables:  type names TOKEN_SEMICOLON 
+	       {  
+			add_variables(program, $2, $1);
+			for(int i =0; i< $2.size(); i++)
+			{
+				$$.push_back(new InstructionCreate($2[i]));
+			}
+		}
+	;
+
 //OK
 simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
     	|TOKEN_VAR_INT { $$ = Create_type(TypeInteger); }
@@ -104,7 +116,7 @@ ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$ = Create_type(TypeArray,$2); }
       	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { Create_type t(TypeArray,$3); $$ = $1.composite(t); }
 	;
 
-//OK TODO
+//OK
 names:	TOKEN_IDENTIFIER { $$.push_back($1); }
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN number { $$.push_back($1); } //TODO pridat instrukciu
      	|names TOKEN_COMMA TOKEN_IDENTIFIER { $1.push_back($3); $$ = $1; }
@@ -155,6 +167,7 @@ commands: matched {$$ = $1;}
 	| commands unmatched { $$ = join_instructions($1, $2); }
 	;
 
+//OK
 command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
        		{ $9 = join_instructions($9, $7); 
 		  $3.push_back(new InstructionMustJump($9.size())); 
@@ -188,13 +201,14 @@ command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOL
 simple_command:	assign {$$ = $1;}
 	|variable TOKEN_PLUSPLUS { $$.push_back(new IntructionLoad($1));$$.push_back(new IntructionPlusPlus());} //switch type & load + instruction ++ 
 	|variable TOKEN_MINUSMINUS { $$.push_back(new IntructionLoad($1)); $$.push_back(new IntructionMinusMinus);}
-	|variable //{ load_var(program, $1); } //switch type & load + instruction ++ 
+	|variable { $$ = $1; } 
 	;
-assign: variable_left TOKEN_ASSIGN variable { }
-	|variable_left TOKEN_ASSIGN number //{ add_instuction(new IntructionLoad(variable_left)) } 
+assign: variable_left TOKEN_ASSIGN expression { $$ = $1; $$.push_back(new IntructionStore()) }
 	;
-variable_left: TOKEN_IDENTIFIER 
-	| TOKEN_IDENTIFIER array_access
+
+//OK
+variable_left: TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1));}
+	| TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$=join_instructions($$, $2); }
 	;
 
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
