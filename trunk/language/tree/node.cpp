@@ -24,7 +24,7 @@ Create_type& Create_type::composite ( Create_type t)
 {
 	Create_type comp(*this);
 	comp.data_type = &t;
-	return *this;// 
+	return *this;
 }
 
 bool is_simple(Type t)
