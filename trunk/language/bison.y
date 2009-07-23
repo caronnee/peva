@@ -95,7 +95,12 @@ local_variables:  type names TOKEN_SEMICOLON
 			add_variables(program, $2, $1);
 			for(int i =0; i< $2.size(); i++)
 			{
-				$$.push_back(new InstructionCreate($2[i]));
+				$$.push_back(new InstructionCreate($2[i].ident));
+				if ($2[i].default_set){ 
+					$$.push_back(new InstructionLoad($2[i].ident));
+					$$ = join_instructions($$, $2.ins);
+					$$.push_back(new InstructionStore();)
+					}
 			}
 		}
 	;
@@ -117,10 +122,10 @@ ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$ = Create_type(TypeArray,$2); }
 	;
 
 //OK
-names:	TOKEN_IDENTIFIER { $$.push_back($1); }
-	|TOKEN_IDENTIFIER TOKEN_ASSIGN number { $$.push_back($1); } //TODO pridat instrukciu
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER { $1.push_back($3); $$ = $1; }
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
+names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); }
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression { $$.push_back(Constr($1,$3)); }
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER { $1.push_back(Constr($3)); $$ = $1; }
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN expression { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
 	;
 

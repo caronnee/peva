@@ -31,13 +31,17 @@ struct expr
 {
 	Type output;
 };
-
+struct Constr
+{
+	std::string id;
+	Instructions ins;
+};
 struct Lval {
 	Operation operation;
 	int number;
 
-	std::string ident; 
-	std::vector<std::string> idents;
+	Constr ident; 
+	std::vector<Constr> idents;
 
 	float f_number;
 
