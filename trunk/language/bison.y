@@ -76,14 +76,15 @@
 %%
 
 //OK
-program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions // { add_main_code(program, block_of_instructions); }
+program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions { reg_main(program, block_of_instructions); }
 	;
 
 //OK, neprepaguje sa hore
 global_variables:	/*	ziadne parametre	*/ 
 	|global_variables local_variables /*Uz pridane parametre*/
 	;
-//OK
+
+//OK, instrukcie s tym uz nic nerobia, TODO mali by robit, minimalne to zdrzat
 local_variables:  simple_type names TOKEN_SEMICOLON {  add_variables(program, $2, $1);}
 	| complex_type names TOKEN_SEMICOLON  { add_variables(program, $2,$1); }
 	;
@@ -93,9 +94,11 @@ simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
 	|TOKEN_LOCATION{ $$ = Create_type(TypeLocation); }
 	|TOKEN_OBJECT{ $$ = Create_type(TypeObject); }
 	;
+
 //OK
 complex_type: simple_type ranges { $$ = $2.composite($1); }
 	;
+
 //OK
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$ = Create_type(TypeArray,$2); }
       	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { Create_type t(TypeArray,$3); $$ = $1.composite(t); }
@@ -108,6 +111,7 @@ names:	TOKEN_IDENTIFIER { $$.push_back($1); }
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN number { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $1.push_back($3);$$ = $1; } //TODO stejne ako predtym, instrukcia
 	;
+
 //OK
 values: number { $$.push_back(new InstructionLoad($1));}
       	| TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1)); }
