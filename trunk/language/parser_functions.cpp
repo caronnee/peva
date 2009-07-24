@@ -66,7 +66,7 @@ Instruction *operMul(Operation op)
 		default: return NULL;
 	}
 }
-Instruction * operAdd(Operation op)
+Instruction * operAdd(Operation op) // add
 {
 	switch(op)
 	{
@@ -76,14 +76,12 @@ Instruction * operAdd(Operation op)
 			return new InstructionMinus();
 	}
 }
- Instruction * OperOr(Operation op)
+Instruction * OperOr(Operation op) //Bool_OR
 {
 	switch(op)
 	{
 		case OperationBoolNot:
 			return new InstructionBinaryNot();
-		case OperationBoolAnd:
-			return new InstructionBinaryAnd();
 		case OperationBoolOr:
 			return new InstructionBinaryOr();
 		default: return NULL;

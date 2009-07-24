@@ -139,4 +139,12 @@ class InstructionLe : public Instruction{
 	public:
 		InstructionLe();
 };
+class InstructionBegin : public Instruction{
+	public:
+		InstructionBegin(); //ked uz pre nic ine, aspon pre breaky:)
+};
+class InstructionEndBlock : public Instruction{
+	public:
+		InstructionEndBlock();
+}
 #endif
