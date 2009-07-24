@@ -35,6 +35,7 @@ struct Constr
 {
 	std::string id;
 	Instructions ins;
+	bool default_set;
 };
 struct Lval {
 	Operation operation;
