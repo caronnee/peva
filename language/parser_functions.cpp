@@ -103,15 +103,15 @@ Instruction * operRel(Operation op)
 	switch(op)
 	{
 		case OperationLess:
-			return new InstructionLess();
+			return new InstructionLt();
 		case OperationLessEqual:
-			return new InstructionLessEqual();
+			return new InstructionLe();
 		case OperationEqual:
 			return new InstructionEqual();
 		case OperationGreater:
-			return new InstructionGreater();
+			return new InstructionGt();
 		case OperationGreaterEqual:
-			return InstructionGreaerEqual();
-			default return NULL;
+			return new InstructionGe();
+		default: return NULL;
 	}
 }

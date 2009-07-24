@@ -25,8 +25,6 @@
 %token TOKEN_WHILE
 %token TOKEN_DO
 %token TOKEN_FOR
-%token TOKEN_BOOL_AND
-%token TOKEN_BOOL_OR
 %token TOKEN_RETURN
 %token TOKEN_BREAK
 
@@ -53,6 +51,8 @@
 %token<operation> TOKEN_OPER_MUL
 %token<operation> TOKEN_PLUSPLUS
 %token<operation> TOKEN_MINUSMINUS
+%token<operation> TOKEN_BOOL_AND
+%token<operation> TOKEN_BOOL_OR
 
 %type<idents> names
 %type<type> simple_type
@@ -63,13 +63,29 @@
 %type<ident> function_header
 
 %type<instructions> commands
+%type<instructions> command
 %type<instructions> matched
 %type<instructions> unmatched
 %type<instructions> local_variables
+%type<instructions> variable
+%type<instructions> variable_left
 %type<instructions> block_of_instructions 
-%type<instructions> expression
 %type<instructions> values
 %type<instructions> number
+%type<instructions> init
+%type<instructions> expression_bool
+%type<instructions> expression
+%type<instructions> exps
+%type<instructions> expression_base
+%type<instructions> expression_mul
+%type<instructions> expression_add
+%type<instructions> expression_bool_base
+%type<instructions> expression_bool_or
+%type<instructions> assign
+%type<instructions> simple_command
+%type<instructions> call_fce
+%type<instructions> call_parameters
+%type<instructions> array_access
 
 %start program
 %error-verbose
@@ -180,20 +196,20 @@ command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOL
        		{ 
 		  $9 = join_instructions($9, $7); 
 		  $3.push_back(new InstructionMustJump($9.size())); 
-		  $5.push_back(new InstructionJump(-1*$9.size()-$5.size()));
+		  $5.push_back(new InstructionJump(-1*$9.size()-$5.size(),1));
 		  $9 = join_instructions($9,$5);
 		  $$ = join_instructions($3,$9);
 		}
 	|TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ $$ = join_instructions($2,$5); 
-		  $$.push_back(new InstructionJump(-1*$$.size())); 
+		  $$.push_back(new InstructionJump(-1*$$.size(),1)); 
 		}
 	|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 		{
-			$$.push_back(new InstructionMustJump($3.size());
+			$$.push_back(new InstructionMustJump($3.size()));
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
-			$$.push_back(new InstructionJump(-1*$$.size()));
+			$$.push_back(new InstructionJump(-1*$$.size(),1));
 		}
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
@@ -212,13 +228,13 @@ command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOL
 
 //OK
 simple_command:	assign {$$ = $1;}
-	|variable TOKEN_PLUSPLUS { $$.push_back(new IntructionLoad($1));$$.push_back(new IntructionPlusPlus());} //switch type & load + instruction ++ 
-	|variable TOKEN_MINUSMINUS { $$.push_back(new IntructionLoad($1)); $$.push_back(new IntructionMinusMinus);}
+	|variable TOKEN_PLUSPLUS { $$.push_back(new InstructionPlusPlus());} 
+	|variable TOKEN_MINUSMINUS { $$.push_back(new InstructionMinusMinus());}
 	|variable { $$ = $1; } 
 	;
 
 //OK
-assign: variable_left TOKEN_ASSIGN expression { $$ = $1; $$.push_back(new IntructionStore()) }
+assign: variable_left TOKEN_ASSIGN expression { $$ = $1; $$.push_back(new InstructionStore()) }
 	;
 
 //OK
@@ -254,7 +270,7 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions 
 
 	 |TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched 
 		{
-		  $5,push_back(new InstructionMustJump($7.size()));
+		  $5.push_back(new InstructionMustJump($7.size()));
 		  $3.push_back(new InstructionJump(1,$5.size()));
 		  $$ = join_instructions($3,$5);
 		  $$ = join_instructions($$,$7);
@@ -268,16 +284,16 @@ init: 	local_variables { $$ = $1;}
 
 //OK
 variable: TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1));}
-	|TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$=join_instructions($$,$1);}
+	|TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$=join_instructions($$,$2);}
 	|call_fce {$$ = $1;}
 //	|variable TOKEN_DOT TOKEN_IDENTIFIER {}//tuto musi byt funkcia, co odpoveda danemu identifierovi, napr see(3).IsMoving()
-	|inner call_fce {$$.push_back(new InstructionCallMethod()); p->leave(); } //znici value, z ktoreho to bolo volane a 
+	|inner call_fce {$$.push_back(new CallMethod()); program->leave(); } //znici value, z ktoreho to bolo volane a 
 	;
 //OK TODO
-inner: variable TOKEN_DOT { p->enter($1.type);}
+inner: variable TOKEN_DOT { program->enter();}
 
 //OK TODO elegantnejc
-array_access: TOKEN_LSBRA exps TOKEN_RSBRA { $$ = $3; $$.push_back(new InstructionLoad());} //vezme zo stacku dve a odnoty pouzije
+array_access: TOKEN_LSBRA exps TOKEN_RSBRA { $$ = $2; $$.push_back(new InstructionLoad());} //vezme zo stacku dve a odnoty pouzije
 	|array_access TOKEN_LSBRA exps TOKEN_RSBRA { $$ = join_instructions($1, $3); $$.push_back(new InstructionLoad());}  
 	;
 
@@ -290,7 +306,7 @@ exps: expression {$$ = $1;}
 expression_base: variable { $$ = $1;}
 	|number{$$ = $1;}
 	|variable TOKEN_MINUSMINUS {$$ = $1; $$.push_back(new InstructionMinusMinus());}
-	|variable TOKEN_PLUSPLUS {$$ = $1; $$.push_back(new InstructionPlusPlus();)}
+	|variable TOKEN_PLUSPLUS {$$ = $1; $$.push_back(new InstructionPlusPlus());}
 	|TOKEN_LPAR expression TOKEN_RPAR {$$ = $2;}
 	;
 
@@ -315,7 +331,7 @@ expression_bool_base: expression { $$ = $1;}
 
 //OK
 expression_bool_or: expression_bool_base {$$ = $1; }
-	| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR {$$ = join_instructions($1,$3); $$.push_back((operOr($2)));}
+	| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR {$$ = join_instructions($1,$4); $$.push_back((operOr($2)));}
 	;
 
 //OK

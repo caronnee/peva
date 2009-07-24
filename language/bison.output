@@ -145,28 +145,28 @@ TOKEN_ELSE (265) 60 65
 TOKEN_WHILE (266) 42 43
 TOKEN_DO (267) 42
 TOKEN_FOR (268) 41
-TOKEN_BOOL_AND (269) 92
-TOKEN_BOOL_OR (270) 90
-TOKEN_RETURN (271) 44 45
-TOKEN_BREAK (272) 46
-TOKEN_SEMICOLON (273) 6 35 41 42 44 45 46 48
-TOKEN_DOT (274) 72
-TOKEN_COMMA (275) 16 17 18 21 22 59 76
-TOKEN_LPAR (276) 1 26 27 28 29 41 42 43 56 60 63 64 65 81 90
-TOKEN_RPAR (277) 1 26 27 28 29 41 42 43 56 60 63 64 65 81 90
-TOKEN_LSBRA (278) 12 13 73 74
-TOKEN_RSBRA (279) 12 13 73 74
-TOKEN_ASSIGN (280) 15 17 18 53
-TOKEN_BEGIN (281) 18 34 35 36
-TOKEN_END (282) 18 34 35 36
-TOKEN_IDENTIFIER (283) 14 15 16 17 18 20 21 25 54 55 56 68 69
-TOKEN_UINT (284) 12 13 31 33
-TOKEN_REAL (285) 30 32
-TOKEN_OPER_REL (286) 88
-TOKEN_OPER_SIGNADD (287) 30 31 85
-TOKEN_OPER_MUL (288) 83
-TOKEN_PLUSPLUS (289) 50 80
-TOKEN_MINUSMINUS (290) 51 79
+TOKEN_RETURN (269) 44 45
+TOKEN_BREAK (270) 46
+TOKEN_SEMICOLON (271) 6 35 41 42 44 45 46 48
+TOKEN_DOT (272) 72
+TOKEN_COMMA (273) 16 17 18 21 22 59 76
+TOKEN_LPAR (274) 1 26 27 28 29 41 42 43 56 60 63 64 65 81 90
+TOKEN_RPAR (275) 1 26 27 28 29 41 42 43 56 60 63 64 65 81 90
+TOKEN_LSBRA (276) 12 13 73 74
+TOKEN_RSBRA (277) 12 13 73 74
+TOKEN_ASSIGN (278) 15 17 18 53
+TOKEN_BEGIN (279) 18 34 35 36
+TOKEN_END (280) 18 34 35 36
+TOKEN_IDENTIFIER (281) 14 15 16 17 18 20 21 25 54 55 56 68 69
+TOKEN_UINT (282) 12 13 31 33
+TOKEN_REAL (283) 30 32
+TOKEN_OPER_REL (284) 88
+TOKEN_OPER_SIGNADD (285) 30 31 85
+TOKEN_OPER_MUL (286) 83
+TOKEN_PLUSPLUS (287) 50 80
+TOKEN_MINUSMINUS (288) 51 79
+TOKEN_BOOL_AND (289) 92
+TOKEN_BOOL_OR (290) 90
 
 
 Nonterminals, with rules where they appear
@@ -635,7 +635,7 @@ state 31
 state 32
 
    56 call_fce: TOKEN_IDENTIFIER . TOKEN_LPAR call_parameters TOKEN_RPAR
-   68 variable: TOKEN_IDENTIFIER .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS]
+   68 variable: TOKEN_IDENTIFIER .  [TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    69         | TOKEN_IDENTIFIER . array_access
    73 array_access: . TOKEN_LSBRA exps TOKEN_RSBRA
    74             | . array_access TOKEN_LSBRA exps TOKEN_RSBRA
@@ -688,7 +688,7 @@ state 37
 state 38
 
    72 inner: variable . TOKEN_DOT
-   77 expression_base: variable .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL]
+   77 expression_base: variable .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    79                | variable . TOKEN_MINUSMINUS
    80                | variable . TOKEN_PLUSPLUS
 
@@ -719,7 +719,7 @@ state 40
 state 41
 
    83 expression_mul: expression_mul . TOKEN_OPER_MUL expression_base
-   84 expression_add: expression_mul .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD]
+   84 expression_add: expression_mul .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
 
     TOKEN_OPER_MUL  shift, and go to state 62
 
@@ -729,7 +729,7 @@ state 41
 state 42
 
    85 expression_add: expression_add . TOKEN_OPER_SIGNADD expression_mul
-   86 expression: expression_add .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL]
+   86 expression: expression_add .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
 
     TOKEN_OPER_SIGNADD  shift, and go to state 63
 
@@ -917,7 +917,7 @@ state 53
 
 state 54
 
-   69 variable: TOKEN_IDENTIFIER array_access .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS]
+   69 variable: TOKEN_IDENTIFIER array_access .  [TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    74 array_access: array_access . TOKEN_LSBRA exps TOKEN_RSBRA
 
     TOKEN_LSBRA  shift, and go to state 77
@@ -1311,7 +1311,7 @@ state 78
 state 79
 
    83 expression_mul: expression_mul . TOKEN_OPER_MUL expression_base
-   85 expression_add: expression_add TOKEN_OPER_SIGNADD expression_mul .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD]
+   85 expression_add: expression_add TOKEN_OPER_SIGNADD expression_mul .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
 
     TOKEN_OPER_MUL  shift, and go to state 62
 
@@ -2091,7 +2091,7 @@ state 134
 
 state 135
 
-   87 expression_bool_base: expression .  [TOKEN_BOOL_AND, TOKEN_BOOL_OR, TOKEN_SEMICOLON, TOKEN_RPAR]
+   87 expression_bool_base: expression .  [TOKEN_SEMICOLON, TOKEN_RPAR, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    88                     | expression . TOKEN_OPER_REL expression
 
     TOKEN_OPER_REL  shift, and go to state 149
@@ -2109,7 +2109,7 @@ state 136
 state 137
 
    90 expression_bool_or: expression_bool_or . TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
-   91 expression_bool: expression_bool_or .  [TOKEN_BOOL_AND, TOKEN_SEMICOLON, TOKEN_RPAR]
+   91 expression_bool: expression_bool_or .  [TOKEN_SEMICOLON, TOKEN_RPAR, TOKEN_BOOL_AND]
 
     TOKEN_BOOL_OR  shift, and go to state 150
 
@@ -2124,8 +2124,8 @@ state 138
    65          | TOKEN_IF TOKEN_LPAR expression_bool . TOKEN_RPAR matched TOKEN_ELSE unmatched
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_BOOL_AND  shift, and go to state 151
-    TOKEN_RPAR      shift, and go to state 152
+    TOKEN_RPAR      shift, and go to state 151
+    TOKEN_BOOL_AND  shift, and go to state 152
 
 
 state 139
@@ -2133,8 +2133,8 @@ state 139
    43 command: TOKEN_WHILE TOKEN_LPAR expression_bool . TOKEN_RPAR block_of_instructions
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_BOOL_AND  shift, and go to state 151
     TOKEN_RPAR      shift, and go to state 153
+    TOKEN_BOOL_AND  shift, and go to state 152
 
 
 state 140
@@ -2256,52 +2256,6 @@ state 150
 
 state 151
 
-   30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
-   31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
-   32       | . TOKEN_REAL
-   33       | . TOKEN_UINT
-   56 call_fce: . TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
-   68 variable: . TOKEN_IDENTIFIER
-   69         | . TOKEN_IDENTIFIER array_access
-   70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
-   77 expression_base: . variable
-   78                | . number
-   79                | . variable TOKEN_MINUSMINUS
-   80                | . variable TOKEN_PLUSPLUS
-   81                | . TOKEN_LPAR expression TOKEN_RPAR
-   82 expression_mul: . expression_base
-   83               | . expression_mul TOKEN_OPER_MUL expression_base
-   84 expression_add: . expression_mul
-   85               | . expression_add TOKEN_OPER_SIGNADD expression_mul
-   86 expression: . expression_add
-   87 expression_bool_base: . expression
-   88                     | . expression TOKEN_OPER_REL expression
-   89 expression_bool_or: . expression_bool_base
-   90                   | . expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
-   92 expression_bool: expression_bool TOKEN_BOOL_AND . expression_bool_or
-
-    TOKEN_LPAR          shift, and go to state 31
-    TOKEN_IDENTIFIER    shift, and go to state 32
-    TOKEN_UINT          shift, and go to state 33
-    TOKEN_REAL          shift, and go to state 34
-    TOKEN_OPER_SIGNADD  shift, and go to state 35
-
-    number                go to state 36
-    call_fce              go to state 37
-    variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 159
-
-
-state 152
-
     4 type: . simple_type
     5     | . complex_type
     6 local_variables: . type names TOKEN_SEMICOLON
@@ -2346,7 +2300,7 @@ state 152
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 160
+    TOKEN_IF          shift, and go to state 159
     TOKEN_WHILE       shift, and go to state 83
     TOKEN_DO          shift, and go to state 84
     TOKEN_FOR         shift, and go to state 85
@@ -2359,15 +2313,61 @@ state 152
     local_variables        go to state 92
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 161
-    command                go to state 162
+    block_of_instructions  go to state 160
+    command                go to state 161
     simple_command         go to state 96
     assign                 go to state 97
     variable_left          go to state 98
     call_fce               go to state 37
-    matched                go to state 163
+    matched                go to state 162
     variable               go to state 101
     inner                  go to state 39
+
+
+state 152
+
+   30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
+   31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
+   32       | . TOKEN_REAL
+   33       | . TOKEN_UINT
+   56 call_fce: . TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
+   68 variable: . TOKEN_IDENTIFIER
+   69         | . TOKEN_IDENTIFIER array_access
+   70         | . call_fce
+   71         | . inner call_fce
+   72 inner: . variable TOKEN_DOT
+   77 expression_base: . variable
+   78                | . number
+   79                | . variable TOKEN_MINUSMINUS
+   80                | . variable TOKEN_PLUSPLUS
+   81                | . TOKEN_LPAR expression TOKEN_RPAR
+   82 expression_mul: . expression_base
+   83               | . expression_mul TOKEN_OPER_MUL expression_base
+   84 expression_add: . expression_mul
+   85               | . expression_add TOKEN_OPER_SIGNADD expression_mul
+   86 expression: . expression_add
+   87 expression_bool_base: . expression
+   88                     | . expression TOKEN_OPER_REL expression
+   89 expression_bool_or: . expression_bool_base
+   90                   | . expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
+   92 expression_bool: expression_bool TOKEN_BOOL_AND . expression_bool_or
+
+    TOKEN_LPAR          shift, and go to state 31
+    TOKEN_IDENTIFIER    shift, and go to state 32
+    TOKEN_UINT          shift, and go to state 33
+    TOKEN_REAL          shift, and go to state 34
+    TOKEN_OPER_SIGNADD  shift, and go to state 35
+
+    number                go to state 36
+    call_fce              go to state 37
+    variable              go to state 38
+    inner                 go to state 39
+    expression_base       go to state 40
+    expression_mul        go to state 41
+    expression_add        go to state 42
+    expression            go to state 135
+    expression_bool_base  go to state 136
+    expression_bool_or    go to state 163
 
 
 state 153
@@ -2548,22 +2548,12 @@ state 158
 
 state 159
 
-   90 expression_bool_or: expression_bool_or . TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
-   92 expression_bool: expression_bool TOKEN_BOOL_AND expression_bool_or .  [TOKEN_BOOL_AND, TOKEN_SEMICOLON, TOKEN_RPAR]
-
-    TOKEN_BOOL_OR  shift, and go to state 150
-
-    $default  reduce using rule 92 (expression_bool)
-
-
-state 160
-
    60 matched: TOKEN_IF . TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched
 
     TOKEN_LPAR  shift, and go to state 168
 
 
-state 161
+state 160
 
    62 matched: block_of_instructions .  [TOKEN_ELSE]
    63 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions .  [TOKEN_LOCATION, TOKEN_OBJECT, TOKEN_VAR_REAL, TOKEN_VAR_INT, TOKEN_IF, TOKEN_WHILE, TOKEN_DO, TOKEN_FOR, TOKEN_RETURN, TOKEN_BREAK, TOKEN_BEGIN, TOKEN_END, TOKEN_IDENTIFIER]
@@ -2572,7 +2562,7 @@ state 161
     $default    reduce using rule 63 (unmatched)
 
 
-state 162
+state 161
 
    61 matched: command .  [TOKEN_ELSE]
    64 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command .  [TOKEN_LOCATION, TOKEN_OBJECT, TOKEN_VAR_REAL, TOKEN_VAR_INT, TOKEN_IF, TOKEN_WHILE, TOKEN_DO, TOKEN_FOR, TOKEN_RETURN, TOKEN_BREAK, TOKEN_BEGIN, TOKEN_END, TOKEN_IDENTIFIER]
@@ -2581,12 +2571,22 @@ state 162
     $default    reduce using rule 64 (unmatched)
 
 
-state 163
+state 162
 
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched . TOKEN_ELSE matched
    65 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched . TOKEN_ELSE unmatched
 
     TOKEN_ELSE  shift, and go to state 169
+
+
+state 163
+
+   90 expression_bool_or: expression_bool_or . TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
+   92 expression_bool: expression_bool TOKEN_BOOL_AND expression_bool_or .  [TOKEN_SEMICOLON, TOKEN_RPAR, TOKEN_BOOL_AND]
+
+    TOKEN_BOOL_OR  shift, and go to state 150
+
+    $default  reduce using rule 92 (expression_bool)
 
 
 state 164
@@ -2601,8 +2601,8 @@ state 165
    42 command: TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool . TOKEN_RPAR TOKEN_SEMICOLON
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_BOOL_AND  shift, and go to state 151
     TOKEN_RPAR      shift, and go to state 170
+    TOKEN_BOOL_AND  shift, and go to state 152
 
 
 state 166
@@ -2610,8 +2610,8 @@ state 166
    41 command: TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool . TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_BOOL_AND   shift, and go to state 151
     TOKEN_SEMICOLON  shift, and go to state 171
+    TOKEN_BOOL_AND   shift, and go to state 152
 
 
 state 167
@@ -2619,8 +2619,8 @@ state 167
    90 expression_bool_or: expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool . TOKEN_RPAR
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_BOOL_AND  shift, and go to state 151
     TOKEN_RPAR      shift, and go to state 172
+    TOKEN_BOOL_AND  shift, and go to state 152
 
 
 state 168
@@ -2790,8 +2790,8 @@ state 173
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool . TOKEN_RPAR matched TOKEN_ELSE matched
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_BOOL_AND  shift, and go to state 151
     TOKEN_RPAR      shift, and go to state 178
+    TOKEN_BOOL_AND  shift, and go to state 152
 
 
 state 174
@@ -2865,7 +2865,7 @@ state 178
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 160
+    TOKEN_IF          shift, and go to state 159
     TOKEN_WHILE       shift, and go to state 83
     TOKEN_DO          shift, and go to state 84
     TOKEN_FOR         shift, and go to state 85
@@ -2958,7 +2958,7 @@ state 182
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 160
+    TOKEN_IF          shift, and go to state 159
     TOKEN_WHILE       shift, and go to state 83
     TOKEN_DO          shift, and go to state 84
     TOKEN_FOR         shift, and go to state 85

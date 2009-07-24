@@ -60,5 +60,7 @@ struct Program
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	bool add(std::string name, Create_type t);
 	Node * create_type(Type t);
+	void enter();
+	void leave();
 };
 #endif
