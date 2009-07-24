@@ -35,7 +35,28 @@ class Instruction
 {
 	Values * values;	
 public:
-	virtual int execute() = 0;
+	virtual int execute();
 	Instruction();
+};
+class InstructionCreate : public Instruction{
+	public:
+		InstructionCreate(std::string s);
+		InstructionCreate();
+};
+class InstructionLoad : public Instruction{
+	public:
+		InstructionLoad(std::string s);
+		InstructionLoad(int i);
+		InstructionLoad(float f);
+		InstructionLoad();
+};
+
+class InstructionStore : public Instruction{
+	public:
+		InstructionStore();
+};
+class Call : public Instruction
+{
+	Call();
 };
 #endif
