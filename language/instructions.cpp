@@ -113,7 +113,14 @@ InstructionLe::InstructionLe()
 {
 	name_ = "InstructionLe";
 }
-
+InstructionBegin::InstructionBegin
+{
+	name_ = "InstructionBegin";
+}
+InstructionEndBlock::InstructionEndBlock
+{
+	name_ = "InstructionEndBlock";
+}
 
 std::string Instruction::name()
 {
