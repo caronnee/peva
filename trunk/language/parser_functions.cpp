@@ -3,11 +3,11 @@
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
-void add_variables(Program *p, strings s, Create_type t)
+void add_variables(Program *p, std::vector<Constr> s, Create_type t)
 {
 	for (int i =0; i< s.size(); i++)
 	{
-		p->add(s[i],t); //TODO checkovat, ci to preslo OK
+		p->add(s[i].id,t); //TODO checkovat, ci to preslo OK
 	}
 }
 /*void add(Program * p, std::vector<std::string> n, Type t)

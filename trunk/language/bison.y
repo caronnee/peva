@@ -58,6 +58,7 @@
 %type<type> simple_type
 %type<type> complex_type
 %type<type> ranges
+%type<type> type
 
 %type<ident> function_header
 %type<node> values
@@ -66,6 +67,7 @@
 %type<instructions> matched
 %type<instructions> unmatched
 %type<instructions> local_variables
+%type<instructions> block_of_instructions 
 
 %start program
 %error-verbose
@@ -76,7 +78,7 @@
 %%
 
 //OK
-program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions { reg_main(program, block_of_instructions); }
+program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions { reg_main(program, $6); }
 	;
 
 //OK, neprepaguje sa hore
@@ -94,9 +96,9 @@ local_variables:  type names TOKEN_SEMICOLON
 			add_variables(program, $2, $1);
 			for(int i =0; i< $2.size(); i++)
 			{
-				$$.push_back(new InstructionCreate($2[i].ident));
+				$$.push_back(new InstructionCreate($2[i].id));
 				if ($2[i].default_set){ 
-					$$.push_back(new InstructionLoad($2[i].ident));
+					$$.push_back(new InstructionLoad($2[i].id));
 					$$ = join_instructions($$, $2.ins);
 					$$.push_back(new InstructionStore();)
 					}

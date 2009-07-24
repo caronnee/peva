@@ -5,7 +5,10 @@
 #include "./header1.h"
 
 typedef std::vector<std::string> strings;
-void add_variables(Program * p, strings s, Create_type t);
+void add_variables(Program * p, std::vector<Constr> s, Create_type t);
+
+void reg_main(Program * p,Instructions ins);
+Instructions join_instructions(Instructions a, Instructions b);
 /*void add(Program * p, std::vector<std::string>, Type t);
 void add(Program * p, std::string s, Type t);
 void add(Program * p, std::string s, int value);

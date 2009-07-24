@@ -4,7 +4,7 @@
 #include <string>
 #include "./tree/my_stack.h"
 
-enum Operation
+/*enum Operation
 {
 	OperationPlus,
 	OperationMinus,
@@ -26,17 +26,19 @@ enum Operation
 	OperationBoolAnd,
 	OperationBoolOr,
 	OperationBoolNot
-};
+};*/
 struct expr
 {
 	Type output;
 };
+
 struct Constr
 {
 	std::string id;
 	Instructions ins;
 	bool default_set;
 };
+
 struct Lval {
 	Operation operation;
 	int number;
