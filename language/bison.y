@@ -20,7 +20,6 @@
 %token TOKEN_VAR_REAL
 %token TOKEN_VAR_INT
 %token TOKEN_FUNCTION
-%token TOKEN_ARRAY
 %token TOKEN_IF
 %token TOKEN_ELSE
 %token TOKEN_WHILE
@@ -267,7 +266,7 @@ variable: TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1));}
 	|TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$=join_instructions($$,$1);}
 	|call_fce {$$ = $1;}
 //	|variable TOKEN_DOT TOKEN_IDENTIFIER {}//tuto musi byt funkcia, co odpoveda danemu identifierovi, napr see(3).IsMoving()
-	|variable TOKEN_DOT call_fce {$$.push_back(new InstructionCallMethod()); p->leave(); } //znici value, z ktoreho to bolo volane a 
+	|inner call_fce {$$.push_back(new InstructionCallMethod()); p->leave(); } //znici value, z ktoreho to bolo volane a 
 	;
 //OK TODO
 inner: variable TOKEN_DOT { p->enter($1.type);}

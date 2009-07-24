@@ -59,7 +59,6 @@ struct Node // struktura premennych
 	int IntegerValue;
 	float RealNumber;
 	Array * array;
-	Function * function;
 	Location LocationValue;
 	Object * ObjectValue;
 	Node();

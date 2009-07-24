@@ -8,7 +8,7 @@
 #include "./typedefs.h"
 #include "./node.h"
 
-template class pair<class Key, class Val>
+template <class Key, class Val>class pair
 {
 	Key key;
 	Val val;
@@ -23,8 +23,10 @@ enum Parameter_type
 struct Parameter_entry
 {
 	std::string name;
-	Parameter_type;
-}
+	Parameter_type val_type;
+	Create_type type;
+};
+
 struct Functions
 {
 	std::string name;

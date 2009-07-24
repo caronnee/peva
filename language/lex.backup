@@ -1,25 +1,13 @@
-State #56 is non-accepting -
+State #55 is non-accepting -
  associated rule line numbers:
-	52	53
+	51	52
  out-transitions: [ 0-9 ]
  jam-transitions: EOF [ \000-/  :-\377 ]
 
-State #80 is non-accepting -
+State #78 is non-accepting -
  associated rule line numbers:
-	52	53
+	51	52
  out-transitions: [ 0-9 ]
  jam-transitions: EOF [ \000-/  :-\377 ]
 
-State #115 is non-accepting -
- associated rule line numbers:
-	31
- out-transitions: [ \t  \f-\r  ' '  o ]
- jam-transitions: EOF [ \000-\b  \n-\v  \016-\037  !-n  p-\377 ]
-
-State #121 is non-accepting -
- associated rule line numbers:
-	31
- out-transitions: [ f ]
- jam-transitions: EOF [ \000-e  g-\377 ]
-
-4 backing up (non-accepting) states.
+2 backing up (non-accepting) states.
