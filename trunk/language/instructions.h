@@ -3,40 +3,14 @@
 #include "./tree/node.h" //su tam ulozene node  values
 #include "./tree/typedefs.h"
 
-/*enum InstructionType
-{
-	InstructionLoad = 0,//loaduje premennu
-	InstructionStore,
-	InstructionCall,
-	InstructionTjump,
-	InstructionJump,
-	InstructionLabel, //kam ma skocit po nejakom jumpe
-	InstructionReturn,
-	InstructionLeaveBlock,//zneplatni vsetky premenne deklarovane v tomto bloku, deklarovanie spravene bisonom
-	InstructionStartBlok,
-
-	InstructionLess,
-	InstructionMore,
-	InstructionLessEqual,
-	InstructionMoreEqual,
-	InstructionNotEqual,
-	InstructionEqual,
-
-	InstructionPlusPlus,
-	InstructionMinusMinus,
-	InstructionPlus,
-	InstructionMinus,
-	InstructionDivide,
-	InstructionMultiply,
-	NumberOfInstructions //TODO pridat instrukcie na varovanie
-};*/
-
 class Instruction
 {
+	protected:
 	Values * values;	
+	std::string name_;
 public:
 	virtual std::string name();
-	virtual int execute();
+//	virtual int execute();
 	Instruction();
 };
 class InstructionCreate : public Instruction{
@@ -49,7 +23,7 @@ class InstructionLoad : public Instruction{
 		InstructionLoad(std::string s);
 		InstructionLoad(int i);
 		InstructionLoad(float f);
-		InstructionLoad();
+		InstructionLoad(); //loadne z toho, co ma na value stacku
 };
 
 class InstructionStore : public Instruction{
@@ -58,6 +32,93 @@ class InstructionStore : public Instruction{
 };
 class Call : public Instruction
 {
-	Call();
+	public:
+		Call(std::string s);
+		Call();
+};
+
+class CallMethod : public Instruction
+{
+	public:
+		CallMethod(std::string s);
+		CallMethod();
+};
+class InstructionPop : public Instruction{
+	public:
+		InstructionPop();
+};
+class InstructionMustJump : public Instruction{
+	public:
+		InstructionMustJump(int steps);
+};
+class InstructionJump : public Instruction{
+	public:
+		InstructionJump(int stepsYes, int stepsNo);
+};
+class InstructionReturn : public Instruction{
+	public:
+		InstructionReturn();
+};
+class InstructionBreak : public Instruction{
+	public:
+		InstructionBreak();
+};
+class InstructionPlusPlus : public Instruction{
+	public:
+		InstructionPlusPlus();
+};
+class InstructionMinusMinus : public Instruction{
+	public:
+		InstructionMinusMinus();
+};
+class InstructionPlus : public Instruction{
+	public:
+		InstructionPlus();
+};
+class InstructionMinus : public Instruction{
+	public:
+		InstructionMinus();
+};
+class InstructionMultiply : public Instruction{
+	public:
+		InstructionMultiply();
+};
+class InstructionDivide : public Instruction{
+	public:
+		InstructionDivide();
+};
+class InstructionModulo : public Instruction{
+	public:
+		InstructionModulo();
+};
+class InstructionBinaryAnd : public Instruction{
+	public:
+		InstructionBinaryAnd();
+};
+class InstructionBinaryOr : public Instruction{
+	public:
+		InstructionBinaryOr();
+};
+//-------------------------------------------------------------------------------------------------------Relation------------------------------
+class InstructionGt : public Instruction{
+	public:
+		InstructionGt();
+};
+
+class InstructionGe : public Instruction{
+	public:
+		InstructionGe();
+};
+class InstructionEqual : public Instruction{
+	public:
+		InstructionEqual();
+};
+class InstructionLt : Instruction{
+	public:
+		InstructionLt();
+};
+class InstructionLe : public Instruction{
+	public:
+		InstructionLe();
 };
 #endif

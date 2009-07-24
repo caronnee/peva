@@ -23,4 +23,7 @@ Node * add_array(Program *p, std::string s);
 void add_array(std::vector<Node *> n, Type t);
 */
 Instruction * operRel(Operation op);
+Instruction * operMul(Operation op);
+Instruction * operAdd(Operation op);
+Instruction * operOr(Operation op);
 #endif
