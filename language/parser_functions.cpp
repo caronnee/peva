@@ -10,94 +10,26 @@ void add_variables(Program *p, std::vector<Constr> s, Create_type t)
 		p->add(s[i].id,t); //TODO checkovat, ci to preslo OK
 	}
 }
-/*void add(Program * p, std::vector<std::string> n, Type t)
+void reg_main(Program* p, Instruction ins)
 {
-	for (int i =0; i< n.size(); i++)
-	{
-	}
-}
-void add(Program * p, std::vector<Node *> n, Type t)
-{
-	for (int i =0; i< n.size(); i++)
-	{
-		if ((n[i]->type!=TypeUndefined)&&(t == n[i]->type)) //ak bol typ pridany, skontroluj, ci sedi, ak nie, vyhod chybu
-		{
-			p->error = true;
-			continue;
-		}
-		n[i]->type = t;
-	}
-}
-void add(Program * p, std::string s, Type t)
-{
-	Node *n = p->add_string(s,t);
-	n->type = t;//TODO zistit, ci sa etse niekde neschovava
-}
-void add(Program * p, std::string s, int value)
-{
-	Node *n = p->add_string(s,TypeInteger);
-	n->IntegerValue = value;
-}
-void add(Program * p, std::string s, float value)
-{	
-	Node *n = p->add_string(s,TypeInteger);
-	n->IntegerValue = value;
-}
-void add(Program * p, std::string s, Location point)
-{
-	Node * n = p->add_string(s, TypeLocation);
-	n->LocationValue = point;
-}
-void set_element_type(Program *p, std::vector<Node *> arr, Type t)
-{
-	for (int i =0; i< arra.size(); i++)
-	{
-		arr[i].element_type = t; //TODO nejaka inicializacia
-	}
-}
-Node * add_array(Program *p, std::string s)
-{
-	Node *n = p->add_string(s, TypeArray);
-	n->array = new Array();
-	n->array->range=255; //TODO definovana hodnota
-	return n->array;
-}
-Node * add_array(Program *p, std::string s, std::vector<int> range, Type t)
-{
-	if (range.size()>MAX_DIMENSION)
-		return NULL;
-	Node* n = p->add_string(s, TypeArray);
-	Node * p = new(s, t);
-	for (int i = range.size()-1; ->=0; i--)
-	{
-		Node *p = create_array(range[i], p);
-	}
-	return n;
+	p>PC = p->stack.size();
+	p->add(ins);
 }
 
-void create_array(Node *node, std::vector<int> range)
+void reg(Program * p,Create_type t, std::string name, std::vector<Constr> c, Instructions b)
 {
-	if(range.size() == 1)
-	{
-		node->array = new Node(range[0]);
-		for (int i =0; i< range[0]; i++)
-		{
-			n->array.elements[i]->type = TypeUndefined;//TODO nemuselo by tu byt
-		}
-	}	
+	p->add_function(t, name,c,b);
 }
-/*void add_array(std::vector<Node *> nodes, Type t)
+
+Instructions join_instructions(Instructions i1, Instructions i2)
 {
-	Node * n;
-	for (int i =0; i < nodes.size();i++)
+	Instructions res = i1;
+	for (int i =0; i < i2.size(); i++)
 	{
-		n = nodes[i];
-		int r = n->array->range[0]; //aspon 1 prvok to budem mat urcite
-		for(int i =1; i< n->array->range.size(); i++)
-			r*=n->array->range[i];
-		n->array->values.resize(r,Node(n->name,t)); //tu sa to samozrejme inicializuje spravne
+		res.push_back(i2[i]);
 	}
-}*/
+	return res;
+}
 Instruction * operRel(Operation op)
 {
 	switch(op)
@@ -112,6 +44,48 @@ Instruction * operRel(Operation op)
 			return new InstructionGt();
 		case OperationGreaterEqual:
 			return new InstructionGe();
+		default: return NULL;
+	}
+}
+Instruction *operMul(Operation op)
+{
+	switch (op)
+	{
+		case OperationMultiply:
+			return new InstructionMultiply();
+		case OperationDivide:
+			return new InstructionDivide();
+		case OperationModulo:
+			return new InstructionModulo();
+		case OperationAnd:
+			return new InstructionBinaryAnd();
+		case OperationOr:
+			return new InstructionBinaryOr();
+		case OperationNot:
+			return new InstructionNot();
+		default: return NULL;
+	}
+}
+Instruction * operAdd(Operation op)
+{
+	switch(op)
+	{
+		case OperationPlus:
+			return new InstructionPlus();
+		case OperationMinus:
+			return new InstructionMinus();
+	}
+}
+ Instruction * OperOr(Operation op)
+{
+	switch(op)
+	{
+		case OperationBoolNot:
+			return new InstructionBinaryNot();
+		case OperationBoolAnd:
+			return new InstructionBinaryAnd();
+		case OperationBoolOr:
+			return new InstructionBinaryOr();
 		default: return NULL;
 	}
 }
