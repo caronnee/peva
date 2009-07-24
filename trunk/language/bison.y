@@ -165,10 +165,10 @@ function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; } //zatial nepotrebuj
 	;
 
 //OK
-declare_function_:	type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg($1,$2, $4, $6);} //register name, parameter_list, block
-	|declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg($2,$3,$5,$7); }
-	|type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg($1, $2, a, $5); } 
-	|declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg($2, $3, a, $6); }
+declare_function_:	type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);} //register name, parameter_list, block
+	|declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
+	|type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program,$1, $2, a, $5); } 
+	|declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program, $2, $3, a, $6); }
 	;
 
 //OK

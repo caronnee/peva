@@ -95,10 +95,28 @@ class InstructionBinaryAnd : public Instruction{
 	public:
 		InstructionBinaryAnd();
 };
+class InstructionAnd : public Instruction{
+	public:
+		InstructionAnd();
+};
 class InstructionBinaryOr : public Instruction{
 	public:
 		InstructionBinaryOr();
 };
+class InstructionOr : public Instruction{
+	public:
+		InstructionOr();
+};
+class InstructionBinaryNot : public Instruction{
+	public:
+		InstructionBinaryNot();
+};
+
+class InstructionNot : public Instruction{
+	public:
+		InstructionNot();
+};
+
 //-------------------------------------------------------------------------------------------------------Relation------------------------------
 class InstructionGt : public Instruction{
 	public:
@@ -113,7 +131,7 @@ class InstructionEqual : public Instruction{
 	public:
 		InstructionEqual();
 };
-class InstructionLt : Instruction{
+class InstructionLt : public Instruction{
 	public:
 		InstructionLt();
 };
