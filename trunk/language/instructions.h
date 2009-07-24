@@ -3,7 +3,7 @@
 #include "./tree/node.h" //su tam ulozene node  values
 #include "./tree/typedefs.h"
 
-enum InstructionType
+/*enum InstructionType
 {
 	InstructionLoad = 0,//loaduje premennu
 	InstructionStore,
@@ -29,12 +29,13 @@ enum InstructionType
 	InstructionDivide,
 	InstructionMultiply,
 	NumberOfInstructions //TODO pridat instrukcie na varovanie
-};
+};*/
 
 class Instruction
 {
 	Values * values;	
 public:
+	virtual std::string name();
 	virtual int execute();
 	Instruction();
 };

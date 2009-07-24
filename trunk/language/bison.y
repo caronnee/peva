@@ -61,13 +61,15 @@
 %type<type> type
 
 %type<ident> function_header
-%type<node> values
 
 %type<instructions> commands
 %type<instructions> matched
 %type<instructions> unmatched
 %type<instructions> local_variables
 %type<instructions> block_of_instructions 
+%type<instructions> expression
+%type<instructions> values
+%type<instructions> number
 
 %start program
 %error-verbose
@@ -99,8 +101,8 @@ local_variables:  type names TOKEN_SEMICOLON
 				$$.push_back(new InstructionCreate($2[i].id));
 				if ($2[i].default_set){ 
 					$$.push_back(new InstructionLoad($2[i].id));
-					$$ = join_instructions($$, $2.ins);
-					$$.push_back(new InstructionStore();)
+					$$ = join_instructions($$, $2[i].ins);
+					$$.push_back(new InstructionStore());
 					}
 			}
 		}
@@ -131,10 +133,10 @@ names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); }
 	;
 
 //OK
-values: number { $$.push_back(new InstructionLoad($1));}
+values: number { $$=$1;}
       	| TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1)); }
 	| values TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back(new InstructionLoad($3));$$ = $1;}
-	| values TOKEN_COMMA number {$1.push_back(new IntructionLoad($3));}
+	| values TOKEN_COMMA number {$$ = join_instructions($1, $3);}
 	;
 
 //OK
@@ -149,15 +151,15 @@ function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; } //zatial nepotrebuj
 //OK
 declare_function_:	type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg($1,$2, $4, $6);} //register name, parameter_list, block
 	|declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg($2,$3,$5,$7); }
-	|type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions { reg($1, $2, NULL, $5); } 
-	|declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions { reg($2, $3,NULL, $6); }
+	|type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg($1, $2, a, $5); } 
+	|declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg($2, $3, a, $6); }
 	;
 
 //OK
-number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) $2*=-1; $$.push_back(new IntructionLoad($2)); } //load realu do 
-      	|TOKEN_OPER_SIGNADD TOKEN_UINT { if (TOKEN_OPER_SIGNADD == OperationMinus) {$2*=-1;} $$.push_back(new IntructionLoad($2)); } 
-      	|TOKEN_REAL { $$.push_back(new IntructionLoad($1)); } 
-      	|TOKEN_UINT { $$.push_back(new IntructionLoad($1)); } 
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } //load realu do 
+      	|TOKEN_OPER_SIGNADD TOKEN_UINT { if (TOKEN_OPER_SIGNADD == OperationMinus) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } 
+      	|TOKEN_REAL { $$.push_back(new InstructionLoad($1)); } 
+      	|TOKEN_UINT { $$.push_back(new InstructionLoad($1)); } 
 	;
 
 //OK, niet co zkazit
@@ -175,7 +177,8 @@ commands: matched {$$ = $1;}
 
 //OK
 command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
-       		{ $9 = join_instructions($9, $7); 
+       		{ 
+		  $9 = join_instructions($9, $7); 
 		  $3.push_back(new InstructionMustJump($9.size())); 
 		  $5.push_back(new InstructionJump(-1*$9.size()-$5.size()));
 		  $9 = join_instructions($9,$5);
