@@ -9,6 +9,7 @@ void add_variables(Program * p, std::vector<Constr> s, Create_type t);
 
 void reg_main(Program * p,Instructions ins);
 Instructions join_instructions(Instructions a, Instructions b);
+void reg(Create_type t, std::string name,std::vector<Constr> s, Instructions i);
 /*void add(Program * p, std::vector<std::string>, Type t);
 void add(Program * p, std::string s, Type t);
 void add(Program * p, std::string s, int value);
