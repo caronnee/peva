@@ -1,10 +1,12 @@
 #ifndef ___STACK___
 #define ___STACK___
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include <list>
 #include <vector>
 #include <string>
-#include "./tree.h"
 #include "../instructions.h"
+#include "./tree.h"
 #include "./typedefs.h"
 #include "./node.h"
 
@@ -71,7 +73,12 @@ struct Value
 	std::string string_value;
 	Object * object_value;
 };
-
+struct MyXmlData
+{
+	xmlDocPtr doc;
+	xmlNodePtr root_ptr;
+	xmlNodePtr node;
+};
 struct Program
 {
 	int PC;
@@ -80,7 +87,8 @@ struct Program
 	Tree defined;//root burst stromu
 	Instructions instructions; //kopa predefinovanych instrukcii
 	Values values;//stack ukazatelov do stromu
-
+	MyXmlData data;
+	void save_to_xml();
 	Program();
 	void output(Tree * t);
 	int find_index(char a);
