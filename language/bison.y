@@ -107,12 +107,15 @@ type:	  simple_type { $$ = $1;}
 	;
 local_variables:  type names TOKEN_SEMICOLON 
 	       {  
-			add_variables(program, $2, $1);
 			for(int i =0; i< $2.size(); i++)
 			{
-				$$.push_back(new InstructionCreate($2[i].id));
+				Node * n = program->add($2[i].id, $1);
+				$$.push_back(new InstructionCreate(program->find_var($2[i].id)));
 				if ($2[i].default_set){ 
-					$$.push_back(new InstructionLoad($2[i].id));
+					if (n->nested == Local)
+						$$.push_back(new InstructionLoadLocal(n));
+					else
+						$$.push_back(new InstructionLoadGlobal(n));
 					$$ = join_instructions($$, $2[i].ins);
 					$$.push_back(new InstructionStore());
 					}
@@ -141,8 +144,13 @@ names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); }
 	;
 
 values: number { $$=$1;}
-      	| TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1)); }
-	| values TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back(new InstructionLoad($3));$$ = $1;}
+      	| TOKEN_IDENTIFIER { Node *n = program->find_var($1); 
+				if(n->nested == Local)
+					$$.push_back(new InstructionLoadLocal(n));
+				else  
+					$$.push_back(new InstructionLoadGlobal(n));
+			}
+	| values TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back(instruction_load(program, $3));$$ = $1;}
 	| values TOKEN_COMMA number {$$ = join_instructions($1, $3);}
 	;
 
@@ -150,10 +158,10 @@ declare_functions: /*	ziadne deklarovane funkcie	*/
 	|declare_function_
 	;
 
-function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; } //zatial nepotrebujeme vediet zanoraenie 
+function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; program->nested++; } //zatial nepotrebujeme vediet zanoraenie 
 	;
 
-declare_function_:	type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);} //register name, parameter_list, block
+declare_function_:	type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->nested--;} //register name, parameter_list, block
 	|declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
 	|type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program,$1, $2, a, $5); } 
 	|declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program, $2, $3, a, $6); }
@@ -219,8 +227,8 @@ simple_command:	assign {$$ = $1;}
 assign: variable_left TOKEN_ASSIGN expression { $$ = $1; $$.push_back(new InstructionStore()) }
 	;
 
-variable_left: TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1));}
-	| TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$ = join_instructions($$, $2); }
+variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
+	| TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$ = join_instructions($$, $2); }
 	;
 
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call($1));} //TODO check parameters
@@ -258,15 +266,14 @@ init: 	local_variables { $$ = $1;}
 	| assign    {$$ = $1;}
 	;
 
-variable: TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1));}
-	|TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$=join_instructions($$,$2);}
+variable: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
+	|TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$=join_instructions($$,$2);}
 	|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
-//	|variable TOKEN_DOT TOKEN_IDENTIFIER {}//tuto musi byt funkcia, co odpoveda danemu identifierovi, napr see(3).IsMoving()
-	|variable TOKEN_DOT call_fce { } //znici value, z ktoreho to bolo volane a 
-	|variable TOKEN_DOT TOKEN_IDENTIFIER {}
+	|variable TOKEN_DOT call_fce //{ if ($1.output.has_function($3.name)) join, else error} //znici value, z ktoreho to bolo volane a zavola clensku funkciu 
+	|variable TOKEN_DOT TOKEN_IDENTIFIER //{}
 	;
 
-array_access: TOKEN_LSBRA exps TOKEN_RSBRA { $$ = $2; $$.push_back(new InstructionLoad());} //vezme zo stacku dve a odnoty pouzije
+array_access: TOKEN_LSBRA exps TOKEN_RSBRA { $$ = $2; $$.push_back(new InstructionLoad());} //vezme zo stacku dve a odnoty pouzije, TODO check real
 	|array_access TOKEN_LSBRA exps TOKEN_RSBRA { $$ = join_instructions($1, $3); $$.push_back(new InstructionLoad());}  
 	;
 

@@ -83,6 +83,7 @@ struct Program
 {
 	int PC;
 	bool error;
+	int nested;
 	std::string alphabet;
 	Tree defined;//root burst stromu
 	Instructions instructions; //kopa predefinovanych instrukcii
@@ -94,9 +95,10 @@ struct Program
 	int find_index(char a);
 	std::vector<Functions> functions;
 	Tree * find_string(std::string);
+	Node * find_var(std::string);
 	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
 	/* Vracia, ci sa podarilo pridat alebo nie*/
-	bool add(std::string name, Create_type t);
+	Node * add(std::string name, Create_type t);
 	void add(Instructions ins);
 	Node * create_type(Type t);
 	void enter();

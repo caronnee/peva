@@ -4,7 +4,7 @@ InstructionCreate::InstructionCreate()
 {
 	name_ = "InstructionCreate";
 };
-InstructionCreate::InstructionCreate(std::string s)
+InstructionCreate::InstructionCreate(Node * n)
 {
 	name_ = "InstructionCreate";
 };
@@ -12,9 +12,21 @@ InstructionLoad::InstructionLoad()
 {
 	name_ = "InstructionLoad";
 };
-InstructionLoad::InstructionLoad(std::string s)
+InstructionLoadGlobal::InstructionLoadGlobal()
 {
-	name_ = "InstructionLoad";
+	name_ = "InstructionLoadGlobal";
+};
+InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
+{
+	name_ = "InstructionLoadGlobal";
+};
+InstructionLoadLocal::InstructionLoadLocal()
+{
+	name_ = "InstructionLoadLocal";
+};
+InstructionLoadLocal::InstructionLoadLocal(Node * n)
+{
+	name_ = "InstructionLoadLocal";
 };
 InstructionLoad::InstructionLoad(int i)
 {
@@ -40,7 +52,7 @@ CallMethod::CallMethod()
 {
 	name_ = "CallMethod";
 };
-CallMethod::CallMethod(std::string s)
+CallMethod::CallMethod(std::string s) //tu vazne potrebujem vediet meno tej premennej
 {
 	name_ = "CallMethod";
 };
