@@ -10,9 +10,9 @@ void add_variables(Program *p, std::vector<Constr> s, Create_type t)
 		p->add(s[i].id,t); //TODO checkovat, ci to preslo OK
 	}
 }
-void reg_main(Program* p, Instruction ins)
+void reg_main(Program* p, Instructions ins)
 {
-	p->PC = p->stack.size();
+	p->PC = p->instructions.size();
 	p->add(ins);
 }
 
@@ -76,7 +76,7 @@ Instruction * operAdd(Operation op) // add
 			return new InstructionMinus();
 	}
 }
-Instruction * OperOr(Operation op) //Bool_OR
+Instruction * operOr(Operation op) //Bool_OR
 {
 	switch(op)
 	{

@@ -111,18 +111,15 @@ class InstructionBinaryNot : public Instruction{
 	public:
 		InstructionBinaryNot();
 };
-
 class InstructionNot : public Instruction{
 	public:
 		InstructionNot();
 };
-
 //-------------------------------------------------------------------------------------------------------Relation------------------------------
 class InstructionGt : public Instruction{
 	public:
 		InstructionGt();
 };
-
 class InstructionGe : public Instruction{
 	public:
 		InstructionGe();
