@@ -1,19 +1,20 @@
 #include "tree.h"
 #include <iostream>
 
-Tree::Tree()
+void Tree::reset()
 {
-	inner_node = false;
+inner_node = false;
 	depth = 0;
 	for (int i =0; i< 256; i++)
 		next[i] = NULL;
 }
+Tree::Tree()
+{
+	reset();
+}
 Tree::Tree(int d)
 {
-	inner_node = false;
-	depth = 0;
-	for (int i =0; i< 256; i++)
-		next[i] = NULL;
+	reset();
 	depth = d;
 }
 std::string quicksort(std::string s)
