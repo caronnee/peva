@@ -22,7 +22,7 @@ std::string quicksort(std::string s)
 	if (s.length()<=1)
 		return s;
 	std::string s1 ="",s2 ="";
-	for (int i =1; i< s.length();i++)
+	for (size_t i =1; i< s.length();i++)
 		if (s[i] < s[0]) s1+=s[i];
 		else s2+=s[i];
 	return quicksort(s1) + s[0] + quicksort(s2);

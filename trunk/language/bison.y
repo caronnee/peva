@@ -260,11 +260,11 @@ init: 	local_variables { $$ = $1;}
 
 variable: TOKEN_IDENTIFIER { $$.push_back(new InstructionLoad($1));}
 	|TOKEN_IDENTIFIER array_access { $$.push_back(new InstructionLoad($1)); $$=join_instructions($$,$2);}
-	|call_fce {$$ = $1;}
+	|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 //	|variable TOKEN_DOT TOKEN_IDENTIFIER {}//tuto musi byt funkcia, co odpoveda danemu identifierovi, napr see(3).IsMoving()
-	|inner call_fce {$$.push_back(new CallMethod()); program->leave(); } //znici value, z ktoreho to bolo volane a 
+	|variable TOKEN_DOT call_fce { } //znici value, z ktoreho to bolo volane a 
+	|variable TOKEN_DOT TOKEN_IDENTIFIER {}
 	;
-inner: variable TOKEN_DOT { program->enter();}
 
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA { $$ = $2; $$.push_back(new InstructionLoad());} //vezme zo stacku dve a odnoty pouzije
 	|array_access TOKEN_LSBRA exps TOKEN_RSBRA { $$ = join_instructions($1, $3); $$.push_back(new InstructionLoad());}  

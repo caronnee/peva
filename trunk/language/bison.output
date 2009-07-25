@@ -96,9 +96,8 @@ Grammar
    68 variable: TOKEN_IDENTIFIER
    69         | TOKEN_IDENTIFIER array_access
    70         | call_fce
-   71         | inner call_fce
-
-   72 inner: variable TOKEN_DOT
+   71         | variable TOKEN_DOT call_fce
+   72         | variable TOKEN_DOT TOKEN_IDENTIFIER
 
    73 array_access: TOKEN_LSBRA exps TOKEN_RSBRA
    74             | array_access TOKEN_LSBRA exps TOKEN_RSBRA
@@ -148,7 +147,7 @@ TOKEN_FOR (268) 41
 TOKEN_RETURN (269) 44 45
 TOKEN_BREAK (270) 46
 TOKEN_SEMICOLON (271) 6 35 41 42 44 45 46 48
-TOKEN_DOT (272) 72
+TOKEN_DOT (272) 71 72
 TOKEN_COMMA (273) 16 17 18 21 22 59 76
 TOKEN_LPAR (274) 1 26 27 28 29 41 42 43 56 60 63 64 65 81 90
 TOKEN_RPAR (275) 1 26 27 28 29 41 42 43 56 60 63 64 65 81 90
@@ -157,7 +156,7 @@ TOKEN_RSBRA (277) 12 13 73 74
 TOKEN_ASSIGN (278) 15 17 18 53
 TOKEN_BEGIN (279) 18 34 35 36
 TOKEN_END (280) 18 34 35 36
-TOKEN_IDENTIFIER (281) 14 15 16 17 18 20 21 25 54 55 56 68 69
+TOKEN_IDENTIFIER (281) 14 15 16 17 18 20 21 25 54 55 56 68 69 72
 TOKEN_UINT (282) 12 13 31 33
 TOKEN_REAL (283) 30 32
 TOKEN_OPER_REL (284) 88
@@ -222,26 +221,24 @@ unmatched (59)
 init (60)
     on left: 66 67, on right: 41
 variable (61)
-    on left: 68 69 70 71, on right: 50 51 52 72 77 79 80
-inner (62)
-    on left: 72, on right: 71
-array_access (63)
+    on left: 68 69 70 71 72, on right: 50 51 52 71 72 77 79 80
+array_access (62)
     on left: 73 74, on right: 55 69 74
-exps (64)
+exps (63)
     on left: 75 76, on right: 73 74 76
-expression_base (65)
+expression_base (64)
     on left: 77 78 79 80 81, on right: 82 83
-expression_mul (66)
+expression_mul (65)
     on left: 82 83, on right: 83 84 85
-expression_add (67)
+expression_add (66)
     on left: 84 85, on right: 85 86
-expression (68)
+expression (67)
     on left: 86, on right: 15 17 44 53 57 59 75 76 81 87 88
-expression_bool_base (69)
+expression_bool_base (68)
     on left: 87 88, on right: 89
-expression_bool_or (70)
+expression_bool_or (69)
     on left: 89 90, on right: 90 91 92
-expression_bool (71)
+expression_bool (70)
     on left: 91 92, on right: 41 42 43 60 63 64 65 90 92
 
 
@@ -502,8 +499,8 @@ state 23
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -524,11 +521,10 @@ state 23
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 43
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 42
 
 
 state 24
@@ -544,7 +540,7 @@ state 25
    17      | names TOKEN_COMMA . TOKEN_IDENTIFIER TOKEN_ASSIGN expression
    18      | names TOKEN_COMMA . TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END
 
-    TOKEN_IDENTIFIER  shift, and go to state 44
+    TOKEN_IDENTIFIER  shift, and go to state 43
 
 
 state 26
@@ -557,31 +553,31 @@ state 26
    26 declare_function_: type function_header TOKEN_LPAR . names TOKEN_RPAR block_of_instructions
    28                  | type function_header TOKEN_LPAR . TOKEN_RPAR block_of_instructions
 
-    TOKEN_RPAR        shift, and go to state 45
+    TOKEN_RPAR        shift, and go to state 44
     TOKEN_IDENTIFIER  shift, and go to state 15
 
-    names  go to state 46
+    names  go to state 45
 
 
 state 27
 
    12 ranges: TOKEN_LSBRA TOKEN_UINT . TOKEN_RSBRA
 
-    TOKEN_RSBRA  shift, and go to state 47
+    TOKEN_RSBRA  shift, and go to state 46
 
 
 state 28
 
    13 ranges: ranges TOKEN_LSBRA . TOKEN_UINT TOKEN_RSBRA
 
-    TOKEN_UINT  shift, and go to state 48
+    TOKEN_UINT  shift, and go to state 47
 
 
 state 29
 
     1 program: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR . TOKEN_RPAR block_of_instructions
 
-    TOKEN_RPAR  shift, and go to state 49
+    TOKEN_RPAR  shift, and go to state 48
 
 
 state 30
@@ -589,7 +585,7 @@ state 30
    27 declare_function_: declare_function_ type function_header . TOKEN_LPAR names TOKEN_RPAR block_of_instructions
    29                  | declare_function_ type function_header . TOKEN_LPAR TOKEN_RPAR block_of_instructions
 
-    TOKEN_LPAR  shift, and go to state 50
+    TOKEN_LPAR  shift, and go to state 49
 
 
 state 31
@@ -602,8 +598,8 @@ state 31
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -625,11 +621,10 @@ state 31
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 51
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 50
 
 
 state 32
@@ -640,12 +635,12 @@ state 32
    73 array_access: . TOKEN_LSBRA exps TOKEN_RSBRA
    74             | . array_access TOKEN_LSBRA exps TOKEN_RSBRA
 
-    TOKEN_LPAR   shift, and go to state 52
-    TOKEN_LSBRA  shift, and go to state 53
+    TOKEN_LPAR   shift, and go to state 51
+    TOKEN_LSBRA  shift, and go to state 52
 
     $default  reduce using rule 68 (variable)
 
-    array_access  go to state 54
+    array_access  go to state 53
 
 
 state 33
@@ -667,8 +662,8 @@ state 35
    30 number: TOKEN_OPER_SIGNADD . TOKEN_REAL
    31       | TOKEN_OPER_SIGNADD . TOKEN_UINT
 
-    TOKEN_UINT  shift, and go to state 55
-    TOKEN_REAL  shift, and go to state 56
+    TOKEN_UINT  shift, and go to state 54
+    TOKEN_REAL  shift, and go to state 55
 
 
 state 36
@@ -687,86 +682,77 @@ state 37
 
 state 38
 
-   72 inner: variable . TOKEN_DOT
+   71 variable: variable . TOKEN_DOT call_fce
+   72         | variable . TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: variable .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    79                | variable . TOKEN_MINUSMINUS
    80                | variable . TOKEN_PLUSPLUS
 
-    TOKEN_DOT         shift, and go to state 57
-    TOKEN_PLUSPLUS    shift, and go to state 58
-    TOKEN_MINUSMINUS  shift, and go to state 59
+    TOKEN_DOT         shift, and go to state 56
+    TOKEN_PLUSPLUS    shift, and go to state 57
+    TOKEN_MINUSMINUS  shift, and go to state 58
 
     $default  reduce using rule 77 (expression_base)
 
 
 state 39
 
-   56 call_fce: . TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
-   71 variable: inner . call_fce
-
-    TOKEN_IDENTIFIER  shift, and go to state 60
-
-    call_fce  go to state 61
-
-
-state 40
-
    82 expression_mul: expression_base .
 
     $default  reduce using rule 82 (expression_mul)
 
 
-state 41
+state 40
 
    83 expression_mul: expression_mul . TOKEN_OPER_MUL expression_base
    84 expression_add: expression_mul .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
 
-    TOKEN_OPER_MUL  shift, and go to state 62
+    TOKEN_OPER_MUL  shift, and go to state 59
 
     $default  reduce using rule 84 (expression_add)
 
 
-state 42
+state 41
 
    85 expression_add: expression_add . TOKEN_OPER_SIGNADD expression_mul
    86 expression: expression_add .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
 
-    TOKEN_OPER_SIGNADD  shift, and go to state 63
+    TOKEN_OPER_SIGNADD  shift, and go to state 60
 
     $default  reduce using rule 86 (expression)
 
 
-state 43
+state 42
 
    15 names: TOKEN_IDENTIFIER TOKEN_ASSIGN expression .
 
     $default  reduce using rule 15 (names)
 
 
-state 44
+state 43
 
    16 names: names TOKEN_COMMA TOKEN_IDENTIFIER .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR]
    17      | names TOKEN_COMMA TOKEN_IDENTIFIER . TOKEN_ASSIGN expression
    18      | names TOKEN_COMMA TOKEN_IDENTIFIER . TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END
 
-    TOKEN_ASSIGN  shift, and go to state 64
+    TOKEN_ASSIGN  shift, and go to state 61
 
     $default  reduce using rule 16 (names)
 
 
-state 45
+state 44
 
    28 declare_function_: type function_header TOKEN_LPAR TOKEN_RPAR . block_of_instructions
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 66
+    block_of_instructions  go to state 63
 
 
-state 46
+state 45
 
    16 names: names . TOKEN_COMMA TOKEN_IDENTIFIER
    17      | names . TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN expression
@@ -774,36 +760,36 @@ state 46
    26 declare_function_: type function_header TOKEN_LPAR names . TOKEN_RPAR block_of_instructions
 
     TOKEN_COMMA  shift, and go to state 25
-    TOKEN_RPAR   shift, and go to state 67
+    TOKEN_RPAR   shift, and go to state 64
 
 
-state 47
+state 46
 
    12 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA .
 
     $default  reduce using rule 12 (ranges)
 
 
-state 48
+state 47
 
    13 ranges: ranges TOKEN_LSBRA TOKEN_UINT . TOKEN_RSBRA
 
-    TOKEN_RSBRA  shift, and go to state 68
+    TOKEN_RSBRA  shift, and go to state 65
 
 
-state 49
+state 48
 
     1 program: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR . block_of_instructions
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 69
+    block_of_instructions  go to state 66
 
 
-state 50
+state 49
 
    14 names: . TOKEN_IDENTIFIER
    15      | . TOKEN_IDENTIFIER TOKEN_ASSIGN expression
@@ -813,20 +799,20 @@ state 50
    27 declare_function_: declare_function_ type function_header TOKEN_LPAR . names TOKEN_RPAR block_of_instructions
    29                  | declare_function_ type function_header TOKEN_LPAR . TOKEN_RPAR block_of_instructions
 
-    TOKEN_RPAR        shift, and go to state 70
+    TOKEN_RPAR        shift, and go to state 67
     TOKEN_IDENTIFIER  shift, and go to state 15
 
-    names  go to state 71
+    names  go to state 68
 
 
-state 51
+state 50
 
    81 expression_base: TOKEN_LPAR expression . TOKEN_RPAR
 
-    TOKEN_RPAR  shift, and go to state 72
+    TOKEN_RPAR  shift, and go to state 69
 
 
-state 52
+state 51
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -840,8 +826,8 @@ state 52
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -863,16 +849,15 @@ state 52
 
     number           go to state 36
     call_fce         go to state 37
-    call_parameters  go to state 73
+    call_parameters  go to state 70
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 74
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 71
 
 
-state 53
+state 52
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -882,8 +867,8 @@ state 53
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    73 array_access: TOKEN_LSBRA . exps TOKEN_RSBRA
    75 exps: . expression
    76     | . exps TOKEN_COMMA expression
@@ -907,74 +892,63 @@ state 53
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    exps             go to state 75
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 76
+    exps             go to state 72
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 73
 
 
-state 54
+state 53
 
    69 variable: TOKEN_IDENTIFIER array_access .  [TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    74 array_access: array_access . TOKEN_LSBRA exps TOKEN_RSBRA
 
-    TOKEN_LSBRA  shift, and go to state 77
+    TOKEN_LSBRA  shift, and go to state 74
 
     $default  reduce using rule 69 (variable)
 
 
-state 55
+state 54
 
    31 number: TOKEN_OPER_SIGNADD TOKEN_UINT .
 
     $default  reduce using rule 31 (number)
 
 
-state 56
+state 55
 
    30 number: TOKEN_OPER_SIGNADD TOKEN_REAL .
 
     $default  reduce using rule 30 (number)
 
 
+state 56
+
+   56 call_fce: . TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
+   71 variable: variable TOKEN_DOT . call_fce
+   72         | variable TOKEN_DOT . TOKEN_IDENTIFIER
+
+    TOKEN_IDENTIFIER  shift, and go to state 75
+
+    call_fce  go to state 76
+
+
 state 57
-
-   72 inner: variable TOKEN_DOT .
-
-    $default  reduce using rule 72 (inner)
-
-
-state 58
 
    80 expression_base: variable TOKEN_PLUSPLUS .
 
     $default  reduce using rule 80 (expression_base)
 
 
-state 59
+state 58
 
    79 expression_base: variable TOKEN_MINUSMINUS .
 
     $default  reduce using rule 79 (expression_base)
 
 
-state 60
-
-   56 call_fce: TOKEN_IDENTIFIER . TOKEN_LPAR call_parameters TOKEN_RPAR
-
-    TOKEN_LPAR  shift, and go to state 52
-
-
-state 61
-
-   71 variable: inner call_fce .
-
-    $default  reduce using rule 71 (variable)
-
-
-state 62
+state 59
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -984,8 +958,8 @@ state 62
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1002,11 +976,10 @@ state 62
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 78
+    expression_base  go to state 77
 
 
-state 63
+state 60
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1016,8 +989,8 @@ state 63
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1036,12 +1009,11 @@ state 63
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 79
+    expression_base  go to state 39
+    expression_mul   go to state 78
 
 
-state 64
+state 61
 
    17 names: names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN . expression
    18      | names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN . TOKEN_BEGIN values TOKEN_END
@@ -1053,8 +1025,8 @@ state 64
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1067,7 +1039,7 @@ state 64
    86 expression: . expression_add
 
     TOKEN_LPAR          shift, and go to state 31
-    TOKEN_BEGIN         shift, and go to state 80
+    TOKEN_BEGIN         shift, and go to state 79
     TOKEN_IDENTIFIER    shift, and go to state 32
     TOKEN_UINT          shift, and go to state 33
     TOKEN_REAL          shift, and go to state 34
@@ -1076,14 +1048,13 @@ state 64
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 81
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 80
 
 
-state 65
+state 62
 
     4 type: . simple_type
     5     | . complex_type
@@ -1128,87 +1099,86 @@ state 65
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
     TOKEN_LOCATION    shift, and go to state 4
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 82
-    TOKEN_WHILE       shift, and go to state 83
-    TOKEN_DO          shift, and go to state 84
-    TOKEN_FOR         shift, and go to state 85
-    TOKEN_RETURN      shift, and go to state 86
-    TOKEN_BREAK       shift, and go to state 87
-    TOKEN_SEMICOLON   shift, and go to state 88
-    TOKEN_BEGIN       shift, and go to state 65
-    TOKEN_END         shift, and go to state 89
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IF          shift, and go to state 81
+    TOKEN_WHILE       shift, and go to state 82
+    TOKEN_DO          shift, and go to state 83
+    TOKEN_FOR         shift, and go to state 84
+    TOKEN_RETURN      shift, and go to state 85
+    TOKEN_BREAK       shift, and go to state 86
+    TOKEN_SEMICOLON   shift, and go to state 87
+    TOKEN_BEGIN       shift, and go to state 62
+    TOKEN_END         shift, and go to state 88
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    type                   go to state 91
-    local_variables        go to state 92
+    type                   go to state 90
+    local_variables        go to state 91
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 93
-    commands               go to state 94
-    command                go to state 95
-    simple_command         go to state 96
-    assign                 go to state 97
-    variable_left          go to state 98
+    block_of_instructions  go to state 92
+    commands               go to state 93
+    command                go to state 94
+    simple_command         go to state 95
+    assign                 go to state 96
+    variable_left          go to state 97
     call_fce               go to state 37
-    matched                go to state 99
-    unmatched              go to state 100
-    variable               go to state 101
-    inner                  go to state 39
+    matched                go to state 98
+    unmatched              go to state 99
+    variable               go to state 100
 
 
-state 66
+state 63
 
    28 declare_function_: type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 28 (declare_function_)
 
 
-state 67
+state 64
 
    26 declare_function_: type function_header TOKEN_LPAR names TOKEN_RPAR . block_of_instructions
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 102
+    block_of_instructions  go to state 101
 
 
-state 68
+state 65
 
    13 ranges: ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA .
 
     $default  reduce using rule 13 (ranges)
 
 
-state 69
+state 66
 
     1 program: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 1 (program)
 
 
-state 70
+state 67
 
    29 declare_function_: declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR . block_of_instructions
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 103
+    block_of_instructions  go to state 102
 
 
-state 71
+state 68
 
    16 names: names . TOKEN_COMMA TOKEN_IDENTIFIER
    17      | names . TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN expression
@@ -1216,49 +1186,49 @@ state 71
    27 declare_function_: declare_function_ type function_header TOKEN_LPAR names . TOKEN_RPAR block_of_instructions
 
     TOKEN_COMMA  shift, and go to state 25
-    TOKEN_RPAR   shift, and go to state 104
+    TOKEN_RPAR   shift, and go to state 103
 
 
-state 72
+state 69
 
    81 expression_base: TOKEN_LPAR expression TOKEN_RPAR .
 
     $default  reduce using rule 81 (expression_base)
 
 
-state 73
+state 70
 
    56 call_fce: TOKEN_IDENTIFIER TOKEN_LPAR call_parameters . TOKEN_RPAR
    59 call_parameters: call_parameters . TOKEN_COMMA expression
 
-    TOKEN_COMMA  shift, and go to state 105
-    TOKEN_RPAR   shift, and go to state 106
+    TOKEN_COMMA  shift, and go to state 104
+    TOKEN_RPAR   shift, and go to state 105
 
 
-state 74
+state 71
 
    57 call_parameters: expression .
 
     $default  reduce using rule 57 (call_parameters)
 
 
-state 75
+state 72
 
    73 array_access: TOKEN_LSBRA exps . TOKEN_RSBRA
    76 exps: exps . TOKEN_COMMA expression
 
-    TOKEN_COMMA  shift, and go to state 107
-    TOKEN_RSBRA  shift, and go to state 108
+    TOKEN_COMMA  shift, and go to state 106
+    TOKEN_RSBRA  shift, and go to state 107
 
 
-state 76
+state 73
 
    75 exps: expression .
 
     $default  reduce using rule 75 (exps)
 
 
-state 77
+state 74
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1268,8 +1238,8 @@ state 77
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    74 array_access: array_access TOKEN_LSBRA . exps TOKEN_RSBRA
    75 exps: . expression
    76     | . exps TOKEN_COMMA expression
@@ -1293,32 +1263,48 @@ state 77
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    exps             go to state 109
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 76
+    exps             go to state 108
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 73
 
 
-state 78
+state 75
+
+   56 call_fce: TOKEN_IDENTIFIER . TOKEN_LPAR call_parameters TOKEN_RPAR
+   72 variable: variable TOKEN_DOT TOKEN_IDENTIFIER .  [TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_OPER_MUL, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
+
+    TOKEN_LPAR  shift, and go to state 51
+
+    $default  reduce using rule 72 (variable)
+
+
+state 76
+
+   71 variable: variable TOKEN_DOT call_fce .
+
+    $default  reduce using rule 71 (variable)
+
+
+state 77
 
    83 expression_mul: expression_mul TOKEN_OPER_MUL expression_base .
 
     $default  reduce using rule 83 (expression_mul)
 
 
-state 79
+state 78
 
    83 expression_mul: expression_mul . TOKEN_OPER_MUL expression_base
    85 expression_add: expression_add TOKEN_OPER_SIGNADD expression_mul .  [TOKEN_SEMICOLON, TOKEN_COMMA, TOKEN_RPAR, TOKEN_RSBRA, TOKEN_OPER_REL, TOKEN_OPER_SIGNADD, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
 
-    TOKEN_OPER_MUL  shift, and go to state 62
+    TOKEN_OPER_MUL  shift, and go to state 59
 
     $default  reduce using rule 85 (expression_add)
 
 
-state 80
+state 79
 
    18 names: names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN . values TOKEN_END
    19 values: . number
@@ -1330,59 +1316,59 @@ state 80
    32       | . TOKEN_REAL
    33       | . TOKEN_UINT
 
-    TOKEN_IDENTIFIER    shift, and go to state 110
+    TOKEN_IDENTIFIER    shift, and go to state 109
     TOKEN_UINT          shift, and go to state 33
     TOKEN_REAL          shift, and go to state 34
     TOKEN_OPER_SIGNADD  shift, and go to state 35
 
-    values  go to state 111
-    number  go to state 112
+    values  go to state 110
+    number  go to state 111
 
 
-state 81
+state 80
 
    17 names: names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN expression .
 
     $default  reduce using rule 17 (names)
 
 
-state 82
+state 81
 
    60 matched: TOKEN_IF . TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched
    63 unmatched: TOKEN_IF . TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
    64          | TOKEN_IF . TOKEN_LPAR expression_bool TOKEN_RPAR command
    65          | TOKEN_IF . TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched
 
+    TOKEN_LPAR  shift, and go to state 112
+
+
+state 82
+
+   43 command: TOKEN_WHILE . TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
+
     TOKEN_LPAR  shift, and go to state 113
 
 
 state 83
-
-   43 command: TOKEN_WHILE . TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
-
-    TOKEN_LPAR  shift, and go to state 114
-
-
-state 84
 
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
    42 command: TOKEN_DO . block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 115
+    block_of_instructions  go to state 114
 
 
-state 85
+state 84
 
    41 command: TOKEN_FOR . TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions
 
-    TOKEN_LPAR  shift, and go to state 116
+    TOKEN_LPAR  shift, and go to state 115
 
 
-state 86
+state 85
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1394,8 +1380,8 @@ state 86
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1407,7 +1393,7 @@ state 86
    85               | . expression_add TOKEN_OPER_SIGNADD expression_mul
    86 expression: . expression_add
 
-    TOKEN_SEMICOLON     shift, and go to state 117
+    TOKEN_SEMICOLON     shift, and go to state 116
     TOKEN_LPAR          shift, and go to state 31
     TOKEN_IDENTIFIER    shift, and go to state 32
     TOKEN_UINT          shift, and go to state 33
@@ -1417,35 +1403,34 @@ state 86
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 118
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 117
+
+
+state 86
+
+   46 command: TOKEN_BREAK . TOKEN_SEMICOLON
+
+    TOKEN_SEMICOLON  shift, and go to state 118
 
 
 state 87
 
-   46 command: TOKEN_BREAK . TOKEN_SEMICOLON
+   35 block_of_instructions: TOKEN_BEGIN TOKEN_SEMICOLON . TOKEN_END
 
-    TOKEN_SEMICOLON  shift, and go to state 119
+    TOKEN_END  shift, and go to state 119
 
 
 state 88
-
-   35 block_of_instructions: TOKEN_BEGIN TOKEN_SEMICOLON . TOKEN_END
-
-    TOKEN_END  shift, and go to state 120
-
-
-state 89
 
    34 block_of_instructions: TOKEN_BEGIN TOKEN_END .
 
     $default  reduce using rule 34 (block_of_instructions)
 
 
-state 90
+state 89
 
    54 variable_left: TOKEN_IDENTIFIER .  [TOKEN_ASSIGN]
    55              | TOKEN_IDENTIFIER . array_access
@@ -1455,16 +1440,16 @@ state 90
    73 array_access: . TOKEN_LSBRA exps TOKEN_RSBRA
    74             | . array_access TOKEN_LSBRA exps TOKEN_RSBRA
 
-    TOKEN_LPAR   shift, and go to state 52
-    TOKEN_LSBRA  shift, and go to state 53
+    TOKEN_LPAR   shift, and go to state 51
+    TOKEN_LSBRA  shift, and go to state 52
 
     TOKEN_ASSIGN  reduce using rule 54 (variable_left)
     $default      reduce using rule 68 (variable)
 
-    array_access  go to state 121
+    array_access  go to state 120
 
 
-state 91
+state 90
 
     6 local_variables: type . names TOKEN_SEMICOLON
    14 names: . TOKEN_IDENTIFIER
@@ -1478,21 +1463,21 @@ state 91
     names  go to state 16
 
 
-state 92
+state 91
 
    47 command: local_variables .
 
     $default  reduce using rule 47 (command)
 
 
-state 93
+state 92
 
    62 matched: block_of_instructions .
 
     $default  reduce using rule 62 (matched)
 
 
-state 94
+state 93
 
     4 type: . simple_type
     5     | . complex_type
@@ -1533,122 +1518,122 @@ state 94
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
     TOKEN_LOCATION    shift, and go to state 4
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 82
-    TOKEN_WHILE       shift, and go to state 83
-    TOKEN_DO          shift, and go to state 84
-    TOKEN_FOR         shift, and go to state 85
-    TOKEN_RETURN      shift, and go to state 86
-    TOKEN_BREAK       shift, and go to state 87
-    TOKEN_BEGIN       shift, and go to state 65
-    TOKEN_END         shift, and go to state 122
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IF          shift, and go to state 81
+    TOKEN_WHILE       shift, and go to state 82
+    TOKEN_DO          shift, and go to state 83
+    TOKEN_FOR         shift, and go to state 84
+    TOKEN_RETURN      shift, and go to state 85
+    TOKEN_BREAK       shift, and go to state 86
+    TOKEN_BEGIN       shift, and go to state 62
+    TOKEN_END         shift, and go to state 121
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    type                   go to state 91
-    local_variables        go to state 92
+    type                   go to state 90
+    local_variables        go to state 91
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 93
-    command                go to state 95
-    simple_command         go to state 96
-    assign                 go to state 97
-    variable_left          go to state 98
+    block_of_instructions  go to state 92
+    command                go to state 94
+    simple_command         go to state 95
+    assign                 go to state 96
+    variable_left          go to state 97
     call_fce               go to state 37
-    matched                go to state 123
-    unmatched              go to state 124
-    variable               go to state 101
-    inner                  go to state 39
+    matched                go to state 122
+    unmatched              go to state 123
+    variable               go to state 100
 
 
-state 95
+state 94
 
    61 matched: command .
 
     $default  reduce using rule 61 (matched)
 
 
-state 96
+state 95
 
    48 command: simple_command . TOKEN_SEMICOLON
 
-    TOKEN_SEMICOLON  shift, and go to state 125
+    TOKEN_SEMICOLON  shift, and go to state 124
 
 
-state 97
+state 96
 
    49 simple_command: assign .
 
     $default  reduce using rule 49 (simple_command)
 
 
-state 98
+state 97
 
    53 assign: variable_left . TOKEN_ASSIGN expression
 
-    TOKEN_ASSIGN  shift, and go to state 126
+    TOKEN_ASSIGN  shift, and go to state 125
 
 
-state 99
+state 98
 
    37 commands: matched .
 
     $default  reduce using rule 37 (commands)
 
 
-state 100
+state 99
 
    39 commands: unmatched .
 
     $default  reduce using rule 39 (commands)
 
 
-state 101
+state 100
 
    50 simple_command: variable . TOKEN_PLUSPLUS
    51               | variable . TOKEN_MINUSMINUS
    52               | variable .  [TOKEN_SEMICOLON, TOKEN_RPAR]
-   72 inner: variable . TOKEN_DOT
+   71 variable: variable . TOKEN_DOT call_fce
+   72         | variable . TOKEN_DOT TOKEN_IDENTIFIER
 
-    TOKEN_DOT         shift, and go to state 57
-    TOKEN_PLUSPLUS    shift, and go to state 127
-    TOKEN_MINUSMINUS  shift, and go to state 128
+    TOKEN_DOT         shift, and go to state 56
+    TOKEN_PLUSPLUS    shift, and go to state 126
+    TOKEN_MINUSMINUS  shift, and go to state 127
 
     $default  reduce using rule 52 (simple_command)
 
 
-state 102
+state 101
 
    26 declare_function_: type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 26 (declare_function_)
 
 
-state 103
+state 102
 
    29 declare_function_: declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 29 (declare_function_)
 
 
-state 104
+state 103
 
    27 declare_function_: declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR . block_of_instructions
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 129
+    block_of_instructions  go to state 128
 
 
-state 105
+state 104
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1659,8 +1644,8 @@ state 105
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1681,21 +1666,20 @@ state 105
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 130
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 129
 
 
-state 106
+state 105
 
    56 call_fce: TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR .
 
     $default  reduce using rule 56 (call_fce)
 
 
-state 107
+state 106
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1705,8 +1689,8 @@ state 107
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    76 exps: exps TOKEN_COMMA . expression
    77 expression_base: . variable
    78                | . number
@@ -1728,54 +1712,53 @@ state 107
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 131
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 130
 
 
-state 108
+state 107
 
    73 array_access: TOKEN_LSBRA exps TOKEN_RSBRA .
 
     $default  reduce using rule 73 (array_access)
 
 
-state 109
+state 108
 
    74 array_access: array_access TOKEN_LSBRA exps . TOKEN_RSBRA
    76 exps: exps . TOKEN_COMMA expression
 
-    TOKEN_COMMA  shift, and go to state 107
-    TOKEN_RSBRA  shift, and go to state 132
+    TOKEN_COMMA  shift, and go to state 106
+    TOKEN_RSBRA  shift, and go to state 131
 
 
-state 110
+state 109
 
    20 values: TOKEN_IDENTIFIER .
 
     $default  reduce using rule 20 (values)
 
 
-state 111
+state 110
 
    18 names: names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values . TOKEN_END
    21 values: values . TOKEN_COMMA TOKEN_IDENTIFIER
    22       | values . TOKEN_COMMA number
 
-    TOKEN_COMMA  shift, and go to state 133
-    TOKEN_END    shift, and go to state 134
+    TOKEN_COMMA  shift, and go to state 132
+    TOKEN_END    shift, and go to state 133
 
 
-state 112
+state 111
 
    19 values: number .
 
     $default  reduce using rule 19 (values)
 
 
-state 113
+state 112
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1789,8 +1772,8 @@ state 113
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1817,17 +1800,16 @@ state 113
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 137
-    expression_bool       go to state 138
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 136
+    expression_bool       go to state 137
 
 
-state 114
+state 113
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1838,8 +1820,8 @@ state 114
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -1866,24 +1848,23 @@ state 114
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 137
-    expression_bool       go to state 139
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 136
+    expression_bool       go to state 138
 
 
-state 115
+state 114
 
    42 command: TOKEN_DO block_of_instructions . TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON
 
-    TOKEN_WHILE  shift, and go to state 140
+    TOKEN_WHILE  shift, and go to state 139
 
 
-state 116
+state 115
 
     4 type: . simple_type
     5     | . complex_type
@@ -1904,86 +1885,86 @@ state 116
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IDENTIFIER  shift, and go to state 141
+    TOKEN_IDENTIFIER  shift, and go to state 140
 
-    type             go to state 91
-    local_variables  go to state 142
+    type             go to state 90
+    local_variables  go to state 141
     simple_type      go to state 10
     complex_type     go to state 11
-    assign           go to state 143
-    variable_left    go to state 98
-    init             go to state 144
+    assign           go to state 142
+    variable_left    go to state 97
+    init             go to state 143
 
 
-state 117
+state 116
 
    45 command: TOKEN_RETURN TOKEN_SEMICOLON .
 
     $default  reduce using rule 45 (command)
 
 
-state 118
+state 117
 
    44 command: TOKEN_RETURN expression . TOKEN_SEMICOLON
 
-    TOKEN_SEMICOLON  shift, and go to state 145
+    TOKEN_SEMICOLON  shift, and go to state 144
 
 
-state 119
+state 118
 
    46 command: TOKEN_BREAK TOKEN_SEMICOLON .
 
     $default  reduce using rule 46 (command)
 
 
-state 120
+state 119
 
    35 block_of_instructions: TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END .
 
     $default  reduce using rule 35 (block_of_instructions)
 
 
-state 121
+state 120
 
    55 variable_left: TOKEN_IDENTIFIER array_access .  [TOKEN_ASSIGN]
    69 variable: TOKEN_IDENTIFIER array_access .  [TOKEN_SEMICOLON, TOKEN_DOT, TOKEN_RPAR, TOKEN_PLUSPLUS, TOKEN_MINUSMINUS]
    74 array_access: array_access . TOKEN_LSBRA exps TOKEN_RSBRA
 
-    TOKEN_LSBRA  shift, and go to state 77
+    TOKEN_LSBRA  shift, and go to state 74
 
     TOKEN_ASSIGN  reduce using rule 55 (variable_left)
     $default      reduce using rule 69 (variable)
 
 
-state 122
+state 121
 
    36 block_of_instructions: TOKEN_BEGIN commands TOKEN_END .
 
     $default  reduce using rule 36 (block_of_instructions)
 
 
-state 123
+state 122
 
    38 commands: commands matched .
 
     $default  reduce using rule 38 (commands)
 
 
-state 124
+state 123
 
    40 commands: commands unmatched .
 
     $default  reduce using rule 40 (commands)
 
 
-state 125
+state 124
 
    48 command: simple_command TOKEN_SEMICOLON .
 
     $default  reduce using rule 48 (command)
 
 
-state 126
+state 125
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -1994,8 +1975,8 @@ state 126
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2016,56 +1997,55 @@ state 126
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 146
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 145
 
 
-state 127
+state 126
 
    50 simple_command: variable TOKEN_PLUSPLUS .
 
     $default  reduce using rule 50 (simple_command)
 
 
-state 128
+state 127
 
    51 simple_command: variable TOKEN_MINUSMINUS .
 
     $default  reduce using rule 51 (simple_command)
 
 
-state 129
+state 128
 
    27 declare_function_: declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 27 (declare_function_)
 
 
-state 130
+state 129
 
    59 call_parameters: call_parameters TOKEN_COMMA expression .
 
     $default  reduce using rule 59 (call_parameters)
 
 
-state 131
+state 130
 
    76 exps: exps TOKEN_COMMA expression .
 
     $default  reduce using rule 76 (exps)
 
 
-state 132
+state 131
 
    74 array_access: array_access TOKEN_LSBRA exps TOKEN_RSBRA .
 
     $default  reduce using rule 74 (array_access)
 
 
-state 133
+state 132
 
    21 values: values TOKEN_COMMA . TOKEN_IDENTIFIER
    22       | values TOKEN_COMMA . number
@@ -2074,49 +2054,49 @@ state 133
    32       | . TOKEN_REAL
    33       | . TOKEN_UINT
 
-    TOKEN_IDENTIFIER    shift, and go to state 147
+    TOKEN_IDENTIFIER    shift, and go to state 146
     TOKEN_UINT          shift, and go to state 33
     TOKEN_REAL          shift, and go to state 34
     TOKEN_OPER_SIGNADD  shift, and go to state 35
 
-    number  go to state 148
+    number  go to state 147
 
 
-state 134
+state 133
 
    18 names: names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END .
 
     $default  reduce using rule 18 (names)
 
 
-state 135
+state 134
 
    87 expression_bool_base: expression .  [TOKEN_SEMICOLON, TOKEN_RPAR, TOKEN_BOOL_AND, TOKEN_BOOL_OR]
    88                     | expression . TOKEN_OPER_REL expression
 
-    TOKEN_OPER_REL  shift, and go to state 149
+    TOKEN_OPER_REL  shift, and go to state 148
 
     $default  reduce using rule 87 (expression_bool_base)
 
 
-state 136
+state 135
 
    89 expression_bool_or: expression_bool_base .
 
     $default  reduce using rule 89 (expression_bool_or)
 
 
-state 137
+state 136
 
    90 expression_bool_or: expression_bool_or . TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
    91 expression_bool: expression_bool_or .  [TOKEN_SEMICOLON, TOKEN_RPAR, TOKEN_BOOL_AND]
 
-    TOKEN_BOOL_OR  shift, and go to state 150
+    TOKEN_BOOL_OR  shift, and go to state 149
 
     $default  reduce using rule 91 (expression_bool)
 
 
-state 138
+state 137
 
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool . TOKEN_RPAR matched TOKEN_ELSE matched
    63 unmatched: TOKEN_IF TOKEN_LPAR expression_bool . TOKEN_RPAR block_of_instructions
@@ -2124,90 +2104,90 @@ state 138
    65          | TOKEN_IF TOKEN_LPAR expression_bool . TOKEN_RPAR matched TOKEN_ELSE unmatched
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_RPAR      shift, and go to state 151
-    TOKEN_BOOL_AND  shift, and go to state 152
+    TOKEN_RPAR      shift, and go to state 150
+    TOKEN_BOOL_AND  shift, and go to state 151
 
 
-state 139
+state 138
 
    43 command: TOKEN_WHILE TOKEN_LPAR expression_bool . TOKEN_RPAR block_of_instructions
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_RPAR      shift, and go to state 153
-    TOKEN_BOOL_AND  shift, and go to state 152
+    TOKEN_RPAR      shift, and go to state 152
+    TOKEN_BOOL_AND  shift, and go to state 151
 
 
-state 140
+state 139
 
    42 command: TOKEN_DO block_of_instructions TOKEN_WHILE . TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON
 
-    TOKEN_LPAR  shift, and go to state 154
+    TOKEN_LPAR  shift, and go to state 153
 
 
-state 141
+state 140
 
    54 variable_left: TOKEN_IDENTIFIER .  [TOKEN_ASSIGN]
    55              | TOKEN_IDENTIFIER . array_access
    73 array_access: . TOKEN_LSBRA exps TOKEN_RSBRA
    74             | . array_access TOKEN_LSBRA exps TOKEN_RSBRA
 
-    TOKEN_LSBRA  shift, and go to state 53
+    TOKEN_LSBRA  shift, and go to state 52
 
     $default  reduce using rule 54 (variable_left)
 
-    array_access  go to state 155
+    array_access  go to state 154
 
 
-state 142
+state 141
 
    66 init: local_variables .
 
     $default  reduce using rule 66 (init)
 
 
-state 143
+state 142
 
    67 init: assign .
 
     $default  reduce using rule 67 (init)
 
 
-state 144
+state 143
 
    41 command: TOKEN_FOR TOKEN_LPAR init . TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions
 
-    TOKEN_SEMICOLON  shift, and go to state 156
+    TOKEN_SEMICOLON  shift, and go to state 155
 
 
-state 145
+state 144
 
    44 command: TOKEN_RETURN expression TOKEN_SEMICOLON .
 
     $default  reduce using rule 44 (command)
 
 
-state 146
+state 145
 
    53 assign: variable_left TOKEN_ASSIGN expression .
 
     $default  reduce using rule 53 (assign)
 
 
-state 147
+state 146
 
    21 values: values TOKEN_COMMA TOKEN_IDENTIFIER .
 
     $default  reduce using rule 21 (values)
 
 
-state 148
+state 147
 
    22 values: values TOKEN_COMMA number .
 
     $default  reduce using rule 22 (values)
 
 
-state 149
+state 148
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -2217,8 +2197,8 @@ state 149
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2240,21 +2220,20 @@ state 149
     number           go to state 36
     call_fce         go to state 37
     variable         go to state 38
-    inner            go to state 39
-    expression_base  go to state 40
-    expression_mul   go to state 41
-    expression_add   go to state 42
-    expression       go to state 157
+    expression_base  go to state 39
+    expression_mul   go to state 40
+    expression_add   go to state 41
+    expression       go to state 156
 
 
-state 150
+state 149
 
    90 expression_bool_or: expression_bool_or TOKEN_BOOL_OR . TOKEN_LPAR expression_bool TOKEN_RPAR
 
-    TOKEN_LPAR  shift, and go to state 158
+    TOKEN_LPAR  shift, and go to state 157
 
 
-state 151
+state 150
 
     4 type: . simple_type
     5     | . complex_type
@@ -2293,38 +2272,37 @@ state 151
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
     TOKEN_LOCATION    shift, and go to state 4
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 159
-    TOKEN_WHILE       shift, and go to state 83
-    TOKEN_DO          shift, and go to state 84
-    TOKEN_FOR         shift, and go to state 85
-    TOKEN_RETURN      shift, and go to state 86
-    TOKEN_BREAK       shift, and go to state 87
-    TOKEN_BEGIN       shift, and go to state 65
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IF          shift, and go to state 158
+    TOKEN_WHILE       shift, and go to state 82
+    TOKEN_DO          shift, and go to state 83
+    TOKEN_FOR         shift, and go to state 84
+    TOKEN_RETURN      shift, and go to state 85
+    TOKEN_BREAK       shift, and go to state 86
+    TOKEN_BEGIN       shift, and go to state 62
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    type                   go to state 91
-    local_variables        go to state 92
+    type                   go to state 90
+    local_variables        go to state 91
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 160
-    command                go to state 161
-    simple_command         go to state 96
-    assign                 go to state 97
-    variable_left          go to state 98
+    block_of_instructions  go to state 159
+    command                go to state 160
+    simple_command         go to state 95
+    assign                 go to state 96
+    variable_left          go to state 97
     call_fce               go to state 37
-    matched                go to state 162
-    variable               go to state 101
-    inner                  go to state 39
+    matched                go to state 161
+    variable               go to state 100
 
 
-state 152
+state 151
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -2334,8 +2312,8 @@ state 152
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2361,28 +2339,27 @@ state 152
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 163
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 162
 
 
-state 153
+state 152
 
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
    43 command: TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR . block_of_instructions
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 164
+    block_of_instructions  go to state 163
 
 
-state 154
+state 153
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -2393,8 +2370,8 @@ state 154
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2421,27 +2398,26 @@ state 154
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 137
-    expression_bool       go to state 165
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 136
+    expression_bool       go to state 164
 
 
-state 155
+state 154
 
    55 variable_left: TOKEN_IDENTIFIER array_access .  [TOKEN_ASSIGN]
    74 array_access: array_access . TOKEN_LSBRA exps TOKEN_RSBRA
 
-    TOKEN_LSBRA  shift, and go to state 77
+    TOKEN_LSBRA  shift, and go to state 74
 
     $default  reduce using rule 55 (variable_left)
 
 
-state 156
+state 155
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -2452,8 +2428,8 @@ state 156
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2480,24 +2456,23 @@ state 156
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 137
-    expression_bool       go to state 166
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 136
+    expression_bool       go to state 165
 
 
-state 157
+state 156
 
    88 expression_bool_base: expression TOKEN_OPER_REL expression .
 
     $default  reduce using rule 88 (expression_bool_base)
 
 
-state 158
+state 157
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -2507,8 +2482,8 @@ state 158
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2536,24 +2511,23 @@ state 158
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 137
-    expression_bool       go to state 167
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 136
+    expression_bool       go to state 166
 
 
-state 159
+state 158
 
    60 matched: TOKEN_IF . TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched
 
-    TOKEN_LPAR  shift, and go to state 168
+    TOKEN_LPAR  shift, and go to state 167
 
 
-state 160
+state 159
 
    62 matched: block_of_instructions .  [TOKEN_ELSE]
    63 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions .  [TOKEN_LOCATION, TOKEN_OBJECT, TOKEN_VAR_REAL, TOKEN_VAR_INT, TOKEN_IF, TOKEN_WHILE, TOKEN_DO, TOKEN_FOR, TOKEN_RETURN, TOKEN_BREAK, TOKEN_BEGIN, TOKEN_END, TOKEN_IDENTIFIER]
@@ -2562,7 +2536,7 @@ state 160
     $default    reduce using rule 63 (unmatched)
 
 
-state 161
+state 160
 
    61 matched: command .  [TOKEN_ELSE]
    64 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command .  [TOKEN_LOCATION, TOKEN_OBJECT, TOKEN_VAR_REAL, TOKEN_VAR_INT, TOKEN_IF, TOKEN_WHILE, TOKEN_DO, TOKEN_FOR, TOKEN_RETURN, TOKEN_BREAK, TOKEN_BEGIN, TOKEN_END, TOKEN_IDENTIFIER]
@@ -2571,59 +2545,59 @@ state 161
     $default    reduce using rule 64 (unmatched)
 
 
-state 162
+state 161
 
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched . TOKEN_ELSE matched
    65 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched . TOKEN_ELSE unmatched
 
-    TOKEN_ELSE  shift, and go to state 169
+    TOKEN_ELSE  shift, and go to state 168
 
 
-state 163
+state 162
 
    90 expression_bool_or: expression_bool_or . TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR
    92 expression_bool: expression_bool TOKEN_BOOL_AND expression_bool_or .  [TOKEN_SEMICOLON, TOKEN_RPAR, TOKEN_BOOL_AND]
 
-    TOKEN_BOOL_OR  shift, and go to state 150
+    TOKEN_BOOL_OR  shift, and go to state 149
 
     $default  reduce using rule 92 (expression_bool)
 
 
-state 164
+state 163
 
    43 command: TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 43 (command)
 
 
-state 165
+state 164
 
    42 command: TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool . TOKEN_RPAR TOKEN_SEMICOLON
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_RPAR      shift, and go to state 170
-    TOKEN_BOOL_AND  shift, and go to state 152
+    TOKEN_RPAR      shift, and go to state 169
+    TOKEN_BOOL_AND  shift, and go to state 151
 
 
-state 166
+state 165
 
    41 command: TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool . TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_SEMICOLON  shift, and go to state 171
-    TOKEN_BOOL_AND   shift, and go to state 152
+    TOKEN_SEMICOLON  shift, and go to state 170
+    TOKEN_BOOL_AND   shift, and go to state 151
 
 
-state 167
+state 166
 
    90 expression_bool_or: expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool . TOKEN_RPAR
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_RPAR      shift, and go to state 172
-    TOKEN_BOOL_AND  shift, and go to state 152
+    TOKEN_RPAR      shift, and go to state 171
+    TOKEN_BOOL_AND  shift, and go to state 151
 
 
-state 168
+state 167
 
    30 number: . TOKEN_OPER_SIGNADD TOKEN_REAL
    31       | . TOKEN_OPER_SIGNADD TOKEN_UINT
@@ -2634,8 +2608,8 @@ state 168
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
    77 expression_base: . variable
    78                | . number
    79                | . variable TOKEN_MINUSMINUS
@@ -2662,17 +2636,16 @@ state 168
     number                go to state 36
     call_fce              go to state 37
     variable              go to state 38
-    inner                 go to state 39
-    expression_base       go to state 40
-    expression_mul        go to state 41
-    expression_add        go to state 42
-    expression            go to state 135
-    expression_bool_base  go to state 136
-    expression_bool_or    go to state 137
-    expression_bool       go to state 173
+    expression_base       go to state 39
+    expression_mul        go to state 40
+    expression_add        go to state 41
+    expression            go to state 134
+    expression_bool_base  go to state 135
+    expression_bool_or    go to state 136
+    expression_bool       go to state 172
 
 
-state 169
+state 168
 
     4 type: . simple_type
     5     | . complex_type
@@ -2712,46 +2685,45 @@ state 169
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
     TOKEN_LOCATION    shift, and go to state 4
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 82
-    TOKEN_WHILE       shift, and go to state 83
-    TOKEN_DO          shift, and go to state 84
-    TOKEN_FOR         shift, and go to state 85
-    TOKEN_RETURN      shift, and go to state 86
-    TOKEN_BREAK       shift, and go to state 87
-    TOKEN_BEGIN       shift, and go to state 65
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IF          shift, and go to state 81
+    TOKEN_WHILE       shift, and go to state 82
+    TOKEN_DO          shift, and go to state 83
+    TOKEN_FOR         shift, and go to state 84
+    TOKEN_RETURN      shift, and go to state 85
+    TOKEN_BREAK       shift, and go to state 86
+    TOKEN_BEGIN       shift, and go to state 62
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    type                   go to state 91
-    local_variables        go to state 92
+    type                   go to state 90
+    local_variables        go to state 91
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 93
-    command                go to state 95
-    simple_command         go to state 96
-    assign                 go to state 97
-    variable_left          go to state 98
+    block_of_instructions  go to state 92
+    command                go to state 94
+    simple_command         go to state 95
+    assign                 go to state 96
+    variable_left          go to state 97
     call_fce               go to state 37
-    matched                go to state 174
-    unmatched              go to state 175
-    variable               go to state 101
-    inner                  go to state 39
+    matched                go to state 173
+    unmatched              go to state 174
+    variable               go to state 100
 
 
-state 170
+state 169
 
    42 command: TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR . TOKEN_SEMICOLON
 
-    TOKEN_SEMICOLON  shift, and go to state 176
+    TOKEN_SEMICOLON  shift, and go to state 175
 
 
-state 171
+state 170
 
    41 command: TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON . simple_command TOKEN_RPAR block_of_instructions
    49 simple_command: . assign
@@ -2765,64 +2737,63 @@ state 171
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    simple_command  go to state 177
-    assign          go to state 97
-    variable_left   go to state 98
+    simple_command  go to state 176
+    assign          go to state 96
+    variable_left   go to state 97
     call_fce        go to state 37
-    variable        go to state 101
-    inner           go to state 39
+    variable        go to state 100
 
 
-state 172
+state 171
 
    90 expression_bool_or: expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR .
 
     $default  reduce using rule 90 (expression_bool_or)
 
 
-state 173
+state 172
 
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool . TOKEN_RPAR matched TOKEN_ELSE matched
    92 expression_bool: expression_bool . TOKEN_BOOL_AND expression_bool_or
 
-    TOKEN_RPAR      shift, and go to state 178
-    TOKEN_BOOL_AND  shift, and go to state 152
+    TOKEN_RPAR      shift, and go to state 177
+    TOKEN_BOOL_AND  shift, and go to state 151
 
 
-state 174
+state 173
 
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched .
 
     $default  reduce using rule 60 (matched)
 
 
-state 175
+state 174
 
    65 unmatched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched .
 
     $default  reduce using rule 65 (unmatched)
 
 
-state 176
+state 175
 
    42 command: TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON .
 
     $default  reduce using rule 42 (command)
 
 
-state 177
+state 176
 
    41 command: TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command . TOKEN_RPAR block_of_instructions
 
-    TOKEN_RPAR  shift, and go to state 179
+    TOKEN_RPAR  shift, and go to state 178
 
 
-state 178
+state 177
 
     4 type: . simple_type
     5     | . complex_type
@@ -2858,64 +2829,63 @@ state 178
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
     TOKEN_LOCATION    shift, and go to state 4
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 159
-    TOKEN_WHILE       shift, and go to state 83
-    TOKEN_DO          shift, and go to state 84
-    TOKEN_FOR         shift, and go to state 85
-    TOKEN_RETURN      shift, and go to state 86
-    TOKEN_BREAK       shift, and go to state 87
-    TOKEN_BEGIN       shift, and go to state 65
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IF          shift, and go to state 158
+    TOKEN_WHILE       shift, and go to state 82
+    TOKEN_DO          shift, and go to state 83
+    TOKEN_FOR         shift, and go to state 84
+    TOKEN_RETURN      shift, and go to state 85
+    TOKEN_BREAK       shift, and go to state 86
+    TOKEN_BEGIN       shift, and go to state 62
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    type                   go to state 91
-    local_variables        go to state 92
+    type                   go to state 90
+    local_variables        go to state 91
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 93
-    command                go to state 95
-    simple_command         go to state 96
-    assign                 go to state 97
-    variable_left          go to state 98
+    block_of_instructions  go to state 92
+    command                go to state 94
+    simple_command         go to state 95
+    assign                 go to state 96
+    variable_left          go to state 97
     call_fce               go to state 37
-    matched                go to state 180
-    variable               go to state 101
-    inner                  go to state 39
+    matched                go to state 179
+    variable               go to state 100
 
 
-state 179
+state 178
 
    34 block_of_instructions: . TOKEN_BEGIN TOKEN_END
    35                      | . TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END
    36                      | . TOKEN_BEGIN commands TOKEN_END
    41 command: TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR . block_of_instructions
 
-    TOKEN_BEGIN  shift, and go to state 65
+    TOKEN_BEGIN  shift, and go to state 62
 
-    block_of_instructions  go to state 181
+    block_of_instructions  go to state 180
 
 
-state 180
+state 179
 
    60 matched: TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched . TOKEN_ELSE matched
 
-    TOKEN_ELSE  shift, and go to state 182
+    TOKEN_ELSE  shift, and go to state 181
 
 
-state 181
+state 180
 
    41 command: TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions .
 
     $default  reduce using rule 41 (command)
 
 
-state 182
+state 181
 
     4 type: . simple_type
     5     | . complex_type
@@ -2951,32 +2921,31 @@ state 182
    68 variable: . TOKEN_IDENTIFIER
    69         | . TOKEN_IDENTIFIER array_access
    70         | . call_fce
-   71         | . inner call_fce
-   72 inner: . variable TOKEN_DOT
+   71         | . variable TOKEN_DOT call_fce
+   72         | . variable TOKEN_DOT TOKEN_IDENTIFIER
 
     TOKEN_LOCATION    shift, and go to state 4
     TOKEN_OBJECT      shift, and go to state 5
     TOKEN_VAR_REAL    shift, and go to state 6
     TOKEN_VAR_INT     shift, and go to state 7
-    TOKEN_IF          shift, and go to state 159
-    TOKEN_WHILE       shift, and go to state 83
-    TOKEN_DO          shift, and go to state 84
-    TOKEN_FOR         shift, and go to state 85
-    TOKEN_RETURN      shift, and go to state 86
-    TOKEN_BREAK       shift, and go to state 87
-    TOKEN_BEGIN       shift, and go to state 65
-    TOKEN_IDENTIFIER  shift, and go to state 90
+    TOKEN_IF          shift, and go to state 158
+    TOKEN_WHILE       shift, and go to state 82
+    TOKEN_DO          shift, and go to state 83
+    TOKEN_FOR         shift, and go to state 84
+    TOKEN_RETURN      shift, and go to state 85
+    TOKEN_BREAK       shift, and go to state 86
+    TOKEN_BEGIN       shift, and go to state 62
+    TOKEN_IDENTIFIER  shift, and go to state 89
 
-    type                   go to state 91
-    local_variables        go to state 92
+    type                   go to state 90
+    local_variables        go to state 91
     simple_type            go to state 10
     complex_type           go to state 11
-    block_of_instructions  go to state 93
-    command                go to state 95
-    simple_command         go to state 96
-    assign                 go to state 97
-    variable_left          go to state 98
+    block_of_instructions  go to state 92
+    command                go to state 94
+    simple_command         go to state 95
+    assign                 go to state 96
+    variable_left          go to state 97
     call_fce               go to state 37
-    matched                go to state 174
-    variable               go to state 101
-    inner                  go to state 39
+    matched                go to state 173
+    variable               go to state 100
