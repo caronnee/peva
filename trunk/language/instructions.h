@@ -1,5 +1,7 @@
 #ifndef __INSTR__
 #define __INSTR__
+//#include <libxml/parser.h>
+//#include <libxml/tree.h>
 #include "./tree/node.h" //su tam ulozene node  values
 #include "./tree/typedefs.h"
 

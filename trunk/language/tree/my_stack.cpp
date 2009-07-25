@@ -148,3 +148,18 @@ void Program::leave()
 {
 
 }
+void Program::save_to_xml()
+{
+	LIBXML_TEST_VERSION;
+
+	data.doc = xmlNewDoc(BAD_CAST "1.0");
+	data.root_ptr = xmlNewNode(NULL, BAD_CAST "Machine");
+	xmlDocSetRootElement(data.doc, data.root_ptr);
+	xmlNodePtr ptr;
+	for(int i =0; i< instructions.size(); i++)
+	{
+		//ptr = instructions[i]->xml_format();
+	}
+	xmlSaveFormatFileEnc("machine.xml", data.doc, "UTF-8", 1);
+	xmlFreeDoc(data.doc);
+}
