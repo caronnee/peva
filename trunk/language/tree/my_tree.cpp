@@ -11,7 +11,7 @@ int main(int c, char** r)
 	for (int i =0; i< 11; i++)
 		b.add(s[i],t);
 	std::cout << "zacinam vypisovat:" << b.defined.depth << std::endl;
-	b.output(&b.defined);
+//	b.output(&b.defined);
 /*	for (int i =0; i< b.alphabet.length(); i++)
 	{
 		std::cout << b.find_index(b.alphabet[i]) << std::endl;

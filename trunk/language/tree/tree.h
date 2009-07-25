@@ -13,5 +13,7 @@ struct Tree
 	std::list<Node *> items;//ukazatel z jednoducheho dovodu -> inak je to prasarna, vyparsovavat z listu:)
 	Tree();
 	Tree(int d);
+private:
+	void reset();
 };
 #endif

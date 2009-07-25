@@ -1,6 +1,6 @@
 integer left, right; //povolene komentare, bool aj integer su naprosto stejne
 
-function rek(a)
+integer function rek(a)
 {
 	if (a == 1) return 1;
 	return a+ rek(a-1);
@@ -11,7 +11,7 @@ function rek(a)
 	return a+b;
 }*/
 
-function dodge()
+integer function dodge()
 {
 	if(rigth == 2) rigth = 2;
 	move(left);
