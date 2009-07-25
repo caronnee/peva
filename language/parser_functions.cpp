@@ -74,6 +74,8 @@ Instruction * operAdd(Operation op) // add
 			return new InstructionPlus();
 		case OperationMinus:
 			return new InstructionMinus();
+		default:
+			return NULL;
 	}
 }
 Instruction * operOr(Operation op) //Bool_OR
