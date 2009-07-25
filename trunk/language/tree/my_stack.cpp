@@ -4,6 +4,7 @@
 #define MaxItems 3
 Program::Program()
 {
+	nested = 0;
 	alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";//vsetky znaky, co a poauzivame v identifikatoroch
 	alphabet = quicksort(alphabet);//zasortime aby sme mohli pouzivat pulenie intervalu
 	error = false;//TODO pridat errorou hlasku
@@ -56,12 +57,25 @@ Tree * Program::find_string(std::string s)
 	}
 	return t;
 }
+
+Node * Program::find_var(std::string s)
+{
+	Tree * t = find_string(s);
+	for (std::list<Node*>::iterator i = t->items.begin(); 
+			i != t->items.end(); 
+			i++)
+	{
+		if ((*i)->name == s)
+			return (*i);
+	}
+	return NULL;
+}
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
 
 //TODO presunut k stromu, kam to tematicky patri
-bool Program::add(std::string s, Create_type type)
+Node * Program::add(std::string s, Create_type type)
 {
 	std::cout << "pridavam meno:" << s << std::endl;
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
@@ -79,7 +93,10 @@ bool Program::add(std::string s, Create_type type)
 
 	} //TODO nejaka rozumnejsia metoda
 
-	t->items.push_back(new Node(s, type));
+	Node * nod = new Node(s, type);
+	if (nested)
+		nod->nested = Local;
+	t->items.push_back(nod);
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
@@ -116,7 +133,7 @@ bool Program::add(std::string s, Create_type type)
 			t = t->next[splitted];
 		}
 	}
-	return true;
+	return nod;
 }
 void Program::output(Tree * t)
 {

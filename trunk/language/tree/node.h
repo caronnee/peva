@@ -18,6 +18,11 @@ enum Type
 	TypeProcedure,
 	NumberOfTypes
 };
+enum NestedType
+{
+	Global,
+	Local
+};
 
 bool is_simple();
 
@@ -53,23 +58,21 @@ struct Location
 struct Node // struktura premennych
 {
 	std::string name;
-	unsigned int last_access; //z  tohoto sa vypocita penalizacia
 	Type type;
+	NestedType nested;
+
 	int active; //bola deklarovana v danom bloku
-	int IntegerValue;
-	float RealNumber;
-	Array * array;
-	Location LocationValue;
-	Object * ObjectValue;
+	unsigned int last_access; //z  tohoto sa vypocita penalizacia
+	std::vector<int> IntegerValue;
+	std::vector<float> RealNumber;
+	std::vector<Array *> array;
+	std::vector<Location> LocationValue;
+	std::vector<Object *> ObjectValue;
+
 	Node();
 	Node(std::string s,Type t);
 	Node (std::string s,Create_type t);
 	int size();
 };
 
-struct Nodes
-{
-	Create_type t;
-	std::vector<Node *> nodes_in_depth;
-};
 #endif

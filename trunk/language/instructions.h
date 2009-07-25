@@ -17,17 +17,25 @@ public:
 };
 class InstructionCreate : public Instruction{
 	public:
-		InstructionCreate(std::string s);
+		InstructionCreate(Node * n);
 		InstructionCreate();
+};
+class InstructionLoadLocal : public Instruction{
+	public:
+		InstructionLoadLocal(Node * n);
+		InstructionLoadLocal(); //loadne z toho, co ma na value stacku
+};
+class InstructionLoadGlobal : public Instruction{
+	public:
+		InstructionLoadGlobal(Node * n);
+		InstructionLoadGlobal(); //loadne z toho, co ma na value stacku
 };
 class InstructionLoad : public Instruction{
 	public:
-		InstructionLoad(std::string s);
 		InstructionLoad(int i);
 		InstructionLoad(float f);
 		InstructionLoad(); //loadne z toho, co ma na value stacku
 };
-
 class InstructionStore : public Instruction{
 	public:
 		InstructionStore();

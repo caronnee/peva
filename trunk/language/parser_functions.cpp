@@ -3,12 +3,13 @@
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
-void add_variables(Program *p, std::vector<Constr> s, Create_type t)
+Instruction * instruction_load(Program *p, std::string s)
 {
-	for (int i =0; i< s.size(); i++)
-	{
-		p->add(s[i].id,t); //TODO checkovat, ci to preslo OK
-	}
+	Node *n = p->find_var(s); 
+	if(n->nested == Local)
+		return new InstructionLoadLocal(n);
+	else  
+		return new InstructionLoadGlobal(n);
 }
 void reg_main(Program* p, Instructions ins)
 {

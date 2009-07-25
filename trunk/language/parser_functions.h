@@ -5,8 +5,8 @@
 #include "./header1.h"
 
 typedef std::vector<std::string> strings;
-void add_variables(Program * p, std::vector<Constr> s, Create_type t);
 
+Instruction * instruction_load(Program * p, std::string s);
 void reg_main(Program * p,Instructions ins);
 void reg(Program *p, Create_type t, std::string name,std::vector<Constr> s, Instructions i);
 Instructions join_instructions(Instructions a, Instructions b);

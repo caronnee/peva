@@ -59,11 +59,12 @@ Node::Node(std::string s, Create_type t)
 		}
 		for (int i =0; i < t.range; i++)
 		{
-			array = new Array();
-			array->elements.push_back(Node(s,*t.data_type));
+			array.push_back(new Array());
+			array[0]->elements.push_back(Node(s,*t.data_type));
 		}
 	}
 }
+//staci pocitat pre prvy NOD
 int Node::size() //kolko v zasoniku ma preskocit, aby sa dostal na zaciatok
 {
 	if (is_simple(this->type))
@@ -71,9 +72,9 @@ int Node::size() //kolko v zasoniku ma preskocit, aby sa dostal na zaciatok
 		return 1;
 	}
 	int size = 0;
-	for (size_t i =0; i< array->elements.size(); i++)
+	for (size_t i =0; i< array[0]->elements.size(); i++)
 	{
-		size +=array->elements[i].size();
+		size +=array[0]->elements[i].size();
 	}
 	return size;
 }
