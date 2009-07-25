@@ -57,11 +57,13 @@ Tree * Program::find_string(std::string s)
 	return t;
 }
 /*
- *Vracia ukazovatel na samotny uzzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
+ *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
 
+//TODO presunut k stromu, kam to tematicky patri
 bool Program::add(std::string s, Create_type type)
 {
+	std::cout << "pridavam meno:" << s << std::endl;
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
 	std::cout << "\t" << s <<std::endl; 
 	std::list<Node*>::iterator iter;
@@ -76,11 +78,13 @@ bool Program::add(std::string s, Create_type type)
 		}//kontrola, co tam nieco take uz nie je
 
 	} //TODO nejaka rozumnejsia metoda
+
 	t->items.push_back(new Node(s, type));
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
 		//burst!
+//		getc(stdin);
 		t->inner_node = true;
 		int splitted = -1,split = 0;
 		std::list<Node *> n;

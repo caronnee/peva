@@ -48,6 +48,7 @@ Node::Node() //toto sa normalne nebude pouzivat
 }
 Node::Node(std::string s, Create_type t)
 {
+	name = s;
 	type = t.type;
 	if (t.type == TypeArray)
 	{
