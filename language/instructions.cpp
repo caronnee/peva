@@ -4,6 +4,10 @@ InstructionCreate::InstructionCreate()
 {
 	name_ = "InstructionCreate";
 };
+InstructionCreate::InstructionCreate(std::string s)
+{
+	name_ = "InstructionCreate";
+};
 InstructionLoad::InstructionLoad()
 {
 	name_ = "InstructionLoad";
@@ -25,6 +29,10 @@ InstructionStore::InstructionStore()
 	name_ = "InstructionStore";
 };
 Call::Call()
+{
+	name_ = "Call";
+};
+Call::Call(std::string s)
 {
 	name_ = "Call";
 };
@@ -88,18 +96,34 @@ InstructionBinaryAnd::InstructionBinaryAnd()
 {
 	name_ = "InstructionBinaryAnd";
 };
+InstructionAnd::InstructionAnd()
+{
+	name_ = "InstructionAnd";
+};
 InstructionBinaryOr::InstructionBinaryOr()
 {
 	name_ = "InstructionBinaryOr";
 };
-//----------------------------------------------------------------------------------------------------
-InstructionGe::InstructionGe()
+InstructionOr::InstructionOr()
 {
-	name_ = "InstructionGe";
+	name_ = "InstructionOr";
 };
+InstructionBinaryNot::InstructionBinaryNot()
+{
+	name_ = "InstructionBinaryNot";
+};
+InstructionNot::InstructionNot()
+{
+	name_ = "InstructionNot";
+};
+//----------------------------------------------------------------------------------------------------
 InstructionGt::InstructionGt()
 {
 	name_ = "InstructionGt";
+};
+InstructionGe::InstructionGe()
+{
+	name_ = "InstructionGe";
 };
 InstructionEqual::InstructionEqual()
 {

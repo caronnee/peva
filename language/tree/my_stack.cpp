@@ -138,5 +138,13 @@ void Program::add(Instructions ins)
 }
 void Program::add_function(Create_type t, std::string name, std::vector<Constr> c, Instructions ins)
 {
+//TODO
+}
+void Program::enter()
+{
+
+}
+void Program::leave()
+{
 
 }
