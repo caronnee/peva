@@ -45,6 +45,7 @@ struct Value
 
 struct Program
 {
+	int PC;
 	bool error;
 	std::string alphabet;
 	Tree defined;//root burst stromu
@@ -56,11 +57,13 @@ struct Program
 	int find_index(char a);
 	std::vector<Functions> functions;
 	Tree * find_string(std::string);
+	void add(Instructions ins);
 	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	bool add(std::string name, Create_type t);
 	Node * create_type(Type t);
 	void enter();
+	void add_function(Create_type t, std::string name, std::vector<Constr> c, Instructions ins);
 	void leave();
 };
 #endif

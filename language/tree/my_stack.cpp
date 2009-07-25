@@ -129,3 +129,14 @@ void Program::output(Tree * t)
 	}
 	std::cout << "END "<<std::endl;
 }
+void Program::add(Instructions ins)
+{
+	for (int i =0; i<ins.size(); i++)
+	{
+		instructions.push_back(ins[i]);
+	}
+}
+void Program::add_function(Create_type t, std::string name, std::vector<Constr> c, Instructions ins)
+{
+
+}
