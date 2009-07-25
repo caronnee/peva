@@ -146,5 +146,5 @@ class InstructionBegin : public Instruction{
 class InstructionEndBlock : public Instruction{
 	public:
 		InstructionEndBlock();
-}
+};
 #endif

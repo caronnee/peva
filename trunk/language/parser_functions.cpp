@@ -12,7 +12,7 @@ void add_variables(Program *p, std::vector<Constr> s, Create_type t)
 }
 void reg_main(Program* p, Instruction ins)
 {
-	p>PC = p->stack.size();
+	p->PC = p->stack.size();
 	p->add(ins);
 }
 
