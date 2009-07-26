@@ -4,7 +4,7 @@ XML=`xml2-config --cflags`
 
 all:bparser 
 
-bparser:parser.o bison.o bot.o biflex.o tree.o instructions.o node.o
+bparser:parser.o bison.o bot.o biflex.o tree.o instructions.o node.o help.o
 	$(CXX) $(LDFLAGS) *.o -o bparser
 
 parser.o: parser.cpp header1.h tokens.h
@@ -35,11 +35,11 @@ node.o:./tree/node.cpp ./tree/node.h
 
 instructions.o: instructions.h instructions.cpp
 	${CXX} ${CFLAGS} -c ${XML} -o $@ instructions.cpp
+help.o:	help_functions.h help_functions.cpp
+	${CXX} ${CFLAGS} -c -o $@ help_functions.cpp
 
 distclean:
 	rm -f *.o bparser parser.cpp bison.cpp bison.hpp
 
 run:
-	make distclean
-	make
 	./bparser vstup

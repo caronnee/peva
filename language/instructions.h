@@ -4,6 +4,7 @@
 #include <libxml/tree.h>
 #include "./tree/node.h" //su tam ulozene node  values
 #include "./tree/typedefs.h"
+#include "help_functions.h"
 
 class Instruction
 {
@@ -26,27 +27,33 @@ class InstructionCreate : public Instruction{
 };
 class InstructionLoadLocal : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionLoadLocal(Node * n);
 		InstructionLoadLocal(); //loadne z toho, co ma na value stacku
 };
 class InstructionLoadGlobal : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionLoadGlobal(Node * n);
 		InstructionLoadGlobal(); //loadne z toho, co ma na value stacku
 };
 class InstructionLoad : public Instruction{
+	bool destroy_node;
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionLoad(int i);
 		InstructionLoad(float f);
 		InstructionLoad(); //loadne z toho, co ma na value stacku
 };
 class InstructionStore : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionStore();
 };
 class Call : public Instruction
 {
 	public:
+		virtual xmlNodePtr xml_format();
 		Call(std::string s);
 		Call();
 };
@@ -54,6 +61,7 @@ class Call : public Instruction
 class CallMethod : public Instruction
 {
 	public:
+		virtual xmlNodePtr xml_format();
 		CallMethod(std::string s);
 		CallMethod();
 };
@@ -63,19 +71,23 @@ class InstructionPop : public Instruction{
 };
 class InstructionMustJump : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionMustJump(int steps);
 };
 class InstructionJump : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionJump(int stepsYes, int stepsNo);
 };
 class InstructionReturn : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionReturn();
 };
 class InstructionBreak : public Instruction{
 	int loop_label;
 	public:
+		virtual xmlNodePtr xml_format();
 		int jump;
 		InstructionBreak(int label);
 		virtual int breaks();
