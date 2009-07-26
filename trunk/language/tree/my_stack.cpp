@@ -181,7 +181,8 @@ void Program::save_to_xml()
 	xmlNodePtr ptr;
 	for(int i =0; i< instructions.size(); i++)
 	{
-		//ptr = instructions[i]->xml_format();
+		ptr = instructions[i]->xml_format();
+		xmlAddChild(data.root_ptr, ptr);
 	}
 	xmlSaveFormatFileEnc("machine.xml", data.doc, "UTF-8", 1);
 	xmlFreeDoc(data.doc);

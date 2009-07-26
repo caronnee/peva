@@ -86,6 +86,9 @@
 %type<instructions> call_fce
 %type<instructions> call_parameters
 %type<instructions> array_access
+%type<instructions> declare_functions
+%type<instructions> declare_function_
+%type<instructions> global_variables
 
 %start program
 %error-verbose
@@ -95,11 +98,17 @@
 %locations
 %%
 
-program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions { reg_main(program, $6); }
+program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions 
+		{ 
+		 // program->shift_functions($1.size());
+		  $1 = join_instructions($1,$2);
+		  $1 = join_instructions($1,$6);
+		  reg_main(program, $1); 
+		}
 	;
 
-global_variables:	/*	ziadne parametre	*/ 
-	|global_variables local_variables /*Uz pridane parametre*/
+global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
+	|global_variables local_variables { $$=join_instructions($1,$2);}
 	;
 
 type:	  simple_type { $$ = $1;}
@@ -154,8 +163,8 @@ values: number { $$=$1;}
 	| values TOKEN_COMMA number {$$ = join_instructions($1, $3);}
 	;
 
-declare_functions: /*	ziadne deklarovane funkcie	*/
-	|declare_function_
+declare_functions: /*	ziadne deklarovane funkcie	*/ { $$.clear(); }
+	|declare_function_ { $$ = $1; }
 	;
 
 function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; program->nested++; } //zatial nepotrebujeme vediet zanoraenie 
@@ -349,5 +358,6 @@ int main(int argc, char ** argv)
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
 	q.output(&q.defined);
+	q.save_to_xml();
 	return 0;	
 }
