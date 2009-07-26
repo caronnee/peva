@@ -63,6 +63,7 @@
 %type<type> return_type
 
 %type<ident> function_header
+%type<entries> parameters
 
 %type<instructions> commands
 %type<instructions> command
@@ -172,10 +173,14 @@ function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; program->nested++; } 
 return_type:	type { $$ = $1; }
 	|TOKEN_VOID { $$ = Create_type(TypeVoid); }
 	;
-declare_function_:	return_type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->nested--;} //register name, parameter_list, block
-	|declare_function_ return_type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
-	|return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program,$1, $2, a, $5); } 
-	|declare_function_ return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program, $2, $3, a, $6); }
+
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, $1)); }
+	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,$3));}
+	;
+declare_function_:	return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->nested--;} //register name, parameter_list, block
+	|declare_function_ return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
+	|return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program,$1, $2, a, $5); } 
+	|declare_function_ return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program, $2, $3, a, $6); }
 	;
 
 number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } //load realu do 

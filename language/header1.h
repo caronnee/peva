@@ -54,6 +54,9 @@ struct Lval {
 	Create_type type;
 
 	Instructions instructions;
+
+	Parameter_entry entry;
+	std::vector<Parameter_entry> entries;
 };
 
 // lex interface
