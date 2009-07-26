@@ -16,6 +16,7 @@ enum Type
 	TypeArray,
 	TypeFunction,
 	TypeProcedure,
+	TypeVoid,
 	NumberOfTypes
 };
 enum NestedType

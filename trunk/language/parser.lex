@@ -24,6 +24,7 @@ WHITESPACE		[ \r\t\f]
 \/\/						BEGIN(COMMENT_LINE);
 \/\*						BEGIN(COMMENT);
 main						{*l = line; return TOKEN_MAIN; };
+void						{*l = line; return TOKEN_VOID; };
 location					{*l = line;return TOKEN_LOCATION; };
 real 						{*l = line;return TOKEN_VAR_REAL; };
 integer						{*l = line;return TOKEN_VAR_INT; };
