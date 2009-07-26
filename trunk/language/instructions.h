@@ -47,7 +47,6 @@ class InstructionLoad : public Instruction{
 };
 class InstructionStore : public Instruction{
 	public:
-		virtual xmlNodePtr xml_format();
 		InstructionStore();
 };
 class Call : public Instruction

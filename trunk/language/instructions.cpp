@@ -34,11 +34,15 @@ InstructionLoadLocal::InstructionLoadLocal()
 }
 InstructionLoadLocal::InstructionLoadLocal(Node * n)
 {
+	node = n;
 	name_ = "InstructionLoadLocal";
 }
 xmlNodePtr InstructionLoadLocal::xml_format()
 {
-	return NULL;
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
+	xmlAddChild(n, child);
+	return n;
 }
 InstructionLoadGlobal::InstructionLoadGlobal()
 {
@@ -88,10 +92,22 @@ xmlNodePtr InstructionLoad::xml_format()
 		{
 			case TypeInteger:
 				{
-					child = xmlNewNode( NULL, BAD_CAST "integer");
+					child = xmlNewNode( NULL, BAD_CAST "TypeInteger");
 					std::string s = deconvert<int>(node->IntegerValue[0]);
 					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
+					xmlAddChild(child,grand_child);
+					break;
 				}
+			case TypeReal:
+				{
+					child = xmlNewNode( NULL, BAD_CAST "TypeReal");
+					std::string s = deconvert<double>(node->RealValue[0]);
+					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
+					xmlAddChild(child,grand_child);
+					break;
+				}
+			default:
+				child = xmlNewText( BAD_CAST "TypeUndefined");
 		}
 	}
 	xmlAddChild(n, child);
@@ -100,11 +116,6 @@ xmlNodePtr InstructionLoad::xml_format()
 InstructionStore::InstructionStore()
 {
 	name_ = "InstructionStore";
-}
-xmlNodePtr InstructionStore::xml_format()
-{
-	return NULL;
-
 }
 Call::Call()
 {

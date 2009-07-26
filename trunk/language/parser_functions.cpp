@@ -1,15 +1,27 @@
 #include "./parser_functions.h"
+#include <iostream>
 
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
 Instruction * instruction_load(Program *p, std::string s)
 {
+	std::cout << "_________"<< s << "_______" <<std::endl;
 	Node *n = p->find_var(s); 
+	if (n == NULL)
+	{
+		exit(4);
+	}
 	if(n->nested == Local)
+	{
+		std::cout << "LOCAAAAAL" <<std::endl;
 		return new InstructionLoadLocal(n);
+	}
 	else  
+	{
+		std::cout << "Globaaaaaaaal" <<std::endl;
 		return new InstructionLoadGlobal(n);
+	}
 }
 void reg_main(Program* p, Instructions ins)
 {
