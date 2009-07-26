@@ -4,6 +4,7 @@
 #define MaxItems 3
 Program::Program()
 {
+	last_loop_number = 0;
 	nested = 0;
 	alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._";//vsetky znaky, co a poauzivame v identifikatoroch
 	alphabet = quicksort(alphabet);//zasortime aby sme mohli pouzivat pulenie intervalu
@@ -70,6 +71,7 @@ Node * Program::find_var(std::string s)
 	}
 	return NULL;
 }
+
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
@@ -183,4 +185,15 @@ void Program::save_to_xml()
 	}
 	xmlSaveFormatFileEnc("machine.xml", data.doc, "UTF-8", 1);
 	xmlFreeDoc(data.doc);
+}
+
+void Program::enter_loop()
+{
+	last_loop_number++; //v podstate loop_zanorenie
+	loop_labels.push(last_loop_number);
+}
+void Program::end_loop()
+{
+	last_loop_number--;
+	loop_labels.pop();
 }

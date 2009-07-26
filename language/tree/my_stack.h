@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <stack>
 #include "../instructions.h"
 #include "./tree.h"
 #include "./typedefs.h"
@@ -84,6 +85,8 @@ struct Program
 	int PC;
 	bool error;
 	int nested;
+	int last_loop_number;
+	std::stack<int> loop_labels;
 	std::string alphabet;
 	Tree defined;//root burst stromu
 	Instructions instructions; //kopa predefinovanych instrukcii
@@ -92,6 +95,8 @@ struct Program
 	void save_to_xml();
 	Program();
 	void output(Tree * t);
+	void enter_loop();
+	void end_loop();
 	int find_index(char a);
 	std::vector<Functions> functions;
 	Tree * find_string(std::string);
