@@ -1,23 +1,26 @@
 #ifndef __INSTR__
 #define __INSTR__
-//#include <libxml/parser.h>
-//#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include "./tree/node.h" //su tam ulozene node  values
 #include "./tree/typedefs.h"
 
 class Instruction
 {
 	protected:
-	Values * values;	
+	Node * node;
 	std::string name_;
+	bool constant;
 public:
 	virtual std::string name();
 	virtual int breaks();
+	virtual xmlNodePtr xml_format();
 //	virtual int execute();
 	Instruction();
 };
 class InstructionCreate : public Instruction{
 	public:
+		virtual xmlNodePtr xml_format();
 		InstructionCreate(Node * n);
 		InstructionCreate();
 };

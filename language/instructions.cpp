@@ -1,7 +1,10 @@
 #include "instructions.h"
 Instruction::Instruction()
 {
-	values = NULL;
+}
+xmlNodePtr Instruction::xml_format()
+{
+	return NULL;	
 }
 int Instruction::breaks()
 {
@@ -13,7 +16,15 @@ InstructionCreate::InstructionCreate()
 }
 InstructionCreate::InstructionCreate(Node * n)
 {
+	node = n;
 	name_ = "InstructionCreate";
+}
+xmlNodePtr InstructionCreate::xml_format()
+{
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
+	xmlAddChild(n, child);
+	return n;
 }
 InstructionLoad::InstructionLoad()
 {
