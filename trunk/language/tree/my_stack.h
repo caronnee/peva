@@ -98,6 +98,7 @@ struct Program
 	MyXmlData data;
 	void save_to_xml();
 	Program();
+	void add_global(Instructions ins);
 	void output(Tree * t);
 	void enter_loop();
 	void end_loop();
