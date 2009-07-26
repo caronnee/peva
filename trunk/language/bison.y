@@ -251,7 +251,7 @@ simple_command:	assign {$$ = $1;}
 	|variable { $$ = $1; } 
 	;
 
-assign: variable_left TOKEN_ASSIGN expression { $$ = $1; $$.push_back(new InstructionStore()) }
+assign: variable_left TOKEN_ASSIGN expression { $$ = join_instructions($1, $3); $$.push_back(new InstructionStore()) }
 	;
 
 variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
