@@ -103,7 +103,9 @@
 
 program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{ 
-		  reg_main(program, $1); 
+		  std::vector<Parameter_entry> p;
+		  program->add_global($1);
+		  reg(program, Create_type(TypeVoid),"main", p, $6); 
 		}
 	;
 

@@ -91,7 +91,14 @@ Node * Program::find_var(std::string s)
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
-
+void Program::add_global(Instructions ins)
+{
+	PC = instructions.size();
+	for (int i =0; i< ins.size(); i++)
+	{
+		instructions.push_back(ins[i]);	
+	}
+}
 //TODO presunut k stromu, kam to tematicky patri
 Node * Program::add(std::string s, Create_type type)
 {
