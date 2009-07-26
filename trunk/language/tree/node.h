@@ -21,6 +21,7 @@ enum Type
 };
 enum NestedType
 {
+	Const,
 	Global,
 	Local
 };
@@ -65,7 +66,7 @@ struct Node // struktura premennych
 	int active; //bola deklarovana v danom bloku
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
 	std::vector<int> IntegerValue;
-	std::vector<float> RealNumber;
+	std::vector<float> RealValue;
 	std::vector<Array *> array;
 	std::vector<Location> LocationValue;
 	std::vector<Object *> ObjectValue;
