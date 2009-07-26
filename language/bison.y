@@ -19,6 +19,7 @@
 %token TOKEN_OBJECT
 %token TOKEN_VAR_REAL
 %token TOKEN_VAR_INT
+%token TOKEN_VOID
 %token TOKEN_FUNCTION
 %token TOKEN_IF
 %token TOKEN_ELSE
@@ -59,6 +60,7 @@
 %type<type> complex_type
 %type<type> ranges
 %type<type> type
+%type<type> return_type
 
 %type<ident> function_header
 
@@ -100,9 +102,6 @@
 
 program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{ 
-		 // program->shift_functions($1.size());
-		  $1 = join_instructions($1,$2);
-		  $1 = join_instructions($1,$6);
 		  reg_main(program, $1); 
 		}
 	;
@@ -170,10 +169,13 @@ declare_functions: /*	ziadne deklarovane funkcie	*/ { $$.clear(); }
 function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; program->nested++; } //zatial nepotrebujeme vediet zanoraenie 
 	;
 
-declare_function_:	type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->nested--;} //register name, parameter_list, block
-	|declare_function_ type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
-	|type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program,$1, $2, a, $5); } 
-	|declare_function_ type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program, $2, $3, a, $6); }
+return_type:	type { $$ = $1; }
+	|TOKEN_VOID { $$ = Create_type(TypeVoid); }
+	;
+declare_function_:	return_type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->nested--;} //register name, parameter_list, block
+	|declare_function_ return_type function_header TOKEN_LPAR names TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
+	|return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program,$1, $2, a, $5); } 
+	|declare_function_ return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Constr> a; reg(program, $2, $3, a, $6); }
 	;
 
 number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } //load realu do 

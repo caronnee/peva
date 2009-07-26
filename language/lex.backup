@@ -1,12 +1,12 @@
-State #55 is non-accepting -
+State #56 is non-accepting -
  associated rule line numbers:
-	51	52
+	52	53
  out-transitions: [ 0-9 ]
  jam-transitions: EOF [ \000-/  :-\377 ]
 
-State #78 is non-accepting -
+State #80 is non-accepting -
  associated rule line numbers:
-	51	52
+	52	53
  out-transitions: [ 0-9 ]
  jam-transitions: EOF [ \000-/  :-\377 ]
 

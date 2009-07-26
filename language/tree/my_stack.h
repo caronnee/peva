@@ -64,6 +64,7 @@ struct Functions
 	std::string name;
 	std::vector<Parameter_entry> parameters;
 	int begin; //kde to zacina v stacku
+	Node * return_type;
 };
 
 struct Value
