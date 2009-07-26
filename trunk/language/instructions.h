@@ -12,6 +12,7 @@ class Instruction
 	std::string name_;
 public:
 	virtual std::string name();
+	virtual int breaks();
 //	virtual int execute();
 	Instruction();
 };
@@ -70,8 +71,11 @@ class InstructionReturn : public Instruction{
 		InstructionReturn();
 };
 class InstructionBreak : public Instruction{
+	int loop_label;
 	public:
-		InstructionBreak();
+		int jump;
+		InstructionBreak(int label);
+		virtual int breaks();
 };
 class InstructionPlusPlus : public Instruction{
 	public:

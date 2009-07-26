@@ -183,25 +183,34 @@ commands: matched {$$ = $1;}
 	| unmatched {$$ = $1;}
 	| commands unmatched { $$ = join_instructions($1, $2); }
 	;
-
-command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
+forcycle:	TOKEN_FOR { program->enter_loop();}
+	;
+do_cycle:	TOKEN_DO { program->enter_loop();}
+	;
+while_cycle:	TOKEN_WHILE { program->enter_loop();}
+	;
+command:	forcycle TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
        		{ 
 		  $9 = join_instructions($9, $7); 
 		  $3.push_back(new InstructionMustJump($9.size())); 
 		  $5.push_back(new InstructionJump(-1*$9.size()-$5.size(),1));
 		  $9 = join_instructions($9,$5);
 		  $$ = join_instructions($3,$9);
+		  set_breaks(program, $5);
+		  program->end_loop();
 		}
-	|TOKEN_DO block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
+	|do_cycle block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ $$ = join_instructions($2,$5); 
 		  $$.push_back(new InstructionJump(-1*$$.size(),1)); 
+		  program->end_loop();
 		}
-	|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
+	|while_cycle TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 		{
 			$$.push_back(new InstructionMustJump($3.size()));
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
 			$$.push_back(new InstructionJump(-1*$$.size(),1));
+		  	program->end_loop();
 		}
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
@@ -212,7 +221,7 @@ command:	TOKEN_FOR TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOL
 	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn());} //v node zostane predchadzajuca hodnota
 	|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
-			$$.push_back(new InstructionBreak());
+			$$.push_back(new InstructionBreak(program->last_loop_number));
 		}
 	|local_variables { $$ = $1; } //deklarovanie novej premennej
 	|simple_command TOKEN_SEMICOLON {$$ = $1;}

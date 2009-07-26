@@ -25,11 +25,23 @@ void reg(Program * p,Create_type t, std::string name, std::vector<Constr> c, Ins
 Instructions join_instructions(Instructions i1, Instructions i2)
 {
 	Instructions res = i1;
-	for (int i =0; i < i2.size(); i++)
+	for (size_t i =0; i < i2.size(); i++)
 	{
 		res.push_back(i2[i]);
 	}
 	return res;
+}
+void set_breaks(Program * p, Instructions ins)
+{
+	size_t size = ins.size();
+	for (size_t i = 0; i< size; i++)
+	{
+		if(ins[i]->breaks() == p-> last_loop_number)
+		{
+			InstructionBreak * b = (InstructionBreak *)ins[i];
+			b->jump = size - i;
+		}
+	}
 }
 Instruction * operRel(Operation op)
 {
