@@ -2,6 +2,16 @@
 #include <iostream>
 
 #define MaxItems 3
+
+Parameter_entry::Parameter_entry()
+{
+	name = "Not_defined";
+}
+Parameter_entry::Parameter_entry(std::string n, Parameter_type pt, Create_type t)
+{
+	name = n;
+	val_type = pt;
+}
 Program::Program()
 {
 	last_loop_number = 0;
@@ -159,9 +169,9 @@ void Program::add(Instructions ins)
 		instructions.push_back(ins[i]);
 	}
 }
-void Program::add_function(Create_type t, std::string name, std::vector<Constr> c, Instructions ins)
+void Program::add_function(Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions ins)
 {
-//TODO
+
 }
 void Program::enter()
 {

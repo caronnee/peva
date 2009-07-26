@@ -57,6 +57,8 @@ struct Parameter_entry
 	std::string name;
 	Parameter_type val_type;
 	Create_type type;
+	Parameter_entry(std::string name, Parameter_type pt, Create_type type);
+	Parameter_entry();
 };
 
 struct Functions
@@ -108,7 +110,7 @@ struct Program
 	void add(Instructions ins);
 	Node * create_type(Type t);
 	void enter();
-	void add_function(Create_type t, std::string name, std::vector<Constr> c, Instructions ins);
+	void add_function(Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions ins);
 	void leave();
 };
 #endif

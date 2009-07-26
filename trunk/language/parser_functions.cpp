@@ -17,7 +17,7 @@ void reg_main(Program* p, Instructions ins)
 	p->add(ins);
 }
 
-void reg(Program * p,Create_type t, std::string name, std::vector<Constr> c, Instructions b)
+void reg(Program * p,Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions b)
 {
 	p->add_function(t, name,c,b);
 }
