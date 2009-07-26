@@ -12,6 +12,12 @@ Parameter_entry::Parameter_entry(std::string n, Parameter_type pt, Create_type t
 	name = n;
 	val_type = pt;
 }
+Function::Function(std::string n, std::vector<Parameter_entry> v, Create_type t)
+{
+	name =n;
+	parameters = v;
+	return_type = new Node(n, t);
+}
 Program::Program()
 {
 	last_loop_number = 0;
@@ -171,7 +177,13 @@ void Program::add(Instructions ins)
 }
 void Program::add_function(Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions ins)
 {
-
+	Function f(name, c,t);
+	f.begin = instructions.size();
+	functions.push_back(f);
+	for (int i =0; i< ins.size(); i++)
+	{
+		instructions.push_back(ins[i]);
+	}
 }
 void Program::enter()
 {
