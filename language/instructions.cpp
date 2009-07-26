@@ -4,7 +4,8 @@ Instruction::Instruction()
 }
 xmlNodePtr Instruction::xml_format()
 {
-	return NULL;	
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	return n;	
 }
 int Instruction::breaks()
 {
