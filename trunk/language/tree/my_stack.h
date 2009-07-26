@@ -61,12 +61,13 @@ struct Parameter_entry
 	Parameter_entry();
 };
 
-struct Functions
+struct Function
 {
 	std::string name;
 	std::vector<Parameter_entry> parameters;
 	int begin; //kde to zacina v stacku
 	Node * return_type;
+	Function(std::string name, std::vector<Parameter_entry>, Create_type t);
 };
 
 struct Value
@@ -101,7 +102,7 @@ struct Program
 	void enter_loop();
 	void end_loop();
 	int find_index(char a);
-	std::vector<Functions> functions;
+	std::vector<Function> functions;
 	Tree * find_string(std::string);
 	Node * find_var(std::string);
 	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
