@@ -125,11 +125,10 @@ Call::Call(std::string s)
 {
 	name_ = "Call";
 }
-xmlNodePtr Call::xml_format()
+/*xmlNodePtr Call::xml_format()
 {
 	return NULL;
-
-}
+}*/
 CallMethod::CallMethod()
 {
 	name_ = "CallMethod";
@@ -138,32 +137,40 @@ CallMethod::CallMethod(std::string s) //tu vazne potrebujem vediet meno tej prem
 {
 	name_ = "CallMethod";
 }
-xmlNodePtr CallMethod::xml_format()
+/*xmlNodePtr CallMethod::xml_format()
 {
-
 	return NULL;
-}
+}*/
 InstructionPop::InstructionPop()
 {
 	name_ = "InstructionPop";
 }
 InstructionMustJump::InstructionMustJump(int steps)
 {
+	shift = steps-1;
 	name_ = "InstructionMustJump";
 }
 xmlNodePtr InstructionMustJump::xml_format()
 {
-
-	return NULL;
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNodePtr n2 = xmlNewNode(NULL, BAD_CAST "JumpCount");
+	xmlNodePtr n3 = xmlNewText(BAD_CAST deconvert<size_t>(shift).c_str());
+	xmlAddChild(n2,n3);
+	xmlAddChild(n,n2);
+	return n;
 }
-InstructionJump::InstructionJump(int yes, int no)
+InstructionJump::InstructionJump(int yes_, int no_)
 {
+	yes = yes_;
+	no = no_;
 	name_ = "InstructionJump";
 }
 xmlNodePtr InstructionJump::xml_format()
 {
-
-	return NULL;
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNewChild(n,NULL,BAD_CAST "yes",BAD_CAST deconvert<int>(yes).c_str());
+	xmlNewChild(n,NULL,BAD_CAST "no",BAD_CAST deconvert<int>(no).c_str());
+	return n;
 }
 InstructionReturn::InstructionReturn()
 {
