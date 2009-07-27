@@ -174,4 +174,40 @@ class InstructionEndBlock : public Instruction{
 	public:
 		InstructionEndBlock();
 };
+//--------------------------------------------------Interaction50--------------------------------------------------
+class InstructionSee : public Instruction
+{
+	public:
+		InstructionSee();
+};
+class InstructionStep : public Instruction
+{
+	public:
+		InstructionStep();
+};
+class InstructionWait : public Instruction
+{
+	public:
+		InstructionWait();
+};
+class InstructionShoot : public Instruction
+{
+	public:
+		InstructionShoot();
+};
+class InstructionTurn : public Instruction
+{
+	public:
+		InstructionTurn();
+};
+class InstructionTurnR : public Instruction
+{
+	public:
+		InstructionTurnR();
+};
+class InstructionTurnL: public Instruction
+{
+	public:
+		InstructionTurnL();
+};
 #endif

@@ -2,6 +2,11 @@
 
 Instruction::Instruction()
 {
+	name_ = "UndefinedInstruction";
+}
+std::string Instruction::name()
+{
+	return name_;
 }
 xmlNodePtr Instruction::xml_format()
 {
@@ -30,6 +35,7 @@ xmlNodePtr InstructionCreate::xml_format()
 }
 InstructionLoadLocal::InstructionLoadLocal()
 {
+	node = NULL;
 	name_ = "InstructionLoadLocal";
 }
 InstructionLoadLocal::InstructionLoadLocal(Node * n)
@@ -161,7 +167,6 @@ xmlNodePtr InstructionMustJump::xml_format()
 }
 InstructionJump::InstructionJump(int yes_, int no_)
 {
-	yes = yes_;
 	no = no_;
 	name_ = "InstructionJump";
 }
@@ -274,9 +279,32 @@ InstructionEndBlock::InstructionEndBlock()
 {
 	name_ = "InstructionEndBlock";
 }
-
-std::string Instruction::name()
+//--------------------------------------------------
+InstructionSee::InstructionSee()
 {
-	return name_;
+	name_ = "InstructionSee";
 }
-
+InstructionStep::InstructionStep()
+{
+	name_ = "InstructionStep";
+}
+InstructionWait::InstructionWait()
+{
+	name_ = "InstructionWait";
+}
+InstructionShoot::InstructionShoot()
+{
+	name_ = "InstructionShoot";
+}
+InstructionTurn::InstructionTurn()
+{
+	name_ = "InstructionTurn";
+}
+InstructionTurnR::InstructionTurnR()
+{
+	name_ = "InstructionTurnR";
+}
+InstructionTurnL::InstructionTurnL()
+{
+	name_ = "InstructionTurnL";
+}

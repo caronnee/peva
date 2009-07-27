@@ -85,6 +85,13 @@ struct MyXmlData
 	xmlNodePtr root_ptr;
 	xmlNodePtr node;
 };
+struct Stack
+{
+//	Robot R;
+	int PC;
+	Instructions instructions;
+	Values values;
+};
 struct Program
 {
 	int PC;
