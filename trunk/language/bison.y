@@ -193,7 +193,7 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinu
 
 block_of_instructions: TOKEN_BEGIN TOKEN_END { $$.clear(); }
 	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  { $$.clear(); }
-	|TOKEN_BEGIN commands TOKEN_END { $$ = $2; }
+	|TOKEN_BEGIN commands TOKEN_END { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
 	;
 
 commands: matched {$$ = $1;}

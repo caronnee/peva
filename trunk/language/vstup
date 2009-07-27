@@ -8,5 +8,10 @@ void function f()
 main() // komentar
 {
 	integer a;
-	a = left*8 + 6*(9 - left)+2;
+//	a = left*8 + 6*(9 - left)+2;
+	integer i;
+	for (i =0; i< 10; i++)
+	{
+		a = a+4;
+	}
 }

@@ -52,7 +52,7 @@ class InstructionStore : public Instruction{
 class Call : public Instruction
 {
 	public:
-		virtual xmlNodePtr xml_format();
+	//	virtual xmlNodePtr xml_format();
 		Call(std::string s);
 		Call();
 };
@@ -60,7 +60,7 @@ class Call : public Instruction
 class CallMethod : public Instruction
 {
 	public:
-		virtual xmlNodePtr xml_format();
+	//	virtual xmlNodePtr xml_format();
 		CallMethod(std::string s);
 		CallMethod();
 };
@@ -69,11 +69,13 @@ class InstructionPop : public Instruction{
 		InstructionPop();
 };
 class InstructionMustJump : public Instruction{
+	int shift;
 	public:
 		virtual xmlNodePtr xml_format();
 		InstructionMustJump(int steps);
 };
 class InstructionJump : public Instruction{
+	int yes, no;
 	public:
 		virtual xmlNodePtr xml_format();
 		InstructionJump(int stepsYes, int stepsNo);
@@ -166,7 +168,7 @@ class InstructionLe : public Instruction{
 };
 class InstructionBegin : public Instruction{
 	public:
-		InstructionBegin(); //ked uz pre nic ine, aspon pre breaky:)
+		InstructionBegin(); //Aby sme vedeli, kedy sa vynorujeme
 };
 class InstructionEndBlock : public Instruction{
 	public:

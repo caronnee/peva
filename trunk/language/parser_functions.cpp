@@ -14,12 +14,10 @@ Instruction * instruction_load(Program *p, std::string s)
 	}
 	if(n->nested == Local)
 	{
-		std::cout << "LOCAAAAAL" <<std::endl;
 		return new InstructionLoadLocal(n);
 	}
 	else  
 	{
-		std::cout << "Globaaaaaaaal" <<std::endl;
 		return new InstructionLoadGlobal(n);
 	}
 }
