@@ -23,7 +23,6 @@ struct Variable // struktura premennych
 	Variable();
 	Variable(std::string s,Type t);
 	void set_variable(Type t);
-	int size();
 };
 
 struct Array
