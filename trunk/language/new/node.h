@@ -7,7 +7,7 @@ struct Var
 {
 	Variable * var;
 	int depth;
-}
+};
 struct Node
 {
 	NestedType nested;

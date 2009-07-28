@@ -5,6 +5,7 @@
 #include "node.h"
 #include "core.h"
 #include "help_functions.h"
+#include "functions.h"
 
 class Instruction
 {
@@ -51,15 +52,16 @@ class InstructionStore : public Instruction{
 };
 class Call : public Instruction
 {
-	Funfunction_name;
+	Function* f;
 	public:
 	//	virtual xmlNodePtr xml_format();
-		Call(std::string s);
+		Call(Function * f);
 		Call();
 };
 
 class CallMethod : public Instruction
 {
+	std::string method;
 	public:
 	//	virtual xmlNodePtr xml_format();
 		CallMethod(std::string s);

@@ -44,4 +44,14 @@ Program::Program()
 	error = false;//TODO pridat errorou hlasku
 }
 
-
+Function * program::find_f(std::string nam)
+{
+	for(int i =0; i< functions.size(); i++)
+	{
+		if(functions[i].name == nam)
+		{
+			return functions[i];
+		}
+	}
+	return NULL;
+}

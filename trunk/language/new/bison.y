@@ -1,7 +1,7 @@
 %{
 	#include <iostream>
 	#include "header1.h"
-	#include "program.hh"
+	#include "program.h"
 	#include "parser_functions.h"
 
 	#define YYSTYPE Lval 
@@ -40,6 +40,7 @@
 %token TOKEN_ASSIGN
 %token TOKEN_BEGIN
 %token TOKEN_END
+%token<of> TOKEN_OBJECT_FEATURE
 
 /* literals */
 %token<ident> TOKEN_IDENTIFIER
@@ -135,6 +136,7 @@ local_variables:  type names TOKEN_SEMICOLON
 		}
 	;
 
+//OK
 simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
     	|TOKEN_VAR_INT { $$ = Create_type(TypeInteger); }
 	|TOKEN_LOCATION{ $$ = Create_type(TypeLocation); }
@@ -259,7 +261,8 @@ variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
 	| TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$ = join_instructions($$, $2); }
 	;
 
-call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call($1));} //TODO check parameters
+call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call(program->find_f$1));} //TODO check parameters
+	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3;$$.push_back(feature($1));}
 	;
 
 call_parameters: expression {$$ = $1} //loaded

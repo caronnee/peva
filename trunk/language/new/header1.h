@@ -27,7 +27,14 @@ enum Operation
 	OperationBoolOr,
 	OperationBoolNot
 };
-
+enum ObjectFeatures
+{
+	FeatureIsPlayer,
+	FeatureIsWall,
+	FeatureIsMissille,
+	FeatureIsMoving,
+	FeatureLocate
+};
 struct expr
 {
 	Type output;
@@ -58,6 +65,8 @@ struct Lval {
 
 	Parameter_entry entry;
 	std::vector<Parameter_entry> entries;
+
+	ObjectFeatures of;
 };
 
 // lex interface

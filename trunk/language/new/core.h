@@ -1,6 +1,9 @@
 #ifndef ___CORE____
 #define ___CORE____
 
+#include "memory.h"
+#include "variable.h"
+
 struct Value
 {
 	Variable hlp;
@@ -14,6 +17,6 @@ struct Core
 //	Robot * R; //periferie, stav robota, interakcia s mapou
 //	Map * map;
 	Memory M;
-	std::vector<Values> values;	
+	std::vector<Value> values;	
 };
 #endif

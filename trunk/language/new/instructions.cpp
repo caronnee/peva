@@ -190,15 +190,19 @@ Call::Call()
 {
 	name_ = "Call";
 }
-Call::Call(std::string s)
+Call::Call(Function * f_)
 {
+	f = f_
 	name_ = "Call";
 }
 xmlNodePtr Call::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr n2 = xmlNodePtr(NULL, BAD_CAST function_name.c_str());
-	xmlProp
+	xmlNewProp(n2, BAD_CAST "begins", BAD_CAST deconvert(f->begin).c_str());
+	xmlAddChild(n,n2);
+	return n;
+}
 
 }
 CallMethod::CallMethod()
@@ -207,12 +211,20 @@ CallMethod::CallMethod()
 }
 CallMethod::CallMethod(std::string s) //tu vazne potrebujem vediet meno tej premennej
 {
+	method = s;
 	name_ = "CallMethod";
 }
-/*xmlNodePtr CallMethod::xml_format()
+int CallMethod::execute(Core * c) //mozem zatial pouzivat len na objekty
 {
-	return NULL;
-}*/
+	Value val = c->values.back();
+	c->values.pop_back();
+	switch
+}
+xmlNodePtr CallMethod::xml_format()
+{
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNewProp(n,BAD_CAST "name", BAD_CAST method.c_str());
+}
 InstructionPop::InstructionPop()
 {
 	name_ = "InstructionPop";

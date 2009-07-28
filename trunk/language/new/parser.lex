@@ -27,6 +27,11 @@ main						{*l = line; return TOKEN_MAIN; };
 void						{*l = line; return TOKEN_VOID; };
 location					{*l = line;return TOKEN_LOCATION; };
 real 						{*l = line;return TOKEN_VAR_REAL; };
+IsPlayer					{*l = line;lv->og = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
+IsWall						{*l = line;lv->og = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
+IsMissille					{*l = line;lv->og = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
+IsMoving					{*l = line;lv->og = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
+Locate						{*l = line;lv->og = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
 integer						{*l = line;return TOKEN_VAR_INT; };
 function	 	 	 	 	{*l = line;return TOKEN_FUNCTION; };
 else 						{*l = line;return TOKEN_ELSE; };
@@ -36,6 +41,7 @@ for 						{*l = line;return TOKEN_FOR; };
 if						{*l = line;return TOKEN_IF;		/* if */ };
 object						{*l = line;return TOKEN_OBJECT; };
 return						{*l = line;return TOKEN_RETURN; };
+
 \; 						{*l = line;return TOKEN_SEMICOLON; };
 \, 						{*l = line;return TOKEN_COMMA; };
 \.						{*l = line;return TOKEN_DOT; };
