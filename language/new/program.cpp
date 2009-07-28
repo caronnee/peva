@@ -42,15 +42,16 @@ Program::Program()
 	last_loop_number = 0;
 	nested = "";
 	error = false;//TODO pridat errorou hlasku
+	core = new Core();
 }
 
-Function * program::find_f(std::string nam)
+Function * Program::find_f(std::string nam)
 {
 	for(int i =0; i< functions.size(); i++)
 	{
 		if(functions[i].name == nam)
 		{
-			return functions[i];
+			return &functions[i];
 		}
 	}
 	return NULL;

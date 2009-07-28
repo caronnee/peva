@@ -4,11 +4,11 @@ XML=`xml2-config --cflags`
 
 all:bparser 
 
-bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o simple_types.o types.o  tree.o value.o variable.o
+bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o
 	$(CXX) $(LDFLAGS) *.o -o bparser
 
 parser.o: parser.cpp header1.h 
-	${CXX} ${CPPFLAGS} ${CFLAGS} -o $@ -c parser.cpp
+	${CXX} ${CPPFLAGS} ${CFLAGS} ${XML} -o $@ -c parser.cpp
 
 bison.o:bison.cpp
 	${CXX} ${CPPFLAGS} ${XML} -o $@ -c $<
@@ -45,17 +45,11 @@ variable.o:variable.h variable.cpp
 help.o:	help_functions.h help_functions.cpp
 	${CXX} ${CFLAGS} -c -o $@ help_functions.cpp
 
-simple_types.o: simple_types.h simple_types.cpp
-	${CXX} ${CFLAGS} -c -o $@ simple_types.cpp
-
 memory.o: memory.h memory.cpp 
 	${CXX} ${CFLAGS} -c -o $@ memory.cpp
 
 types.o: types.h types.cpp
 	${CXX} ${CFLAGS} -c -o $@ types.cpp
-
-value.o: value.h value.cpp
-	${CXX} ${CFLAGS} -c -o $@ value.cpp
 
 distclean:
 	rm -f *.o bparser parser.cpp bison.cpp bison.hpp
