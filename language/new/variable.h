@@ -4,6 +4,8 @@
 #include "object.h"
 #include "simple_types.h"
 
+struct Array;
+
 struct Variable // struktura premennych
 {
 	std::string name;
@@ -18,7 +20,6 @@ struct Variable // struktura premennych
 
 	Variable();
 	Variable(std::string s,Type t);
-	void set_node(Create_type t, Memory *m);
 	int size();
 };
 

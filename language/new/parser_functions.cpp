@@ -112,3 +112,21 @@ Instruction * operOr(Operation op) //Bool_OR
 		default: return NULL;
 	}
 }
+Instruction * feature (ObjectFeatures feat)
+{
+	switch(feat)
+	{
+		case FeatureIsPlayer:
+		       return new InstructionIsPlayer();
+	       	case FeatureIsWall:
+			return new InstructionIsWall();
+	 	case FeatureIsMissille:
+			return new InstructionIsMissille();
+		case FeatureIsMoving:
+			return new InstructionIMoving();
+		case FeatureLocate:
+			return new InstructionLocate();
+		default
+			return NULL;		
+	}
+}

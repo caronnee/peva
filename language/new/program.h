@@ -12,6 +12,7 @@
 
 //#define DELIMINER_CHAR '#'
 typedef std::vector<Instruction *> Instructions;
+typedef std::vector<Value> Values;
 
 struct Constr
 {
@@ -52,6 +53,7 @@ struct Program
 	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	Node * add(std::string name, Create_type t);
+	Function * find_f(std::string s);
 	void add(Instructions ins);
 	Node * create_type(Type t);
 	void enter(std::string s);
