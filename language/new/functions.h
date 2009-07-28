@@ -1,5 +1,7 @@
 #ifndef __FUNCTIONS_____
 #define __FUNCTIONS_____
+
+#include <vector>
 enum Parameter_type
 {
 	PARAMETER_BY_REFERENCE,
