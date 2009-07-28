@@ -16,7 +16,7 @@ struct Core
 	int depth;
 //	Robot * R; //periferie, stav robota, interakcia s mapou
 //	Map * map;
-	Memory M;
+	Memory memory;
 	std::vector<Value> values;	
 };
 #endif

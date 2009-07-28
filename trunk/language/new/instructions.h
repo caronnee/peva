@@ -42,6 +42,7 @@ class InstructionLoadGlobal : public Instruction{
 };
 class InstructionLoad : public Instruction{
 	bool constant;
+	Variable* var;
 	public:
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core *s);
@@ -56,23 +57,14 @@ class InstructionStore : public Instruction{
 };
 class Call : public Instruction
 {
-	Function* f;
+	Function* function;
 	public:
-	//	virtual xmlNodePtr xml_format();
+		virtual xmlNodePtr xml_format();
 		virtual int execute(Core *s);
 		Call(Function * f);
 		Call();
 };
 
-class CallMethod : public Instruction
-{
-	std::string method;
-	public:
-	//	virtual xmlNodePtr xml_format();
-		virtual int execute(Core *s);
-		CallMethod(std::string s);
-		CallMethod();
-};
 class InstructionPop : public Instruction{
 	public:
 		virtual int execute(Core *s);
@@ -257,6 +249,7 @@ class InstructionHit: public Instruction
 		virtual int execute(Core *s);
 		InstructionHit();
 };
+//--------------------------------------------
 class InstructionIsPlayer: public Instruction
 {
 	public:

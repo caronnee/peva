@@ -1,6 +1,8 @@
 #ifndef ___TYPES____
 #define ___TYPES____
-bool is_simple();
+struct Create_type;
+
+bool is_simple(Create_type t);
 
 enum Type
 {

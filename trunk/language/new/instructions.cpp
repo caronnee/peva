@@ -22,13 +22,14 @@ InstructionCreate::InstructionCreate(Node * n)
 	node = n;
 	name_ = "InstructionCreate";
 }
-InstructionCreate::execute(Core * c)
+int InstructionCreate::execute(Core * c)
 {
-	Variable * v = c->assign(node->type);
+	Variable * v = c->memory.assign(node->type_of_variable);
 	Var var;
 	var.var = v;
-	var.depth = c->depth();
+	var.depth = c->depth;
 	node->var.push_back(var); //pridali sme pre akutialne zanorenie premenu
+	return 0;
 }
 xmlNodePtr InstructionCreate::xml_format()
 {
@@ -50,7 +51,7 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 int InstructionLoadLocal::execute(Core * c)
 {
 	Value v;
-	v.loaded = node->var[c->depth];
+	v.loaded = node->var.back().var;
 	c->values.push_back(v); //pridali sme value na stack
 	return 0;
 }
@@ -74,8 +75,8 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 int InstructionLoadGlobal::execute(Core * c)
 {
 	Value v;
-	v->loaded = n->var[0];
-	v->values.push_back(v);
+	v.loaded = node->var[0].var;
+	c->values.push_back(v);
 	return 0;
 }
 xmlNodePtr InstructionLoadGlobal::xml_format()
@@ -93,46 +94,48 @@ InstructionLoad::InstructionLoad()
 InstructionLoad::InstructionLoad(int i)
 {
 	constant = true;
-	node = new Node("const",Create_type(TypeInteger));
-	node->IntegerValue.push_back(i);
+	var = new Variable("const",TypeInteger);
+	var->IntegerValue = i;
 	name_ = "InstructionLoad";
 }
 InstructionLoad::InstructionLoad(float f)
 {
 	constant = true;
-	node = new Node("const",Create_type(TypeReal));
-	node->RealValue.push_back(f);
+	var = new Variable("const",TypeReal);
+	var->RealValue = f;
 	name_ = "InstructionLoad";
 }
 int InstructionLoad::execute(Core *c)
 {
 	if(constant)
 	{
-		Value var;
-		var->loaded = node->var[0]; 
-		c->values.push_back(var);
+		Value v;
+		v.loaded = var;
+		c->values.push_back(v);
 		return 0;
-	}
+	}//else from stack
 	Value range = c->values.back();
 	c->values.pop_back();
 	Value comp = c->values.back();
 	c->values.pop_back();
-	c->values.push_back(comp.loaded->array.elements[range.loaded->IntegerValue.back()]);//TODO schecknut, moze byt aj premenna, aj globalna konstanta
+	comp.loaded = comp.loaded->array->elements[range.loaded->IntegerValue];
+	c->values.push_back(comp);
+	return 0;
 }
 xmlNodePtr InstructionLoad::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr child;
-        if (node ==NULL)
+        if (!constant)
 		child= xmlNewText( BAD_CAST node->name.c_str());
 	else
 	{
-		switch (node->type)
+		switch (var->type)
 		{
 			case TypeInteger:
 				{
 					child = xmlNewNode( NULL, BAD_CAST "TypeInteger");
-					std::string s = deconvert<int>(node->IntegerValue[0]);
+					std::string s = deconvert<int>(var->IntegerValue);
 					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
 					xmlAddChild(child,grand_child);
 					break;
@@ -140,7 +143,7 @@ xmlNodePtr InstructionLoad::xml_format()
 			case TypeReal:
 				{
 					child = xmlNewNode( NULL, BAD_CAST "TypeReal");
-					std::string s = deconvert<double>(node->RealValue[0]);
+					std::string s = deconvert<double>(var->RealValue);
 					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
 					xmlAddChild(child,grand_child);
 					break;
@@ -192,39 +195,18 @@ Call::Call()
 }
 Call::Call(Function * f_)
 {
-	f = f_
+	function = f_;
 	name_ = "Call";
 }
 xmlNodePtr Call::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
-	xmlNodePtr n2 = xmlNodePtr(NULL, BAD_CAST function_name.c_str());
-	xmlNewProp(n2, BAD_CAST "begins", BAD_CAST deconvert(f->begin).c_str());
+	xmlNodePtr n2 = xmlNewNode(NULL, BAD_CAST function->name.c_str());
+	xmlNewProp(n2, BAD_CAST "begins", BAD_CAST deconvert(function->begin).c_str());
 	xmlAddChild(n,n2);
 	return n;
 }
 
-}
-CallMethod::CallMethod()
-{
-	name_ = "CallMethod";
-}
-CallMethod::CallMethod(std::string s) //tu vazne potrebujem vediet meno tej premennej
-{
-	method = s;
-	name_ = "CallMethod";
-}
-int CallMethod::execute(Core * c) //mozem zatial pouzivat len na objekty
-{
-	Value val = c->values.back();
-	c->values.pop_back();
-	switch
-}
-xmlNodePtr CallMethod::xml_format()
-{
-	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
-	xmlNewProp(n,BAD_CAST "name", BAD_CAST method.c_str());
-}
 InstructionPop::InstructionPop()
 {
 	name_ = "InstructionPop";
