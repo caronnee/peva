@@ -6,7 +6,6 @@
 
 Instruction * instruction_load(Program *p, std::string s)
 {
-	std::cout << "_________"<< s << "_______" <<std::endl;
 	Node *n = p->find_var(s); 
 	if (n == NULL)
 	{
@@ -23,7 +22,7 @@ Instruction * instruction_load(Program *p, std::string s)
 }
 void reg_main(Program* p, Instructions ins)
 {
-	p->PC = p->instructions.size();
+	p->core->PC = p->instructions.size();
 	p->add(ins);
 }
 
@@ -123,10 +122,10 @@ Instruction * feature (ObjectFeatures feat)
 	 	case FeatureIsMissille:
 			return new InstructionIsMissille();
 		case FeatureIsMoving:
-			return new InstructionIMoving();
+			return new InstructionIsMoving();
 		case FeatureLocate:
 			return new InstructionLocate();
-		default
+		default:
 			return NULL;		
 	}
 }

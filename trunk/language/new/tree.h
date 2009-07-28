@@ -4,6 +4,9 @@
 #include <list>
 #include "node.h"
 
+#define DELIMINER_CHAR '#'
+#define MaxItems 5
+
 std::string quicksort(std::string s); // TODO template
 
 struct Tree

@@ -10,7 +10,7 @@
 #include "./tree.h"
 #include "functions.h"
 
-//#define DELIMINER_CHAR '#'
+#define DELIMINER_CHAR '#'
 typedef std::vector<Instruction *> Instructions;
 typedef std::vector<Value> Values;
 
@@ -44,13 +44,13 @@ struct Program
 	MyXmlData data;
 	void save_to_xml();
 	Program();
+	Core * core;
 	void add_global(Instructions ins);
 	void output(Tree * t);
 	void enter_loop();
 	void end_loop();
 	std::vector<Function> functions;
 	Node * find_var(std::string);
-	std::vector<Create_type*> types; //TODO spravit tak, aby boli unikatne
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	Node * add(std::string name, Create_type t);
 	Function * find_f(std::string s);
