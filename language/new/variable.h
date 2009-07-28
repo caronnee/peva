@@ -1,6 +1,8 @@
 #ifndef ___VAR___
 #define ___VAR___
 
+#include<string>
+#include<vector>
 #include "object.h"
 #include "simple_types.h"
 
