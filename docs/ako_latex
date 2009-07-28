@@ -1,4 +1,0 @@
-
-cslatex dp.tex
-dvips dp
-gv dp.ps
