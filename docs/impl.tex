@@ -13,12 +13,11 @@ Penalizáciou za inštrukciu nazývam počet tikov, ktoré robot stratí, ak in�
 Programom robota sa nazýva postupnosť inštrukcií, ProgramPointer je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísay v \ref{TODO}.
 \end{definicia}
 
-Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na ktorý práve ukazuje jeho ProgramPointer. Ako je naznačené na \ref{thinking}, robot pokračuje vo vykonávaní inštrukcií až kým nenarazí na takú, ktorá interaguje s bojiskom. Výsledok takejto inštrukcie nie je možné zistiť z dostupných informácií a teda je nutné o ďalšie data požiadať bojisko. Podľa veľkosti penalizovania sa potom R zaradí do plánovaných objektov, viz \ref{timeline}. Dĺžka tejto akcie sa ale pre rovnaký počet inštrukcií pre dvoch rôznych botov môže a typicky bude líšiť. Je to spôsobené tým, že každá inštrukcia môže mať rozdielnu penalizáciu za vykonanie. Napríklad samostatné vykonanie inštrukcie 'step' musí byť niekoľko krát rýchlejšie ako povedzme inštrukcia, ktorá naloaduje hodnotu premennej, obzvlášť ak táto premenná už dlho loadovaná nebola. Ďalej inštrukcia, ktorá zavolá užívateľom definovanú funkciu, zaberie viac procerového času vzhladom na to, čo musí spraviť so zásobníkom robota, a preto je táto skutočnosť zohľadnená. Podobne napríklad inštrukcie pre násobenie a delenie su zlošitejšie ako prosté sčitanie a preto sú viac penalizované. Penalizácia prebieha podľa tabuľky \ref{penal}, v ktorej používam nasledujúce funkcie:
+Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na ktorý práve ukazuje jeho ProgramPointer. Ako je naznačené na \ref{thinking}, robot pokračuje vo vykonávaní inštrukcií až kým nenarazí na takú, ktorá interaguje s bojiskom. Výsledok takejto inštrukcie nie je možné zistiť z dostupných informácií a teda je nutné o ďalšie data požiadať bojisko. Podľa veľkosti penalizovania sa potom R zaradí do plánovaných objektov, viz \ref{timeline}. Dĺžka tejto akcie sa ale pre rovnaký počet inštrukcií pre dvoch rôznych botov môže a typicky bude líšiť. Je to spôsobené tým, že každá inštrukcia môže mať rozdielnu penalizáciu za vykonanie. Napríklad samostatné vykonanie inštrukcie 'step' musí byť niekoľko krát rýchlejšie ako povedzme inštrukcia, ktorá naloaduje hodnotu premennej, obzvlášť ak táto premenná už dlho loadovaná nebola. Ďalej inštrukcia, ktorá zavolá užívateľom definovanú funkciu, zaberie viac procerového času vzhladom na to, čo musí spraviť so zásobníkom robota, a preto je táto skutočnosť zohľadnená. Podobne napríklad inštrukcie pre násobenie a delenie su zlošitejšie ako prosté sčitanie a preto sú viac penalizované. Penalizácia prebieha podľa tabuľky \ref{penal}, je možné si ale v nastaveniach nastavit tieto funkcie:
 \begin{itemize}
-\item SizeOfJump: počet inštrukcií medzi miestom skoku a miestom určenia
 \item SizeOfFunction: počet inštrukcií vo funkcii
-\item SizeOfCleaned: počet premených, ktoré sa stali odchodom z bloku príkazov neplatnými
-\item LastLoaded: počet tickov, ktoré ubehli od posledného loadovania
+\item SizeOfCleaned: počet premených, ktoré sa stali odchodom z bloku príkazov neplatnými. Použiteľné iba pri inštrukcii indikujúcej koniec bloku
+\item LastLoaded: počet tickov, ktoré ubehli od posledného loadovania premennej alebo funkcie, použiteľná iba s inštrukciami Load a Call
 \end{itemize}
 \begin{table}[ht]
 \centering
@@ -27,7 +26,7 @@ Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na kt
 \hline
 Inštrukcia & Penalizácia \\
 \hline
-Jump & SizeOfJump\\
+Jump & 0\\
 Store & 1 \\
 Plus & 1 \\
 Minus & 1 \\
@@ -35,7 +34,7 @@ Multiply & 2 \\
 Divide & 4 \\
 Less & 1 \\
 LessEqual & 2 \\ %kontroluje sa aj real/integer!
-Call &  SizeOfFunction \\
+Call &  0 \\
 StartBlock & 0 \\ %iba zvysi aktuane zanorenie
 EndBlock &  SizeOfCleaned \\
 Load & LastLoaded \\
@@ -64,7 +63,7 @@ V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá, 
 Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
 
 \subsection{Preplánovanie}
-Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhšie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play. Samotné inštrukcie interagujúce s bojiskom  majú jednu z najmenších penalizácií, čo odpovedá tomu, že je to pre bota akoby prirodzená akcia(žodpovedá to skutočnosti,že človek sa obvykle rýchlejšie pohne ako vypoćíta mocninu dvoch) \\
+Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhšie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play.\\
 V tomto prípade sa za kľúč, podľa ktorého sa objekty usporadúvajú, považuje čas od začiatku behu hry. Problém ale nastáva v okamihu, keď tento čas pretečie. Vzhľadom na to, že celkový čas simulácie je ukladaný do 64-bitového integeru, je možnosť, že by tento čas pretiekol, krajne neprijateľný, pretože celkový čas by bol vačší ako niekoľko tisíc rokov:)\\
 Otázkou zostáva, ako implementovať túto časovú líniu tak, aby celý program nepůsobil trhane, teda aby v okamihu, keď robot rozmýšľa, ostatné objekty, ktoré sú na rade, sa mohli pohybova+t, keďže samotné premýšľanie sa ich nedotýka. Existuje niekoľko možností:
 \begin{itemize}
