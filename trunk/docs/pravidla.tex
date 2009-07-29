@@ -1,0 +1,35 @@
+\section{Uvod do Codewars}
+V tejto sekcii by som chcela objasniť úlohu a pravidla simulácie Codewars, keďže sa na ne neskor budem odkazovať. \\ 
+Ako nazov naznačuje, Codewars je súboj hlavne kódov, teda algoritmov. To sa prejaví konkrétne tak, že každý hráč dostane minimálne jedného virtuálneho robota na hranie. Zatiaľ predpokladajme, že je to práve jeden a že máme viacero hráčov. Okrem robot sa v Codewars vyskytujé ďalšie objekty, na ktoŕe ma hráč pomerne malý vplyv. Sú to strly a steny. Vplyv na tieto objekty bude vysvetlený nižšie. Robot je vlastne iba postava, ktorou hráč môže pred samotnýmm bojom pripraviť. Príprava spočíva v úprave vlastností robota. Tieto vlastnosti sú nasledovné:\begin{itemize}
+\item Dĺžka života : je číslo označujúce životaschopnosť robota. Štandartne sa znižuje v okamihu, keď na miesto, kde stojí robot, chce pristúpiť iný objekt. Existuje možnosť, že sa v tomto prípade totočislo aj tak nezmení, viz Kolize\ref{kolizie} 
+\item Polomer viditeľnosti: určuje vzdialenosť, do akej maximálne robot môže robot rozoznávať ostatné objekty.
+\item Uhol viditeľnosti: určuje krohovú výseč, vnútri ktorej robot rozoznava objekty.
+\item Obranné číslo: určuje odolnosť robota vočí iným objektom
+\item útočné číslo: určuje útoňosť robotovho tela pri strete s inými objektami
+\item ďalekonosnosť zbrane: určuje, ako daleko je možné náboj vystreliť
+\item útočnosť zbrane: určuje ako moc je zbraň schopná ublížiť objektom
+\end{itemize}
+Tieto vlastnosti sa rozdeľujú do určitých tematicky podobných skupín (sekcií), v rámci ktorých sa môžu vlastnosti meniť.Sú to: {polomer a uhol viditelnosti}, {dalekonosnosť a útočnosť zbrane} a {zvyšok}. Hráč môže napríklad zvýšit robotovu odolnosť voči strelám, ale súčasne mu potom zostáva menej na zvýšenia života schopnosti robota. Počet bodov, ktoré sa prozdeľujú, je vždy v každej sekciii rovnaký, inak by nemalo zmysel sekcie zavádzať. \\Hlavnou úlohou hráča je však napísať algoritmus, podľa ktrého sa bude robot správať. Ten je ale závislý na tom, čo je vlastne cieľom robota.\\
+Cieľom robota, ak nie je povedane inak, je zlikvidovať ostatných protivníkov. Pre každého robota však existuje možnosť definovať si vlastný cieľ pomocou jedného výrazu s výslednou pravdivostnou hodnotou. V tomto výraze je možné používať iba boolovské oprácie AND, OR , NOT, aritmetické  a relačné operácie, preddefinované  premenné a funkcie a konštanty typu integer. Použitie iných typov ako integer by síce bolo teoreticky možné, ale vzhľadom na to, každé reálne čislo sa dá aproximovat zlomkový čislo a teda operaciou deleno, je jeho povolenie nepotrebný luxus. Povolené premenné sú:
+\begin{itemize}
+\item Killed - označuje počet zabitých robotov
+\item Health - označuje životnosť robota
+\item Nearest - označuje najbližsieho živého robota
+\item Robot - správa sa ako pole, kde robot[0] je aktuálny robot
+\end{itemize}
+Funkcie, ktoré sa dajú používať:\\
+\begin{itemize}
+\item Start(Robot r) - označuje miesto, kde sa robot objavil na začiatku hry, k jednotlivým súradniciam je možné pristupovať ako Start.x, Start.y
+\item hasVisited(int i, int j) - podmienkou je navštívenie miesta
+\item hasVisitedSequence - posmienkou je navšivenie sekvencie miest
+\item hasVisitedSequenceOrder - podmienkou je sekvencia navštíveným mieste v presne danom poradí
+\item exit - po dokončení všetkých ostatných úloh ná za úlohu vojsť na miesto označené políčko exit
+\item nearest exit - po dokončení všetkých ostatných úloh musí vojsť na políčko označené ako exit, ktoré je čo najbližsie pozícii robota po dokončeni ostatných úloh.
+\end{itemize}
+Potom simulácia známej hry Capture the flag alebo dojdi na miesto, dojdi na start a bez toho, aby ta niekto zabil, označuje výraz:\\
+$$ (hasVisitedSequenceOrder(Start(Robot[1]), Start(Robot[0])))$$
+\subsection {Priebeh hry}
+Codewars nie je real-time hra, to znamená, že sa roboti striedajú, kto je na rade. Spôsob preplánovania jednotlivého je popísaný neskôr, tu stačí povedať, že každý jednotlivý kus kódu programu robota zaberá istý čas a teda sa robot môže dostať opať na radu až v okamihu, keď tento čas pominie.
+\subsection{Kolízie}
+Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to bud útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(v takom prípade útočník minimálne zmení smer) alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to strela, zanikne, ak je to stena, útoči ďalej, ak je to hráč, závisí na jeho algoritme.
+Codewars je vlastne hra založená na tom, že vo velkej väčsine je hra rozhodnutá ešte pre okamihom spustenia vlastnej simulácie. Tá menšina je tvorená algoritmami, ktoré používají funkciu random a teda majú pravdepodobnosť, že sa skončia inak každú ďalšiu simuláciu.
