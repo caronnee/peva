@@ -14,13 +14,15 @@ struct Core
 {
 	size_t PC;
 	int depth;
-	Robot_body * R; //periferie, stav robota, interakcia s mapou
+	bool error;
+	Robot_body * robot; //periferie, stav robota, interakcia s mapou
 //	Map * map;
 	Memory memory;
 	std::vector<Value> values;	
 	Core()
 	{
-		R = new Robot_body();
+		error = false;
+		robot = new Robot_body();
 	}
 };
 #endif

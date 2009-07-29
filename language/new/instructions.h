@@ -17,7 +17,7 @@ public:
 	virtual std::string name();
 	virtual int breaks();
 	virtual xmlNodePtr xml_format();
-	virtual int execute(Core * s) = 0;
+	virtual int execute(Core * s);
 	Instruction();
 };
 class InstructionCreate : public Instruction{
@@ -199,7 +199,7 @@ class InstructionEndBlock : public Instruction{
 		virtual int execute(Core *s);
 		InstructionEndBlock();
 };
-//--------------------------------------------------Interaction50--------------------------------------------------
+//--------------------------------------------------Interaction--------------------------------------------------
 class InstructionSee : public Instruction
 {
 	public:
