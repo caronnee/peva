@@ -17,7 +17,7 @@ public:
 	virtual std::string name();
 	virtual int breaks();
 	virtual xmlNodePtr xml_format();
-	virtual int execute(Core * s);
+	virtual int execute(Core * s) = 0;
 	Instruction();
 };
 class InstructionCreate : public Instruction{
@@ -87,7 +87,6 @@ class InstructionJump : public Instruction{
 class InstructionReturn : public Instruction{
 	public:
 		virtual int execute(Core *s);
-		virtual xmlNodePtr xml_format();
 		InstructionReturn();
 };
 class InstructionBreak : public Instruction{
