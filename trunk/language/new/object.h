@@ -3,26 +3,68 @@
 
 #include <iostream>
 
-struct Object;
-struct Robot_body
+class Object
 {
-	int step(){
+	public:
+	int IsMoving(){
+		return 0;
+	}
+	int IsWall()
+	{
+		return 0;
+	}
+	int IsPlayer()
+	{
+		return 0;
+	}
+	int IsMissille()
+	{
+		return 0;
+	}
+	int Locate()
+	{
+		return 0;
+	}
+	int Hit()
+	{
+		return 0;
+	}
+
+};
+struct Robot_body : public Object
+{
+	int Step(){
 		std::cout << "moving!" << std::endl;
 		return 0;
 	}
-	int shoot()
+	int Shoot()
 	{
 		std::cout <<"shooting" <<std::endl;
 		return 0;
 	}
-	int see()
+	int See()
 	{
 		std::cout <<"shooting" <<std::endl;
 		return 0;
 	}
-	int wait()
+	int Wait()
 	{
 		std::cout <<"shooting" <<std::endl;
+		return 0;
+	}
+	int Turn(int var)
+	{
+		std::cout << "otacam sa v smere:" << var <<std::endl;
+		return 0;
+	}
+	int TurnL()
+	{
+		std::cout << "otacam sa v dolava " <<std::endl;
+		return 0;
+	}
+	int TurnR()
+	{
+		std::cout << "otacam sa doprava " <<std::endl;
 		return 0;
 	}
 };

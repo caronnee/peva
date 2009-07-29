@@ -8,14 +8,19 @@ std::string Instruction::name()
 {
 	return name_;
 }
+int Instruction::breaks()
+{
+	return -1;
+}
 xmlNodePtr Instruction::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	return n;	
 }
-int Instruction::breaks()
+int Instruction::execute(Core * s)
 {
-	return -1;
+	s->error = true;
+	return 1;
 }
 InstructionCreate::InstructionCreate(Node * n)
 {
@@ -24,7 +29,7 @@ InstructionCreate::InstructionCreate(Node * n)
 }
 int InstructionCreate::execute(Core * c)
 {
-	Variable * v = c->memory.assign(node->type_of_variable);
+	Variable * v = c->memory.assign(node->type_of_variable,c->depth);
 	Var var;
 	var.var = v;
 	var.depth = c->depth;
@@ -364,51 +369,157 @@ InstructionSee::InstructionSee()
 {
 	name_ = "InstructionSee";
 }
+int InstructionSee::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->See();
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionStep::InstructionStep()
 {
 	name_ = "InstructionStep";
+}
+int InstructionStep::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->Step();
+	v.loaded->type = TypeInteger;
+	return 0;
 }
 InstructionWait::InstructionWait()
 {
 	name_ = "InstructionWait";
 }
+int InstructionWait::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->Wait();
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionShoot::InstructionShoot()
 {
 	name_ = "InstructionShoot";
+}
+int InstructionShoot::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->Shoot();
+	v.loaded->type = TypeInteger;
+	return 0;
 }
 InstructionTurn::InstructionTurn()
 {
 	name_ = "InstructionTurn";
 }
+int InstructionTurn::execute(Core *s)
+{
+	Value par = s->values.back();
+	s->values.pop_back();
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->Turn(par.loaded->IntegerValue);
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionTurnR::InstructionTurnR()
 {
 	name_ = "InstructionTurnR";
+}
+int InstructionTurnR::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->TurnR();
+	v.loaded->type = TypeInteger;
+	return 0;
 }
 InstructionTurnL::InstructionTurnL()
 {
 	name_ = "InstructionTurnL";
 }
+int InstructionTurnL::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->TurnL();
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionHit::InstructionHit()
 {
 	name_ = "InstructionHit";
+}
+int InstructionHit::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->Hit();
+	v.loaded->type = TypeInteger;
+	return 0;
 }
 InstructionIsPlayer::InstructionIsPlayer()
 {
 	name_ = "InstructionIsPlayer";
 }
+int InstructionIsPlayer::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->IsPlayer();
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionIsWall::InstructionIsWall()
 {
 	name_ = "InstructionIsWall";
+}
+int InstructionIsWall::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->IsWall();
+	v.loaded->type = TypeInteger;
+	return 0;
 }
 InstructionIsMissille::InstructionIsMissille()
 {
 	name_ = "InstructionIsMissille";
 }
+int InstructionIsMissille::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->IsMissille();
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionLocate::InstructionLocate()
 {
 	name_ = "InstructionLocate";
 }
+int InstructionLocate::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->Locate();
+	v.loaded->type = TypeInteger;
+	return 0;
+}
 InstructionIsMoving::InstructionIsMoving()
 {
 	name_ = "InstructionIsMoving";
+}
+int InstructionIsMoving::execute(Core *s)
+{
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->IntegerValue = s->robot->IsMoving();
+	v.loaded->type = TypeInteger;
+	return 0;
 }

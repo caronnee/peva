@@ -4,12 +4,20 @@
 #include <stack>
 #include "variable.h"
 
+struct Memory_record
+{
+	int depth;
+	Variable * variable;
+	int id;
+};
 struct Memory
 {
-	int max_size;
+	int memory_size;
 	std::stack<int> id_free_vars;
+	std::vector<Memory_record> assigned;
 	std::vector<Variable *> memory;
-	Variable * assign(Create_type t);
+	void free(int depth);
+	Variable * assign(Create_type t,int depth);
 };
 
 #endif
