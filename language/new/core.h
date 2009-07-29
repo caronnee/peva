@@ -14,9 +14,13 @@ struct Core
 {
 	size_t PC;
 	int depth;
-//	Robot * R; //periferie, stav robota, interakcia s mapou
+	Robot_body * R; //periferie, stav robota, interakcia s mapou
 //	Map * map;
 	Memory memory;
 	std::vector<Value> values;	
+	Core()
+	{
+		R = new Robot_body();
+	}
 };
 #endif

@@ -181,9 +181,6 @@ int InstructionStore::execute(Core * c)
 		case TypeObject:
 				right.loaded->ObjectValue = left.loaded->ObjectValue;
 				break;
-		case TypeLocation:
-				right.loaded->LocationValue =left .loaded->LocationValue;
-				break;
 		default:
 				return -1;
 	}
@@ -198,6 +195,11 @@ Call::Call(Function * f_)
 	function = f_;
 	name_ = "Call";
 }
+int Call::execute(Core * c)
+{
+	
+	return 0;
+}
 xmlNodePtr Call::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
@@ -211,10 +213,20 @@ InstructionPop::InstructionPop()
 {
 	name_ = "InstructionPop";
 }
+int InstructionPop::execute(Core *s)
+{
+	s->values.pop_back();
+	return 0;
+}
 InstructionMustJump::InstructionMustJump(int steps)
 {
-	shift = steps-1;
+	shift = steps -1;
 	name_ = "InstructionMustJump";
+}
+int InstructionMustJump::execute(Core * c)
+{
+	c->PC+=shift;
+	return 0;
 }
 xmlNodePtr InstructionMustJump::xml_format()
 {
@@ -230,6 +242,15 @@ InstructionJump::InstructionJump(int yes_, int no_)
 	no = no_;
 	name_ = "InstructionJump";
 }
+int InstructionJump::execute(Core * c)
+{
+	Value v = c->values.back();
+	c->values.pop_back();
+	if (!v.loaded->IntegerValue)
+		c->PC+=yes;
+	else c->PC+=no;
+	return 0;
+}
 xmlNodePtr InstructionJump::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
@@ -241,11 +262,10 @@ InstructionReturn::InstructionReturn()
 {
 	name_ = "InstructionReturn";
 }
-xmlNodePtr InstructionReturn::xml_format()
+/*int InstructionReturn::execute(Core *c)
 {
-	return NULL;
-
-}
+	
+}*/
 InstructionBreak::InstructionBreak(int label)
 {
 	name_ = "InstructionBreak";
@@ -371,4 +391,24 @@ InstructionTurnL::InstructionTurnL()
 InstructionHit::InstructionHit()
 {
 	name_ = "InstructionHit";
+}
+InstructionIsPlayer::InstructionIsPlayer()
+{
+	name_ = "InstructionIsPlayer";
+}
+InstructionIsWall::InstructionIsWall()
+{
+	name_ = "InstructionIsWall";
+}
+InstructionIsMissille::InstructionIsMissille()
+{
+	name_ = "InstructionIsMissille";
+}
+InstructionLocate::InstructionLocate()
+{
+	name_ = "InstructionLocate";
+}
+InstructionIsMoving::InstructionIsMoving()
+{
+	name_ = "InstructionIsMoving";
 }

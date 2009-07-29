@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include "object.h"
+#include "types.h"
 #include "simple_types.h"
 
 struct Array;
@@ -17,7 +18,6 @@ struct Variable // struktura premennych
 	int IntegerValue;
 	float RealValue;
 	Array * array;
-	Location LocationValue;
 	Object * ObjectValue;
 
 	Variable();
