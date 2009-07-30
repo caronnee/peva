@@ -55,4 +55,5 @@ distclean:
 	rm -f *.o bparser parser.cpp bison.cpp bison.hpp
 
 run:
+	make
 	./bparser vstup
