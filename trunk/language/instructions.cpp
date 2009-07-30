@@ -39,7 +39,6 @@ int InstructionCreate::execute(Core * c)
 xmlNodePtr InstructionCreate::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
-	std::cout<<node->name << std::endl;
 	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
 	xmlAddChild(n, child);
 	return n;
