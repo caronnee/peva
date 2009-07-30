@@ -4,7 +4,7 @@ XML=`xml2-config --cflags`
 
 all:bparser 
 
-bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o
+bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o functions.o
 	$(CXX) $(LDFLAGS) *.o -o bparser
 
 parser.o: parser.cpp header1.h 
