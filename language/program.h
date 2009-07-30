@@ -49,7 +49,6 @@ struct Program
 	void output(Tree * t);
 	void enter_loop();
 	void end_loop();
-	std::vector<Function *> functions;
 	Node * find_var(std::string);
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	Node * add(std::string name, Create_type t);

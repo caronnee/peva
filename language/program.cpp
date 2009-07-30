@@ -34,11 +34,11 @@ Program::Program()
 
 Function * Program::find_f(std::string nam)
 {
-	for(int i =0; i< functions.size(); i++)
+	for(int i =0; i< core->functions.size(); i++)
 	{
-		if(functions[i]->name == nam)
+		if(core->functions[i]->name == nam)
 		{
-			return functions[i];
+			return core->functions[i];
 		}
 	}
 	return NULL;
@@ -108,7 +108,7 @@ void Program::add_function(Node * n, std::string name, std::vector<Parameter_ent
 	Function* f = new Function(name, c,n);
 	f->begin = instructions.size();
 	f->end = f->begin + ins.size()+1;
-	functions.push_back(f);
+	core->functions.push_back(f);
 	for (int i =0; i< ins.size(); i++)
 	{
 		instructions.push_back(ins[i]);
@@ -138,21 +138,21 @@ void Program::save_to_xml()
 	xmlNodePtr parent = data.root_ptr;
 	xmlNodePtr ptr;
 	int fce_num = 0;
-	for(int i =0; i< functions.size(); i++)
+	for(int i =0; i< core->functions.size(); i++)
 	{
-		std::cout<<functions[i]->name<<std::endl;
+		std::cout<< core->functions[i]->name<<std::endl;
 	}
 	for(int i =0; i< instructions.size(); i++)
 	{
 		std::cout << i << "," << instructions[i]->name_ <<std::endl;
-		if(functions[fce_num]->end == i)
+		if(core->functions[fce_num]->end == i)
 		{
 			xmlAddChild(data.root_ptr, parent);
 			parent = data.root_ptr;
 			fce_num++;
 		}
-		if(functions[fce_num]->begin == i)
-			parent = xmlNewNode(NULL, BAD_CAST functions[fce_num]->name.c_str());
+		if(core->functions[fce_num]->begin == i)
+			parent = xmlNewNode(NULL, BAD_CAST core->functions[fce_num]->name.c_str());
 		ptr = instructions[i]->xml_format();
 		xmlAddChild(parent, ptr);
 	}

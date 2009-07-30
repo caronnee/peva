@@ -205,6 +205,23 @@ Call::Call(Function * f_)
 
 int Call::execute(Core * c)
 {
+	//zoberie [pocet premennych aktualne na stacku], ulozi do svojich, v pripade varu ulozi svoje premenne(copy, pozor na pole a na recordy)
+	for(size_t i = 0; i< function->parameters.size(); i++)
+	{
+		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
+		{
+			Var v;
+			v.var = c->values.back().loaded;
+			function->parameters[i].node->var.push_back(v);
+			c->values.pop_back();
+		}
+		else
+		{
+			Var v;
+			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth);
+			function->parameters[i].node->var.push_back(v);
+		}
+	}
 	c->save(function->begin);	
 	return 0;
 }
