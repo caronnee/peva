@@ -1995,7 +1995,7 @@ yyreduce:
 
   case 66:
 #line 273 "bison.y"
-    {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);}
+    {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 67:
@@ -2005,7 +2005,7 @@ yyreduce:
 
   case 68:
 #line 275 "bison.y"
-    {(yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions),(yyvsp[(3) - (3)].instructions)); ;}
+    {(yyval.instructions) = join_instructions((yyvsp[(3) - (3)].instructions),(yyvsp[(1) - (3)].instructions)); ;}
     break;
 
   case 69:

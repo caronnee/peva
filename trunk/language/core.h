@@ -3,6 +3,7 @@
 
 #include "memory.h"
 #include "variable.h"
+#include "functions.h"
 
 struct Value
 {
@@ -14,6 +15,7 @@ struct Core
 {
 	size_t PC;
 	std::vector<size_t> PCs;
+	std::vector<Function *> functions;
 	int depth;
 	bool error;
 	Robot_body * robot; //periferie, stav robota, interakcia s mapou
@@ -30,7 +32,7 @@ struct Core
 		PCs.push_back(PC);
 		PC = j-1;
 	}
-	void restore()
+	void restore() //+ pushnut vsetky parametre zadanej funkcie o jedno
 	{
 		PC = PCs.back();
 		PCs.pop_back();

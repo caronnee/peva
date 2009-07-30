@@ -270,9 +270,9 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.p
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3;$$.push_back(feature($1));}
 	;
 
-call_parameters: expression {$$ = $1} //loaded
+call_parameters: expression {$$ = $1;} //loaded
 	 | /* ziadny parameter */ {$$.clear();}
-	 |call_parameters TOKEN_COMMA expression {$$ = join_instructions($1,$3); }
+	 |call_parameters TOKEN_COMMA expression {$$ = join_instructions($3,$1); }
 	;
 
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
