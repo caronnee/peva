@@ -13,29 +13,11 @@
     <InstructionBegin/>
     <InstructionCreate>main#a</InstructionCreate>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLoad>
-      <TypeInteger>8</TypeInteger>
-    </InstructionLoad>
-    <InstructionMultiply/>
-    <InstructionLoad>
-      <TypeInteger>10</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad>
-      <TypeInteger>12</TypeInteger>
-    </InstructionLoad>
-    <InstructionDivide/>
-    <InstructionPlus/>
-    <InstructionLoad>
-      <TypeInteger>5</TypeInteger>
-    </InstructionLoad>
-    <InstructionPlus/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionPlus/>
+    <InstructionLoadLocal>left</InstructionLoadLocal>
     <InstructionStore/>
     <InstructionEndBlock/>
     <InstructionMustJump>
-      <JumpCount>-17</JumpCount>
+      <JumpCount>-7</JumpCount>
     </InstructionMustJump>
   </main>
 </Machine>
