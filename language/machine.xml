@@ -2,16 +2,16 @@
 <Machine>
   <f>
     <InstructionBegin/>
-    <InstructionCreate/>
-    <InstructionCreate/>
+    <InstructionCreate>f#t</InstructionCreate>
+    <InstructionCreate>f#b</InstructionCreate>
     <InstructionEndBlock/>
     <InstructionRestore/>
   </f>
-  <InstructionCreate/>
-  <InstructionCreate/>
+  <InstructionCreate>left</InstructionCreate>
+  <InstructionCreate>right</InstructionCreate>
   <main>
     <InstructionBegin/>
-    <InstructionCreate/>
+    <InstructionCreate>f#a</InstructionCreate>
     <InstructionEndBlock/>
     <InstructionMustJump>
       <JumpCount>-4</JumpCount>
