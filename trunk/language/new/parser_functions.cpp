@@ -45,7 +45,7 @@ void set_breaks(Program * p, Instructions ins)
 	size_t size = ins.size();
 	for (size_t i = 0; i< size; i++)
 	{
-		if(ins[i]->breaks() == p-> last_loop_number)
+		if(ins[i]->breaks() == p->last_loop_number)
 		{
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i;

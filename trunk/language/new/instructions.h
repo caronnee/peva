@@ -70,6 +70,7 @@ class InstructionPop : public Instruction{
 		virtual int execute(Core *s);
 		InstructionPop();
 };
+
 class InstructionMustJump : public Instruction{
 	int shift;
 	public:

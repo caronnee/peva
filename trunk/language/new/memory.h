@@ -6,9 +6,9 @@
 
 struct Memory_record
 {
-	int depth;
+	size_t owner, depth;
 	Variable * variable;
-	int id;
+	size_t id;
 };
 struct Memory
 {
@@ -16,8 +16,8 @@ struct Memory
 	std::stack<int> id_free_vars;
 	std::vector<Memory_record> assigned;
 	std::vector<Variable *> memory;
-	void free(int depth);
-	Variable * assign(Create_type t,int depth);
+	void free(size_t depth);
+	Variable * assign(Create_type t,size_t id, size_t t);
 };
 
 #endif

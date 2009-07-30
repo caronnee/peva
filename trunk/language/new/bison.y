@@ -261,7 +261,7 @@ variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
 	| TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$ = join_instructions($$, $2); }
 	;
 
-call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call(program->find_f$1));} //TODO check parameters
+call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call(program->find_f($1)));} //TODO check parameters
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3;$$.push_back(feature($1));}
 	;
 
