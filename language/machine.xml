@@ -11,7 +11,7 @@
   <InstructionCreate>right</InstructionCreate>
   <main>
     <InstructionBegin/>
-    <InstructionCreate>f#a</InstructionCreate>
+    <InstructionCreate>main#a</InstructionCreate>
     <InstructionEndBlock/>
     <InstructionMustJump>
       <JumpCount>-4</JumpCount>
