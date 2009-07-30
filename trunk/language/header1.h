@@ -2,7 +2,7 @@
 #define HEADER_H_
 
 #include <string>
-#include "./tree/my_stack.h"
+#include "./program.h"
 
 enum Operation
 {
@@ -27,12 +27,21 @@ enum Operation
 	OperationBoolOr,
 	OperationBoolNot
 };
+enum ObjectFeatures
+{
+	FeatureIsPlayer,
+	FeatureIsWall,
+	FeatureIsMissille,
+	FeatureIsMoving,
+	FeatureLocate
+};
 struct expr
 {
 	Type output;
 };
 
 struct Lval {
+	
 	Operation operation;
 	int number;
 
@@ -46,7 +55,7 @@ struct Lval {
 	Instructions block;
 
 	Node * node;
-	std::vector<Node *> nodes;
+	std::vector<Node *> nodes; //kde su ulozene premenne
 
 	std::vector< Array *> arrays;
 	Array * array;
@@ -57,6 +66,8 @@ struct Lval {
 
 	Parameter_entry entry;
 	std::vector<Parameter_entry> entries;
+
+	ObjectFeatures of;
 };
 
 // lex interface

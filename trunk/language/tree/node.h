@@ -4,27 +4,8 @@
 #include <string> 
 #include <vector>
 #include <list>
+#include "../core.h"
 #include "typedefs.h"
-
-enum Type
-{
-	TypeUndefined = 0,
-	TypeInteger,
-	TypeReal,
-	TypeObject,
-	TypeLocation,
-	TypeArray,
-	TypeFunction,
-	TypeProcedure,
-	TypeVoid,
-	NumberOfTypes
-};
-enum NestedType
-{
-	Const,
-	Global,
-	Local
-};
 
 bool is_simple();
 
@@ -41,14 +22,21 @@ struct Create_type
 
 std::string quicksort(std::string s);
 
-class Object;
-struct Node;
+struct Node
+{
+	NestedType nested;
+	std::string name;
+	Create_type type_of_variable;
+	Variable * var;
+	Node();
+	Node(std::string name, Create_type t);
+};
 
 struct Array
 {
 	int range; //rozmer pola
 	Type element_type;
-	std::vector<Node> elements;
+	std::vector<Variable* > elements;
 };
 
 struct Location
@@ -57,11 +45,10 @@ struct Location
 	Location(int x = 0, int y = 0);
 };
 
-struct Node // struktura premennych
+struct Variable // struktura premennych
 {
 	std::string name;
 	Type type;
-	NestedType nested;
 
 	int active; //bola deklarovana v danom bloku
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
@@ -71,9 +58,9 @@ struct Node // struktura premennych
 	std::vector<Location> LocationValue;
 	std::vector<Object *> ObjectValue;
 
-	Node();
-	Node(std::string s,Type t);
-	Node (std::string s,Create_type t);
+	Variable();
+	Variable(std::string s,Type t);
+	void set_node(Create_type t, Memory *m);
 	int size();
 };
 

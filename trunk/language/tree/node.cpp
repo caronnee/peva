@@ -40,16 +40,17 @@ Location::Location(int x_, int y_)
 {
 	x = x_; y = y_;
 }
-Node::Node() //toto sa normalne nebude pouzivat
+Variable::Variable() //toto sa normalne nebude pouzivat
 {
 	last_access = 0;
 	type = TypeUndefined;
 	//location, object, real numbers a pod, nahodne cisla
 }
-Node::Node(std::string s, Create_type t)
+Variable::set_node(Create_type t, Memory * m)
 {
-	name = s;
 	type = t.type;
+	if(is_simple(type))
+		return;
 	if (t.type == TypeArray)
 	{
 		if (t.data_type == NULL)		
@@ -60,12 +61,15 @@ Node::Node(std::string s, Create_type t)
 		for (int i =0; i < t.range; i++)
 		{
 			array.push_back(new Array());
-			array[0]->elements.push_back(Node(s,*t.data_type));
+			Variable * n = m->get_node();
+			n->set_node(t->data_type);
+			array[0]->elements.push_back( n );
+			//TODO elegantnejsie alebo cez for a queue
 		}
 	}
 }
 //staci pocitat pre prvy NOD
-int Node::size() //kolko v zasoniku ma preskocit, aby sa dostal na zaciatok
+int Variable::size() //kolko v zasoniku ma preskocit, aby sa dostal na zaciatok
 {
 	if (is_simple(this->type))
 	{
@@ -77,12 +81,5 @@ int Node::size() //kolko v zasoniku ma preskocit, aby sa dostal na zaciatok
 		size +=array[0]->elements[i].size();
 	}
 	return size;
-}
-Node::Node(std::string s,Type t)
-{
-	//space_ocupied;
-	last_access = 0;
-	name = s;
-	type = t;
 }
 
