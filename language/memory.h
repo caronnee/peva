@@ -15,9 +15,10 @@ struct Memory
 	int memory_size;
 	std::stack<int> id_free_vars;
 	std::vector<Memory_record> assigned;
-	std::vector<Variable *> memory;
+	Variable ** memory;
 	void free(size_t depth);
 	Variable * assign(Create_type t,size_t id, size_t t);
+	Memory(int size = 100);
 };
 
 #endif

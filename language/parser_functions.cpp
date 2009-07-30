@@ -25,7 +25,13 @@ Instruction * instruction_load(Program *p, std::string s)
 
 void reg(Program * p,Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions b)
 {
-	Node * ret = p->add(name+DELIMINER_CHAR,t); //TODO krajsie
+	Node * ret ; //TODO krajsie
+	if( t.type == TypeVoid)
+	{
+		ret = NULL;
+	}
+	else 
+		ret = p->add("",t);
 	p->add_function(ret, name,c,b);
 }
 

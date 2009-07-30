@@ -34,5 +34,14 @@ void Memory::free(size_t depth)
 		Memory_record r = assigned.back();
 		assigned.pop_back();
 		id_free_vars.push(r.id);
+		r.variable->owner = -1;
 	}
+}
+Memory::Memory(int size)
+{
+	memory = new Variable*[size];
+	for(int i =0; i< size; i++)
+		memory[i] = new Variable();
+	for(int i =0; i< size; i++)
+		id_free_vars.push(i);
 }
