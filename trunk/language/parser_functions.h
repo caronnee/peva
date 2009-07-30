@@ -7,7 +7,6 @@
 typedef std::vector<std::string> strings;
 
 Instruction * instruction_load(Program * p, std::string s);
-void reg_main(Program * p,Instructions ins);
 void reg(Program *p, Create_type t, std::string name,std::vector<Parameter_entry> s, Instructions i);
 Instructions join_instructions(Instructions a, Instructions b);
 void set_breaks(Program * p, Instructions i);

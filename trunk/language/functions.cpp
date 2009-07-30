@@ -10,10 +10,10 @@ Parameter_entry::Parameter_entry(std::string s, Parameter_type pt, Node * n)
 	val_type = pt;
 	node = n;
 }
-Function::Function(std::string n, std::vector<Parameter_entry> v, Create_type t)
+Function::Function(std::string s, std::vector<Parameter_entry> v, Node * n)
 {
-	name =n;
+	name = s;
 	parameters = v;
-	return_type = t; //potom sa priradi, ked bude funkcia zavolana
+	return_var = n; //potom sa priradi, ked bude funkcia zavolana
 }
 
