@@ -6,7 +6,7 @@ $for (integer i = 0; i<10; i++)
 {
 	code;
 }$
-premennú i už nie je možné použiť mimo cyklu a naopak táto premenná nebola predtým deklarovaná v žiadnom v nadradených cykloch. V normálnych programovacích jazykoch je zapuzdrovanie ideálnou metódou na zprehľadnenie kódu tým, že jedno meno sa používa ako v rôzných blokoch s rovnakým meno a rozličným typom premennej, v našom prípade je ale situácia trochu zložitejšia. Ako je popísané neskôr, robota inizializovanie novej premennej niečo stojí a jej deinicializovanie tiež, takže z tohoto hľadiska na tom robot iba tratí,čo je temer vždy nežiaduce. Dôvod pre zavedenie zapúzdrovania aj v tomto prípade je, ze v okamihu, keď robot použije takúto funkciu, má to dva efekty: \\
+premennú i už nie je možné použiť mimo cyklu a naopak táto premenná nebola predtým deklarovaná v žiadnom v nadradených cykloch. Vo väčšine programovacích jazykoch je zapuzdrovanie ideálnou metódou na zprehľadnenie kódu tým, že pod premennou s rovnakým menom sa skrýva premenná rôzneho typu v rámci bloku. Typickým príkladom napríklad v jazyku C je \\$for (int\ i =0; i< 10; i++)$ \\ $ {//blabla}$ \\V našom prípade je ale situácia trochu zložitejšia. Ako bolo povedané v úvode, každá inštrukcia robota niečo stojí, rovnako inizializovanie novej premennej a jej deinicializovanie tiež, takže z tohoto hľadiska na tom robot iba tratí,čo je temer vždy nežiaduce. Dôvod pre zavedenie zapúzdrovania aj v tomto prípade je, ze v okamihu, keď robot použije takúto funkciu, má to dva efekty: \\
 		\begin{itemize}
 		\item v pamati bude mať pochopitelne o jednu premennú viac. Keďže pamať robota nie je neobmedzená a je uživateľom definovaná na úkor iných vlastnosti(napríklad odolnosti voči zbraniam), pri kóde typu:
 for (integer i = 0; i< 10; i++)
@@ -17,6 +17,8 @@ fce1();
 fce2();
 fce3();
 ..
-môže pri nepodoporovanom zapúzdrovaní robotovi dojsť pamať napriek tomu, ze ďalšie použtie premennej i sa už ďalej nevyskytuje. Pri nepodporovanom zapúzdrenía súčasne výskyte premennej po danom cykle by bolo stejne akoby bola premenná definovaná v nadradenom cykle, to znamená, že až na virtuálne uvoľnenie premennej z pamäti robota by penalizácia bola úplne rovnaká.
+môže pri nepodoporovanom zapúzdrovaní robotovi dojsť pamať napriek tomu, ze ďalšie použitie premennej i sa už ďalej nevyskytuje. Pri nepodporovanom zapúzdrenía súčasne výskyte premennej po danom cykle by bolo stejne akoby bola premenná definovaná v nadradenom cykle, to znamená, že až na virtuálne uvoľnenie premennej z pamäti robota by penalizácia bola úplne rovnaká.
 \end{itemize}
-Z tohoto dôvodu je teda zapúzdrovanie povolené. Rozlisovanie prebieha tým spôsobom, že buď so dopredu rezervuje miesto pre premenné každej funkcie v každej možnej hladine zanorenia (tažke prípadné miesto premennej by sa jednoznažne identifikovalo hĺbkou zanorenia, menom funkcie a nazvom premennej). tento spôsob ale vyžaduje generovanie obrovského množstva dát, kde len malá časť bude využívaná. Preto v tejto implementácií je pri každom volaní funkcie vygenerovaný nový podstrom, s rovnakými parametram, ale v inej hĺbke. Jedná sa vlastne o dynamické vytváranie stromu volaní funkcií. V okamihu, ked sa dojde na koniec hlavnej funkcie, vieme, že máme kompletné prehľad o tom. Tento prehľad sa však môže meniť, obzvlášt ak je volanie funkcií závislá na inštrukciách step() alebo see() robota. Keďže volanie funkcie v určitej hĺbke zanorenia je nemenne vzhľadom na to, kto funkciu volal, jednotlivé stromy (stack zostáva vždy rovnaký), sú uložené v poli rpi funkcií
+Z tohoto dôvodu je teda zapúzdrovanie povolené. \\
+\\
+Problém môže nastať v okamihu, keď sú povolené rovkako rekurzívne funkcie. V okamihu zavolania takejto funkcie, 
