@@ -287,82 +287,362 @@ InstructionPlusPlus::InstructionPlusPlus()
 {
 	name_ = "InstructionPlusPlus";
 }
+int InstructionPlusPlus::execute(Core * c)
+{
+	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue++;
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
 InstructionMinusMinus::InstructionMinusMinus()
 {
 	name_ = "InstructionMinusMinus";
+}
+int InstructionMinusMinus::execute(Core * c)
+{
+	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue--;
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
 }
 InstructionPlus::InstructionPlus()
 {
 	name_ = "InstructionPlus";
 }
+int InstructionPlus::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue + right.loaded->IntegerValue;
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
 InstructionMinus::InstructionMinus()
 {
 	name_ = "InstructionMinus";
+}
+int InstructionMinus::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue - right.loaded->IntegerValue;
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
 }
 InstructionMultiply::InstructionMultiply()
 {
 	name_ = "InstructionMultiply";
 }
+int InstructionMultiply::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue * right.loaded->IntegerValue;
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
 InstructionDivide::InstructionDivide()
 {
 	name_ = "InstructionDivide";
 }
+int InstructionDivide::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	if ((right.loaded->type != TypeInteger) && (right.loaded->type!=TypeReal))
+		return -1; //TODO do bisona	
+	if ((c->values.back().loaded->type != TypeInteger) && (c->values.back().loaded->type!=TypeReal))
+		return -1; //TODO do bisona	
+	if (right.loaded->type == TypeInteger) //zatial nepredpokladame konverziu
+	{
+		c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue / right.loaded->IntegerValue;
+		c->values.back().hlp.type = TypeInteger;
+	}
+	else
+	{
+		c->values.back().hlp.RealValue = c->values.back().loaded->RealValue / right.loaded->RealValue;
+		c->values.back().hlp.type = TypeReal;
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
+
 InstructionModulo::InstructionModulo()
 {
 	name_ = "InstructionModulo";
+}
+int InstructionModulo::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue % right.loaded->IntegerValue;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
 }
 InstructionBinaryAnd::InstructionBinaryAnd()
 {
 	name_ = "InstructionBinaryAnd";
 }
+int InstructionBinaryAnd::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	c->values.back().hlp.IntegerValue = 
+		c->values.back().loaded->IntegerValue & right.loaded->IntegerValue;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
 InstructionAnd::InstructionAnd()
 {
 	name_ = "InstructionAnd";
+}
+int InstructionAnd::execute(Core *c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	if ((right.loaded->IntegerValue == 0)
+		|| (left.loaded->IntegerValue ==0)) 
+		c->values.back().hlp.IntegerValue = 0;
+	else
+		c->values.back().hlp.IntegerValue = 1;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
 }
 InstructionBinaryOr::InstructionBinaryOr()
 {
 	name_ = "InstructionBinaryOr";
 }
+int InstructionBinaryOr::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	c->values.back().hlp.IntegerValue = 
+		c->values.back().loaded->IntegerValue | right.loaded->IntegerValue;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
 InstructionOr::InstructionOr()
 {
 	name_ = "InstructionOr";
+}
+int InstructionOr::execute(Core *c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	if ((right.loaded->IntegerValue != 0)
+		|| (left.loaded->IntegerValue !=0)) 
+		c->values.back().hlp.IntegerValue = 1;
+	else
+		c->values.back().hlp.IntegerValue = 0;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
 }
 InstructionBinaryNot::InstructionBinaryNot()
 {
 	name_ = "InstructionBinaryNot";
 }
+int InstructionBinaryNot::execute(Core *c)
+{
+	c->values.back().hlp.IntegerValue = ~c->values.back().loaded->IntegerValue;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
 InstructionNot::InstructionNot()
 {
 	name_ = "InstructionNot";
+}
+int InstructionNot::execute(Core *c)
+{
+	if (c->values.back().loaded->IntegerValue == 0)
+		c->values.back().hlp.IntegerValue = 1;
+	else 
+		c->values.back().hlp.IntegerValue = 1;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
 }
 //----------------------------------------------------------------------------------------------------
 InstructionGt::InstructionGt()
 {
 	name_ = "InstructionGt";
 }
+int InstructionGt::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	switch (left.loaded->type)
+	{
+		case TypeInteger:
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue > right.loaded->IntegerValue)? 0:1; 
+			break;
+		case TypeReal:
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue > right.loaded->RealValue)? 0:1; 
+			break;
+		default:
+			return -1; //zvysok nepozna
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.push_back(right);
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
 InstructionGe::InstructionGe()
 {
 	name_ = "InstructionGe";
+}
+int InstructionGe::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	switch (left.loaded->type)
+	{
+		case TypeInteger:
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue >= right.loaded->IntegerValue)? 0:1; 
+			break;
+		case TypeReal:
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue >= right.loaded->RealValue)? 0:1; 
+			break;
+		default:
+			return -1; //zvysok nepozna
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.push_back(right);
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
 }
 InstructionEqual::InstructionEqual()
 {
 	name_ = "InstructionEqual";
 }
+int InstructionEqual::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	switch (left.loaded->type)
+	{
+		case TypeInteger:
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue == right.loaded->IntegerValue)? 1:0; 
+			break;
+		case TypeReal:
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue == right.loaded->RealValue)? 1:0; 
+			break;
+		case TypeLocation:
+			if ((left.loaded->array->elements[0]->IntegerValue == right.loaded->array->elements[0]->IntegerValue) 
+				&&(left.loaded->array->elements[1]->IntegerValue == right.loaded->array->elements[1]->IntegerValue))
+				c->values.back().hlp.IntegerValue = 1;
+			else 
+				c->values.back().hlp.IntegerValue = 0;
+			break;
+		case TypeObject:
+			c->values.back().hlp.IntegerValue = (left.loaded->ObjectValue == right.loaded->ObjectValue)? 1:0;
+			break;
+/*		case TypeArray:
+			bool equal = true;
+			std::stack<Variable *> lefts, rights;
+			rights.push(right.loaded);
+			lefts.push(left.loaded);
+			while (!lefts.empty())
+			{
+				Variable * left_v = lefts.top();
+				lefts.pop();
+				Variable * right_v = rights.top();
+				rights.pop();
+				if((left_v->type!=right_v->type)
+				 ||(left_v->array->elements.size()!= right_v->array->elements.size()))
+				{
+					equal = false;
+					break;
+				}
+				for(size_t i = 0; i< left_v->array->elements.size(); i++)
+				{
+					lefts.push(left_v->array->elements[i]);
+					rights.push(right_v->array->elements[i])
+				}
+
+			}
+			break;*///array sa porovnavat nebude,moc miesta a ets aj penalizacia by bola divna
+		default:
+			return -1; //zvysok nepozna
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.push_back(right);
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
 InstructionLt::InstructionLt()
 {
 	name_ = "InstructionLt";
+}
+int InstructionLt::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	switch (left.loaded->type)
+	{
+		case TypeInteger:
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue < right.loaded->IntegerValue)? 0:1; 
+			break;
+		case TypeReal:
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue < right.loaded->RealValue)? 0:1; 
+			break;
+		default:
+			return -1; //zvysok nepozna
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.push_back(right);
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
 }
 InstructionLe::InstructionLe()
 {
 	name_ = "InstructionLe";
 }
+int InstructionLe::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	switch (left.loaded->type)
+	{
+		case TypeInteger:
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue <= right.loaded->IntegerValue)? 0:1; 
+			break;
+		case TypeReal:
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue <= right.loaded->RealValue)? 0:1; 
+		default:
+			return -1; //zvysok nepozna
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.push_back(right);
+	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
 InstructionBegin::InstructionBegin()
 {
 	name_ = "InstructionBegin";
 }
+int InstructionBegin::execute(Core * c)
+{
+	c->depth++;
+	return 0;
+}
 InstructionEndBlock::InstructionEndBlock()
 {
 	name_ = "InstructionEndBlock";
+}
+int InstructionEndBlock::execute(Core * c)
+{
+	c->memory.free(c->depth);
+	c->depth--;
+	return 0;
 }
 //--------------------------------------------------
 InstructionSee::InstructionSee()
