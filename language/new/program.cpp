@@ -117,6 +117,10 @@ void Program::add_function(Create_type t, std::string name, std::vector<Paramete
 	{
 		instructions.push_back(ins[i]);
 	}
+	if(name == "main")
+	{
+		instructions.push_back(new InstructionMustJump(ins.size()*-1));
+	}
 }
 void Program::enter(std::string name)
 {
