@@ -202,6 +202,7 @@ Call::Call(Function * f_)
 	function = f_;
 	name_ = "Call";
 }
+
 int Call::execute(Core * c)
 {
 	c->save(function->begin);	

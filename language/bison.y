@@ -184,8 +184,8 @@ return_type:	type { $$ = $1; }
 	|TOKEN_VOID { $$ = Create_type(TypeVoid); }
 	;
 
-parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, $1)); program->add($2, $1); }
-	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,$3));program->add($4, $3);}
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->add($2, $1)));  }
+	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->add($4, $3)));}
 	;
 declare_function_:	return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->leave();} 
 	|declare_function_ return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); program->leave();}
