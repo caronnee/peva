@@ -1,7 +1,7 @@
 #ifndef __BISON_HELP__
 #define __BISON_HELP__
 
-#include "./tree/my_stack.h"
+#include "./program.h"
 #include "./header1.h"
 
 typedef std::vector<std::string> strings;
@@ -16,4 +16,5 @@ Instruction * operRel(Operation op);
 Instruction * operMul(Operation op);
 Instruction * operAdd(Operation op);
 Instruction * operOr(Operation op);
+Instruction * feature (ObjectFeatures feat);
 #endif

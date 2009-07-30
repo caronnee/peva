@@ -14,9 +14,42 @@ Tree::Tree()
 }
 Tree::Tree(int d)
 {
+	alphabet = quicksort("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._");
 	reset();
 	depth = d;
 }
+
+int Tree::find_index(char a)
+{
+	int max = alphabet.length()-1; //za hranicu uz nesmie skocit
+	int min = 0; //zaciatok
+	int index = (max-min)/2;
+	std::cout << alphabet <<std::endl;
+//	std::cout << min << " " << index <<" " << max <<std::endl;
+	while ((max-min)>1) //ked uz je jedna, presli sme vsetko a nie je tam
+	{
+		if (alphabet[index] == a)
+			return index;
+		if (alphabet[index] > a)
+		{
+			max = index; //viac ako za indexom to nebude
+			index-=(max-min)/2;
+		}
+		if (alphabet[index] < a)
+		{
+			min = index;
+			index+=(max-min)/2;
+		}
+//		std::cout << alphabet[min] << " " << alphabet[index] <<" " << alphabet[max] <<std::endl;
+	}
+//	std::cout << "OUT" << std::endl;
+	if (alphabet[min] == a)
+		return min;
+	if (alphabet[max] == a)
+		return max;
+	return -1; //nenasiel sa 
+}
+
 std::string quicksort(std::string s)
 {
 	if (s.length()<=1)
@@ -26,4 +59,93 @@ std::string quicksort(std::string s)
 		if (s[i] < s[0]) s1+=s[i];
 		else s2+=s[i];
 	return quicksort(s1) + s[0] + quicksort(s2);
+}
+Tree * Tree::find_string(std::string s)
+{
+	Tree* t  = this;
+	size_t i =0;
+	while (t->inner_node == true)
+	{
+		int pointer = find_index(s[i]);
+		if (t->next[pointer]==NULL)
+		{
+			t->next[pointer] = new Tree(t->depth+1);
+		}
+		t = t->next[pointer];
+		i++;
+		if (i == s.length())
+			break;
+	}
+	return t;
+}
+
+Node * Tree::add(std::string s, Create_type type)
+{
+	std::cout << "pridavam meno:" << s << std::endl;
+	Tree * t = find_string(s);//pridavame do tohoto kontejnera
+	std::cout << "\t" << s <<std::endl; 
+	std::list<Node*>::iterator iter;
+	for (iter = t->items.begin(); 
+		iter!=t->items.end(); 
+		iter++)
+	{
+		if ((*iter)->name == s) {
+
+			std::cout << "uz tam je "<< s <<std::endl;
+			exit(5);
+		}//kontrola, co tam nieco take uz nie je
+
+	} //TODO nejaka rozumnejsia metoda
+
+	Node * nod = new Node(s, type);
+	bool nested = false;
+	for (size_t i =0; i< s.length(); i++)
+	{
+		if (s[i] == DELIMINER_CHAR)
+		{
+			nested = true;
+			break;
+		}
+			
+	}
+	if (nested)
+		nod->nested = Local;
+	t->items.push_back(nod);
+	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
+	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
+	{
+		//burst!
+//		getc(stdin);
+		t->inner_node = true;
+		int splitted = -1,split = 0;
+		std::list<Node *> n;
+		while (!(t->items.empty()))
+		{
+//			std::cout <<t->items.size() <<" : "<< t->items.front()->name<< std::endl;
+//			getc(stdin);
+			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
+			{
+				split++;//TODO ocheckovat
+				n.splice(n.begin(),t->items,t->items.begin());
+				continue;
+			}
+			int pointer = find_index(t->items.front()->name[t->depth]);
+		 	if (t->next[pointer]==NULL) //
+			{
+				split++;
+				splitted = pointer;
+				t->next[pointer] = new Tree(t->depth+1);
+			}
+			Tree * nxt = t->next[pointer];
+			nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
+		}
+//		std::cout <<" enddd"<<n.size();
+		t->items.swap(n);
+		if ( split == 1 )
+		{
+			std::cout <<"repete! " <<splitted << std::endl;
+			t = t->next[splitted];
+		}
+	}
+	return nod;
 }

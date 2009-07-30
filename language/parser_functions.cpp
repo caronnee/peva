@@ -6,7 +6,6 @@
 
 Instruction * instruction_load(Program *p, std::string s)
 {
-	std::cout << "_________"<< s << "_______" <<std::endl;
 	Node *n = p->find_var(s); 
 	if (n == NULL)
 	{
@@ -23,7 +22,7 @@ Instruction * instruction_load(Program *p, std::string s)
 }
 void reg_main(Program* p, Instructions ins)
 {
-	p->PC = p->instructions.size();
+	p->core->PC = p->instructions.size();
 	p->add(ins);
 }
 
@@ -46,7 +45,7 @@ void set_breaks(Program * p, Instructions ins)
 	size_t size = ins.size();
 	for (size_t i = 0; i< size; i++)
 	{
-		if(ins[i]->breaks() == p-> last_loop_number)
+		if(ins[i]->breaks() == p->last_loop_number)
 		{
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i;
@@ -110,5 +109,23 @@ Instruction * operOr(Operation op) //Bool_OR
 		case OperationBoolOr:
 			return new InstructionBinaryOr();
 		default: return NULL;
+	}
+}
+Instruction * feature (ObjectFeatures feat)
+{
+	switch(feat)
+	{
+		case FeatureIsPlayer:
+		       return new InstructionIsPlayer();
+	       	case FeatureIsWall:
+			return new InstructionIsWall();
+	 	case FeatureIsMissille:
+			return new InstructionIsMissille();
+		case FeatureIsMoving:
+			return new InstructionIsMoving();
+		case FeatureLocate:
+			return new InstructionLocate();
+		default:
+			return NULL;		
 	}
 }

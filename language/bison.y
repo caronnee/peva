@@ -1,7 +1,7 @@
 %{
-	#include "header1.h"
-	#include "./tree/my_stack.h"
 	#include <iostream>
+	#include "header1.h"
+	#include "program.h"
 	#include "parser_functions.h"
 
 	#define YYSTYPE Lval 
@@ -40,6 +40,7 @@
 %token TOKEN_ASSIGN
 %token TOKEN_BEGIN
 %token TOKEN_END
+%token<of> TOKEN_OBJECT_FEATURE
 
 /* literals */
 %token<ident> TOKEN_IDENTIFIER
@@ -106,7 +107,7 @@ program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR bl
 		  std::vector<Parameter_entry> p;
 		  program->add_global($1);
 		  reg(program, Create_type(TypeVoid),"main", p, $6); 
-		}
+		} //skonsoliduje vsetky instrukcie, co sa doteraz vygenerovali
 	;
 
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
@@ -115,15 +116,16 @@ global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 
 type:	  simple_type { $$ = $1;}
 	| complex_type { $$ = $1; }
-	;
+	; //vsetky typy, ale moze premenna nadobudnut
+
 local_variables:  type names TOKEN_SEMICOLON 
 	       {  
 			for(int i =0; i< $2.size(); i++)
 			{
-				Node * n = program->add($2[i].id, $1);
-				$$.push_back(new InstructionCreate(program->find_var($2[i].id)));
-				if ($2[i].default_set){ 
-					if (n->nested == Local)
+				Node * n = program->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
+				$$.push_back(new InstructionCreate(program->find_var($2[i].id))); //treba este aktivovat, na to sluzi tato instrukcia
+				if ($2[i].default_set){ //ak bola zadana defaultna hodnota 
+					if (n->nested == Local) //toto  je vnode, lebo sa to pre premennu nemeni
 						$$.push_back(new InstructionLoadLocal(n));
 					else
 						$$.push_back(new InstructionLoadGlobal(n));
@@ -134,6 +136,7 @@ local_variables:  type names TOKEN_SEMICOLON
 		}
 	;
 
+//OK
 simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
     	|TOKEN_VAR_INT { $$ = Create_type(TypeInteger); }
 	|TOKEN_LOCATION{ $$ = Create_type(TypeLocation); }
@@ -169,7 +172,7 @@ declare_functions: /*	ziadne deklarovane funkcie	*/ { $$.clear(); }
 	|declare_function_ { $$ = $1; }
 	;
 
-function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; program->nested++; } //zatial nepotrebujeme vediet zanoraenie 
+function_header:TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $2; program->enter($2); } //zatial nepotrebujeme vediet zanoraenie 
 	;
 
 return_type:	type { $$ = $1; }
@@ -179,7 +182,7 @@ return_type:	type { $$ = $1; }
 parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, $1)); }
 	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,$3));}
 	;
-declare_function_:	return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->nested--;} //register name, parameter_list, block
+declare_function_:	return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->leave();} //register name, parameter_list, block
 	|declare_function_ return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions { reg(program,$2,$3,$5,$7); }
 	|return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program,$1, $2, a, $5); } 
 	|declare_function_ return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program, $2, $3, a, $6); }
@@ -258,7 +261,8 @@ variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
 	| TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$ = join_instructions($$, $2); }
 	;
 
-call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call($1));} //TODO check parameters
+call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call(program->find_f($1)));} //TODO check parameters
+	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3;$$.push_back(feature($1));}
 	;
 
 call_parameters: expression {$$ = $1} //loaded
