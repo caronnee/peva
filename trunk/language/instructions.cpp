@@ -194,25 +194,33 @@ int InstructionStore::execute(Core * c)
 }
 Call::Call()
 {
+	function = NULL;
 	name_ = "Call";
 }
 Call::Call(Function * f_)
 {
+	getc(stdin);
+	std::cout << f_->name << std::endl;
 	function = f_;
+	std::cout << function->name << ":" << function <<  std::endl;
+	getc(stdin);
 	name_ = "Call";
 }
 int Call::execute(Core * c)
 {
 	//TODO nejak elegantnejsie
-	
 	c->save(function->begin);	
 	return 0;
 }
 xmlNodePtr Call::xml_format()
 {
+	std::cout << "zapamatovane meno:"<< function <<std::endl;
+	getc(stdin);
+	std::cout << function->name <<std::endl;
+	getc(stdin);
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
-	xmlNodePtr n2 = xmlNewNode(NULL, BAD_CAST function->name.c_str());
-	xmlNewProp(n2, BAD_CAST "begins", BAD_CAST deconvert(function->begin).c_str());
+	xmlNodePtr n2 = xmlNewText(BAD_CAST function->name.c_str());
+	xmlNewProp(n, BAD_CAST "begins", BAD_CAST deconvert(function->begin).c_str());
 	xmlAddChild(n,n2);
 	return n;
 }

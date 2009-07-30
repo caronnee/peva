@@ -8,5 +8,6 @@ void function f()
 main() // komentar
 {
 	integer a;
-	a = left*8 + 10/12 + 5+a;
+	//a = left*8 + 10/12 + 5+a;
+	f();
 }
