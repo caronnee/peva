@@ -25,9 +25,8 @@ struct Function
 	std::vector<Parameter_entry> parameters;
 	int begin; //kde to zacina v stacku
 	int end;
-	Create_type return_type;
-	std::vector<Variable *> return_var;
-	Function(std::string name, std::vector<Parameter_entry>, Create_type t);
+	Node * return_var;
+	Function(std::string name, std::vector<Parameter_entry>, Node * n);
 };
 
 #endif

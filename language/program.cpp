@@ -103,9 +103,9 @@ void Program::add(Instructions ins)
 		instructions.push_back(ins[i]);
 	}
 }
-void Program::add_function(Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions ins)
+void Program::add_function(Node * n, std::string name, std::vector<Parameter_entry> c, Instructions ins)
 {
-	Function* f = new Function(name, c,t);
+	Function* f = new Function(name, c,n);
 	f->begin = instructions.size();
 	f->end = f->begin + ins.size()+1;
 	functions.push_back(f);

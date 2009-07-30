@@ -57,7 +57,7 @@ struct Program
 	void add(Instructions ins);
 	Node * create_type(Type t);
 	void enter(std::string s);
-	void add_function(Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions ins);
+	void add_function(Node * t, std::string name, std::vector<Parameter_entry> c, Instructions ins);
 	void leave();
 };
 #endif

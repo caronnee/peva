@@ -22,15 +22,11 @@ Instruction * instruction_load(Program *p, std::string s)
 		return new InstructionLoadGlobal(n);
 	}
 }
-void reg_main(Program* p, Instructions ins)
-{
-	p->core->PC = p->instructions.size();
-	p->add(ins);
-}
 
 void reg(Program * p,Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions b)
 {
-	p->add_function(t, name,c,b);
+	Node * ret = p->add(name+DELIMINER_CHAR,t); //TODO krajsie
+	p->add_function(ret, name,c,b);
 }
 
 Instructions join_instructions(Instructions i1, Instructions i2)
