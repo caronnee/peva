@@ -104,9 +104,9 @@
 
 program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{ 
-		  std::vector<Parameter_entry> p;
-		  program->add_global($1);
-		  reg(program, Create_type(TypeVoid),"main", p, $6); 
+	//	  std::vector<Parameter_entry> p;
+	//	  program->add_global($1);
+	//	  reg(program, Create_type(TypeVoid),"main", p, $6); 
 		} //skonsoliduje vsetky instrukcie, co sa doteraz vygenerovali
 	;
 
@@ -371,6 +371,6 @@ int main(int argc, char ** argv)
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
 	q.output(&q.defined);
-	q.save_to_xml();
+//	q.save_to_xml();
 	return 0;	
 }
