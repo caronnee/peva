@@ -38,9 +38,11 @@ int InstructionCreate::execute(Core * c)
 }
 xmlNodePtr InstructionCreate::xml_format()
 {
+	std::cout << "IN" <<std::endl;
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
-	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
-	xmlAddChild(n, child);
+	std::cout<<node->name << std::endl;
+//	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
+//	xmlAddChild(n, child);
 	return n;
 }
 InstructionLoadLocal::InstructionLoadLocal()
@@ -229,6 +231,7 @@ int InstructionPop::execute(Core *s)
 InstructionMustJump::InstructionMustJump(int steps)
 {
 	shift = steps -1;
+	std::cout << "Must step: " << shift << std::endl;
 	name_ = "InstructionMustJump";
 }
 int InstructionMustJump::execute(Core * c)
@@ -240,7 +243,7 @@ xmlNodePtr InstructionMustJump::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr n2 = xmlNewNode(NULL, BAD_CAST "JumpCount");
-	xmlNodePtr n3 = xmlNewText(BAD_CAST deconvert<size_t>(shift).c_str());
+	xmlNodePtr n3 = xmlNewText(BAD_CAST deconvert<int>(shift).c_str());
 	xmlAddChild(n2,n3);
 	xmlAddChild(n,n2);
 	return n;
@@ -268,15 +271,23 @@ xmlNodePtr InstructionJump::xml_format()
 }
 InstructionReturn::InstructionReturn()
 {
+	loop_label = 1;
+	jump = 123;
 	name_ = "InstructionReturn";
 }
-int InstructionReturn::execute(Core *c)
+InstructionRestore::InstructionRestore()
+{
+	name_ = "InstructionRestore";
+}
+int InstructionRestore::execute(Core *c)
 {
 	c->restore();
 	return 0;
 }
+
 InstructionBreak::InstructionBreak(int label)
 {
+	loop_label = label;
 	name_ = "InstructionBreak";
 }
 int InstructionBreak::execute(Core * c)
@@ -286,7 +297,9 @@ int InstructionBreak::execute(Core * c)
 }
 xmlNodePtr InstructionBreak::xml_format()
 {
-	return NULL;
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNewChild(n,NULL, BAD_CAST "Jump", BAD_CAST deconvert<int>(jump).c_str());
+	return n;
 }
 int InstructionBreak::breaks()
 {

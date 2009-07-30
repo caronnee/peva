@@ -11,9 +11,9 @@ class Instruction
 {
 	protected:
 	Node * node;
-	std::string name_;
 	bool constant;
 public:
+	std::string name_;
 	virtual std::string name();
 	virtual int breaks();
 	virtual xmlNodePtr xml_format();
@@ -85,19 +85,26 @@ class InstructionJump : public Instruction{
 		virtual xmlNodePtr xml_format();
 		InstructionJump(int stepsYes, int stepsNo);
 };
-class InstructionReturn : public Instruction{
-	public:
-		virtual int execute(Core *s);
-		InstructionReturn();
-};
+
 class InstructionBreak : public Instruction{
-	int loop_label;
+	protected:
+		int loop_label;
 	public:
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
 		int jump;
-		InstructionBreak(int label);
+		InstructionBreak(int label = 1);
 		virtual int breaks();
+};
+class InstructionReturn : public InstructionBreak{
+	public:
+		InstructionReturn();
+};
+class InstructionRestore: public Instruction
+{
+	public:
+		virtual int execute(Core * c);
+		InstructionRestore();
 };
 class InstructionPlusPlus : public Instruction{
 	public:

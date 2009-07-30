@@ -2,44 +2,19 @@
 <Machine>
   <f>
     <InstructionBegin/>
-    <InstructionCreate>t</InstructionCreate>
-    <InstructionCreate>b</InstructionCreate>
+    <InstructionCreate/>
+    <InstructionCreate/>
     <InstructionEndBlock/>
+    <InstructionRestore/>
   </f>
-  <InstructionCreate>left</InstructionCreate>
-  <InstructionCreate>right</InstructionCreate>
+  <InstructionCreate/>
+  <InstructionCreate/>
   <main>
     <InstructionBegin/>
-    <InstructionCreate>a</InstructionCreate>
-    <InstructionCreate>i</InstructionCreate>
-    <InstructionLoadLocal>i</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>0</TypeInteger>
-    </InstructionLoad>
-    <InstructionStore/>
+    <InstructionCreate/>
+    <InstructionEndBlock/>
     <InstructionMustJump>
-      <JumpCount>8</JumpCount>
+      <JumpCount>-4</JumpCount>
     </InstructionMustJump>
-    <InstructionBegin/>
-    <InstructionLoadLocal>a</InstructionLoadLocal>
-    <InstructionLoadLocal>a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>4</TypeInteger>
-    </InstructionLoad>
-    <InstructionPlus/>
-    <InstructionStore/>
-    <InstructionEndBlock/>
-    <InstructionLoadLocal>i</InstructionLoadLocal>
-    <InstructionPlusPlus/>
-    <InstructionLoadLocal>i</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>10</TypeInteger>
-    </InstructionLoad>
-    <InstructionLt/>
-    <InstructionJump>
-      <yes>-12</yes>
-      <no>1</no>
-    </InstructionJump>
-    <InstructionEndBlock/>
   </main>
 </Machine>
