@@ -1,6 +1,6 @@
 integer left, right; //povolene komentare, bool aj integer su naprosto stejne
 
-void function f()
+void function f(integer a, integer x)
 {
 	integer t;
 	real b;
