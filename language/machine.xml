@@ -12,9 +12,12 @@
   <main>
     <InstructionBegin/>
     <InstructionCreate>main#a</InstructionCreate>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoadLocal>left</InstructionLoadLocal>
+    <InstructionStore/>
     <InstructionEndBlock/>
     <InstructionMustJump>
-      <JumpCount>-4</JumpCount>
+      <JumpCount>-7</JumpCount>
     </InstructionMustJump>
   </main>
 </Machine>

@@ -159,6 +159,8 @@ names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); }
 
 values: number { $$=$1;}
       	| TOKEN_IDENTIFIER { Node *n = program->find_var($1); 
+				if (n == NULL)
+					std::cout << "aekfuhak" <<std::endl;
 				if(n->nested == Local)
 					$$.push_back(new InstructionLoadLocal(n));
 				else  
