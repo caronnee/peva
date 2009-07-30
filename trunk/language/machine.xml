@@ -13,7 +13,7 @@
     <InstructionBegin/>
     <InstructionCreate>main#a</InstructionCreate>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoadLocal>left</InstructionLoadLocal>
+    <InstructionLoadGlobal>left</InstructionLoadGlobal>
     <InstructionStore/>
     <InstructionEndBlock/>
     <InstructionMustJump>

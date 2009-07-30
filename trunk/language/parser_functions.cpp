@@ -9,7 +9,9 @@ Instruction * instruction_load(Program *p, std::string s)
 	Node *n = p->find_var(s); 
 	if (n == NULL)
 	{
-		exit(4);
+		std::cout << "hehehe" << std::endl;
+		p->error = 1;
+		getc(stdin);
 	}
 	if(n->nested == Local)
 	{
