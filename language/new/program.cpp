@@ -121,6 +121,8 @@ void Program::add_function(Create_type t, std::string name, std::vector<Paramete
 	{
 		instructions.push_back(new InstructionMustJump(ins.size()*-1));
 	}
+	else
+		instructions.push_back(new InstructionReturn());
 }
 void Program::enter(std::string name)
 {

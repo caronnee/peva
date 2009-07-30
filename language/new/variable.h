@@ -11,6 +11,7 @@ struct Array;
 
 struct Variable // struktura premennych
 {
+	size_t owner;
 	std::string name;
 	Type type;
 	int active; //bola deklarovana v danom bloku

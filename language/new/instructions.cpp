@@ -29,7 +29,7 @@ InstructionCreate::InstructionCreate(Node * n)
 }
 int InstructionCreate::execute(Core * c)
 {
-	Variable * v = c->memory.assign(node->type_of_variable,c->depth);
+	Variable * v = c->memory.assign(node->type_of_variable,node->ID, c->depth);
 	Var var;
 	var.var = v;
 	var.depth = c->depth;
@@ -202,7 +202,9 @@ Call::Call(Function * f_)
 }
 int Call::execute(Core * c)
 {
+	//TODO nejak elegantnejsie
 	
+	c->save(function->begin);	
 	return 0;
 }
 xmlNodePtr Call::xml_format()
@@ -223,6 +225,7 @@ int InstructionPop::execute(Core *s)
 	s->values.pop_back();
 	return 0;
 }
+
 InstructionMustJump::InstructionMustJump(int steps)
 {
 	shift = steps -1;
@@ -267,13 +270,19 @@ InstructionReturn::InstructionReturn()
 {
 	name_ = "InstructionReturn";
 }
-/*int InstructionReturn::execute(Core *c)
+int InstructionReturn::execute(Core *c)
 {
-	
-}*/
+	c->restore();
+	return 0;
+}
 InstructionBreak::InstructionBreak(int label)
 {
 	name_ = "InstructionBreak";
+}
+int InstructionBreak::execute(Core * c)
+{
+	c->PC+=jump;
+	return 0;
 }
 xmlNodePtr InstructionBreak::xml_format()
 {
