@@ -245,13 +245,14 @@ int InstructionPop::execute(Core *s)
 
 InstructionMustJump::InstructionMustJump(int steps)
 {
-	shift = steps -1;
+	shift = steps;
 	std::cout << "Must step: " << shift << std::endl;
 	name_ = "InstructionMustJump";
 }
 int InstructionMustJump::execute(Core * c)
 {
 	c->PC+=shift;
+	c->PC--;
 	return 0;
 }
 xmlNodePtr InstructionMustJump::xml_format()
@@ -265,6 +266,7 @@ xmlNodePtr InstructionMustJump::xml_format()
 }
 InstructionJump::InstructionJump(int yes_, int no_)
 {
+	yes = yes_;
 	no = no_;
 	name_ = "InstructionJump";
 }
@@ -275,6 +277,7 @@ int InstructionJump::execute(Core * c)
 	if (!v.loaded->IntegerValue)
 		c->PC+=yes;
 	else c->PC+=no;
+	c->PC--;
 	return 0;
 }
 xmlNodePtr InstructionJump::xml_format()
@@ -302,12 +305,14 @@ int InstructionRestore::execute(Core *c)
 
 InstructionBreak::InstructionBreak(int label)
 {
+	std::cout << label << "-----" << std::endl;
 	loop_label = label;
 	name_ = "InstructionBreak";
 }
 int InstructionBreak::execute(Core * c)
 {
 	c->PC+=jump;
+	c->PC--;
 	return 0;
 }
 xmlNodePtr InstructionBreak::xml_format()
@@ -318,6 +323,8 @@ xmlNodePtr InstructionBreak::xml_format()
 }
 int InstructionBreak::breaks()
 {
+	std::cout << loop_label << ": loop_label" << std::endl;
+	getc(stdin);
 	return loop_label;
 }
 InstructionPlusPlus::InstructionPlusPlus()

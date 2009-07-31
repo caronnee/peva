@@ -1893,7 +1893,7 @@ yyreduce:
 		  (yyvsp[(5) - (9)].instructions).push_back(new InstructionJump(-1*(yyvsp[(9) - (9)].instructions).size()-(yyvsp[(5) - (9)].instructions).size(),1));
 		  (yyvsp[(9) - (9)].instructions) = join_instructions((yyvsp[(9) - (9)].instructions),(yyvsp[(5) - (9)].instructions));
 		  (yyval.instructions) = join_instructions((yyvsp[(3) - (9)].instructions),(yyvsp[(9) - (9)].instructions));
-		  set_breaks(program, (yyvsp[(5) - (9)].instructions));
+		  set_breaks(program, (yyval.instructions));
 		  program->end_loop();
 		;}
     break;

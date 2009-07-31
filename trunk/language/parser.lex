@@ -40,7 +40,7 @@ for 						{*l = line;return TOKEN_FOR; };
 if						{*l = line;return TOKEN_IF;		/* if */ };
 object						{*l = line;return TOKEN_OBJECT; };
 return						{*l = line;return TOKEN_RETURN; };
-
+break						{*l = line;return TOKEN_BREAK; };
 \; 						{*l = line;return TOKEN_SEMICOLON; };
 \, 						{*l = line;return TOKEN_COMMA; };
 \.						{*l = line;return TOKEN_DOT; };
