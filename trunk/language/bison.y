@@ -93,6 +93,7 @@
 %type<instructions> declare_functions
 %type<instructions> declare_function_
 %type<instructions> global_variables
+%type<instructions> command_var
 
 %start program
 %error-verbose
@@ -227,7 +228,8 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 		}
 	|do_cycle block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ $$ = join_instructions($2,$5); 
-		  $$.push_back(new InstructionJump(-1*$$.size(),1)); 
+		  $$.push_back(new InstructionJump(-1*$$.size(),0));
+		  set_breaks(program, $$);
 		  program->end_loop();
 		}
 	|while_cycle TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
@@ -235,7 +237,8 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 			$$.push_back(new InstructionMustJump($5.size()));
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
-			$$.push_back(new InstructionJump(-1*$$.size(),1));
+			$$.push_back(new InstructionJump(-1*$$.size(),0));
+		  	set_breaks(program, $$);
 		  	program->end_loop();
 		}
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
@@ -249,10 +252,12 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 		{
 			$$.push_back(new InstructionBreak(program->last_loop_number));
 		}
-	|local_variables { $$ = $1; } //deklarovanie novej premennej
 	|simple_command TOKEN_SEMICOLON {$$ = $1;}
       	;
 
+command_var: local_variables { $$ = $1;}
+	| command { $$ = $1;}
+	;
 simple_command:	assign {$$ = $1;}
 	|variable TOKEN_PLUSPLUS { $$.push_back(new InstructionPlusPlus());} 
 	|variable TOKEN_MINUSMINUS { $$.push_back(new InstructionMinusMinus());}
@@ -278,21 +283,21 @@ call_parameters: expression {$$ = $1;} //loaded
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
        		{
 		  $5.push_back(new InstructionMustJump($7.size()));
-		  $3.push_back(new InstructionJump(1,$5.size()));
+		  $3.push_back(new InstructionJump(0,$5.size()));
 		  $$ =join_instructions($3,$5);
 		  $$ =join_instructions($$,$7);
 		}
-	| command {$$ = $1;}
+	| command_var {$$ = $1;}
 	|block_of_instructions { $$ = $1;}
 	;
 
-unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions {$3.push_back(new InstructionJump(1,$5.size()));$$ = join_instructions($3,$5);}
-	 |TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command {$3.push_back(new InstructionJump(1,$5.size()));$$ = join_instructions($3,$5);}
+unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions {$3.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3,$5);}
+	 |TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command {$3.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3,$5);}
 
 	 |TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched 
 		{
 		  $5.push_back(new InstructionMustJump($7.size()));
-		  $3.push_back(new InstructionJump(1,$5.size()));
+		  $3.push_back(new InstructionJump(0,$5.size()));
 		  $$ = join_instructions($3,$5);
 		  $$ = join_instructions($$,$7);
 		}

@@ -130,7 +130,7 @@ Node * Tree::add(std::string s, Create_type type)
 		std::list<Node *> n;
 		while (!(t->items.empty()))
 		{
-			std::cout <<t->items.size() <<" : "<< t->items.front()->name<< std::endl;
+			//std::cout <<t->items.size() <<" : "<< t->items.front()->name<< std::endl;
 			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
 			{
 				split++;//TODO ocheckovat
@@ -142,7 +142,7 @@ Node * Tree::add(std::string s, Create_type type)
 //			getc(stdin);
 		 	if (t->next[pointer]==NULL) //
 			{
-				std::cout << "splittling" <<std::endl;
+			//	std::cout << "splittling" <<std::endl;
 				split++;
 				splitted = pointer;
 				t->next[pointer] = new Tree(t->depth+1);
@@ -156,10 +156,10 @@ Node * Tree::add(std::string s, Create_type type)
 		t->items.swap(n);
 		if ( split == 1 )
 		{
-			std::cout <<"repete! " <<splitted << std::endl;
+			//std::cout <<"repete! " <<splitted << std::endl;
 			t = t->next[splitted];
 		}
 	}
-	std::cout << "adresa return " << nod << std::endl;
+	//std::cout << "adresa return " << nod << std::endl;
 	return nod;
 }

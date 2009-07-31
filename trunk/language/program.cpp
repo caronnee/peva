@@ -138,13 +138,14 @@ void Program::save_to_xml()
 	xmlNodePtr parent = data.root_ptr;
 	xmlNodePtr ptr;
 	int fce_num = 0;
+	std::cout<< "Zapamatovane mena:" <<std::endl;
 	for(int i =0; i< core->functions.size(); i++)
 	{
 		std::cout<< core->functions[i]->name<<std::endl;
 	}
 	for(int i =0; i< instructions.size(); i++)
 	{
-		std::cout << i << "," << instructions[i]->name_ <<std::endl;
+		.//std::cout << i << "," << instructions[i]->name_ <<std::endl;
 		if(core->functions[fce_num]->end == i)
 		{
 			xmlAddChild(data.root_ptr, parent);

@@ -51,13 +51,14 @@ void set_breaks(Program * p, Instructions ins)
 	getc(stdin);
 	for (size_t i = 0; i< size; i++)
 	{
-		std::cout << "\t\t" << ins[i]->name_ << "\t" ;
+		std::cout << "\t\t" << ins[i]->name_ << ins[i]->breaks()<< "\t" ;
+//		getc(stdin);
 		if(ins[i]->breaks() == p->last_loop_number)
 		{
 			std::cout << "IN:" << i <<std::endl;
-			getc(stdin);
+//			getc(stdin);
 			InstructionBreak * b = (InstructionBreak *)ins[i];
-			b->jump = size - i;
+			b->jump = size - i -1;
 		}
 	}
 	std::cout << "BLE" <<std::endl;
