@@ -8,14 +8,8 @@ void function f(integer a, integer x)
 main() // komentar
 {
 	integer a = 6;
-	for(integer i; i< 10; i++)
+	while( a < 8)
 	{
 		f();
-		if(a==left)
-		{
-			f();
-			a = 4*3;
-			break;
-		}
 	}
 }
