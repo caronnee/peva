@@ -35,7 +35,7 @@ void reg(Program * p,Create_type t, std::string name, std::vector<Parameter_entr
 	p->add_function(ret, name,c,b);
 }
 
-Instructions join_instructions(Instructions i1, Instructions i2)
+Instructions join_instructions(const Instructions i1, const Instructions i2)
 {
 	Instructions res = i1;
 	for (size_t i =0; i < i2.size(); i++)
@@ -51,10 +51,11 @@ void set_breaks(Program * p, Instructions ins)
 	getc(stdin);
 	for (size_t i = 0; i< size; i++)
 	{
-		std::cout << "\t\thuuu" << ins[i]->breaks()<<std::endl;
-		std::cout << "\t\t" << ins[i]->name_ <<std::endl;
+		std::cout << "\t\t" << ins[i]->name_ << "\t" ;
 		if(ins[i]->breaks() == p->last_loop_number)
 		{
+			std::cout << "IN:" << i <<std::endl;
+			getc(stdin);
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i;
 		}
@@ -75,6 +76,8 @@ Instruction * operRel(Operation op)
 			return new InstructionGt();
 		case OperationGreaterEqual:
 			return new InstructionGe();
+		case OperationNotEqual:
+			return new InstructionNotEqual();
 		default: return NULL;
 	}
 }

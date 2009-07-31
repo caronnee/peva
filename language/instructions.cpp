@@ -320,7 +320,7 @@ xmlNodePtr InstructionBreak::xml_format()
 }
 int InstructionBreak::breaks()
 {
-	std::cout << loop_label << ": loop_label" << std::endl;
+	std::cout << loop_label << ": loop_label in break" << std::endl;
 	getc(stdin);
 	return loop_label;
 }
@@ -584,6 +584,10 @@ int InstructionEqual::execute(Core * c)
 		case TypeObject:
 			c->values.back().hlp.IntegerValue = (left.loaded->ObjectValue == right.loaded->ObjectValue)? 1:0;
 			break;
+		case TypeArray:
+			c->values.back().hlp.IntegerValue = (left.loaded == right.loaded)? 1:0;
+			break;
+
 /*		case TypeArray:
 			bool equal = true;
 			std::stack<Variable *> lefts, rights;
@@ -664,6 +668,45 @@ int InstructionLe::execute(Core * c)
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.push_back(right);
 	c->values.back().hlp.type = TypeInteger;
+	return 0;
+}
+InstructionNotEqual::InstructionNotEqual()
+{
+	name_ = "InstructionNotEqual";
+}
+int InstructionNotEqual::execute(Core * c)
+{
+	Value right = c->values.back();
+	c->values.pop_back();
+	Value left = c->values.back();
+	switch (left.loaded->type)
+	{
+		case TypeInteger:
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue != right.loaded->IntegerValue)? 1:0; 
+			break;
+		case TypeReal:
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue != right.loaded->RealValue)? 1:0; 
+			break;
+		case TypeLocation:
+			if ((left.loaded->array->elements[0]->IntegerValue != right.loaded->array->elements[0]->IntegerValue) 
+				&&(left.loaded->array->elements[1]->IntegerValue != right.loaded->array->elements[1]->IntegerValue))
+				c->values.back().hlp.IntegerValue = 1;
+			else 
+				c->values.back().hlp.IntegerValue = 0;
+			break;
+		case TypeObject:
+			c->values.back().hlp.IntegerValue = (left.loaded->ObjectValue != right.loaded->ObjectValue)? 1:0;
+			break;
+		case TypeArray:
+			c->values.back().hlp.IntegerValue = (left.loaded != right.loaded)? 1:0;
+			break;
+		default:
+			return -1;
+	}
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.push_back(right);
+	c->values.back().hlp.type = TypeInteger;
+
 	return 0;
 }
 InstructionBegin::InstructionBegin()

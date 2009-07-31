@@ -187,6 +187,11 @@ class InstructionEqual : public Instruction{
 		virtual int execute(Core *s);
 		InstructionEqual();
 };
+class InstructionNotEqual : public Instruction{
+	public:
+		virtual int execute(Core *s);
+		InstructionNotEqual();
+};
 class InstructionLt : public Instruction{
 	public:
 		virtual int execute(Core *s);
