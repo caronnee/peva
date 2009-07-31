@@ -246,7 +246,7 @@ int InstructionPop::execute(Core *s)
 InstructionMustJump::InstructionMustJump(int steps)
 {
 	shift = steps;
-	std::cout << "Must step: " << shift << std::endl;
+//	std::cout << "Must step: " << shift << std::endl;
 	name_ = "InstructionMustJump";
 }
 int InstructionMustJump::execute(Core * c)
@@ -303,13 +303,14 @@ int InstructionRestore::execute(Core *c)
 
 InstructionBreak::InstructionBreak(int label)
 {
-	std::cout << label << "-----" << std::endl;
+//	std::cout << label << "-----" << std::endl;
 	loop_label = label;
 	name_ = "InstructionBreak";
 }
 int InstructionBreak::execute(Core * c)
 {
 	c->PC+=jump;
+	c->memory.free(loop_label); //vycisti do vratane hlbky s
 	return 0;
 }
 xmlNodePtr InstructionBreak::xml_format()
@@ -320,8 +321,8 @@ xmlNodePtr InstructionBreak::xml_format()
 }
 int InstructionBreak::breaks()
 {
-	std::cout << loop_label << ": loop_label in break" << std::endl;
-	getc(stdin);
+//	std::cout << loop_label << ": loop_label in break" << std::endl;
+//	getc(stdin);
 	return loop_label;
 }
 InstructionPlusPlus::InstructionPlusPlus()
