@@ -7,11 +7,15 @@ void function f(integer a, integer x)
 }
 main() // komentar
 {
-	integer a;
-	for(a = 0; a< 10; a++)
+	integer a = 6;
+	for(integer i; i< 10; i++)
 	{
-		a = left;
-		break;
-		left = right;
+		f();
+		if(a==left)
+		{
+			f();
+			a = 4*3;
+			break;
+		}
 	}
 }
