@@ -18,17 +18,11 @@
     </InstructionLoad>
     <InstructionStore/>
     <InstructionMustJump>
-      <JumpCount>11</JumpCount>
+      <JumpCount>7</JumpCount>
     </InstructionMustJump>
     <InstructionBegin/>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionStore/>
-    <InstructionBreak>
-      <Jump>11</Jump>
-    </InstructionBreak>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLoadGlobal>right</InstructionLoadGlobal>
     <InstructionStore/>
     <InstructionEndBlock/>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
@@ -39,12 +33,12 @@
     </InstructionLoad>
     <InstructionLt/>
     <InstructionJump>
-      <yes>-14</yes>
+      <yes>-10</yes>
       <no>1</no>
     </InstructionJump>
     <InstructionEndBlock/>
     <InstructionMustJump>
-      <JumpCount>-22</JumpCount>
+      <JumpCount>-18</JumpCount>
     </InstructionMustJump>
   </main>
 </Machine>

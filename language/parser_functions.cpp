@@ -9,7 +9,7 @@ Instruction * instruction_load(Program *p, std::string s)
 	Node *n = p->find_var(s); 
 	if (n == NULL)
 	{
-		std::cout << "hehehe" << std::endl;
+		std::cout << "hehehe:" << s<< std::endl;
 		p->error = 1;
 		getc(stdin);
 	}
@@ -47,14 +47,19 @@ Instructions join_instructions(Instructions i1, Instructions i2)
 void set_breaks(Program * p, Instructions ins)
 {
 	size_t size = ins.size();
+	std::cout << p->last_loop_number <<std::endl;
+	getc(stdin);
 	for (size_t i = 0; i< size; i++)
 	{
+		std::cout << "\t\thuuu" << ins[i]->breaks()<<std::endl;
+		std::cout << "\t\t" << ins[i]->name_ <<std::endl;
 		if(ins[i]->breaks() == p->last_loop_number)
 		{
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i;
 		}
 	}
+	std::cout << "BLE" <<std::endl;
 }
 Instruction * operRel(Operation op)
 {

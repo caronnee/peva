@@ -222,7 +222,7 @@ command:	forcycle TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLO
 		  $5.push_back(new InstructionJump(-1*$9.size()-$5.size(),1));
 		  $9 = join_instructions($9,$5);
 		  $$ = join_instructions($3,$9);
-		  set_breaks(program, $5);
+		  set_breaks(program, $$);
 		  program->end_loop();
 		}
 	|do_cycle block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
