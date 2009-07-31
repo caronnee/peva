@@ -69,5 +69,6 @@ public:
 	virtual void process(void);
 	virtual void draw();
 	virtual ~Create_map()throw();
+	void generuj(Position res);
 };
 #endif

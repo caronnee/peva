@@ -65,8 +65,8 @@ bool Graphic::Init()
 void Graphic::set_resolution(std::string res)
 {
 	unsigned int pos = res.find("x");
-	resolution_width = convert(res.substr(0,pos));
-	resolution_heigth = convert ( res.substr(pos+1)); //ocheckovat, ci sa to da, ci nemam corrupted file!
+	resolution_width = convert<int>(res.substr(0,pos));
+	resolution_heigth = convert<int>( res.substr(pos+1)); //ocheckovat, ci sa to da, ci nemam corrupted file!
 }
 
 void Graphic::Destroy()
@@ -89,7 +89,7 @@ void Graphic::set_font(std::string s)
 
 void Graphic::set_font_size(std::string s)
 {
-	font_size = convert(s);
+	font_size = convert<int>(s);
 }
 
 //------------------------------------------------WINDOW-----------------------------------------------------
@@ -149,7 +149,7 @@ int Window::Toggle_screen()
 
 void Window::set_timeout(std::string time)
 {
-	timeout = convert(time);
+	timeout = convert<int>(time);
 }
 
 void Window::set_background(std::string res)

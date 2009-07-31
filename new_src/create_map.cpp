@@ -37,7 +37,7 @@ Create_map::Create_map(Window *w_)
 	rects[CHOOSE].w = 2*IMG_WIDTH; //TODO! co aj sa to bude menit? Da sa z SDL_Surface zistit vyska sirka, TODO!
 	rects[MAP].w = w->g->g_screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->g_screen->w /3;
-//Mono by si kazda classa mohla precitat svoj vlastny konfigurat, ak nejaky je
+	//Mono by si kazda classa mohla precitat svoj vlastny konfigurat, ak nejaky je
 
 	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;//TODO!
 	rects[CHOOSE].h = w->g->g_screen->h - rects[EXIT].h;
@@ -80,9 +80,9 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 	for (i = 0; i < max; i++)
 	{
 		if ((x >=r[i].x) 
-		&& (x< r[i].x + r[i].w)
-		&& (y >= r[i].y)
-		&& (y < r[i].y + r[i].h))
+				&& (x< r[i].x + r[i].w)
+				&& (y >= r[i].y)
+				&& (y < r[i].y + r[i].h))
 			return i;
 	}
 	std::cout <<x << " medzi " << rects[UP].x << " " <<rects[UP].x + rects[UP].w << " " << std::endl;
@@ -222,8 +222,8 @@ void Create_map::process_resolution()
 					case SDLK_RETURN: 
 						{ 
 							state = DRAW;
-							resolX = convert(written_x);
-							resolY = convert(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
+							resolX = convert<int>(written_x);
+							resolY = convert<int>(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
 							map = new unsigned int*[resolX];
 							for (int i =0; i< resolX; i++)
 							{
@@ -238,14 +238,14 @@ void Create_map::process_resolution()
 					case SDLK_LEFT:{x = false;break;}
 					case SDLK_q:
 					case SDLK_ESCAPE:
-						{
-							reset();
-							w->state.pop();
-							break;
-						}
+						       {
+							       reset();
+							       w->state.pop();
+							       break;
+						       }
 					default:
-						std::cout << "Unknown command (Create map)" << std::endl;
-						break;
+						       std::cout << "Unknown command (Create map)" << std::endl;
+						       break;
 				}
 				break;
 			}
@@ -265,7 +265,7 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 
 	xmlNewProp(root_node, BAD_CAST "width", BAD_CAST written_x.c_str());
 	xmlNewProp(root_node, BAD_CAST "heigth", BAD_CAST written_y.c_str());
-	
+
 	int x = 0, y = 0;
 	int write_x, write_y;
 	bool found = false;
@@ -290,11 +290,11 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 				{
 					if (line == NULL) //ak sme este nic nenasli, privesim line
 					{
-						std::string l= "line" + deconvert(y);
+						std::string l= "line" + deconvert<int>(y);
 						line = xmlNewChild(tile,NULL,BAD_CAST l.c_str(),NULL);
 					}
 					xmlNodePtr n;
-					std::string range = deconvert(from) + "-"+ deconvert(x);
+					std::string range = deconvert<int>(from) + "-"+ deconvert<int>(x);
 					n = xmlNewChild(line,NULL,BAD_CAST "range",BAD_CAST range.c_str());
 					found = false;
 				}
@@ -340,16 +340,16 @@ void Create_map::generuj(Position resolution)
 		if (type < NumberOfWalls_)
 		{	
 			int where = srand()%3;
-			       if ((where & 2) && (map[p1.x][p1.y]!=FreeTile))
-			       {
-				       map[p1.x][p1.y] &= ~(1 << type);
-				       map[p1.x][p1.y] |= 1 << type;
-			       }
-			       if ((where & 1) && (map[p2.x][p2.y]!=FreeTile))
-			       {
-				       map[p2.x][p2.y] &= ~(1 << SolidWall_);
-				       map[p2.x][p2.y] |= 1 << type;
-			       }
+			if ((where & 2) && (map[p1.x][p1.y]!=FreeTile))
+			{
+				map[p1.x][p1.y] &= ~(1 << type);
+				map[p1.x][p1.y] |= 1 << type;
+			}
+			if ((where & 1) && (map[p2.x][p2.y]!=FreeTile))
+			{
+				map[p2.x][p2.y] &= ~(1 << SolidWall_);
+				map[p2.x][p2.y] |= 1 << type;
+			}
 		}
 		snake.pohyb();//ak sa v pohne x_krat, vytvor dalsieho mensieho
 	}
@@ -423,11 +423,11 @@ void Create_map::process_map()
 				{
 					case SDLK_q:
 					case SDLK_ESCAPE:
-						     {
-							     reset();
-							     w->state.pop();
-							     break;
-						     }
+						{
+							reset();
+							w->state.pop();
+							break;
+						}
 					default:
 						std::cout << "Unknown command (Create map)" << std::endl;
 						break;
@@ -468,9 +468,9 @@ void Create_map::process_map()
 										   break;
 									   }
 								case  GENERATE:{std::cout << "generate" <<std::endl;
-										  break;}
+										       break;}
 								case  EXIT:{std::cout << "exit" <<std::endl;
-										  break;}
+										   break;}
 								case  CHOOSE:{std::cout << "choose" <<std::endl;
 										     int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberOfWalls_);
 										     switch (wall)
@@ -479,37 +479,37 @@ void Create_map::process_map()
 												     std::cout << "S";
 												     break;
 											     case ExitWall_: std::cout<< "E";
-													break;
+													     break;
 											     case PushableWall_: std::cout << "pushable";
-														break;
+														 break;
 											     case TrapWall_: std::cout <<"T";
 													     break;
 											     default: std::cout << "ble!";
 										     }
 										     if (wall < NumberOfWalls_)
 										     {
-											    select = wall;
+											     select = wall;
 										     }
 										     draw();
-										  break;}
+										     break;}
 								case  LEFT:{ begin_x--; 
 										   if (begin_x < 0) begin_x = 0;
 										   draw();
-										  break;}
+										   break;}
 								case  UP:{ begin_y--;
 										 if (begin_y < 0) begin_y = 0;
-										   draw();
-										  break;}
+										 draw();
+										 break;}
 								case  DOWN:{begin_y++;
 										   if (begin_y + rects[MAP].h/IMG_HEIGHT > resolY )
 											   begin_y--;
 										   draw();
-										  break;}
+										   break;}
 								case  RIGHT:{begin_x++;
 										    if (begin_x > resolX - rects[MAP].w/IMG_WIDTH)
 											    begin_x--;
-										   draw();
-										  break;}
+										    draw();
+										    break;}
 								default: std::cout  << "HE?" << std::endl;
 							}
 							break;

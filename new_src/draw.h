@@ -23,6 +23,7 @@
 #define ICON "./images/icon.png"
 
 //defaults:
+
 #define DEFAULT_WIN_WIDTH 600
 #define DEFAULT_WIN_HEIGTH 480
 #define DEFAULT_FONT "../fonts/sfd/DejaVuSansCondensed.ttf"
