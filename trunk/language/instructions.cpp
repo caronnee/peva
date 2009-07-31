@@ -252,7 +252,6 @@ InstructionMustJump::InstructionMustJump(int steps)
 int InstructionMustJump::execute(Core * c)
 {
 	c->PC+=shift;
-	c->PC--;
 	return 0;
 }
 xmlNodePtr InstructionMustJump::xml_format()
@@ -277,7 +276,6 @@ int InstructionJump::execute(Core * c)
 	if (!v.loaded->IntegerValue)
 		c->PC+=yes;
 	else c->PC+=no;
-	c->PC--;
 	return 0;
 }
 xmlNodePtr InstructionJump::xml_format()
@@ -312,7 +310,6 @@ InstructionBreak::InstructionBreak(int label)
 int InstructionBreak::execute(Core * c)
 {
 	c->PC+=jump;
-	c->PC--;
 	return 0;
 }
 xmlNodePtr InstructionBreak::xml_format()

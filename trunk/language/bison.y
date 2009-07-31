@@ -123,7 +123,7 @@ local_variables:  type names TOKEN_SEMICOLON
 			for(int i =0; i< $2.size(); i++)
 			{
 				Node * n = program->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
-				$$.push_back(new InstructionCreate(program->find_var($2[i].id))); //treba este aktivovat, na to sluzi tato instrukcia
+				$$.push_back(new InstructionCreate(program->find_var($2[i].id))); 
 				if ($2[i].default_set){ //ak bola zadana defaultna hodnota 
 					if (n->nested == Local) //toto  je vnode, lebo sa to pre premennu nemeni
 						$$.push_back(new InstructionLoadLocal(n));
@@ -215,13 +215,13 @@ do_cycle:	TOKEN_DO { program->enter_loop();}
 	;
 while_cycle:	TOKEN_WHILE { program->enter_loop();}
 	;
-command:	forcycle TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
+command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
        		{ 
-		  $9 = join_instructions($9, $7); 
-		  $3.push_back(new InstructionMustJump($9.size())); 
-		  $5.push_back(new InstructionJump(-1*$9.size()-$5.size(),1));
-		  $9 = join_instructions($9,$5);
-		  $$ = join_instructions($3,$9);
+		  $8 = join_instructions($8, $6); 
+		  $3.push_back(new InstructionMustJump($8.size())); 
+		  $4.push_back(new InstructionJump(-1*$8.size()-$4.size(),0));
+		  $8 = join_instructions($8,$4);
+		  $$ = join_instructions($3,$8);
 		  set_breaks(program, $$);
 		  program->end_loop();
 		}
@@ -232,7 +232,7 @@ command:	forcycle TOKEN_LPAR init TOKEN_SEMICOLON expression_bool TOKEN_SEMICOLO
 		}
 	|while_cycle TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 		{
-			$$.push_back(new InstructionMustJump($3.size()));
+			$$.push_back(new InstructionMustJump($5.size()));
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
 			$$.push_back(new InstructionJump(-1*$$.size(),1));
@@ -299,7 +299,7 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions 
 	;
 
 init: 	local_variables { $$ = $1;}
-	| assign    {$$ = $1;}
+	| assign TOKEN_SEMICOLON {$$ = $1;}
 	;
 
 variable: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
