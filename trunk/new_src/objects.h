@@ -1,7 +1,7 @@
 #ifndef __OBJECTS__
 #define __OBJECTS__
 #include <SDL/SDL.h>
-//#include "board.h"
+#include "position.h"
 
 struct Type_bot
 {
@@ -10,10 +10,6 @@ struct Type_bot
 struct Type_missille
 {
 	int attack, hitpoints; //a tak podobne, TODO!
-};
-struct Position
-{
-	int x, y;
 };
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 

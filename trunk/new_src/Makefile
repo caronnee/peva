@@ -6,8 +6,8 @@ all: codewars
 distclean: 
 		rm -f codewars *.o codewars.config
 
-codewars: game.o draw.o objects.o wall.o help.o create.o main_menu.o other.o
-		g++ $(LDFLAGS) -o codewars game.o draw.o wall.o objects.o create.o main_menu.o other.o help.o
+codewars: game.o draw.o objects.o wall.o help.o create.o main_menu.o other.o position.o movement.o
+		g++ $(LDFLAGS) -o codewars *.o
 
 game.o: main.cpp
 		g++ -c $(CFLAGS) -o game.o main.cpp 
@@ -32,3 +32,9 @@ main_menu.o:main_menu.h main_menu.cpp
 
 other.o:other.h other.cpp
 		g++ -c $(CFLAGS) -o other.o other.cpp
+
+position.o: position.h position.cpp
+		g++ -c $(CFLAGS) -o position.o position.cpp
+
+movement.o: movement.h movement.cpp
+		g++ -c $(CFLAGS) -o movement.o movement.cpp
