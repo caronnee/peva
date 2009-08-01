@@ -3,6 +3,7 @@
 
 #include "draw.h"
 #include "menu.h"
+#include "snake.h"
 
 class Create_map:public Menu
 {

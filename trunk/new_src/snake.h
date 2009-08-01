@@ -12,16 +12,17 @@ class Snake
 	void Init();	
 	int fatness;
 	int health;
+	int * visited; //zapamataj si predposledne 4 policka
+
+	Position position;
+	Position resolution;
+	Position direction;
 public:
 	Snake(const Snake& a);
 	Snake(Position resolution_);
 
 	int max_interval;
 
-	int * visited; //zapamataj si predposledne 4 policka
-	Position resolution;
-	Position position;
-	Position direction;
 
 	Movement movements[MOVEMENTS]; //zoradenie zmeny oproti resolution		
 	bool move();
@@ -29,8 +30,9 @@ public:
 	int get_x();
 	int get_y();
 	int get_fat();
-	int get_direct_x();
-	int get_direct_y();
+	int alive();
+	Position get_dir();
+	Position get_pos();
 };
 
 #endif

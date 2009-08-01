@@ -5,7 +5,9 @@ Movement::Movement()
 }
 Movement::Movement(int v,int x,int y)
 {
-	this->addiction=v;this->x=x;this->y=y;
+	this->addiction=v;
+	this->x=x;
+	this->y=y;
 }
 Movement::Movement(const Movement& a)
 {

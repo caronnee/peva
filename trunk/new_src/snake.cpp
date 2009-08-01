@@ -9,7 +9,7 @@ void Snake::Init()
 	movements[2]=Movement(resolution.x-position.x,-1,0);//<-
 	movements[3]=Movement(position.y-1,0,-1);///v
 
-	//suradna sustava, ze 00 je v lavom dolnom rohu
+		//suradna sustava, ze 00 je v lavom dolnom rohu
 	//zatriedit podla addictioni od najvacieseho po najmensie
 
 	this->fatness=0;
@@ -35,6 +35,12 @@ void Snake::Init()
 		movements[i].interval = 
 			movements[i].addiction + movements[i-1].interval;
 	}
+	/*for (int i =0; i< 4; i++)
+	{
+		std::cout << movements[i].x << ":" << movements[i].y << std::endl;
+	}
+	exit(4);
+*/
 }
 
 bool Snake::move()
@@ -56,11 +62,13 @@ bool Snake::move()
 	direction.x=movements[i].x;
 	direction.y=movements[i].y;
 
+	std::cout << resolution.x << ":"<< resolution.y << std::endl;
 	if (position>=resolution)
 	{
 		//bude prechadzat na druhu obrazovku
 		position.x%=resolution.x;
 		position.y%=resolution.y;
+		std::cout << " dalsia obrazovka" << std::endl;
 	}
 	if (position.x<0)
 		position.x+=resolution.x;
@@ -95,9 +103,9 @@ Snake::Snake(const Snake& a)
 	this->position=a.position;	
 }
 
-Snake::Snake(Position resolution)
+Snake::Snake(Position resolution_)
 {
-	resolution = resolution;
+	resolution = resolution_;
 	max_interval = resolution.x + resolution.y - 2;		
 	int hlt = resolution.x + resolution.y;
 	position.x %= resolution.x;
@@ -118,12 +126,17 @@ int Snake::get_fat()
 {
 	return this->fatness;
 }
-int Snake::get_direct_x()
+
+int Snake::alive()
 {
-	return direction.x;
+	return health;
 }
-int Snake::get_direct_y()
+Position Snake::get_pos()
 {
-	return direction.y;
+	return position;
 }
 
+Position Snake::get_dir()
+{
+	return direction;
+}
