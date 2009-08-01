@@ -313,7 +313,7 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 void Create_map::generuj(Position resolution)
 {
 	//zaplnime to solidnymi stenami vsetko
-	int exits = 0;//musi byt aspon jeden exit
+/*	int exits = 0;//musi byt aspon jeden exit
 	for (int i = 0; i < width; i++)
 		for (int j = 0; j < heigth; j++)
 			map[i][j] = SolidWall_;
@@ -353,6 +353,7 @@ void Create_map::generuj(Position resolution)
 		}
 		snake.pohyb();//ak sa v pohne x_krat, vytvor dalsieho mensieho
 	}
+	*/
 }
 void Create_map::saving()
 {
