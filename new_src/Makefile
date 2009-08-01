@@ -41,3 +41,7 @@ movement.o: movement.h movement.cpp
 
 snake.o: snake.h snake.cpp
 	g++ -c $(CFLAGS) -o snake.o snake.cpp
+
+run:
+	make
+	./codewars

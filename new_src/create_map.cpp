@@ -1,5 +1,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <fstream>
+#include <iostream>
 #include "create_map.h"
 #include "help_functions.h"
 
@@ -313,47 +315,66 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 void Create_map::generuj(Position resolution)
 {
 	//zaplnime to solidnymi stenami vsetko
-/*	int exits = 0;//musi byt aspon jeden exit
-	for (int i = 0; i < width; i++)
-		for (int j = 0; j < heigth; j++)
-			map[i][j] = SolidWall_;
-	//vypocitaj, kolko hadov by sa na to hodilo
-	Snakes snake(resolution);//automaticky random x,y zaciatok, vitality 
-	//zivotnost, to, ze existuje cesta k cielu sa vygeneruje jednoducho, iba vedla zozratych stien sa generuju exity
-	Position p1,p2,n; //normal
-	//Snake je normalny had, Snakes je list hadov
-	while(!snake.empty())
+	for (int i = 0; i < resolX; i++)
+		for (int j = 0; j < resolY; j++)
+			map[i][j] = 2;
+	Snake snake(resolution);
+	Position actual;
+	while (!snake.move())
 	{
-		p1 = p2 = snake.location();
-		n.x = snake.direction().y;
-		n.y = snake.direction().y * (-1); //normala
-		int type = srand()%(2*NumberOfWalls_);
-		for (int i =0; i< snake.robust(); i++)
+//		std::cout << snake.alive() << "\t";
+//		std::cout << "zastavka, .." << snake.get_fat();
+		actual = snake.get_pos();
+//		std::cout << actual.x << ":" <<actual.y << std::endl;
+//		getc(stdin);
+		map[actual.y][actual.x] = FreeTile;
+		//druha strana
+		for(int i=0;i<snake.get_fat();i++)
 		{
-			map[p1.x][p1.y] = FreeTile;
-			map[p2.x][p2.y] = FreeTile;
-			p1+=n;
-			p2-=n;
-			p1.clip(resolution);
-			p2.clip(resolution);
-		}
-		if (type < NumberOfWalls_)
-		{	
-			int where = srand()%3;
-			if ((where & 2) && (map[p1.x][p1.y]!=FreeTile))
+			actual.x+=snake.get_dir().y;
+			actual.y-=snake.get_dir().x;
+			if ((actual.x<0)
+			  ||(actual.y<0)
+			  ||(actual.x>=resolX)
+			  ||(actual.y>=resolY)) 
 			{
-				map[p1.x][p1.y] &= ~(1 << type);
-				map[p1.x][p1.y] |= 1 << type;
+				std::cout << "breakujem" << actual.x << " : " << actual.y << std::endl;
+				getc(stdin);
+				break;
 			}
-			if ((where & 1) && (map[p2.x][p2.y]!=FreeTile))
-			{
-				map[p2.x][p2.y] &= ~(1 << SolidWall_);
-				map[p2.x][p2.y] |= 1 << type;
-			}
+//			std::cout << actual.x << "__" << actual.y << std::endl;
+//			getc(stdin);
+			map[actual.y][actual.x] = FreeTile;
 		}
-		snake.pohyb();//ak sa v pohne x_krat, vytvor dalsieho mensieho
+		for(int i=0;i<snake.get_fat();i++)
+		{
+			actual.x-=snake.get_dir().y;
+			actual.y+=snake.get_dir().x;
+			if ((actual.x<0)
+					||(actual.y<0)
+					||(actual.x>=resolX)
+					||(actual.y>=resolY)) 
+			{
+//				std::cout << "breakujem" << actual.x << " : " << actual.y << std::endl;
+//				getc(stdin);
+				break;
+			}
+//			std::cout << actual.x << "__" << actual.y << std::endl;
+//			getc(stdin);
+			map[actual.y][actual.x] = FreeTile;
+		}
 	}
-	*/
+	draw();
+	std::ofstream f;
+	f.open("checkfile");
+	for(int i =0; i< resolX; i++)
+	{
+		for (int j =0; j< resolY; j++)
+		{
+			f << map[i][j];
+		}
+		f << "\n";
+	}
 }
 void Create_map::saving()
 {
@@ -468,8 +489,12 @@ void Create_map::process_map()
 										   state = SAVING;
 										   break;
 									   }
-								case  GENERATE:{std::cout << "generate" <<std::endl;
-										       break;}
+								case  GENERATE:
+									   {
+										       std::cout << "generate" <<std::endl;
+										       generuj(Position(resolX, resolY));
+										       break;
+									   }
 								case  EXIT:{std::cout << "exit" <<std::endl;
 										   break;}
 								case  CHOOSE:{std::cout << "choose" <<std::endl;
