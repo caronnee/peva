@@ -36,7 +36,7 @@ Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 }
 void Memory::free(size_t depth)
 {
-	while((!assigned.empty())&&(assigned.back().depth == depth))
+	while((!assigned.empty())&&(assigned.back().depth >= depth))
 	{
 		Memory_record r = assigned.back();
 		assigned.pop_back();

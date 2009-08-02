@@ -370,9 +370,10 @@ InstructionBreak::InstructionBreak(int label)
 }
 int InstructionBreak::execute(Core * c)
 {
-	std::cout << "BREAK!:)" << std::endl;
+	std::cout << "BREAK!:) Returnning to depth " << loop_label << std::endl;
 	c->PC+=jump;
-	c->memory.free(loop_label); //vycisti do vratane hlbky s
+	c->depth = loop_label;
+	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
 	getc(stdin);
 	return 0;
 }
@@ -395,8 +396,8 @@ InstructionPlusPlus::InstructionPlusPlus()
 int InstructionPlusPlus::execute(Core * c)
 {
 	std::cout << name_ << ":" << c->values.size() << std::endl;
-	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue++;
-	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->IntegerValue++;
+	c->values.pop_back();
 	getc(stdin);
 	return 0;
 }
@@ -407,8 +408,8 @@ InstructionMinusMinus::InstructionMinusMinus()
 int InstructionMinusMinus::execute(Core * c)
 {
 	std::cout << name_ << ":" << c->values.size() << std::endl;
-	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue--;
-	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->IntegerValue--;
+	c->values.pop_back();
 	return 0;
 }
 InstructionPlus::InstructionPlus()
@@ -634,8 +635,6 @@ int InstructionGe::execute(Core * c)
 			return -1; //zvysok nepozna
 	}
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.push_back(right);
-	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
 InstructionEqual::InstructionEqual()
@@ -699,8 +698,6 @@ int InstructionEqual::execute(Core * c)
 			return -1; //zvysok nepozna
 	}
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.push_back(right);
-	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
 //--------------------------------------------------BACK--------------------------------------------------
@@ -755,8 +752,6 @@ int InstructionLe::execute(Core * c)
 			return -1; //zvysok nepozna
 	}
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.push_back(right);
-	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
 InstructionNotEqual::InstructionNotEqual()
@@ -794,8 +789,6 @@ int InstructionNotEqual::execute(Core * c)
 			return -1;
 	}
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.push_back(right);
-	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
 InstructionBegin::InstructionBegin()
