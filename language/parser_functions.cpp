@@ -9,7 +9,7 @@ Instruction * instruction_load(Program *p, std::string s)
 	Node *n = p->find_var(s); 
 	if (n == NULL)
 	{
-		std::cout << "hehehe:" << s<< std::endl;
+		std::cout << "hehehe:" << s << std::endl;
 		p->error = 1;
 		getc(stdin);
 	}
@@ -23,16 +23,9 @@ Instruction * instruction_load(Program *p, std::string s)
 	}
 }
 
-void reg(Program * p,Create_type t, std::string name, std::vector<Parameter_entry> c, Instructions b)
+void reg(Program * p, std::vector<Parameter_entry> c, Instructions b)
 {
-	Node * ret ; //TODO krajsie
-	if( t.type == TypeVoid)
-	{
-		ret = NULL;
-	}
-	else 
-		ret = p->add("",t);
-	p->add_function(ret, name,c,b);
+	p->add_function(c,b);
 }
 
 Instructions join_instructions(const Instructions i1, const Instructions i2)

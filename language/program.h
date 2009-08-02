@@ -36,6 +36,7 @@ struct Program
 {
 	bool error;
 	std::string nested;
+	Function * nested_function;
 	int last_loop_number;
 	std::stack<int> loop_labels;
 	Tree defined;//root burst stromu
@@ -55,8 +56,8 @@ struct Program
 	Function * find_f(std::string s);
 	void add(Instructions ins);
 	Node * create_type(Type t);
-	void enter(std::string s);
-	void add_function(Node * t, std::string name, std::vector<Parameter_entry> c, Instructions ins);
+	void enter(std::string s, Create_type t);
+	void add_function(std::vector<Parameter_entry> c, Instructions ins);
 	void leave();
 	void execute();
 };
