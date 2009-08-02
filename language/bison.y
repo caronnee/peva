@@ -220,7 +220,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
        		{ 
 		  $8 = join_instructions($8, $6); 
 		  $3.push_back(new InstructionMustJump($8.size())); 
-		  $4.push_back(new InstructionJump(-1*$8.size()-$4.size(),0));
+		  $4.push_back(new InstructionJump(-1*$8.size()-$4.size()-1,0));
 		  $8 = join_instructions($8,$4);
 		  $$ = join_instructions($3,$8);
 		  set_breaks(program, $$);
@@ -228,7 +228,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 		}
 	|do_cycle block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ $$ = join_instructions($2,$5); 
-		  $$.push_back(new InstructionJump(-1*$$.size(),0));
+		  $$.push_back(new InstructionJump(-1*$$.size()-1,0));
 		  set_breaks(program, $$);
 		  program->end_loop();
 		}
@@ -237,7 +237,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 			$$.push_back(new InstructionMustJump($5.size()));
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
-			$$.push_back(new InstructionJump(-1*$$.size(),0));
+			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
 		  	set_breaks(program, $$);
 		  	program->end_loop();
 		}
