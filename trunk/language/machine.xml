@@ -23,7 +23,7 @@
     </InstructionLoad>
     <InstructionStore/>
     <InstructionMustJump>
-      <JumpCount>26</JumpCount>
+      <JumpCount>34</JumpCount>
     </InstructionMustJump>
     <InstructionBegin/>
     <InstructionCreate>main#ble</InstructionCreate>
@@ -35,15 +35,30 @@
     <InstructionEqual/>
     <InstructionJump>
       <yes>0</yes>
-      <no>13</no>
+      <no>21</no>
     </InstructionJump>
     <InstructionBegin/>
+    <InstructionCreate>main#gg</InstructionCreate>
     <InstructionMustJump>
-      <JumpCount>4</JumpCount>
+      <JumpCount>11</JumpCount>
     </InstructionMustJump>
     <InstructionBegin/>
+    <InstructionCreate>main#fff</InstructionCreate>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoadGlobal>left</InstructionLoadGlobal>
+    <InstructionLe/>
+    <InstructionJump>
+      <yes>0</yes>
+      <no>3</no>
+    </InstructionJump>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionPlusPlus/>
+    <InstructionMustJump>
+      <JumpCount>1</JumpCount>
+    </InstructionMustJump>
+    <InstructionBreak>
+      <Jump>5</Jump>
+    </InstructionBreak>
     <InstructionEndBlock/>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
@@ -51,7 +66,7 @@
     </InstructionLoad>
     <InstructionLe/>
     <InstructionJump>
-      <yes>-8</yes>
+      <yes>-15</yes>
       <no>0</no>
     </InstructionJump>
     <InstructionCreate>main#f</InstructionCreate>
@@ -71,7 +86,7 @@
     </InstructionLoad>
     <InstructionLt/>
     <InstructionJump>
-      <yes>-30</yes>
+      <yes>-38</yes>
       <no>0</no>
     </InstructionJump>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
