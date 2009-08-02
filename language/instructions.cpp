@@ -57,11 +57,10 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 }
 int InstructionLoadLocal::execute(Core * c)
 {
-	std::cout << "Loadjem localnu premennu " << node->name;
-	getc(stdin);
 	Value v;
 	v.loaded = node->var.back().var;
 	c->values.push_back(v); //pridali sme value na stack
+	std::cout << "Loadjem localnu premennu " << node->name << ":" << node->ID << " var id:"<< v.loaded->owner;
 	std::cout << " Hodnota integeru: " << v.loaded->IntegerValue << std::endl;
 	getc(stdin);
 	return 0;
@@ -192,28 +191,32 @@ int InstructionStore::execute(Core * c)
 	c->values.pop_back();
 	//ak sa rovnaju, potom uloz
 	
-	std::cout << "ukladam premennu " << right.loaded->name<< " do " << left.loaded->name << std::endl;
-	getc(stdin);
+	std::cout << "ukladam premennu s id " << right.loaded->owner<< " do id " << left.loaded->owner << std::endl;
 	switch(right.loaded->type)
 	{
 		case TypeInteger:
 			{
+				left.loaded->IntegerValue = right.loaded->IntegerValue;
 				std::cout << " Integer: " << left.loaded->IntegerValue << std::endl;
 				getc(stdin);
-				right.loaded->IntegerValue = left.loaded->IntegerValue;
 				break;
 			}
 		case TypeReal:
 			{
-				right.loaded->RealValue = left.loaded->RealValue;
+				left.loaded->RealValue = right.loaded->RealValue;
+				std::cout << " Real: " << left.loaded->RealValue << std::endl;
+				getc(stdin);
 				break;
 			}
 		case TypeObject:
-				right.loaded->ObjectValue = left.loaded->ObjectValue;
+				left.loaded->ObjectValue = right.loaded->ObjectValue;
+				std::cout << " object " << left.loaded->ObjectValue << std::endl;
+				getc(stdin);
 				break;
 		default:
 				return -1;
 	}
+	getc(stdin);
 	return 0;
 }
 Call::Call()
@@ -294,8 +297,9 @@ InstructionMustJump::InstructionMustJump(int steps)
 }
 int InstructionMustJump::execute(Core * c)
 {
-	std::cout << "jumping" << std::endl;
+	std::cout << "jumping :" << shift << std::endl;
 	c->PC+=shift;
+	std::cout << "new position" << c->PC << std::endl;
 	return 0;
 }
 xmlNodePtr InstructionMustJump::xml_format()
@@ -317,15 +321,18 @@ int InstructionJump::execute(Core * c)
 {
 	Value v = c->values.back();
 	c->values.pop_back();
-	if (!v.loaded->IntegerValue)
+	std::cout << "laded result: " << v.loaded->IntegerValue << std::endl;
+	if (v.loaded->IntegerValue)
 	{
 		std::cout <<"jumping to YES position" << std::endl;
 		c->PC+=yes;
+		std::cout << "new position" << c->PC << std::endl;
 	}
 	else 
 	{
-		std::cout <<"jumping to YES position" << std::endl;
+		std::cout <<"jumping to NO position" << std::endl;
 		c->PC+=no;
+		std::cout << "new position" << c->PC << std::endl;
 	}
 	getc(stdin);
 	return 0;
@@ -387,9 +394,10 @@ InstructionPlusPlus::InstructionPlusPlus()
 }
 int InstructionPlusPlus::execute(Core * c)
 {
-	std::cout << name_ << std::endl;
+	std::cout << name_ << ":" << c->values.size() << std::endl;
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue++;
 	c->values.back().loaded = &c->values.back().hlp;
+	getc(stdin);
 	return 0;
 }
 InstructionMinusMinus::InstructionMinusMinus()
@@ -398,7 +406,7 @@ InstructionMinusMinus::InstructionMinusMinus()
 }
 int InstructionMinusMinus::execute(Core * c)
 {
-	std::cout << name_ << std::endl;
+	std::cout << name_ << ":" << c->values.size() << std::endl;
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue--;
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
@@ -695,29 +703,35 @@ int InstructionEqual::execute(Core * c)
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
+//--------------------------------------------------BACK--------------------------------------------------
 InstructionLt::InstructionLt()
 {
 	name_ = "InstructionLt";
 }
 int InstructionLt::execute(Core * c)
 {
+	std::cout << "less than" << std::endl;
 	Value right = c->values.back();
+	std::cout << "loaded" << right.loaded->IntegerValue << std::endl;
 	c->values.pop_back();
 	Value left = c->values.back();
+	std::cout << "loaded" << left.loaded->IntegerValue << std::endl;
+	getc(stdin);
 	switch (left.loaded->type)
 	{
 		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue < right.loaded->IntegerValue)? 0:1; 
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue < right.loaded->IntegerValue)? 1:0; 
+			std::cout << "vysledok" << c->values.back().hlp.IntegerValue << std::endl;
+//			std::cout << "Stary by mal este zostat" << c->values.back().loaded->IntegerValue << std::endl;
+
 			break;
 		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue < right.loaded->RealValue)? 0:1; 
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue < right.loaded->RealValue)? 1:0; 
 			break;
 		default:
 			return -1; //zvysok nepozna
 	}
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.push_back(right);
-	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
 InstructionLe::InstructionLe()
@@ -733,10 +747,10 @@ int InstructionLe::execute(Core * c)
 	switch (left.loaded->type)
 	{
 		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue <= right.loaded->IntegerValue)? 0:1; 
+			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue <= right.loaded->IntegerValue)? 1:0; 
 			break;
 		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue <= right.loaded->RealValue)? 0:1; 
+			c->values.back().hlp.IntegerValue = (left.loaded->RealValue <= right.loaded->RealValue)? 1:0; 
 		default:
 			return -1; //zvysok nepozna
 	}
@@ -782,7 +796,6 @@ int InstructionNotEqual::execute(Core * c)
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.push_back(right);
 	c->values.back().hlp.type = TypeInteger;
-
 	return 0;
 }
 InstructionBegin::InstructionBegin()

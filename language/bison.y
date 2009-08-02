@@ -200,8 +200,8 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinu
       	|TOKEN_UINT { $$.push_back(new InstructionLoad($1)); } 
 	;
 
-block_of_instructions: TOKEN_BEGIN TOKEN_END { $$.clear(); }
-	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  { $$.clear(); }
+block_of_instructions: TOKEN_BEGIN TOKEN_END { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
+	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  { $$.clear();$$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock()); }
 	|TOKEN_BEGIN commands TOKEN_END { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
 	;
 

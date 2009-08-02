@@ -61,7 +61,7 @@ void set_breaks(Program * p, Instructions ins)
 			b->jump = size - i -1;
 		}
 	}
-	std::cout << "BLE" <<std::endl;
+	std::cout << "nenajdeny break!" <<std::endl;
 }
 Instruction * operRel(Operation op)
 {

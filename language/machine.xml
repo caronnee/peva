@@ -17,11 +17,27 @@
       <TypeInteger>6</TypeInteger>
     </InstructionLoad>
     <InstructionStore/>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
-      <TypeInteger>17</TypeInteger>
+      <TypeInteger>6</TypeInteger>
     </InstructionLoad>
     <InstructionStore/>
+    <InstructionMustJump>
+      <JumpCount>4</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionPlusPlus/>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>10</TypeInteger>
+    </InstructionLoad>
+    <InstructionLt/>
+    <InstructionJump>
+      <yes>-7</yes>
+      <no>0</no>
+    </InstructionJump>
     <InstructionEndBlock/>
   </main>
 </Machine>
