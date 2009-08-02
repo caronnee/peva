@@ -10,5 +10,18 @@ main() // komentar
 	integer a = 6;
 	for ( a = 6; a < 10; a++)
 	{
+		integer ble;
+		left= a;
+		if(a == left)
+		{
+			while(a<=8)
+			{
+				a++;
+			}
+			integer f;
+			break;
+		}
+		break;
 	}
+	a = 5;
 }

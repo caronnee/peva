@@ -1919,7 +1919,7 @@ yyreduce:
 			(yyval.instructions).push_back(new InstructionMustJump((yyvsp[(5) - (5)].instructions).size()));
 			(yyvsp[(3) - (5)].instructions) = join_instructions((yyvsp[(5) - (5)].instructions),(yyvsp[(3) - (5)].instructions));
 			(yyval.instructions) = join_instructions((yyval.instructions), (yyvsp[(3) - (5)].instructions));
-			(yyval.instructions).push_back(new InstructionJump(-1*(yyval.instructions).size()-1,0));
+			(yyval.instructions).push_back(new InstructionJump(-1*(yyval.instructions).size(),0));
 		  	set_breaks(program, (yyval.instructions));
 		  	program->end_loop();
 		;}

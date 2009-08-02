@@ -237,7 +237,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 			$$.push_back(new InstructionMustJump($5.size()));
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
-			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
+			$$.push_back(new InstructionJump(-1*$$.size(),0));
 		  	set_breaks(program, $$);
 		  	program->end_loop();
 		}
