@@ -1843,12 +1843,12 @@ yyreduce:
 
   case 39:
 #line 203 "bison.y"
-    { (yyval.instructions).clear(); ;}
+    { (yyval.instructions).push_back(new InstructionBegin()); (yyval.instructions).push_back(new InstructionEndBlock());;}
     break;
 
   case 40:
 #line 204 "bison.y"
-    { (yyval.instructions).clear(); ;}
+    { (yyval.instructions).clear();(yyval.instructions).push_back(new InstructionBegin()); (yyval.instructions).push_back(new InstructionEndBlock()); ;}
     break;
 
   case 41:

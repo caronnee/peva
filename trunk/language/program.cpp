@@ -116,6 +116,7 @@ void Program::add_function(Node * n, std::string name, std::vector<Parameter_ent
 	if(name == "main")
 	{
 //		instructions.push_back(new InstructionMustJump(ins.size()*-1));
+		core->PC = f->begin;
 	}
 	else
 		instructions.push_back(new InstructionRestore()); //pre procedury
@@ -174,8 +175,9 @@ void Program::end_loop()
 }
 void Program::execute()
 {
-	for(int i = find_f("main")->begin; i < instructions.size(); i++)
+	while(core->PC < instructions.size())
 	{
-		instructions[i]->execute(core);
+		instructions[core->PC]->execute(core);
+		core->PC++;
 	}
 }
