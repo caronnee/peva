@@ -17,72 +17,11 @@
       <TypeInteger>6</TypeInteger>
     </InstructionLoad>
     <InstructionStore/>
-    <InstructionMustJump>
-      <JumpCount>27</JumpCount>
-    </InstructionMustJump>
-    <InstructionBegin/>
-    <Call begins="0">f</Call>
-    <InstructionBreak>
-      <Jump>28</Jump>
-    </InstructionBreak>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>8</TypeInteger>
-    </InstructionLoad>
-    <InstructionEqual/>
-    <InstructionJump>
-      <yes>0</yes>
-      <no>18</no>
-    </InstructionJump>
-    <InstructionBegin/>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLoadGlobal>right</InstructionLoadGlobal>
-    <InstructionNotEqual/>
-    <InstructionJump>
-      <yes>0</yes>
-      <no>3</no>
-    </InstructionJump>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLoadGlobal>right</InstructionLoadGlobal>
-    <InstructionStore/>
-    <InstructionBreak>
-      <Jump>15</Jump>
-    </InstructionBreak>
-    <InstructionMustJump>
-      <JumpCount>3</JumpCount>
-    </InstructionMustJump>
-    <InstructionBegin/>
-    <InstructionCreate>main#xxx</InstructionCreate>
-    <InstructionEndBlock/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>9</TypeInteger>
-    </InstructionLoad>
-    <InstructionEqual/>
-    <InstructionJump>
-      <yes>-7</yes>
-      <no>0</no>
-    </InstructionJump>
-    <InstructionEndBlock/>
-    <Call begins="0">f</Call>
-    <InstructionEndBlock/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>8</TypeInteger>
-    </InstructionLoad>
-    <InstructionNotEqual/>
-    <InstructionJump>
-      <yes>-31</yes>
-      <no>0</no>
-    </InstructionJump>
     <InstructionLoadGlobal>left</InstructionLoadGlobal>
     <InstructionLoad>
       <TypeInteger>17</TypeInteger>
     </InstructionLoad>
     <InstructionStore/>
     <InstructionEndBlock/>
-    <InstructionMustJump>
-      <JumpCount>-41</JumpCount>
-    </InstructionMustJump>
   </main>
 </Machine>

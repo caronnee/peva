@@ -4,6 +4,7 @@
 Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 {
 	int id = id_free_vars.top();
+	std::cout << "assigning " << id << std::endl;
 	id_free_vars.pop();
 	Memory_record record;
 	record.owner = id__;
@@ -34,6 +35,7 @@ void Memory::free(size_t depth)
 		Memory_record r = assigned.back();
 		assigned.pop_back();
 		id_free_vars.push(r.id);
+		std::cout << "dealok " << r.id << std::endl;
 		r.variable->owner = -1;
 	}
 }

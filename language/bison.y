@@ -384,5 +384,7 @@ int main(int argc, char ** argv)
 	for (int i =0; i<q.instructions.size(); i++)
 		std::cout << q.instructions[i]->name_<<std::endl;
 	q.save_to_xml();
+	std::cout << "haho!" << std::endl;
+   	q.execute();
 	return 0;	
 }

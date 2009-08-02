@@ -8,21 +8,5 @@ void function f(integer a, integer x)
 main() // komentar
 {
 	integer a = 6;
-	while( a != 8)
-	{
-		f();
-		break;
-		if( a == 8)
-		{
-			if (left!=right)
-			left = right;
-			break;
-			while(a == 9)
-			{
-				integer xxx;
-			}
-		}
-		f();
-	}
 	left = 17;
 }

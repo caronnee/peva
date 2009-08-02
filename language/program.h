@@ -58,5 +58,6 @@ struct Program
 	void enter(std::string s);
 	void add_function(Node * t, std::string name, std::vector<Parameter_entry> c, Instructions ins);
 	void leave();
+	void execute();
 };
 #endif

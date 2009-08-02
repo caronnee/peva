@@ -115,7 +115,7 @@ void Program::add_function(Node * n, std::string name, std::vector<Parameter_ent
 	}
 	if(name == "main")
 	{
-		instructions.push_back(new InstructionMustJump(ins.size()*-1));
+//		instructions.push_back(new InstructionMustJump(ins.size()*-1));
 	}
 	else
 		instructions.push_back(new InstructionRestore()); //pre procedury
@@ -145,7 +145,7 @@ void Program::save_to_xml()
 	}
 	for(int i =0; i< instructions.size(); i++)
 	{
-		.//std::cout << i << "," << instructions[i]->name_ <<std::endl;
+		//std::cout << i << "," << instructions[i]->name_ <<std::endl;
 		if(core->functions[fce_num]->end == i)
 		{
 			xmlAddChild(data.root_ptr, parent);
@@ -171,4 +171,11 @@ void Program::end_loop()
 {
 	last_loop_number--;
 	loop_labels.pop();
+}
+void Program::execute()
+{
+	for(int i = find_f("main")->begin; i < instructions.size(); i++)
+	{
+		instructions[i]->execute(core);
+	}
 }
