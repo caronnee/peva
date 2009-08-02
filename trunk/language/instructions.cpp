@@ -804,8 +804,9 @@ InstructionBegin::InstructionBegin()
 }
 int InstructionBegin::execute(Core * c)
 {
-	std::cout << name_ << std::endl;
 	c->depth++;
+	std::cout << name_ << "going to depth" << c->depth<< std::endl;
+	getc(stdin);
 	return 0;
 }
 InstructionEndBlock::InstructionEndBlock()
@@ -814,7 +815,7 @@ InstructionEndBlock::InstructionEndBlock()
 }
 int InstructionEndBlock::execute(Core * c)
 {
-	std::cout << name_ << " and freeing@"<< std::endl;
+	std::cout << name_ << " and freeing in depth"<< c->depth <<std::endl;
 	c->memory.free(c->depth);
 	c->depth--;
 	return 0;

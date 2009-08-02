@@ -1896,7 +1896,7 @@ yyreduce:
     { 
 		  (yyvsp[(8) - (8)].instructions) = join_instructions((yyvsp[(8) - (8)].instructions), (yyvsp[(6) - (8)].instructions)); 
 		  (yyvsp[(3) - (8)].instructions).push_back(new InstructionMustJump((yyvsp[(8) - (8)].instructions).size())); 
-		  (yyvsp[(4) - (8)].instructions).push_back(new InstructionJump(-1*(yyvsp[(8) - (8)].instructions).size()-(yyvsp[(4) - (8)].instructions).size(),0));
+		  (yyvsp[(4) - (8)].instructions).push_back(new InstructionJump(-1*(yyvsp[(8) - (8)].instructions).size()-(yyvsp[(4) - (8)].instructions).size()-1,0));
 		  (yyvsp[(8) - (8)].instructions) = join_instructions((yyvsp[(8) - (8)].instructions),(yyvsp[(4) - (8)].instructions));
 		  (yyval.instructions) = join_instructions((yyvsp[(3) - (8)].instructions),(yyvsp[(8) - (8)].instructions));
 		  set_breaks(program, (yyval.instructions));
@@ -1907,7 +1907,7 @@ yyreduce:
   case 50:
 #line 230 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(2) - (7)].instructions),(yyvsp[(5) - (7)].instructions)); 
-		  (yyval.instructions).push_back(new InstructionJump(-1*(yyval.instructions).size(),0));
+		  (yyval.instructions).push_back(new InstructionJump(-1*(yyval.instructions).size()-1,0));
 		  set_breaks(program, (yyval.instructions));
 		  program->end_loop();
 		;}
@@ -1919,7 +1919,7 @@ yyreduce:
 			(yyval.instructions).push_back(new InstructionMustJump((yyvsp[(5) - (5)].instructions).size()));
 			(yyvsp[(3) - (5)].instructions) = join_instructions((yyvsp[(5) - (5)].instructions),(yyvsp[(3) - (5)].instructions));
 			(yyval.instructions) = join_instructions((yyval.instructions), (yyvsp[(3) - (5)].instructions));
-			(yyval.instructions).push_back(new InstructionJump(-1*(yyval.instructions).size(),0));
+			(yyval.instructions).push_back(new InstructionJump(-1*(yyval.instructions).size()-1,0));
 		  	set_breaks(program, (yyval.instructions));
 		  	program->end_loop();
 		;}
