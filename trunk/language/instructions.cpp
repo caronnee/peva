@@ -28,7 +28,9 @@ InstructionCreate::InstructionCreate(Node * n)
 	name_ = "InstructionCreate";
 }
 int InstructionCreate::execute(Core * c)
-{
+{	
+	std::cout << "pridavam premennu " << node->name << std::endl;
+	getc(stdin);
 	Variable * v = c->memory.assign(node->type_of_variable,node->ID, c->depth);
 	Var var;
 	var.var = v;
@@ -55,9 +57,13 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 }
 int InstructionLoadLocal::execute(Core * c)
 {
+	std::cout << "Loadjem localnu premennu " << node->name;
+	getc(stdin);
 	Value v;
 	v.loaded = node->var.back().var;
 	c->values.push_back(v); //pridali sme value na stack
+	std::cout << " Hodnota integeru: " << v.loaded->IntegerValue << std::endl;
+	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionLoadLocal::xml_format()
@@ -79,9 +85,18 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 }
 int InstructionLoadGlobal::execute(Core * c)
 {
+	std::cout << " Loadujem globalnu premennu: " << node->name << node->var.size();
+	getc(stdin);
+	if (node->var.size() == 0) 
+	{
+		Var v;
+		v.var = c->memory.assign(node->type_of_variable, node->ID, 0);
+		node->var.push_back(v);
+	}	
 	Value v;
 	v.loaded = node->var[0].var;
 	c->values.push_back(v);
+	std::cout << "Hodnota:" << v.loaded->IntegerValue << std::endl;
 	return 0;
 }
 xmlNodePtr InstructionLoadGlobal::xml_format()
@@ -114,11 +129,16 @@ int InstructionLoad::execute(Core *c)
 {
 	if(constant)
 	{
+		std::cout << "Loadujem konstantu!" << std::endl;
+		getc(stdin);
 		Value v;
 		v.loaded = var;
 		c->values.push_back(v);
+		std::cout << " hodnota: " << v.loaded->IntegerValue << std::endl;
 		return 0;
 	}//else from stack
+	std::cout << "loadujem array" <<std::endl; //TODO
+	getc(stdin);
 	Value range = c->values.back();
 	c->values.pop_back();
 	Value comp = c->values.back();
@@ -171,10 +191,15 @@ int InstructionStore::execute(Core * c)
 	Value left = c->values.back();
 	c->values.pop_back();
 	//ak sa rovnaju, potom uloz
+	
+	std::cout << "ukladam premennu " << right.loaded->name<< " do " << left.loaded->name << std::endl;
+	getc(stdin);
 	switch(right.loaded->type)
 	{
 		case TypeInteger:
 			{
+				std::cout << " Integer: " << left.loaded->IntegerValue << std::endl;
+				getc(stdin);
 				right.loaded->IntegerValue = left.loaded->IntegerValue;
 				break;
 			}
@@ -205,10 +230,13 @@ Call::Call(Function * f_)
 int Call::execute(Core * c)
 {
 	//zoberie [pocet premennych aktualne na stacku], ulozi do svojich, v pripade varu ulozi svoje premenne(copy, pozor na pole a na recordy)
+	std::cout << "calling function"<< function->name << std::endl;
+	getc(stdin);
 	for(size_t i = 0; i< function->parameters.size(); i++)
 	{
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
+			std::cout <<"parameter by_referecne" << std::endl;
 			Var v;
 			v.var = c->values.back().loaded;
 			function->parameters[i].node->var.push_back(v);
@@ -219,6 +247,20 @@ int Call::execute(Core * c)
 			Var v;
 			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth);
 			function->parameters[i].node->var.push_back(v);
+			Variable * vvv = c->values.back().loaded;
+			c->values.pop_back();
+			switch (c->values.back().loaded->type)
+			{
+				case TypeInteger:
+					v.var->IntegerValue = vvv->IntegerValue;
+				       break;
+				case TypeReal:
+					v.var->RealValue = vvv->RealValue;
+			 		break;
+				case TypeObject:
+					v.var->ObjectValue = vvv->ObjectValue; //TODO type_location
+				default: return -1;
+			}
 		}
 	}
 	c->save(function->begin);	
@@ -239,6 +281,7 @@ InstructionPop::InstructionPop()
 }
 int InstructionPop::execute(Core *s)
 {
+	std::cout << "popping out value" <<std::endl;
 	s->values.pop_back();
 	return 0;
 }
@@ -251,6 +294,7 @@ InstructionMustJump::InstructionMustJump(int steps)
 }
 int InstructionMustJump::execute(Core * c)
 {
+	std::cout << "jumping" << std::endl;
 	c->PC+=shift;
 	return 0;
 }
@@ -274,8 +318,16 @@ int InstructionJump::execute(Core * c)
 	Value v = c->values.back();
 	c->values.pop_back();
 	if (!v.loaded->IntegerValue)
+	{
+		std::cout <<"jumping to YES position" << std::endl;
 		c->PC+=yes;
-	else c->PC+=no;
+	}
+	else 
+	{
+		std::cout <<"jumping to YES position" << std::endl;
+		c->PC+=no;
+	}
+	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionJump::xml_format()
@@ -297,7 +349,9 @@ InstructionRestore::InstructionRestore()
 }
 int InstructionRestore::execute(Core *c)
 {
+	std::cout << "restorin'";
 	c->restore();
+	getc(stdin);
 	return 0;
 }
 
@@ -309,8 +363,10 @@ InstructionBreak::InstructionBreak(int label)
 }
 int InstructionBreak::execute(Core * c)
 {
+	std::cout << "BREAK!:)" << std::endl;
 	c->PC+=jump;
 	c->memory.free(loop_label); //vycisti do vratane hlbky s
+	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionBreak::xml_format()
@@ -331,6 +387,7 @@ InstructionPlusPlus::InstructionPlusPlus()
 }
 int InstructionPlusPlus::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue++;
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
@@ -341,16 +398,19 @@ InstructionMinusMinus::InstructionMinusMinus()
 }
 int InstructionMinusMinus::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue--;
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
 InstructionPlus::InstructionPlus()
 {
+	std::cout << name_ << std::endl;
 	name_ = "InstructionPlus";
 }
 int InstructionPlus::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue + right.loaded->IntegerValue;
@@ -363,6 +423,7 @@ InstructionMinus::InstructionMinus()
 }
 int InstructionMinus::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue - right.loaded->IntegerValue;
@@ -375,6 +436,7 @@ InstructionMultiply::InstructionMultiply()
 }
 int InstructionMultiply::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue * right.loaded->IntegerValue;
@@ -387,6 +449,7 @@ InstructionDivide::InstructionDivide()
 }
 int InstructionDivide::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	if ((right.loaded->type != TypeInteger) && (right.loaded->type!=TypeReal))
@@ -413,6 +476,7 @@ InstructionModulo::InstructionModulo()
 }
 int InstructionModulo::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue % right.loaded->IntegerValue;
@@ -426,6 +490,7 @@ InstructionBinaryAnd::InstructionBinaryAnd()
 }
 int InstructionBinaryAnd::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = 
@@ -439,6 +504,7 @@ InstructionAnd::InstructionAnd()
 }
 int InstructionAnd::execute(Core *c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -457,6 +523,7 @@ InstructionBinaryOr::InstructionBinaryOr()
 }
 int InstructionBinaryOr::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = 
@@ -470,6 +537,7 @@ InstructionOr::InstructionOr()
 }
 int InstructionOr::execute(Core *c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -488,6 +556,7 @@ InstructionBinaryNot::InstructionBinaryNot()
 }
 int InstructionBinaryNot::execute(Core *c)
 {
+	std::cout << name_ << std::endl;
 	c->values.back().hlp.IntegerValue = ~c->values.back().loaded->IntegerValue;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
@@ -499,6 +568,7 @@ InstructionNot::InstructionNot()
 }
 int InstructionNot::execute(Core *c)
 {
+	std::cout << name_ << std::endl;
 	if (c->values.back().loaded->IntegerValue == 0)
 		c->values.back().hlp.IntegerValue = 1;
 	else 
@@ -514,6 +584,7 @@ InstructionGt::InstructionGt()
 }
 int InstructionGt::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -539,6 +610,7 @@ InstructionGe::InstructionGe()
 }
 int InstructionGe::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -564,6 +636,7 @@ InstructionEqual::InstructionEqual()
 }
 int InstructionEqual::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -653,6 +726,7 @@ InstructionLe::InstructionLe()
 }
 int InstructionLe::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -677,6 +751,7 @@ InstructionNotEqual::InstructionNotEqual()
 }
 int InstructionNotEqual::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	Value left = c->values.back();
@@ -716,6 +791,7 @@ InstructionBegin::InstructionBegin()
 }
 int InstructionBegin::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	c->depth++;
 	return 0;
 }
@@ -725,6 +801,7 @@ InstructionEndBlock::InstructionEndBlock()
 }
 int InstructionEndBlock::execute(Core * c)
 {
+	std::cout << name_ << std::endl;
 	c->memory.free(c->depth);
 	c->depth--;
 	return 0;
@@ -736,6 +813,7 @@ InstructionSee::InstructionSee()
 }
 int InstructionSee::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->See();
@@ -748,6 +826,7 @@ InstructionStep::InstructionStep()
 }
 int InstructionStep::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->Step();
@@ -760,6 +839,7 @@ InstructionWait::InstructionWait()
 }
 int InstructionWait::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->Wait();
@@ -772,6 +852,7 @@ InstructionShoot::InstructionShoot()
 }
 int InstructionShoot::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->Shoot();
@@ -784,6 +865,7 @@ InstructionTurn::InstructionTurn()
 }
 int InstructionTurn::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value par = s->values.back();
 	s->values.pop_back();
 	Value v;
@@ -798,6 +880,7 @@ InstructionTurnR::InstructionTurnR()
 }
 int InstructionTurnR::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->TurnR();
@@ -810,6 +893,7 @@ InstructionTurnL::InstructionTurnL()
 }
 int InstructionTurnL::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->TurnL();
@@ -822,6 +906,7 @@ InstructionHit::InstructionHit()
 }
 int InstructionHit::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->Hit();
@@ -834,6 +919,7 @@ InstructionIsPlayer::InstructionIsPlayer()
 }
 int InstructionIsPlayer::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->IsPlayer();
@@ -846,6 +932,7 @@ InstructionIsWall::InstructionIsWall()
 }
 int InstructionIsWall::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->IsWall();
@@ -858,6 +945,7 @@ InstructionIsMissille::InstructionIsMissille()
 }
 int InstructionIsMissille::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->IsMissille();
@@ -870,6 +958,7 @@ InstructionLocate::InstructionLocate()
 }
 int InstructionLocate::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->Locate();
@@ -882,6 +971,7 @@ InstructionIsMoving::InstructionIsMoving()
 }
 int InstructionIsMoving::execute(Core *s)
 {
+	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->IsMoving();
