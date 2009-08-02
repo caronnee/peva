@@ -12,6 +12,12 @@ Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 	record.variable = memory[id];
 	record.id = id;
 	memory[id]->owner = id__;
+	if (depth_ == 0)
+	{
+		assigned.insert(assigned.begin(), record);
+	}
+	else 
+		assigned.push_back(record);
 	if (is_simple(type.type))
 	{
 		memory[id]->set_variable(type.type);
@@ -38,6 +44,7 @@ void Memory::free(size_t depth)
 		std::cout << "dealok " << r.id << std::endl;
 		r.variable->owner = -1;
 	}
+	std::cout << assigned.size() << std::endl;
 }
 Memory::Memory(int size)
 {

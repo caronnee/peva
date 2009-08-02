@@ -801,7 +801,7 @@ InstructionEndBlock::InstructionEndBlock()
 }
 int InstructionEndBlock::execute(Core * c)
 {
-	std::cout << name_ << std::endl;
+	std::cout << name_ << " and freeing@"<< std::endl;
 	c->memory.free(c->depth);
 	c->depth--;
 	return 0;
