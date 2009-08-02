@@ -102,9 +102,10 @@ class InstructionReturn : public InstructionBreak{
 };
 class InstructionRestore: public Instruction
 {
+	Function * function;
 	public:
 		virtual int execute(Core * c);
-		InstructionRestore();
+		InstructionRestore(Function *);
 };
 class InstructionPlusPlus : public Instruction{
 	public:

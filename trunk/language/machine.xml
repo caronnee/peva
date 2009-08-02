@@ -4,6 +4,14 @@
     <InstructionBegin/>
     <InstructionCreate>f#t</InstructionCreate>
     <InstructionCreate>f#b</InstructionCreate>
+    <InstructionLoadLocal>f#</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>1</TypeInteger>
+    </InstructionLoad>
+    <InstructionStore/>
+    <InstructionReturn>
+      <Jump>6579566</Jump>
+    </InstructionReturn>
     <InstructionEndBlock/>
     <InstructionRestore/>
   </f>
@@ -13,82 +21,8 @@
     <InstructionBegin/>
     <InstructionCreate>main#a</InstructionCreate>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>6</TypeInteger>
-    </InstructionLoad>
+    <Call begins="0">f</Call>
     <InstructionStore/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>6</TypeInteger>
-    </InstructionLoad>
-    <InstructionStore/>
-    <InstructionMustJump>
-      <JumpCount>34</JumpCount>
-    </InstructionMustJump>
-    <InstructionBegin/>
-    <InstructionCreate>main#ble</InstructionCreate>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionStore/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionEqual/>
-    <InstructionJump>
-      <yes>0</yes>
-      <no>21</no>
-    </InstructionJump>
-    <InstructionBegin/>
-    <InstructionCreate>main#gg</InstructionCreate>
-    <InstructionMustJump>
-      <JumpCount>11</JumpCount>
-    </InstructionMustJump>
-    <InstructionBegin/>
-    <InstructionCreate>main#fff</InstructionCreate>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLe/>
-    <InstructionJump>
-      <yes>0</yes>
-      <no>3</no>
-    </InstructionJump>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionPlusPlus/>
-    <InstructionMustJump>
-      <JumpCount>1</JumpCount>
-    </InstructionMustJump>
-    <InstructionBreak>
-      <Jump>5</Jump>
-    </InstructionBreak>
-    <InstructionEndBlock/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>8</TypeInteger>
-    </InstructionLoad>
-    <InstructionLe/>
-    <InstructionJump>
-      <yes>-15</yes>
-      <no>0</no>
-    </InstructionJump>
-    <InstructionCreate>main#f</InstructionCreate>
-    <InstructionBreak>
-      <Jump>9</Jump>
-    </InstructionBreak>
-    <InstructionEndBlock/>
-    <InstructionBreak>
-      <Jump>7</Jump>
-    </InstructionBreak>
-    <InstructionEndBlock/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionPlusPlus/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>10</TypeInteger>
-    </InstructionLoad>
-    <InstructionLt/>
-    <InstructionJump>
-      <yes>-38</yes>
-      <no>0</no>
-    </InstructionJump>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
       <TypeInteger>5</TypeInteger>

@@ -26,7 +26,7 @@ struct Function
 	int begin; //kde to zacina v stacku
 	int end;
 	Node * return_var;
-	Function(std::string name, std::vector<Parameter_entry>, Node * n);
+	Function(std::string name, Node * n);
 };
 
 #endif

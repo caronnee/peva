@@ -221,11 +221,14 @@ int InstructionStore::execute(Core * c)
 }
 Call::Call()
 {
+	node = NULL;
 	function = NULL;
 	name_ = "Call";
 }
 Call::Call(Function * f_)
 {
+	node = NULL;
+	std::cout << "Calling" << f_ << std::endl;
 	function = f_;
 	name_ = "Call";
 }
@@ -233,10 +236,18 @@ Call::Call(Function * f_)
 int Call::execute(Core * c)
 {
 	//zoberie [pocet premennych aktualne na stacku], ulozi do svojich, v pripade varu ulozi svoje premenne(copy, pozor na pole a na recordy)
-	std::cout << "calling function"<< function->name << std::endl;
+	//sucasne do return typu da novy variabl
+	std::cout << node << ":adresa nodu" << std::endl;
 	getc(stdin);
+	Var v;
+	Node * ret = function->return_var;
+	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth);
+	ret->var.push_back(v);
+	std::cout << "calling function"<< function->name << std::endl;
 	for(size_t i = 0; i< function->parameters.size(); i++)
 	{
+		std::cout << "Pocet Parametrov:" << function->parameters.size() << std::endl;
+		getc(stdin);
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
 			std::cout <<"parameter by_referecne" << std::endl;
@@ -266,6 +277,7 @@ int Call::execute(Core * c)
 			}
 		}
 	}
+	getc(stdin);
 	c->save(function->begin);	
 	return 0;
 }
@@ -347,11 +359,11 @@ xmlNodePtr InstructionJump::xml_format()
 InstructionReturn::InstructionReturn()
 {
 	loop_label = 1;
-	jump = 123;
 	name_ = "InstructionReturn";
 }
-InstructionRestore::InstructionRestore()
+InstructionRestore::InstructionRestore(Function * f)
 {
+	function = f;
 	name_ = "InstructionRestore";
 }
 int InstructionRestore::execute(Core *c)
@@ -369,7 +381,7 @@ InstructionBreak::InstructionBreak(int label)
 }
 int InstructionBreak::execute(Core * c)
 {
-	std::cout << "BREAK!:) Returnning to depth " << loop_label << std::endl;
+	std::cout << "BREAK!:) Returnning to depth " << depth << std::endl;
 	c->PC+=jump;
 	c->depth = depth;
 	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
