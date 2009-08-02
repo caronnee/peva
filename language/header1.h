@@ -42,6 +42,8 @@ struct expr
 
 struct Lval {
 	
+	int depth;
+
 	Operation operation;
 	int number;
 

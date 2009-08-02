@@ -92,7 +92,7 @@ class InstructionBreak : public Instruction{
 	public:
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
-		int jump;
+		int jump, depth;
 		InstructionBreak(int label = 1);
 		virtual int breaks();
 };

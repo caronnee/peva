@@ -14,9 +14,13 @@ main() // komentar
 		left= a;
 		if(a == left)
 		{
+			integer gg;
 			while(a<=8)
 			{
-				a++;
+				integer fff;
+				if ( a <= left)
+					a++;
+				else break;
 			}
 			integer f;
 			break;

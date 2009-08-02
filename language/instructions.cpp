@@ -364,7 +364,6 @@ int InstructionRestore::execute(Core *c)
 
 InstructionBreak::InstructionBreak(int label)
 {
-//	std::cout << label << "-----" << std::endl;
 	loop_label = label;
 	name_ = "InstructionBreak";
 }
@@ -372,7 +371,7 @@ int InstructionBreak::execute(Core * c)
 {
 	std::cout << "BREAK!:) Returnning to depth " << loop_label << std::endl;
 	c->PC+=jump;
-	c->depth = loop_label;
+	c->depth = depth;
 	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
 	getc(stdin);
 	return 0;

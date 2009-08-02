@@ -185,7 +185,7 @@ return_type:	type { $$ = $1; }
 	|TOKEN_VOID { $$ = Create_type(TypeVoid); }
 	;
 
-parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->add($2, $1)));  }
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->add($2, $1))); }
 	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->add($4, $3)));}
 	;
 declare_function_:	return_type function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  { reg(program,$1,$2, $4, $6);program->leave();} 
@@ -194,15 +194,21 @@ declare_function_:	return_type function_header TOKEN_LPAR parameters TOKEN_RPAR 
 	|declare_function_ return_type function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program, $2, $3, a, $6);program->leave(); }
 	;
 
-number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } //load realu do 
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } 
       	|TOKEN_OPER_SIGNADD TOKEN_UINT { if (TOKEN_OPER_SIGNADD == OperationMinus) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } 
       	|TOKEN_REAL { $$.push_back(new InstructionLoad($1)); } 
       	|TOKEN_UINT { $$.push_back(new InstructionLoad($1)); } 
 	;
 
-block_of_instructions: TOKEN_BEGIN TOKEN_END { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
-	|TOKEN_BEGIN TOKEN_SEMICOLON TOKEN_END  { $$.clear();$$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock()); }
-	|TOKEN_BEGIN commands TOKEN_END { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
+begin:	TOKEN_BEGIN { program->core->depth++; }
+     	;
+
+end:	TOKEN_END { program->core->depth--; }
+   	;
+
+block_of_instructions: begin end { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
+	|begin TOKEN_SEMICOLON end  { $$.clear();$$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock()); }
+	|begin commands end { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
 	;
 
 commands: matched {$$ = $1;}

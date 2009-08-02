@@ -47,7 +47,7 @@ Instructions join_instructions(const Instructions i1, const Instructions i2)
 void set_breaks(Program * p, Instructions ins)
 {
 	size_t size = ins.size();
-	std::cout << p->last_loop_number <<std::endl;
+	std::cout << "Last loop number" << p->last_loop_number <<std::endl;
 	getc(stdin);
 	for (size_t i = 0; i< size; i++)
 	{
@@ -59,9 +59,10 @@ void set_breaks(Program * p, Instructions ins)
 //			getc(stdin);
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i -1;
+			b->depth = p->core->depth;
 		}
 	}
-	std::cout << "nenajdeny break!" <<std::endl;
+	std::cout << "Nenajdeny break!" <<std::endl;
 }
 Instruction * operRel(Operation op)
 {
