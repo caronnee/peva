@@ -3,11 +3,10 @@
   <f>
     <InstructionBegin/>
     <InstructionCreate>f#t</InstructionCreate>
-    <InstructionCreate>f#b</InstructionCreate>
     <InstructionLoadGlobal>left</InstructionLoadGlobal>
-    <InstructionLoad>
-      <TypeInteger>0</TypeInteger>
-    </InstructionLoad>
+    <InstructionLoadLocal>f#a</InstructionLoadLocal>
+    <InstructionLoadLocal>f#b</InstructionLoadLocal>
+    <InstructionPlus/>
     <InstructionStore/>
     <InstructionMustJump>
       <JumpCount>3</JumpCount>
@@ -34,6 +33,12 @@
   <main>
     <InstructionBegin/>
     <InstructionCreate>main#a</InstructionCreate>
+    <InstructionLoad>
+      <TypeInteger>3</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad>
+      <TypeInteger>2</TypeInteger>
+    </InstructionLoad>
     <Call begins="0">f</Call>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
