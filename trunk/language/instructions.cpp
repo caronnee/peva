@@ -905,6 +905,7 @@ int InstructionTurn::execute(Core *s)
 	v.loaded = &v.hlp;
 	v.loaded->IntegerValue = s->robot->Turn(par.loaded->IntegerValue);
 	v.loaded->type = TypeInteger;
+	//ak to nie je integer, tak papa
 	return 0;
 }
 InstructionTurnR::InstructionTurnR()

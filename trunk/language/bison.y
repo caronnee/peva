@@ -408,7 +408,6 @@ int main(int argc, char ** argv)
 
 	Program q;
 	Create_type t;
-	q.add(".", t);//anonymna premenna
 	yyparse(&q);
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;

@@ -14,5 +14,6 @@ main() // komentar
 {
 	integer a;
 	a = f(2,3);
+	turnL();
 	a = 100;
 }
