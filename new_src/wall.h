@@ -21,6 +21,7 @@ class Tile:public Object //oddelenie urovne abstrakcie:)
 {
 public:
 	Tile();
+	virtual bool is_blocking();
 	//virtual void damage(Object * sender);
 };
 class SolidWall:public Tile //nic specialneho, proste sten a s nejkou odolnostou
