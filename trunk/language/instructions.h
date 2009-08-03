@@ -96,16 +96,17 @@ class InstructionBreak : public Instruction{
 		InstructionBreak(int label = 1, int depth_ = 0);
 		virtual int breaks();
 };
-class InstructionReturn : public InstructionBreak{
+class InstructionReturn : public Instruction{
+	int depth,jump;
 	public:
-		InstructionReturn();
+		InstructionReturn(int dep);
+		virtual int execute(Core * c);
 };
 class InstructionRestore: public Instruction
 {
-	Function * function;
 	public:
 		virtual int execute(Core * c);
-		InstructionRestore(Function *);
+		InstructionRestore();
 };
 class InstructionPlusPlus : public Instruction{
 	public:

@@ -36,7 +36,6 @@ struct Program
 {
 	bool error;
 	std::string nested;
-	Function * nested_function;
 
 	int last_loop_number;
 	
