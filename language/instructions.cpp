@@ -354,14 +354,18 @@ xmlNodePtr InstructionJump::xml_format()
 }
 InstructionReturn::InstructionReturn(int depth_)
 {
+	std::cout << "hlbka: " << depth_ << std::endl;
+	getc(stdin);
 	depth = depth_;
 	name_ = "InstructionReturn";
 }
 int InstructionReturn::execute(Core * c)
 {
-	c->depth -= depth + 1;
+	std::cout << "Zpatky do hlbky" << c->depth << std::endl;
+	c->depth -= depth-1 ;
 	std::cout << "zpatky do hlbky" << c->depth << std::endl;
-	c->PC += c->nested_function->end -3; //za restore, end_block a ++ u PC
+	c->PC = c->nested_function->end -3; //za restore, end_block a ++ u PC
+	std::cout << "A na instrukciu cislo" << c->PC << std::endl;
 	return 0;
 }
 InstructionRestore::InstructionRestore()
