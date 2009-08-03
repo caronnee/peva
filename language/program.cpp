@@ -105,33 +105,33 @@ void Program::add(Instructions ins)
 }
 void Program::add_function(std::vector<Parameter_entry> c, Instructions ins)
 {
-	nested_function->parameters = c;
-	nested_function->begin = instructions.size();
-	nested_function->end = nested_function->begin + ins.size()+1;
-	core->functions.push_back(nested_function);
+	core->nested_function->parameters = c;
+	core->nested_function->begin = instructions.size();
+	core->nested_function->end = core->nested_function->begin + ins.size()+1;
+	core->functions.push_back(core->nested_function);
 	for (int i =0; i< ins.size(); i++)
 	{
 		instructions.push_back(ins[i]);
 	}
-	if(nested_function->name == "main")
+	if(core->nested_function->name == "main")
 	{
 //		instructions.push_back(new InstructionMustJump(ins.size()*-1));
-		core->PC = nested_function->begin;
+		core->PC = core->nested_function->begin;
 	}
 	else
 	{
-		instructions.push_back(new InstructionRestore(nested_function)); //pre procedury
+		instructions.push_back(new InstructionRestore()); //pre procedury
 	}
 }
 void Program::enter(std::string name, Create_type return_type)
 {
-	nested+= name + DELIMINER_CHAR;
-	nested_function = new Function(name, add("",return_type));
+	nested += name + DELIMINER_CHAR;
+	core->nested_function = new Function(name, add("",return_type));
 }
 void Program::leave() //odide z funkcie
 {
 	nested = "";
-	nested_function = NULL;
+	core->nested_function = NULL;
 }
 void Program::save_to_xml()
 {

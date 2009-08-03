@@ -178,7 +178,7 @@ declare_functions: /*	ziadne deklarovane funkcie	*/ { $$.clear(); program->enter
 	|declare_function_ { $$ = $1; program->enter("main", Create_type(TypeVoid));}
 	;
 
-function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $3; program->enter($3, $1); } //zatial nepotrebujeme vediet zanoraenie 
+function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $3; program->enter($3, $1); } //zatial nepotrebujeme vediet zanoraenie , enter loop pre returny
 	;
 
 return_type:	type { $$ = $1; }
@@ -189,10 +189,30 @@ parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY
 	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->add($4, $3)));}
 	;
 
-declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  { reg(program,$3,$5);program->leave();} 
-	|declare_function_ function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions { reg(program,$4,$6); program->leave();}
-	|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program, a, $4); program->leave();} 
-	|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions {std::vector<Parameter_entry> a; reg(program, a, $5);program->leave(); }
+declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  
+		 { 
+		   reg(program,$3,$5);
+		   program->leave();
+		 } 
+	|declare_function_ function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions 
+		{ 
+		  reg(program,$4,$6); 
+		  program->leave();
+		  program->end_loop();
+		}
+	|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
+		{ 
+		  std::vector<Parameter_entry> a; 
+		  reg(program, a, $4); 
+		  program->leave();
+		} 
+	|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
+		{
+		  set_breaks(program, $5);
+		  std::vector<Parameter_entry> a; 
+		  reg(program, a, $5);
+		  program->leave(); 
+		}
 	;
 
 number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.push_back(new InstructionLoad($2)); } 
@@ -251,13 +271,13 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
 			$$ = $2;
-			std::cout << program->nested_function << "-----"<< std::endl;
+			std::cout << program->core->nested_function << "-----"<< std::endl;
 			getc(stdin);
-			$$.insert($$.begin(), new InstructionLoadLocal(program->nested_function->return_var));
+			$$.insert($$.begin(), new InstructionLoadLocal(program->core->nested_function->return_var));
 			$$.push_back(new InstructionStore()); //budu vedla seba, takze by to malo prejst
-			$$.push_back(new InstructionReturn());
+			$$.push_back(new InstructionReturn(program->core->depth));
 		}
-	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn());} //v node zostane predchadzajuca hodnota
+	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn(program->core->depth));} //v node zostane predchadzajuca hodnota
 	|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
 			std::cout << "Adding break to in depth" <<program->core->depth << std::endl;

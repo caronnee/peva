@@ -237,6 +237,8 @@ int Call::execute(Core * c)
 {
 	//zoberie [pocet premennych aktualne na stacku], ulozi do svojich, v pripade varu ulozi svoje premenne(copy, pozor na pole a na recordy)
 	//sucasne do return typu da novy variabl
+	c->nested_functions.push_back(c->nested_function);
+	c->nested_function = function;
 	Var v;
 	Node * ret = function->return_var;
 	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth);
@@ -354,19 +356,25 @@ xmlNodePtr InstructionJump::xml_format()
 	xmlNewChild(n,NULL,BAD_CAST "no",BAD_CAST deconvert<int>(no).c_str());
 	return n;
 }
-InstructionReturn::InstructionReturn()
+InstructionReturn::InstructionReturn(int depth_)
 {
-	loop_label = 1;
+	depth = depth_;
 	name_ = "InstructionReturn";
 }
-InstructionRestore::InstructionRestore(Function * f)
+int InstructionReturn::execute(Core * c)
 {
-	function = f;
+	c->depth -= depth + 1;
+	std::cout << "zpatky do hlbky" << c->depth << std::endl;
+	c->PC += c->nested_function->end -3; //za restore, end_block a ++ u PC
+	return 0;
+}
+InstructionRestore::InstructionRestore()
+{
 	name_ = "InstructionRestore";
 }
 int InstructionRestore::execute(Core *c)
 {
-	std::cout << "restorin'";
+	std::cout << "restorin'"; //zmaz prebentivne navratove hodnoty a para,etre
 	c->restore();
 	getc(stdin);
 	return 0;
