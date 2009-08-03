@@ -49,10 +49,10 @@ void set_breaks(Program * p, Instructions ins)
 		if(ins[i]->breaks() == p->last_loop_number)
 		{
 			std::cout << "IN:" << i <<std::endl;
-//			getc(stdin);
+			getc(stdin);
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i -1;
-			b->depth = p->core->depth;
+			b->depth -= p->core->depth; //rozdiel medzi zaciatkom breaku a jeho koncom
 		}
 	}
 	std::cout << "Nenajdeny break!" <<std::endl;

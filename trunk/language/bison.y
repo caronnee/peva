@@ -260,7 +260,9 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn());} //v node zostane predchadzajuca hodnota
 	|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
-			$$.push_back(new InstructionBreak(program->last_loop_number));
+			std::cout << "Adding break to in depth" <<program->core->depth << std::endl;
+			getc(stdin);
+			$$.push_back(new InstructionBreak(program->last_loop_number, program->core->depth));
 		}
 	|simple_command TOKEN_SEMICOLON {$$ = $1;}
       	;

@@ -26,7 +26,7 @@ Constr::Constr(std::string a, Instructions i)
 
 Program::Program()
 {
-	last_loop_number = 0;
+	last_loop_number = 1;
 	nested = "";
 	error = false;//TODO pridat errorou hlasku
 	core = new Core();
