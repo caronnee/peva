@@ -118,7 +118,7 @@ Instruction * operOr(Operation op) //Bool_OR
 		default: return NULL;
 	}
 }
-Instruction * feature (ObjectFeatures feat)
+Instruction * feature ( ObjectFeatures feat )
 {
 	switch(feat)
 	{
@@ -132,7 +132,27 @@ Instruction * feature (ObjectFeatures feat)
 			return new InstructionIsMoving();
 		case FeatureLocate:
 			return new InstructionLocate();
+		case FeatureStep:
+			return new InstructionStep();
+		case FeatureSee:
+			return new InstructionSee();
+		case FeatureHit:
+			return new InstructionHit();
+		case FeatureShoot:
+			return new InstructionShoot();//nutne musi zobrat
+		case FeatureTurn:
+			return new InstructionTurn();
+		case FeatureTurnR:
+			return new InstructionTurnR();
+		case FeatureTurnL:
+			std::cout << "ralh" << std::endl;
+			getc(stdin);
+			return new InstructionTurnL();
+		case FeatureWait:
+			return new InstructionWait();
 		default:
+			std::cout << "Vraciam NULL" << std::endl;
+			getc(stdin);	
 			return NULL;		
 	}
 }

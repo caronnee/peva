@@ -33,7 +33,15 @@ enum ObjectFeatures
 	FeatureIsWall,
 	FeatureIsMissille,
 	FeatureIsMoving,
-	FeatureLocate
+	FeatureLocate,
+	FeatureStep,
+	FeatureShoot,
+	FeatureHit,
+	FeatureTurn,
+	FeatureTurnL,
+	FeatureTurnR,
+	FeatureWait,
+	FeatureSee
 };
 struct expr
 {

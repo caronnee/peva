@@ -46,6 +46,7 @@
     </InstructionLoad>
     <Call begins="0">f</Call>
     <InstructionStore/>
+    <InstructionTurnL/>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
       <TypeInteger>100</TypeInteger>
