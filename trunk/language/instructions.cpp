@@ -119,10 +119,10 @@ InstructionLoad::InstructionLoad(int i)
 }
 InstructionLoad::InstructionLoad(float f)
 {
+	name_ = "InstructionLoad";
 	constant = true;
 	var = new Variable("const",TypeReal);
 	var->RealValue = f;
-	name_ = "InstructionLoad";
 }
 int InstructionLoad::execute(Core *c)
 {
@@ -241,16 +241,13 @@ int Call::execute(Core * c)
 	c->nested_function = function;
 	Var v;
 	Node * ret = function->return_var;
-	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth);
+	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth +1); //aby zmizlo po ukonceni
 	ret->var.push_back(v);
 	std::cout << "calling function"<< function->name << std::endl;
 	for(size_t i = 0; i< function->parameters.size(); i++)
 	{
-		std::cout << "Pocet Parametrov:" << function->parameters.size() << std::endl;
-		getc(stdin);
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
-			std::cout <<"parameter by_referecne" << std::endl;
 			Var v;
 			v.var = c->values.back().loaded;
 			function->parameters[i].node->var.push_back(v);
@@ -259,8 +256,7 @@ int Call::execute(Core * c)
 		else
 		{
 			Var v;
-
-			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth);
+			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back().loaded;
 			switch (c->values.back().loaded->type)
@@ -278,8 +274,6 @@ int Call::execute(Core * c)
 			c->values.pop_back();
 		}
 	}
-	std::cout << "end of calling" << std::endl;
-	getc(stdin);
 	c->save(function->begin);	
 	return 0;
 }
@@ -434,8 +428,8 @@ int InstructionMinusMinus::execute(Core * c)
 }
 InstructionPlus::InstructionPlus()
 {
-	std::cout << name_ << std::endl;
 	name_ = "InstructionPlus";
+	std::cout << name_ << std::endl;
 }
 int InstructionPlus::execute(Core * c)
 {
