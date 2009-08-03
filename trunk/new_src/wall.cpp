@@ -5,6 +5,10 @@ Tile::Tile()
 {
 	image = IMG_Load("../images/FreeTile.png");
 } 
+bool Tile::is_blocking()
+{
+	return true;
+}
 
 SolidWall::SolidWall()
 {
