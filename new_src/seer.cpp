@@ -21,9 +21,9 @@ void Seer::set_masks()
 	int x0 = 1, y0 = 1, yn = resolution.y*2, xn = resolution.x *2;//vsetko zdvojnasobit;
 	//rovnica v tvare 0 = Ax + By + C;
 	int A = y0-yn, B = x0-xn, C = y0*xn + x0*yn;	
-	for(size_t y = 1; y< resolution.y *2; y+=2)
+	for(int y = 1; y< resolution.y *2; y+=2)
 	{
-		for(size_t x = 1; x < resolution.x; x+=2)
+		for(int x = 1; x < resolution.x; x+=2)
 		{
 			if (A * x + B * y + C > 0)
 				positions.push_back(Position(x, y));
@@ -62,7 +62,7 @@ void Seer::see(Direction d, Map * m, Position pos)
 	{
 		case UP:
 			{
-				for(int i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
+				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
 				{
 					int xx = pos.x - positions[i].x;
 				        int yy = pos.y + positions[i].y;
@@ -102,7 +102,7 @@ void Seer::see(Direction d, Map * m, Position pos)
 			}
 		case DOWN:
 			{
-				for(int i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
+				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
 				{
 					int xx = pos.x - positions[i].x;
 					int yy = pos.y - positions[i].y;
@@ -139,7 +139,7 @@ void Seer::see(Direction d, Map * m, Position pos)
 			}
 		case LEFT:
 			{
-				for(int i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
+				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
 				{
 					int yy = pos.x - positions[i].x;
 					int xx = pos.y - positions[i].y;
@@ -177,7 +177,7 @@ void Seer::see(Direction d, Map * m, Position pos)
 			}
 		case RIGTH:
 			{
-				for(int i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
+				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
 				{
 					int yy = pos.x + positions[i].x;
 					int xx = pos.y - positions[i].y;
