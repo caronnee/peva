@@ -1,17 +1,18 @@
 integer left, right; //povolene komentare, bool aj integer su naprosto stejne
 
-void function f(integer a, integer b)
+integer function f(integer a, integer b)
 {
 	integer t;
-	left = a + b;
+	left = a ;
 	while ( left <10)
 	{
 		break;
 	}
+	return 7;
 }
 main() // komentar
 {
 	integer a;
-	f(2,3);
+	a = f(2,3);
 	a = 5;
 }
