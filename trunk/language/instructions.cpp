@@ -259,10 +259,10 @@ int Call::execute(Core * c)
 		else
 		{
 			Var v;
+
 			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back().loaded;
-			c->values.pop_back();
 			switch (c->values.back().loaded->type)
 			{
 				case TypeInteger:
@@ -275,8 +275,10 @@ int Call::execute(Core * c)
 					v.var->ObjectValue = vvv->ObjectValue; //TODO type_location
 				default: return -1;
 			}
+			c->values.pop_back();
 		}
 	}
+	std::cout << "end of calling" << std::endl;
 	getc(stdin);
 	c->save(function->begin);	
 	return 0;
