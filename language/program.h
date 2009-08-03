@@ -37,7 +37,9 @@ struct Program
 	bool error;
 	std::string nested;
 	Function * nested_function;
+
 	int last_loop_number;
+	
 	std::stack<int> loop_labels;
 	Tree defined;//root burst stromu
 	Instructions instructions; //kopa predefinovanych instrukcii

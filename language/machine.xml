@@ -4,14 +4,28 @@
     <InstructionBegin/>
     <InstructionCreate>f#t</InstructionCreate>
     <InstructionCreate>f#b</InstructionCreate>
-    <InstructionLoadLocal>f#</InstructionLoadLocal>
+    <InstructionLoadGlobal>left</InstructionLoadGlobal>
     <InstructionLoad>
-      <TypeInteger>1</TypeInteger>
+      <TypeInteger>0</TypeInteger>
     </InstructionLoad>
     <InstructionStore/>
-    <InstructionReturn>
-      <Jump>6579566</Jump>
-    </InstructionReturn>
+    <InstructionMustJump>
+      <JumpCount>3</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionBreak>
+      <Jump>5</Jump>
+    </InstructionBreak>
+    <InstructionEndBlock/>
+    <InstructionLoadGlobal>left</InstructionLoadGlobal>
+    <InstructionLoad>
+      <TypeInteger>10</TypeInteger>
+    </InstructionLoad>
+    <InstructionLt/>
+    <InstructionJump>
+      <yes>-7</yes>
+      <no>0</no>
+    </InstructionJump>
     <InstructionEndBlock/>
     <InstructionRestore/>
   </f>
@@ -20,9 +34,7 @@
   <main>
     <InstructionBegin/>
     <InstructionCreate>main#a</InstructionCreate>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <Call begins="0">f</Call>
-    <InstructionStore/>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
       <TypeInteger>5</TypeInteger>

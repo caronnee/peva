@@ -237,8 +237,6 @@ int Call::execute(Core * c)
 {
 	//zoberie [pocet premennych aktualne na stacku], ulozi do svojich, v pripade varu ulozi svoje premenne(copy, pozor na pole a na recordy)
 	//sucasne do return typu da novy variabl
-	std::cout << node << ":adresa nodu" << std::endl;
-	getc(stdin);
 	Var v;
 	Node * ret = function->return_var;
 	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth);
@@ -374,16 +372,17 @@ int InstructionRestore::execute(Core *c)
 	return 0;
 }
 
-InstructionBreak::InstructionBreak(int label)
+InstructionBreak::InstructionBreak(int label, int depth_)
 {
+	depth = depth_;
 	loop_label = label;
 	name_ = "InstructionBreak";
 }
 int InstructionBreak::execute(Core * c)
 {
-	std::cout << "BREAK!:) Returnning to depth " << depth << std::endl;
 	c->PC+=jump;
-	c->depth = depth;
+	c->depth -= depth;
+	std::cout << "BREAK!:) Returning to depth " << c->depth << std::endl;
 	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
 	getc(stdin);
 	return 0;

@@ -540,12 +540,12 @@ static const yytype_uint16 yyrline[] =
      161,   162,   173,   174,   177,   178,   181,   184,   185,   188,
      189,   192,   193,   194,   195,   198,   199,   200,   201,   204,
      207,   210,   211,   212,   215,   216,   217,   218,   220,   222,
-     224,   226,   236,   242,   251,   260,   261,   265,   268,   269,
-     271,   272,   273,   274,   277,   280,   281,   284,   285,   288,
-     289,   290,   293,   300,   301,   304,   305,   307,   316,   317,
-     320,   321,   322,   323,   324,   327,   328,   331,   332,   335,
-     336,   337,   338,   339,   342,   343,   346,   347,   350,   353,
-     354,   357,   358,   361,   362
+     224,   226,   236,   242,   251,   260,   261,   267,   270,   271,
+     273,   274,   275,   276,   279,   282,   283,   286,   287,   290,
+     291,   292,   295,   302,   303,   306,   307,   309,   318,   319,
+     322,   323,   324,   325,   326,   329,   330,   333,   334,   337,
+     338,   339,   340,   341,   344,   345,   348,   349,   352,   355,
+     356,   359,   360,   363,   364
 };
 #endif
 
@@ -1953,87 +1953,89 @@ yyreduce:
   case 56:
 #line 262 "bison.y"
     {
-			(yyval.instructions).push_back(new InstructionBreak(program->last_loop_number));
+			std::cout << "Adding break to in depth" <<program->core->depth << std::endl;
+			getc(stdin);
+			(yyval.instructions).push_back(new InstructionBreak(program->last_loop_number, program->core->depth));
 		;}
     break;
 
   case 57:
-#line 265 "bison.y"
+#line 267 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (2)].instructions);;}
     break;
 
   case 58:
-#line 268 "bison.y"
+#line 270 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 59:
-#line 269 "bison.y"
+#line 271 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 60:
-#line 271 "bison.y"
+#line 273 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 61:
-#line 272 "bison.y"
+#line 274 "bison.y"
     { (yyval.instructions).push_back(new InstructionPlusPlus());;}
     break;
 
   case 62:
-#line 273 "bison.y"
+#line 275 "bison.y"
     { (yyval.instructions).push_back(new InstructionMinusMinus());;}
     break;
 
   case 63:
-#line 274 "bison.y"
+#line 276 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions); ;}
     break;
 
   case 64:
-#line 277 "bison.y"
+#line 279 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions), (yyvsp[(3) - (3)].instructions)); (yyval.instructions).push_back(new InstructionStore()) ;}
     break;
 
   case 65:
-#line 280 "bison.y"
+#line 282 "bison.y"
     { (yyval.instructions).push_back(instruction_load(program, (yyvsp[(1) - (1)].ident)));;}
     break;
 
   case 66:
-#line 281 "bison.y"
+#line 283 "bison.y"
     { (yyval.instructions).push_back(instruction_load(program, (yyvsp[(1) - (2)].ident))); (yyval.instructions) = join_instructions((yyval.instructions), (yyvsp[(2) - (2)].instructions)); ;}
     break;
 
   case 67:
-#line 284 "bison.y"
+#line 286 "bison.y"
     { (yyval.instructions) = (yyvsp[(3) - (4)].instructions); (yyval.instructions).push_back(new Call(program->find_f((yyvsp[(1) - (4)].ident))));;}
     break;
 
   case 68:
-#line 285 "bison.y"
+#line 287 "bison.y"
     { (yyval.instructions) = (yyvsp[(3) - (4)].instructions);(yyval.instructions).push_back(feature((yyvsp[(1) - (4)].of)));;}
     break;
 
   case 69:
-#line 288 "bison.y"
+#line 290 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 70:
-#line 289 "bison.y"
+#line 291 "bison.y"
     {(yyval.instructions).clear();;}
     break;
 
   case 71:
-#line 290 "bison.y"
+#line 292 "bison.y"
     {(yyval.instructions) = join_instructions((yyvsp[(3) - (3)].instructions),(yyvsp[(1) - (3)].instructions)); ;}
     break;
 
   case 72:
-#line 294 "bison.y"
+#line 296 "bison.y"
     {
 		  (yyvsp[(5) - (7)].instructions).push_back(new InstructionMustJump((yyvsp[(7) - (7)].instructions).size()));
 		  (yyvsp[(3) - (7)].instructions).push_back(new InstructionJump(0,(yyvsp[(5) - (7)].instructions).size()));
@@ -2043,27 +2045,27 @@ yyreduce:
     break;
 
   case 73:
-#line 300 "bison.y"
+#line 302 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 74:
-#line 301 "bison.y"
+#line 303 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 75:
-#line 304 "bison.y"
+#line 306 "bison.y"
     {(yyvsp[(3) - (5)].instructions).push_back(new InstructionJump(0,(yyvsp[(5) - (5)].instructions).size()));(yyval.instructions) = join_instructions((yyvsp[(3) - (5)].instructions),(yyvsp[(5) - (5)].instructions));;}
     break;
 
   case 76:
-#line 305 "bison.y"
+#line 307 "bison.y"
     {(yyvsp[(3) - (5)].instructions).push_back(new InstructionJump(0,(yyvsp[(5) - (5)].instructions).size()));(yyval.instructions) = join_instructions((yyvsp[(3) - (5)].instructions),(yyvsp[(5) - (5)].instructions));;}
     break;
 
   case 77:
-#line 308 "bison.y"
+#line 310 "bison.y"
     {
 		  (yyvsp[(5) - (7)].instructions).push_back(new InstructionMustJump((yyvsp[(7) - (7)].instructions).size()));
 		  (yyvsp[(3) - (7)].instructions).push_back(new InstructionJump(0,(yyvsp[(5) - (7)].instructions).size()));
@@ -2073,133 +2075,133 @@ yyreduce:
     break;
 
   case 78:
-#line 316 "bison.y"
+#line 318 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 79:
-#line 317 "bison.y"
+#line 319 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (2)].instructions);;}
     break;
 
   case 80:
-#line 320 "bison.y"
+#line 322 "bison.y"
     { (yyval.instructions).push_back(instruction_load(program, (yyvsp[(1) - (1)].ident)));;}
     break;
 
   case 81:
-#line 321 "bison.y"
+#line 323 "bison.y"
     { (yyval.instructions).push_back(instruction_load(program, (yyvsp[(1) - (2)].ident))); (yyval.instructions)=join_instructions((yyval.instructions),(yyvsp[(2) - (2)].instructions));;}
     break;
 
   case 82:
-#line 322 "bison.y"
+#line 324 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 85:
-#line 327 "bison.y"
+#line 329 "bison.y"
     { (yyval.instructions) = (yyvsp[(2) - (3)].instructions); (yyval.instructions).push_back(new InstructionLoad());;}
     break;
 
   case 86:
-#line 328 "bison.y"
+#line 330 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (4)].instructions), (yyvsp[(3) - (4)].instructions)); (yyval.instructions).push_back(new InstructionLoad());;}
     break;
 
   case 87:
-#line 331 "bison.y"
+#line 333 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 88:
-#line 332 "bison.y"
+#line 334 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions), (yyvsp[(3) - (3)].instructions)); ;}
     break;
 
   case 89:
-#line 335 "bison.y"
+#line 337 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 90:
-#line 336 "bison.y"
+#line 338 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 91:
-#line 337 "bison.y"
+#line 339 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (2)].instructions); (yyval.instructions).push_back(new InstructionMinusMinus());;}
     break;
 
   case 92:
-#line 338 "bison.y"
+#line 340 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (2)].instructions); (yyval.instructions).push_back(new InstructionPlusPlus());;}
     break;
 
   case 93:
-#line 339 "bison.y"
+#line 341 "bison.y"
     {(yyval.instructions) = (yyvsp[(2) - (3)].instructions);;}
     break;
 
   case 94:
-#line 342 "bison.y"
+#line 344 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions); ;}
     break;
 
   case 95:
-#line 343 "bison.y"
+#line 345 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions), (yyvsp[(3) - (3)].instructions)); (yyval.instructions).push_back(operMul((yyvsp[(2) - (3)].operation))); ;}
     break;
 
   case 96:
-#line 346 "bison.y"
+#line 348 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions); ;}
     break;
 
   case 97:
-#line 347 "bison.y"
+#line 349 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions), (yyvsp[(3) - (3)].instructions)); (yyval.instructions).push_back(operAdd((yyvsp[(2) - (3)].operation))); ;}
     break;
 
   case 98:
-#line 350 "bison.y"
+#line 352 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions); ;}
     break;
 
   case 99:
-#line 353 "bison.y"
+#line 355 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions);;}
     break;
 
   case 100:
-#line 354 "bison.y"
+#line 356 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions),(yyvsp[(3) - (3)].instructions)); (yyval.instructions).push_back(operRel((yyvsp[(2) - (3)].operation))); ;}
     break;
 
   case 101:
-#line 357 "bison.y"
+#line 359 "bison.y"
     {(yyval.instructions) = (yyvsp[(1) - (1)].instructions); ;}
     break;
 
   case 102:
-#line 358 "bison.y"
+#line 360 "bison.y"
     {(yyval.instructions) = join_instructions((yyvsp[(1) - (5)].instructions),(yyvsp[(4) - (5)].instructions)); (yyval.instructions).push_back((operOr((yyvsp[(2) - (5)].operation))));;}
     break;
 
   case 103:
-#line 361 "bison.y"
+#line 363 "bison.y"
     { (yyval.instructions) = (yyvsp[(1) - (1)].instructions); ;}
     break;
 
   case 104:
-#line 362 "bison.y"
+#line 364 "bison.y"
     { (yyval.instructions) = join_instructions((yyvsp[(1) - (3)].instructions),(yyvsp[(3) - (3)].instructions)); (yyval.instructions).push_back(new InstructionBinaryAnd()); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2203 "bison.cpp"
+#line 2205 "bison.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2419,7 +2421,7 @@ yyreturn:
 }
 
 
-#line 364 "bison.y"
+#line 366 "bison.y"
 
 
 extern FILE * yyin;
