@@ -24,9 +24,9 @@
       <no>0</no>
     </InstructionJump>
     <InstructionLoadLocal>f#</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>7</TypeInteger>
-    </InstructionLoad>
+    <InstructionLoadLocal>f#a</InstructionLoadLocal>
+    <InstructionLoadLocal>f#b</InstructionLoadLocal>
+    <InstructionPlus/>
     <InstructionStore/>
     <InstructionReturn/>
     <InstructionEndBlock/>
@@ -48,7 +48,7 @@
     <InstructionStore/>
     <InstructionLoadLocal>main#a</InstructionLoadLocal>
     <InstructionLoad>
-      <TypeInteger>5</TypeInteger>
+      <TypeInteger>100</TypeInteger>
     </InstructionLoad>
     <InstructionStore/>
     <InstructionEndBlock/>

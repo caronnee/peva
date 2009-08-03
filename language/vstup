@@ -8,11 +8,11 @@ integer function f(integer a, integer b)
 	{
 		break;
 	}
-	return 7;
+	return a+b;
 }
 main() // komentar
 {
 	integer a;
 	a = f(2,3);
-	a = 5;
+	a = 100;
 }
