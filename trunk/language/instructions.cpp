@@ -190,8 +190,9 @@ int InstructionStore::execute(Core * c)
 	Value left = c->values.back();
 	c->values.pop_back();
 	//ak sa rovnaju, potom uloz
-	
+	std::cout <<"left adresa: " << left.loaded << " right:" << right.loaded << std::endl;	
 	std::cout << "ukladam premennu s id " << right.loaded->owner<< " do id " << left.loaded->owner << std::endl;
+	getc(stdin);
 	switch(right.loaded->type)
 	{
 		case TypeInteger:
@@ -214,6 +215,7 @@ int InstructionStore::execute(Core * c)
 				getc(stdin);
 				break;
 		default:
+				std::cout << "nezamy typ!" << std::endl;
 				return -1;
 	}
 	getc(stdin);
@@ -241,7 +243,8 @@ int Call::execute(Core * c)
 	c->nested_function = function;
 	Var v;
 	Node * ret = function->return_var;
-	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth +1); //aby zmizlo po ukonceni
+	std::cout << v.var << "navratova adresa" << std::endl;
+	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth ); //aby zmizlo po ukonceni
 	ret->var.push_back(v);
 	std::cout << "calling function"<< function->name << std::endl;
 	for(size_t i = 0; i< function->parameters.size(); i++)
@@ -362,10 +365,13 @@ InstructionReturn::InstructionReturn(int depth_)
 int InstructionReturn::execute(Core * c)
 {
 	std::cout << "Zpatky do hlbky" << c->depth << std::endl;
-	c->depth -= depth-1 ;
+	c->depth -= depth-1;
 	std::cout << "zpatky do hlbky" << c->depth << std::endl;
 	c->PC = c->nested_function->end -3; //za restore, end_block a ++ u PC
 	std::cout << "A na instrukciu cislo" << c->PC << std::endl;
+	Value v;
+	v.loaded = c->nested_function->return_var->var.back().var;
+	c->values.push_back(v);
 	return 0;
 }
 InstructionRestore::InstructionRestore()
@@ -442,19 +448,21 @@ int InstructionPlus::execute(Core * c)
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue + right.loaded->IntegerValue;
 	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->type = TypeInteger;
 	return 0;
 }
 InstructionMinus::InstructionMinus()
 {
 	name_ = "InstructionMinus";
 }
-int InstructionMinus::execute(Core * c)
+int InstructionMinus::execute(Core * c) //TODO aj pre real!
 {
 	std::cout << name_ << std::endl;
 	Value right = c->values.back();
 	c->values.pop_back();
 	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue - right.loaded->IntegerValue;
 	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->type = TypeInteger;
 	return 0;
 }
 InstructionMultiply::InstructionMultiply()

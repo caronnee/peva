@@ -41,7 +41,7 @@ struct Core
 			nested_function =NULL;
 			return;
 		}
-		for(int i =0; i< nested_function->parameters.size(); i++)
+		for(size_t i =0; i< nested_function->parameters.size(); i++)
 		{
 			nested_function->parameters[i].node->var.pop_back();
 		}
@@ -49,6 +49,7 @@ struct Core
 		nested_functions.pop_back();
 		PC = PCs.back();
 		PCs.pop_back();
+		std::cout << "Restored" << PC << std::endl;
 	}
 };
 #endif
