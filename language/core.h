@@ -41,6 +41,10 @@ struct Core
 			nested_function =NULL;
 			return;
 		}
+		for(int i =0; i< nested_function->parameters.size(); i++)
+		{
+			nested_function->parameters[i].node->var.pop_back();
+		}
 		nested_function = nested_functions.back();
 		nested_functions.pop_back();
 		PC = PCs.back();
