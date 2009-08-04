@@ -14,7 +14,3 @@ Map::Map(Position resol)
 	}
 }
 
-int Map::move(Object* o)
-{
-	
-}

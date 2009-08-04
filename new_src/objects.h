@@ -19,6 +19,7 @@ public:
 	virtual bool is_blocking();
 	SDL_Surface * image;
 	Position position; //kde sa prave nachadza na mape
+	std::string name;
 	int hit_points,ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
 	Object();
 //	virtual void damage(Object * sender) = 0;
@@ -32,5 +33,6 @@ public:
 	virtual bool is_blocking();
 	Position direction; //akym smerom sa vydava
 //	virtual int action(); //penalizacia
+	Missille();
 };
 #endif

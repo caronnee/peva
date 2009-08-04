@@ -5,7 +5,7 @@ Seer::Seer(Position p) //mame iba resolution
 	resolution = p;
 	masks = new Mask*[p.x];
 	int ID = 0;
-	for(int i =0; i < p.y; i++)
+	for(int i =0; i < p.x; i++)
 	{
 		masks[i] = new Mask[p.y];
 		for(int j =0; j < p.y; j++)
@@ -46,7 +46,7 @@ void Seer::set_masks()
 		C = -y0*xn + x0*yn;
 		std::cout << A << " " <<B << " " <<C <<std::endl;
 //		getc(stdin);
-		for (int y = 0; y < yn; y+=2)
+		for (int y = 0; y < yn-1; y+=2)
 		{
 			for(int x = 0; x < xn; x+=2) //x,y aktualne dolny pravy roh, < 0
 			{
@@ -61,6 +61,11 @@ void Seer::set_masks()
 			}
 		}
 	}	
+	for(int i =0; i< positions.size(); i++)
+	{
+		positions[i].x = positions[i].x >> 1;
+		positions[i].y = positions[i].y >> 1;
+	}
 }
 void Seer::see(Direction d, Map * m, Position pos) 
 {
@@ -68,161 +73,48 @@ void Seer::see(Direction d, Map * m, Position pos)
 	//zarotujeme v zavislosti na otoceni
 		
 	Position row = pos;
+	objects.clear();
 	switch(d)
 	{
 		case UP:
 			{
-				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
+				std::cout << "hu!";
+				getc(stdin);
+				uint32_t mask = 0;
+				for(int i =0; i< resolution.x; i++)
 				{
-					int xx = pos.x - positions[i].x;
-				        int yy = pos.y + positions[i].y;
-					if ((xx < 0)||(yy > m->resolution.y))
-						continue;
-					uint32_t mask = masks[positions[i].x][positions[i].y].mask;
-					if((left & mask) == mask)
+					for(int j =0; j<resolution.y; j++)
 					{
-						if(m->map[xx][yy]!=NULL)
+						int xx = pos.x + i, yy = pos.y + j;
+						if ((xx ==0 )&& (yy == 0))
+							continue;
+						if((xx >= m->resolution.x)||(yy >= m->resolution.y))
+							break;
+						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
 						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								left &= (1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
+							mask |= 1 << (i*resolution.y + j);
+							std::cout << "ID:"<< i*resolution.y + j << " ";
 						}
+						masks[i][j].object = m->map[xx][yy];
 					}
-					else
-						left &= ~(1 << masks[positions[i].x][positions[i].y].ID);
-					//ideme na druhu stranu
-					xx = pos.x + positions[i].x;
-					if((right & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								right &= ~ ( 0 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						right &= ~(1 << masks[xx][yy].ID);
 				}
+				std::cout << std::endl;
+				for(int i =0; i< positions.size(); i++)
+				{
+					std::cout << "x:" << positions[i].x << " y:" << positions[i].y << "maska:" << masks[positions[i].x][positions[i].y].mask << std::endl;
+					uint32_t mask_comp = masks[positions[i].x][positions[i].y].mask;
+					std::cout << " x:" << positions[i].x << " y:" << positions[i].y << "maska:" << masks[positions[i].x][positions[i].y].mask<< "sucet" << (masks[positions[i].x][positions[i].y].mask & mask) << std::endl;
+					if (((mask_comp & mask) == mask_comp )&&(masks[positions[i].x][positions[i].y].object!=NULL))
+					{
+						std::cout << "INNNNNNNNNNNNNNNNNN";
+						objects.push_back(masks[positions[i].x][positions[i].y].object);
+					}
+				}
+				std::cout << mask << std::endl;
 				break;
 			}
-		case DOWN:
-			{
-				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
-				{
-					int xx = pos.x - positions[i].x;
-					int yy = pos.y - positions[i].y;
-					uint32_t mask = masks[positions[i].x][positions[i].y].mask;
-					if((left & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								left &= (1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						left &= ~(1 << masks[xx][yy].ID);
-					xx = pos.x + positions[i].x;
-					if((right & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								right &= (1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						right &= (1 << masks[xx][yy].ID);
-				}
-				break;
-			}
-		case LEFT:
-			{
-				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
-				{
-					int yy = pos.x - positions[i].x;
-					int xx = pos.y - positions[i].y;
-					uint32_t mask = masks[positions[i].x][positions[i].y].mask;
-					if((left & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								left &= ~ (1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						left &= ~( 1 << masks[xx][yy].ID);
-					xx = pos.x + positions[i].x;
-					if((right & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								right &= ~ (1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						right &= (1 << masks[xx][yy].ID);
-				}
-				break;
-					
-			}
-		case RIGTH:
-			{
-				for(size_t i = 0; i < positions.size(); i++) //cez vsetky viditelne pozicie
-				{
-					int yy = pos.x + positions[i].x;
-					int xx = pos.y - positions[i].y;
-					uint32_t mask = masks[positions[i].x][positions[i].y].mask;
-					if((left & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								left &= (1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						left &= ~(1 << masks[xx][yy].ID);
-					xx = pos.x + positions[i].x;
-					if((right & mask) == mask)
-					{
-						if(m->map[xx][yy]!=NULL)
-						{
-							if(m->map[xx][yy]->is_blocking())
-							{
-								right &=~( 1 << masks[xx][yy].ID);
-							}
-							objects.push_back(m->map[xx][yy]);
-						}
-					}
-					else
-						right &= (1 << masks[xx][yy].ID);
-				}
-				break;
-
-			}
+		default:
+			return;
 	}
 }
 
