@@ -64,11 +64,12 @@ Eva Pešková
 \subsection {Pogamut}
 \section{Problem optimalnej strategie viacerych hracov}
 \section{Prakticke vyuzitie}
-Súčasná implementácia poskytule dosť širokú škálu použitia. Napríklad:\\
+Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad:\\
 	\begin{itemize}
-	\item V okamihu dobre vygenerovaného bludiska sa dá použit na vizualizáciu niektorých algoritmov, napríklad na vyhľadávanie v stromoch a tak zistiť optimálnosť algoritmu vzhľadom na architekturu stroja
-	\item Program môže simulovať stratégiu robota pri vykonávaní určitéj úlohy, hodí sa povedzme na predmet typu EuroBot
-	\item Pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup v rokoch 2005-2008%todo zistit spravne roky 
+	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov
+	\item v okamihu dobre vygenerovaného bludiska sa dá použit na vizualizáciu niektorých algoritmov, napríklad na vyhľadávanie v stromoch a tak zistiť optimálnosť algoritmu vzhľadom na architekturu stroja
+	\item program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný
+	\item pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C, aby podobne ako Codewars, ale iba v tomto specifickom prípade, bola zistená ideálna stratégia. %todo zistit spravne roky 
 	\end{itemize}
 \input impl.tex
 \input analyza.tex
@@ -89,5 +90,7 @@ Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
 {\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
 \bibitem{vm}
 http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
+\bibitem{imaginecup}http://imaginecup.com
+\bibitem{simtool}http://mpherbert.codeplex.com/
 \end{thebibliography}
 \end{document}
