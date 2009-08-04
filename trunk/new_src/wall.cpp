@@ -12,6 +12,7 @@ bool Tile::is_blocking()
 
 SolidWall::SolidWall()
 {
+	name = "SolidWall";
 	image = IMG_Load("../images/SolidWall.png");//kedze je to iba v konstruktore, mozno si to mozem dovolit
 	if (image == NULL) //crash!
 	{
@@ -20,6 +21,7 @@ SolidWall::SolidWall()
 }
 TrapWall::TrapWall()
 {
+	name = "TrapWall";
 	image = IMG_Load("../images/TrapWall.png");
 	if (image == NULL) //crash!o
 	{
@@ -28,6 +30,7 @@ TrapWall::TrapWall()
 }
 PushableWall::PushableWall()
 {
+	name = "PushableWall";
 	image = IMG_Load("../images/PushableWall.png");
 	if (image == NULL) //crash!o
 	{
@@ -36,6 +39,7 @@ PushableWall::PushableWall()
 }
 ExitWall::ExitWall()
 {
+	name = "ExitWall";
 	image = IMG_Load("../images/ExitWall.png");
 	if (image == NULL) //crash!o
 	{
