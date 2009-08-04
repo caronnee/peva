@@ -26,33 +26,40 @@ void Seer::set_masks()
 		for(int x = 1; x < resolution.x*2; x+=2)
 		{
 			if (A * x + B * y + C >= 0)
-				positions.push_back(Position(x >> 1, y >>1));
+				positions.push_back(Position(x, y ));
 		}
 	}
 	std::cout << A << " " <<B << " " <<C <<std::endl;
-	getc(stdin);
+//	getc(stdin);
 	masks[0][0].mask = 1;
-
+	std::cout << "PositionSize:" << positions.size() << std::endl;
 	for (size_t i =0; i< positions.size(); i++)
 	{
-		std::cout << "x:" << positions[i].x << ", y:" << positions[i].y << std::endl;
-/*		yn = positions[i].y;
-		xn = positions[i].x;
+	//	std::cout <<"he?" << std::endl;
+	//	getc(stdin);
+		std::cout << "x:" << positions[i].x << ", y:" << positions[i].y << " i: "<<i<< std::endl;
+		//getc(stdin);
+		yn = positions[i].y;
+		xn = positions[i].x; //mame stredy celociselne
 		A = y0-yn;
-	       	B = x0-xn; 
-		C = y0*xn + x0*yn; //mame spravenu rovnice pre dvojnasobok;
-		for (int y = 2; y < yn; y+=2)
-			for(int x = 2; x < xn; x++) //x,y aktualne dolny pravy roh, < 0
+	       	B = xn-x0; 
+		C = -y0*xn + x0*yn;
+		std::cout << A << " " <<B << " " <<C <<std::endl;
+//		getc(stdin);
+		for (int y = 0; y < yn; y+=2)
+		{
+			for(int x = 0; x < xn; x+=2) //x,y aktualne dolny pravy roh, < 0
 			{
-				if (A * x + B * y + C <= 0)
+				if (A * x + B * y +B*2  + C >= 0)
 				{
-					if (A * (x-2) + B * (y+2) + C >= 0)
+					if (A * x + B * y + A*2 + C <= 0)
 					{
-						int xx = x/2 -1, yy = y/2;
-						masks[(xn-1)/2][(yn-1)/1].mask |= 1<<masks[xx][yy].ID;
+					//	std::cout << "huurray!";
+						masks[xn >> 1][yn >> 1].mask |= 1<<masks[x >> 1][y >> 1].ID;
 					}
 				}
-			}*/
+			}
+		}
 	}	
 }
 void Seer::see(Direction d, Map * m, Position pos) 
@@ -221,11 +228,20 @@ void Seer::see(Direction d, Map * m, Position pos)
 
 void Seer::output()
 {
-/*	for(int i =0; i< resolution.x; i++)
+	for(int i =0; i< resolution.x; i++)
+	{
+		for(int j = 0; j < resolution.y; j++)
+		{
+			std::cout << masks[i][j].ID << " ";
+		}
+		std::cout << std::endl;
+	}
+	for(int i =0; i< resolution.x; i++)
 	{
 		for(int j = 0; j < resolution.y; j++)
 		{
 			std::cout << "x:" << i << "y" << j << "zavisi na:" << std::endl;
+//			std::cout << "maska:" << masks[i][j].mask << std::endl;
 			for(int k = 0; k< resolution.x * resolution.y; k++)
 			{
 				if (masks[i][j].mask & (1 << k))
@@ -234,5 +250,5 @@ void Seer::output()
 			std::cout << std::endl;
 			
 		}
-	}*/
+	}
 }
