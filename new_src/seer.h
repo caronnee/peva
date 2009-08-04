@@ -1,6 +1,7 @@
 #ifndef ___SEER____
 #define ___SEER____
 
+#include <iostream>
 #include <vector>
 #include "position.h"
 #include "map.h"
@@ -27,6 +28,7 @@ class Seer
 	void set_masks();
 	void see(Direction d, Map * m, Position pos);
 	std::vector<Object *> objects;
+	void output();
 };
 
 #endif
