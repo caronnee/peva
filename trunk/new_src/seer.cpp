@@ -18,22 +18,25 @@ Seer::Seer(Position p) //mame iba resolution
 }
 void Seer::set_masks()
 {
-	int x0 = 1, y0 = 1, yn = resolution.y*2, xn = resolution.x *2;//vsetko zdvojnasobit;
+	int  x0 = 1, y0 = 1, yn = resolution.y *2 -1, xn = resolution.x*2-1;//vsetko zdvojnasobit;
 	//rovnica v tvare 0 = Ax + By + C;
-	int A = y0-yn, B = x0-xn, C = y0*xn + x0*yn;	
-	for(int y = 1; y< resolution.y *2; y+=2)
+	int A = y0-yn, B = xn-x0, C =  - y0*xn + x0*yn;	
+	for(int y = 1; y < resolution.y*2; y+=2)
 	{
-		for(int x = 1; x < resolution.x; x+=2)
+		for(int x = 1; x < resolution.x*2; x+=2)
 		{
-			if (A * x + B * y + C > 0)
-				positions.push_back(Position(x, y));
+			if (A * x + B * y + C >= 0)
+				positions.push_back(Position(x >> 1, y >>1));
 		}
 	}
+	std::cout << A << " " <<B << " " <<C <<std::endl;
+	getc(stdin);
 	masks[0][0].mask = 1;
-	//mame vsetky stredy v intoch ulozene po riadkoch od najmensieho po najvacsie
+
 	for (size_t i =0; i< positions.size(); i++)
 	{
-		yn = positions[i].y;
+		std::cout << "x:" << positions[i].x << ", y:" << positions[i].y << std::endl;
+/*		yn = positions[i].y;
 		xn = positions[i].x;
 		A = y0-yn;
 	       	B = x0-xn; 
@@ -49,7 +52,7 @@ void Seer::set_masks()
 						masks[(xn-1)/2][(yn-1)/1].mask |= 1<<masks[xx][yy].ID;
 					}
 				}
-			}
+			}*/
 	}	
 }
 void Seer::see(Direction d, Map * m, Position pos) 
@@ -214,4 +217,22 @@ void Seer::see(Direction d, Map * m, Position pos)
 
 			}
 	}
+}
+
+void Seer::output()
+{
+/*	for(int i =0; i< resolution.x; i++)
+	{
+		for(int j = 0; j < resolution.y; j++)
+		{
+			std::cout << "x:" << i << "y" << j << "zavisi na:" << std::endl;
+			for(int k = 0; k< resolution.x * resolution.y; k++)
+			{
+				if (masks[i][j].mask & (1 << k))
+					std::cout << k << " ";
+			}
+			std::cout << std::endl;
+			
+		}
+	}*/
 }
