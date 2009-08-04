@@ -11,6 +11,7 @@ struct Mask
 	uint32_t ID;
 	uint32_t mask;
 	Object * object;
+	Object * object_l;
 };
 class Seer
 {

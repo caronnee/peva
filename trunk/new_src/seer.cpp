@@ -29,23 +29,16 @@ void Seer::set_masks()
 				positions.push_back(Position(x, y ));
 		}
 	}
-	std::cout << A << " " <<B << " " <<C <<std::endl;
-//	getc(stdin);
 	masks[0][0].mask = 1;
-	std::cout << "PositionSize:" << positions.size() << std::endl;
+//	std::cout << "PositionSize:" << positions.size() << std::endl;
 	for (size_t i =0; i< positions.size(); i++)
 	{
-	//	std::cout <<"he?" << std::endl;
-	//	getc(stdin);
-		std::cout << "x:" << positions[i].x << ", y:" << positions[i].y << " i: "<<i<< std::endl;
-		//getc(stdin);
+//		std::cout << "x:" << positions[i].x << ", y:" << positions[i].y << " i: "<<i<< std::endl;
 		yn = positions[i].y;
 		xn = positions[i].x; //mame stredy celociselne
 		A = y0-yn;
 	       	B = xn-x0; 
 		C = -y0*xn + x0*yn;
-		std::cout << A << " " <<B << " " <<C <<std::endl;
-//		getc(stdin);
 		for (int y = 0; y < yn-1; y+=2)
 		{
 			for(int x = 0; x < xn; x+=2) //x,y aktualne dolny pravy roh, < 0
@@ -54,68 +47,86 @@ void Seer::set_masks()
 				{
 					if (A * x + B * y + A*2 + C <= 0)
 					{
-					//	std::cout << "huurray!";
 						masks[xn >> 1][yn >> 1].mask |= 1<<masks[x >> 1][y >> 1].ID;
 					}
 				}
 			}
 		}
 	}	
-	for(int i =0; i< positions.size(); i++)
+	for(size_t i =0; i< positions.size(); i++)
 	{
 		positions[i].x = positions[i].x >> 1;
 		positions[i].y = positions[i].y >> 1;
+		std::cout << "ID" << masks[positions[i].x][positions[i].y].ID << ", maska:" <<masks[positions[i].x][positions[i].y].mask << std::endl;
 	}
 }
 void Seer::see(Direction d, Map * m, Position pos) 
 {
-	uint32_t left = ~0, right = ~0; //pociatocne masky, uvodne policko, na ktorom stoji robit, budu vidiet vzdy, preto ma masku jedna
-	//zarotujeme v zavislosti na otoceni
-		
 	Position row = pos;
 	objects.clear();
+	uint32_t mask = 1; //pre robota
+	uint32_t mask2 = 1; //pre robota
 	switch(d)
 	{
 		case UP:
 			{
-				std::cout << "hu!";
-				getc(stdin);
-				uint32_t mask = 0;
 				for(int i =0; i< resolution.x; i++)
 				{
 					for(int j =0; j<resolution.y; j++)
 					{
 						int xx = pos.x + i, yy = pos.y + j;
-						if ((xx ==0 )&& (yy == 0))
+						if ((i ==0 )&& (j == 0))
 							continue;
 						if((xx >= m->resolution.x)||(yy >= m->resolution.y))
 							break;
 						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
 						{
 							mask |= 1 << (i*resolution.y + j);
-							std::cout << "ID:"<< i*resolution.y + j << " ";
+						//	std::cout << "ID:"<< i*resolution.y + j << " ";
 						}
 						masks[i][j].object = m->map[xx][yy];
 					}
-				}
-				std::cout << std::endl;
-				for(int i =0; i< positions.size(); i++)
-				{
-					std::cout << "x:" << positions[i].x << " y:" << positions[i].y << "maska:" << masks[positions[i].x][positions[i].y].mask << std::endl;
-					uint32_t mask_comp = masks[positions[i].x][positions[i].y].mask;
-					std::cout << " x:" << positions[i].x << " y:" << positions[i].y << "maska:" << masks[positions[i].x][positions[i].y].mask<< "sucet" << (masks[positions[i].x][positions[i].y].mask & mask) << std::endl;
-					if (((mask_comp & mask) == mask_comp )&&(masks[positions[i].x][positions[i].y].object!=NULL))
+					for(int j =0; j<resolution.y; j++)
 					{
-						std::cout << "INNNNNNNNNNNNNNNNNN";
-						objects.push_back(masks[positions[i].x][positions[i].y].object);
+						int xx = pos.x - i, yy = pos.y + j;
+						std::cout << xx << "@" << yy;
+						if((xx < 0 )||(yy >= m->resolution.y)) //TODO skontrolovat
+							break;
+						std::cout << "checking...." << std::endl;
+						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
+						{
+							mask2 |= 1 << (i*resolution.y + j);
+							std::cout << "ID2:"<< i*resolution.y + j << " ";
+						}
+						masks[i][j].object_l = m->map[xx][yy];
 					}
 				}
-				std::cout << mask << std::endl;
+				std::cout << std::endl;
 				break;
 			}
 		default:
 			return;
 	}
+	for(size_t i =0; i< positions.size(); i++)
+	{
+		uint32_t mask_comp = masks[positions[i].x][positions[i].y].mask;
+		Object * o = masks[positions[i].x][positions[i].y].object;
+		Object * o2 = masks[positions[i].x][positions[i].y].object_l;
+//		std::cout << "maska:"  << mask_comp << ", sucet" << (mask_comp & mask) << std::endl;
+		std::cout << "ID2: " <<masks[positions[i].x][positions[i].y].ID <<", maska2:"  << mask_comp << ", sucet" << (mask_comp & mask2) << std::endl;
+		if (((mask_comp & mask) == mask_comp) && (o!=NULL))
+		{
+			objects.push_back(o);
+		}
+		if (positions[i].x == 0)
+			continue;
+		if (((mask_comp & mask2) == mask_comp) && (o2!=NULL))
+		{
+			objects.push_back(o2);
+		}
+	}
+	std::cout << mask << std::endl;
+	std::cout << mask2 << std::endl;
 }
 
 void Seer::output()
