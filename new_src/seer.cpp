@@ -66,37 +66,70 @@ void Seer::see(Direction d, Map * m, Position pos)
 	objects.clear();
 	uint32_t mask = 1; //pre robota
 	uint32_t mask2 = 1; //pre robota
+	int corr =1;
 	switch(d)
 	{
+		case DOWN:
+			corr = -1;
 		case UP:
 			{
 				for(int i =0; i< resolution.x; i++)
 				{
 					for(int j =0; j<resolution.y; j++)
 					{
-						int xx = pos.x + i, yy = pos.y + j;
+						int xx = pos.x + i, yy = pos.y + j*corr;
 						if ((i ==0 )&& (j == 0))
 							continue;
-						if((xx >= m->resolution.x)||(yy >= m->resolution.y))
+						if((xx >= m->resolution.x)||(yy >= m->resolution.y)||(yy < 0))
 							break;
 						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
 						{
 							mask |= 1 << (i*resolution.y + j);
-						//	std::cout << "ID:"<< i*resolution.y + j << " ";
 						}
 						masks[i][j].object = m->map[xx][yy];
 					}
 					for(int j =0; j<resolution.y; j++)
 					{
-						int xx = pos.x - i, yy = pos.y + j;
-						std::cout << xx << "@" << yy;
-						if((xx < 0 )||(yy >= m->resolution.y)) //TODO skontrolovat
+						int xx = pos.x - i, yy = pos.y + j*corr;
+						if((xx < 0 )||(yy >= m->resolution.y)|| (yy < 0)) //TODO skontrolovat
 							break;
-						std::cout << "checking...." << std::endl;
 						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
 						{
 							mask2 |= 1 << (i*resolution.y + j);
-							std::cout << "ID2:"<< i*resolution.y + j << " ";
+						}
+						masks[i][j].object_l = m->map[xx][yy];
+					}
+				}
+				std::cout << std::endl;
+				break;
+			}
+		case LEFT:
+			corr = -1;
+		case RIGTH:
+			{
+				for(int j =0; j<resolution.y; j++)
+				{
+					for(int i =0; i< resolution.x; i++)
+					{
+						int xx = pos.x + j, yy = pos.y + i*corr;
+						if ((i ==0 )&& (j == 0))
+							continue;
+						if((xx >= m->resolution.x)||(yy >= m->resolution.y)||(yy < 0))
+							break;
+						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
+						{
+							mask |= 1 << (i*resolution.y + j);
+						}
+						masks[i][j].object = m->map[xx][yy];
+					}
+					for(int i =0; i<resolution.x; i++)
+					{
+						int xx = pos.x - j, yy = pos.y + i*corr;
+						if((xx < 0 )||(yy >= m->resolution.y)|| (yy < 0)) //TODO skontrolovat
+							break;
+						if((m->map[xx][yy]==NULL)||(!m->map[xx][yy]->is_blocking()))
+						{
+							mask2 |= 1 << (i*resolution.y + j);
 						}
 						masks[i][j].object_l = m->map[xx][yy];
 					}
@@ -112,8 +145,6 @@ void Seer::see(Direction d, Map * m, Position pos)
 		uint32_t mask_comp = masks[positions[i].x][positions[i].y].mask;
 		Object * o = masks[positions[i].x][positions[i].y].object;
 		Object * o2 = masks[positions[i].x][positions[i].y].object_l;
-//		std::cout << "maska:"  << mask_comp << ", sucet" << (mask_comp & mask) << std::endl;
-		std::cout << "ID2: " <<masks[positions[i].x][positions[i].y].ID <<", maska2:"  << mask_comp << ", sucet" << (mask_comp & mask2) << std::endl;
 		if (((mask_comp & mask) == mask_comp) && (o!=NULL))
 		{
 			objects.push_back(o);
