@@ -85,6 +85,7 @@ Play::Play(Window *w_)
 	name = "Play";
 	w = w_;
 	size = 10;
+	begin = 0;
 	rect.x = 0;
 	rect.y = 0;
 	for (int i = 0; i< 256; i++)
@@ -102,7 +103,7 @@ void Play::draw()
 	r.y = 0;
 	size = 10;
 	SDL_BlitSurface(w->background,NULL,w->g->g_screen,&r);
-	for( int i =0; i< 256; i++)
+/*	for( int i =0; i< 256; i++)
 	{
 		r.x += letters[i-1].size;
 		if (r.x >= w->g->resolution_width)
@@ -111,12 +112,24 @@ void Play::draw()
 			r.y += letters[0].heigth;
 		}
 		SDL_BlitSurface(letters[i].s,NULL,w->g->g_screen, &r);
+	}*/
+	for(size_t i = begin; (i<letts.size()) && (r.y < w->g->resolution_width); i++)
+	{
+		if(letts[i] == NULL)
+		{
+			r.x = 0;
+			r.y+=letters[0].heigth;
+			continue;
+		}
+		SDL_BlitSurface(letts[i]->s, NULL, w->g->g_screen, &r);
+		r.x+=letts[i]->size;
 	}
 	SDL_Flip(w->g->g_screen);
 }
 
 void Play::process()
-{draw();
+{
+	draw();
 	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
 	switch (w->g->event.type)
 	{
@@ -124,18 +137,20 @@ void Play::process()
 			{
 				switch(w->g->event.key.keysym.sym)
 				{
+					case SDLK_RETURN:
+						{
+							letts.push_back(NULL);
+							break;
+						}
 					case SDLK_ESCAPE:
 						{
 							w->state.pop();
 							break;
 						}
-					case SDLK_a:
-						{
 								
-							break;
-						}
 					default:
-						std::cout << "nezname tlacitko XXX" << std::endl;
+						std::cout <<w->g->event.key.keysym.unicode << "!" <<std::endl;
+						letts.push_back(&letters[w->g->event.key.keysym.unicode]);
 						break;
 				}
 				break;

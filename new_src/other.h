@@ -1,7 +1,9 @@
 #ifndef __OTHER__
 #define __OTHER__
 
+#include <vector>
 #include "draw.h"
+#include "position.h"
 
 
 class Settings:public Menu
@@ -33,12 +35,14 @@ public:
 	virtual void draw();
 	virtual ~Join()throw();
 };
+
 struct Letter
 {
 	std::string ch;
 	int size,heigth;
 	SDL_Surface * s;
 };
+
 class Play:public Menu
 {
 	enum PlayType
@@ -46,8 +50,13 @@ class Play:public Menu
 		Editor,
 		Game
 	};
+
 	int size;
 	Window * w;
+	size_t begin, end;
+	Position p;
+//	std::vector<int> begin_line;
+	std::vector<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
 public:
