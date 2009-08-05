@@ -6,10 +6,15 @@
     <InstructionLoadGlobal>left</InstructionLoadGlobal>
     <InstructionLoadLocal>f#a</InstructionLoadLocal>
     <InstructionStore/>
+    <InstructionLoadLocal>f#b</InstructionLoadLocal>
+    <InstructionLoadLocal>f#a</InstructionLoadLocal>
+    <Call begins="0">f</Call>
     <InstructionMustJump>
-      <JumpCount>3</JumpCount>
+      <JumpCount>5</JumpCount>
     </InstructionMustJump>
     <InstructionBegin/>
+    <InstructionSee/>
+    <InstructionShoot/>
     <InstructionBreak>
       <Jump>5</Jump>
     </InstructionBreak>
@@ -20,7 +25,7 @@
     </InstructionLoad>
     <InstructionLt/>
     <InstructionJump>
-      <yes>-7</yes>
+      <yes>-9</yes>
       <no>0</no>
     </InstructionJump>
     <InstructionLoadLocal>f#</InstructionLoadLocal>
