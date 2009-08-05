@@ -198,7 +198,8 @@ int InstructionStore::execute(Core * c)
 		case TypeInteger:
 			{
 				left.loaded->IntegerValue = right.loaded->IntegerValue;
-				std::cout << " Integer: " << left.loaded->IntegerValue << std::endl;
+				std::cout << " vysledny Integer: " << left.loaded->IntegerValue << std::endl;
+				std::cout << "adresa naloadovaneho" << left.loaded<< std::endl;
 				getc(stdin);
 				break;
 			}
@@ -371,7 +372,14 @@ int InstructionReturn::execute(Core * c)
 	std::cout << "A na instrukciu cislo" << c->PC << std::endl;
 	Value v;
 	v.loaded = c->nested_function->return_var->var.back().var;
+	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
 	c->values.push_back(v);
+	std::cout << "size os values: " << c->values.size();
+	for (int i =0; i < c->values.size(); i++)
+	{
+		std::cout << "value adress= " << c->values[i].loaded << std::endl;
+	}
+	getc(stdin);
 	return 0;
 }
 InstructionRestore::InstructionRestore()
