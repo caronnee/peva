@@ -28,6 +28,8 @@
 %token TOKEN_FOR
 %token TOKEN_RETURN
 %token TOKEN_BREAK
+%token TOKEN_ROBOT
+%token TOKEN_OPTION
 
 /* delimiters */
 %token TOKEN_SEMICOLON

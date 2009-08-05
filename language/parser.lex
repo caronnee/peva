@@ -22,6 +22,13 @@ WHITESPACE		[ \r\t\f]
 
 \/\/						BEGIN(COMMENT_LINE);
 \/\*						BEGIN(COMMENT);
+ROBOT						{*l = line; return TOKEN_ROBOT; };
+HEALTH 						{*l = line; lv->op = OptionHealth; return TOKEN_OPTION; };
+ATTACK						{*l = line; lv->op = OptionAttack; return TOKEN_OPTION; };
+MATTACK 					{*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; };
+MHEALTH						{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; };
+SEE						{*l = line; lv->op = OptionSee;return TOKEN_OPTION; };
+DEFENSE						{*l = line; lv->op = OptionDefense;return TOKEN_OPTION; };
 main						{*l = line; return TOKEN_MAIN; };
 void						{*l = line; return TOKEN_VOID; };
 location					{*l = line;return TOKEN_LOCATION; };
