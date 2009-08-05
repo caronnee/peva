@@ -87,6 +87,7 @@ Play::Play(Window *w_)
 	begin = 0;
 	rect.x = 0;
 	rect.y = 0;
+	iter = letts.begin();
 	for (int i = 0; i< 256; i++)
 	{
 		letters[i].heigth = TTF_FontLineSkip(w->g->g_font);
@@ -155,7 +156,7 @@ void Play::process()
 								
 					default:
 						std::cout <<w->g->event.key.keysym.unicode << "!" <<std::endl;
-						letts.push_back(&letters[w->g->event.key.keysym.unicode]);
+						letts.insert(iter,&letters[w->g->event.key.keysym.unicode]);
 						
 						break;
 				}
