@@ -17,7 +17,7 @@ struct Memory
 	std::vector<Memory_record> assigned;
 	Variable ** memory;
 	void free(size_t depth);
-	Variable * assign(Create_type t,size_t id, size_t t);
+	Variable * assign(Create_type t,size_t id, size_t siz);
 	Memory(int size = 100);
 };
 

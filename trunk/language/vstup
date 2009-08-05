@@ -1,15 +1,46 @@
-integer left, right; //povolene komentare, bool aj integer su naprosto stejne
+ROBOT qqq
+{
+	HEALTH 100
+	OC = 50
+	UC = 9
 
-integer function f(integer a)
-{
-	if ( a == 0 )
-		return 1;
-	return a+f(a-1);
+	SEE 8x4
+
+	MISILLE 100
+	MUC 50
+
+	integer left, right; //povolene komentare, bool aj integer su naprosto stejne
+
+	integer function f(integer a)
+	{
+		if ( a == 0 )
+			return 1;
+		return a+f(a-1);
+	}
+	main() // komentar
+	{
+		integer a;
+		a = f(4);
+		turnL();
+		a = 100;
+	}
 }
-main() // komentar
+
+ROBOT r1
 {
-	integer a;
-	a = f(4);
-	turnL();
-	a = 100;
+	integer left, right; //povolene komentare, bool aj integer su naprosto stejne
+
+	integer function f(integer a)
+	{
+		if ( a == 0 )
+			return 1;
+		return a+f(a-1);
+	}
+	main() // komentar
+	{
+		integer a;
+		a = f(4);
+		turnL();
+		a = 100;
+	}
 }

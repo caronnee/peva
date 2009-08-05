@@ -29,8 +29,6 @@ InstructionCreate::InstructionCreate(Node * n)
 }
 int InstructionCreate::execute(Core * c)
 {	
-	std::cout << "pridavam premennu " << node->name << std::endl;
-	getc(stdin);
 	Variable * v = c->memory.assign(node->type_of_variable,node->ID, c->depth);
 	Var var;
 	var.var = v;
@@ -60,9 +58,6 @@ int InstructionLoadLocal::execute(Core * c)
 	Value v;
 	v.loaded = node->var.back().var;
 	c->values.push_back(v); //pridali sme value na stack
-	std::cout << "Loadjem localnu premennu " << node->name << ":" << node->ID << " var id:"<< v.loaded->owner;
-	std::cout << " Hodnota integeru: " << v.loaded->IntegerValue << std::endl;
-	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionLoadLocal::xml_format()
@@ -219,7 +214,6 @@ int InstructionStore::execute(Core * c)
 				std::cout << "nezamy typ!" << std::endl;
 				return -1;
 	}
-	getc(stdin);
 	return 0;
 }
 Call::Call()

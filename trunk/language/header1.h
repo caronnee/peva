@@ -27,6 +27,15 @@ enum Operation
 	OperationBoolOr,
 	OperationBoolNot
 };
+enum Options
+{
+	OptionHealth,
+	OptionSee,
+	OptionAttack,
+	OptionDefense,
+	OptionMisilleAttack,
+	OptionMisilleHealth
+};
 enum ObjectFeatures
 {
 	FeatureIsPlayer,
@@ -43,8 +52,9 @@ enum ObjectFeatures
 	FeatureWait,
 	FeatureSee
 };
-struct expr
+struct Expr
 {
+	Instructions ins;
 	Type output;
 };
 
@@ -78,6 +88,8 @@ struct Lval {
 	std::vector<Parameter_entry> entries;
 
 	ObjectFeatures of;
+	Options op;
+	Expr e;
 };
 
 // lex interface
