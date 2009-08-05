@@ -35,9 +35,9 @@
 #define NUMCHARS 11
 class Graphic
 {
+public:
 	std::string font;
 	int resolution_width, resolution_heigth;
-public:
 	int font_size;
 	TTF_Font * g_font;//main font
 	SDL_Color normal, light;//TODO read_only
