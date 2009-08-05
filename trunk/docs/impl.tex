@@ -1,9 +1,9 @@
 \chapter{Implementácia prostredia}
 \begin{definicia}
-Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať od inakiaľ ako z vnútra robota
+Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať od inakiaľ ako z vnútra robota.
 \end{definicia}
 
-Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Je potrebné zaistiť spravodlivosť pri vykonávaní programu. Robot totiž môže počítať s vlastnými premennými, na ktoré nepotrebuje dáta bojiska. Zaistenie spravodlivosti v tomto prípade teda znamená, aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
+Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Pre plynulosť simulácie je potrebné zaistiť spravodlivosť pri vykonávaní programu, v opdstate ide o zahovanie zdania simultánnosti robotov. Ako bolo povedane skôr Robot totiž môže počítať s vlastnými premennými, na ktoré nepotrebuje dáta bojiska, teda nemusí na nič čakať. Zaistenie spravodlivosti v tomto prípade teda znamená,  oby o Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
 \section{Priebeh penalizácie za inštrukciu}
 
 \begin{definicia}
@@ -42,7 +42,7 @@ LessEqual & 2 \\ %kontroluje sa aj real/integer!
 Call &  0 \\
 StartBlock & 0 \\ %iba zvysi aktuane zanorenie
 EndBlock &  SizeOfCleaned \\
-Load & LastLoaded \\
+Load & 1\\
 Return & 1 \\
 Restore & 1 \\
 \hline
