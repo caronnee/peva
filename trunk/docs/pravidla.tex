@@ -7,11 +7,13 @@ Ako názov naznačuje, Codewars je súboj hlavne kódov, teda algoritmov. To sa 
 \item Vlastnosti pojednávajúce o stave robota
 \begin{itemize} 
 \item Dĺžka života : je číslo označujúce životaschopnosť robota. Štandartne sa znižuje v okamihu, keď na miesto, kde stojí robot, chce pristúpiť iný objekt. Existuje možnosť, že sa v tomto prípade toto číslo aj tak nezmení, viz \ref{kolizie} 
-\item Obranné číslo: určuje odolnosť robota vočí iným objektom
-\item Útočné číslo: určuje útočnosť robotovho tela pri strete s inými objektami
 \item Polomer viditeľnosti: určuje vzdialenosť, do akej maximálne robot môže robot rozoznávať ostatné objekty.
 \item Uhol viditeľnosti: určuje kruhovú výseč, vnútri ktorej robot rozoznáva objekty.
 \item Veľkosť pamäte : určuje maximálny počet premenných, ktoré si robot pamatá a tým obmedzuje napríklad hĺbku zarekurzenia, keďže každá funkcia má nejaký návratový typ, ktorý si robot musí pamätať
+\end{itemize}
+\begin{itemize}
+\item Obranné číslo: určuje odolnosť robota vočí iným objektom
+\item Útočné číslo: určuje útočnosť robotovho tela pri strete s inými objektami
 \end{itemize}
 \item Vlasnosti týkajúce sa akcieschopnosti na diaľku
 \begin{itemize}
@@ -19,50 +21,21 @@ Ako názov naznačuje, Codewars je súboj hlavne kódov, teda algoritmov. To sa 
 \item Útočnosť zbrane: určuje ako moc je zbraň schopná ublížiť objektom, viz \ref{kolizie}
 \end{itemize}
 \end{itemize}
-Toto rozdelenie znamená, že hráč môže napríklad zvýšit robotovu odolnosť voči stretu s inúmi objektami, ale súčasne mu potom zostáva menej na zvýšenia životaschopnosti robota. Počet bodov, ktoré sa v rámci sekcie prezdeľujú, je vždy v každom oddieli pre každého hráča rovnaký (T.j. každý hráč prerozdelí X bodov v rámci prvej sekci a  Y v rámci druhej, kde X, Y nemusia byť nutne navzájom rôzne čísla). Rozdelenie vlastností do sekcií nemá väčší než estetický význam. Predstava, ze na úkor očí bude puška alebo podobný nástroj lepšie strielať, nie je príliš intuitívna a užívateľa by to mohlo pomerne zmiasť.
-\\Hlavnou úlohou hráča je však napísať algoritmus, podľa ktorého sa bude robot správať. Codewars ponúka možnosť definovať si vlastný cieľ, odlišný od ostatný robotov.\\
-Cieľom robota, ak nie je povedane inak, je zlikvidovať ostatných protivníkov. Definovanie vlastného cieľa prebieha pomocou jedného výrazu s výslednou pravdivostnou hodnotou true alebo false. V tomto výraze je možné používať iba boolovskú operácie AND, relačné operácie, preddefinované  premenné a funkcie, a konštanty typu integer. Použitie iných typov ako integer by síce bolo teoreticky možné, ale s ohľadom na povolené operátory a to, že všetky preddefinované funkcie sú celočíselného typu, je zavádzanie reálneho typu príliš veľký luxus. Povolené premenné sú:
-\begin{itemize}
-\item Killed - označuje počet zabitých robotov
-\item Health - označuje životnosť robota
-\item Nearest - označuje najbližsieho živého robota
-\item Robot - správa sa ako pole, kde robot[0] je aktuálny robot
-\end{itemize}
-Funkcie, ktoré sa dajú používať:\\
-\begin{itemize}
-\item Start(Robot r) - označuje miesto, kde sa robot objavil na začiatku hry, k jednotlivým súradniciam je možné pristupovať ako Start.x, Start.y
-\item hasVisitedSequence ([int i, int j])- podmienkou je navšivenie sekvencie miest
-\item hasVisitedSequenceOrder - podmienkou je sekvencia navštíveným mieste v presne danom poradí. 
-\end{itemize}
-Potom simulácia známej hry Capture the flag alebo dojdi na miesto, dojdi na start a bez toho, aby ta niekto zabil, označuje výraz:\\
-$$ (hasVisitedSequenceOrder(Start(Robot[1]), Start(Robot[0])))$$
-Tento cieľ sa zadáva vzhľadom na implementáciu gramatiky nástrojom Bison v zdrojovom kóde robota ešte pred definovaním akejkoľvek funkcie. Potom zdrojový kód môže vyzerať takto:
-$$ TARGET:(hasVisitedSequenceOrder(Start(Robot[1]), Start(Robot[0]))AND(Health > 10))
-integer function a()
-{
-	step();
-	step();
-	turnL();
-}
-main()
-{
-	a();
-}$$
-Tento kód implemetuje typ hry Capture the flag a tým, že robot spraví dva kroky, otočí sa doľava a toto bude opakovať dovtedy, kým sa nedostane na miesto startu prvého robota, späť na svoje a s velosťou životnosti minimálne 10. Z tohoto príkladu vyplýva ďalšia vec, že pokiaľ robot vykoná všetky inštrukcie, ktoré podľa programu mal, opakuje ich od začiatku.
+Toto rozdelenie znamená, že hráč môže napríklad zvýšit robotovu odolnosť voči stretu s inúmi objektami, ale súčasne mu potom zostáva menej na zvýšenia životaschopnosti robota. Počet bodov, ktoré sa v rámci sekcie prerozdeľujú, je vždy v každom oddieli pre každého hráča rovnaký (T.j. každý hráč prerozdelí X bodov v rámci prvej sekci a  Y v rámci druhej a Z v rámci tretej, kde X, Y, Z nemusia byť nutne navzájom rôzne čísla). Rozdelenie vlastností do sekcií nemá väčší než estetický význam. Predstava, ze na úkor očí bude puška alebo podobný nástroj lepšie strielať, nie je príliš intuitívna a užívateľa by to mohlo pomerne zmiasť. Čo sa týka samotných čísel X a Y, Z, vzhľadom na implementáciu kolízií a následné vypočítavanie poškodenia obete alebo útočníka sú v aktuálnej implementácií tieto dve čísla konštantami o hodnotách 200,50,50. Tieto čísla boli vybrané pre pomerne ľahké zapamätanie a súčasne nie sú moc veľké, aby sa simulácia príliš preťahovala.
+\\Hlavnou úlohou hráča je však napísať algoritmus, podľa ktorého sa bude robot správať. Optimálny algoritmus spraví to, robot ako jediný prežije, t.j väčšinu svojich nepriateľov zničí alebo ich prinúti zničíť sa(napríklad navedením na vlastnú strelu alebo podobne).
 
 \subsection{Vlastnosti stien} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
-Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú kominikovať s mapou. Sú to:\\
+Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú komunikovať s mapou. Sú to:\\
 \begin{itemize}
-\item Zvláštne políčko Start, ktoré je iba označením pri generovaní mapy, kde majú roboti na začiatku stáť 
+\item Zvláštne políčko Start, ktoré sa používa iba pri generovaní mapy, označúje políčko, kde majú roboti na začiatku simulácie stáť 
 \item MovableWall, touto stenou je možné pohnúť, ak na políčku za za ňou v smere pohybu nič nie je.
 \item TrapWall. Táto stena vždy na náhodný počet tikov zmizne a znova sa objaví. V prípade, že sa v okamžiku jej objavenia je na jej políčku nachádza iný objekt, ráta sa to ako kolízia, viz neskôr.%TODO referencia
 \item SolidWall, obyčajná stena bez špeciálnych vlastností.
 \end {itemize}
-Steny sa dajú kombinovať, to znamená, že napríklad východ sa môže pohybovať alebo miznúť. 
+Steny sa dajú kombinovať, to znamená, že napríklad stena sa môže pohybovať alebo miznúť. 
 
 \subsection{Kolízie}\label{kolizie}
-Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to bud útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to strela, zanikne, ak je to stena, útoči ďalej, ak je to hráč, závisí na jeho algoritme.
+Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to buď útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou, akovýsledok sa mu zmení smer, ktorým sa doteraz pohyboval), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to napríklad strela, zanikne, ak je to stena, svojím pohybom útoči ďalej, ak je to hráč, závisí na jeho algoritme.
 
 \subsection {Priebeh hry}
-Hra sa začína vhodením robotov do prostredia v poradí, v akom boli pridaní a roboti by mali začať vykonávať svoj program súčasne. To implementačne znamená, že buď každý nový robot dostane vlastné vlákno, alebo sa určí spôsob zoradenia robotov tak, aby nesimultánnosť bola visieť čo najmenej. Spôsob preplánovania jednotlivého je popísaný neskôr, tu stačí povedať, že každý jednotlivý kus kódu programu robota zaberá istý čas a teda sa robot môže dostať opať na radu až v okamihu, keď tento čas pominie. \\
-Codewars je vlastne hra založená na tom, že vo velkej väčsine je hra rozhodnutá ešte pre okamihom spustenia vlastnej simulácie. Tá menšina je tvorená algoritmami, ktoré používají funkciu random a teda majú pravdepodobnosť, že sa skončia inak každú ďalšiu simuláciu.
+Hra sa začína vhodením robotov do prostredia v poradí, v akom boli pridaní a roboti by mali začať vykonávať svoj program súčasne. To implementačne znamená, že buď každý nový robot dostane vlastné vlákno, alebo sa určí spôsob zoradenia robotov tak, aby nesimultánnosť bola vidieť čo najmenej. Spôsob preplánovania jednotlivého súčastí CodeWars je popísaný neskôr, nateraz stačí povedať, že každý jednotlivý kus kódu programu robota zaberá istý čas (napríklad na premiestnenie sa alebo vypočítanie premennej), a teda sa robot môže dostať opať na radu až v okamihu, keď tento čas pominie. \\ %TODO
