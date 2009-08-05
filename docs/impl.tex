@@ -1,8 +1,13 @@
 \chapter{Implementácia prostredia}
-Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Je potrebné zaistiť spravodlivosť pri vykonávaní programu. Robot totiž môže počítať s vlastnými premennými, na ktore nepotrebuje dáta bojiska. Zaistenie spravodlvosti v tomto prípade teda znamená, aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
-\section{Priebeh penalizácie za inštrukciu}
 \begin{definicia}
-Tick je jednotka virtuálneho času sveta. Timeout je počet tickov,ktoré má robot k dispozícii na premýšľanie a tento čas (ďalej nazývaný timeout) nesmie prekročiť.
+Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať od inakiaľ ako z vnútra robota
+\end{definicia}
+
+Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Je potrebné zaistiť spravodlivosť pri vykonávaní programu. Robot totiž môže počítať s vlastnými premennými, na ktoré nepotrebuje dáta bojiska. Zaistenie spravodlivosti v tomto prípade teda znamená, aby ten robot, ktorý počítal dlho bez toho, aby vykonal nejakú akciu súvisejúcu s bojiskom, prišiel na radu s ťahom o niečo neskôr ako robot, ktorý takúto akciu vykoná okamžite. Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
+\section{Priebeh penalizácie za inštrukciu}
+
+\begin{definicia}
+Tick je jednotka virtuálneho času sveta. 
 \end{definicia}
 
 \begin{definicia}
@@ -65,6 +70,7 @@ V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá, 
 Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
 
 \subsection{Preplánovanie}
+
 Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhšie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play.\\
 V tomto prípade sa za kľúč, podľa ktorého sa objekty usporadúvajú, považuje čas od začiatku behu hry. Problém ale nastáva v okamihu, keď tento čas pretečie. Vzhľadom na to, že celkový čas simulácie je ukladaný do 64-bitového integeru, je možnosť, že by tento čas pretiekol, krajne neprijateľný, pretože celkový čas by bol vačší ako niekoľko tisíc rokov:)\\
 Otázkou zostáva, ako implementovať túto časovú líniu tak, aby celý program nepůsobil trhane, teda aby v okamihu, keď robot rozmýšľa, ostatné objekty, ktoré sú na rade, sa mohli pohybova+t, keďže samotné premýšľanie sa ich nedotýka. Existuje niekoľko možností:
@@ -169,61 +175,45 @@ Jump & $ DeleteIP,VS,t$\\
 \label{VnutroBota}
 \end{table}
 
-\subsection{Vlastnosti stien} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
-Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú kominikovať s mapou. Sú to:\\
-\begin{itemize}
-\item zvláštne políčko Exit, na ktoré sa má robot dostať. Pokiaľ je políčok viac, a nie je difinované inak, robot sa musí dostať do toho najvzdialenejšieho exitu od miesta, kde začínal.
-\item MovableWall, touto stenou je možné pohnúť, ak na políčku za za ňou v smere pohybu nič nie je.
-\item TrapWall. Táto stena vždy na náhodný počet tikov zmizne a znova sa objaví. V prípade, že sa v okamžiku jej objavenia je na jej políčku nachádza iný objekt, ráta sa to ako kolízia, viz neskôr.%TODO referencia
-\item SolidWall, obyčajná stena bez špeciálnych vlastností.
-\end {itemize}
-Steny sa dajú kombinovať, to znamená, že napríklad východ sa môže pohybovať alebo miznúť. 
-\subsection{Viditeľnost robota}
-V úvode si užívateľ má možnost nastavit dve premenné, ktoré ovplyvňujú to, ako ďaleko bud robot vidieť. Sú to premenné  'uhol' a 'vzdialenoť'. Tieto premenné sa navzájom ovlyvňujú a teda počet bodov, ktorý sa medzi nich má rozdeliť, je nezávislý na počte bodov u ostatných vlastností robota. Maximálna veľkosť \'vzdialenosti\' je 32, uhol môže byť až $90\,^{\circ}$. Uhol je zadávaný v stupňoch aby sa predišlo načítavanie reálnych hodnôt a tým k strate informácií.
+\subsection{Zrak robota}
+V úvode si užívateľ má možnost nastavit dve premenné, ktoré ovplyvňujú to, ako ďaleko bude robot vidieť. Sú to premenné X, Y, ktoré označujú obdĺžnik, podľa ktorého sa zrak ďalej určí.
+
+\begin{figure}
+\centering
+\includegraphics[totalheight=0.2\textheight,width=.6\textwidth]{chooseVisible}
+\caption {Výber parametrov pre zrak robota}
+\label{choosing}
+\end{figure}
+
 \begin{definicia}
-Pod zorným poľom robota rozumieme kruhovú výseč o polomere 'vzdialenosti'.Robot vidí objekt v okamihu, ked vidí stred políčka, na ktorom objekt stojí a úsečka spájajúca tieto dva body nepretína žiadny ďalší objekt.
+Pod zorným poľom robota rozumieme hornú polovicu trojuholníka určeného uhlopriečkou medzi vrcholmi obdĺžnika o veľkosti X,Y. Robot vidí objekt v okamihu, ked vidí stred políčka, na ktorom objekt stojí a úsečka spájajúca tieto dva body nepretína žiadny ďalší blokujúci objekt. blokujúci objekt je definovaný implementáciou, v našom prípade je blokujúci objekt robot a stena, neblokujúci strela. toto rozdelenie vychádza z bežneho pozorovania, že drobná stela nemá tendenciu zakrývať výhľad.
 \end{definicia}
-Vzdialenosť a uhol určujú obdĺžnik, ktorý obsahuje presnú polovicu zorného poľa robota.a Tento obdĺžnik môže mať vzhľadom na podmienku o zadávaní vzialenosti a uhla maximálne obsah 32. Pri vytváraní robota sa vygeneruje obdĺžnik a každému políčku sa priradí maska. Nech má obdĺžnik rozmery (x,y) a jeho dolný ľavý vrchol je na pozícií (0,0), čo je v podstate pozícia bota. Táto maska sa potom spočíta tak, že na vygeneruje úsečka spájajúca(0,0) postupne so všetkými stredmi políčok hornom trojuholníku. Každému políčku potom priradíme 32-bitovú masku, kde jedničky sú na pozíciach čísla toho políčka, cez ktoré táto úsečka prechádzala. Druhá polovica je presne symetrická, teda masky tejto polovičky nemusíme počítať zvlášť. Potom na zistenie, ktoré objekt sú viditeľné a ktoré nie, stačí v mape prejst tento obdĺžnik 2x (raz doľava a raz doprava) s počiatočnou maskou nulovou a v prípade, že sa na i-tom políčku zhoduje maska políčka s majou maskou binárne sčítanou s maskou políčka, na to políčko obot vidí. Ak tam je ďalej objekt, nastaví sa v skúšobnej maske na i.tom mieste nula, inak jedna. Ak sa masku nezhodujú, potom robot na toto políčko nevidí a skúšobná maska bude mať na i-tom mieste nulu.
+Obdĺžnik môže mať vzhľadom na implementáciu maximálne obsah 32, čo je na väčšine architektúrách veľkosť integeru. Toto číslo bolo zvolené, pretože je dostatočne veľké a súčasne vysoko dostupné na rôznych architektúrach. Samotne detekovanie toho, čo robot vidí, prebieha nasledujúco: \\
+\begin{figure}
+\centering
+\includegraphics[totalheight=0.4\textheight,width=.8\textwidth]{visibility}
+\caption {Viditeľnosť robota s parametrami x = 5, y = 6}
+\label{visibility}
+\end{figure}
+Nech má obdĺžnik rozmery (x,y) a jeho dolný ľavý vrchol je na pozícií (0,0), čo je v podstate pozícia bota. Obdĺžnik je teda rozdelený na XxY menších obdĺžničkov. Kazdý z nich má svoje poradové číslo a masku, ktorá má na i-tej pozícií jedničku práve vtedy, ak úsećka počínajúca v bode [0.5,0.5],čo je stred políčko s robotom, a stredom skúmaného políčka prechádza políčkom s identifikaćným číslom ID. takto ale robot bude vidieť len na jednu stranu, ale keďže druhá polovička je presne symetrická, môžeme tieto práve vygenerované masky použiť, viz \ref{visibility}  na obe strany bez upravovania. \\
+Podla obrázka \ref{visibility} bude mať políčko s ID 4 masku 1111, pretože na to, aby ho bolo vidno, je nutné vidieť políčka s ID 1,2,3. Podobne políčko 9 bude mať masku 110000011, pretože úsečka spájajúca tieto dva body prebieha tiež týmito políčkami. Zistenie, či práve toto políčko je pretnuté úsečkou, sa takto zjednodušuje na nájdenie všeobecnej rovnice priamky s koncovými bodmi v stredoch týchto dvoch políčoka zistenie, či pravý dolný vrchol a ľavý horný vrchol patria rovnakej polrovine generovanej touto priamkou.\\
+
+Za života robota sa jeho zrak nemení a teda môžeme použiť tieto vygenerované masky bez ďalšieho prepočítavania. Pri volaní metody see(), ktorá dodá viditeľné objekty robotovi, potom stačí namapovať náš obdĺžnik na príslušné miesto na mape(podľa robotovej pozície a natočenia), nastaviť 1 na i-té miesto políčka s ID = i, na ktorom nie je nič alebo len neblokujúci objekt, a výslednú masku porovnať s predtým vypočítanou maskou každého políčka, na ktoré by robot mohol vidieť. Nech zisťujeme, či vidíme objekt na pozícií na mape X,Y, ktorý sme namapovali na políčko s ID = I a maskou M. Ak výsledná maska má jedničky presne na tých istých miestach ako M, potom I je viditeľné, pretože všetky políčka, na ktorých I záviselo, boli označené ako viditeľné. \\
+Nech existuje také políčko s ID = P, na ktorom je nejaký blokujúci objekt. Potom vo výslednej maske bude na P-tom mieste 0 a políčko I, ak úsečka spájajúca stredy políčok robota a I prechádzala cez P, bude mať na P-tom mieste 1. Maska políčka I bude mať teda o minimálne jednu 1 viac ako výsledná maska a teda políčko bude označené ako neviditeľné.\\
+Na obrázku \ref{visibleo} je červeným znázornen=y objekt, ktorý robot uź neuvidía zelenou, ktorý uvidí. Napríklad je viditeľný robot R, pretože pred ním je strela S a keďže je neblokujúca, políčko 4 pripojilo na výslednej maske 1 na 4.pozícií. Pozícia 5 má masku 1111 a teda je viditeľná.
+
+\begin{figure}
+\centering
+\includegraphics[totalheight=0.4\textheight,width=.8\textwidth]{VisibleObjects}
+\caption { Objekty v zornom poli robota}
+\label{visibleo}
+\end{figure}
 \indent
+
 \subsection{Priebeh výpočtu robota} %co je povolene a ako sa to riesi implementacne
 ..\\
 Zaujímavejšie je to pri volaní funkcie, ktorá má defaultný parameter. Pretože sa predpokladá, že program bude prístupný aj pre obyčaných užívateľov, je možné u funkcie definovať aj explicitnú hodnotu a to nezávisle na poradí parametrov. T.j. explicitné hodnota môže byť zadaná ako prvý a tretí parameter, ale nie ako druhý. Takáto funkcia sa nadefinuje podobne ako v C/C++, napríklad : \\\center $ function distance(integer x=3, integer y=2, integer radius, Location l) $ \\ je funkcia, ktorá bude napr
 \subsection{Detekcia zacyklenia}
-
-\section{Vlastnosti robotov}
-Výsledok programu, ktorého inštrukcie robot vykonáva, je závislý na konkrétnom type robota. Typ robota je definovaný niekoľkými parametrami, ktoré si bežný užívateľ samostatne na začiatku hry definuje == UholViditelnost, PolomerViditelnosti, Obrana, Hitpoints, TypStrely, VelkostPamate==
-\begin{table}[ht]
-\caption{Vlastnosti robota}   % title of Table
-\centering                          % used for centering table
-\begin{tabular}{cl}            % centered columns (4 columns)
-%\hline\hline                        %inserts double horizontal lines
-Vlastnost & Vplyv \\   % inserts table
-%heading
-%\hline                              % inserts single horizontal line
-polomer viditeľnosti & Robot dokáže na určitú vzdialenosť rozpoznať object, táto vlastnosť určuje, koľko políčok dopredu v priamom smere( v smere, akým je bot aktualne otočený) vidí. Tento počet sa pod iným uhlom o niečo zmení,\\
-uhol viditeľnosti & maximálny rozptyl viditeľnosti - robot nevidí celý kruh okolo seba, ale iba určitú výseč \\
-Obrana & Obranne cislo bota. Pouziva sa pri strete s nejakou prekazkou. Viz kolizie. \\
-Hitpoints  & životnost bota, akonahle klesne na nulu, z fronty akcií sa jeho nasledujúca akcia odstráni a robot mizne do prepadlišťa dejin\\
-Typ strely & Strela je sa definuje podobne ako samotný bot, ale ma iné parametre\\
-\end{tabular}
-\label{table:vlastnosti}          % is used to refer this table in the text
-\end{table}
-
-\begin{table}[h]
-\caption{Vlastnosti Strely}   % title of Table
-\centering                          % used for centering table
-\begin{tabular}{cc}            % centered columns (4 columns)
-\hline\hline                        %inserts double horizontal lines
-Vlastnost & Vplyv \\   % inserts table
-%heading
-\hline                              % inserts single horizontal line
-Odrážavost & definuje, ako moc sa strela od steny odrazí, v podstate je to to iste ako hmotnosť\\ \hline
-Rýchlosť & definuje preplanovanie vo fronte akcií\\ \hline
-Hitpoints  & dolet strely, ten sa znižuje s poctom tikov a súčasne kolíziami\\ \hline
-Utok & Utocne cislo bota, pouziva sa pri utok, viz kolizie \\ \hline
-\hline                              %inserts single line
-\end{tabular}
-\end{table}
 
 Užívateľ si typ strely definuje tak, že dostane k dispozícií určitź počet bodv a tie musí medzi jednotlive volby rozdeliť\\
 Bot premýšla tak, že sa nechá bežat dovtedy, kým z jeho program nenarazí na inštrukciu, ktorá by ovplyvnila svet, alebo kým neprsiahne timeout. Ak presiahne timeout, preruší sa, preplánuje vo fronte udalostí ďalej (presnejšie o TIMEOUT tikov ďalej)\\
