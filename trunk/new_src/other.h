@@ -53,7 +53,6 @@ class Play:public Menu
 	};
 
 	Window * w;
-	size_t begin, end;
 	Position p;
 	std::list<Letter *>::iterator iter;
 	std::list<Letter *> letts;
