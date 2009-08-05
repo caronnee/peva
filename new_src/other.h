@@ -4,6 +4,7 @@
 #include <vector>
 #include "draw.h"
 #include "position.h"
+#include <list>
 
 
 class Settings:public Menu
@@ -51,12 +52,11 @@ class Play:public Menu
 		Game
 	};
 
-	int size;
 	Window * w;
 	size_t begin, end;
 	Position p;
-//	std::vector<int> begin_line;
-	std::vector<Letter *> letts;
+	std::list<Letter>::iterator iter;
+	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
 public:
