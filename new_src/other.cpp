@@ -111,11 +111,14 @@ void Play::draw()
 			r.y += letters[0].heigth;
 		}
 		SDL_BlitSurface(letters[i].s,NULL,w->g->g_screen, &r);
-	}*/
-	for(std::list<Letter *>::iterator i = iter_beg; 
+	}*/std::list<Letter *>::iterator i; 
+	bool was_displayed = false;
+	for(i = letts.begin(); 
 			(i!=letts.end()) && (r.y < w->g->resolution_width);
 		       	i++)
 	{
+		if ( i == iter)
+			was_displayed = true;
 		if((*i) == NULL)
 		{
 			r.x = 0;
@@ -125,6 +128,10 @@ void Play::draw()
 		SDL_BlitSurface((*i)->s, NULL, w->g->g_screen, &r);
 		r.x+=(*i)->size;
 	}
+	if ( !was_displayed)
+		do
+			iter_beg++;
+		while ((*iter_beg)!=NULL); //zobraz dalsiu riadku
 	SDL_Flip(w->g->g_screen);
 }
 
@@ -157,13 +164,8 @@ void Play::process()
 					case SDLK_BACKSPACE:
 						{
 							if (iter == letts.begin()); break;
-							if (iter == iter_beg)
-							do
-								iter_beg--;
-							while(iter_beg!=letts.begin() || (*iter_beg !=NULL));
 							iter--;
 							letts.erase(iter);
-							
 							break;
 						}
 					case SDLK_LEFT:
@@ -184,10 +186,6 @@ void Play::process()
 							break;
 						}
 					default:
-						if (iter == iter_end)
-							do
-								iter_beg++;
-							while ((*iter_beg)!=NULL);
 						letts.insert(iter,&letters[w->g->event.key.keysym.unicode]);
 						break;
 				}
