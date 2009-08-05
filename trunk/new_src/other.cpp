@@ -84,7 +84,6 @@ Play::Play(Window *w_)
 {
 	name = "Play";
 	w = w_;
-	size = 10;
 	begin = 0;
 	rect.x = 0;
 	rect.y = 0;
@@ -101,7 +100,6 @@ void Play::draw()
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
-	size = 10;
 	SDL_BlitSurface(w->background,NULL,w->g->g_screen,&r);
 /*	for( int i =0; i< 256; i++)
 	{
@@ -113,16 +111,18 @@ void Play::draw()
 		}
 		SDL_BlitSurface(letters[i].s,NULL,w->g->g_screen, &r);
 	}*/
-	for(size_t i = begin; (i<letts.size()) && (r.y < w->g->resolution_width); i++)
+	for(std::list<Letter *>::iterator i = letts.begin(); 
+			(i!=letts.end()) && (r.y < w->g->resolution_width);
+		       	i++)
 	{
-		if(letts[i] == NULL)
+		if((*i) == NULL)
 		{
 			r.x = 0;
 			r.y+=letters[0].heigth;
 			continue;
 		}
-		SDL_BlitSurface(letts[i]->s, NULL, w->g->g_screen, &r);
-		r.x+=letts[i]->size;
+		SDL_BlitSurface((*i)->s, NULL, w->g->g_screen, &r);
+		r.x+=(*i)->size;
 	}
 	SDL_Flip(w->g->g_screen);
 }
@@ -142,6 +142,11 @@ void Play::process()
 							letts.push_back(NULL);
 							break;
 						}
+					case SDLK_UP:
+						{
+							
+							break;
+						}
 					case SDLK_ESCAPE:
 						{
 							w->state.pop();
@@ -151,6 +156,7 @@ void Play::process()
 					default:
 						std::cout <<w->g->event.key.keysym.unicode << "!" <<std::endl;
 						letts.push_back(&letters[w->g->event.key.keysym.unicode]);
+						
 						break;
 				}
 				break;
