@@ -86,7 +86,7 @@ Play::Play(Window *w_)
 	w = w_;
 	rect.x = 0;
 	rect.y = 0;
-	iter = letts.begin();
+	iter = iter_beg = letts.begin();
 	for (int i = 0; i< 256; i++)
 	{
 		letters[i].heigth = TTF_FontLineSkip(w->g->g_font);
@@ -98,6 +98,7 @@ Play::Play(Window *w_)
 void Play::draw()
 {
 	SDL_Rect r;
+	p.x = 0; p.y = 0;
 	r.x = 0;
 	r.y = 0;
 	SDL_BlitSurface(w->background,NULL,w->g->g_screen,&r);
@@ -111,7 +112,7 @@ void Play::draw()
 		}
 		SDL_BlitSurface(letters[i].s,NULL,w->g->g_screen, &r);
 	}*/
-	for(std::list<Letter *>::iterator i = letts.begin(); 
+	for(std::list<Letter *>::iterator i = iter_beg; 
 			(i!=letts.end()) && (r.y < w->g->resolution_width);
 		       	i++)
 	{
@@ -155,8 +156,14 @@ void Play::process()
 						}
 					case SDLK_BACKSPACE:
 						{
+							if (iter == letts.begin()); break;
+							if (iter == iter_beg)
+							do
+								iter_beg--;
+							while(iter_beg!=letts.begin() || (*iter_beg !=NULL));
 							iter--;
 							letts.erase(iter);
+							
 							break;
 						}
 					case SDLK_LEFT:
@@ -176,11 +183,12 @@ void Play::process()
 							w->state.pop();
 							break;
 						}
-								
 					default:
-						std::cout <<w->g->event.key.keysym.unicode << "!" <<std::endl;
+						if (iter == iter_end)
+							do
+								iter_beg++;
+							while ((*iter_beg)!=NULL);
 						letts.insert(iter,&letters[w->g->event.key.keysym.unicode]);
-						
 						break;
 				}
 				break;

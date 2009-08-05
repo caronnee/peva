@@ -54,7 +54,7 @@ class Play:public Menu
 
 	Window * w;
 	Position p;
-	std::list<Letter *>::iterator iter;
+	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
