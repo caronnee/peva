@@ -84,7 +84,6 @@ Play::Play(Window *w_)
 {
 	name = "Play";
 	w = w_;
-	begin = 0;
 	rect.x = 0;
 	rect.y = 0;
 	iter = letts.begin();
@@ -143,9 +142,33 @@ void Play::process()
 							letts.push_back(NULL);
 							break;
 						}
+					case SDLK_DOWN:
 					case SDLK_UP:
 						{
-							
+							break;
+						}
+					case SDLK_TAB:
+						{
+							for(int i =0; i< 7; i++)
+								letts.insert(iter,&letters[' ']);
+							break;
+						}
+					case SDLK_BACKSPACE:
+						{
+							iter--;
+							letts.erase(iter);
+							break;
+						}
+					case SDLK_LEFT:
+						{
+							if (iter!=letts.begin())
+								iter--;
+							break;
+						}
+					case SDLK_RIGHT:
+						{
+							if (iter!=letts.end())
+								iter++;
 							break;
 						}
 					case SDLK_ESCAPE:
