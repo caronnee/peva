@@ -14,39 +14,40 @@ enum WallType
 	SolidWall_, //o okolo sa to maposutu doprava pre masku
 	PushableWall_,
 	TrapWall_,
-	ExitWall_,
 	NumberOfWalls_
+};
+class ImageTile
+{
+	public:
+		SDL_Surface ** tiles;
+		ImageTile(); //naloaduje vsetky obrazky
+		SDL_Surface * get_image(WallType);
 };
 class Tile:public Object //oddelenie urovne abstrakcie:)
 {
 public:
 	Tile();
+	Tile(ImageTile *);
 	virtual bool is_blocking();
 	//virtual void damage(Object * sender);
 };
 class SolidWall:public Tile //nic specialneho, proste sten a s nejkou odolnostou
 {
 public:
-	SolidWall();
+	SolidWall(ImageTile *);
 	//virtual void damage(Object * sender); 
 };
 
 class PushableWall:public Tile //da sa nou pohnut
 {
 public:
-	PushableWall();
+	PushableWall(ImageTile *);
 	//virtual void damage(Object * sender);
 };
 class TrapWall:public Tile // opstey na zemi sa vystrkujuce:)
 {
 public:
-	TrapWall();
-	//virtual void damage(Object * sender);
-};
-class ExitWall:public Tile // Kam sa ma robot dostat 
-{
-public:
-	ExitWall();
+	TrapWall(ImageTile *);
 	//virtual void damage(Object * sender);
 };
 #endif

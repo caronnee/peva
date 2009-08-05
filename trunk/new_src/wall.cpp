@@ -1,48 +1,54 @@
 #include "wall.h"
 #include <iostream>
 
-Tile::Tile() 
+Tile::Tile(){
+
+}
+ImageTile::ImageTile()
 {
-	image = IMG_Load("../images/FreeTile.png");
+	tiles = new SDL_Surface*[NumberOfWalls_];
+	tiles[FreeTile] = IMG_Load("../images/FreeTile.png");
+	tiles[SolidWall_] = IMG_Load("../images/SolidWall.png");
+	tiles[PushableWall_] = IMG_Load("../images/PushableWall.png");
+	tiles[TrapWall_] = IMG_Load("../images/TrapWall.png");
+}
+SDL_Surface * ImageTile::get_image(WallType t)
+{
+	return tiles[t];
+}
+Tile::Tile(ImageTile * t) 
+{
+	image = t->get_image(FreeTile); 
 } 
 bool Tile::is_blocking()
 {
 	return true;
 }
 
-SolidWall::SolidWall()
+SolidWall::SolidWall(ImageTile * t)
 {
 	name = "SolidWall";
-	image = IMG_Load("../images/SolidWall.png");//kedze je to iba v konstruktore, mozno si to mozem dovolit
+	image = t->get_image(SolidWall_);
 	if (image == NULL) //crash!
 	{
 		std::cerr << "Image of solid wall not found!)";
 	}
 }
-TrapWall::TrapWall()
+TrapWall::TrapWall(ImageTile * t)
 {
 	name = "TrapWall";
-	image = IMG_Load("../images/TrapWall.png");
+	image = t->get_image(TrapWall_);
 	if (image == NULL) //crash!o
 	{
 		std::cerr << "Image of trap wall not found!)";
 	}
 }
-PushableWall::PushableWall()
+PushableWall::PushableWall(ImageTile * t)
 {
 	name = "PushableWall";
-	image = IMG_Load("../images/PushableWall.png");
+	image = t->get_image(TrapWall_);
 	if (image == NULL) //crash!o
 	{
 		std::cerr << "Image of pushable wall not found!)";
-	}
-}
-ExitWall::ExitWall()
-{
-	name = "ExitWall";
-	image = IMG_Load("../images/ExitWall.png");
-	if (image == NULL) //crash!o
-	{
-		std::cerr << "Image of exit wall not found!)";
 	}
 }

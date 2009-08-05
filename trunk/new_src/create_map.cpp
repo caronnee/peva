@@ -61,11 +61,6 @@ Create_map::Create_map(Window *w_)
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
 	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
 
-	tiles[FreeTile] = new Tile();
-	tiles[SolidWall_] = new SolidWall();
-	tiles[TrapWall_] = new TrapWall();
-	tiles[PushableWall_] = new PushableWall();
-	tiles[ExitWall_] = new ExitWall();
 	int pom = rects[CHOOSE].y + IMG_HEIGHT/2;
 	for (int i =1; i< NumberOfWalls_; i++)
 	{
@@ -161,10 +156,10 @@ void Create_map::draw()
 					for (int i = 0; i < NumberOfWalls_; i++)
 					{
 						if (map[tile_x][tile_y] & (1<<i))
-							SDL_BlitSurface(tiles[i]->show(),NULL,w->g->g_screen, &rect); //mutacie vidielny len ten prvy povrch
+							SDL_BlitSurface(t.tiles[i],NULL,w->g->g_screen, &rect); //mutacie vidielny len ten prvy povrch
 					}
 				}
-				else SDL_BlitSurface(tiles[FreeTile]->show(),NULL,w->g->g_screen,&rect);
+				else SDL_BlitSurface(t.tiles[FreeTile],NULL,w->g->g_screen,&rect);
 				rect.x+=IMG_WIDTH;
 				tile_x++;
 				if (tile_x == resolX)
@@ -181,13 +176,13 @@ void Create_map::draw()
 		SDL_SetClipRect(w->g->g_screen, NULL);
 		for (int i =1 ; i< NumberOfWalls_; i++) //bez grass
 		{
-			SDL_BlitSurface(tiles[i]->show(),NULL,w->g->g_screen,&tile_rect[i]);
+			std::cout << "huuu" << i <<std::endl;
+			SDL_BlitSurface(t.tiles[i],NULL,w->g->g_screen,&tile_rect[i]);
 		}
 		if (select < NumberOfWalls_)
 		{
 			SDL_BlitSurface(selected,NULL,w->g->g_screen,&tile_rect[select]);
 		}
-
 	}
 	SDL_Flip(w->g->g_screen);
 }
@@ -273,7 +268,7 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 	bool found = false;
 	xmlNodePtr tile = NULL;
 	xmlNodePtr line = NULL;
-	std::string walls[] = {"FreeTile","Solid Wall","Pushable Wall","Trap Wall","Exit"};//TODO dat to do statit niekam medzi walls
+	std::string walls[] = {"FreeTile","Solid Wall","Pushable Wall","Trap Wall"};//TODO dat to do statit niekam medzi walls
 	int from,to;
 	for (int i = 1; i< NumberOfWalls_; i++)
 	{
@@ -504,8 +499,6 @@ void Create_map::process_map()
 											     case SolidWall_:
 												     std::cout << "S";
 												     break;
-											     case ExitWall_: std::cout<< "E";
-													     break;
 											     case PushableWall_: std::cout << "pushable";
 														 break;
 											     case TrapWall_: std::cout <<"T";
