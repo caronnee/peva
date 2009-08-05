@@ -4,8 +4,11 @@ integer function f(integer a, integer b)
 {
 	integer t;
 	left = a ;
+	f(a,b);
 	while ( left <10)
 	{
+		see();
+		shoot();
 		break;
 	}
 	return a+b;

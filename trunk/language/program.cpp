@@ -41,7 +41,7 @@ Function * Program::find_f(std::string nam)
 			return core->functions[i];
 		}
 	}
-	return NULL;
+	return core->nested_function;
 }
 
 Node * Program::find_var(std::string var_name)

@@ -44,12 +44,12 @@ struct Robot_body : public Object
 	}
 	int See()
 	{
-		std::cout <<"shooting" <<std::endl;
+		std::cout << "Checking visibility" <<std::endl;
 		return 0;
 	}
 	int Wait()
 	{
-		std::cout <<"shooting" <<std::endl;
+		std::cout << "Waiting" <<std::endl;
 		return 0;
 	}
 	int Turn(int var)
