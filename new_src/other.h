@@ -3,6 +3,7 @@
 
 #include "draw.h"
 
+
 class Settings:public Menu
 {
 	Window* w;
@@ -32,9 +33,23 @@ public:
 	virtual void draw();
 	virtual ~Join()throw();
 };
+struct Letter
+{
+	std::string ch;
+	int size,heigth;
+	SDL_Surface * s;
+};
 class Play:public Menu
 {
+	enum PlayType
+	{
+		Editor,
+		Game
+	};
+	int size;
 	Window * w;
+	SDL_Rect rect;
+	Letter letters[256];
 public:
 	Play(Window * w_);
 	virtual void process(void);
