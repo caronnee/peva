@@ -1,7 +1,7 @@
 #ifndef __CREATE_MAP__
 #define __CREATE_MAP__
 
-#include "draw.h"
+#include "graphic.h"
 #include "menu.h"
 #include "snake.h"
 

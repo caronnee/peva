@@ -2,8 +2,9 @@
 #define __OTHER__
 
 #include <vector>
-#include "draw.h"
+#include "graphic.h"
 #include "position.h"
+#include "map.h"
 #include <list>
 
 
@@ -52,12 +53,17 @@ class Play:public Menu
 		Game
 	};
 
+	Map * m;
 	Window * w;
 	Position p;
+	Position begin, resolution;
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
+	ImageTile t;
+	void redraw();
+	std::vector<Object *> objects;
 public:
 	Play(Window * w_);
 	virtual void process(void);

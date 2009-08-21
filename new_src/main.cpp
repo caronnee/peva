@@ -1,10 +1,13 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "draw.h"
+#include "graphic.h"
 
+//config file
 #define CONFIG "./codewars.config"
-#define DELIMINER "="
+
+// deliminer to delimine values in config
+#define DELIMINER '='
 
 using namespace std;
 
@@ -43,7 +46,8 @@ int main(int argc, char *argv[])
 			if (name == "font-size") g.set_font_size(par);
 			if (name == "font") g.set_font(par);
 			if (name == "background") w.set_background(par);
-			if (name == "timeout") w.set_timeout(par);
+		//	if (name == "timeout") w.set_timeout(par);
+		//	TODO timeout nepatri do grafiky ale do hry -> gamestate
 		}
 		config.close();
 	}

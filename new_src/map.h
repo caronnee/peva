@@ -3,29 +3,38 @@
 
 #include <SDL/SDL.h>
 #include <vector>
+#include <list>
+#include "graphic.h"
 #include "position.h"
-#include "wall.h"
-#include "robot.h"
-#include "draw.h"
+#include "objects.h"
+
+class Box
+{
+	Rectangle bounds;
+	public:
+	Box(Rectangle rect);
+	Position box_resolution;
+	std::list<Object *> objects; //objects in area
+};
 
 class Map
 {
 public:
-	Object *** map;
+	Box *** map;
 	ImageTile m;
 	SDL_Rect** rects;
-	Position resolution; //kolko policok sa zmesti do mapy
+	Position resolution; //velkost mapy v pixeloch
+	Position tiles; //kolko policok sa zmesti
 	std::vector<Position> bot_begins;
 	Position begin_draw_at;	
-//	void collision(Object * o1; Object * o2);
-	int begin_x, begin_y; //odkial sa ma vykreslovat
+	void collision(Object * o1, Object * o2);
 	Map(Position resolution);
-//	int move(Object * o); //ak sa chce object pohnut, vracia ako moc sa to pokazilo
+	void move(Object * o); //ak sa chce object pohnut, vracia ako moc sa to pokazilo
 	~Map();
 	void redraw(Window * w); //ked ma vykreslit vsetko
+	void update(Window *, Position);
 //	void update(SDL_Rect rec);
-//	int process();
-//	void generate_positions();
+//	void move(Position p, Position p2);
 };
 
 

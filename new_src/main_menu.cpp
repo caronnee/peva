@@ -58,13 +58,13 @@ void Main::draw()
 	w->tapestry();
 	
 	int offset_up = 10;
-	rect.y = (w->g->g_screen->h + (w->g->font_size+offset_up)*4)/2;
-	rect.x = (w->g->g_screen->w)/2 - 15;// TODO zmenit na lepsie
+	rect.y = (w->g->screen->h + (w->g->font_size+offset_up)*4)/2;
+	rect.x = (w->g->screen->w)/2 - 15;// TODO zmenit na lepsie
 	SDL_Surface* text;
 	TTF_SetFontStyle(w->g->g_font, TTF_STYLE_NORMAL);
 	int width;
 	
-	rect.y = (w->g->g_screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
+	rect.y = (w->g->screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
 	for (int i =0; i< NUMBEROFMENUS; i++)
 	{
 		TTF_SizeText(w->g->g_font, menus[i]->name.c_str(),&width, NULL);
@@ -77,13 +77,13 @@ void Main::draw()
 			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->name.c_str(), w->g->normal );
 		}	
 		if (text ==NULL) std::cout << " Error rendering text " << TTF_GetError() <<std::endl; //podla mna tu tato podmienka nemusi byt
-		rect.x = (w->g->g_screen->w >> 1) - (width >> 1);
+		rect.x = (w->g->screen->w >> 1) - (width >> 1);
 		if (text ==NULL) std::cout << "IEuhfzeuh:"<<TTF_GetError() <<std::endl;
-		SDL_BlitSurface(text, NULL, w->g->g_screen, &rect);
+		SDL_BlitSurface(text, NULL, w->g->screen, &rect);
 		SDL_FreeSurface(text);
 		rect.y+=30;
 	}
-	SDL_Flip(w->g->g_screen);
+	SDL_Flip(w->g->screen);
 }
 Main::~Main()throw ()
 {

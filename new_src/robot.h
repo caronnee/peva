@@ -3,6 +3,7 @@
 
 class Robot: public Object
 {
+	
 	public:
 		virtual bool is_blocking();
 };

@@ -2,7 +2,7 @@
 #define __MAIN_MENU__
 
 #include "menu.h"
-#include "draw.h"
+#include "graphic.h"
 
 class Main:public Menu
 {

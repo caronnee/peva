@@ -1,5 +1,9 @@
-#ifndef __DRAWING__
-#define __DRAWING__
+#ifndef __GRAPHIC__
+#define __GRAPHIC__
+
+/*
+ * Interface for graphical events
+ */
 
 #include <iostream>
 #include <stack>
@@ -41,23 +45,22 @@ public:
 	int font_size;
 	TTF_Font * g_font;//main font
 	SDL_Color normal, light;//TODO read_only
-	SDL_Surface * g_screen; //TODO pridat funkciu get_screen
+	SDL_Surface * screen; //TODO pridat funkciu get_screen
 	SDL_Event event;
 
 	Graphic();
-	bool Init(); //initne g_screen, nacita background a pod.
+	bool Init(); //initne screen, nacita background a pod.
 	void Destroy();
 
 	void set_resolution(std::string r);
 	void set_font(std::string res);
 	void set_font_size(std::string res);
+	//TODO take veci ako napriklad vykreslovanie
 };
 //-------------------- Draw variables-----------
 
 class Window
 {
-	unsigned int timeout;
-//	Board gameboard;
 	Menu * main_menu;
 	std::string back;
 public:
@@ -69,7 +72,6 @@ public:
 	void add(Menu * m);
 	bool Init();
 	void Destroy();
-	void set_timeout(std::string res);
 	void set_background(std::string res);
 	std::stack<Menu *> state;
 };

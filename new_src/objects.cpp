@@ -2,7 +2,7 @@
 
 Object::Object()
 {
-	ticks = 100; //blablalb, TODO
+	ticks = 100; // TODO
 	name =" Object";
 }
 
@@ -13,14 +13,71 @@ bool Object::is_blocking()
 
 SDL_Surface * Object::show()
 {
-	return image; //read-only premenna
+	return image; 
 }
 
-Missille::Missille()
+Missille::Missille(Position P, Position dir)
 {
+	direction = dir;
+	position_in_map = P;
+	hlp = 100;
+	milisec = 0;
+	ticks = SDL_GetTicks();
 	name = "Misille";
+	image = IMG_Load("../images/Missille.png");
 }
 bool Missille::is_blocking()
 {
 	return false;
+}
+void Missille::damage(Object * sender)
+{
+	Position p = sender->position_in_map;
+	this->hitpoints -= sender->attack;
+}
+void Missille::defense() //zkladne sa a odide, odkial prisla
+{
+	direction.x *=-1;
+	direction.y *=-1;
+}
+
+void Object::action() {}
+
+void Missille::action()
+{
+	old_pos = position_in_map;
+	milisec = SDL_GetTicks() - ticks;
+	ticks = SDL_GetTicks(); //ticks je last_time
+	if (milisec == 0)
+		milisec = 1;
+	fps = 1000.0f / milisec;
+	if(fps == 0)
+		fps = 1;
+	position_in_map.x += direction.x/fps;
+	position_in_map.y += direction.y/fps;
+	ticks = SDL_GetTicks();
+}
+
+int Object::IsMoving(){
+	return 0;
+}
+int Object::IsWall()
+{
+	return 0;
+}
+int Object::IsPlayer()
+{
+	return 0;
+}
+int Object::IsMissille()
+{
+	return 0;
+}
+int Object::Locate() //TODO bude vraciac position
+{
+	return 0;
+}
+int Object::Hit()
+{
+	return 0;
 }

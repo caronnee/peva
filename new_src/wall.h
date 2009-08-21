@@ -1,5 +1,3 @@
-//TODO mozno este jedna treasurewall, cez kpru ide strielat a ktora pridava body,koniec vdety ked su pstatni mrtvi, ked sa vyzbiera vsetko a niekto zapadne do exitu, odomknuty exit po vyzbierani vsetkeho...uzivatelom toto definovane
-//pri pisani kodu este jeda special funkcia exit(EXIT & Bonus <=30 & killed == 5). ALL_EXIT, (vsetky exity alebo navzialenejsi...
 #ifndef __WALLS__
 #define __WALLS__
 #include <SDL/SDL.h>
@@ -23,13 +21,13 @@ class ImageTile
 		ImageTile(); //naloaduje vsetky obrazky
 		SDL_Surface * get_image(WallType);
 };
-class Tile:public Object //oddelenie urovne abstrakcie:)
+class Tile:public Object 
 {
 public:
 	Tile();
 	Tile(ImageTile *);
 	virtual bool is_blocking();
-	//virtual void damage(Object * sender);
+//	virtual void damage(Object * sender);
 };
 class SolidWall:public Tile //nic specialneho, proste sten a s nejkou odolnostou
 {
@@ -40,14 +38,16 @@ public:
 
 class PushableWall:public Tile //da sa nou pohnut
 {
+	int shift; //o kolko sa posunie
 public:
 	PushableWall(ImageTile *);
-	//virtual void damage(Object * sender);
+//	virtual void damage(Object * sender);
+	virtual void action();
 };
 class TrapWall:public Tile // opstey na zemi sa vystrkujuce:)
 {
 public:
 	TrapWall(ImageTile *);
-	//virtual void damage(Object * sender);
+//	virtual void damage(Object * sender);
 };
 #endif

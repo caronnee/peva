@@ -6,14 +6,14 @@ all: codewars
 distclean: 
 		rm -f codewars *.o codewars.config
 
-codewars: game.o draw.o objects.o wall.o help.o create.o main_menu.o other.o position.o movement.o snake.o
+codewars: game.o graphic.o objects.o wall.o help.o create.o main_menu.o other.o position.o movement.o snake.o map.o
 		g++ $(LDFLAGS) -o codewars *.o
 
 game.o: main.cpp
 		g++ -c $(CFLAGS) -o game.o main.cpp 
 
-draw.o: draw.h draw.cpp
-		g++ -c $(CFLAGS) -o draw.o draw.cpp 
+graphic.o: graphic.h graphic.cpp
+		g++ -c $(CFLAGS) -o graphic.o graphic.cpp 
 
 objects.o: objects.h objects.cpp
 		g++ -c $(CFLAGS) -o objects.o objects.cpp
@@ -41,6 +41,8 @@ movement.o: movement.h movement.cpp
 
 snake.o: snake.h snake.cpp
 	g++ -c $(CFLAGS) -o snake.o snake.cpp
+map.o:
+	g++ -c $(CFLAGS) -o map.o map.cpp
 
 run:
 	make
