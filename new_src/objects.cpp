@@ -53,8 +53,13 @@ void Missille::action()
 	fps = 1000.0f / milisec;
 	if(fps == 0)
 		fps = 1;
-	position_in_map.x += direction.x/fps;
-	position_in_map.y += direction.y/fps;
+	std::cout << "fps:" << fps <<std::endl;
+	std::cout << "pozicia pred:" << position_in_map << std::endl;
+	std::cout << "direction:" << direction << std::endl;
+	std::cout << "delenie:" <<direction.y<<"/"<<fps<<"="<< direction.y/fps << std::endl;
+	position_in_map.x += direction.x/(int)fps;
+	position_in_map.y += direction.y/(int)fps;
+	std::cout << "pozicia po:" << position_in_map << std::endl;
 	ticks = SDL_GetTicks();
 }
 
