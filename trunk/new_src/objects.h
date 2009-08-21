@@ -42,7 +42,7 @@ public:
 
 class Missille : public Object
 {
-	Uint32 fps;
+	float fps;
 	Uint32 milisec;
 	Uint32 hlp;
 public:
