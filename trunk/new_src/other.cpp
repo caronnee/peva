@@ -155,18 +155,28 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 		r.x = objects[i]->position_in_map.x;
 		r.y = objects[i]->position_in_map.y;
 
-		if ((r.x < 0)||(r.x > resolution.x))
+		if (r.x < 0)
 		{
 			objects[i]->direction.x *= -1;
-			objects[i]->position_in_map.x += objects[i]->direction.x;
+			objects[i]->position_in_map.x *= -1;
 			r.x = objects[i]->position_in_map.x;
 		}
-		if ((r.y < 0)||(r.y > resolution.y))
+		else if (r.x > resolution.x)
 		{
-			std::cout << objects[i]->direction.y << std::endl;
-//			getc(stdin);
+			objects[i]->direction.x *= -1;
+			objects[i]->position_in_map.x = 2*resolution.x - objects[i]->position_in_map.x;
+			r.x = objects[i]->position_in_map.x;
+		}
+		if (r.y < 0)
+		{
 			objects[i]->direction.y *= -1;
-			objects[i]->position_in_map.y += objects[i]->direction.y;
+			objects[i]->position_in_map.y *= -1;
+			r.y = objects[i]->position_in_map.y;
+		}
+		else if(r.y > resolution.y)
+		{
+			objects[i]->direction.y *= -1;
+			objects[i]->position_in_map.y = 2*resolution.y - objects[i]->position_in_map.y;
 			r.y = objects[i]->position_in_map.y;
 		}
 		SDL_BlitSurface(objects[i]->show(), NULL, w->g->screen, &r);

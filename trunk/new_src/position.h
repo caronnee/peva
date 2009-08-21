@@ -13,6 +13,7 @@ public:
 	Position& operator=(const Position &a);
 	Position& operator+=(const Position &a);
 	bool operator>=(Position &a);
+	std::ostream& operator<<(std::ostream & o);
 };
 
 struct Rectangle
