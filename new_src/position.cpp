@@ -46,3 +46,7 @@ Rectangle::Rectangle(int x_, int y_, int width_, int height_)
 	height = height_;
 }
 
+std::ostream& Position::operator<<(std::ostream& o)
+{
+	return o<<"x:" << x << "y:" << y;
+}
