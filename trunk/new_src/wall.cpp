@@ -34,6 +34,22 @@ SolidWall::SolidWall(ImageTile * t)
 		std::cerr << "Image of solid wall not found!)";
 	}
 }
+PushableWall::PushableWall(ImageTile * t)
+{
+	name = "PushableWall";
+	image = t->get_image(TrapWall_);
+	if (image == NULL) //crash!o
+	{
+		std::cerr << "Image of pushable wall not found!)";
+	}
+	direction.x = 0;
+	direction.y = 0;
+	ticks = SDL_GetTicks() + 100;
+}
+void PushableWall::action()
+{
+
+}
 TrapWall::TrapWall(ImageTile * t)
 {
 	name = "TrapWall";
@@ -43,12 +59,4 @@ TrapWall::TrapWall(ImageTile * t)
 		std::cerr << "Image of trap wall not found!)";
 	}
 }
-PushableWall::PushableWall(ImageTile * t)
-{
-	name = "PushableWall";
-	image = t->get_image(TrapWall_);
-	if (image == NULL) //crash!o
-	{
-		std::cerr << "Image of pushable wall not found!)";
-	}
-}
+

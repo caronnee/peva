@@ -1,5 +1,5 @@
 #include <sstream>
-#include "draw.h"
+#include "graphic.h"
 #include "main_menu.h"
 #include "help_functions.h"
 
@@ -36,9 +36,9 @@ bool Graphic::Init()
 		std::cerr << "Unable to initialize SDL_ttf: " << TTF_GetError() << std::endl;
 		return false;
 	}
-	g_screen = SDL_SetVideoMode(resolution_width, resolution_heigth, WIN_BPP, WIN_FLAGS);
+	screen = SDL_SetVideoMode(resolution_width, resolution_heigth, WIN_BPP, WIN_FLAGS);
 
-	if(g_screen == NULL)
+	if(screen == NULL)
 	{
 		std::cerr << "Unable to set video, resolution: " << resolution_width << resolution_heigth << ", " << SDL_GetError() << std::endl;
 		return false;
@@ -52,7 +52,7 @@ bool Graphic::Init()
 		return false;
 	}	
 	SDL_EnableUNICODE(true);
-	//SDL_Rect ** r = SDL_ListModes(g->g_screen->format,WIN_FLAGS|SDL_FULLSCREEN);
+	//SDL_Rect ** r = SDL_ListModes(g->screen->format,WIN_FLAGS|SDL_FULLSCREEN);
 	/*int i =0;
 	  if (r == NULL ) { std::cout << "awekfgajesgfbewa" <<std::endl; return false;}
 	  if (r == (SDL_Rect**) -1 ) { std::cout << "mmmmmm" <<std::endl; }
@@ -71,8 +71,7 @@ void Graphic::set_resolution(std::string res)
 
 void Graphic::Destroy()
 {
-	// Ak bol nejaky kod, uprace po nom 
-	// TODO lespei osefovat, pri viacerych oknach sa mi moze stat, ze deletnem niekolkokrat
+	//  cleaning the class
 	if(g_font != NULL)
 	{
 		TTF_CloseFont(g_font);
@@ -96,7 +95,6 @@ void Graphic::set_font_size(std::string s)
 Window:: Window(Graphic * g_)
 {
 	back = DEFAULT_BACKGROUND;
-	timeout = DEFAULT_TIMEOUT;
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	g = g_;
 }
@@ -118,14 +116,14 @@ void Window::tapestry()
 	SDL_Rect rect;
 	if (background == NULL) {std::cout << "kvjfjbnskb"<<std::endl;return;}
 	int i;
-	for (i = 0; i < g->g_screen->h; i+=background->h) //tapetujeme pozadie, TODO zmenit na iba raz
+	for (i = 0; i < g->screen->h; i+=background->h) //tapetujeme pozadie, TODO zmenit na iba raz
 	{
 		rect.y=i;
 		int j;
-		for (j =0; j < g->g_screen->w; j+=background->w)
+		for (j =0; j < g->screen->w; j+=background->w)
 		{
 			rect.x=j;
-			SDL_BlitSurface(background,NULL,g->g_screen, &rect);
+			SDL_BlitSurface(background,NULL,g->screen, &rect);
 		}
 	}
 }
@@ -137,20 +135,15 @@ int Window::Toggle_screen()
 //		WIN_FLAGS &= !SDL_FULLSCREEN;
 	} 
 //	else WIN_FLAGS |= SDL_FULLSCREEN; //opacne
-	if( SDL_WM_ToggleFullScreen(g->g_screen) ==0) //nepodarilo sa to cez funkciu
+	if( SDL_WM_ToggleFullScreen(g->screen) ==0) //nepodarilo sa to cez funkciu
 	{
 		std::cout<<"Nepodarilo zmenit rozlisenie!"<<std::endl;
-		SDL_FreeSurface(g->g_screen);
+		SDL_FreeSurface(g->screen);
 		return Init();
 		}
 	return true;
 }; //TODO! zatial nepouzite, jelikoz musim este checkovat, ci sa mi to nahodou nezblazni
 
-
-void Window::set_timeout(std::string time)
-{
-	timeout = convert<int>(time);
-}
 
 void Window::set_background(std::string res)
 {

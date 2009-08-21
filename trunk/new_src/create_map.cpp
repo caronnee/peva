@@ -29,23 +29,23 @@ Create_map::Create_map(Window *w_)
 	TTF_SizeText(w->g->g_font,info.c_str(),&info_width,NULL); 
 	info_o = TTF_RenderText_Solid(w->g->g_font,info.c_str(), w->g->normal);//TODO prehodit do kontruktora
 
-	file_r.y = w->g->g_screen-> h/2 - 2*TTF_FontLineSkip(w->g->g_font);
-	file_r.x = w->g->g_screen->w /2 - info_width/2;
+	file_r.y = w->g->screen-> h/2 - 2*TTF_FontLineSkip(w->g->g_font);
+	file_r.x = w->g->screen->w /2 - info_width/2;
 	file_r.w = info_width+20;
 	file_r.h = 3*TTF_FontLineSkip(w->g->g_font);
 
 	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
-	rects[UP].w = rects[DOWN].w = w->g->g_screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
+	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[CHOOSE].w = 2*IMG_WIDTH; //TODO! co aj sa to bude menit? Da sa z SDL_Surface zistit vyska sirka, TODO!
-	rects[MAP].w = w->g->g_screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
-	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->g_screen->w /3;
+	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
+	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->screen->w /3;
 	//Mono by si kazda classa mohla precitat svoj vlastny konfigurat, ak nejaky je
 
 	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;//TODO!
-	rects[CHOOSE].h = w->g->g_screen->h - rects[EXIT].h;
+	rects[CHOOSE].h = w->g->screen->h - rects[EXIT].h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
-	rects[LEFT].h = rects[RIGHT].h = w->g->g_screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
-	rects[MAP].h = w->g->g_screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
+	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
+	rects[MAP].h = w->g->screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
 
 	rects[LEFT].x = rects[SAVE].x = 0;
 	rects[UP].x = rects[DOWN].x = rects[LEFT].w;
@@ -110,20 +110,20 @@ void Create_map::reset()
 void Create_map::draw_resol()
 {
 	SDL_Rect r;
-	r.x = (w->g->g_screen->w >> 1) - (text_width >> 1);
-	r.y = (w->g->g_screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
-	SDL_BlitSurface (text, NULL, w->g->g_screen, &r);
+	r.x = (w->g->screen->w >> 1) - (text_width >> 1);
+	r.y = (w->g->screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
+	SDL_BlitSurface (text, NULL, w->g->screen, &r);
 	r.y+=TTF_FontLineSkip(w->g->g_font);
 	for (unsigned int i = 0; i< written_x.size(); i++)
 	{
-		SDL_BlitSurface(resol[written_x[i] - '0'], NULL,w->g->g_screen, &r);
+		SDL_BlitSurface(resol[written_x[i] - '0'], NULL,w->g->screen, &r);
 		r.x+=resol_width[written_x[i] - '0'];//potom to vycentrovat, samostatna funkcia
 	}
-	SDL_BlitSurface(resol[NUMCHARS - 1], NULL,w->g->g_screen, &r);
+	SDL_BlitSurface(resol[NUMCHARS - 1], NULL,w->g->screen, &r);
 	r.x+=resol_width[NUMCHARS - 1];//potom to vycentrovat, samostatna funkcia
 	for (unsigned int i = 0; i< written_y.size(); i++)
 	{
-		SDL_BlitSurface(resol[written_y[i] - '0'], NULL,w->g->g_screen, &r);
+		SDL_BlitSurface(resol[written_y[i] - '0'], NULL,w->g->screen, &r);
 		r.x+=resol_width[written_y[i] - '0'];// TODO potom to vycentrovat, samostatna funkcia
 	}
 }
@@ -141,7 +141,7 @@ void Create_map::draw()
 		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
 		int max_width = rects[MAP].x + min(rects[MAP].w,IMG_WIDTH*resolX);
 		int max_heigth = rects[MAP].y + min(rects[MAP].h, IMG_HEIGHT*resolY);
-		SDL_SetClipRect(w->g->g_screen,&rects[MAP]);
+		SDL_SetClipRect(w->g->screen,&rects[MAP]);
 		SDL_Rect rect;//TODO dokreslit sipky
 		rect.x = window_begin_x;
 		rect.y = window_begin_y; //od jakeho pixelu mame zacinat
@@ -156,10 +156,10 @@ void Create_map::draw()
 					for (int i = 0; i < NumberOfWalls_; i++)
 					{
 						if (map[tile_x][tile_y] & (1<<i))
-							SDL_BlitSurface(t.tiles[i],NULL,w->g->g_screen, &rect); //mutacie vidielny len ten prvy povrch
+							SDL_BlitSurface(t.tiles[i],NULL,w->g->screen, &rect); //mutacie vidielny len ten prvy povrch
 					}
 				}
-				else SDL_BlitSurface(t.tiles[FreeTile],NULL,w->g->g_screen,&rect);
+				else SDL_BlitSurface(t.tiles[FreeTile],NULL,w->g->screen,&rect);
 				rect.x+=IMG_WIDTH;
 				tile_x++;
 				if (tile_x == resolX)
@@ -173,18 +173,18 @@ void Create_map::draw()
 			tile_x = begin_x;
 		}
 		//dokreslime panel
-		SDL_SetClipRect(w->g->g_screen, NULL);
+		SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< NumberOfWalls_; i++) //bez grass
 		{
 			std::cout << "huuu" << i <<std::endl;
-			SDL_BlitSurface(t.tiles[i],NULL,w->g->g_screen,&tile_rect[i]);
+			SDL_BlitSurface(t.tiles[i],NULL,w->g->screen,&tile_rect[i]);
 		}
 		if (select < NumberOfWalls_)
 		{
-			SDL_BlitSurface(selected,NULL,w->g->g_screen,&tile_rect[select]);
+			SDL_BlitSurface(selected,NULL,w->g->screen,&tile_rect[select]);
 		}
 	}
-	SDL_Flip(w->g->g_screen);
+	SDL_Flip(w->g->screen);
 }
 void Create_map::process_resolution()
 {
@@ -412,8 +412,8 @@ void Create_map::saving()
 								std::cout << "something's reeealy realy wrong" <<std::endl;
 							SDL_Rect r = file_r;
 							r.y+=TTF_FontLineSkip(w->g->g_font);
-							SDL_BlitSurface(s, NULL, w->g->g_screen, &r);
-							SDL_Flip(w->g->g_screen);
+							SDL_BlitSurface(s, NULL, w->g->screen, &r);
+							SDL_Flip(w->g->screen);
 							std::cout << "blitted" <<std::endl;
 							SDL_FreeSurface(s);
 							break;
@@ -477,10 +477,10 @@ void Create_map::process_map()
 									  }
 								case  SAVE:{std::cout << "save" <<std::endl;
 										   SDL_Rect r = file_r;
-										   SDL_FillRect(w->g->g_screen, &r,0);
+										   SDL_FillRect(w->g->screen, &r,0);
 										   r.x+=10;
-										   SDL_BlitSurface(info_o,NULL,w->g->g_screen,&r);
-										   SDL_Flip(w->g->g_screen);
+										   SDL_BlitSurface(info_o,NULL,w->g->screen,&r);
+										   SDL_Flip(w->g->screen);
 										   state = SAVING;
 										   break;
 									   }

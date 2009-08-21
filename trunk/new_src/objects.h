@@ -1,7 +1,10 @@
 #ifndef __OBJECTS__
 #define __OBJECTS__
 #include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 #include "position.h"
+
+struct Map;
 
 struct Type_bot
 {
@@ -14,25 +17,39 @@ struct Type_missille
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
-	//mMap * map;
 public:
+	Position old_pos;
+	Map * map;
 	virtual bool is_blocking();
 	SDL_Surface * image;
-	Position position; //kde sa prave nachadza na mape
+	Position position_in_map, direction; //kde sa prave nachadza na mape
 	std::string name;
-	int hit_points,ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
+	int defense, attack;
+	int hitpoints;
+	Uint32 ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
 	Object();
 //	virtual void damage(Object * sender) = 0;
-//	virtual int action(Walls *** game) = 0;
+//	virtual void action() = 0;
 	SDL_Surface * show();
+	virtual void action();
+	int IsMoving();
+	int IsWall();
+	int IsPlayer();
+	int IsMissille();
+	int Locate();
+	int Hit();
 };
 
-class Missille : Object
+class Missille : public Object
 {
+	Uint32 fps;
+	Uint32 milisec;
+	Uint32 hlp;
 public:
 	virtual bool is_blocking();
-	Position direction; //akym smerom sa vydava
-//	virtual int action(); //penalizacia
-	Missille();
+	virtual void damage(Object* sender);
+	virtual void action(); //penalizacia
+	virtual void defense();
+	Missille(Position p, Position dir);
 };
 #endif
