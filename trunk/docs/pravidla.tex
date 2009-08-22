@@ -46,9 +46,11 @@ Hra sa začína vhodením robotov do prostredia v poradí, v akom boli pridaní 
 Definovanie vítazného stavu sa v pro písaní programu pre robota objaví ešte pred funkciami v tvare:
 \begin{itemize}
 \item $Killed\ [>, < <=, >=, !=, ==]\ N, N \in Z$ , kde Killed je pocet zabitých nepratieľov a do tohoto počtu sa nezapočítavajú rozbité steny ani strely
+\item $Killed( N ), N \in Z$ , kde N je identifikačné čislo robota. Toto číslo je každému robotovi pridelená automaticky, ale pre lepšiuidentifikáciu, napríklad pri sieťovom pripojení, je možné i roboto toto číslo explicitne definovať napísaním $ ID\ n, n\in N$ na rovnak=ych miesach ako tieto pravidlá
 \item $Visit([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, v akomkoľvek poradi
-\item $VisitSequence([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, práve v tomto poradi
+\item $VisitSequence([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, práve v tomto poradi. V prípade, že je definovaných viac takýchto inštrukcií, spracovávajú sa všetky simultánne, T.J ak má pravidlá:\\
+$VisitSequence([10,10],[20,20])\\VisitSequence([20,20],[20,30])$ a pristúpi na políčko [20,20], splní sa v druhej sekvencii prvé miesto. Ak robot už predtým navštívil políčko [10,10], potom je kompletne splnená prvá podmienka a časť druhej
 \end{itemize}
 V týchto podmienkach je ešte možné použit premennú 'Start', ku ktorej sa pristupuje ako k poľu a označuje štartovnú pozíciu i-teho robota.\\
-Kód, ktorý by simuloval populárnu hru 'Capture the flag' by napríklad vyzeral takto:\\
+Kód, ktorý by simuloval populárnu hru 'Capture the flag' by napríklad vyzeral takto pre robota s ID 0:\\
 $VisitSequence(start[1],start[0]) \\ main()\\\{\\//kod robota\\\}\\$
