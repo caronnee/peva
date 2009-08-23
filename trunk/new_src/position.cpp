@@ -26,6 +26,17 @@ Position& Position::operator+=(const Position &p)
 	y +=p.y;
 	return *this;
 }
+bool Position::operator==(Position& p)
+{
+	if ((x !=p.x)||( y!=p.y))
+		return false;
+	return true;
+}
+bool Position::operator!=(Position& p)
+{
+	return !((*this)==p);
+}
+
 Rectangle::Rectangle()
 {
 	x = y = width = height = -1;

@@ -42,7 +42,7 @@ class PushableWall:public Tile //da sa nou pohnut
 public:
 	PushableWall(ImageTile *);
 //	virtual void damage(Object * sender);
-	virtual void action();
+	virtual void action(Map * m);
 };
 class TrapWall:public Tile // opstey na zemi sa vystrkujuce:)
 {

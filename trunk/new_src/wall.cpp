@@ -42,11 +42,11 @@ PushableWall::PushableWall(ImageTile * t)
 	{
 		std::cerr << "Image of pushable wall not found!)";
 	}
-	direction.x = 0;
-	direction.y = 0;
+	movement.direction.x = 0;
+	movement.direction.y = 0;
 	ticks = SDL_GetTicks() + 100;
 }
-void PushableWall::action()
+void PushableWall::action(Map * m)
 {
 
 }

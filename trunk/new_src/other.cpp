@@ -2,6 +2,7 @@
 #include <time.h>
 #include "other.h"
 #include "position.h"
+#include "missille.h"
 
 Join::Join(Window *w_)
 {
@@ -135,7 +136,9 @@ Play::Play(Window *w_)
 		}
 		*/
 	Position speed(300,300);
-	m->add(new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed));
+	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
+	objects.push_back(o);
+	m->add(o);
 }
 Play::~Play()throw()
 {
@@ -198,10 +201,10 @@ void Play::init(int x, int y)
 }
 void Play::process()
 {
-/*	for (size_t i =0; i< objects.size(); i++)
+	for (size_t i =0; i< objects.size(); i++)
 	{
-		objects[i]->action();
-	}*/
+		objects[i]->action(m);
+	}
 	redraw();
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)

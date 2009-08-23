@@ -13,6 +13,8 @@ public:
 	Position& operator=(const Position &a);
 	Position& operator+=(const Position &a);
 	bool operator>=(Position &a);
+	bool operator==(Position &p);
+	bool operator!=(Position &p);
 	friend std::ostream& operator<<(std::ostream & o, const Position p);
 };
 

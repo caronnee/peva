@@ -8,7 +8,7 @@ all: codewars
 distclean: 
 		rm -f codewars *.o codewars.config
 
-codewars: game.o graphic.o objects.o wall.o help.o create.o main_menu.o other.o position.o movement.o snake.o map.o
+codewars: game.o graphic.o objects.o wall.o help.o create.o main_menu.o other.o position.o movement.o snake.o map.o missille.o
 		g++ $(LDFLAGS) -o codewars *.o
 
 game.o: main.cpp
@@ -45,6 +45,8 @@ snake.o: snake.h snake.cpp
 	g++ -c $(CFLAGS) -o snake.o snake.cpp
 map.o: map.cpp map.h
 	g++ -c $(CFLAGS) -o map.o map.cpp
+missille.o: missille.h missille.cpp map.h
+	g++ -c $(CFLAGS) -o missille.o missille.cpp
 
 run:
 	make
