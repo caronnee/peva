@@ -29,7 +29,7 @@ public:
 	//Position begin_draw_at;	
 	void collision(Object * o1, Object * o2);
 	Map(Position resolution);
-	void move(Object * o); //ak sa chce object pohnut, vracia ako moc sa to pokazilo
+	void move(ObjectMovement& m, Object * o); //ak sa chce object pohnut, vracia ako moc sa to pokazilo
 	~Map();
 	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko
 	void update(Window *, Position);

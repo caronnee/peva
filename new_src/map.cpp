@@ -56,23 +56,23 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	}
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
 	std::cout << "zacina vykreslovanie objektov" << std::endl;
-getc(stdin);
+//getc(stdin);
 	//zacinaju sa vykreslovat objekty na viditelnej ploche
 	for (int i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
 			std::cout << "huhu"<< pos << std::endl;
-			getc(stdin);
+			//getc(stdin);
 			if (map[pos.x][pos.y]->objects.empty())
 			{
-				std::cout << "wdygvure" << map[pos.x][pos.y]->objects.size() <<std::endl;
+				std::cout << "wdygvure" <<std::endl;
 			}
 			else std::cout << "not empty"<< map[pos.x][pos.y]->objects.size() << std::endl;
-			getc(stdin);
+		//	getc(stdin);
 			std::list<Object *>::iterator iter = map[pos.x][pos.y]->objects.begin();
 			std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
-			getc(stdin);
+		//	getc(stdin);
 			while(iter != map[pos.x][pos.y]->objects.end())
 			{
 				std::cout << "HE??" << std::endl;
@@ -83,8 +83,8 @@ getc(stdin);
 				if(o!=NULL)
 				{
 					SDL_Rect rects;
-					rects.x = o->position_in_map.x - begin_draw_at.x;
-				       rects.y = o->position_in_map.y - begin_draw_at.y;
+					rects.x = o->get_pos().x - begin_draw_at.x;
+				       rects.y = o->get_pos().y - begin_draw_at.y;
 					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
 				}
 		//		pos.y++;
@@ -99,7 +99,7 @@ getc(stdin);
 	}
 	SDL_Flip(w->g->screen);
 	std::cout << "end";
-	getc(stdin);
+	//getc(stdin);
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
@@ -114,9 +114,35 @@ void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 	}
 	*/
 }
-void Map::move(Object * o)
+void Map::move(ObjectMovement& move , Object * o)
 {
-	//TODO
+	Position oldBox(move.old_pos.x/BOX_WIDTH,move.old_pos.y/BOX_HEIGHT);
+	Position newBox(move.position_in_map.x/BOX_WIDTH,move.position_in_map.y/BOX_HEIGHT);
+//	if (oldBox != newBox)
+	if (o->movement.position_in_map.x < 0)
+	{
+		o->movement.direction.x *= -1;
+		o->movement.position_in_map.x *= -1;
+		o->movement.position_in_map.x = o->movement.position_in_map.x;
+	}
+	else if (o->movement.position_in_map.x > resolution.x)
+	{
+		o->movement.direction.x *= -1;
+		o->movement.position_in_map.x = 2*resolution.x - o->movement.position_in_map.x;
+		o->movement.position_in_map.x = o->movement.position_in_map.x;
+	}
+	if (o->movement.position_in_map.y < 0)
+	{
+		o->movement.direction.y *= -1;
+		o->movement.position_in_map.y *= -1;
+		o->movement.position_in_map.y = o->movement.position_in_map.y;
+	}
+	else if(o->movement.position_in_map.y > resolution.y)
+	{
+		o->movement.direction.y *= -1;
+		o->movement.position_in_map.y = 2*resolution.y - o->movement.position_in_map.y;
+		o->movement.position_in_map.y = o->movement.position_in_map.y;
+	}
 }
 void Map::update(Window * w, Position p)
 {
