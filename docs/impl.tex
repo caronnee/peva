@@ -1,9 +1,9 @@
 \chapter{Implementácia prostredia}
 \begin{definicia}
-Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať od inakiaľ ako z vnútra robota.
+Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať odinakiaľ ako z vnútra robota.
 \end{definicia}
 
-Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Pre plynulosť simulácie je potrebné zaistiť spravodlivosť pri vykonávaní programu, v opdstate ide o zahovanie zdania simultánnosti robotov. Ako bolo povedane skôr Robot totiž môže počítať s vlastnými premennými, na ktoré nepotrebuje dáta bojiska, teda nemusí na nič čakať. Zaistenie spravodlivosti v tomto prípade teda znamená,  oby o Toto je splnené tým, že každá inštrukcia je penalizovaná, preto sa najskôr budeme zaoberať penalizáciou a nie samotným priebehom.
+Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Pre plynulosť simulácie je potrebné zaistiť spravodlivosť pri vykonávaní programu vzhľadom na vykonávané inštrukcie. 
 \section{Priebeh penalizácie za inštrukciu}
 
 \begin{definicia}
@@ -11,14 +11,15 @@ Tick je jednotka virtuálneho času sveta.
 \end{definicia}
 
 \begin{definicia}
-Penalizáciou za inštrukciu nazývam počet tikov, ktoré robot stratí, ak inštrukciu vykoná. Pre rôzne inštrukcie môže byť rôzna.
+Penalizáciou za inštrukciu nazývam počet tikov, ktoré robot stratí, ak inštrukciu vykoná. Pre rôzne inštrukcie môže byť (a typicky bude)rôzna.
 \end{definicia}
 
 \begin{definicia}
-Programom robota sa nazýva postupnosť inštrukcií, ProgramPointer je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísay v \ref{TODO}.
+Programom robota sa nazýva postupnosť inštrukcií, ProgramPointer je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísaný v \ref{instrukcie}.
 \end{definicia}
 
-Nech je na rade robot R. V tomto okamihu začne R vykonávať inštrukciu, na ktorý práve ukazuje jeho ProgramPointer. Ako je naznačené na \ref{thinking}, robot pokračuje vo vykonávaní inštrukcií až kým nenarazí na takú, ktorá interaguje s bojiskom. Výsledok takejto inštrukcie nie je možné zistiť z dostupných informácií a teda je nutné o ďalšie data požiadať bojisko. Podľa veľkosti penalizovania sa potom R zaradí do plánovaných objektov, viz \ref{timeline}. Dĺžka tejto akcie sa ale pre rovnaký počet inštrukcií pre dvoch rôznych botov môže a typicky bude líšiť. Je to spôsobené tým, že každá inštrukcia môže mať rozdielnu penalizáciu za vykonanie. Napríklad samostatné vykonanie inštrukcie 'step' musí byť niekoľko krát rýchlejšie ako povedzme inštrukcia, ktorá naloaduje hodnotu premennej, obzvlášť ak táto premenná už dlho loadovaná nebola. Ďalej inštrukcia, ktorá zavolá užívateľom definovanú funkciu, zaberie viac procerového času vzhladom na to, čo musí spraviť so zásobníkom robota, a preto je táto skutočnosť zohľadnená. Podobne napríklad inštrukcie pre násobenie a delenie su zlošitejšie ako prosté sčitanie a preto sú viac penalizované. Penalizácia prebieha podľa tabuľky \ref{penal}, je možné si ale v nastaveniach nastavit tieto funkcie:
+Nech je na rade robot R. R sa pozrie, či už ubehla dostatočne dlhá doba od vykonania jeho poslednej akcie. Ak áno, R začne vykonávať inštrukciu, na ktorú práve ukazuje jeho ProgramPointer. Po vykonaní tejto inštrukcie si poznamená, koľko ho stála tickov. Ak ešte neprebehla dostatočne dlhá doba, potom počká a na rade je ďalší objekt. \\
+Penalizácia prebieha podľa tabuľky \ref{penal}, je možné si ale v nastaveniach nastavit tieto funkcie:
 \begin{itemize}
 \item SizeOfFunction: počet inštrukcií vo funkcii
 \item SizeOfCleaned: počet premených, ktoré sa stali odchodom z bloku príkazov neplatnými. Použiteľné iba pri inštrukcii indikujúcej koniec bloku
@@ -64,41 +65,19 @@ turnR & 1\\
 \label{thinking}
 \end{figure}
 
-Robotovi môže týmto spôsobom samozrejme vypršať čas, veľkosť jeho premýšľania dosiahne hodnoty timeout.%TODO ref
-V takom prípade, ako je naznačené na obrázku \ref{thinking} sa robot vzdá, preplánuje sa a uvoľní miesto nasledujúcemu objektu. 
+Týmto spôsobom sa efektívne vyrieši prípad, keby robot premýšľa príliš dlho alebo keby sa zacyklil. Keďze po každej vykonanej inštrukcii predá riadenie daľsiemu objektu, zacyklenie sa pozná len podľa toho, že robot sa nebude hýbať, ale nijak to nespomalí ostatné objekty.%TODO ref
 \newline
-Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
+Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu (strela štandartne 0) a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
 
-\subsection{Preplánovanie}
+\subsection{Poradie vykonávaných akcií}
 
-Preplánovanie prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, presne o toľko sa posunie v pomyselnej casovej osi a zaradí sa vo fronte udalostí za posledného bota s rovnakým časom. To spôsobí to, že robot, ktorý nebol na rade dlhšie, sa dostane k akcií skôr, čo je opäť jedna z podmienok fair-play.\\
-V tomto prípade sa za kľúč, podľa ktorého sa objekty usporadúvajú, považuje čas od začiatku behu hry. Problém ale nastáva v okamihu, keď tento čas pretečie. Vzhľadom na to, že celkový čas simulácie je ukladaný do 64-bitového integeru, je možnosť, že by tento čas pretiekol, krajne neprijateľný, pretože celkový čas by bol vačší ako niekoľko tisíc rokov:)\\
-Otázkou zostáva, ako implementovať túto časovú líniu tak, aby celý program nepůsobil trhane, teda aby v okamihu, keď robot rozmýšľa, ostatné objekty, ktoré sú na rade, sa mohli pohybova+t, keďže samotné premýšľanie sa ich nedotýka. Existuje niekoľko možností:
-\begin{itemize}
-\item Z robotovho programu sa približne odhadne, koľko budei minimálne premýšlať a po tomto čase sa pozrie, či výpočet dobehol. Ak nie, bude musieť čakať, ak áno, pokračuje sa s zozbrazovaním akcií, ktoré sú výsledkom inštrukcií objektov. 
-Výhody tohoto prístupu:\begin{itemize}
-	\item Plus: Je zachovaná správna postupnosť akcií, to znamená, že nie sú závislé na procesore a jeho súčasnej vyťaženosti.
-	\item Minus: Odhad sa můze od skutočnej penalizácie líšiť stovky tickov (napríklad v prípade u podmieneného skoku sa načíta funkcia, ktorá stoji ohromne moc, kým v druhej vetve sa robot okamžite pohne), tým by vznikali nechcené prestoje a simulácia by sa v istých situáciách trhala.
-	\end{itemize}
-\item Dopredu sa nasimuluje časť priebeh hry a na výstup sa púšťajú už iba výsledky. Výhody a nevýhody:
-	\begin{itemize}
-	\item Plus: Simulácia sa bude zatrhávať maximálne raz za čas, v okamihu, keď ešte nebudú pripravné data, čo sa 
-	\item Minus: na jednoprocesorovych architekturach ma tento spôsob rovnaký efekt ako keď sa súčasne vykresľujú oneskorené výsledky a súčasne poćítajú aktuálne časové línie.
-	\end{itemize}
-\end{itemize}
-Kód robota sa za jeho života nemení. 
+Rozhodovanie robota, či má vykonať inštrukciu, prebieha tým spôsobom, že sa podľa tabuľky \ref{penal} spočíta, koľko času robot prehmrhal na myslenie, a podla toho sa robot N-krát robot sa vzdá vykonania inštrukcie, kde N sa dá vypočítať dvoma spôsobmi.\\
+N sa bude rovnať penalizácií za jednu, inštrukciu a teda presne toľkokrát príde robot na radu a nebude robiť nič, len predá slovo ďalšiemu objektu. Výhodou je, že tento prístup je pomerne priamočiary, ľahko implementovateľný. Nevýhodou tohoto prístupu je, že zatiaľ čo pohyb objektov musí byť vykrelovaný v závislosti na čase, aby sa predišlo závislosti na rýchlosti procesora a táto penalizácia nie, výsledok je, že robot sa pohne alebo otoči, poťažne vystrelí a potom najmenej 3 kolá musí stáť ( load premennej, load konstanty a uloženie), pričom za ten čas povedzme strely môžu uraziť príliš veľký kus a robot na ne nemá sancu zaregovať.\\
+Ďalšou možnosťou je podobne ako pri vykresľovaní pohybu striel a stien sa aj k ostatným inštrukciám správať ako na závislé na čase. Penalizácie ako sú popísané v tabuľke \ref{penal} nebudú značiť priamo čas, ale akú časť z pevne daného množstva F zaberajú. Za predpokladu, že posledný čas aktualizovania(odvtedy, čo vykonal nejakú inštrukciu) robota bol T, aktuálny čas je TA, potom robot vykoná inštrukciu, vypočíta si jej čas, ktorý zaberá = F/penalize(instruction) a bude vykonávať inštrukcie tak dlho, pokiaľ suma týchto vypočítaných inštrukcií nebude väčšia nanajvýš rovná rozdielu medzi aktuálnym časom a časom posledného aktualizovania. V pseudokóde to vyzerá približne takto:\\
+$ Uint32 diff= actualTime - timeLastUpdate;\\ while (diff > 0)\\\{\\ diff-=nextInstruction.penalize();\\nextInstruction.run();\\Pointer ++; \\\}\\ $ Tento spôsob je viac šetrnejší k robotovi,pozastai objekty, aby na ne mohol robot reagovať, čo je v simulácií ako Codewars podstatné.	
 
 \section{Hracia plocha} % z coho sa sklada
-Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{kap}. Ďalej celú túto konštrukciu nazývam bojisko. V tomto okamihu je hra pripravená na spustenie. V závislosti na veľkosti bojiska sa čaká na odpovedajúce množštvo robotov, ktorí sa zapoja do hry. Toto množstvo je defaultne obmedzené iba zdola. Na zdôvodnenie tohoto rozhodnutia je nutné spomenúť základné vlastnosti programu. 
-garantovaný, nastávajú dve možnosti, ako to tom informovať robota:
-\begin{itemize}
-\item za cieľ by sa simulovalo ľubovoľné políčko, ktoré je mimo mapy. V tomto prípade by robot prinajlepšom cyklicky prehľadával celú mapu, čo je v podstate to isté akoby pozíciu vôbec nepoznal.
-\item za cieľ by sa vybralo políčko patriace mape. V tom prípade 
-\item Je zabezpečená spravodlivosť pre robotov. To znamená
-\end{itemize}
-
-v  že pri neprimarane veľkých mapách bude trvať príliš dlho, než sa roboti vobec  
-Nastavenie toho, ze roboti so takto obmedzení, a dá prenastaviť v settings.%TODO rozpisat v+setky menu, +co kde robia
+Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{walls}. Ďalej celú túto konštrukciu nazývam bojisko. V tomto okamihu je hra pripravená na spustenie. V závislosti na veľkosti bojiska sa čaká na odpovedajúce množštvo robotov, ktorí sa zapoja do hry. Toto množstvo je defaultne obmedzené iba zdola. Na zdôvodnenie tohoto rozhodnutia je nutné spomenúť základné vlastnosti programu. 
 \subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
 \section{Jazyk hry a priebeh hry} %bison, preco
 \begin{definicia}
@@ -106,7 +85,7 @@ Cieľom určenia robota nazývam políčko na mape sveta, kam sa má robot dosta
 Pod vzdialenosťou rozumiem veľkosť obsahu obdĺžnika v vrcholmi cieľom a výskytom robota. %TODO preco?
 \end{definicia}
 
-Samotná hra prebieha tak, že roboti vykonávajú užívateľom definovaný kód až do okamžiku, keď dosiahnu cieľ určenia alebo kým zostane na bojisku maximálne jeden robot. Cieľ môže byť pre každého robota rozdielny a je súčasťou mapy sveta. Hra nie je zabezpečená proti nekonečne dlhotrvajúcim cyklom (napríklad keď každý robot stojí na mieste), predpokladá sa v tomto prípade vstup od uživateľa, ktorým hru prerusí.
+Samotná hra prebieha tak, že roboti vykonávajú užívateľom definovaný kód až do okamžiku, keď dosiahnu víťazný stav alebo kým nezostane na bojisku maximálne jeden robot. Cieľ môže byť pre každého robota rozdielny a je jeho súčasťou. Hra nie je zabezpečená proti nekonečne dlhotrvajúcim cyklom (napríklad keď každý robot stojí na mieste), predpokladá sa v tomto prípade vstup od uživateľa, ktorým hru preruší.
 
 \begin{definicia}
 Stav robota vzhľadom na svet charakterizuje štvorica: (InstructionPointer IP, Hitpoints HP, VisualMemory vm, Direction direct), kde 
@@ -127,34 +106,34 @@ Stav robota s ohľadom na inštrukcie, ktore vykonáva, charakterizuje (PointerS
 \begin{definicia} 
 Pod objektami sveta rozumieme všetky prvky, ktoré svet tvoria a zároveň ho z času na čas menia, t.j. v tomto prípade strely, steny, a samotní roboti. Napríklad strela mení svet tým, že sa pohne alebo narazí, istý druh steny sa môže posunúť a pod.
 \end{definicia}
-Svet je charakterizovaný dvojicou $< FrontaUdalosti, Bojisko >$, kde FrontaUdalosti je fronta objektov, ktoré sú na rade, aby komunikovali so svetom. Presný spôsob definovania poradia tejto komunikácie je popísaný neskôr. Objekty v tejto fronte sa počas priebehu boja menia, napríklad pribúdajú a zanikajú strely, ktoré sú podla \ref{defobjekty} tiež objektami.
+Svet je charakterizovaný dvojicou $< ZoznamObjektov, Bojisko >$, kde ZoznamObjektov obsahuje objekty, ktoré sú na rade, aby vykonali nejakú inštrukciu. Presný spôsob vykonávania inštrukcií je popísaný v \ref{schedulle} Objekty v tomto zozname sa počas priebehu boja menia, napríklad pribúdajú a zanikajú strely, ktoré sú podla \ref{defobjekty} tiež objektami, tiež môžu ubúdať steny ( niektoré majú svoju životnosť a dajú sa rozbiť ). \\
 
-Pre všetky nasledujúc inštrukcie interagujúce so svetom predpokladajme, že svet je v stave $<FrontaUdalosti, Bojisko>$, kde FrontaUdalostí je postupnosť objektov $(robot X, objekt1, objekt2, objekt3,...objektN)$ a Bojisko je dvojrozmerná matica popisujúca, aké objekty sú na akých pozíciach.
+Pre všetky nasledujúc inštrukcie interagujúce so svetom predpokladajme, že svet je v stave $<ZoznamObjektov, Bojisko>$, kde ZoznamObjektov je postupnosť objektov $(robot X, objekt1, objekt2, objekt3,...objektN)$ a Bojisko je dvojrozmerná matica popisujúca, aké objekty sú na akých pozíciach.
 Popis jednotlivých inštrukcií a ich vplyv na svet je symbolicky popísaný takto: (bez parameterov, ktoré nemajú vplyv na svet):\\
 \newline
 step:\begin {itemize}
-\item Svet:$ < NewQueue, m.reinsert(X) > $
-\item Bot: $ < NewIP, HP, direct> $
+\item Svet:$ < ObjectsList, m.reinsert(X) > $
+\item Bot: $ < NewIP, Hp, direct> $
 \end {itemize}
 turnLeft, turnRight \begin{itemize}
-\item $Svet:  <NewQueue, m>$
+\item $Svet:  <ObjectList, m>$
 \item $Bot:  < NewIP, Hp, NewDirect)>$
 \end{itemize}
 turn  \begin{itemize}
-\item $Svet:  < NewQueue, m > $
+\item $Svet:  < ObjectsList, m > $
 \item $Bot:   < NewIP, Hp, NewDirect)> $
 \end {itemize}
 see  \begin{itemize}
-\item $Svet:  <NewQueue,m> $
+\item $Svet:  <ObjectsList,m> $
 \item $ Bot:  < NewIP, Hp, NewDirect)> $
 \end {itemize}
 shoot \begin {itemize}
-\item $ Svet:  < AddQueue, m> $ 
+\item $ Svet:  < AddedObjectsList, m> $ 
 \item $ Bot:  < NewIP, Hp, Direct)>  $
 \end {itemize}
 \indent
-kde NewQueue je \\ $(Objekt_1, Objekt_2, ..., Objekt_K, X, Objekt_{k+1},.., Objekt_N)$, NewIP je nový ukazateľ do programu robota, nie nutn odlišný od predošlého, NewDirect je číslo 1-4 označujúce aktuálne natočenie robota, reinsert je funkcia, ktorá sa pokúsi robotom pohnut v mape, ak sa nedá vyvolá sa ošetrenie kolízií a AddQueue je\\ $(Objekt_1, Objekt_2, ...,Object_{strela},..., Objekt_K, X, Objekt_{k+1},.., Objekt_N)$ (strela bude na rade typicky pred robotom, ktorý j vypustil, pretože ten robot sa preplánuje, ale strela ešte na rade nebola, tak mś vyššiu prioritu.)
-Ďalšie inštrukcie vôbec nekomunikujú so svetom, preto sú uvedené oddelene. Tieto inštrukcie robot vykonáva počas svojho premýšľania. Keďze tým robot vobec nepotrebuje vedieť o objektov sveta iných než je on sám, po prevedení takýchto inštrukcií sa meni stav robota podla tabuľky \ref{VnutroBota},kde IP+1 znamená posun v atuálneho pointera v programe robota o jednu inštrukciu ďalej, AddedIP je uloženie aktuálneho pointera na inštrukciu a vyhlásenie iného pointera za aktuálny (typicky začiatok pricedúry alebo funkcie), VariablesAdded je pamať robota rozrastená o premenné danej funkcie alebo procedúry v danom zanorení, ClearVariables je označenie premennych definovaných v tomto bloku za neplatné, LoadByName je uloženie hodnoty volanej premennej na ValueStack, AddedResult je uloženie výsledku aritmetických operácií na ValueStack a DeleteIP je zrušenie aktuálneho pointera na funkciu a obnovenie predchádzajúceho na inštrukiu, pre ktrou bol prerušený. RemoveValue je spracovanie hodnoty zo ValueStacku a teda jej odobranie a odobranie premennej, do ktorej sa priradzuje.
+kde ObjectsList je \\ $(Objekt_1, Objekt_2, ..., Objekt_K, X, Objekt_{k+1},.., Objekt_N)$, NewIP je nový ukazateľ do programu robota, nie nutne odlišný od predošlého(je možné zastať napríklad pri forcukle zastať na rovnakej inštrukcií), NewDirect je číslo 1-4 označujúce aktuálne natočenie robota, reinsert je funkcia, ktorá sa pokúsi robotom pohnut v mape, ak sa nedá vyvolá sa ošetrenie kolízií a AddedObjectList je\\ $(Objekt_1, Objekt_2, ... Objekt_N, Object_{strela})$ Strela sa vždy pridá na koniec zoznamu. Tým je zaručené, že roboti budú vedieť reagovať na strelu a porípade sa jej vyhnúť. %TODO rozviest
+Ďalšie inštrukcie vôbec nekomunikujú so svetom, preto sú uvedené oddelene. Tieto inštrukcie robot vykonáva počas svojho premýšľania po skupinách podľa toho, ako moc času ubehlo. Keďze tým robot vôbec nepotrebuje vedieť o objektoch sveta iných než je on sám, po prevedení takýchto inštrukcií sa meni stav robota podla tabuľky \ref{VnutroBota},kde IP+1 znamená posun v atuálneho pointera v programe robota o jednu inštrukciu ďalej, AddedIP je uloženie aktuálneho pointera na inštrukciu a vyhlásenie iného pointera za aktuálny (typicky začiatok pricedúry alebo funkcie), VariablesAdded je pamať robota rozrastená o premenné danej funkcie alebo procedúry v danom zanorení, ClearVariables je označenie premennych definovaných v tomto bloku za neplatné, LoadByName je uloženie hodnoty volanej premennej na ValueStack, AddedResult je uloženie výsledku aritmetických operácií na ValueStack a DeleteIP je zrušenie aktuálneho pointera na funkciu a obnovenie predchádzajúceho na inštrukiu, pre ktrou bol prerušený. RemoveValue je spracovanie hodnoty zo ValueStacku a teda jej odobranie a odobranie premennej, do ktorej sa priradzuje.
 
 \begin{table}[ht]
 \centering
@@ -174,9 +153,17 @@ Jump & $ DeleteIP,VS,t$\\
 \end{tabular}
 \label{VnutroBota}
 \end{table}
+\subsection{Priebeh výpočtu robota} %co je povolene a ako sa to riesi implementacne
+TODO
+Jazyk pre Codewars je rozpoznavaný pomocou nástrojov Flex pre lexikálne rozpoznávanie a Bison pre syntaktické. Keďze Flex vyžaduje pre lexikálne rozpoznávanie v podstate len súbor tvorený regulárnymi výrazmi a konštantami pre detekciu tokenov a Bison iba súbor s definíciami gramatiku a pomocnými štruktúrami, je tento spôsob veľmi priehľadný, ľahko udržovateľný a modifikovateľný, preto bol zvolený. Následuje popis štruktúr  a popis práce s nimi:
+\begin{huge}TODO \end{huge}
+\\
+Zaujímavejšie je to pri volaní funkcie, ktorá má defaultný parameter. Pretože sa predpokladá, že program bude prístupný aj pre obyčaných užívateľov, je možné u funkcie definovať aj explicitnú hodnotu a to nezávisle na poradí parametrov. T.j. explicitné hodnota môže byť zadaná ako prvý a tretí parameter, ale nie ako druhý. Takáto funkcia sa nadefinuje podobne ako v C/C++, napríklad : \\\begin{center} $ function distance(integer x=3, integer y=2, integer radius, Location l) $ \\\end{center}V okamžiku, keď sa zavolá \begin{center} $ distance(, , radius,l) $ \end{center} sa ušetrí loadovane dvoch premenných.
+\subsection{Detekcia zacyklenia}
 
+Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamať. Takýto robot nie je schopný si zapatať jedinú premennú a ani vracat návratové hodnoty, teda v kóde programu by nemali byť definované žiadne funkcie, ale iba procedúry.Je nutné povedať, že funkcie a procedúry sa v žiadnom prípade nechovajú ako premenné a teda nezaberajú robotovi pamať. Teda v tomto prípade dojde k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že nemá povolené napriklad strieľanie, pretože to je funkcia, ktorá potrebuje za každých okolností parametre.
 \subsection{Zrak robota}
-V úvode si užívateľ má možnost nastavit dve premenné, ktoré ovplyvňujú to, ako ďaleko bude robot vidieť. Sú to premenné X, Y, ktoré označujú obdĺžnik, podľa ktorého sa zrak ďalej určí.
+V úvode si užívateľ má možnost nastavit dve premenné, ktoré ovplyvňujú to, ako ďaleko bude robot vidieť. Sú to premenné X, Y, ktoré označujú obdĺžnik, podľa ktorého sa zrak ďalej určí. Opať máme viacero možností, ako s týmito premennými zacházdať. Jedným z pomerne rýchlych spôsobov, ako určiť viditeľnosť, je následuuci algoritmus:
 
 \begin{figure}
 \centering
@@ -209,12 +196,7 @@ Na obrázku \ref{visibleo} je červeným znázornen=y objekt, ktorý robot uź n
 \label{visibleo}
 \end{figure}
 \indent
+\newline
+\indent Tento spôsob má ale nevýhodu pri použití v programoch typu Codewars. Predpokladá totiž, že v okamžiku žiadosti o naplnenie viditeľných ojektov budú tieto objekty stáť oresne v strede daných políčok. Ak by povedzme jedna stena stála presne nedzi dvoma políčkami, už nie jasné, aké políčka robot vidí. Preto bol primo v implementácií použitý spôsob..TODO
 
-\subsection{Priebeh výpočtu robota} %co je povolene a ako sa to riesi implementacne
-..\\
-Zaujímavejšie je to pri volaní funkcie, ktorá má defaultný parameter. Pretože sa predpokladá, že program bude prístupný aj pre obyčaných užívateľov, je možné u funkcie definovať aj explicitnú hodnotu a to nezávisle na poradí parametrov. T.j. explicitné hodnota môže byť zadaná ako prvý a tretí parameter, ale nie ako druhý. Takáto funkcia sa nadefinuje podobne ako v C/C++, napríklad : \\\center $ function distance(integer x=3, integer y=2, integer radius, Location l) $ \\ je funkcia, ktorá bude napr
-\subsection{Detekcia zacyklenia}
 
-Užívateľ si typ strely definuje tak, že dostane k dispozícií určitź počet bodv a tie musí medzi jednotlive volby rozdeliť\\
-Bot premýšla tak, že sa nechá bežat dovtedy, kým z jeho program nenarazí na inštrukciu, ktorá by ovplyvnila svet, alebo kým neprsiahne timeout. Ak presiahne timeout, preruší sa, preplánuje vo fronte udalostí ďalej (presnejšie o TIMEOUT tikov ďalej)\\
-Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamať. Takýto robot nie je schopný si zapatať jedinú premennú a ani vracat návratové hodnoty, teda v kóde programu by nemali byť definované žiadne funkcie, ale iba procedúry.Je nutné povedať, že funkcie a procedúry sa v žiadnom prípade nechovajú ako premenné a teda nezaberajú robotovi pamať. Teda v tomto prípade dojde k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že nemá povolené napriklad strieľanie, pretože to je funkcia, ktorá potrebuje za každých okolností parametre.
