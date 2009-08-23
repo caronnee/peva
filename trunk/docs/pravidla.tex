@@ -23,7 +23,7 @@ Toto rozdelenie znamená, že hráč môže napríklad zvýšit robotovu odolnos
 Čo sa týka samotných čísel X a Y, je možné si ich samostatne definovať, a to práve kvôli veľkostiam pamäte. Tieto čísla sú potom záväzné pre každého robota.
 \\Hlavnou úlohou hráča je však napísať algoritmus, podľa ktorého sa bude robot správať. Optimálny algoritmus spraví to, robot ako jediný prežije, t.j väčšinu svojich nepriateľov zničí alebo ich prinúti zničíť sa(napríklad navedením na vlastnú strelu alebo podobne).
 
-\subsection{Vlastnosti stien} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
+\subsection{Vlastnosti stien}\label{walls} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
 Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú komunikovať s mapou. Sú to:\\
 \begin{itemize}
 \item Zvláštne políčko Start, ktoré sa používa iba pri generovaní mapy, označuje políčko, kde majú roboti na začiatku simulácie stáť. V prípade, že to políčko sa na mape nevyskytuje, potom sú roboti rozmiestní náhodne.
@@ -34,7 +34,7 @@ Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vyc
 Steny sa dajú kombinovať, to znamená, že napríklad stena sa môže pohybovať alebo miznúť alebo súčasne. Pri generovaní mapy sa toto dosiahne položením steny na polííčko, ktoré už obsahuje iný typ steny.
 
 \subsection{Kolízie}\label{kolizie}
-Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to buď útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou, akovýsledok sa mu zmení smer, ktorým sa doteraz pohyboval), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to napríklad strela, zanikne, ak je to stena, svojím pohybom útoči ďalej, ak je to hráč, závisí na jeho algoritme.
+Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to buď útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou, ako výsledok sa mu zmení smer, ktorým sa doteraz pohyboval), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. Toto zranenie sa vypočíta ako rozdiel útočnosti útočníka a obranyschopnosti brániaceho sa objektu. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to napríklad strela, zanikne alebo sa odrazí od steny, ak je to stena, svojím pohybom útočí ďalej, ak je to hráč, závisí na jeho algoritme.
 \subsubsection{Detekovanie kolízií}%TODO referencia
 Detekovanie kolízií je jedno z najkritickejších miest pri vytváraní grafickej hry. Nejde pri tom ani tak o samotné spracovanie výsledkov kolízie ako uloženie samotných objektov do štruktúry, ktorá pomerne rýchlo vyhľadá objekty možných kolízií. Existije na to niekoľko metód.\\
 Najjednoduchšia metóda, ktorá sa dá použiť, je samozrejme uložiť si do poľa všetky objekty a systematicky prechádzať každú dvojicu, či náhodou nekoliduje. Kód vyzerá pomerne jednoducho:\\ $ for(std::vector<Object>::iterator = objects.begin();\\ iterator!=objects.end();\\ iterator++)\\ \\ checkForCollistion(iterator, object);$\\
