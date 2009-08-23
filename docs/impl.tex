@@ -159,7 +159,7 @@ Jazyk pre Codewars je rozpoznavaný pomocou nástrojov Flex pre lexikálne rozpo
 \begin{huge}TODO \end{huge}
 \\
 Zaujímavejšie je to pri volaní funkcie, ktorá má defaultný parameter. Pretože sa predpokladá, že program bude prístupný aj pre obyčaných užívateľov, je možné u funkcie definovať aj explicitnú hodnotu a to nezávisle na poradí parametrov. T.j. explicitné hodnota môže byť zadaná ako prvý a tretí parameter, ale nie ako druhý. Takáto funkcia sa nadefinuje podobne ako v C/C++, napríklad : \\\begin{center} $ function distance(integer x=3, integer y=2, integer radius, Location l) $ \\\end{center}V okamžiku, keď sa zavolá \begin{center} $ distance(, , radius,l) $ \end{center} sa ušetrí loadovane dvoch premenných.
-\subsection{Detekcia zacyklenia}
+\subsection{Zaujímave nastavenia a efekty}
 
 Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamať. Takýto robot nie je schopný si zapatať jedinú premennú a ani vracat návratové hodnoty, teda v kóde programu by nemali byť definované žiadne funkcie, ale iba procedúry.Je nutné povedať, že funkcie a procedúry sa v žiadnom prípade nechovajú ako premenné a teda nezaberajú robotovi pamať. Teda v tomto prípade dojde k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že nemá povolené napriklad strieľanie, pretože to je funkcia, ktorá potrebuje za každých okolností parametre.
 \subsection{Zrak robota}
