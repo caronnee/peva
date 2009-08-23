@@ -29,19 +29,16 @@ void Missille::action(Map * m)
 {
 	movement.old_pos = movement.position_in_map;
 	milisec = SDL_GetTicks() - ticks;
-	ticks = SDL_GetTicks(); //ticks je last_time
 	if (milisec == 0)
 		milisec = 1;
 	fps = 1000.0f / milisec;
+//	std::cout << "fps" << fps <<std::endl;
 	if(fps == 0)
 		fps = 1;
-/*	std::cout << "fps:" << fps <<std::endl;
-	std::cout << "pozicia pred:" << position_in_map << std::endl;
-	std::cout << "direction:" << direction << std::endl;
-	std::cout << "delenie:" <<direction.y<<"/"<<fps<<"="<< direction.y/fps << std::endl;*/
+//	std::cout << "pozicia pred:" << movement.position_in_map << std::endl;
 	movement.position_in_map.x += movement.direction.x/fps;
 	movement.position_in_map.y += movement.direction.y/fps;
-//	std::cout << "pozicia po:" << position_in_map << std::endl;
+//	std::cout << "pozicia po:" << movement.position_in_map << std::endl;
 	ticks = SDL_GetTicks();
 	m->move(movement, this);
 }
