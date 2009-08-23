@@ -10,6 +10,6 @@ class Menu
 		std::string name;
 		std::string get_name();
 		virtual void process(void) = 0;
-		virtual void draw()=0; //skuska dedicnosti! par potomkov bude pouzit stejnu fciu ako Menu
+		virtual void draw()=0; 
 };
 #endif

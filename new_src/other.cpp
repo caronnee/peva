@@ -81,7 +81,6 @@ void Host::process()
 }
 Host::~Host()throw(){};
 
-
 Play::Play(Window *w_)
 {
 	srand(time(NULL));
@@ -92,7 +91,8 @@ Play::Play(Window *w_)
 	iter = iter_beg = letts.begin();
 	resolution.x = 500;
 	resolution.y = 300;
-	m = new Map(resolution);
+	begin.x = 0;
+	begin.y = 0; //TODO  vystredit
 	for (int i = 0; i< 256; i++)
 	{
 		letters[i].heigth = TTF_FontLineSkip(w->g->g_font);
@@ -101,6 +101,7 @@ Play::Play(Window *w_)
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
 
 	}
+	init (300,400);//TODO zmenit na mapy, ktore uzivatel zada
 	//mapa o velkosti 10x10
 /*	for(int i = 0; i<8; i++)
 	{
@@ -133,6 +134,8 @@ Play::Play(Window *w_)
 			if (object[i].x)
 		}
 		*/
+	Position speed(300,300);
+//	m->add(new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed));
 }
 Play::~Play()throw()
 {
@@ -149,7 +152,9 @@ void Play::redraw()
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
-	SDL_Rect r;
+//	std::cout << m << std::endl;
+	m->redraw(w, begin);
+/*	SDL_Rect r;
 	for(size_t i = 0; i< objects.size(); i++)
 	{
 		r.x = objects[i]->position_in_map.x;
@@ -180,10 +185,17 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 			r.y = objects[i]->position_in_map.y;
 		}
 		SDL_BlitSurface(objects[i]->show(), NULL, w->g->screen, &r);
-	}
+	}*/
 	SDL_Flip(w->g->screen);
 }
 
+void Play::init(int x, int y)
+{
+	resolution = Position(x,y);
+	m = new Map(resolution);
+	objects.clear();
+	std::cout << "mapa vytvorena";
+}
 void Play::process()
 {
 	for (size_t i =0; i< objects.size(); i++)

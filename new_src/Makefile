@@ -1,6 +1,8 @@
 CFLAGS=-O0 -g -Wall
 LDFLAGS= `sdl-config --cflags --libs` -lSDL_ttf -lSDL_image `xml2-config --cflags --libs`
 
+.PHONY: all
+
 all: codewars
 
 distclean: 
@@ -41,7 +43,7 @@ movement.o: movement.h movement.cpp
 
 snake.o: snake.h snake.cpp
 	g++ -c $(CFLAGS) -o snake.o snake.cpp
-map.o:
+map.o: map.cpp map.h
 	g++ -c $(CFLAGS) -o map.o map.cpp
 
 run:

@@ -57,7 +57,7 @@ class Create_map:public Menu
 	unsigned int ** map; //maximalne 32 druhov stien, na mape prave 1object, take to nevadi
 	SDL_Surface * resol[NUMCHARS]; //0-9+x
 	int resol_width[NUMCHARS];
-	int resolX,resolY, number_written; //max 5x5 cifier?
+	int resolX,resolY, number_written; //max 5x5 cifier? TODO prepisat na position
 	std::string written_x, written_y;
 	void process_map();
 	void process_resolution();

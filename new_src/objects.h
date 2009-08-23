@@ -28,6 +28,7 @@ public:
 	int hitpoints;
 	Uint32 ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
 	Object();
+	Position get_pos() const;
 //	virtual void damage(Object * sender) = 0;
 //	virtual void action() = 0;
 	SDL_Surface * show();
@@ -44,7 +45,7 @@ class Missille : public Object
 {
 	float fps;
 	Uint32 milisec;
-	Uint32 hlp;
+//	Uint32 hlp;
 public:
 	virtual bool is_blocking();
 	virtual void damage(Object* sender);

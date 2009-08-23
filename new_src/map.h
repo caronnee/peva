@@ -26,13 +26,14 @@ public:
 	Position resolution; //velkost mapy v pixeloch
 	Position tiles; //kolko policok sa zmesti
 	std::vector<Position> bot_begins;
-	Position begin_draw_at;	
+	//Position begin_draw_at;	
 	void collision(Object * o1, Object * o2);
 	Map(Position resolution);
 	void move(Object * o); //ak sa chce object pohnut, vracia ako moc sa to pokazilo
 	~Map();
-	void redraw(Window * w); //ked ma vykreslit vsetko
+	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko
 	void update(Window *, Position);
+	void add(Object * o); //object si uz drzi informacie o svojej pozicii, je private a
 //	void update(SDL_Rect rec);
 //	void move(Position p, Position p2);
 };
