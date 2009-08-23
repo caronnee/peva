@@ -181,8 +181,12 @@ void Play::process()
 				switch(w->g->event.key.keysym.sym)
 				{
 					case SDLK_a:
-						objects.push_back(new Missille(Position(rand()%15, rand()%15), Position(100, 360)));
-						break;
+						{
+							Object * o = new Missille(Position(rand()%15, rand()%15), Position(100, 360));
+							objects.push_back(o);
+							m->add(o);
+							break;
+						}
 					case SDLK_ESCAPE:
 						{
 							w->state.pop();

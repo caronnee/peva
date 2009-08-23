@@ -38,6 +38,7 @@ public:
 //	virtual void damage(Object * sender) = 0;
 	SDL_Surface * show();
 	virtual void action(Map * m);
+	void collideWith(Object * o);
 	int IsMoving();
 	int IsWall();
 	int IsPlayer();

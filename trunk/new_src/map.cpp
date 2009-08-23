@@ -87,6 +87,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 					rects.x = o->get_pos().x - begin_draw_at.x;
 					rects.y = o->get_pos().y - begin_draw_at.y;
 					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
+					SDL_Rect blabla;
 				}
 //		pos.y++;
 //		r.y+=IMG_HEIGHT;
@@ -117,9 +118,6 @@ void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 }
 void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 {
-	Position oldBox(move.old_pos.x/BOX_WIDTH,move.old_pos.y/BOX_HEIGHT);
-	Position newBox(move.position_in_map.x/BOX_WIDTH,move.position_in_map.y/BOX_HEIGHT);
-//	if (oldBox != newBox)
 	if (o->movement.position_in_map.x < 0)
 	{
 	//	std::cout << o->movement.position_in_map << std::endl;
@@ -129,26 +127,47 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 		o->movement.position_in_map.x = o->movement.position_in_map.x;
 	//	std::cout << o->movement.position_in_map << std::endl;
 	//	getc(stdin);
+		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
-	else if (o->movement.position_in_map.x > resolution.x)
+	else if (o->movement.position_in_map.x > resolution.x-o->show()->w)
 	{
 		o->movement.direction.x *= -1;
-		o->movement.position_in_map.x = 2*resolution.x - o->movement.position_in_map.x;
+		o->movement.position_in_map.x = 2*(resolution.x-o->show()->w) - o->movement.position_in_map.x;
 		o->movement.position_in_map.x = o->movement.position_in_map.x;
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
 		o->movement.direction.y *= -1;
 		o->movement.position_in_map.y *= -1;
-		o->movement.position_in_map.y = o->movement.position_in_map.y;
 	}
-	else if(o->movement.position_in_map.y > resolution.y)
+	else if(o->movement.position_in_map.y > resolution.y-o->show()->h)
 	{
 		o->movement.direction.y *= -1;
-		o->movement.position_in_map.y = 2*resolution.y - o->movement.position_in_map.y;
-		o->movement.position_in_map.y = o->movement.position_in_map.y;
+		o->movement.position_in_map.y = 2*(resolution.y - o->show()->h) - o->movement.position_in_map.y;
+	}
+//	pre kazdy roh sa pozri, akom je boxe. Ak rozny, checkuj kolizi pre kazdy objekt v boxe s useckou (A,B)
+//	vieme urcite, ze dalsi boc bude vedlajsi z velkosti boxi a z maximu pohyby za sekundu
+	Position oldBox(move.old_pos.x/BOX_WIDTH,move.old_pos.y/BOX_HEIGHT);
+	Position newBox(move.position_in_map.x/BOX_WIDTH,move.position_in_map.y/BOX_HEIGHT);
+	if(oldBox != newBox) //checkni pre kolizie aj ostatne
+	{
+		std::cout << "TODO" << std::endl;
+	}
+	//pre vsetky v tej povodnej, ci sa nam to skolidovalo
+	Box * b = map[oldBox.x][oldBox.y];
+	for (std::list<Object *>::iterator iter = b->objects.begin(); iter!=b->objects.end(); iter++)
+	{
+		checkCollision(*iter,o);
 	}
 }
+
+void Map::checkCollision(Object * def, Object * att)
+{
+	if ( def == att)
+		return;
+	def->collideWith(att);	
+}
+
 void Map::update(Window * w, Position p)
 {
 /*	Position pos(p.x-1,p.y-1);	

@@ -23,6 +23,10 @@ SDL_Surface * Object::show()
 
 void Object::action(Map * m) {}
 
+void Object::collideWith(Object * o)
+{
+	
+}
 int Object::IsMoving(){
 	return 0;
 }
