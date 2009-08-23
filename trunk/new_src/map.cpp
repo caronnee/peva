@@ -21,7 +21,7 @@ Map::Map(Position resol) //map resolution in pixels
 	float boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
 	Rectangle begin(0,0,BOX_WIDTH,BOX_HEIGHT);
 	map = new Box **[(int)boxesInRow +1 ];
-	std::cout << boxesInRow << "grgrgrg" << boxesInColumn << std::endl;
+//	std::cout << boxesInRow << "grgrgrg" << boxesInColumn << std::endl;
 	for(int i = 0; i < boxesInRow; i++) //tolko framov vytvorime v x osi
 	{
 		map[i] = new Box * [(int)boxesInColumn + 1]; //+1 because of real numbers
@@ -33,13 +33,13 @@ Map::Map(Position resol) //map resolution in pixels
 		begin.x+=BOX_HEIGHT;
 		begin.y = 0;
 	}
-	// boxes created
+// boxes created
 	std::cout << "Boxes created" << std::endl;
 }
 
 void Map::redraw(Window * w, Position begin_draw_at) 
 {
-	//vytapetuj to naskor prazdnymi tilom
+//vytapetuj to naskor prazdnymi tilom
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
@@ -55,51 +55,52 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		r.x+=IMG_WIDTH;
 	}
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
-	std::cout << "zacina vykreslovanie objektov" << std::endl;
+//	std::cout << "zacina vykreslovanie objektov" << std::endl;
 //getc(stdin);
-	//zacinaju sa vykreslovat objekty na viditelnej ploche
+//zacinaju sa vykreslovat objekty na viditelnej ploche
 	for (int i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
-			std::cout << "huhu"<< pos << std::endl;
-			//getc(stdin);
-			if (map[pos.x][pos.y]->objects.empty())
+//	std::cout << "huhu"<< pos << std::endl;
+//getc(stdin);
+		/*	if (map[pos.x][pos.y]->objects.empty())
 			{
 				std::cout << "wdygvure" <<std::endl;
 			}
 			else std::cout << "not empty"<< map[pos.x][pos.y]->objects.size() << std::endl;
-		//	getc(stdin);
+//	getc(stdin);
+		*/
 			std::list<Object *>::iterator iter = map[pos.x][pos.y]->objects.begin();
-			std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
-		//	getc(stdin);
+//	std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
+//	getc(stdin);
 			while(iter != map[pos.x][pos.y]->objects.end())
 			{
-				std::cout << "HE??" << std::endl;
+//			std::cout << "HE??" << std::endl;
 				Object * o = (*iter);
-				std::cout << "goin";
+//			std::cout << "goin";
 //				getc(stdin);
 				iter++;
 				if(o!=NULL)
 				{
 					SDL_Rect rects;
 					rects.x = o->get_pos().x - begin_draw_at.x;
-				       rects.y = o->get_pos().y - begin_draw_at.y;
+					rects.y = o->get_pos().y - begin_draw_at.y;
 					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
 				}
-		//		pos.y++;
-		//		r.y+=IMG_HEIGHT;
+//		pos.y++;
+//		r.y+=IMG_HEIGHT;
 			}
 		}
 		r.y = 0;
 		pos.y = begin_draw_at.y;
 		pos.x++;
-	//	r.x+=IMG_WIDTH;
-	//	r.x = 0;
+//	r.x+=IMG_WIDTH;
+//	r.x = 0;
 	}
 	SDL_Flip(w->g->screen);
-	std::cout << "end";
-	//getc(stdin);
+//	std::cout << "end";
+//getc(stdin);
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
@@ -114,16 +115,20 @@ void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 	}
 	*/
 }
-void Map::move(ObjectMovement& move , Object * o)
+void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 {
 	Position oldBox(move.old_pos.x/BOX_WIDTH,move.old_pos.y/BOX_HEIGHT);
 	Position newBox(move.position_in_map.x/BOX_WIDTH,move.position_in_map.y/BOX_HEIGHT);
 //	if (oldBox != newBox)
 	if (o->movement.position_in_map.x < 0)
 	{
+	//	std::cout << o->movement.position_in_map << std::endl;
+	//	getc(stdin);
 		o->movement.direction.x *= -1;
 		o->movement.position_in_map.x *= -1;
 		o->movement.position_in_map.x = o->movement.position_in_map.x;
+	//	std::cout << o->movement.position_in_map << std::endl;
+	//	getc(stdin);
 	}
 	else if (o->movement.position_in_map.x > resolution.x)
 	{
@@ -169,7 +174,7 @@ void Map::add(Object * o)
 	Position pos= o->get_pos();
 	pos.x /=BOX_WIDTH;
 	pos.y /=BOX_HEIGHT;
-	std::cout << pos << std::endl;
+//	std::cout << pos << std::endl;
 	map[pos.x][pos.y]->objects.push_back(o);
 	std::cout << "added to" << pos << std::endl;
 }

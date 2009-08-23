@@ -135,7 +135,7 @@ Play::Play(Window *w_)
 			if (object[i].x)
 		}
 		*/
-	Position speed(300,300);
+	Position speed(100,100);
 	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
 	objects.push_back(o);
 	m->add(o);
@@ -155,40 +155,7 @@ void Play::redraw()
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
-//	std::cout << m << std::endl;
 	m->redraw(w, begin);
-/*	SDL_Rect r;
-	for(size_t i = 0; i< objects.size(); i++)
-	{
-		r.x = objects[i]->position_in_map.x;
-		r.y = objects[i]->position_in_map.y;
-
-		if (r.x < 0)
-		{
-			objects[i]->direction.x *= -1;
-			objects[i]->position_in_map.x *= -1;
-			r.x = objects[i]->position_in_map.x;
-		}
-		else if (r.x > resolution.x)
-		{
-			objects[i]->direction.x *= -1;
-			objects[i]->position_in_map.x = 2*resolution.x - objects[i]->position_in_map.x;
-			r.x = objects[i]->position_in_map.x;
-		}
-		if (r.y < 0)
-		{
-			objects[i]->direction.y *= -1;
-			objects[i]->position_in_map.y *= -1;
-			r.y = objects[i]->position_in_map.y;
-		}
-		else if(r.y > resolution.y)
-		{
-			objects[i]->direction.y *= -1;
-			objects[i]->position_in_map.y = 2*resolution.y - objects[i]->position_in_map.y;
-			r.y = objects[i]->position_in_map.y;
-		}
-		SDL_BlitSurface(objects[i]->show(), NULL, w->g->screen, &r);
-	}*/
 	SDL_Flip(w->g->screen);
 }
 
