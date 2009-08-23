@@ -66,9 +66,9 @@ getc(stdin);
 			getc(stdin);
 			if (map[pos.x][pos.y]->objects.empty())
 			{
-				std::cout << "wdygvure" <<std::endl;
+				std::cout << "wdygvure" << map[pos.x][pos.y]->objects.size() <<std::endl;
 			}
-			else std::cout << "not empty"<< std::endl;
+			else std::cout << "not empty"<< map[pos.x][pos.y]->objects.size() << std::endl;
 			getc(stdin);
 			std::list<Object *>::iterator iter = map[pos.x][pos.y]->objects.begin();
 			std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
@@ -78,7 +78,7 @@ getc(stdin);
 				std::cout << "HE??" << std::endl;
 				Object * o = (*iter);
 				std::cout << "goin";
-				getc(stdin);
+//				getc(stdin);
 				iter++;
 				if(o!=NULL)
 				{
@@ -87,15 +87,15 @@ getc(stdin);
 				       rects.y = o->position_in_map.y - begin_draw_at.y;
 					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
 				}
-				pos.y++;
-				r.y+=IMG_HEIGHT;
+		//		pos.y++;
+		//		r.y+=IMG_HEIGHT;
 			}
 		}
 		r.y = 0;
 		pos.y = begin_draw_at.y;
 		pos.x++;
-		r.x+=IMG_WIDTH;
-		r.x = 0;
+	//	r.x+=IMG_WIDTH;
+	//	r.x = 0;
 	}
 	SDL_Flip(w->g->screen);
 	std::cout << "end";

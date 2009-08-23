@@ -135,7 +135,7 @@ Play::Play(Window *w_)
 		}
 		*/
 	Position speed(300,300);
-//	m->add(new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed));
+	m->add(new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed));
 }
 Play::~Play()throw()
 {
@@ -198,10 +198,10 @@ void Play::init(int x, int y)
 }
 void Play::process()
 {
-	for (size_t i =0; i< objects.size(); i++)
+/*	for (size_t i =0; i< objects.size(); i++)
 	{
 		objects[i]->action();
-	}
+	}*/
 	redraw();
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
