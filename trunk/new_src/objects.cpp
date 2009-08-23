@@ -11,6 +11,11 @@ bool Object::is_blocking()
 	return false;
 }
 
+Position Object::get_pos() const
+{
+	return position_in_map;
+}
+
 SDL_Surface * Object::show()
 {
 	return image; 
@@ -20,11 +25,10 @@ Missille::Missille(Position P, Position dir)
 {
 	direction = dir;
 	position_in_map = P;
-	hlp = 100;
 	milisec = 0;
 	ticks = SDL_GetTicks();
 	name = "Misille";
-	image = IMG_Load("../images/Missille.png");
+	image = IMG_Load("../images/Missille.png"); //TODO dat do samostatnej classy
 }
 bool Missille::is_blocking()
 {

@@ -7,7 +7,7 @@ Main::Main(Window * w_)
 	iterator = 0;
 	w = w_; //akonahle sa vytvori, tak sa vykresli to, co sa ma
 	menus[0] = new Play(w_); //TODO zmenit na add a tak podobne, aby to bolo dynamicke
-	menus[1] = new Host(w_);
+	menus[1] = new Host(w_); //TODO mozno nechat bez iterator a menit to rovno switch( state)?
 	menus[2] = new Join(w_);
 	menus[3] = new Settings(w_);
 	menus[4] = new Create_map(w_);
@@ -35,7 +35,7 @@ void Main::process()
 					case SDLK_UP:
 						{
 							iterator--;
-							if (iterator<0) iterator = 4;
+							if (iterator<0) iterator = NUMBEROFMENUS -1;
 							break;
 						}
 					case SDLK_DOWN:

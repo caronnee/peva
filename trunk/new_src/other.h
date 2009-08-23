@@ -56,14 +56,16 @@ class Play:public Menu
 	Map * m;
 	Window * w;
 	Position p;
-	Position begin, resolution;
+	Position begin; //whre to begin drae gameboard
+	Position resolution;//map resolution in pixels
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
 	ImageTile t;
 	void redraw();
-	std::vector<Object *> objects;
+	std::vector<Object *> objects; //all activ objects
+	void init(int, int);
 public:
 	Play(Window * w_);
 	virtual void process(void);
