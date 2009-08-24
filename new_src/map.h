@@ -34,7 +34,7 @@ public:
 	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko
 	void update(Window *, Position);
 	void add(Object * o); //object si uz drzi informacie o svojej pozicii, je private a
-	void checkCollision(Object * def, Object * att);
+//	bool checkCollision(Object * def, Object * att);
 //	void update(SDL_Rect rec);
 //	void move(Position p, Position p2);
 };
