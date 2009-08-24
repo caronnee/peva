@@ -87,7 +87,6 @@ void Map::redraw(Window * w, Position begin_draw_at)
 					rects.x = o->get_pos().x - begin_draw_at.x;
 					rects.y = o->get_pos().y - begin_draw_at.y;
 					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
-					SDL_Rect blabla;
 				}
 //		pos.y++;
 //		r.y+=IMG_HEIGHT;
@@ -133,7 +132,6 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 	{
 		o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = 2*(resolution.x-o->show()->w) - o->movement.position_in_map.x;
-		o->movement.position_in_map.x = o->movement.position_in_map.x;
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
@@ -155,17 +153,22 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 	}
 	//pre vsetky v tej povodnej, ci sa nam to skolidovalo
 	Box * b = map[oldBox.x][oldBox.y];
-	for (std::list<Object *>::iterator iter = b->objects.begin(); iter!=b->objects.end(); iter++)
+	Object * nearest = NULL; //TODO kontrola, ci to fakt je nutne
+	float dist = BOX_WIDTH*BOX_HEIGHT; //nekonecno
+	Position colVector;
+	std::list<Object *>::iterator iter = b->objects.begin();
+	while (iter!=b->objects.end())
 	{
-		checkCollision(*iter,o);
-	}
-}
+		if ( o != (* iter))
 
-void Map::checkCollision(Object * def, Object * att)
-{
-	if ( def == att)
-		return;
-	def->collideWith(att);	
+			if (o->collideWith(*iter, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
+			{
+				//	(*iter)->collision(colVector);
+				//			iter = b->objects.begin();
+			}		
+		//		else
+		iter++;
+	}
 }
 
 void Map::update(Window * w, Position p)
