@@ -46,18 +46,20 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		
 		Position perpVector(movement.old_pos.y - movement.position_in_map.y, movement.position_in_map.x-movement.old_pos.x);//Ax +By = c;
 		int c = 0;
-		c-=perpVector.x*movement.old_pos.x + perpVector.y*movement.old_pos.y;
+		c-=perpVector.x*(movement.old_pos.x+image->w/2) + perpVector.y*(movement.old_pos.y - image->h/2); //priamka cez stred
 		Position del;
 		if(movement.old_pos.x < movement.position_in_map.x)
 		{
 			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo hore doprava
 			{
-				del.x = o->movement.position_in_map.x;
+				del.x = o->movement.position_in_map.x; //horny roh, ok
 				del.y = o->movement.position_in_map.y - o->show()->h;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
 				{
+		//			return false;
+//					std::cout << "here!" << std::endl;
 					movement.direction.x *= -1; 
-					movement.position_in_map.x = 2* del.x - movement.position_in_map.x - image->w;
+					movement.position_in_map.x += del.x - movement.position_in_map.x - image->w;
 				}
 				else
 				{
@@ -68,23 +70,25 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 			}
 			else //sikmo dole doprava
 			{
-				del.x = o->movement.position_in_map.x;
+				return false;
+		/*		del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
-				{
-					movement.position_in_map.y = 2* del.y - movement.position_in_map.y - image->h;
-					movement.direction.y *=-1;
-				}
-				else
 				{
 					movement.direction.x *=-1;
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x;
 				}
+				else
+				{
+					movement.direction.y *=-1;
+					movement.position_in_map.y = 2* del.y - movement.position_in_map.y - image->h;
+				}
+				*/
 			}
 		}
 		else
 		{
-			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo hore dolava
+		/*	if ( movement.old_pos.y < movement.position_in_map.y) // sikmo hore dolava
 			{
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y;
@@ -113,7 +117,8 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 					movement.direction.x *=-1;
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x;
 				}
-			}
+			}*/
+			return false;
 		}
 //		movement.direction.x = (o->movement.direction.x + movement.direction.x)/2;
 //		movement.direction.y = (o->movement.direction.y + movement.direction.y)/2;

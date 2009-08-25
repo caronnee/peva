@@ -115,6 +115,8 @@ void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 }
 void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 {
+	if ((o->movement.direction.x == 0)&&(o->movement.direction.y ==0))
+		return;
 	if (o->movement.position_in_map.x < 0)
 	{
 	//	std::cout << o->movement.position_in_map << std::endl;
