@@ -163,7 +163,7 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 
 			if (o->collideWith(*iter, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
 			{
-				//	(*iter)->collision(colVector);
+				(*iter)->collision(colVector);
 				//			iter = b->objects.begin();
 			}		
 		//		else
