@@ -38,6 +38,7 @@ public:
 //	virtual void damage(Object * sender) = 0;
 	SDL_Surface * show();
 	virtual void action(Map * m);
+	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
 	int IsMoving();
 	int IsWall();
