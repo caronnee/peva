@@ -33,8 +33,6 @@ Map::Map(Position resol) //map resolution in pixels
 		begin.x+=BOX_HEIGHT;
 		begin.y = 0;
 	}
-// boxes created
-	std::cout << "Boxes created" << std::endl;
 }
 
 void Map::redraw(Window * w, Position begin_draw_at) 
@@ -203,9 +201,12 @@ void Map::add(Object * o)
 
 Map::~Map() 
 {
-	for(int i = 0; i< resolution.x; i++)
+	
+	float boxesInRow = (float)resolution.x/ BOX_WIDTH; 
+	float boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
+	for(int i = 0; i< boxesInRow; i++)
 	{
-		for(int j =0; j< resolution.y; j++)
+		for(int j =0; j< boxesInColumn; j++)
 			delete map[i][j];
 		delete [] map[i];
 	}

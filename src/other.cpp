@@ -41,6 +41,8 @@ void Join::process()
 			}
 	}	
 }
+void Join::init(){}
+
 Join::~Join()throw(){};
 
 Host::Host(Window *w_)
@@ -80,6 +82,8 @@ void Host::process()
 			}
 	}	
 }
+void Host::init(){}
+
 Host::~Host()throw(){};
 
 Play::Play(Window *w_)
@@ -168,9 +172,13 @@ void Play::clear()
 	resolution.x = 0;
 	resolution.y = 0;
 	delete m;
-	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
-		delete (*iter); //mazeme zatial iba missile, pozor na boxy, mazat to v mape
+//	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
+//		delete (*iter); //mazeme zatial iba missile, pozor na boxy, mazat to v mape
 
+}
+void Play::init()
+{
+	init(300,400);
 }
 void Play::process()
 {
@@ -195,6 +203,7 @@ void Play::process()
 						}
 					case SDLK_ESCAPE:
 						{
+							clear();
 							w->state.pop();
 							break;
 						}
@@ -243,4 +252,7 @@ void Settings::process()
 			}
 	}	
 }
-Settings::~Settings()throw(){};
+
+void Settings::init() {}
+
+Settings::~Settings()throw(){}

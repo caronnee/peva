@@ -103,7 +103,6 @@ bool Window::Init()
 {
 	// Inicializace SDL
 	bool b = g->Init();
-	std::cout << "__" <<back << std::endl;
 	background = IMG_Load(back.c_str());
 	if (background == NULL) std::cout << "Backgound image not found!" <<std::endl;
 	main_menu = new Main(this); //TODO  nieco ako set_main

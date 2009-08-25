@@ -11,5 +11,6 @@ class Menu
 		std::string get_name();
 		virtual void process(void) = 0;
 		virtual void draw()=0; 
+		virtual void init()=0; 
 };
 #endif

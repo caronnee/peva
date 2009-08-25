@@ -16,6 +16,7 @@ public:
 	Settings(Window * w_);
 	virtual void process(void);
 	virtual void draw();
+	virtual void init();
 	virtual ~Settings()throw();
 };
 
@@ -26,6 +27,7 @@ public:
 	Host(Window * w_);
 	virtual void process(void);
 	virtual void draw();
+	virtual void init();
 	virtual ~Host()throw();
 };
 class Join:public Menu
@@ -35,6 +37,7 @@ public:
 	Join(Window * w_);
 	virtual void process(void);
 	virtual void draw();
+	virtual void init();
 	virtual ~Join()throw();
 };
 
@@ -67,6 +70,7 @@ class Play:public Menu
 	std::list<Object *> objects; //all activ objects
 	void init(int, int);
 	void clear();
+	virtual void init();
 public:
 	Play(Window * w_);
 	virtual void process(void);

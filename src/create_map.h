@@ -67,6 +67,7 @@ class Create_map:public Menu
 	void reset();
 public:
 	Create_map(Window * w_);
+	virtual void init();
 	virtual void process(void);
 	virtual void draw();
 	virtual ~Create_map()throw();
