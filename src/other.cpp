@@ -135,18 +135,9 @@ Play::Play(Window *w_)
 			if (object[i].x)
 		}
 		*/
-	Position speed(100,100);
-	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
-	objects.push_back(o);
-	m->add(o);
 }
-Play::~Play()throw()
-{
-	for(size_t i =0; i< objects.size(); i++)
-	{
-		delete (objects[i]);
-	}
-}
+Play::~Play()throw(){} //uz predtym sa zavola clear, takze to netreba
+
 void Play::redraw()
 {
 	w->tapestry();
@@ -164,13 +155,28 @@ void Play::init(int x, int y)
 	resolution = Position(x,y);
 	m = new Map(resolution);
 	objects.clear();
-	std::cout << "mapa vytvorena";
+	Position speed(100,100);
+	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
+	objects.push_back(o);
+	m->add(o);
+}
+
+void Play::clear()
+{
+	begin.x = 0;
+	begin.y = 0;
+	resolution.x = 0;
+	resolution.y = 0;
+	delete m;
+	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
+		delete (*iter); //mazeme zatial iba missile, pozor na boxy, mazat to v mape
+
 }
 void Play::process()
 {
-	for (size_t i =0; i< objects.size(); i++)
+	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
 	{
-		objects[i]->action(m);
+		(*iter)->action(m);
 	}
 	redraw();
 	while (SDL_PollEvent(&w->g->event))
