@@ -71,6 +71,8 @@ Create_map::Create_map(Window *w_)
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	reset();
 }
+void Create_map::init() {} //zatial nic, pozdejc sa to bude odstrranovat
+
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 {
 	int i;

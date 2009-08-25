@@ -12,6 +12,7 @@ public:
 	Main(Window * w_);
 	virtual void process(void);
 	virtual void draw();
+	virtual void init();
 	virtual ~Main()throw();
 };
 #endif

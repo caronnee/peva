@@ -30,6 +30,7 @@ void Main::process()
 					case SDLK_RETURN:
 						{
 							w->state.push(menus[iterator]);
+							menus[iterator]->init();
 							break;
 						}
 					case SDLK_UP:
@@ -85,6 +86,7 @@ void Main::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
+void Main::init(){} //TODO nieco sa tu bude initovat
 Main::~Main()throw ()
 {
 	for (int i =0; i < NUMBEROFMENUS; i++)
