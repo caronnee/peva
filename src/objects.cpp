@@ -50,44 +50,42 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		Position del;
 		if(movement.old_pos.x < movement.position_in_map.x)
 		{
-			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo hore doprava
+			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole doprava
 			{
 				del.x = o->movement.position_in_map.x; //horny roh, ok
-				del.y = o->movement.position_in_map.y - o->show()->h;
+				del.y = o->movement.position_in_map.y;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
 				{
-		//			return false;
-//					std::cout << "here!" << std::endl;
 					movement.direction.x *= -1; 
 					movement.position_in_map.x += del.x - movement.position_in_map.x - image->w;
 				}
 				else
 				{
 					movement.direction.y *=-1;
-					movement.position_in_map.y = 2* del.y - movement.position_in_map.y;
+					movement.position_in_map.y += movement.position_in_map.y + image->h - del.y;
 				}
 
 			}
-			else //sikmo dole doprava
+			else //sikmo hore doprava
 			{
 				return false;
-		/*		del.x = o->movement.position_in_map.x;
+				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
 				{
 					movement.direction.x *=-1;
-					movement.position_in_map.x = 2* del.x - movement.position_in_map.x;
+					movement.position_in_map.x += del.x - movement.position_in_map.x - image->w;
 				}
 				else
 				{
 					movement.direction.y *=-1;
-					movement.position_in_map.y = 2* del.y - movement.position_in_map.y - image->h;
-				}
-				*/
+					movement.position_in_map.y +=  del.y - movement.position_in_map.y - image->h;
+				}	
 			}
 		}
 		else
 		{
+			return false;
 		/*	if ( movement.old_pos.y < movement.position_in_map.y) // sikmo hore dolava
 			{
 				del.x = o->movement.position_in_map.x;
@@ -118,7 +116,6 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x;
 				}
 			}*/
-			return false;
 		}
 //		movement.direction.x = (o->movement.direction.x + movement.direction.x)/2;
 //		movement.direction.y = (o->movement.direction.y + movement.direction.y)/2;
