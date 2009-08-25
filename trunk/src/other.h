@@ -64,8 +64,9 @@ class Play:public Menu
 	Letter letters[256];
 	ImageTile t;
 	void redraw();
-	std::vector<Object *> objects; //all activ objects
+	std::list<Object *> objects; //all activ objects
 	void init(int, int);
+	void clear();
 public:
 	Play(Window * w_);
 	virtual void process(void);

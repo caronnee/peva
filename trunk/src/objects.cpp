@@ -55,9 +55,15 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y - o->show()->h;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
+				{
+					movement.direction.x *= -1; 
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x - image->w;
+				}
 				else
+				{
+					movement.direction.y *=-1;
 					movement.position_in_map.y = 2* del.y - movement.position_in_map.y;
+				}
 
 			}
 			else //sikmo dole doprava
@@ -65,9 +71,15 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
+				{
 					movement.position_in_map.y = 2* del.y - movement.position_in_map.y - image->h;
+					movement.direction.y *=-1;
+				}
 				else
+				{
+					movement.direction.x *=-1;
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x;
+				}
 			}
 		}
 		else
@@ -77,22 +89,34 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
+				{	
+					movement.direction.x *=-1;
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x - image->w;
+				}
 				else
+				{
+					movement.direction.y *=-1;
 					movement.position_in_map.y = 2* del.y - movement.position_in_map.y;
+				}
 			}
 			else //sikmo dole dolava
 			{
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y - o->show()->h;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
+				{
+					movement.direction.y *=-1;
 					movement.position_in_map.y = 2* del.y - movement.position_in_map.y - image->h;
+				}
 				else
+				{
+					movement.direction.x *=-1;
 					movement.position_in_map.x = 2* del.x - movement.position_in_map.x;
+				}
 			}
 		}
-		movement.direction.x = (o->movement.direction.x + movement.direction.x)/2;
-		movement.direction.y = (o->movement.direction.y + movement.direction.y)/2;
+//		movement.direction.x = (o->movement.direction.x + movement.direction.x)/2;
+//		movement.direction.y = (o->movement.direction.y + movement.direction.y)/2;
 		return true; //mame tu iba obdlzniky a ziadne kruhy, takze kolizny vektor bude v smere utocnika
 
 	}

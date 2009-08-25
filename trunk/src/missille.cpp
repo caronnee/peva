@@ -42,4 +42,4 @@ void Missille::action(Map * m)
 	ticks = SDL_GetTicks();
 	m->move(movement, this);
 }
-
+Missille::~Missille() {} //zatial nic specialne nerobi

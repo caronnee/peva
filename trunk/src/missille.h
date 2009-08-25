@@ -14,6 +14,7 @@ public:
 	virtual void action(Map * m); //penalizacia
 	virtual void defense();
 	Missille(Position p, Position dir);
+	~Missille();
 };
 
 #endif
