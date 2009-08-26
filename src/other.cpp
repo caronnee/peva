@@ -196,7 +196,7 @@ void Play::process()
 				{
 					case SDLK_a:
 						{
-							Object * o = new Missille(Position(rand()%15, rand()%15), Position(50, 60));
+							Object * o = new Missille(Position(100,100), Position(-50,-60));
 							objects.push_back(o);
 							m->add(o);
 							break;
