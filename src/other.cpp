@@ -160,9 +160,9 @@ void Play::init(int x, int y)
 	m = new Map(resolution);
 	objects.clear();
 	Position speed(100,100);
-	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
-	objects.push_back(o);
-	m->add(o);
+//	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
+//	objects.push_back(o);
+//	m->add(o);
 }
 
 void Play::clear()
@@ -196,7 +196,7 @@ void Play::process()
 				{
 					case SDLK_a:
 						{
-							Object * o = new Missille(Position(rand()%15, rand()%15), Position(100, 360));
+							Object * o = new Missille(Position(rand()%15, rand()%15), Position(50, 60));
 							objects.push_back(o);
 							m->add(o);
 							break;
