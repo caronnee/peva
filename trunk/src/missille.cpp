@@ -35,6 +35,7 @@ void Missille::action(Map * m)
 //	std::cout << "fps" << fps <<std::endl;
 	if(fps == 0)
 		fps = 1;
+	fps = 30;
 //	std::cout << "pozicia pred:" << movement.position_in_map << std::endl;
 	movement.position_in_map.x += movement.direction.x/fps;
 	movement.position_in_map.y += movement.direction.y/fps;

@@ -46,31 +46,38 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		
 		Position perpVector(movement.old_pos.y - movement.position_in_map.y, movement.position_in_map.x-movement.old_pos.x);//Ax +By = c;
 		int c = 0;
-		c-=perpVector.x*(movement.old_pos.x+image->w/2) + perpVector.y*(movement.old_pos.y - image->h/2); //priamka cez stred
+//		c-=perpVector.x*(movement.old_pos.x+image->w/2) + perpVector.y*(movement.old_pos.y - image->h/2); //priamka cez stred
 		Position del;
 		if(movement.old_pos.x < movement.position_in_map.x)
 		{
 			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole doprava
 			{
-				//vyzera zatial dobre
-				return false;
+				c-=perpVector.x*(movement.old_pos.x+image->w) + perpVector.y*(movement.old_pos.y + image->h); //priamka pravy dolny roh
 				del.x = o->movement.position_in_map.x; //horny roh, ok
 				del.y = o->movement.position_in_map.y;
-				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
+				std::cout << perpVector << " c:" << c << std::endl;
+				std::cout << del << std::endl;
+				std::cout << perpVector.x*(movement.position_in_map.x+image->w) + perpVector.y*(movement.position_in_map.y - image->h);
+				if (perpVector.x*del.x + perpVector.y*del.y + c > 0 ) //narazil na bocnu stenu
 				{
-					movement.direction.x *= -1; 
-					movement.position_in_map.x += del.x - movement.position_in_map.x - image->w;
+					std::cout << "horna stena" << std::endl;
+				//	getc(stdin);
+					movement.direction.y *=-1;
+					movement.position_in_map.y += movement.position_in_map.y + image->h - del.y;
 				}
 				else
 				{
-					movement.direction.y *=-1;
-					movement.position_in_map.y += movement.position_in_map.y + image->h - del.y;
+					std::cout << "bocna stena" << std::endl;
+				//	getc(stdin);
+				//	return false;
+					movement.direction.x *= -1; 
+					movement.position_in_map.x += del.x - movement.position_in_map.x - image->w;
+					std::cout << "here:" << movement.position_in_map << ", direction:" << movement.direction << " o:" << o->movement.position_in_map << "direction"<< o->movement.direction << std::endl;
 				}
 
 			}
 			else //sikmo hore doprava
 			{
-				//vyzera OK
 				return false;
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y + o->show()->h; //dolny roh, ktovie preco;)
@@ -88,9 +95,9 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		}
 		else
 		{
+			return false;
 			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo hore dolava
 			{
-		//		return false;
 				del.x = o->movement.position_in_map.x+o->show()->w;
 				del.y = o->movement.position_in_map.y;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
@@ -100,14 +107,12 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				}
 				else
 				{
-					return false;
 					movement.direction.x *=-1;
 					movement.position_in_map.x += del.x - movement.position_in_map.x;
 				}
 			}
 			else //sikmo dole dolava
 			{
-				return false;
 				del.x = o->movement.position_in_map.x + o->show()->w;
 				del.y = o->movement.position_in_map.y + o->show()->h;
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
