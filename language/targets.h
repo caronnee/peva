@@ -27,13 +27,46 @@ class TargetVisitSequence : public TargetVisit
 	virtual bool visited(Rectangle r);
 };
 
-class TargetKillNumber : public Target //v okamihu, ked sa mu vrati strela
+class TargetKillNumber//v okamihu, ked sa mu vrati strela
+{
+	protected:
+	int constraint;
+	public:
+	void set(size_t t);
+	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
+};
+
+class TargetKillNumberLess : public TargetKillNumber
 {
 	int constraint;
 	public:
-	virtual bool fullfilled();	
+	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 };
 
+class TargetKillNumberLessThen : public TargetKillNumber
+{
+	public:
+	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
+	TargetKillNumberLessThen();
+};
+class TargetKillNumberMore : public TargetKillNumber
+{
+	public:
+	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
+	TargetKillNumberMore();
+};
+class TargetKillNumberMoreThen : public TargetKillNumber
+{
+	public:
+	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
+	TargetKillNumberMoreThen();
+};
+class TargetKillNumberNot : public TargetKillNumber
+{
+	public:
+	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
+	TargetKillNumberNot();
+};
 class TargetKillId : public Target
 {
 	size_t ID;
