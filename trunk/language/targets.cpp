@@ -43,7 +43,7 @@ bool TargetKillNumber::fullfilled()
 		ok = true;
 	return ok;
 }
-bool TargetKillId::fullfilled(int id)
+bool TargetKillId::fullfilled(size_t id)
 {
 	if (id == ID)
 		ok = true;

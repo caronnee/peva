@@ -3,13 +3,15 @@ ROBOT qqq
 	HEALTH 100
 	OC = 50
 	UC = 9
-
-	SEE 8x4
-
-	MISILLE 100
-	MUC 50
-
-	integer left, right; //povolene komentare, bool aj integer su naprosto stejne
+	ATTACK = 33			
+        HEALTH = 100		
+	ATTACK = 34	
+	SEE_WIDTH = 8
+	SEE_HEIGHT = 4
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
+        ID = 5			
 
 	integer function f(integer a)
 	{
