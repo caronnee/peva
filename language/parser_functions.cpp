@@ -4,7 +4,7 @@
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
-Instruction * instruction_load(Program *p, std::string s)
+Instruction * instruction_load(Robot *p, std::string s)
 {
 	Node *n = p->find_var(s); 
 	if (n == NULL)
@@ -23,7 +23,7 @@ Instruction * instruction_load(Program *p, std::string s)
 	}
 }
 
-void reg(Program * p, std::vector<Parameter_entry> c, Instructions b)
+void reg(Robot * p, std::vector<Parameter_entry> c, Instructions b)
 {
 	p->add_function(c,b);
 }
@@ -37,7 +37,7 @@ Instructions join_instructions(const Instructions i1, const Instructions i2)
 	}
 	return res;
 }
-void set_breaks(Program * p, Instructions ins)
+void set_breaks(Robot * p, Instructions ins)
 {
 	size_t size = ins.size();
 	std::cout << "Last loop number" << p->last_loop_number <<std::endl;

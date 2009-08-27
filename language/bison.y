@@ -9,7 +9,7 @@
 	#define YYLLOC_DEFAULT(cur, rhs, n)	do { if(n) (cur)=(rhs)[1]; else (cur)=(rhs)[0]; } while(0)
 
 	#define YYERROR_VERBOSE 1		
-	static void yyerror(YYLTYPE *line, Program* ctx, const char *m);
+	static void yyerror(YYLTYPE *line, Robot* ctx, const char *m);
 
 %}
 
@@ -105,8 +105,8 @@
 %start program
 %error-verbose
 %pure-parser
-%parse-param { Program *program }
-%lex-param { Program *program }
+%parse-param { Robot *program }
+%lex-param { Robot *program }
 %locations
 %%
 
@@ -394,7 +394,7 @@ expression_bool: expression_bool_or { $$ = $1; }
 
 extern FILE * yyin;
 
-static void yyerror(unsigned *line,Program* ctx, const char *message)
+static void yyerror(unsigned *line,Robot* ctx, const char *message)
 {
 	printf("Co to, co to? %s, line %d\n", message, *line);
 }
@@ -413,7 +413,8 @@ int main(int argc, char ** argv)
 		return 16;
     	}
 
-	Program q; //TODO namiesto tohoto robot
+	GamePoints points;
+	Robot q(points); //TODO namiesto tohoto robot
 	Create_type t;
 	yyparse(&q);
     	fclose(yyin);

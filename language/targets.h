@@ -38,7 +38,7 @@ class TargetKillId : public Target
 {
 	size_t ID;
 	public:
-	bool fullfilled(int id);
+	bool fullfilled(size_t id);
 };
 
 #endif

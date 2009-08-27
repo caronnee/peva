@@ -24,7 +24,7 @@ Constr::Constr(std::string a, Instructions i)
 	default_set = true;
 }
 
-Program::Program()
+Robot::Robot(GamePoints p)
 {
 	last_loop_number = 1;
 	nested = "";
@@ -32,7 +32,7 @@ Program::Program()
 	core = new Core();
 }
 
-Function * Program::find_f(std::string nam)
+Function * Robot::find_f(std::string nam)
 {
 	for(int i =0; i< core->functions.size(); i++)
 	{
@@ -44,7 +44,7 @@ Function * Program::find_f(std::string nam)
 	return core->nested_function;
 }
 
-Node * Program::find_var(std::string var_name)
+Node * Robot::find_var(std::string var_name)
 {
 	std::string s = nested + var_name;
 	Tree * t = defined.find_string(s);
@@ -66,14 +66,14 @@ Node * Program::find_var(std::string var_name)
 	}
 	return NULL;
 }
-Node * Program::add(std::string name, Create_type type)
+Node * Robot::add(std::string name, Create_type type)
 {
 	return defined.add(nested + name, type);
 }
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
  */
-void Program::add_global(Instructions ins)
+void Robot::add_global(Instructions ins)
 {
 	core->PC = instructions.size();
 	for (int i =0; i< ins.size(); i++)
@@ -81,7 +81,7 @@ void Program::add_global(Instructions ins)
 		instructions.push_back(ins[i]);	
 	}
 }
-void Program::output(Tree * t)
+void Robot::output(Tree * t)
 {
 	for (std::list<Node*>::iterator i = t->items.begin();i!=t->items.end(); i++)
 		std::cout << "prvok s menom:" << (*i)->name <<std::endl;
@@ -96,14 +96,14 @@ void Program::output(Tree * t)
 	}
 	std::cout << "END "<<std::endl;
 }
-void Program::add(Instructions ins)
+void Robot::add(Instructions ins)
 {
 	for (int i =0; i<ins.size(); i++)
 	{
 		instructions.push_back(ins[i]);
 	}
 }
-void Program::add_function(std::vector<Parameter_entry> c, Instructions ins)
+void Robot::add_function(std::vector<Parameter_entry> c, Instructions ins)
 {
 	core->nested_function->parameters = c;
 	core->nested_function->begin = instructions.size();
@@ -123,17 +123,17 @@ void Program::add_function(std::vector<Parameter_entry> c, Instructions ins)
 		instructions.push_back(new InstructionRestore()); //pre procedury
 	}
 }
-void Program::enter(std::string name, Create_type return_type)
+void Robot::enter(std::string name, Create_type return_type)
 {
 	nested += name + DELIMINER_CHAR;
 	core->nested_function = new Function(name, add("",return_type));
 }
-void Program::leave() //odide z funkcie
+void Robot::leave() //odide z funkcie
 {
 	nested = "";
 	core->nested_function = NULL;
 }
-void Program::save_to_xml()
+void Robot::save_to_xml()
 {
 	LIBXML_TEST_VERSION;
 
@@ -167,17 +167,17 @@ void Program::save_to_xml()
 	xmlFreeDoc(data.doc);
 }
 
-void Program::enter_loop()
+void Robot::enter_loop()
 {
 	last_loop_number++; //v podstate loop_zanorenie
 	loop_labels.push(last_loop_number);
 }
-void Program::end_loop()
+void Robot::end_loop()
 {
 	last_loop_number--;
 	loop_labels.pop();
 }
-void Program::execute()
+void Robot::execute()
 {
 	while(core->PC < instructions.size())
 	{

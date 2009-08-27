@@ -25,6 +25,10 @@ struct Constr
 	Constr(std::string a, Instructions i);
 };
 
+struct GamePoints
+{
+	size_t firstSection,secondSection, thirdSection;
+};
 struct MyXmlData
 {
 	xmlDocPtr doc;
@@ -45,7 +49,7 @@ struct Robot // == ROBOT
 	Values values;//stack ukazatelov do stromu
 	MyXmlData data;
 	void save_to_xml();
-	Program();
+	Robot(GamePoints g);
 	Core * core;
 	void add_global(Instructions ins);
 	void output(Tree * t);
