@@ -24,6 +24,20 @@ Constr::Constr(std::string a, Instructions i)
 	default_set = true;
 }
 
+FirstSection::FirstSection()
+{
+	hitpoints = 100;
+	sizeOfMemory = 100;
+	seeX = seeY = 5;
+}
+SecondSection::SecondSection()
+{
+	missileAttack = 25;
+	missileDefense = 25;
+	defense = 25;
+	attack = 25;
+}
+
 Robot::Robot(GamePoints p)
 {
 	last_loop_number = 1;
