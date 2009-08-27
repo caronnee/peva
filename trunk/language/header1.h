@@ -2,7 +2,7 @@
 #define HEADER_H_
 
 #include <string>
-#include "./program.h"
+#include "./robot.h"
 
 enum Operation
 {
@@ -30,12 +30,16 @@ enum Operation
 enum Options
 {
 	OptionHealth,
-	OptionSee,
+	OptionSeeX,
+	OptionSeeY,
+	OptionMemory,
 	OptionAttack,
 	OptionDefense,
 	OptionMisilleAttack,
-	OptionMisilleHealth
+	OptionMisilleHealth,
+	OptionId
 };
+
 enum ObjectFeatures
 {
 	FeatureIsPlayer,
