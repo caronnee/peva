@@ -32,6 +32,7 @@ enum Options
 	OptionHealth,
 	OptionSeeX,
 	OptionSeeY,
+	OptionSee,
 	OptionMemory,
 	OptionAttack,
 	OptionDefense,

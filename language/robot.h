@@ -25,9 +25,25 @@ struct Constr
 	Constr(std::string a, Instructions i);
 };
 
+struct FirstSection
+{
+	int hitpoints;
+	int sizeOfMemory;
+	int seeX, seeY;
+	FirstSection();
+};
+struct SecondSection
+{
+	int missileAttack;
+	int missileDefense;
+	int defense;
+	int attack;
+	SecondSection();
+};
 struct GamePoints
 {
-	size_t firstSection,secondSection, thirdSection;
+	FirstSection firstSection;
+	SecondSection secondSection;
 };
 struct MyXmlData
 {

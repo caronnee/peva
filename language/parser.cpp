@@ -8271,8 +8271,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 84
-#define YY_END_OF_BUFFER 85
+#define YY_NUM_RULES 85
+#define YY_END_OF_BUFFER 86
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -8282,33 +8282,33 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[250] =
     {   0,
-        0,    0,    0,    0,    0,    0,   85,   83,    1,   82,
-       62,   69,   70,   46,   47,   67,   65,   44,   66,   45,
-       68,   54,   43,   58,   50,   60,   53,   53,   53,   53,
-       53,   53,   53,   53,   53,   53,   53,   48,   49,   53,
-       53,   53,   53,   53,   53,   53,   53,   53,   53,   53,
-       53,   53,   53,   75,   71,   76,   72,   78,   77,   81,
-       80,   81,    1,   63,   73,   51,   52,    3,    2,    0,
-       54,   55,   55,   59,   64,   61,   53,   53,   53,   53,
-       53,   12,   53,   53,   53,   53,   53,   53,   53,   53,
-       53,   37,   53,   53,   53,   53,   39,   53,   53,   53,
+        0,    0,    0,    0,    0,    0,   86,   84,    1,   83,
+       63,   70,   71,   47,   48,   68,   66,   45,   67,   46,
+       69,   55,   44,   59,   51,   61,   54,   54,   54,   54,
+       54,   54,   54,   54,   54,   54,   54,   49,   50,   54,
+       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
+       54,   54,   54,   76,   72,   77,   73,   79,   78,   82,
+       81,   82,    1,   64,   74,   52,   53,    3,    2,    0,
+       55,   56,   56,   60,   65,   62,   54,   54,   54,   54,
+       54,   13,   54,   54,   54,   54,   54,   54,   54,   54,
+       54,   38,   54,   54,   54,   54,   40,   54,   54,   54,
 
-       53,   53,   53,   53,   53,   53,   53,   53,   53,   74,
-       79,   56,    0,   55,   53,   53,   53,   53,   53,   53,
-       53,   53,   53,   53,   53,   53,   53,   53,   53,   38,
-       53,   29,   53,   53,   53,   53,   53,   53,   26,   53,
-       53,   53,   53,   53,   53,   56,   57,   57,   56,   53,
-       53,   53,   53,   53,   53,   53,   53,   53,   53,   53,
-       53,   53,   53,   53,   35,   53,   53,   53,   16,   53,
-       19,   53,   53,   25,   30,   17,   28,   53,   56,   53,
-       53,   53,   53,   53,   53,   53,   53,   53,   53,   53,
-        4,   53,   53,   13,   42,   53,   53,   53,   53,   53,
+       54,   54,   54,   54,   54,   54,   54,   54,   54,   75,
+       80,   57,    0,   56,   54,   54,   54,   54,   54,   54,
+       54,   54,   54,   54,   54,   12,   54,   54,   54,   39,
+       54,   30,   54,   54,   54,   54,   54,   54,   27,   54,
+       54,   54,   54,   54,   54,   57,   58,   58,   57,   54,
+       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
+       54,   54,   54,   54,   36,   54,   54,   54,   17,   54,
+       20,   54,   54,   26,   31,   18,   29,   54,   57,   54,
+       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
+        4,   54,   54,   14,   43,   54,   54,   54,   54,   54,
 
-       27,   31,   32,   36,    6,   53,    5,   53,   53,   53,
-       21,   15,   24,   53,   53,   53,   53,   53,   53,   53,
-       53,   40,   41,    7,   53,   53,   53,    8,    9,   53,
-       53,   53,   53,   33,   53,   53,   23,   20,   53,   53,
-       53,   34,   18,   53,   53,   10,   14,   22,   11
+       28,   32,   33,   37,    6,   54,    5,   54,   54,   54,
+       22,   16,   25,   54,   54,   54,   54,   54,   54,   54,
+       54,   41,   42,    7,   54,   54,   54,    8,    9,   54,
+       54,   54,   54,   34,   54,   54,   24,   21,   54,   54,
+       54,   35,   19,   54,   54,   10,   15,   23,   11
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -8365,7 +8365,8 @@ char *yytext;
 	#include "bison.hpp"
 
 int line = 1;
-#line 8369 "parser.cpp"
+
+#line 8370 "parser.cpp"
 
 #define INITIAL 0
 #define COMMENT_LINE 1
@@ -8518,10 +8519,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 19 "parser.lex"
+#line 20 "parser.lex"
 
 
-#line 8525 "parser.cpp"
+#line 8526 "parser.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -8594,434 +8595,439 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "parser.lex"
+#line 22 "parser.lex"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "parser.lex"
+#line 24 "parser.lex"
 BEGIN(COMMENT_LINE);
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 24 "parser.lex"
+#line 25 "parser.lex"
 BEGIN(COMMENT);
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 26 "parser.lex"
+#line 27 "parser.lex"
 {*l = line; return TOKEN_ROBOT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 27 "parser.lex"
+#line 28 "parser.lex"
 {*l = line; lv->op = OptionHealth; return TOKEN_OPTION; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 28 "parser.lex"
+#line 29 "parser.lex"
 {*l = line; lv->op = OptionAttack; return TOKEN_OPTION; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 29 "parser.lex"
+#line 30 "parser.lex"
 {*l = line; lv->op = OptionDefense;return TOKEN_OPTION; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 30 "parser.lex"
+#line 31 "parser.lex"
 {*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 31 "parser.lex"
+#line 32 "parser.lex"
 {*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 32 "parser.lex"
+#line 33 "parser.lex"
 {*l = line; lv->op = OptionSeeX;return TOKEN_OPTION; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 33 "parser.lex"
+#line 34 "parser.lex"
 {*l = line; lv->op = OptionSeeY;return TOKEN_OPTION; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 34 "parser.lex"
-{*l = line; lv->op = OptionId; return TOKEN_OPTION;}
+#line 35 "parser.lex"
+{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 36 "parser.lex"
-{*l = line; return TOKEN_VISIT; }
+{*l = line; lv->op = OptionId; return TOKEN_OPTION;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 37 "parser.lex"
-{*l = line; return TOKEN_VISIT_SEQUENCE; }
+#line 38 "parser.lex"
+{*l = line; return TOKEN_VISIT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 38 "parser.lex"
-{*l = line; return TOKEN_KILLED; }
+#line 39 "parser.lex"
+{*l = line; return TOKEN_VISIT_SEQUENCE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 40 "parser.lex"
-{*l = line; return TOKEN_MAIN; }
+{*l = line; return TOKEN_KILLED; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 41 "parser.lex"
-{*l = line; return TOKEN_VOID; }
+#line 42 "parser.lex"
+{*l = line; return TOKEN_MAIN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 42 "parser.lex"
-{*l = line;return TOKEN_LOCATION; }
+#line 43 "parser.lex"
+{*l = line; return TOKEN_VOID; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 43 "parser.lex"
-{*l = line;return TOKEN_VAR_REAL; }
+#line 44 "parser.lex"
+{*l = line;return TOKEN_LOCATION; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 44 "parser.lex"
-{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
+#line 45 "parser.lex"
+{*l = line;return TOKEN_VAR_REAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 45 "parser.lex"
-{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
+#line 46 "parser.lex"
+{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 46 "parser.lex"
-{*l = line;lv->of = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
+#line 47 "parser.lex"
+{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 47 "parser.lex"
-{*l = line;lv->of = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
+#line 48 "parser.lex"
+{*l = line;lv->of = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 48 "parser.lex"
-{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
+#line 49 "parser.lex"
+{*l = line;lv->of = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 49 "parser.lex"
+#line 50 "parser.lex"
 {*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 50 "parser.lex"
-{*l = line;lv->of = FeatureSee;return TOKEN_OBJECT_FEATURE;}
+#line 51 "parser.lex"
+{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 51 "parser.lex"
-{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
+#line 52 "parser.lex"
+{*l = line;lv->of = FeatureSee;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 52 "parser.lex"
-{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
+#line 53 "parser.lex"
+{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 53 "parser.lex"
-{*l = line;lv->of = FeatureHit;return TOKEN_OBJECT_FEATURE;}
+#line 54 "parser.lex"
+{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 54 "parser.lex"
-{*l = line;lv->of = FeatureTurn;return TOKEN_OBJECT_FEATURE;}
+#line 55 "parser.lex"
+{*l = line;lv->of = FeatureHit;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 55 "parser.lex"
-{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
+#line 56 "parser.lex"
+{*l = line;lv->of = FeatureTurn;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 56 "parser.lex"
-{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
+#line 57 "parser.lex"
+{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 57 "parser.lex"
-{*l = line;return TOKEN_VAR_INT; }
+#line 58 "parser.lex"
+{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 58 "parser.lex"
-{*l = line;return TOKEN_FUNCTION; }
+#line 59 "parser.lex"
+{*l = line;return TOKEN_VAR_INT; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 59 "parser.lex"
-{*l = line;return TOKEN_ELSE; }
+#line 60 "parser.lex"
+{*l = line;return TOKEN_FUNCTION; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 60 "parser.lex"
-{*l = line;return TOKEN_WHILE; }
+#line 61 "parser.lex"
+{*l = line;return TOKEN_ELSE; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 61 "parser.lex"
-{*l = line;return TOKEN_DO;		/* do */ }
+#line 62 "parser.lex"
+{*l = line;return TOKEN_WHILE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 62 "parser.lex"
-{*l = line;return TOKEN_FOR; }
+#line 63 "parser.lex"
+{*l = line;return TOKEN_DO;		/* do */ }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 63 "parser.lex"
-{*l = line;return TOKEN_IF;		/* if */ }
+#line 64 "parser.lex"
+{*l = line;return TOKEN_FOR; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 64 "parser.lex"
-{*l = line;return TOKEN_OBJECT; }
+#line 65 "parser.lex"
+{*l = line;return TOKEN_IF;		/* if */ }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 65 "parser.lex"
-{*l = line;return TOKEN_RETURN; }
+#line 66 "parser.lex"
+{*l = line;return TOKEN_OBJECT; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 66 "parser.lex"
-{*l = line;return TOKEN_BREAK; }
+#line 67 "parser.lex"
+{*l = line;return TOKEN_RETURN; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 67 "parser.lex"
-{*l = line;return TOKEN_SEMICOLON; }
+#line 68 "parser.lex"
+{*l = line;return TOKEN_BREAK; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 68 "parser.lex"
-{*l = line;return TOKEN_COMMA; }
+#line 69 "parser.lex"
+{*l = line;return TOKEN_SEMICOLON; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 69 "parser.lex"
-{*l = line;return TOKEN_DOT; }
+#line 70 "parser.lex"
+{*l = line;return TOKEN_COMMA; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 70 "parser.lex"
-{*l = line;return TOKEN_LPAR; }
+#line 71 "parser.lex"
+{*l = line;return TOKEN_DOT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 71 "parser.lex"
-{*l = line;return TOKEN_RPAR; }
+#line 72 "parser.lex"
+{*l = line;return TOKEN_LPAR; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 72 "parser.lex"
-{*l = line;return TOKEN_LSBRA; }
+#line 73 "parser.lex"
+{*l = line;return TOKEN_RPAR; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 73 "parser.lex"
-{*l = line;return TOKEN_RSBRA; }
+#line 74 "parser.lex"
+{*l = line;return TOKEN_LSBRA; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 74 "parser.lex"
-{*l = line;return TOKEN_ASSIGN; }
+#line 75 "parser.lex"
+{*l = line;return TOKEN_RSBRA; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 75 "parser.lex"
-{*l = line;return TOKEN_PLUSPLUS; }
+#line 76 "parser.lex"
+{*l = line;return TOKEN_ASSIGN; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 76 "parser.lex"
-{*l = line;return TOKEN_MINUSMINUS; }
+#line 77 "parser.lex"
+{*l = line;return TOKEN_PLUSPLUS; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 77 "parser.lex"
-{*l = line;lv->ident = yytext; return TOKEN_IDENTIFIER; }
+#line 78 "parser.lex"
+{*l = line;return TOKEN_MINUSMINUS; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 78 "parser.lex"
-{*l = line;lv->ident = yytext; lv->number = atoi(yytext);return TOKEN_UINT; }
+#line 79 "parser.lex"
+{*l = line;lv->ident = yytext; return TOKEN_IDENTIFIER; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 79 "parser.lex"
+#line 80 "parser.lex"
 {*l = line;lv->ident = yytext; lv->number = atoi(yytext);return TOKEN_UINT; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 80 "parser.lex"
-{*l = line;lv->ident = yytext; lv->f_number = atof(yytext);return TOKEN_REAL; }
+#line 81 "parser.lex"
+{*l = line;lv->ident = yytext; lv->number = atoi(yytext);return TOKEN_UINT; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 81 "parser.lex"
-;
+#line 82 "parser.lex"
+{*l = line;lv->ident = yytext; lv->f_number = atof(yytext);return TOKEN_REAL; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 82 "parser.lex"
-{ lv->operation = OperationLess;*l = line;return TOKEN_OPER_REL; }
+#line 83 "parser.lex"
+;
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 83 "parser.lex"
-{ lv->operation = OperationLessEqual;*l = line;return TOKEN_OPER_REL; }
+#line 84 "parser.lex"
+{ lv->operation = OperationLess;*l = line;return TOKEN_OPER_REL; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 84 "parser.lex"
-{ lv->operation = OperationGreater;*l = line;return TOKEN_OPER_REL; }
+#line 85 "parser.lex"
+{ lv->operation = OperationLessEqual;*l = line;return TOKEN_OPER_REL; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 85 "parser.lex"
-{ lv->operation = OperationGreaterEqual;*l = line;return TOKEN_OPER_REL; }
+#line 86 "parser.lex"
+{ lv->operation = OperationGreater;*l = line;return TOKEN_OPER_REL; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 86 "parser.lex"
-{ lv->operation = OperationBoolNot;*l = line;return TOKEN_BOOL_OR; }
+#line 87 "parser.lex"
+{ lv->operation = OperationGreaterEqual;*l = line;return TOKEN_OPER_REL; }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 87 "parser.lex"
-{ lv->operation = OperationNotEqual;*l = line;return TOKEN_OPER_REL; }
+#line 88 "parser.lex"
+{ lv->operation = OperationBoolNot;*l = line;return TOKEN_BOOL_OR; }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 88 "parser.lex"
-{ lv->operation = OperationEqual;*l = line;return TOKEN_OPER_REL; }
+#line 89 "parser.lex"
+{ lv->operation = OperationNotEqual;*l = line;return TOKEN_OPER_REL; }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 89 "parser.lex"
-{ lv->operation = OperationPlus; *l = line;return TOKEN_OPER_SIGNADD; }
+#line 90 "parser.lex"
+{ lv->operation = OperationEqual;*l = line;return TOKEN_OPER_REL; }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 90 "parser.lex"
-{ lv->operation = OperationMinus; *l = line;return TOKEN_OPER_SIGNADD; }
+#line 91 "parser.lex"
+{ lv->operation = OperationPlus; *l = line;return TOKEN_OPER_SIGNADD; }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 91 "parser.lex"
-{ lv->operation = OperationMultiply;*l = line;return TOKEN_OPER_MUL; }
+#line 92 "parser.lex"
+{ lv->operation = OperationMinus; *l = line;return TOKEN_OPER_SIGNADD; }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 92 "parser.lex"
-{ lv->operation = OperationDivide; *l = line;return TOKEN_OPER_MUL; }
+#line 93 "parser.lex"
+{ lv->operation = OperationMultiply;*l = line;return TOKEN_OPER_MUL; }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 93 "parser.lex"
-{ lv->operation = OperationModulo; *l = line;return TOKEN_OPER_MUL; }
+#line 94 "parser.lex"
+{ lv->operation = OperationDivide; *l = line;return TOKEN_OPER_MUL; }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 94 "parser.lex"
-{ lv->operation = OperationAnd;*l = line;return TOKEN_OPER_MUL; }
+#line 95 "parser.lex"
+{ lv->operation = OperationModulo; *l = line;return TOKEN_OPER_MUL; }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 95 "parser.lex"
-{ lv->operation = OperationOr;*l = line;return TOKEN_OPER_MUL; }
+#line 96 "parser.lex"
+{ lv->operation = OperationAnd;*l = line;return TOKEN_OPER_MUL; }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 96 "parser.lex"
-{ lv->operation = OperationNot;*l = line;return TOKEN_OPER_MUL; }
+#line 97 "parser.lex"
+{ lv->operation = OperationOr;*l = line;return TOKEN_OPER_MUL; }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 97 "parser.lex"
-{ lv->operation = OperationBoolAnd;*l = line;return TOKEN_BOOL_AND; }
+#line 98 "parser.lex"
+{ lv->operation = OperationNot;*l = line;return TOKEN_OPER_MUL; }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 98 "parser.lex"
-{ lv->operation = OperationBoolOr;*l = line;return TOKEN_BOOL_OR; }
+#line 99 "parser.lex"
+{ lv->operation = OperationBoolAnd;*l = line;return TOKEN_BOOL_AND; }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 99 "parser.lex"
-{*l = line;return TOKEN_BEGIN; }
+#line 100 "parser.lex"
+{ lv->operation = OperationBoolOr;*l = line;return TOKEN_BOOL_OR; }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 100 "parser.lex"
+#line 101 "parser.lex"
+{*l = line;return TOKEN_BEGIN; }
+	YY_BREAK
+case 77:
+YY_RULE_SETUP
+#line 102 "parser.lex"
 {*l = line;return TOKEN_END; }
 	YY_BREAK
 
 
-case 77:
-/* rule 77 can match eol */
+case 78:
+/* rule 78 can match eol */
 YY_RULE_SETUP
-#line 103 "parser.lex"
+#line 105 "parser.lex"
 {BEGIN(INITIAL);line++;}
 	YY_BREAK
-case 78:
-YY_RULE_SETUP
-#line 104 "parser.lex"
-;
-	YY_BREAK
-
-
-
 case 79:
 YY_RULE_SETUP
-#line 108 "parser.lex"
-BEGIN(INITIAL);
-	YY_BREAK
-case 80:
-/* rule 80 can match eol */
-YY_RULE_SETUP
-#line 109 "parser.lex"
-{line++;}
-	YY_BREAK
-case 81:
-YY_RULE_SETUP
-#line 110 "parser.lex"
+#line 106 "parser.lex"
 ;
 	YY_BREAK
 
+
+
+case 80:
+YY_RULE_SETUP
+#line 110 "parser.lex"
+BEGIN(INITIAL);
+	YY_BREAK
+case 81:
+/* rule 81 can match eol */
+YY_RULE_SETUP
+#line 111 "parser.lex"
+{line++;}
+	YY_BREAK
 case 82:
-/* rule 82 can match eol */
 YY_RULE_SETUP
 #line 112 "parser.lex"
-line++;
+;
 	YY_BREAK
+
 case 83:
+/* rule 83 can match eol */
 YY_RULE_SETUP
-#line 113 "parser.lex"
-printf("Unrecognized token!Ignoring.Line %d, %s\n", line, yytext);
+#line 114 "parser.lex"
+line++;
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 114 "parser.lex"
+#line 115 "parser.lex"
+printf("Unrecognized token!Ignoring.Line %d, %s\n", line, yytext);
+	YY_BREAK
+case 85:
+YY_RULE_SETUP
+#line 116 "parser.lex"
 ECHO;
 	YY_BREAK
-#line 9025 "parser.cpp"
+#line 9031 "parser.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT_LINE):
 case YY_STATE_EOF(COMMENT):
@@ -9975,4 +9981,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 114 "parser.lex"
+#line 116 "parser.lex"

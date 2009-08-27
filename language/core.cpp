@@ -4,6 +4,8 @@ Core::Core()
 {
 	PC =0;
 	values.clear();	
+	error = false;
+	robot = new Robot_body();
 }
 
 void Core::save(int j)

@@ -20,15 +20,11 @@ struct Core
 	std::vector<Function *> nested_functions;
 	int depth;
 	bool error;
-//	Robot_body * robot; //periferie, stav robota, interakcia s mapou
+	Robot_body * robot; //periferie, stav robota, interakcia s mapou
 //	Map * map;
 	Memory memory;
 	std::vector<Value> values;	
-	Core()
-	{
-		error = false;
-//		robot = new Robot_body();
-	}
+	Core();
 	void save(int j);
 	void restore(); //+ pushnut vsetky parametre zadanej funkcie o jedno
 };
