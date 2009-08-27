@@ -34,15 +34,55 @@ bool TargetVisitSequence::visited(Rectangle r)
 		ok = true; //splnene
 	return ok;
 }
-bool TargetKillNumber::fullfilled()
+void TargetKillNumber::set(size_t t)
 {
-	if (ok)
-		return ok;
+	constraint = t;
+}
+int TargetKillNumber::fullfilled()
+{
 	constraint--;
 	if (constraint == 0)
-		ok = true;
-	return ok;
+		return 1;
+	if (constraint <0)
+		return -1;
+	return 0;
 }
+int TargetKillNumberLess::fullfilled()
+{
+	constraint--;
+	if (constraint >0)
+		return 1;
+	return -1;
+}
+int TargetKillNumberLessThen::fullfilled()
+{
+	constraint--;
+	if (constraint >= 0 )
+		return 1;
+	return -1;
+}
+int TargetKillNumberMore::fullfilled()
+{
+	constraint--;
+	if (constraint >=0)
+		return 0;
+	return 1;
+}
+int TargetKillNumberMoreThen::fullfilled()
+{
+	constraint--;
+	if (constraint >0)
+		return 0;
+	return 1;
+}
+int TargetKillNumberNot::fullfilled()
+{
+	constraint--;
+	if (constraint == 0)
+		return 0;
+	return 1;
+}
+
 bool TargetKillId::fullfilled(size_t id)
 {
 	if (id == ID)

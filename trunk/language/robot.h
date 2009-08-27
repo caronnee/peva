@@ -9,6 +9,7 @@
 #include "./instructions.h"
 #include "./tree.h"
 #include "functions.h"
+#include "targets.h"
 
 #define DELIMINER_CHAR '#'
 typedef std::vector<Instruction *> Instructions;
