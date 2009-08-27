@@ -369,7 +369,7 @@ int InstructionReturn::execute(Core * c)
 	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
 	c->values.push_back(v);
 	std::cout << "size os values: " << c->values.size();
-	for (int i =0; i < c->values.size(); i++)
+	for (size_t i =0; i < c->values.size(); i++)
 	{
 		std::cout << "value adress= " << c->values[i].loaded << std::endl;
 	}

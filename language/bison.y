@@ -1,7 +1,7 @@
 %{
 	#include <iostream>
 	#include "header1.h"
-	#include "program.h"
+	#include "robot.h"
 	#include "parser_functions.h"
 
 	#define YYSTYPE Lval 
@@ -48,6 +48,11 @@
 %token<ident> TOKEN_IDENTIFIER
 %token<number> TOKEN_UINT
 %token<f_number> TOKEN_REAL
+
+/* target of game*/
+%token TOKEN_VISIT
+%token TOKEN_VISIT_SEQUENCE
+%token TOKEN_KILLED
 
 /* group tokens */
 %token<operation> TOKEN_OPER_REL
@@ -408,7 +413,7 @@ int main(int argc, char ** argv)
 		return 16;
     	}
 
-	Program q;
+	Program q; //TODO namiesto tohoto robot
 	Create_type t;
 	yyparse(&q);
     	fclose(yyin);

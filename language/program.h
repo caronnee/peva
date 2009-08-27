@@ -32,7 +32,7 @@ struct MyXmlData
 	xmlNodePtr node;
 };
 
-struct Program
+struct Robot // == ROBOT
 {
 	bool error;
 	std::string nested;
