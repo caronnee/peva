@@ -225,7 +225,7 @@ Call::Call()
 Call::Call(Function * f_)
 {
 	node = NULL;
-	std::cout << "Calling" << f_ << std::endl;
+	std::cout << "Creatinf instruction for calling function :" << f_ << std::endl;
 	function = f_;
 	name_ = "Call";
 }

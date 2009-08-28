@@ -215,29 +215,46 @@ void Robots::set(Options o, size_t value)
 	{
 		case OptionHealth:
 			std::cout << "setting health to:" << value << std::endl;
-		       break;
+			break;
 		case OptionSeeX:	       
 			std::cout << "setting SEE x to:" << value << std::endl;
-		       break;
+			break;
 		case OptionSeeY:
 			std::cout << "setting SEE y to:" << value << std::endl;
-		       break;
+			break;
 		case OptionSee:
 			std::cout << "setting SEE to:" << value << std::endl;
-		       break;
+			break;
 		case OptionMemory:
 			actualRobot->core->memory.realok(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
+			break;
 		case OptionAttack:
-
 			std::cout << "setting Attack x to:" << value << std::endl;
-		       break;
+			break;
 		case OptionDefense:
-		       std::cout << "setting defense to " << value << std::endl;
-		       break;
+			std::cout << "setting defense to " << value << std::endl;
+			break;
 		case OptionMisilleAttack:
-		       std::cout << "setting Missille attack to " << value << std::endl;
-		       break;
+			std::cout << "setting Missille attack to " << value << std::endl;
+			break;
 		case OptionMisilleHealth:
-		       std::cout << "setting Missille health to:" << value << std::endl;
+			std::cout << "setting Missille health to:" << value << std::endl;
+			break;
 	}
+}
+Position Robots::get_start_position(size_t ID)
+{
+	int iter;
+	for (iter = 0; iter < startPositions.size(); iter ++)
+	{
+		if (startPositions[iter].ID == ID)
+			return startPositions[iter].position;
+	}
+	//ak sa nenaslo, nejaku poziciu si vymysli, TODO musi to byt kompatibilne s mapu, nech sa naobjavi na policku so stenou a pod.
+	Position p(rand()%100, rand()%100); 
+	StartPosition sp;
+	sp.position = p;
+	startPositions.push_back(sp);
+	startPositions.back().ID = ID;
+	return p;
 }

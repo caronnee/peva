@@ -4,7 +4,7 @@ XML=`xml2-config --cflags`
 
 all:bparser 
 
-bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o functions.o targets.o core.o
+bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o functions.o targets.o core.o position.o
 	$(CXX) $(LDFLAGS) *.o -o bparser
 
 parser.o: parser.cpp header1.h 
@@ -56,6 +56,9 @@ targets.o: targets.cpp targets.h
 
 core.o: core.h core.cpp
 	${CXX} ${CFLAGS} -c -o $@ core.cpp
+
+position.o: position.h position.cpp
+	${CXX} ${CFLAGS} -c -o $@ position.cpp
 
 distclean:
 	rm -f *.o bparser parser.cpp bison.cpp bison.hpp
