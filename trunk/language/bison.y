@@ -9,7 +9,7 @@
 	#define YYLLOC_DEFAULT(cur, rhs, n)	do { if(n) (cur)=(rhs)[1]; else (cur)=(rhs)[0]; } while(0)
 
 	#define YYERROR_VERBOSE 1		
-	static void yyerror(YYLTYPE *line, Robot* ctx, const char *m);
+	static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 
 %}
 
@@ -29,7 +29,7 @@
 %token TOKEN_RETURN
 %token TOKEN_BREAK
 %token TOKEN_ROBOT
-%token TOKEN_OPTION
+%token<op> TOKEN_OPTION
 
 /* delimiters */
 %token TOKEN_SEMICOLON
@@ -105,19 +105,29 @@
 %start program
 %error-verbose
 %pure-parser
-%parse-param { Robot *program }
-%lex-param { Robot *program }
+%parse-param { Robots *program }
+%lex-param { Robots *program }
 %locations
 %%
 
-program	: global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions 
-		{ 
-	  std::vector<Parameter_entry> p;
-	  program->add_global($1);
-	  reg(program, p, $6); 
-		} //skonsoliduje vsetky instrukcie, co sa doteraz vygenerovali
+program: program robot { program->robots.push_back(program->actualRobot); }
+       |robot { program->robots.push_back(program->actualRobot);}
 	;
 
+define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER { program->createNew($2); }
+	  ;
+
+robot:  define_bot TOKEN_BEGIN options global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions TOKEN_END
+	{ 
+	  std::vector<Parameter_entry> p;
+	  program->actualRobot->add_global($4);
+	  reg(program->actualRobot, p, $9); 
+	} //skonsoliduje vsetky instrukcie, co sa doteraz vygenerovali
+	;
+
+options: // defaultne opsny
+       | options TOKEN_OPTION TOKEN_UINT { program->set($2,$3);}
+	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 	|global_variables local_variables { $$=join_instructions($1,$2);}
 	;
@@ -130,8 +140,8 @@ local_variables:  type names TOKEN_SEMICOLON
 	       {  
 			for(int i =0; i< $2.size(); i++)
 			{
-				Node * n = program->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
-				$$.push_back(new InstructionCreate(program->find_var($2[i].id))); 
+				Node * n = program->actualRobot->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
+				$$.push_back(new InstructionCreate(program->actualRobot->find_var($2[i].id))); 
 				if ($2[i].default_set){ //ak bola zadana defaultna hodnota 
 					if (n->nested == Local) //toto  je vnode, lebo sa to pre premennu nemeni
 						$$.push_back(new InstructionLoadLocal(n));
@@ -167,58 +177,58 @@ names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); }
 
 values: number { $$=$1;}
       	| TOKEN_IDENTIFIER { 
-				Node *n = program->find_var($1); 
+				Node *n = program->actualRobot->find_var($1); 
 				if (n == NULL)
 					{
-						std::cout << "aekfuhak" <<std::endl;
+						std::cout << "nenaslo mi premennu" <<std::endl;
 					}
 				if(n->nested == Local)
 					$$.push_back(new InstructionLoadLocal(n));
 				else  
 					$$.push_back(new InstructionLoadGlobal(n));
 			}
-	| values TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back(instruction_load(program, $3));$$ = $1;}
+	| values TOKEN_COMMA TOKEN_IDENTIFIER {$1.push_back(instruction_load(program->actualRobot, $3));$$ = $1;}
 	| values TOKEN_COMMA number {$$ = join_instructions($1, $3);}
 	;
 
-declare_functions: /*	ziadne deklarovane funkcie	*/ { $$.clear(); program->enter("main", Create_type(TypeVoid)); }
-	|declare_function_ { $$ = $1; program->enter("main", Create_type(TypeVoid));}
+declare_functions: /*	ziadne deklarovane funkcie	*/ { $$.clear(); program->actualRobot->enter("main", Create_type(TypeVoid)); }
+	|declare_function_ { $$ = $1; program->actualRobot->enter("main", Create_type(TypeVoid));}
 	;
 
-function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $3; program->enter($3, $1); } //zatial nepotrebujeme vediet zanoraenie , enter loop pre returny
+function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $3; program->actualRobot->enter($3, $1); } //zatial nepotrebujeme vediet zanoraenie , enter loop pre returny
 	;
 
 return_type:	type { $$ = $1; }
 	|TOKEN_VOID { $$ = Create_type(TypeVoid); }
 	;
 
-parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->add($2, $1))); }
-	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->add($4, $3)));}
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); }
+	| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->actualRobot->add($4, $3)));}
 	;
 
 declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  
 		 { 
-		   reg(program,$3,$5);
-		   program->leave();
+		   reg(program->actualRobot,$3,$5);
+		   program->actualRobot->leave();
 		 } 
 	|declare_function_ function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions 
 		{ 
-		  reg(program,$4,$6); 
-		  program->leave();
-		  program->end_loop();
+		  reg(program->actualRobot,$4,$6); 
+		  program->actualRobot->leave();
+		  program->actualRobot->end_loop();
 		}
 	|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{ 
 		  std::vector<Parameter_entry> a; 
-		  reg(program, a, $4); 
-		  program->leave();
+		  reg(program->actualRobot, a, $4); 
+		  program->actualRobot->leave();
 		} 
 	|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{
-		  set_breaks(program, $5);
+		  set_breaks(program->actualRobot, $5);
 		  std::vector<Parameter_entry> a; 
-		  reg(program, a, $5);
-		  program->leave(); 
+		  reg(program->actualRobot, a, $5);
+		  program->actualRobot->leave(); 
 		}
 	;
 
@@ -228,10 +238,10 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinu
       	|TOKEN_UINT { $$.push_back(new InstructionLoad($1)); } 
 	;
 
-begin:	TOKEN_BEGIN { program->core->depth++; }
+begin:	TOKEN_BEGIN { program->actualRobot->core->depth++; }
      	;
 
-end:	TOKEN_END { program->core->depth--; }
+end:	TOKEN_END { program->actualRobot->core->depth--; }
    	;
 
 block_of_instructions: begin end { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
@@ -244,11 +254,11 @@ commands: matched {$$ = $1;}
 	| unmatched {$$ = $1;}
 	| commands unmatched { $$ = join_instructions($1, $2); }
 	;
-forcycle:	TOKEN_FOR { program->enter_loop();}
+forcycle:	TOKEN_FOR { program->actualRobot->enter_loop();}
 	;
-do_cycle:	TOKEN_DO { program->enter_loop();}
+do_cycle:	TOKEN_DO { program->actualRobot->enter_loop();}
 	;
-while_cycle:	TOKEN_WHILE { program->enter_loop();}
+while_cycle:	TOKEN_WHILE { program->actualRobot->enter_loop();}
 	;
 command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
        		{ 
@@ -257,14 +267,14 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 		  $4.push_back(new InstructionJump(-1*$8.size()-$4.size()-1,0));
 		  $8 = join_instructions($8,$4);
 		  $$ = join_instructions($3,$8);
-		  set_breaks(program, $$);
-		  program->end_loop();
+		  set_breaks(program->actualRobot, $$);
+		  program->actualRobot->end_loop();
 		}
 	|do_cycle block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ $$ = join_instructions($2,$5); 
 		  $$.push_back(new InstructionJump(-1*$$.size()-1,0));
-		  set_breaks(program, $$);
-		  program->end_loop();
+		  set_breaks(program->actualRobot, $$);
+		  program->actualRobot->end_loop();
 		}
 	|while_cycle TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 		{
@@ -272,24 +282,24 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 			$3 = join_instructions($5,$3);
 			$$ = join_instructions($$, $3);
 			$$.push_back(new InstructionJump(-1*$$.size(),0));
-		  	set_breaks(program, $$);
-		  	program->end_loop();
+		  	set_breaks(program->actualRobot, $$);
+		  	program->actualRobot->end_loop();
 		}
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
 			$$ = $2;
-			std::cout << program->core->nested_function << "-----"<< std::endl;
+			std::cout << program->actualRobot->core->nested_function << "-----"<< std::endl;
 			getc(stdin);
-			$$.insert($$.begin(), new InstructionLoadLocal(program->core->nested_function->return_var));
+			$$.insert($$.begin(), new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
 			$$.push_back(new InstructionStore()); //budu vedla seba, takze by to malo prejst
-			$$.push_back(new InstructionReturn(program->core->depth));
+			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
 		}
-	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn(program->core->depth));} //v node zostane predchadzajuca hodnota
+	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn(program->actualRobot->core->depth));} //v node zostane predchadzajuca hodnota
 	|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
-			std::cout << "Adding break to in depth" <<program->core->depth << std::endl;
+			std::cout << "Adding break to in depth" <<program->actualRobot->core->depth << std::endl;
 			getc(stdin);
-			$$.push_back(new InstructionBreak(program->last_loop_number, program->core->depth));
+			$$.push_back(new InstructionBreak(program->actualRobot->last_loop_number, program->actualRobot->core->depth));
 		}
 	|simple_command TOKEN_SEMICOLON {$$ = $1;}
       	;
@@ -306,11 +316,11 @@ simple_command:	assign {$$ = $1;}
 assign: variable_left TOKEN_ASSIGN expression { $$ = join_instructions($1, $3); $$.push_back(new InstructionStore()) }
 	;
 
-variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
-	| TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$ = join_instructions($$, $2); }
+variable_left: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program->actualRobot, $1));}
+	| TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program->actualRobot, $1)); $$ = join_instructions($$, $2); }
 	;
 
-call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call(program->find_f($1)));} //TODO check parameters
+call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3; $$.push_back(new Call(program->actualRobot->find_f($1)));} //TODO check parameters
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { $$ = $3;$$.push_back(feature($1));}
 	;
 
@@ -346,8 +356,8 @@ init: 	local_variables { $$ = $1;}
 	| assign TOKEN_SEMICOLON {$$ = $1;}
 	;
 
-variable: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program, $1));}
-	|TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program, $1)); $$=join_instructions($$,$2);}
+variable: TOKEN_IDENTIFIER { $$.push_back(instruction_load(program->actualRobot, $1));}
+	|TOKEN_IDENTIFIER array_access { $$.push_back(instruction_load(program->actualRobot, $1)); $$=join_instructions($$,$2);}
 	|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 	|variable TOKEN_DOT call_fce //{ if ($1.output.has_function($3.name)) join, else error} //znici value, z ktoreho to bolo volane a zavola clensku funkciu 
 	|variable TOKEN_DOT TOKEN_IDENTIFIER //{}
@@ -394,7 +404,7 @@ expression_bool: expression_bool_or { $$ = $1; }
 
 extern FILE * yyin;
 
-static void yyerror(unsigned *line,Robot* ctx, const char *message)
+static void yyerror(unsigned *line, Robots* ctx, const char *message)
 {
 	printf("Co to, co to? %s, line %d\n", message, *line);
 }
@@ -414,16 +424,16 @@ int main(int argc, char ** argv)
     	}
 
 	GamePoints points;
-	Robot q(points); //TODO namiesto tohoto robot
+	Robots q(points); //TODO namiesto tohoto robot
 	Create_type t;
 	yyparse(&q);
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
-	q.output(&q.defined);
-	for (int i =0; i<q.instructions.size(); i++)
-		std::cout << q.instructions[i]->name_<<std::endl;
-	q.save_to_xml();
+	q.actualRobot->output(&q.actualRobot->defined);
+	for (int i =0; i<q.actualRobot->instructions.size(); i++)
+		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
+	q.actualRobot->save_to_xml();
 	std::cout << "haho!" << std::endl;
-   	q.execute();
+   	q.actualRobot->execute();
 	return 0;	
 }
