@@ -145,13 +145,11 @@ Instruction * feature ( ObjectFeatures feat )
 		case FeatureTurnR:
 			return new InstructionTurnR();
 		case FeatureTurnL:
-			std::cout << "ralh" << std::endl;
-			getc(stdin);
 			return new InstructionTurnL();
 		case FeatureWait:
 			return new InstructionWait();
 		default:
-			std::cout << "Vraciam NULL" << std::endl;
+			std::cout << "Vraciam NULL, nenasla sa ziadna takato pogybova instrukcia" << std::endl;
 			getc(stdin);	
 			return NULL;		
 	}

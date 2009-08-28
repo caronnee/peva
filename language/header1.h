@@ -3,6 +3,7 @@
 
 #include <string>
 #include "./robot.h"
+#include "./position.h"
 
 enum Operation
 {
@@ -82,6 +83,9 @@ struct Lval {
 	ObjectFeatures of;
 	Options op;
 	Expr e;
+	
+	Position position;
+	std::vector<Position> positions;
 };
 
 // lex interface

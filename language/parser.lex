@@ -38,6 +38,7 @@ ID						{*l = line; lv->op = OptionId; return TOKEN_OPTION;}
 VISIT						{*l = line; return TOKEN_VISIT; }
 VISIT_SEQ					{*l = line; return TOKEN_VISIT_SEQUENCE; }
 KILLED						{*l = line; return TOKEN_KILLED; }
+START						{*l = line; return TOKEN_START; }
 
 main						{*l = line; return TOKEN_MAIN; }
 void						{*l = line; return TOKEN_VOID; }

@@ -53,6 +53,7 @@
 %token TOKEN_VISIT
 %token TOKEN_VISIT_SEQUENCE
 %token TOKEN_KILLED
+%token TOKEN_START
 
 /* group tokens */
 %token<operation> TOKEN_OPER_REL
@@ -102,6 +103,8 @@
 %type<instructions> global_variables
 %type<instructions> command_var
 
+%type<positions> places
+
 %start program
 %error-verbose
 %pure-parser
@@ -117,16 +120,27 @@ program: program robot { program->robots.push_back(program->actualRobot); }
 define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER { program->createNew($2); }
 	  ;
 
-robot:  define_bot TOKEN_BEGIN options global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions TOKEN_END
+robot:  define_bot TOKEN_BEGIN options targets global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions TOKEN_END
 	{ 
 	  std::vector<Parameter_entry> p;
-	  program->actualRobot->add_global($4);
-	  reg(program->actualRobot, p, $9); 
+	  program->actualRobot->add_global($5);
+	  reg(program->actualRobot, p, $10); 
 	} //skonsoliduje vsetky instrukcie, co sa doteraz vygenerovali
+	;
+targets: /* default target */
+      	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT
+	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR
+	;
+
+places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position($2,$4)); }
+	| places TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA {$$ = $1; $$.push_back(Position($3,$5));}
+	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA /* START[8] */ { $$.push_back(program->get_start_position($3));}
+	| places TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA // START[8]
 	;
 
 options: // defaultne opsny
-       | options TOKEN_OPTION TOKEN_UINT { program->set($2,$3);}
+       | options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4);}
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 	|global_variables local_variables { $$=join_instructions($1,$2);}
@@ -402,24 +416,24 @@ expression_bool: expression_bool_or { $$ = $1; }
 	;
 %%
 
-extern FILE * yyin;
+extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 
 static void yyerror(unsigned *line, Robots* ctx, const char *message)
 {
-	printf("Co to, co to? %s, line %d\n", message, *line);
+	printf("Syntax Error %s, line %d\n", message, *line);
 }
 
 int main(int argc, char ** argv)
 {
 	if(argc<2)
     	{
-		puts("Kde mam vstup, ha?\n");
+		puts("Input nor found\n");
 		return 16;
     	}
 
 	if((yyin=fopen(argv[1], "r"))==0)
     	{
-		puts("Vstup je divny\n");
+		puts("Unable to open input\n");
 		return 16;
     	}
 
@@ -429,11 +443,12 @@ int main(int argc, char ** argv)
 	yyparse(&q);
     	fclose(yyin);
 	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
-	q.actualRobot->output(&q.actualRobot->defined);
+/*	q.actualRobot->output(&q.actualRobot->defined);
 	for (int i =0; i<q.actualRobot->instructions.size(); i++)
 		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
 	q.actualRobot->save_to_xml();
 	std::cout << "haho!" << std::endl;
    	q.actualRobot->execute();
+*/
 	return 0;	
 }

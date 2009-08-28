@@ -6,6 +6,7 @@ Core::Core()
 	values.clear();	
 	error = false;
 	robot = new Robot_body();
+	depth = 0;
 }
 
 void Core::save(int j)

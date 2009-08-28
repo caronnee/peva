@@ -102,13 +102,20 @@ enum Options
 	OptionId
 };
 
+struct StartPosition
+{
+	size_t ID;
+	Position position;
+};
 struct Robots
 {	
 	GamePoints g;
 	Robot * actualRobot;
 	std::vector<Robot *> robots;
 	Robots(GamePoints g);
+	std::vector<StartPosition> startPositions; //najprv sa vygeneruje mapa, nacitaju sa start positions a potom sa spusti bison
 	void createNew(std::string name);
 	void set(Options op, size_t value);
+	Position get_start_position(size_t ID);
 };
 #endif

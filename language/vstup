@@ -1,17 +1,18 @@
 ROBOT qqq
 {
-	HEALTH 100
-	OC = 50
-	UC = 9
+	HEALTH = 100
 	ATTACK = 33			
-        HEALTH = 100		
-	ATTACK = 34	
 	SEE_WIDTH = 8
 	SEE_HEIGHT = 4
+	SEE = 56
         DEFENSE	= 22		
 	MATTACK = 50	
 	MHEALTH	= 20	
         ID = 5			
+
+	KILLED < 5
+	VISIT_SEQ( Start[3], Start[2])
+	VISIT( [100,200])
 
 	integer function f(integer a)
 	{
