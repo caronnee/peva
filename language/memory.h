@@ -19,6 +19,7 @@ struct Memory
 	void free(size_t depth);
 	Variable * assign(Create_type t,size_t id, size_t siz);
 	Memory(int size = 100);
+	void realok(int size);
 };
 
 #endif

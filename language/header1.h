@@ -27,19 +27,6 @@ enum Operation
 	OperationBoolOr,
 	OperationBoolNot
 };
-enum Options
-{
-	OptionHealth,
-	OptionSeeX,
-	OptionSeeY,
-	OptionSee,
-	OptionMemory,
-	OptionAttack,
-	OptionDefense,
-	OptionMisilleAttack,
-	OptionMisilleHealth,
-	OptionId
-};
 
 enum ObjectFeatures
 {
@@ -98,7 +85,7 @@ struct Lval {
 };
 
 // lex interface
-#define YY_DECL	    int yylex(Lval *lv, unsigned *l, Robot *c)
+#define YY_DECL	    int yylex(Lval *lv, unsigned *l, Robots *c)
 YY_DECL;
 
 // parser interface

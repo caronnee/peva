@@ -57,3 +57,15 @@ Memory::Memory(int size)
 	for(int i =0; i< size; i++)
 		id_free_vars.push(i);
 }
+void Memory::realok(int size)
+{
+	if (memory)
+		delete memory;
+	memory = new Variable*[size];
+	while(!id_free_vars.empty())
+	{
+		id_free_vars.pop();
+	}
+	for(int i =0; i< size; i++)
+		id_free_vars.push(i);
+}

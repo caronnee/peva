@@ -38,9 +38,9 @@ SecondSection::SecondSection()
 	attack = 25;
 }
 
-Robot::Robot(GamePoints p)
+Robot::Robot(std::string s, GamePoints p)
 {
-	last_loop_number = 1;
+	name = s;
 	nested = "";
 	error = false;//TODO pridat errorou hlasku
 	core = new Core();
@@ -181,6 +181,24 @@ void Robot::save_to_xml()
 	xmlFreeDoc(data.doc);
 }
 
+void Robot::execute()
+{
+	while(core->PC < instructions.size())
+	{
+		instructions[core->PC]->execute(core);
+		core->PC++;
+	}
+}
+Robots::Robots(GamePoints g_)
+{
+	g = g_;
+	actualRobot = NULL;
+}
+void Robots::createNew(std::string name)
+{
+	actualRobot = new Robot(name, g);
+}
+
 void Robot::enter_loop()
 {
 	last_loop_number++; //v podstate loop_zanorenie
@@ -191,11 +209,35 @@ void Robot::end_loop()
 	last_loop_number--;
 	loop_labels.pop();
 }
-void Robot::execute()
+void Robots::set(Options o, size_t value)
 {
-	while(core->PC < instructions.size())
+	switch(o) //TODO po zlinkovani
 	{
-		instructions[core->PC]->execute(core);
-		core->PC++;
+		case OptionHealth:
+			std::cout << "setting health to:" << value << std::endl;
+		       break;
+		case OptionSeeX:	       
+			std::cout << "setting SEE x to:" << value << std::endl;
+		       break;
+		case OptionSeeY:
+			std::cout << "setting SEE y to:" << value << std::endl;
+		       break;
+		case OptionSee:
+			std::cout << "setting SEE to:" << value << std::endl;
+		       break;
+		case OptionMemory:
+			actualRobot->core->memory.realok(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
+		case OptionAttack:
+
+			std::cout << "setting Attack x to:" << value << std::endl;
+		       break;
+		case OptionDefense:
+		       std::cout << "setting defense to " << value << std::endl;
+		       break;
+		case OptionMisilleAttack:
+		       std::cout << "setting Missille attack to " << value << std::endl;
+		       break;
+		case OptionMisilleHealth:
+		       std::cout << "setting Missille health to:" << value << std::endl;
 	}
 }
