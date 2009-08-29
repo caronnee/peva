@@ -24,16 +24,16 @@ parser.cpp:parser.lex bison.hpp
 bison.cpp: bison.y
 	bison --report=all -d -b bis -o $@ $<
 
-bot.o:	./robot.h ./robot.cpp
-	${CXX} ${CPPFLAGS} -c ${XML} -o $@ ./robot.cpp
+bot.o:	robot.h robot.cpp
+	${CXX} ${CPPFLAGS} -c ${XML} -o $@ robot.cpp
 
 biflex.o:parser_functions.h parser_functions.cpp
 	${CXX} ${CFLAGS} ${XML} -o $@ -c parser_functions.cpp
 
-tree.o:./tree.cpp ./tree.h
+tree.o: tree.cpp tree.h
 	${CXX} ${CFLAGS} -o $@ -c ./tree.cpp
 
-node.o:./node.cpp ./node.h
+node.o: node.cpp node.h
 	${CXX} ${CFLAGS} -o $@ -c ./node.cpp
 
 instructions.o: instructions.h instructions.cpp

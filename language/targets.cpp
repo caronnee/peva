@@ -8,6 +8,23 @@ bool Target::fullfilled()
 {
 	return ok;
 }
+TargetVisit::TargetVisit(Position p)
+{
+	positionToVisit = p;
+}
+TargetVisit::TargetVisit()
+{
+	positionToVisit.x = -1;
+	positionToVisit.y = -1;
+}
+TargetVisitSequence::TargetVisitSequence()
+{
+	positions.clear();
+}
+TargetVisitSequence::TargetVisitSequence(std::vector<Position> p)
+{
+	positions = p;
+}
 bool TargetVisit::visited(Rectangle r)
 {
 	//TODO zlepsit, co ak sa to odrazi alebo tak nejak
@@ -34,9 +51,13 @@ bool TargetVisitSequence::visited(Rectangle r)
 		ok = true; //splnene
 	return ok;
 }
-void TargetKillNumber::set(size_t t)
+TargetKillNumber::TargetKillNumber()
 {
-	constraint = t;
+	constraint = 0;
+}
+TargetKillNumber::TargetKillNumber(int i)
+{
+	constraint = i;
 }
 int TargetKillNumber::fullfilled()
 {
@@ -47,12 +68,28 @@ int TargetKillNumber::fullfilled()
 		return -1;
 	return 0;
 }
+TargetKillNumberLess::TargetKillNumberLess()
+{
+	constraint = 0;
+}
+TargetKillNumberLess::TargetKillNumberLess(int i)
+{
+	constraint = i;
+}
 int TargetKillNumberLess::fullfilled()
 {
 	constraint--;
 	if (constraint >0)
 		return 1;
 	return -1;
+}
+TargetKillNumberLessThen::TargetKillNumberLessThen()
+{
+	constraint = 0;
+}
+TargetKillNumberLessThen::TargetKillNumberLessThen(int i)
+{
+	constraint = i;
 }
 int TargetKillNumberLessThen::fullfilled()
 {
@@ -61,12 +98,28 @@ int TargetKillNumberLessThen::fullfilled()
 		return 1;
 	return -1;
 }
+TargetKillNumberMore::TargetKillNumberMore()
+{
+	constraint = 0;
+}
+TargetKillNumberMore::TargetKillNumberMore(int i)
+{
+	constraint = i;
+}
 int TargetKillNumberMore::fullfilled()
 {
 	constraint--;
 	if (constraint >=0)
 		return 0;
 	return 1;
+}
+TargetKillNumberMoreThen::TargetKillNumberMoreThen()
+{
+	constraint = 0;
+}
+TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i)
+{
+	constraint = i;
 }
 int TargetKillNumberMoreThen::fullfilled()
 {
@@ -75,6 +128,14 @@ int TargetKillNumberMoreThen::fullfilled()
 		return 0;
 	return 1;
 }
+TargetKillNumberNot::TargetKillNumberNot()
+{
+	constraint = 0;
+}
+TargetKillNumberNot::TargetKillNumberNot(int i)
+{
+	constraint = i;
+}
 int TargetKillNumberNot::fullfilled()
 {
 	constraint--;
@@ -82,7 +143,6 @@ int TargetKillNumberNot::fullfilled()
 		return 0;
 	return 1;
 }
-
 bool TargetKillId::fullfilled(size_t id)
 {
 	if (id == ID)
