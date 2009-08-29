@@ -3,48 +3,9 @@
 
 #include <string>
 #include "./robot.h"
-#include "./position.h"
+#include "position.h"
+#include "enums.h"
 
-enum Operation
-{
-	OperationPlus,
-	OperationMinus,
-	OperationMultiply,
-	OperationDivide,
-	OperationModulo,
-
-	OperationLess,
-	OperationLessEqual,
-	OperationGreater,
-	OperationGreaterEqual,
-	OperationEqual,
-	OperationNotEqual,
-
-	OperationAnd,
-	OperationOr,
-	OperationNot,
-
-	OperationBoolAnd,
-	OperationBoolOr,
-	OperationBoolNot
-};
-
-enum ObjectFeatures
-{
-	FeatureIsPlayer,
-	FeatureIsWall,
-	FeatureIsMissille,
-	FeatureIsMoving,
-	FeatureLocate,
-	FeatureStep,
-	FeatureShoot,
-	FeatureHit,
-	FeatureTurn,
-	FeatureTurnL,
-	FeatureTurnR,
-	FeatureWait,
-	FeatureSee
-};
 struct Expr
 {
 	Instructions ins;

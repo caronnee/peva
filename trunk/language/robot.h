@@ -10,6 +10,7 @@
 #include "./tree.h"
 #include "functions.h"
 #include "targets.h"
+#include "enums.h"
 
 #define DELIMINER_CHAR '#'
 typedef std::vector<Instruction *> Instructions;
@@ -55,7 +56,17 @@ struct MyXmlData
 
 struct Robot 
 {
-	bool error;
+	enum ErrorCode
+	{
+		WarningKillAlreadyDefined,
+		WarningConversionToInt,
+		WarningRedefinedOption,
+		ErrorVariableNotDefined
+	};
+	bool errors;
+	bool warning;
+	std::string errorList;
+	std::string warningList;
 	std::string nested;
 	std::string name;
 
@@ -86,6 +97,10 @@ struct Robot
 	std::stack<int> loop_labels;
 	void enter_loop();
 	void end_loop();
+	void addKilled(Operation op, size_t number);
+	void addVisit(std::vector<Position> pos);
+	void addVisitSeq(std::vector<Position> pos);
+	void error(unsigned int line, ErrorCode c,std::string message="");
 };
 
 enum Options
@@ -102,20 +117,13 @@ enum Options
 	OptionId
 };
 
-struct StartPosition
-{
-	size_t ID;
-	Position position;
-};
 struct Robots
 {	
 	GamePoints g;
 	Robot * actualRobot;
 	std::vector<Robot *> robots;
 	Robots(GamePoints g);
-	std::vector<StartPosition> startPositions; //najprv sa vygeneruje mapa, nacitaju sa start positions a potom sa spusti bison
 	void createNew(std::string name);
 	void set(Options op, size_t value);
-	Position get_start_position(size_t ID);
 };
 #endif

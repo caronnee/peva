@@ -9,9 +9,10 @@ Instruction * instruction_load(Robot *p, std::string s)
 	Node *n = p->find_var(s); 
 	if (n == NULL)
 	{
-		std::cout << "hehehe:" << s << std::endl;
-		p->error = 1;
-		getc(stdin);
+		std::cout << "Nenasla sa premenna" << s << std::endl;
+		Robot::ErrorCode a = Robot::ErrorVariableNotDefined;
+	//	p->error(a);
+		return NULL;
 	}
 	if(n->nested == Local)
 	{
@@ -149,7 +150,7 @@ Instruction * feature ( ObjectFeatures feat )
 		case FeatureWait:
 			return new InstructionWait();
 		default:
-			std::cout << "Vraciam NULL, nenasla sa ziadna takato pogybova instrukcia" << std::endl;
+			std::cout << "Vraciam NULL, nenasla sa ziadna takato pohybova instrukcia" << std::endl;
 			getc(stdin);	
 			return NULL;		
 	}

@@ -42,8 +42,9 @@ Robot::Robot(std::string s, GamePoints p)
 {
 	name = s;
 	nested = "";
-	error = false;//TODO pridat errorou hlasku
+	errors = false;//TODO pridat errorou hlasku
 	core = new Core();
+	toKill = NULL;
 }
 
 Function * Robot::find_f(std::string nam)
@@ -242,19 +243,71 @@ void Robots::set(Options o, size_t value)
 			break;
 	}
 }
-Position Robots::get_start_position(size_t ID)
+
+void Robot::addKilled(Operation op, size_t number)
 {
-	int iter;
-	for (iter = 0; iter < startPositions.size(); iter ++)
+	if (toKill !=NULL)
 	{
-		if (startPositions[iter].ID == ID)
-			return startPositions[iter].position;
+		error(1,WarningKillAlreadyDefined);
+		return;
 	}
-	//ak sa nenaslo, nejaku poziciu si vymysli, TODO musi to byt kompatibilne s mapu, nech sa naobjavi na policku so stenou a pod.
-	Position p(rand()%100, rand()%100); 
-	StartPosition sp;
-	sp.position = p;
-	startPositions.push_back(sp);
-	startPositions.back().ID = ID;
-	return p;
+	switch (op)
+	{
+		case OperationNotEqual:
+			toKill = new TargetKillNumberNot(number);
+			break;
+		case OperationLess:
+			toKill = new TargetKillNumberLess(number);
+			break;
+		case OperationLessEqual:
+			toKill = new TargetKillNumberLessThen(number);
+			break;
+		case OperationGreater:
+			toKill = new TargetKillNumberMore(number);
+			break;
+		case OperationGreaterEqual:
+			toKill = new TargetKillNumberMoreThen(number);
+			break;
+		default:
+			toKill = new TargetKillNumber(number);
+			break;	
+	}
+}
+
+void Robot::addVisit(std::vector<Position> positions)
+{
+	for(size_t i =0; i< positions.size(); i++)
+	{
+		targets.push_back(new TargetVisit(positions[i]));
+	}
+}
+
+void Robot::addVisitSeq(std::vector<Position> positions)
+{
+	targets.push_back(new TargetVisitSequence(positions));
+}
+void Robot::error(unsigned line, ErrorCode e, std::string m)
+{
+	switch (e)
+	{
+		case WarningKillAlreadyDefined:
+			warning = true;
+			warningList += "Ignoring, kill was already defined";
+			break;
+		case WarningConversionToInt:
+			warning = true;
+			warningList += "Conversion from real to int";
+			break;
+		case WarningRedefinedOption:
+			warning = true;
+			warningList += "Option already defined, using new value";
+		case ErrorVariableNotDefined:
+			errors = true;
+			errorList += "Variable" + m + " not defined";
+			break;
+		default:
+			errors = true;
+			errorList += "Unrecognized error";
+			break;
+	}
 }

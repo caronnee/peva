@@ -128,15 +128,15 @@ robot:  define_bot TOKEN_BEGIN options targets global_variables declare_function
 	} //skonsoliduje vsetky instrukcie, co sa doteraz vygenerovali
 	;
 targets: /* default target */
-      	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT
-	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR
-	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR
+      	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->actualRobot->addKilled($3,$4);}
+	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->addVisit($4);}
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->addVisitSeq($4);}
 	;
 
 places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position($2,$4)); }
-	| places TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA {$$ = $1; $$.push_back(Position($3,$5));}
-	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA /* START[8] */ { $$.push_back(program->get_start_position($3));}
-	| places TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA // START[8]
+	| places TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA {$$ = $1; $$.push_back(Position($3,$5)); }
+	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position(-1, $3)); }
+	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  {$$ = $1; $$.push_back(Position(-1,$5)); }
 	;
 
 options: // defaultne opsny
