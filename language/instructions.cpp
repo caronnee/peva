@@ -1,5 +1,5 @@
 #include "instructions.h"
-
+//TODO premenovat floatfrom an real, aby to olo konzistentne
 Instruction::Instruction()
 {
 	name_ = "UndefinedInstruction";
@@ -21,6 +21,10 @@ int Instruction::execute(Core * s)
 {
 	s->error = true;
 	return 1;
+}
+Node * Instruction::get_node()
+{
+	return node;
 }
 InstructionCreate::InstructionCreate(Node * n)
 {
@@ -90,7 +94,7 @@ int InstructionLoadGlobal::execute(Core * c)
 	Value v;
 	v.loaded = node->var[0].var;
 	c->values.push_back(v);
-	std::cout << "Hodnota:" << v.loaded->IntegerValue << std::endl;
+	std::cout << "Hodnota:" << v.loaded->integerValue << std::endl;
 	return 0;
 }
 xmlNodePtr InstructionLoadGlobal::xml_format()
@@ -109,7 +113,7 @@ InstructionLoad::InstructionLoad(int i)
 {
 	constant = true;
 	var = new Variable("const",TypeInteger);
-	var->IntegerValue = i;
+	var->integerValue = i;
 	name_ = "InstructionLoad";
 }
 InstructionLoad::InstructionLoad(float f)
@@ -117,7 +121,7 @@ InstructionLoad::InstructionLoad(float f)
 	name_ = "InstructionLoad";
 	constant = true;
 	var = new Variable("const",TypeReal);
-	var->RealValue = f;
+	var->realValue = f;
 }
 int InstructionLoad::execute(Core *c)
 {
@@ -128,7 +132,7 @@ int InstructionLoad::execute(Core *c)
 		Value v;
 		v.loaded = var;
 		c->values.push_back(v);
-		std::cout << " hodnota: " << v.loaded->IntegerValue << std::endl;
+		std::cout << " hodnota: " << v.loaded->integerValue << std::endl;
 		return 0;
 	}//else from stack
 	std::cout << "loadujem array" <<std::endl; //TODO
@@ -137,7 +141,7 @@ int InstructionLoad::execute(Core *c)
 	c->values.pop_back();
 	Value comp = c->values.back();
 	c->values.pop_back();
-	comp.loaded = comp.loaded->array->elements[range.loaded->IntegerValue];
+	comp.loaded = comp.loaded->array.elements[range.loaded->integerValue];
 	c->values.push_back(comp);
 	return 0;
 }
@@ -154,7 +158,7 @@ xmlNodePtr InstructionLoad::xml_format()
 			case TypeInteger:
 				{
 					child = xmlNewNode( NULL, BAD_CAST "TypeInteger");
-					std::string s = deconvert<int>(var->IntegerValue);
+					std::string s = deconvert<int>(var->integerValue);
 					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
 					xmlAddChild(child,grand_child);
 					break;
@@ -162,7 +166,7 @@ xmlNodePtr InstructionLoad::xml_format()
 			case TypeReal:
 				{
 					child = xmlNewNode( NULL, BAD_CAST "TypeReal");
-					std::string s = deconvert<double>(var->RealValue);
+					std::string s = deconvert<double>(var->realValue);
 					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
 					xmlAddChild(child,grand_child);
 					break;
@@ -174,46 +178,54 @@ xmlNodePtr InstructionLoad::xml_format()
 	xmlAddChild(n, child);
 	return n;
 }
-InstructionStore::InstructionStore()
+InstructionConversionToInt::InstructionConversionToInt()
 {
-	name_ = "InstructionStore";
+	name_ = "InstructionConversionToInt";
 }
-int InstructionStore::execute(Core * c)
+int InstructionConversionToInt::execute(Core * c)
 {
-	Value right = c->values.back();
+	c->values.back().loaded->integerValue = (int)c->values.back().loaded->realValue;
+	return 0;
+}
+InstructionConversionToReal::InstructionConversionToReal()
+{
+	name_ = "InstructionConversionToReal";
+}
+int InstructionConversionToReal::execute(Core * c)
+{
+	c->values.back().loaded->realValue = (float)c->values.back().loaded->integerValue;
+	return 0;
+}
+InstructionStoreInteger::InstructionStoreInteger()
+{
+	name_ = "InstructionStoreInteger";
+}
+int InstructionStoreInteger::execute(Core * c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().loaded->integerValue = right;
 	c->values.pop_back();
-	Value left = c->values.back();
+	return 0;
+}
+InstructionStoreReal::InstructionStoreReal()
+{
+	name_ = "InstructionStoreReal";
+}
+int InstructionStoreReal::execute(Core * c)
+{
+	float right = c->getFloatFromStack();
+	c->values.back().loaded->realValue = right;
 	c->values.pop_back();
-	//ak sa rovnaju, potom uloz
-	std::cout <<"left adresa: " << left.loaded << " right:" << right.loaded << std::endl;	
-	std::cout << "ukladam premennu s id " << right.loaded->owner<< " do id " << left.loaded->owner << std::endl;
-	getc(stdin);
-	switch(right.loaded->type)
-	{
-		case TypeInteger:
-			{
-				left.loaded->IntegerValue = right.loaded->IntegerValue;
-				std::cout << " vysledny Integer: " << left.loaded->IntegerValue << std::endl;
-				std::cout << "adresa naloadovaneho" << left.loaded<< std::endl;
-				getc(stdin);
-				break;
-			}
-		case TypeReal:
-			{
-				left.loaded->RealValue = right.loaded->RealValue;
-				std::cout << " Real: " << left.loaded->RealValue << std::endl;
-				getc(stdin);
-				break;
-			}
-		case TypeObject:
-				left.loaded->ObjectValue = right.loaded->ObjectValue;
-				std::cout << " object " << left.loaded->ObjectValue << std::endl;
-				getc(stdin);
-				break;
-		default:
-				std::cout << "nezamy typ!" << std::endl;
-				return -1;
-	}
+	return 0;
+}
+InstructionStoreObject::InstructionStoreObject()
+{
+	name_ = "InstructionStoreObject";
+}
+int InstructionStoreObject::execute(Core * c)
+{
+	Object * right = c->getObjectFromStack();
+	c->values.back().loaded->objectValue = right;
 	return 0;
 }
 Call::Call()
@@ -229,7 +241,6 @@ Call::Call(Function * f_)
 	function = f_;
 	name_ = "Call";
 }
-
 int Call::execute(Core * c)
 {
 	//zoberie [pocet premennych aktualne na stacku], ulozi do svojich, v pripade varu ulozi svoje premenne(copy, pozor na pole a na recordy)
@@ -244,32 +255,34 @@ int Call::execute(Core * c)
 	std::cout << "calling function"<< function->name << std::endl;
 	for(size_t i = 0; i< function->parameters.size(); i++)
 	{
+		Var v;
+		//ak pridane ako refeencia, skopiruj pointre
+		//TODO skontrolovat, ci sedia parametre
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
-			Var v;
-			v.var = c->values.back().loaded;
+			v.var = c->values.back().loaded; //mozem to tam spravit, lebo v gramatike sa to da pouzit len pramo s premennou
+			//Musi byt premenna
 			function->parameters[i].node->var.push_back(v);
-			c->values.pop_back();
 		}
 		else
 		{
-			Var v;
+			//TODO co ak je parametrom array alebo location?
 			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back().loaded;
 			switch (c->values.back().loaded->type)
 			{
 				case TypeInteger:
-					v.var->IntegerValue = vvv->IntegerValue;
+					v.var->integerValue = vvv->integerValue;
 				       break;
 				case TypeReal:
-					v.var->RealValue = vvv->RealValue;
+					v.var->realValue = vvv->realValue;
 			 		break;
 				case TypeObject:
-					v.var->ObjectValue = vvv->ObjectValue; //TODO type_location
+					v.var->objectValue = vvv->objectValue; //TODO type_location
 				default: return -1;
 			}
-			c->values.pop_back();
+			c->values.pop_back(); //uz skopirovana premenna
 		}
 	}
 	c->save(function->begin);	
@@ -283,7 +296,6 @@ xmlNodePtr Call::xml_format()
 	xmlAddChild(n,n2);
 	return n;
 }
-
 InstructionPop::InstructionPop()
 {
 	name_ = "InstructionPop";
@@ -294,7 +306,6 @@ int InstructionPop::execute(Core *s)
 	s->values.pop_back();
 	return 0;
 }
-
 InstructionMustJump::InstructionMustJump(int steps)
 {
 	shift = steps;
@@ -327,8 +338,8 @@ int InstructionJump::execute(Core * c)
 {
 	Value v = c->values.back();
 	c->values.pop_back();
-	std::cout << "laded result: " << v.loaded->IntegerValue << std::endl;
-	if (v.loaded->IntegerValue)
+	std::cout << "laded result: " << v.loaded->integerValue << std::endl;
+	if (v.loaded->integerValue)
 	{
 		std::cout <<"jumping to YES position" << std::endl;
 		c->PC+=yes;
@@ -349,6 +360,49 @@ xmlNodePtr InstructionJump::xml_format()
 	xmlNewChild(n,NULL,BAD_CAST "yes",BAD_CAST deconvert<int>(yes).c_str());
 	xmlNewChild(n,NULL,BAD_CAST "no",BAD_CAST deconvert<int>(no).c_str());
 	return n;
+}
+InstructionBreak::InstructionBreak(int label, int depth_)
+{
+	depth = depth_;
+	loop_label = label;
+	name_ = "InstructionBreak";
+}
+int InstructionBreak::execute(Core * c)
+{
+	c->PC+=jump;
+	c->depth -= depth;
+	std::cout << "BREAK!:) Returning to depth " << c->depth << std::endl;
+	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
+	getc(stdin);
+	return 0;
+}
+xmlNodePtr InstructionBreak::xml_format()
+{
+	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	xmlNewChild(n,NULL, BAD_CAST "Jump", BAD_CAST deconvert<int>(jump).c_str());
+	return n;
+}
+int InstructionBreak::breaks()
+{
+//	std::cout << loop_label << ": loop_label in break" << std::endl;
+//	getc(stdin);
+	return loop_label;
+}
+void InstructionBreak::set(int a, int b, int c)
+{
+	jump = b-a-1;
+	depth = c;
+}
+InstructionContinue::InstructionContinue(int label, int depth_)
+{
+	depth = depth_;
+	loop_label = label;
+	name_ = "InstructionContinue";
+}
+void InstructionContinue::set(int jump, int size, int dep)
+{
+	jump = -jump;
+	depth = dep;
 }
 InstructionReturn::InstructionReturn(int depth_)
 {
@@ -387,126 +441,142 @@ int InstructionRestore::execute(Core *c)
 	getc(stdin);
 	return 0;
 }
-
-InstructionBreak::InstructionBreak(int label, int depth_)
+//--------------------------POCITANIE--------------------------------------------------
+InstructionPlusPlusInteger::InstructionPlusPlusInteger()
 {
-	depth = depth_;
-	loop_label = label;
-	name_ = "InstructionBreak";
+	name_ = "InstructionPlusPlusInteger";
 }
-int InstructionBreak::execute(Core * c)
-{
-	c->PC+=jump;
-	c->depth -= depth;
-	std::cout << "BREAK!:) Returning to depth " << c->depth << std::endl;
-	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
-	getc(stdin);
-	return 0;
-}
-xmlNodePtr InstructionBreak::xml_format()
-{
-	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
-	xmlNewChild(n,NULL, BAD_CAST "Jump", BAD_CAST deconvert<int>(jump).c_str());
-	return n;
-}
-int InstructionBreak::breaks()
-{
-//	std::cout << loop_label << ": loop_label in break" << std::endl;
-//	getc(stdin);
-	return loop_label;
-}
-InstructionPlusPlus::InstructionPlusPlus()
-{
-	name_ = "InstructionPlusPlus";
-}
-int InstructionPlusPlus::execute(Core * c)
+int InstructionPlusPlusInteger::execute(Core * c)
 {
 	std::cout << name_ << ":" << c->values.size() << std::endl;
-	c->values.back().loaded->IntegerValue++;
-	c->values.pop_back();
-	getc(stdin);
+	c->values.back().loaded->integerValue++; //TODO cez neajky fciu vracajucu pointer
 	return 0;
 }
-InstructionMinusMinus::InstructionMinusMinus()
+InstructionPlusPlusReal::InstructionPlusPlusReal()
 {
-	name_ = "InstructionMinusMinus";
+	name_ = "InstructionPlusPlusReal";
 }
-int InstructionMinusMinus::execute(Core * c)
+int InstructionPlusPlusReal::execute(Core * c)
 {
 	std::cout << name_ << ":" << c->values.size() << std::endl;
-	c->values.back().loaded->IntegerValue--;
-	c->values.pop_back();
+	c->values.back().loaded->realValue++;
 	return 0;
 }
-InstructionPlus::InstructionPlus()
+InstructionMinusMinusInteger::InstructionMinusMinusInteger()
 {
-	name_ = "InstructionPlus";
+	name_ = "InstructionMinusMinusInteger";
+}
+int InstructionMinusMinusInteger::execute(Core * c)
+{
+	c->values.back().loaded->integerValue--;
+	return 0;
+}
+InstructionMinusMinusReal::InstructionMinusMinusReal()
+{
+	name_ = "InstructionMinusMinusReal";
+}
+int InstructionMinusMinusReal::execute(Core * c)
+{
+	c->values.back().loaded->realValue--;
+	return 0;
+}
+InstructionPlusInteger::InstructionPlusInteger()
+{
+	name_ = "InstructionPlusInteger";
 	std::cout << name_ << std::endl;
 }
-int InstructionPlus::execute(Core * c)
+int InstructionPlusInteger::execute(Core * c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = c->values.back().loaded->integerValue + right;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->type = TypeInteger;//teoreticky uz netreba
+	return 0;
+}
+InstructionPlusReal::InstructionPlusReal()
+{
+	name_ = "InstructionPlusReal";
+	std::cout << name_ << std::endl;
+}
+int InstructionPlusReal::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue + right.loaded->IntegerValue;
+	float right = c->getFloatFromStack(); //TODO nepritupovat k stacku priamo
+	c->values.back().hlp.integerValue = c->values.back().loaded->integerValue + right;
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->type = TypeReal;
+	return 0;
+}
+InstructionMinusInteger::InstructionMinusInteger()
+{
+	name_ = "InstructionMinusInteger";
+}
+int InstructionMinusInteger::execute(Core * c)
+{
+	std::cout << name_ << std::endl;
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = c->values.back().loaded->integerValue - right;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().loaded->type = TypeInteger;
 	return 0;
 }
-InstructionMinus::InstructionMinus()
+InstructionMinusReal::InstructionMinusReal()
 {
-	name_ = "InstructionMinus";
+	name_ = "InstructionMinusReal";
 }
-int InstructionMinus::execute(Core * c) //TODO aj pre real!
+int InstructionMinusReal::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue - right.loaded->IntegerValue;
+	float right = c->getFloatFromStack();
+	c->values.back().hlp.realValue = c->values.back().loaded->realValue - right;
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.back().loaded->type = TypeInteger;
+	c->values.back().loaded->type = TypeReal;
 	return 0;
 }
-InstructionMultiply::InstructionMultiply()
+InstructionMultiplyInteger::InstructionMultiplyInteger()
 {
-	name_ = "InstructionMultiply";
+	name_ = "InstructionMultiplyInteger";
 }
-int InstructionMultiply::execute(Core * c)
+int InstructionMultiplyInteger::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue * right.loaded->IntegerValue;
+	float right = c->getFloatFromStack();
+	c->values.back().hlp.realValue = c->values.back().loaded->realValue * right;
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
-InstructionDivide::InstructionDivide()
+InstructionMultiplyReal::InstructionMultiplyReal()
 {
-	name_ = "InstructionDivide";
+	name_ = "InstructionMultiplyReal";
 }
-int InstructionDivide::execute(Core * c)
+int InstructionMultiplyReal::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	if ((right.loaded->type != TypeInteger) && (right.loaded->type!=TypeReal))
-		return -1; //TODO do bisona	
-	if ((c->values.back().loaded->type != TypeInteger) && (c->values.back().loaded->type!=TypeReal))
-		return -1; //TODO do bisona	
-	if (right.loaded->type == TypeInteger) //zatial nepredpokladame konverziu
-	{
-		c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue / right.loaded->IntegerValue;
-		c->values.back().hlp.type = TypeInteger;
-	}
-	else
-	{
-		c->values.back().hlp.RealValue = c->values.back().loaded->RealValue / right.loaded->RealValue;
-		c->values.back().hlp.type = TypeReal;
-	}
+	float right = c->getFloatFromStack();
+	c->values.back().hlp.realValue = c->values.back().loaded->realValue * right;
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
-
+InstructionDivideInteger::InstructionDivideInteger()
+{
+	name_ = "InstructionDivideInteger";
+}
+int InstructionDivideInteger::execute(Core * c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.realValue = c->values.back().loaded->integerValue / right;
+	return 0;
+}
+InstructionDivideReal::InstructionDivideReal()
+{
+	name_ = "InstructionDivideReal";
+}
+int InstructionDivideReal::execute(Core * c)
+{
+	int right = c->getFloatFromStack();
+	c->values.back().hlp.realValue = c->values.back().loaded->realValue / right;
+	return 0;
+}
 InstructionModulo::InstructionModulo()
 {
 	name_ = "InstructionModulo";
@@ -514,9 +584,8 @@ InstructionModulo::InstructionModulo()
 int InstructionModulo::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	c->values.back().hlp.IntegerValue = c->values.back().loaded->IntegerValue % right.loaded->IntegerValue;
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = c->values.back().loaded->integerValue % right;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
@@ -528,10 +597,9 @@ InstructionBinaryAnd::InstructionBinaryAnd()
 int InstructionBinaryAnd::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	c->values.back().hlp.IntegerValue = 
-		c->values.back().loaded->IntegerValue & right.loaded->IntegerValue;
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = c->values.back().loaded->integerValue & right;
+	c->values.back().loaded = & c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
@@ -541,15 +609,14 @@ InstructionAnd::InstructionAnd()
 }
 int InstructionAnd::execute(Core *c)
 {
-	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
+	std::cout << name_ << std::endl; //TODO upravit tak, zeget int, addTemp()
+	int right = c->getIntFromStack();
 	Value left = c->values.back();
-	if ((right.loaded->IntegerValue == 0)
-		|| (left.loaded->IntegerValue ==0)) 
-		c->values.back().hlp.IntegerValue = 0;
+	if ((right == 0)
+		|| (left.loaded->integerValue ==0)) 
+		c->values.back().hlp.integerValue = 0;
 	else
-		c->values.back().hlp.IntegerValue = 1;
+		c->values.back().hlp.integerValue = 1;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
@@ -561,10 +628,8 @@ InstructionBinaryOr::InstructionBinaryOr()
 int InstructionBinaryOr::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	c->values.back().hlp.IntegerValue = 
-		c->values.back().loaded->IntegerValue | right.loaded->IntegerValue;
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = c->values.back().loaded->integerValue | right;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
@@ -572,17 +637,16 @@ InstructionOr::InstructionOr()
 {
 	name_ = "InstructionOr";
 }
-int InstructionOr::execute(Core *c)
+int InstructionOr::execute(Core *c) //TODO skratene vyhodnocovanie??
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
+	int right = c->getIntFromStack();
 	Value left = c->values.back();
-	if ((right.loaded->IntegerValue != 0)
-		|| (left.loaded->IntegerValue !=0)) 
-		c->values.back().hlp.IntegerValue = 1;
+	if ((right != 0)
+		|| (left.loaded->integerValue !=0)) 
+		c->values.back().hlp.integerValue = 1;
 	else
-		c->values.back().hlp.IntegerValue = 0;
+		c->values.back().hlp.integerValue = 0;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
@@ -594,7 +658,7 @@ InstructionBinaryNot::InstructionBinaryNot()
 int InstructionBinaryNot::execute(Core *c)
 {
 	std::cout << name_ << std::endl;
-	c->values.back().hlp.IntegerValue = ~c->values.back().loaded->IntegerValue;
+	c->values.back().hlp.integerValue = ~c->values.back().loaded->integerValue;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
@@ -603,100 +667,94 @@ InstructionNot::InstructionNot()
 {
 	name_ = "InstructionNot";
 }
-int InstructionNot::execute(Core *c)
+int InstructionNot::execute(Core *c) //POZOR, pri unarnych operaciach sa neda pouzivat int!
 {
 	std::cout << name_ << std::endl;
-	if (c->values.back().loaded->IntegerValue == 0)
-		c->values.back().hlp.IntegerValue = 1;
-	else 
-		c->values.back().hlp.IntegerValue = 1;
+	if (c->values.back().loaded->integerValue == 0)
+		c->values.back().hlp.integerValue = 1;
+	else
+		c->values.back().hlp.integerValue = 1;
 	c->values.back().loaded = &c->values.back().hlp;
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
 //----------------------------------------------------------------------------------------------------
-InstructionGt::InstructionGt()
+InstructionGtInteger::InstructionGtInteger()
 {
-	name_ = "InstructionGt";
+	name_ = "InstructionGtInteger";
 }
-int InstructionGt::execute(Core * c)
+int InstructionGtInteger::execute(Core * c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->integerValue > right)? 0:1; 
+	return 0;
+}
+InstructionGtReal::InstructionGtReal()
+{
+	name_ = "InstructionGtReal";
+}
+int InstructionGtReal::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
+	float right = c->getFloatFromStack();
 	Value left = c->values.back();
-	switch (left.loaded->type)
-	{
-		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue > right.loaded->IntegerValue)? 0:1; 
-			break;
-		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue > right.loaded->RealValue)? 0:1; 
-			break;
-		default:
-			return -1; //zvysok nepozna
-	}
+	c->values.back().hlp.integerValue = (c->values.back().loaded->realValue > right)? 0:1; 
 	c->values.back().loaded = &c->values.back().hlp;
-	c->values.push_back(right);
 	c->values.back().hlp.type = TypeInteger;
 	return 0;
 }
-InstructionGe::InstructionGe()
+InstructionGeInteger::InstructionGeInteger()
 {
-	name_ = "InstructionGe";
+	name_ = "InstructionGeInteger";
 }
-int InstructionGe::execute(Core * c)
+int InstructionGeInteger::execute(Core *c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->integerValue >= right)? 0:1; 
+	return 0;
+}
+InstructionGeReal::InstructionGeReal()
+{
+	name_ = "InstructionGeReal";
+}
+int InstructionGeReal::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
+	float right = c->getFloatFromStack();
 	Value left = c->values.back();
-	switch (left.loaded->type)
-	{
-		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue >= right.loaded->IntegerValue)? 0:1; 
-			break;
-		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue >= right.loaded->RealValue)? 0:1; 
-			break;
-		default:
-			return -1; //zvysok nepozna
-	}
+	c->values.back().hlp.integerValue = (c->values.back().loaded->realValue >= right)? 0:1; 
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
-InstructionEqual::InstructionEqual()
+InstructionEqualInteger::InstructionEqualInteger()
 {
-	name_ = "InstructionEqual";
+	name_ = "InstructionEqualInteger";
 }
-int InstructionEqual::execute(Core * c)
+int InstructionEqualInteger::execute(Core * c) //pre location nech si napisu funkciu bujde o nastejno:)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->integerValue == right)? 1:0; 
+	return 0;
+}
+InstructionEqualReal::InstructionEqualReal()
+{
+	name_ = "InstructionEqualReal";
+}
+int InstructionEqualReal::execute(Core *c)
+{
+	float right = c->getFloatFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->realValue == right)? 1:0; 
+	return 0;
+}
+InstructionEqualObject::InstructionEqualObject()
+{
+	name_ = "InstructionEqualObject";
+}
+int InstructionEqualObject::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	Value left = c->values.back();
-	switch (left.loaded->type)
-	{
-		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue == right.loaded->IntegerValue)? 1:0; 
-			break;
-		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue == right.loaded->RealValue)? 1:0; 
-			break;
-		case TypeLocation:
-			if ((left.loaded->array->elements[0]->IntegerValue == right.loaded->array->elements[0]->IntegerValue) 
-				&&(left.loaded->array->elements[1]->IntegerValue == right.loaded->array->elements[1]->IntegerValue))
-				c->values.back().hlp.IntegerValue = 1;
-			else 
-				c->values.back().hlp.IntegerValue = 0;
-			break;
-		case TypeObject:
-			c->values.back().hlp.IntegerValue = (left.loaded->ObjectValue == right.loaded->ObjectValue)? 1:0;
-			break;
-		case TypeArray:
-			c->values.back().hlp.IntegerValue = (left.loaded == right.loaded)? 1:0;
-			break;
-
+	Object * right = c->getObjectFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->objectValue == right)? 1:0;
 /*		case TypeArray:
 			bool equal = true;
 			std::stack<Variable *> lefts, rights;
@@ -709,113 +767,96 @@ int InstructionEqual::execute(Core * c)
 				Variable * right_v = rights.top();
 				rights.pop();
 				if((left_v->type!=right_v->type)
-				 ||(left_v->array->elements.size()!= right_v->array->elements.size()))
+				 ||(left_v->array.elements.size()!= right_v->array.elements.size()))
 				{
 					equal = false;
 					break;
 				}
-				for(size_t i = 0; i< left_v->array->elements.size(); i++)
+				for(size_t i = 0; i< left_v->array.elements.size(); i++)
 				{
-					lefts.push(left_v->array->elements[i]);
-					rights.push(right_v->array->elements[i])
+					lefts.push(left_v->array.elements[i]);
+					rights.push(right_v->array.elements[i])
 				}
-
 			}
 			break;*///array sa porovnavat nebude,moc miesta a ets aj penalizacia by bola divna
-		default:
-			return -1; //zvysok nepozna
-	}
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
-//--------------------------------------------------BACK--------------------------------------------------
-InstructionLt::InstructionLt()
+InstructionNotEqualInteger::InstructionNotEqualInteger()
 {
-	name_ = "InstructionLt";
+	name_ = "InstructionNotEqualInteger";
 }
-int InstructionLt::execute(Core * c)
+int InstructionNotEqualInteger::execute(Core * c)
 {
-	std::cout << "less than" << std::endl;
-	Value right = c->values.back();
-	std::cout << "loaded" << right.loaded->IntegerValue << std::endl;
-	c->values.pop_back();
-	Value left = c->values.back();
-	std::cout << "loaded" << left.loaded->IntegerValue << std::endl;
-	getc(stdin);
-	switch (left.loaded->type)
-	{
-		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue < right.loaded->IntegerValue)? 1:0; 
-			std::cout << "vysledok" << c->values.back().hlp.IntegerValue << std::endl;
-//			std::cout << "Stary by mal este zostat" << c->values.back().loaded->IntegerValue << std::endl;
-
-			break;
-		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue < right.loaded->RealValue)? 1:0; 
-			break;
-		default:
-			return -1; //zvysok nepozna
-	}
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->integerValue != right)? 1:0; 
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
-InstructionLe::InstructionLe()
+InstructionNotEqualReal::InstructionNotEqualReal()
 {
-	name_ = "InstructionLe";
+	name_ = "InstructionNotEqualReal";
 }
-int InstructionLe::execute(Core * c)
+int InstructionNotEqualReal::execute(Core * c)
+{
+	int right = c->getFloatFromStack();
+	c->values.back().hlp.realValue = (c->values.back().loaded->realValue != right)? 1:0; 
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
+InstructionNotEqualObject::InstructionNotEqualObject()
+{
+	name_ = "InstructionNotEqualObject";
+}
+int InstructionNotEqualObject::execute(Core * c)
+{
+	Object * right = c->getObjectFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->objectValue != right)? 1:0; 
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
+InstructionLtInteger::InstructionLtInteger()
+{
+	name_ = "InstructionLtInteger";
+}
+int InstructionLtInteger::execute(Core * c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->integerValue < right)? 1:0; 
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
+InstructionLtReal::InstructionLtReal()
+{
+	name_ = "InstructionLtReal";
+}
+int InstructionLtReal::execute(Core * c)
+{
+	float right = c->getFloatFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->realValue < right)? 1:0; 
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
+InstructionLeInteger::InstructionLeInteger()
+{
+	name_ = "InstructionLeInteger";
+}
+int InstructionLeInteger::execute(Core * c)
+{
+	int right = c->getIntFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->integerValue <= right)? 1:0; 
+	c->values.back().loaded = &c->values.back().hlp;
+	return 0;
+}
+InstructionLeReal::InstructionLeReal()
+{
+	name_ = "InstructionLeReal";
+}
+int InstructionLeReal::execute(Core * c)
 {
 	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	Value left = c->values.back();
-	switch (left.loaded->type)
-	{
-		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue <= right.loaded->IntegerValue)? 1:0; 
-			break;
-		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue <= right.loaded->RealValue)? 1:0; 
-		default:
-			return -1; //zvysok nepozna
-	}
-	c->values.back().loaded = &c->values.back().hlp;
-	return 0;
-}
-InstructionNotEqual::InstructionNotEqual()
-{
-	name_ = "InstructionNotEqual";
-}
-int InstructionNotEqual::execute(Core * c)
-{
-	std::cout << name_ << std::endl;
-	Value right = c->values.back();
-	c->values.pop_back();
-	Value left = c->values.back();
-	switch (left.loaded->type)
-	{
-		case TypeInteger:
-			c->values.back().hlp.IntegerValue = (left.loaded->IntegerValue != right.loaded->IntegerValue)? 1:0; 
-			break;
-		case TypeReal:
-			c->values.back().hlp.IntegerValue = (left.loaded->RealValue != right.loaded->RealValue)? 1:0; 
-			break;
-		case TypeLocation:
-			if ((left.loaded->array->elements[0]->IntegerValue != right.loaded->array->elements[0]->IntegerValue) 
-				&&(left.loaded->array->elements[1]->IntegerValue != right.loaded->array->elements[1]->IntegerValue))
-				c->values.back().hlp.IntegerValue = 1;
-			else 
-				c->values.back().hlp.IntegerValue = 0;
-			break;
-		case TypeObject:
-			c->values.back().hlp.IntegerValue = (left.loaded->ObjectValue != right.loaded->ObjectValue)? 1:0;
-			break;
-		case TypeArray:
-			c->values.back().hlp.IntegerValue = (left.loaded != right.loaded)? 1:0;
-			break;
-		default:
-			return -1;
-	}
+	float right = c->getFloatFromStack();
+	c->values.back().hlp.integerValue = (c->values.back().loaded->realValue <= right)? 1:0; 
 	c->values.back().loaded = &c->values.back().hlp;
 	return 0;
 }
@@ -851,7 +892,7 @@ int InstructionSee::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->See();
+	v.loaded->integerValue = s->robot->See();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -864,7 +905,7 @@ int InstructionStep::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->Step();
+	v.loaded->integerValue = s->robot->Step();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -877,7 +918,7 @@ int InstructionWait::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->Wait();
+	v.loaded->integerValue = s->robot->Wait();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -890,7 +931,7 @@ int InstructionShoot::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->Shoot();
+	v.loaded->integerValue = s->robot->Shoot();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -905,7 +946,7 @@ int InstructionTurn::execute(Core *s)
 	s->values.pop_back();
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->Turn(par.loaded->IntegerValue);
+	v.loaded->integerValue = s->robot->Turn(par.loaded->integerValue);
 	v.loaded->type = TypeInteger;
 	//ak to nie je integer, tak papa
 	return 0;
@@ -919,7 +960,7 @@ int InstructionTurnR::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->TurnR();
+	v.loaded->integerValue = s->robot->TurnR();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -932,7 +973,7 @@ int InstructionTurnL::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->TurnL();
+	v.loaded->integerValue = s->robot->TurnL();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -945,7 +986,7 @@ int InstructionHit::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->Hit();
+	v.loaded->integerValue = s->robot->Hit();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -958,7 +999,7 @@ int InstructionIsPlayer::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->IsPlayer();
+	v.loaded->integerValue = s->robot->IsPlayer();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -971,7 +1012,7 @@ int InstructionIsWall::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->IsWall();
+	v.loaded->integerValue = s->robot->IsWall();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -984,7 +1025,7 @@ int InstructionIsMissille::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->IsMissille();
+	v.loaded->integerValue = s->robot->IsMissille();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -997,7 +1038,7 @@ int InstructionLocate::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->Locate();
+	v.loaded->integerValue = s->robot->Locate();
 	v.loaded->type = TypeInteger;
 	return 0;
 }
@@ -1010,7 +1051,7 @@ int InstructionIsMoving::execute(Core *s)
 	std::cout << name_ << std::endl;
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->IntegerValue = s->robot->IsMoving();
+	v.loaded->integerValue = s->robot->IsMoving();
 	v.loaded->type = TypeInteger;
 	return 0;
 }

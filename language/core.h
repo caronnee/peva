@@ -27,5 +27,8 @@ struct Core
 	Core();
 	void save(int j);
 	void restore(); //+ pushnut vsetky parametre zadanej funkcie o jedno
+	int getIntFromStack();
+	float getFloatFromStack(); //dalej su iba object a location
+	Object * getObjectFromStack();
 };
 #endif

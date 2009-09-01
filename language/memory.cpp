@@ -6,7 +6,7 @@ Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 	int id;
 	if (id_free_vars.size() > 0)
 		id = id_free_vars.top();
-	else id = 0; // v pripade, ne dojde pamat, nastanu nepredvidatelne nasledky
+	else id = 0; // v pripade, ne dojde pamat, nastanu nepredvidatelne nasledky:)
 	std::cout << "assigning " << id << std::endl;
 	id_free_vars.pop();
 	Memory_record record;
@@ -26,15 +26,18 @@ Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 		memory[id]->set_variable(type.type);
 		return memory[id];
 	}
-	if (type.type == TypeArray)
+	else
 	{
-		memory[id]->array->elements.clear();
-		for(int i =0; i< type.range; i++)
+		for (size_t i =0; i< type.nested_vars.size(); i++)
 		{
-			memory[id]->array->elements.push_back(assign(*type.data_type, id__, depth_));
+			memory[id]->array.elements.push_back(assign(*type.nested_vars[i].type, id__, depth_));
 		}
-		return memory[id];
-	}
+		//v pripade, ze je to array
+		for (int i =0; i < type.range; i++)
+		{
+			memory[id]->array.elements.push_back(assign(*type.data_type, id__, depth_));
+		}
+	}	
 	return NULL;
 }
 void Memory::free(size_t depth)
