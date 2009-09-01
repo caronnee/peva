@@ -174,7 +174,11 @@ Robots::Robots(GamePoints g_)
 }
 void Robots::createNew(std::string name)
 {
+	if (actualRobot!=NULL)
+		robots.push_back(actualRobot);
 	actualRobot = new Robot(name, g);
+	std::cout << "creating new robot" << std::endl;
+	getc(stdin);
 }
 
 void Robot::enter_loop()
