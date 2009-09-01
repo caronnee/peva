@@ -1,27 +1,100 @@
+//TODO dat to do vlastneho namespacu
 #include "./parser_functions.h"
 #include <iostream>
 
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
-Instruction * instruction_load(Robot *p, std::string s)
+Element ident_load(unsigned line, Robot * r, std::string s)
 {
-	Node *n = p->find_var(s); 
+	Element st;
+	Node *n = r->find_var(s); 
 	if (n == NULL)
 	{
-		std::cout << "Nenasla sa premenna" << s << std::endl;
-		Robot::ErrorCode a = Robot::ErrorVariableNotDefined;
-	//	p->error(a);
-		return NULL;
+		r->error(line,Robot::Robot::ErrorVariableNotFound);
+		std::cout << "nenaslo mi premennu" <<std::endl;
+		return st;
 	}
 	if(n->nested == Local)
-	{
-		return new InstructionLoadLocal(n);
-	}
+		st.ins.push_back(new InstructionLoadLocal(n));
 	else  
+		st.ins.push_back(new InstructionLoadGlobal(n));
+	st.output.push_back(n->type_of_variable);
+	return st;
+}
+Instruction * possible_conversion(Type to, Type from)
+{
+	if ((to == TypeInteger) && (from == TypeReal))
+		return new InstructionConversionToInt();
+	if ((from == TypeInteger) && (to == TypeReal))
+		return new InstructionConversionToReal();
+	return NULL;
+}
+//constr je load vsetkych funkcii
+Instructions assign_default(int line, Robot * r,Node * n, Constr& l)
+{
+	Instructions ins;
+	std::vector<int> access_id;//co vsetko ma loadnut
+	std::vector<int> last_range;//co vsetko ma loadnut
+	std::vector<Create_type *> types;
+	while (!types.empty())
 	{
-		return new InstructionLoadGlobal(n);
+		Create_type * t = types.back();
+		if (is_simple(t->type))
+		{
+			if (n->nested == Local)
+			ins.push_back(new InstructionLoadLocal(n));
+			else 
+			ins.push_back(new InstructionLoadGlobal(n));
+			for(size_t i =0; i> access_id.size(); i++)
+			{
+			ins.push_back(new InstructionLoad(access_id[i]));
+				switch (t->type)
+				{
+					case TypeInteger:
+						if (l.output.back().type == TypeReal)
+						ins.push_back(new InstructionConversionToInt());
+						else if (l.output.back()!=t->type)
+						{
+							r->error(line, Robot::ErrorConversionImpossible);
+							return ins;
+						}
+					ins.push_back(new InstructionStoreInteger());
+							break;
+					case TypeReal:
+							if (l.output.back().type == TypeInteger)
+							ins.push_back(new InstructionConversionToInt());
+							else if (l.output.back()!=t->type)
+							{
+								r->error(line, Robot::ErrorConversionImpossible);
+								return ins;
+							}
+						ins.push_back(new InstructionStoreReal());
+							break;
+					case TypeObject:
+							if(t->type!=TypeObject)
+							{
+								r->error(line,Robot::ErrorConversionImpossible);
+								return ins;
+							}
+						ins.push_back(new InstructionStoreObject());
+					default:
+						       	r->error(line,Robot::ErrorTypeNotRecognized);
+							break;
+				}
+			}
+			access_id.back()++;
+			while ((!access_id.empty())&&(access_id.back() == last_range.back()))
+			{
+				access_id.pop_back();
+				last_range.pop_back();
+				if (!access_id.empty())
+					access_id.back()++;
+			}
+
+		}
 	}
+	return ins;
 }
 
 void reg(Robot * p, std::vector<Parameter_entry> c, Instructions b)
@@ -56,102 +129,271 @@ void set_breaks(Robot * p, Instructions ins)
 			b->depth -= p->core->depth; //rozdiel medzi zaciatkom breaku a jeho koncom
 		}
 	}
-	std::cout << "Nenajdeny break!" <<std::endl;
+	//std::cout << "Nenajdeny break!" <<std::endl;
 }
-Instruction * operRel(Operation op)
+Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 {
-	switch(op)
+	Element e;
+	Instruction * il = conversionToReal(t1.type, t2.type);
+	if (il!=NULL)
 	{
-		case OperationLess:
-			return new InstructionLt();
-		case OperationLessEqual:
-			return new InstructionLe();
-		case OperationEqual:
-			return new InstructionEqual();
-		case OperationGreater:
-			return new InstructionGt();
-		case OperationGreaterEqual:
-			return new InstructionGe();
-		case OperationNotEqual:
-			return new InstructionNotEqual();
-		default: return NULL;
+		e.ins.push_back(il);
+		e.output.push_back(Create_type(TypeReal));
 	}
-}
-Instruction *operMul(Operation op)
-{
-	switch (op)
+	else if ( t1!=t2)
 	{
-		case OperationMultiply:
-			return new InstructionMultiply();
-		case OperationDivide:
-			return new InstructionDivide();
-		case OperationModulo:
-			return new InstructionModulo();
-		case OperationAnd:
-			return new InstructionBinaryAnd();
-		case OperationOr:
-			return new InstructionBinaryOr();
-		case OperationNot:
-			return new InstructionNot();
-		default: return NULL;
+		r->error(l,Robot::ErrorConversionImpossible);
+		return e;
 	}
-}
-Instruction * operAdd(Operation op) // add
-{
-	switch(op)
+	else
+		e.output.push_back(t1);
+	switch (e.output[0].type)
 	{
-		case OperationPlus:
-			return new InstructionPlus();
-		case OperationMinus:
-			return new InstructionMinus();
+		case TypeInteger:
+			switch(op)
+			{
+				case OperationLess:
+					e.ins.push_back(new InstructionLtInteger());
+					break;
+				case OperationLessEqual:
+					e.ins.push_back(new InstructionLeInteger());
+					break;
+				case OperationEqual:
+					e.ins.push_back(new InstructionEqualInteger());
+					break;
+				case OperationGreater:
+					e.ins.push_back(new InstructionGtInteger());
+					break;
+				case OperationGreaterEqual:
+					e.ins.push_back(new InstructionGeInteger());
+					break;
+				case OperationNotEqual:
+					e.ins.push_back(new InstructionNotEqualInteger());
+					break;
+				default: ;
+			}
+			break;
+		case TypeReal:
+			switch(op)
+			{
+				case OperationLess:
+					e.ins.push_back(new InstructionLtReal());
+					break;
+				case OperationLessEqual:
+					e.ins.push_back(new InstructionLeReal());
+					break;
+				case OperationEqual:
+					e.ins.push_back(new InstructionEqualReal());
+					break;
+				case OperationGreater:
+					e.ins.push_back(new InstructionGtReal());
+					break;
+				case OperationGreaterEqual:
+					e.ins.push_back(new InstructionGeReal());
+					break;
+				case OperationNotEqual:
+					e.ins.push_back(new InstructionNotEqualReal());
+					break;
+				default: ;
+			}
+			break;
+		case TypeObject:
+			switch(op)
+			{
+				case OperationEqual:
+					e.ins.push_back(new InstructionEqualObject());
+					break;
+				case OperationNotEqual:
+					e.ins.push_back(new InstructionNotEqualObject());
+					break;
+				default: r->error(l, Robot::ErrorOperationNotSupported);
+			}
+			break;
 		default:
-			return NULL;
+			r->error(l, Robot::ErrorOperationNotSupported);
 	}
+	return e;
 }
-Instruction * operOr(Operation op) //Bool_OR
+Instruction * conversionToReal(Type t1, Type t2)
 {
+	if (((t1 == TypeInteger)&& (t2 == TypeReal))||((t1 = TypeReal) && (t2 == TypeInteger)))
+	
+		return new InstructionConversionToReal();
+	return NULL;
+}
+Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t2)
+{	
+	Element e;
+	Instruction * i = conversionToReal(t1.type, t2.type);
+	Type output = t1.type;
+	if (i!=NULL)
+	{
+		output = TypeReal;
+		e.ins.push_back(i);
+	}
+	switch (output)
+	{
+		case TypeInteger:
+			switch (op)
+			{
+				case OperationMultiply:
+					e.ins.push_back(new InstructionMultiplyInteger());
+					break;
+				case OperationDivide:
+					e.ins.push_back( new InstructionDivideInteger());
+					break;
+				case OperationModulo:
+					e.ins.push_back( new InstructionModulo());
+					break;
+				case OperationAnd:
+					e.ins.push_back( new InstructionBinaryAnd());
+					break;
+				case OperationOr:
+					e.ins.push_back( new InstructionBinaryOr());
+					break;
+				case OperationNot:
+					e.ins.push_back( new InstructionBinaryNot());
+					break;
+				default: r->error(line,Robot::ErrorOperationNotSupported);
+			}
+			break;
+		case TypeReal:
+			switch (op)
+			{
+				case OperationMultiply:
+					e.ins.push_back(new InstructionMultiplyReal());
+					break;
+				case OperationDivide:
+					e.ins.push_back( new InstructionDivideReal());
+					break;
+				default: r->error(line,Robot::ErrorOperationNotSupported);
+			}
+			break;
+		default: r->error(line,Robot::ErrorOperationNotSupported);
+	}
+	return e;
+}
+Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2) // add
+{
+	Element e;
+	Instruction *i = conversionToReal(t1.type,t2.type);
+	Type output = t1.type;;
+	if (i!=NULL)
+	{
+		output = TypeReal;
+		e.ins.push_back(i);
+	}
+	if (t1!=t2)
+	{
+		r->error(line, Robot::ErrorOperationNotSupported);
+		return e;
+	}
+	switch (output)
+	{
+		case TypeInteger:
+			switch(op)
+			{
+				case OperationPlus:
+					e.ins.push_back( new InstructionPlusInteger());
+					break;
+				case OperationMinus:
+					e.ins.push_back( new InstructionMinusInteger());
+					break;
+				default:
+					r->error(line, Robot::ErrorOperationNotSupported);
+			}
+			break;
+		case TypeReal:
+			switch(op)
+			{
+				case OperationPlus:
+					e.ins.push_back( new InstructionPlusInteger());
+					break;
+				case OperationMinus:
+					e.ins.push_back( new InstructionMinusInteger());
+					break;
+				default:
+					r->error(line, Robot::ErrorOperationNotSupported);
+			}
+			break;
+		default:
+			r->error(line, Robot::ErrorOperationNotSupported);
+	}
+	return e;
+}
+
+Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2) //Bool_OR
+{
+	Element e;
+	//ak nie je bool, oniec
+	if ((t1.type != TypeInteger)||(t2.type!=TypeInteger))
+	{
+		r->error(line, Robot::ErrorOperationNotSupported);
+	}
 	switch(op)
 	{
 		case OperationBoolNot:
-			return new InstructionBinaryNot();
+			e.ins.push_back( new InstructionBinaryNot());
+			break;
 		case OperationBoolOr:
-			return new InstructionBinaryOr();
-		default: return NULL;
+			e.ins.push_back( new InstructionBinaryOr());
+			break;
+		default: 
+			r->error(line, Robot::ErrorOperationNotSupported);
 	}
+	return e;
 }
-Instruction * feature ( ObjectFeatures feat )
+Instructions feature ( int line, Robot *r, ObjectFeatures feat, Create_type t )
 {
+	Instructions ins;
+	if (t!=TypeObject)
+	{
+		r->error(line, Robot::ErrorOperationNotSupported);
+		return ins;
+	}
 	switch(feat)
 	{
 		case FeatureIsPlayer:
-		       return new InstructionIsPlayer();
+			ins.push_back( new InstructionIsPlayer());
+			break;
 	       	case FeatureIsWall:
-			return new InstructionIsWall();
+			ins.push_back( new InstructionIsWall());
+			break;
 	 	case FeatureIsMissille:
-			return new InstructionIsMissille();
+			ins.push_back( new InstructionIsMissille());
+			break;
 		case FeatureIsMoving:
-			return new InstructionIsMoving();
+			ins.push_back( new InstructionIsMoving());
+			break;
 		case FeatureLocate:
-			return new InstructionLocate();
+			ins.push_back( new InstructionLocate());
+			break;
 		case FeatureStep:
-			return new InstructionStep();
+			ins.push_back( new InstructionStep());
+			break;
 		case FeatureSee:
-			return new InstructionSee();
+			ins.push_back( new InstructionSee());
+			break;
 		case FeatureHit:
-			return new InstructionHit();
+			ins.push_back( new InstructionHit());
+			break;
 		case FeatureShoot:
-			return new InstructionShoot();//nutne musi zobrat
+			ins.push_back( new InstructionShoot());//nutne musi zobrat
+			break;
 		case FeatureTurn:
-			return new InstructionTurn();
+			ins.push_back( new InstructionTurn());
+			break;
 		case FeatureTurnR:
-			return new InstructionTurnR();
+			ins.push_back( new InstructionTurnR());
+			break;
 		case FeatureTurnL:
-			return new InstructionTurnL();
+			ins.push_back( new InstructionTurnL());
+			break;
 		case FeatureWait:
-			return new InstructionWait();
+			ins.push_back( new InstructionWait());
+			break;
 		default:
-			std::cout << "Vraciam NULL, nenasla sa ziadna takato pohybova instrukcia" << std::endl;
-			getc(stdin);	
-			return NULL;		
+			r->error(line, Robot::ErrorOperationNotSupported);
 	}
+	return ins;
 }

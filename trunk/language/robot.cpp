@@ -1,29 +1,6 @@
 #include "./robot.h"
 #include <iostream>
 
-Constr::Constr()
-{
-	default_set = false;
-	id ="";
-}
-Constr::Constr(std::string a)
-{
-	id =a;
-	default_set  =false;
-}
-Constr::Constr(std::string a, int def)
-{
-	id  = a;
-	default_set = true;
-	ins.push_back(new InstructionLoad(def));
-}
-Constr::Constr(std::string a, Instructions i)
-{
-	id = a;
-	ins = i;
-	default_set = true;
-}
-
 FirstSection::FirstSection()
 {
 	hitpoints = 100;
@@ -244,11 +221,11 @@ void Robots::set(Options o, size_t value)
 	}
 }
 
-void Robot::addKilled(Operation op, size_t number)
+void Robot::addKilled(unsigned i,Operation op, size_t number)
 {
 	if (toKill !=NULL)
 	{
-		error(1,WarningKillAlreadyDefined);
+		error(i,WarningKillAlreadyDefined);
 		return;
 	}
 	switch (op)
@@ -292,7 +269,7 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 	{
 		case WarningKillAlreadyDefined:
 			warning = true;
-			warningList += "Ignoring, kill was already defined";
+			warningList += "Line"+ deconvert<int>(line) + ":Ignoring, kill was already defined";
 			break;
 		case WarningConversionToInt:
 			warning = true;

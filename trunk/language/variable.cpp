@@ -4,13 +4,13 @@ Variable::Variable()
 {
 	owner = 0; //nijaky node nevlastni
 	type = TypeUndefined;
-	array = new Array();
+	objectValue = NULL;	
 }
 Variable::Variable(std::string name_, Type t)
 {
 	owner = 0;
-	array = new Array();
 	type = t;
+	objectValue = NULL;
 }
 void Variable::set_variable(Type t)
 {

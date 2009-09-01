@@ -6,26 +6,14 @@
 #include <vector>
 #include <string>
 #include <stack>
-#include "./instructions.h"
-#include "./tree.h"
+#include "instructions.h"
+#include "tree.h"
 #include "functions.h"
 #include "targets.h"
 #include "enums.h"
+#include "parser_classes.h"
 
 #define DELIMINER_CHAR '#'
-typedef std::vector<Instruction *> Instructions;
-typedef std::vector<Value> Values;
-
-struct Constr
-{
-	std::string id;
-	Instructions ins;
-	bool default_set;
-	Constr();
-	Constr(std::string a);
-	Constr(std::string a, int def);
-	Constr(std::string a, Instructions i);
-};
 
 struct FirstSection
 {
@@ -61,7 +49,15 @@ struct Robot
 		WarningKillAlreadyDefined,
 		WarningConversionToInt,
 		WarningRedefinedOption,
-		ErrorVariableNotDefined
+		WarningQouOfRange,
+		ErrorVariableNotDefined,
+		ErrorToMuchInitializers,
+		ErrorTypeNotRecognized,
+		ErrorConversionImpossible,
+		ErrorVariableNotFound,
+		ErrorOperationNotSupported,
+		ErrorWrongNumberOfParameters,
+		ErrorFunctionNotDefined
 	};
 	bool errors;
 	bool warning;
@@ -97,7 +93,7 @@ struct Robot
 	std::stack<int> loop_labels;
 	void enter_loop();
 	void end_loop();
-	void addKilled(Operation op, size_t number);
+	void addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
 	void addVisitSeq(std::vector<Position> pos);
 	void error(unsigned int line, ErrorCode c,std::string message="");

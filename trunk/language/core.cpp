@@ -30,6 +30,35 @@ void Core::restore() //+ pushnut vsetky parametre zadanej funkcie o jedno
 	nested_functions.pop_back();
 	PC = PCs.back();
 	PCs.pop_back();
-	std::cout << "Restored" << PC << std::endl;
+	std::cout << "Context restored" << PC << std::endl;
 }
-
+int Core::getIntFromStack()
+{
+	int i;
+	if (!values.empty()) //TODO throw exception
+	{
+		i = values.back().loaded->integerValue;
+		values.pop_back();
+	}
+	return i;
+}
+float Core::getFloatFromStack()
+{
+	float i;
+	if (!values.empty()) //TODO throw exception
+	{
+		i = values.back().loaded->realValue;
+		values.pop_back();
+	}
+	return i;
+}
+Object * Core::getObjectFromStack()
+{
+	Object * o = NULL;
+	if (!values.empty())
+	{
+		o = values.back().loaded->objectValue;
+		values.pop_back();
+	}
+	return o;
+}

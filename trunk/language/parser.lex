@@ -41,6 +41,7 @@ KILLED						{*l = line; return TOKEN_KILLED; }
 START						{*l = line; return TOKEN_START; }
 
 main						{*l = line; return TOKEN_MAIN; }
+var						{*l = line; return TOKEN_REFERENCE;}
 void						{*l = line; return TOKEN_VOID; }
 location					{*l = line;return TOKEN_LOCATION; }
 real 						{*l = line;return TOKEN_VAR_REAL; }
@@ -67,6 +68,7 @@ if						{*l = line;return TOKEN_IF;		/* if */ }
 object						{*l = line;return TOKEN_OBJECT; }
 return						{*l = line;return TOKEN_RETURN; }
 break						{*l = line;return TOKEN_BREAK; }
+continue					{*l = line;return TOKEN_CONTINUE; }
 \; 						{*l = line;return TOKEN_SEMICOLON; }
 \, 						{*l = line;return TOKEN_COMMA; }
 \.						{*l = line;return TOKEN_DOT; }

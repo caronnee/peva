@@ -2,15 +2,10 @@
 #define HEADER_H_
 
 #include <string>
-#include "./robot.h"
+#include "robot.h"
 #include "position.h"
 #include "enums.h"
-
-struct Expr
-{
-	Instructions ins;
-	Type output;
-};
+#include "parser_classes.h"
 
 struct Lval {
 	
@@ -20,13 +15,11 @@ struct Lval {
 	int number;
 
 	std::string ident; 
-	std::vector<Constr> idents;
+	std::vector<Constr> idents; //meno a defaultna hodnota, ak bola nejaka
 
 	float f_number;
 
 	std::vector<int> ranges;
-
-	Instructions block;
 
 	Node * node;
 	std::vector<Node *> nodes; //kde su ulozene premenne
@@ -43,10 +36,12 @@ struct Lval {
 
 	ObjectFeatures of;
 	Options op;
-	Expr e;
 	
 	Position position;
 	std::vector<Position> positions;
+
+	Element output;
+
 };
 
 // lex interface
