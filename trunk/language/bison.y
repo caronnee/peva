@@ -160,6 +160,8 @@ type:	  simple_type { $$ = $1;}
 /* definicie, lokalnych a globalnych premennych, local variables cez command_var */
 local_variables:  type names TOKEN_SEMICOLON 
 	       {  
+			std::cout << "deklarujem premenne" << std::endl;
+getc(stdin);
 			for(int i =0; i< $2.size(); i++)
 			{
 				Node * n = program->actualRobot->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
@@ -167,6 +169,8 @@ local_variables:  type names TOKEN_SEMICOLON
 				if ($2[i].default_set) 
 					$$ = assign_default(@1,program->actualRobot, n, $2[i]);
 			}
+			std::cout << "dodeklarovane" << std::endl;
+getc(stdin);
 		}
 	;
 
@@ -307,7 +311,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
 			$$ = $2.ins;
-			std::cout << program->actualRobot->core->nested_function << "-----"<< std::endl;
+			std::cout << program->actualRobot->core->nested_function << "--Tu dorazim---"<< std::endl;
 			getc(stdin);
 			$$.insert($$.begin(), new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable == TypeReal))
@@ -364,6 +368,8 @@ simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 //pozor na to, co sa assignuje
 assign: variable_left TOKEN_ASSIGN expression 
       		{
+		std::cout << "Vstupujem do assignu" << $1.output.size()<<" " <<$3.output.size() << std::endl;
+		getc(stdin);
 		Node * n = $3.ins.back()->get_node();
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
 			$3.ins.push_back(new InstructionConversionToInt());
@@ -371,6 +377,7 @@ assign: variable_left TOKEN_ASSIGN expression
 			$3.ins.push_back(new InstructionConversionToReal());
 		else if ($1.output.back()!=$3.output.back())
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
+getc(stdin);
 		$$ = join_instructions($1.ins, $3.ins); 
 		switch ($1.output.back().type)
 		{
@@ -395,6 +402,8 @@ assign: variable_left TOKEN_ASSIGN expression
 				break;
 			default: program->actualRobot->error(@2, Robot::ErrorOperationNotSupported);
 			}
+		std::cout << "Vystupujem do assignu" << std::endl;
+		getc(stdin);
 		 }
 	;
 
@@ -595,7 +604,7 @@ int main(int argc, char ** argv)
 	Create_type t;
 	yyparse(&q);
     	fclose(yyin);
-	std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
+	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
 /*	q.actualRobot->output(&q.actualRobot->defined);
 	for (int i =0; i<q.actualRobot->instructions.size(); i++)
 		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;

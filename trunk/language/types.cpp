@@ -59,14 +59,14 @@ Create_type::~Create_type()
 	if (data_type!=NULL)
 		delete data_type;
 }
-bool Create_type::operator!=(const Create_type& t)
+bool Create_type::operator!=(const Create_type & t)
 {
 	return !((*this)==t);
 }
-bool Create_type::operator==(const Create_type &t)
+bool Create_type::operator==(const Create_type & t)
 {
 	if (t.type!=type)
-		return true;
+		return false;
 	if (nested_vars.size()!=t.nested_vars.size())
 		return false;
 	for(size_t i =0; i<nested_vars.size(); i++)
@@ -78,7 +78,7 @@ bool Create_type::operator==(const Create_type &t)
 	}
 	if (range!=t.range)
 		return false;
-	if ((*data_type)!=(*t.data_type))
-		return false;
-	return true;
+	if (data_type == t.data_type) // ak sa rovnaju poitre, tak je zvysok zarucene stejny
+		return true;
+	return ((*data_type)==(*t.data_type));
 }
