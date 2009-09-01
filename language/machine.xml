@@ -1,53 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
-  <f>
-    <InstructionBegin/>
-    <InstructionLoadLocal>f#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>0</TypeInteger>
-    </InstructionLoad>
-    <InstructionEqual/>
-    <InstructionJump>
-      <yes>0</yes>
-      <no>4</no>
-    </InstructionJump>
-    <InstructionLoadLocal>f#</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>1</TypeInteger>
-    </InstructionLoad>
-    <InstructionStore/>
-    <InstructionReturn/>
-    <InstructionLoadLocal>f#</InstructionLoadLocal>
-    <InstructionLoadLocal>f#a</InstructionLoadLocal>
-    <InstructionLoadLocal>f#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>1</TypeInteger>
-    </InstructionLoad>
-    <InstructionMinus/>
-    <Call begins="0">f</Call>
-    <InstructionPlus/>
-    <InstructionStore/>
-    <InstructionReturn/>
-    <InstructionEndBlock/>
-    <InstructionRestore/>
-  </f>
-  <InstructionCreate>left</InstructionCreate>
-  <InstructionCreate>right</InstructionCreate>
+  <InstructionCreate>i</InstructionCreate>
   <main>
     <InstructionBegin/>
-    <InstructionCreate>main#a</InstructionCreate>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoadGlobal>i</InstructionLoadGlobal>
+    <InstructionLoad>
+      <TypeInteger>2</TypeInteger>
+    </InstructionLoad>
+    <InstructionConversionToReal/>
+    <InstructionStoreReal/>
+    <InstructionLoadGlobal>i</InstructionLoadGlobal>
+    <InstructionLoad>
+      <TypeInteger>5</TypeInteger>
+    </InstructionLoad>
     <InstructionLoad>
       <TypeInteger>4</TypeInteger>
     </InstructionLoad>
-    <Call begins="0">f</Call>
-    <InstructionStore/>
-    <InstructionTurnL/>
-    <InstructionLoadLocal>main#a</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>100</TypeInteger>
-    </InstructionLoad>
-    <InstructionStore/>
+    <InstructionMultiplyInteger/>
+    <InstructionConversionToReal/>
+    <InstructionStoreReal/>
     <InstructionEndBlock/>
   </main>
 </Machine>

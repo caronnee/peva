@@ -216,7 +216,7 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 }
 Instruction * conversionToReal(Type t1, Type t2)
 {
-	if (((t1 == TypeInteger)&& (t2 == TypeReal))||((t1 = TypeReal) && (t2 == TypeInteger)))
+	if (((t1 == TypeInteger)&& (t2 == TypeReal))||((t1 == TypeReal) && (t2 == TypeInteger)))
 	
 		return new InstructionConversionToReal();
 	return NULL;
@@ -228,6 +228,7 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 	Type output = t1.type;
 	if (i!=NULL)
 	{
+		std::cout << "konvertujem na real"<< t1.type<< " "<< t2.type << std::endl;
 		output = TypeReal;
 		e.ins.push_back(i);
 	}
@@ -267,10 +268,11 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 					e.ins.push_back( new InstructionDivideReal());
 					break;
 				default: r->error(line,Robot::ErrorOperationNotSupported);
-			}
+			}		
 			break;
 		default: r->error(line,Robot::ErrorOperationNotSupported);
 	}
+	e.output.push_back(Create_type(output));
 	return e;
 }
 Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2) // add
@@ -319,6 +321,7 @@ Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2
 		default:
 			r->error(line, Robot::ErrorOperationNotSupported);
 	}
+	e.output.push_back(Create_type(output));
 	return e;
 }
 
@@ -341,6 +344,7 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 		default: 
 			r->error(line, Robot::ErrorOperationNotSupported);
 	}
+	e.output.push_back(Create_type(TypeInteger));
 	return e;
 }
 Instructions feature ( int line, Robot *r, ObjectFeatures feat, Create_type t )

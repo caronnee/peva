@@ -369,7 +369,6 @@ simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 assign: variable_left TOKEN_ASSIGN expression 
       		{
 		std::cout << "Vstupujem do assignu" << $1.output.size()<<" " <<$3.output.size() << std::endl;
-		getc(stdin);
 		Node * n = $3.ins.back()->get_node();
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
 			$3.ins.push_back(new InstructionConversionToInt());
@@ -377,7 +376,6 @@ assign: variable_left TOKEN_ASSIGN expression
 			$3.ins.push_back(new InstructionConversionToReal());
 		else if ($1.output.back()!=$3.output.back())
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
-getc(stdin);
 		$$ = join_instructions($1.ins, $3.ins); 
 		switch ($1.output.back().type)
 		{
@@ -403,7 +401,6 @@ getc(stdin);
 			default: program->actualRobot->error(@2, Robot::ErrorOperationNotSupported);
 			}
 		std::cout << "Vystupujem do assignu" << std::endl;
-		getc(stdin);
 		 }
 	;
 
@@ -516,31 +513,35 @@ $$.output.push_back($1.output[i]);
 	;
 
 expression_base: unary_var { $$ = $1;}
-	|number{$$ = $1;}
+	|number{$$ = $1; std::cout << "number, type" << $$.output.back().type << std::endl;}
 	|TOKEN_LPAR expression TOKEN_RPAR {$$ = $2;}
 	;
 
-expression_mul:expression_base { $$ = $1; }
-	|expression_mul TOKEN_OPER_MUL expression_base { $$.ins = join_instructions($1.ins, $3.ins);
- Element e = operMul(@2, program->actualRobot, $2, $1.output.back(), $3.output.back());
- $$.output = $1.output;
- for (int i =0;
- i< $3.output.size();
- i++) $$.output.push_back($3.output[i]);
- $$.output.push_back(e.output[0]);
+expression_mul:expression_base { $$ = $1; std::cout << "u expressny"<<$$.output.back().type;}
+	|expression_mul TOKEN_OPER_MUL expression_base { 
+std::cout << "MUL" << std::endl;
+	$$.ins = join_instructions($1.ins, $3.ins);
+	Element e = operMul(@2, program->actualRobot, $2, $1.output.back(), $3.output.back());
+	$$.ins = join_instructions($$.ins, e.ins);
+	$$.output = e.output;
+	getc(stdin);
+	$$.output.push_back(e.output[0]);
+std::cout << "MUL END" << std::endl;
+   getc(stdin);
  }
 	;
 
 
 expression_add: expression_mul { $$ = $1; }
-	|expression_add TOKEN_OPER_SIGNADD expression_mul{$$.ins = join_instructions($1.ins, $3.ins);
- Element e = (operAdd(@2, program->actualRobot,$2,$1.output.back(), $3.output.back()));
- $$.output = $1.output;
- for (int i =0;
- i< $3.output.size();
- i++) $$.output.push_back($3.output[i]);
- $$.output.push_back(e.output[0]);
- }
+	|expression_add TOKEN_OPER_SIGNADD expression_mul
+		{
+		 $$.ins = join_instructions($1.ins, $3.ins);
+		 Element e = (operAdd(@2, program->actualRobot,$2,$1.output.back(), $3.output.back()));
+		 $$.output = $1.output;
+		 for (int i =0; i< $3.output.size(); i++) 
+			$$.output.push_back($3.output[i]);
+		 $$.output.push_back(e.output[0]);
+ 		}
 	;
 
 
@@ -612,5 +613,9 @@ int main(int argc, char ** argv)
 	std::cout << "haho!" << std::endl;
    	q.actualRobot->execute();
 */
+	if(q.actualRobot->errors)
+		std::cout << q.actualRobot->errorList << std::endl;
+	else
+		q.actualRobot->save_to_xml();
 	return 0;	
 }
