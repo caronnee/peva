@@ -269,22 +269,47 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 	{
 		case WarningKillAlreadyDefined:
 			warning = true;
-			warningList += "Line"+ deconvert<int>(line) + ":Ignoring, kill was already defined";
+			warningList += "Line:" + deconvert<int>(line) + "Line"+ deconvert<int>(line) + "Line:" + deconvert<int>(line) + ":Ignoring, kill was already defined\n";
 			break;
 		case WarningConversionToInt:
 			warning = true;
-			warningList += "Conversion from real to int";
+			warningList += "Line:" + deconvert<int>(line) + "Conversion from real to int\n";
 			break;
 		case WarningRedefinedOption:
 			warning = true;
-			warningList += "Option already defined, using new value";
+			warningList += "Line:" + deconvert<int>(line) + "Option already defined, using new value\n";
+		case ErrorVariableNotFound:
 		case ErrorVariableNotDefined:
 			errors = true;
-			errorList += "Variable" + m + " not defined";
+			errorList += "Line:" + deconvert<int>(line) + "Variable" + m + " not defined\n";
+			break;
+		case ErrorToMuchInitializers:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Too much initializers\n";
+			break;
+		case ErrorTypeNotRecognized:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Type not recognized\n";
+			break;
+		case ErrorConversionImpossible:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Conversion impossible\n";
+			break;
+		case ErrorOperationNotSupported:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Operation is not supported\n";
+			break;
+		case ErrorWrongNumberOfParameters:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Wrong number of parameters\n";
+			break;
+		case ErrorFunctionNotDefined:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Function Not defined\n";
 			break;
 		default:
 			errors = true;
-			errorList += "Unrecognized error";
+			errorList += "Line:" + deconvert<int>(line) + "Unrecognized error\n";
 			break;
 	}
 }
