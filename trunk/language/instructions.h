@@ -67,6 +67,12 @@ class InstructionConversionToReal: public Instruction
 		InstructionConversionToReal();
 		virtual int execute(Core *c);
 };
+class InstructionDuplicate: public Instruction
+{
+	public:
+		virtual int execute(Core *s);
+		InstructionDuplicate();
+};
 class InstructionStoreInteger : public Instruction
 {
 	public:

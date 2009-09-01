@@ -196,6 +196,15 @@ int InstructionConversionToReal::execute(Core * c)
 	c->values.back().loaded->realValue = (float)c->values.back().loaded->integerValue;
 	return 0;
 }
+InstructionDuplicate::InstructionDuplicate()
+{
+	name_ = "InstructionDuplicate";
+}
+int InstructionDuplicate::execute(Core * c)
+{
+	c->values.push_back(c->values.back()); //TODO ocheckovat, ci ma z coho brat
+	return 0;
+}
 InstructionStoreInteger::InstructionStoreInteger()
 {
 	name_ = "InstructionStoreInteger";
