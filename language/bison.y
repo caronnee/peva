@@ -519,31 +519,22 @@ expression_base: unary_var { $$ = $1;}
 
 expression_mul:expression_base { $$ = $1; std::cout << "u expressny"<<$$.output.back().type;}
 	|expression_mul TOKEN_OPER_MUL expression_base { 
-std::cout << "MUL" << std::endl;
 	$$.ins = join_instructions($1.ins, $3.ins);
 	Element e = operMul(@2, program->actualRobot, $2, $1.output.back(), $3.output.back());
 	$$.ins = join_instructions($$.ins, e.ins);
 	$$.output = e.output;
-	getc(stdin);
-	$$.output.push_back(e.output[0]);
-std::cout << "MUL END" << std::endl;
-   getc(stdin);
  }
 	;
-
 
 expression_add: expression_mul { $$ = $1; }
 	|expression_add TOKEN_OPER_SIGNADD expression_mul
 		{
 		 $$.ins = join_instructions($1.ins, $3.ins);
 		 Element e = (operAdd(@2, program->actualRobot,$2,$1.output.back(), $3.output.back()));
-		 $$.output = $1.output;
-		 for (int i =0; i< $3.output.size(); i++) 
-			$$.output.push_back($3.output[i]);
-		 $$.output.push_back(e.output[0]);
+		 $$.ins = join_instructions($$.ins, e.ins);
+		 $$.output = e.output;
  		}
 	;
-
 
 expression:	expression_add { $$ = $1; }
 	;
@@ -551,11 +542,8 @@ expression:	expression_add { $$ = $1; }
 expression_bool_base: expression { $$ = $1;}
 	|expression TOKEN_OPER_REL expression {$$.ins = join_instructions($1.ins, $3.ins);
  Element e = operRel(@2,program->actualRobot,$2,$3.output.back(),$1.output.back());
- $$.output = $1.output;
- for (int i =0;
- i< $3.output.size();
- i++) $$.output.push_back($3.output[i]);
- $$.output.push_back(e.output[0]);
+	$$.ins = join_instructions($$.ins, e.ins);
+ $$.output = e.output;
  }
 	;
 
@@ -563,11 +551,8 @@ expression_bool_base: expression { $$ = $1;}
 expression_bool_or: expression_bool_base {$$ = $1; }
 	| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR 
 	{$$.ins = join_instructions($1.ins, $4.ins);
- Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$4.output.back());
- $$.output = $1.output;
- for (int i =0; i< $4.output.size(); i++) 
-	$$.output.push_back($4.output[i]);
- $$.output.push_back(e.output[0]);
+	 Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$4.output.back());
+	 $$.output = e.output; //aj tak by tu vzy mal byt integer
  }
 	;
 
