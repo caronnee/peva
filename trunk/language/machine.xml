@@ -14,10 +14,19 @@
       <TypeInteger>5</TypeInteger>
     </InstructionLoad>
     <InstructionLoad>
-      <TypeInteger>4</TypeInteger>
+      <TypeReal>4.9</TypeReal>
     </InstructionLoad>
-    <InstructionMultiplyInteger/>
     <InstructionConversionToReal/>
+    <InstructionMultiplyReal/>
+    <InstructionLoad>
+      <TypeInteger>10</TypeInteger>
+    </InstructionLoad>
+    <InstructionConversionToReal/>
+    <InstructionMinusReal/>
+    <InstructionLoad>
+      <TypeReal>2.5</TypeReal>
+    </InstructionLoad>
+    <InstructionPlusReal/>
     <InstructionStoreReal/>
     <InstructionEndBlock/>
   </main>

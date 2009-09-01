@@ -275,7 +275,7 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 	e.output.push_back(Create_type(output));
 	return e;
 }
-Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2) // add
+Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 {
 	Element e;
 	Instruction *i = conversionToReal(t1.type,t2.type);
@@ -285,7 +285,7 @@ Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2
 		output = TypeReal;
 		e.ins.push_back(i);
 	}
-	if (t1!=t2)
+	else if (t1!=t2)
 	{
 		r->error(line, Robot::ErrorOperationNotSupported);
 		return e;
@@ -309,10 +309,10 @@ Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2
 			switch(op)
 			{
 				case OperationPlus:
-					e.ins.push_back( new InstructionPlusInteger());
+					e.ins.push_back( new InstructionPlusReal());
 					break;
 				case OperationMinus:
-					e.ins.push_back( new InstructionMinusInteger());
+					e.ins.push_back( new InstructionMinusReal());
 					break;
 				default:
 					r->error(line, Robot::ErrorOperationNotSupported);
