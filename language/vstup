@@ -11,7 +11,7 @@ ROBOT qqq
         ID = 5			
 
 	KILLED < 5
-	VISIT_SEQ( Start[3], Start[2], [13,18])
+	VISIT_SEQ( START[3], START[2], [13,18])
 	VISIT( [100,200])
 
 	integer function f(integer a)

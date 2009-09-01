@@ -139,7 +139,7 @@ targets: /* default target */
 	;
 //OK
 places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position($2,$4)); }
-	| places TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA {$$ = $1; $$.push_back(Position($3,$5)); }
+	| places TOKEN_COMMA TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA {$$ = $1; $$.push_back(Position($4,$6)); }
 	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position(-1, $3)); }
 	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  {$$ = $1; $$.push_back(Position(-1,$5)); }
 	;
