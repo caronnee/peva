@@ -11,25 +11,10 @@
     <TypeInteger>0</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
-  <InstructionStoreInteger/>
   <InstructionLoad>
     <TypeInteger>1</TypeInteger>
   </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>2</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>3</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>4</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
+  <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
     <TypeInteger>0</TypeInteger>
@@ -40,24 +25,6 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionStoreInteger/>
-  <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>2</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>3</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>4</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
     <TypeInteger>1</TypeInteger>
@@ -67,25 +34,10 @@
     <TypeInteger>0</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
-  <InstructionStoreInteger/>
-  <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
-  </InstructionLoad>
   <InstructionLoad>
     <TypeInteger>2</TypeInteger>
   </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>3</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>4</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
+  <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
     <TypeInteger>1</TypeInteger>
@@ -95,25 +47,10 @@
     <TypeInteger>1</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
-  <InstructionStoreInteger/>
-  <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>2</TypeInteger>
-  </InstructionLoad>
   <InstructionLoad>
     <TypeInteger>3</TypeInteger>
   </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>4</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
+  <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
     <InstructionEndBlock/>
