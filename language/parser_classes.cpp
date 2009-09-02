@@ -15,5 +15,6 @@ Constr::Constr(std::string a, Instructions i, Expressions e)
 {
 	id = a;
 	default_set = true;
+	output = e;
+	ins = i;
 }
-
