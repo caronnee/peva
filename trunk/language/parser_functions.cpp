@@ -38,72 +38,103 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 	std::vector<int> last_range;//co vsetko ma loadnut
 	std::vector<Create_type *> types;
 	types.push_back(n->type_of_variable);
+	for (int i =0; i< l.output.size(); i++)
+	{
+		std::cout << "output" << i << ":" << l.output[i].type<< std::endl;
+	}
+	size_t ins_iterator = 0;
 	while (!types.empty())
 	{
 		std::cout << "hoe much?" <<types.size() << std::endl;
+		std::cout << "loaded?" <<l.output.size() << std::endl;
 		Create_type * t = types.back();
-		std::cout << "typ je:" << t->type << std::endl;
+		std::cout << "typ je:" << t->type << "meno:" << n->name<< std::endl;
 		types.pop_back();
+		getc(stdin);
 		if (is_simple(t->type))
 		{
 			std::cout << "ano" << std::endl;
-			getc(stdin);
 			if (n->nested == Local)
 				ins.push_back(new InstructionLoadLocal(n));
 			else 
 				ins.push_back(new InstructionLoadGlobal(n));
-			for(size_t i =0; i<= access_id.size(); i++)
+			if(access_id.size())
 			{
-				ins.push_back(new InstructionLoad(access_id[i]));
-				switch (t->type)
+				for(size_t i =0; i< access_id.size(); i++)
 				{
-					case TypeInteger:
-						if (l.output.back().type == TypeReal)
-						ins.push_back(new InstructionConversionToInt());
-						else if (l.output.back()!=t->type)
-						{
-							r->error(line, Robot::ErrorConversionImpossible);
-							return ins;
-						}
-					ins.push_back(new InstructionStoreInteger());
-							break;
-					case TypeReal:
-							if (l.output.back().type == TypeInteger)
-							ins.push_back(new InstructionConversionToInt());
-							else if (l.output.back()!=t->type)
-							{
-								r->error(line, Robot::ErrorConversionImpossible);
-								return ins;
-							}
-							ins.push_back(new InstructionStoreReal());
-							break;
-					case TypeObject:
-							if(t->type!=TypeObject)
-							{
-								r->error(line,Robot::ErrorConversionImpossible);
-								return ins;
-							}
-						ins.push_back(new InstructionStoreObject());
-					default:
-						       	r->error(line,Robot::ErrorTypeNotRecognized);
-							break;
+					ins.push_back(new InstructionLoad(access_id[i]));
+					ins.push_back(new InstructionLoad()); //loadni element
+				}
+				access_id.back()++;
+				while ((!access_id.empty())&&(access_id.back() == last_range.back()))
+				{
+					access_id.pop_back();
+					last_range.pop_back();
+					if (!access_id.empty())
+						access_id.back()++;
 				}
 			}
-			access_id.back()++;
-			while ((!access_id.empty())&&(access_id.back() == last_range.back()))
+			switch (t->type)
 			{
-				access_id.pop_back();
-				last_range.pop_back();
-				if (!access_id.empty())
-					access_id.back()++;
+				case TypeInteger:
+					if (l.output.back().type == TypeReal)
+					{
+						ins.push_back(new InstructionConversionToInt());
+						l.output.back() = TypeInteger;
+					}
+					else if (l.output.back()!=t->type)
+					{
+						std::cout << "tu";
+						r->error(line, Robot::ErrorConversionImpossible);
+						return ins;
+					}
+					ins.push_back(new InstructionStoreInteger());
+					break;
+				case TypeReal:
+					if (l.output.back().type == TypeInteger)
+					{
+						l.output.back() = TypeReal;
+						ins.push_back(new InstructionConversionToInt());
+					}
+					else if (l.output.back()!=t->type)
+					{
+						r->error(line, Robot::ErrorConversionImpossible);
+						return ins;
+					}
+					ins.push_back(new InstructionStoreReal());
+					break;
+				case TypeObject:
+					if(l.output.back()!=TypeObject)
+					{
+						r->error(line,Robot::ErrorConversionImpossible);
+						return ins;
+					}
+					ins.push_back(new InstructionStoreObject());
+					break;
+				default:
+					r->error(line,Robot::ErrorTypeNotRecognized);
+					break;
 			}
+			std::cout << "vekost ins v konstrukcte je:" << l.ins.size();
+			while(l.ins[ins_iterator]!=NULL)
+			{
+				ins.push_back(l.ins[ins_iterator]);
+				ins_iterator++;
+			}
+			ins_iterator++;
+		//	ins = join_instructions(ins,l.ins);
+			getc(stdin);
+			l.output.pop_back();
+			
 
 		}
 		else 
 		{
+			std::cout << "else vetva";
 			bool nest = false;
 			for(size_t i = 0; i<t->nested_vars.size(); i++)
 			{
+				std::cout << "jehrvkehrgvkewgvkeshvkrhvgbs";
 				nest = true;
 				types.push_back(t->nested_vars[i].type);
 			}
@@ -116,6 +147,7 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 				last_range.push_back(t->nested_vars.size());
 			else 
 				last_range.push_back(t->range);
+			access_id.push_back(0);
 			std::cout << "end else" << std::endl;
 			getc(stdin);
 		}

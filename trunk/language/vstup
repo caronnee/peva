@@ -16,9 +16,11 @@ ROBOT qqq
 
 	integer i;
 
-	integer [5] a = {1,2,3,4,5};
+	integer [3][2] a = {1,2,3,4,5,5};
 	main() // komentar
 	{
+	//	i = 6;
+	//	a[5] = 3;
 	}
 }
 

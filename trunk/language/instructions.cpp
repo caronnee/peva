@@ -109,8 +109,10 @@ xmlNodePtr InstructionLoadGlobal::xml_format()
 }
 InstructionLoad::InstructionLoad()
 {
+	constant = true;
 	node = NULL;
 	name_ = "InstructionLoad";
+	var = NULL;
 }
 InstructionLoad::InstructionLoad(int i)
 {
@@ -152,10 +154,13 @@ xmlNodePtr InstructionLoad::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr child;
+	if (n)
         if (!constant)
 		child= xmlNewText( BAD_CAST node->name.c_str());
 	else
 	{
+		if (var == NULL)
+			return n;
 		switch (var->type)
 		{
 			case TypeInteger:
