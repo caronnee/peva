@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
   <InstructionCreate>i</InstructionCreate>
+  <InstructionLoadGlobal>i</InstructionLoadGlobal>
+  <InstructionLoad>
+    <TypeInteger>6</TypeInteger>
+  </InstructionLoad>
+  <InstructionStoreInteger/>
   <InstructionCreate>a</InstructionCreate>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
@@ -8,18 +13,10 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>0</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
     <TypeInteger>1</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>0</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
   <InstructionLoad>
     <TypeInteger>1</TypeInteger>
   </InstructionLoad>
@@ -27,11 +24,7 @@
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>0</TypeInteger>
+    <TypeInteger>2</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
@@ -40,19 +33,56 @@
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
+    <TypeInteger>3</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
     <TypeInteger>3</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
+  <InstructionLoadGlobal>a</InstructionLoadGlobal>
+  <InstructionLoad>
+    <TypeInteger>4</TypeInteger>
+  </InstructionLoad>
+  <InstructionLoad/>
+  <InstructionLoad>
+    <TypeInteger>4</TypeInteger>
+  </InstructionLoad>
+  <InstructionStoreInteger/>
+  <InstructionLoadGlobal>a</InstructionLoadGlobal>
+  <InstructionLoad>
+    <TypeInteger>5</TypeInteger>
+  </InstructionLoad>
+  <InstructionLoad/>
+  <InstructionLoad>
+    <TypeInteger>5</TypeInteger>
+  </InstructionLoad>
+  <InstructionStoreInteger/>
+  <InstructionLoadGlobal>a</InstructionLoadGlobal>
+  <InstructionLoad>
+    <TypeInteger>6</TypeInteger>
+  </InstructionLoad>
+  <InstructionLoad/>
+  <InstructionLoad>
+    <TypeInteger>5</TypeInteger>
+  </InstructionLoad>
+  <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
+    <InstructionLoadGlobal>i</InstructionLoadGlobal>
+    <InstructionLoad>
+      <TypeInteger>6</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionLoadGlobal>a</InstructionLoadGlobal>
+    <InstructionLoad>
+      <TypeInteger>5</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad/>
+    <InstructionLoad>
+      <TypeInteger>3</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
     <InstructionEndBlock/>
   </main>
 </Machine>

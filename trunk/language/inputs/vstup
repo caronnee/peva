@@ -1,0 +1,49 @@
+ROBOT qqq
+{
+	HEALTH = 100
+	ATTACK = 33			
+	SEE_WIDTH = 8
+	SEE_HEIGHT = 4
+	SEE = 56
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
+        ID = 5			
+
+	KILLED < 5
+	VISIT_SEQ( START[3], START[2], [13,18])
+	VISIT( [100,200])
+
+	integer function f(integer a)
+	{
+		if ( a == 0 )
+			return 1;
+		return a+f(a-1);
+	}
+	main() // komentar
+	{
+		integer a;
+		a = f(4);
+		turnL();
+		a = 100;
+	}
+}
+
+ROBOT r1
+{
+	integer left, right; //povolene komentare, bool aj integer su naprosto stejne
+
+	integer function f(integer a)
+	{
+		if ( a == 0 )
+			return 1;
+		return a+f(a-1);
+	}
+	main() // komentar
+	{
+		integer a;
+		a = f(4);
+		turnL();
+		a = 100;
+	}
+}

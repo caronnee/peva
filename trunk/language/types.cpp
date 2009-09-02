@@ -31,15 +31,10 @@ Create_type::Create_type(const Create_type & t)
 	{
 		Record r;
 		r.name = nested_vars[i].name;
-		r.type = new Create_type(*nested_vars[i].type);
-		std::cout <<"bolo akolovane:" << r.type <<"v:" << this<< std::endl;
+		r.type = nested_vars[i].type;
 		nested_vars.push_back(r);
 	}
-	if (t.data_type!=NULL)
-	{
-		data_type = new Create_type(*t.data_type);
-		std::cout <<"bolo akolovane:" <<  data_type <<"v:" << this<< std::endl;
-	}
+	data_type = t.data_type;
 	type = t.type;
 }
 

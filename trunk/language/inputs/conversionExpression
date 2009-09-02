@@ -14,14 +14,11 @@ ROBOT qqq
 	VISIT_SEQ( START[3], START[2], [13,18])
 	VISIT( [100,200])
 
-	integer i = 6;
-
-	integer [7] a = {1,2,3,4,5,5,6};
+	real i;
 	main() // komentar
 	{
-		Location l = {1,2};
-		i = 6;
-		a[5] = 3;
+		i = 2;
+		i = 5*4;
 	}
 }
 

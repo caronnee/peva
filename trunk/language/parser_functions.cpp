@@ -20,6 +20,11 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	else  
 		st.ins.push_back(new InstructionLoadGlobal(n));
 	st.output.push_back(*n->type_of_variable);
+	std::cout << "type identu:" << st.output.back().type;
+	if (st.output.back().type == TypeArray)
+	{
+		std::cout << "Array!"<<st.output.back().data_type << std::endl;
+	}
 	return st;
 }
 Instruction * possible_conversion(Type to, Type from)
@@ -38,7 +43,7 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 	std::vector<int> last_range;//co vsetko ma loadnut
 	std::vector<Create_type *> types;
 	types.push_back(n->type_of_variable);
-	for (int i =0; i< l.output.size(); i++)
+	for (size_t i =0; i< l.output.size(); i++)
 	{
 		std::cout << "output" << i << ":" << l.output[i].type<< std::endl;
 	}
