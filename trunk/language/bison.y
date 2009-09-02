@@ -69,9 +69,10 @@
 %type<idents> names
 %type<type> simple_type
 %type<type> complex_type
-%type<type> ranges
 %type<type> type
 %type<type> return_type
+
+%type<ranges> ranges
 
 %type<ident> function_header
 %type<entries> parameters
@@ -154,7 +155,7 @@ global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 
 //vsetky typy, ale moze premenna nadobudnut, token TYPE
 type:	  simple_type { $$ = $1;}
-	| complex_type { $$ = $1; }
+	| complex_type { $$ = $1;}
 	; 
 
 /* definicie, lokalnych a globalnych premennych, local variables cez command_var */
@@ -164,10 +165,11 @@ local_variables:  type names TOKEN_SEMICOLON
 getc(stdin);
 			for(int i =0; i< $2.size(); i++)
 			{
+				std::cout << "IN"<<std::endl;
 				Node * n = program->actualRobot->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
 				$$.push_back(new InstructionCreate(n)); 
 				if ($2[i].default_set) 
-					$$ = assign_default(@1,program->actualRobot, n, $2[i]);
+					$$ = join_instructions($$, assign_default(@1,program->actualRobot, n, $2[i]));
 			}
 			std::cout << "dodeklarovane" << std::endl;
 getc(stdin);
@@ -175,18 +177,22 @@ getc(stdin);
 	;
 
 //OK
-simple_type: TOKEN_VAR_REAL { $$ = Create_type(TypeReal); }
-    	|TOKEN_VAR_INT { $$ = Create_type(TypeInteger); }
-	|TOKEN_LOCATION{ $$ = Create_type(TypeLocation);$$.add("x",Create_type(TypeInteger)); $$.add("y", Create_type(TypeInteger)); }
-	|TOKEN_OBJECT{ $$ = Create_type(TypeObject); }
+simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } //najdi REAL
+    	|TOKEN_VAR_INT { $$ = program->actualRobot->find_type(TypeInteger); }
+	|TOKEN_LOCATION{ $$ = program->actualRobot->find_type(TypeLocation);}
+	|TOKEN_OBJECT{ $$ = program->actualRobot->find_type(TypeObject); }
 	;
 
 //OK
-complex_type: simple_type ranges { $$ = $2.composite($1); }
+complex_type: simple_type ranges { 
+	    Create_type * t = $1; 
+	    for(size_t i =0; i< $2.size(); i++) 
+		t = program->actualRobot->find_array_type($2.back(),t);
+	}//FIXME elegantnejsie
 	;
 
-ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$ = Create_type(TypeArray,$2); }
-      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { Create_type t(TypeArray,$3); $$ = $1.composite(t); }
+ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
+      	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
 	;
 
 //pozuite iba u local_variables
@@ -206,8 +212,8 @@ values: expression { $$ = $1;} // blabla load nieco, {Instruction, Type}
 	;
 
 //deklarovanie, OK
-declare_functions: /*	ziadne deklarovane funkcie	*/ { program->actualRobot->enter("main", Create_type(TypeVoid)); }
-	|declare_function_ { $$ = $1; program->actualRobot->enter("main", Create_type(TypeVoid));}
+declare_functions: /*	ziadne deklarovane funkcie	*/ { program->actualRobot->enter("main", program->actualRobot->find_type(TypeVoid)); }
+	|declare_function_ { $$ = $1; program->actualRobot->enter("main", program->actualRobot->find_type(TypeVoid));}
 	;
 
 //deklarovanie funkcie, ok
@@ -215,7 +221,7 @@ function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $3; program->
 	;
 //deklarovanie typu
 return_type:	type { $$ = $1; } //Normalne sa neda premenna taka, ze VOID
-	|TOKEN_VOID { $$ = Create_type(TypeVoid); }
+	|TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid); }
 	;
 //deklarovane type parametrov
 parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); }
@@ -314,11 +320,11 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 			std::cout << program->actualRobot->core->nested_function << "--Tu dorazim---"<< std::endl;
 			getc(stdin);
 			$$.insert($$.begin(), new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
-			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable == TypeReal))
+			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
 				$$.push_back(new InstructionConversionToReal());
-			else if (($2.output.back().type == TypeReal) && (program->actualRobot->core->nested_function->return_var->type_of_variable == TypeInteger))
+			else if (($2.output.back().type == TypeReal) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeInteger))
 				$$.push_back(new InstructionConversionToInt());
-			if ($2.output.back()!=program->actualRobot->core->nested_function->return_var->type_of_variable)
+			if ($2.output.back()!=program->actualRobot->core->nested_function->return_var->type_of_variable->type)
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			Node * nn = $2.ins.back()->get_node();
 			switch($2.output.back().type)
@@ -418,8 +424,8 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 			if (f->parameters.size()!=$3.output.size()) 
 				program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
 			$$.ins.push_back(new Call(f));
-			if (f->return_var->type_of_variable.type !=TypeVoid) 
-				$$.output.push_back(f->return_var->type_of_variable);
+			if (f->return_var->type_of_variable->type !=TypeVoid) 
+				$$.output.push_back(*f->return_var->type_of_variable);
 			}
 		}
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { 

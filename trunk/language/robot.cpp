@@ -22,6 +22,30 @@ Robot::Robot(std::string s, GamePoints p)
 	errors = false;//TODO pridat errorou hlasku
 	core = new Core();
 	toKill = NULL;
+	defined_types.push_back(new Create_type(TypeReal));
+	defined_types.push_back(new Create_type(TypeInteger));
+	defined_types.push_back(new Create_type(TypeObject));
+	defined_types.push_back(new Create_type(TypeLocation));
+	defined_types.back()->add("x",find_type(TypeInteger));
+	defined_types.back()->add("y",find_type(TypeInteger));
+}
+Create_type * Robot::find_type(Type t)
+{
+	for (size_t i= 0; i< defined_types.size(); i++)
+		if (defined_types[i]->type == t)
+			return defined_types[i];
+	return NULL;//ZAVZNA CHYBA! Ale zo strany programatora;)
+}
+
+Create_type * Robot::find_array_type(int range, Create_type * descend)
+{
+	for (size_t i= 0; i< defined_types.size(); i++)
+		if ((defined_types[i]->type == TypeArray)&&(defined_types[i]->data_type == descend))
+			return defined_types[i];
+	Create_type * t = new Create_type(TypeArray, range);
+	t->composite(descend);
+	defined_types.push_back(t);
+	return t;
 }
 
 Function * Robot::find_f(std::string nam)
@@ -58,7 +82,7 @@ Node * Robot::find_var(std::string var_name)
 	}
 	return NULL;
 }
-Node * Robot::add(std::string name, Create_type type)
+Node * Robot::add(std::string name, Create_type * type)
 {
 	return defined.add(nested + name, type);
 }
@@ -115,7 +139,7 @@ void Robot::add_function(std::vector<Parameter_entry> c, Instructions ins)
 		instructions.push_back(new InstructionRestore()); //pre procedury
 	}
 }
-void Robot::enter(std::string name, Create_type return_type)
+void Robot::enter(std::string name, Create_type * return_type)
 {
 	nested += name + DELIMINER_CHAR;
 	core->nested_function = new Function(name, add("",return_type));
