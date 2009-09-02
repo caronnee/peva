@@ -74,6 +74,11 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 						access_id.back()++;
 				}
 			}
+			while(l.ins[ins_iterator]!=NULL)
+			{
+				ins.push_back(l.ins[ins_iterator]);
+				ins_iterator++;
+			}
 			switch (t->type)
 			{
 				case TypeInteger:
@@ -115,15 +120,8 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 					r->error(line,Robot::ErrorTypeNotRecognized);
 					break;
 			}
-			std::cout << "vekost ins v konstrukcte je:" << l.ins.size();
-			while(l.ins[ins_iterator]!=NULL)
-			{
-				ins.push_back(l.ins[ins_iterator]);
-				ins_iterator++;
-			}
+			
 			ins_iterator++;
-		//	ins = join_instructions(ins,l.ins);
-			getc(stdin);
 			l.output.pop_back();
 			
 
