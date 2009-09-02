@@ -1,4 +1,6 @@
 #include "instructions.h"
+#include <iostream>
+
 //TODO premenovat floatfrom an real, aby to olo konzistentne
 Instruction::Instruction()
 {
@@ -33,7 +35,7 @@ InstructionCreate::InstructionCreate(Node * n)
 }
 int InstructionCreate::execute(Core * c)
 {	
-	Variable * v = c->memory.assign(node->type_of_variable,node->ID, c->depth);
+	Variable * v = c->memory.assign(*node->type_of_variable,node->ID, c->depth);
 	Var var;
 	var.var = v;
 	var.depth = c->depth;
@@ -43,6 +45,7 @@ int InstructionCreate::execute(Core * c)
 xmlNodePtr InstructionCreate::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
+	std::cout << node->name << "--3t4---"<< std::endl;
 	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
 	xmlAddChild(n, child);
 	return n;
@@ -88,7 +91,7 @@ int InstructionLoadGlobal::execute(Core * c)
 	if (node->var.size() == 0) 
 	{
 		Var v;
-		v.var = c->memory.assign(node->type_of_variable, node->ID, 0);
+		v.var = c->memory.assign(*node->type_of_variable, node->ID, 0);
 		node->var.push_back(v);
 	}	
 	Value v;
@@ -259,7 +262,7 @@ int Call::execute(Core * c)
 	Var v;
 	Node * ret = function->return_var;
 	std::cout << v.var << "navratova adresa" << std::endl;
-	v.var = c->memory.assign(ret->type_of_variable,ret->ID, c->depth ); //aby zmizlo po ukonceni
+	v.var = c->memory.assign(*ret->type_of_variable,ret->ID, c->depth ); //aby zmizlo po ukonceni
 	ret->var.push_back(v);
 	std::cout << "calling function"<< function->name << std::endl;
 	for(size_t i = 0; i< function->parameters.size(); i++)
@@ -276,7 +279,7 @@ int Call::execute(Core * c)
 		else
 		{
 			//TODO co ak je parametrom array alebo location?
-			v.var = c->memory.assign(function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
+			v.var = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back().loaded;
 			switch (c->values.back().loaded->type)

@@ -27,7 +27,7 @@ struct Lval {
 	std::vector< Array *> arrays;
 	Array * array;
 
-	Create_type type;
+	Create_type* type;
 
 	Instructions instructions;
 

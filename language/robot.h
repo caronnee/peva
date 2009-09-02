@@ -41,7 +41,6 @@ struct MyXmlData
 	xmlNodePtr root_ptr;
 	xmlNodePtr node;
 };
-
 struct Robot 
 {
 	enum ErrorCode
@@ -65,11 +64,14 @@ struct Robot
 	std::string warningList;
 	std::string nested;
 	std::string name;
-
 	
+	Create_type * find_type(Type t);
+	Create_type * find_array_type(int i, Create_type * t);
+
 	std::list<TargetVisit *> targets;
 	TargetKillNumber * toKill;
 
+	std::vector<Create_type *> defined_types;
 	Tree defined;//root burst stromu
 	Instructions instructions; //kopa predefinovanych instrukcii
 	Values values;//stack ukazatelov do stromu
@@ -81,11 +83,11 @@ struct Robot
 	void output(Tree * t);
 	Node * find_var(std::string);
 	/* Vracia, ci sa podarilo pridat alebo nie*/
-	Node * add(std::string name, Create_type t);
+	Node * add(std::string name, Create_type * t);
 	Function * find_f(std::string s);
 	void add(Instructions ins);
 	Node * create_type(Type t);
-	void enter(std::string s, Create_type t);
+	void enter(std::string s, Create_type *t);
 	void add_function(std::vector<Parameter_entry> c, Instructions ins);
 	void leave();
 	void execute();

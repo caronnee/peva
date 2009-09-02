@@ -19,7 +19,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 		st.ins.push_back(new InstructionLoadLocal(n));
 	else  
 		st.ins.push_back(new InstructionLoadGlobal(n));
-	st.output.push_back(n->type_of_variable);
+	st.output.push_back(*n->type_of_variable);
 	return st;
 }
 Instruction * possible_conversion(Type to, Type from)
@@ -31,24 +31,30 @@ Instruction * possible_conversion(Type to, Type from)
 	return NULL;
 }
 //constr je load vsetkych funkcii
-Instructions assign_default(int line, Robot * r,Node * n, Constr& l)
+Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 {
 	Instructions ins;
 	std::vector<int> access_id;//co vsetko ma loadnut
 	std::vector<int> last_range;//co vsetko ma loadnut
 	std::vector<Create_type *> types;
+	types.push_back(n->type_of_variable);
 	while (!types.empty())
 	{
+		std::cout << "hoe much?" <<types.size() << std::endl;
 		Create_type * t = types.back();
+		std::cout << "typ je:" << t->type << std::endl;
+		types.pop_back();
 		if (is_simple(t->type))
 		{
+			std::cout << "ano" << std::endl;
+			getc(stdin);
 			if (n->nested == Local)
-			ins.push_back(new InstructionLoadLocal(n));
+				ins.push_back(new InstructionLoadLocal(n));
 			else 
-			ins.push_back(new InstructionLoadGlobal(n));
-			for(size_t i =0; i> access_id.size(); i++)
+				ins.push_back(new InstructionLoadGlobal(n));
+			for(size_t i =0; i<= access_id.size(); i++)
 			{
-			ins.push_back(new InstructionLoad(access_id[i]));
+				ins.push_back(new InstructionLoad(access_id[i]));
 				switch (t->type)
 				{
 					case TypeInteger:
@@ -69,7 +75,7 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l)
 								r->error(line, Robot::ErrorConversionImpossible);
 								return ins;
 							}
-						ins.push_back(new InstructionStoreReal());
+							ins.push_back(new InstructionStoreReal());
 							break;
 					case TypeObject:
 							if(t->type!=TypeObject)
@@ -93,7 +99,29 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l)
 			}
 
 		}
+		else 
+		{
+			bool nest = false;
+			for(size_t i = 0; i<t->nested_vars.size(); i++)
+			{
+				nest = true;
+				types.push_back(t->nested_vars[i].type);
+			}
+			for(int i = 0; i<t->range; i++)
+			{
+				std::cout << " push datatype : " << t->data_type->type << std::endl;
+				types.push_back(t->data_type);
+			}
+			if (nest)
+				last_range.push_back(t->nested_vars.size());
+			else 
+				last_range.push_back(t->range);
+			std::cout << "end else" << std::endl;
+			getc(stdin);
+		}
 	}
+	std::cout << "end default" << std::endl;
+	getc(stdin);
 	return ins;
 }
 

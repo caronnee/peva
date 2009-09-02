@@ -82,7 +82,7 @@ Tree * Tree::find_string(std::string s)
 	return t;
 }
 
-Node * Tree::add(std::string s, Create_type type)
+Node * Tree::add(std::string s, Create_type * type)
 {
 //	std::cout << "pridavam meno:" << s << std::endl;
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera

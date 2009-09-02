@@ -21,7 +21,7 @@ struct Tree
 	Tree(int d);
 	Tree * find_string(std::string a);
 	int find_index(char a);
-	Node * add(std::string s, Create_type type);
+	Node * add(std::string s, Create_type* type);
 private:
 	void reset();
 };
