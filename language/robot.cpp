@@ -34,7 +34,7 @@ Create_type * Robot::find_type(Type t)
 	for (size_t i= 0; i< defined_types.size(); i++)
 		if (defined_types[i]->type == t)
 			return defined_types[i];
-	return NULL;//ZAVZNA CHYBA! Ale zo strany programatora;)
+	return NULL;//ZAVAZNA CHYBA! Ale zo strany programatora;)
 }
 
 Create_type * Robot::find_array_type(int range, Create_type * descend)
@@ -335,6 +335,11 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 			errors = true;
 			errorList += "Line:" + deconvert<int>(line) + "Function Not defined\n";
 			break;
+		case ErrorOutOfRange:
+			errors = true;
+			errorList += "Line:" + deconvert<int>(line) + "Type out of range\n";
+			break;
+			
 		default:
 			errors = true;
 			errorList += "Line:" + deconvert<int>(line) + "Unrecognized error\n";

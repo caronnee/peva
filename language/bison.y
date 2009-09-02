@@ -258,10 +258,10 @@ declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_ins
 		}
 	;
 //Load ciala, na output sa dostava REAL alno INT, OK
-number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.ins.push_back(new InstructionLoad($2));$$.output.push_back(TypeReal); } 
-      	|TOKEN_OPER_SIGNADD TOKEN_UINT { if (TOKEN_OPER_SIGNADD == OperationMinus) {$2*=-1;} $$.ins.push_back(new InstructionLoad($2)); $$.output.push_back(TypeInteger) } 
-      	|TOKEN_REAL { $$.ins.push_back(new InstructionLoad($1)); $$.output.push_back(TypeReal); } 
-      	|TOKEN_UINT { $$.ins.push_back(new InstructionLoad($1)); $$.output.push_back(TypeInteger); } 
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.ins.push_back(new InstructionLoad($2));$$.output.push_back(*program->actualRobot->find_type(TypeReal)); } 
+      	|TOKEN_OPER_SIGNADD TOKEN_UINT { if (TOKEN_OPER_SIGNADD == OperationMinus) {$2*=-1;} $$.ins.push_back(new InstructionLoad($2)); $$.output.push_back( *program->actualRobot->find_type(TypeInteger));} 
+      	|TOKEN_REAL { $$.ins.push_back(new InstructionLoad($1)); $$.output.push_back(*program->actualRobot->find_type(TypeReal)); } 
+      	|TOKEN_UINT { $$.ins.push_back(new InstructionLoad($1)); $$.output.push_back(*program->actualRobot->find_type(TypeInteger)); } 
 	;
 //tu by mal byt prazdny output
 begin:	TOKEN_BEGIN { program->actualRobot->core->depth++; }
@@ -413,8 +413,22 @@ assign: variable_left TOKEN_ASSIGN expression
 
 variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1);}
 	| TOKEN_IDENTIFIER array_access { $$ = ident_load(@1,program->actualRobot, $1);
- $$.ins = join_instructions($$.ins, $2.ins);
- } //TODO v loade checkovat, ci sa nestavam mimo ramec
+ $$.ins = join_instructions($$.ins, $2.ins);Create_type t = $$.output.back();
+	for (size_t i =0; i< $2.output.size();i++)
+		{ 
+std::cout << "hhhh" ;
+   getc(stdin);
+			if (t.data_type == NULL)
+			{
+			std::cout<<"Tu sa dostanem" << std::endl;
+				program->actualRobot->error(@1,Robot::ErrorOutOfRange);
+				break;
+			}
+			else
+				t = *t.data_type;	
+		}
+	$$.output.push_back(t);
+ } //TODO v loade checkovat, ci sa nestavam mimo rame.
 	;
 
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
@@ -605,6 +619,10 @@ int main(int argc, char ** argv)
 	std::cout << "haho!" << std::endl;
    	q.actualRobot->execute();
 */
+	for(int i =0; i<q.actualRobot->defined_types.size(); i++)
+	{
+		std::cout<<"adresa prvku" <<i << q.actualRobot->defined_types[i] << ", datatype address:" << q.actualRobot->defined_types[i]->data_type << std::endl;
+	}
 	if(q.actualRobot->errors)
 		std::cout << q.actualRobot->errorList << std::endl;
 	else

@@ -56,7 +56,8 @@ struct Robot
 		ErrorVariableNotFound,
 		ErrorOperationNotSupported,
 		ErrorWrongNumberOfParameters,
-		ErrorFunctionNotDefined
+		ErrorFunctionNotDefined,
+		ErrorOutOfRange
 	};
 	bool errors;
 	bool warning;
