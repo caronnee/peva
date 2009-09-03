@@ -87,17 +87,20 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 int InstructionLoadGlobal::execute(Core * c)
 {
 	std::cout << " Loadujem globalnu premennu: " << node->name << node->var.size();
-	getc(stdin);
 	if (node->var.size() == 0) 
 	{
 		Var v;
 		v.var = c->memory.assign(*node->type_of_variable, node->ID, 0);
+		std::cout<<"Tu sa este dostanem - assign" <<v.var<< std::endl;
+		getc(stdin);
 		node->var.push_back(v);
 	}	
 	Value v;
 	v.loaded = node->var[0].var;
+	std::cout<<"Tu sa este dostanem, ve;lkost" <<c->values.size()<<"," << v.loaded<< std::endl;
 	c->values.push_back(v);
-	std::cout << "Hodnota:" << v.loaded->integerValue << std::endl;
+	std::cout << "Hodnota:" << v.loaded->integerValue <<  "END"<< std::endl;
+	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionLoadGlobal::xml_format()
@@ -109,7 +112,7 @@ xmlNodePtr InstructionLoadGlobal::xml_format()
 }
 InstructionLoad::InstructionLoad()
 {
-	constant = true;
+	constant = false;
 	node = NULL;
 	name_ = "InstructionLoad";
 	var = NULL;
@@ -132,57 +135,52 @@ int InstructionLoad::execute(Core *c)
 {
 	if(constant)
 	{
-		std::cout << "Loadujem konstantu!" << std::endl;
-		getc(stdin);
+		std::cout << "Loadujem konstantu!" <<  "vaaaar" <<var <<std::endl;
 		Value v;
 		v.loaded = var;
 		c->values.push_back(v);
 		std::cout << " hodnota: " << v.loaded->integerValue << std::endl;
 		return 0;
 	}//else from stack
-	std::cout << "loadujem array" <<std::endl; //TODO
-	getc(stdin);
+	std::cout << "loadujem array" << c->values.size()<<std::endl; 
 	Value range = c->values.back();
 	c->values.pop_back();
 	Value comp = c->values.back();
 	c->values.pop_back();
+	std::cout << "ffffffff" << std::endl;
 	comp.loaded = comp.loaded->array.elements[range.loaded->integerValue];
 	c->values.push_back(comp);
+	std::cout << "fjiojfa"<<std::endl;
 	return 0;
 }
 xmlNodePtr InstructionLoad::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr child;
-	if (n)
-        if (!constant)
-		child= xmlNewText( BAD_CAST node->name.c_str());
-	else
-	{
-		if (var == NULL)
+	if (var == NULL)
 			return n;
-		switch (var->type)
-		{
-			case TypeInteger:
-				{
-					child = xmlNewNode( NULL, BAD_CAST "TypeInteger");
-					std::string s = deconvert<int>(var->integerValue);
-					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
-					xmlAddChild(child,grand_child);
-					break;
-				}
-			case TypeReal:
-				{
-					child = xmlNewNode( NULL, BAD_CAST "TypeReal");
-					std::string s = deconvert<double>(var->realValue);
-					xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
-					xmlAddChild(child,grand_child);
-					break;
-				}
-			default:
-				child = xmlNewText( BAD_CAST "TypeUndefined");
-		}
+	switch (var->type)
+	{
+		case TypeInteger:
+			{
+				child = xmlNewNode( NULL, BAD_CAST "TypeInteger");
+				std::string s = deconvert<int>(var->integerValue);
+				xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
+				xmlAddChild(child,grand_child);
+				break;
+			}
+		case TypeReal:
+			{
+				child = xmlNewNode( NULL, BAD_CAST "TypeReal");
+				std::string s = deconvert<double>(var->realValue);
+				xmlNodePtr grand_child = xmlNewText(BAD_CAST s.c_str()); 
+				xmlAddChild(child,grand_child);
+				break;
+			}
+		default:
+			child = xmlNewText( BAD_CAST "TypeUndefined");
 	}
+	
 	xmlAddChild(n, child);
 	return n;
 }
@@ -368,7 +366,6 @@ int InstructionJump::execute(Core * c)
 		c->PC+=no;
 		std::cout << "new position" << c->PC << std::endl;
 	}
-	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionJump::xml_format()
@@ -390,7 +387,6 @@ int InstructionBreak::execute(Core * c)
 	c->depth -= depth;
 	std::cout << "BREAK!:) Returning to depth " << c->depth << std::endl;
 	c->memory.free(c->depth+1); //vycisti do vratane az hi hlbky povodneho, loop_label je povodny, tam by to chcl nechat
-	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionBreak::xml_format()
@@ -402,7 +398,6 @@ xmlNodePtr InstructionBreak::xml_format()
 int InstructionBreak::breaks()
 {
 //	std::cout << loop_label << ": loop_label in break" << std::endl;
-//	getc(stdin);
 	return loop_label;
 }
 void InstructionBreak::set(int a, int b, int c)
@@ -424,7 +419,6 @@ void InstructionContinue::set(int jump, int size, int dep)
 InstructionReturn::InstructionReturn(int depth_)
 {
 	std::cout << "hlbka: " << depth_ << std::endl;
-	getc(stdin);
 	depth = depth_;
 	name_ = "InstructionReturn";
 }
@@ -444,7 +438,6 @@ int InstructionReturn::execute(Core * c)
 	{
 		std::cout << "value adress= " << c->values[i].loaded << std::endl;
 	}
-	getc(stdin);
 	return 0;
 }
 InstructionRestore::InstructionRestore()
@@ -455,7 +448,6 @@ int InstructionRestore::execute(Core *c)
 {
 	std::cout << "restorin'"; //zmaz prebentivne navratove hodnoty a para,etre
 	c->restore();
-	getc(stdin);
 	return 0;
 }
 //--------------------------POCITANIE--------------------------------------------------
@@ -885,7 +877,6 @@ int InstructionBegin::execute(Core * c)
 {
 	c->depth++;
 	std::cout << name_ << "going to depth" << c->depth<< std::endl;
-	getc(stdin);
 	return 0;
 }
 InstructionEndBlock::InstructionEndBlock()

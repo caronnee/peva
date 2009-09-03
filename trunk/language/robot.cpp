@@ -203,7 +203,7 @@ void Robots::createNew(std::string name)
 		robots.push_back(actualRobot);
 	actualRobot = new Robot(name, g);
 	std::cout << "creating new robot" << std::endl;
-	getc(stdin);
+	
 }
 
 void Robot::enter_loop()
