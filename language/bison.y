@@ -322,9 +322,15 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 			getc(stdin);
 			$$.insert($$.begin(), new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
+{
+				$2.output.back() = *program->actualRobot->find_type(TypeReal);
 				$$.push_back(new InstructionConversionToReal());
+}
 			else if (($2.output.back().type == TypeReal) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeInteger))
+{
+				$2.output.back() = *program->actualRobot->find_type(TypeInteger);
 				$$.push_back(new InstructionConversionToInt());
+}
 			if ($2.output.back()!=program->actualRobot->core->nested_function->return_var->type_of_variable->type)
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			Node * nn = $2.ins.back()->get_node();

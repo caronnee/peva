@@ -27,7 +27,6 @@ ROBOT qqq
 		location l = {100,200};
 		i = 6;
 		a[5] = 3;
-		i = f();
 	}
 }
 

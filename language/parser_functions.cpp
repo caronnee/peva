@@ -133,11 +133,9 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 		}
 		else 
 		{
-			std::cout << "else vetva";
 			bool nest = false;
 			for(size_t i = 0; i<t->nested_vars.size(); i++)
 			{
-				std::cout << "jehrvkehrgvkewgvkeshvkrhvgbs";
 				nest = true;
 				types.push_back(t->nested_vars[i].type);
 			}
