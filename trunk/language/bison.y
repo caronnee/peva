@@ -318,8 +318,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
 			$$ = $2.ins;
-			std::cout << program->actualRobot->core->nested_function << "--Tu dorazim---"<< std::endl;
-			getc(stdin);
+			std::cout << program->actualRobot->core->nested_function << "--Tu dorazim---"<<program->actualRobot->core->nested_function->return_var->type_of_variable << std::endl;
 			$$.insert($$.begin(), new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
 {
@@ -332,7 +331,10 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 				$$.push_back(new InstructionConversionToInt());
 }
 			if ($2.output.back()!=program->actualRobot->core->nested_function->return_var->type_of_variable->type)
+{
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
+}
+else{
 			Node * nn = $2.ins.back()->get_node();
 			switch($2.output.back().type)
 			{
@@ -360,6 +362,7 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 					break;
 			}
 			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
+}
 		}
 	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn(program->actualRobot->core->depth));} //v node zostane predchadzajuca hodnota
 	|TOKEN_BREAK TOKEN_SEMICOLON 

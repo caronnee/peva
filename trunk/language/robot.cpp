@@ -22,6 +22,7 @@ Robot::Robot(std::string s, GamePoints p)
 	errors = false;//TODO pridat errorou hlasku
 	core = new Core();
 	toKill = NULL;
+	defined_types.push_back(new Create_type(TypeVoid));
 	defined_types.push_back(new Create_type(TypeReal));
 	defined_types.push_back(new Create_type(TypeInteger));
 	defined_types.push_back(new Create_type(TypeObject));
