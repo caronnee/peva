@@ -17,7 +17,7 @@ ROBOT qqq
 	integer i = 6;
 	integer [7] a = {1,2,3,4,5,5,6};
 
-	void function f()
+	real function f()
 	{
 		return 5;
 	}
