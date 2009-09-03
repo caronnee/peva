@@ -451,6 +451,9 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 			if (f->return_var->type_of_variable->type !=TypeVoid) 
 				$$.output.push_back(*f->return_var->type_of_variable);
 			}
+			if (f->return_var->type_of_variable->type!=TypeVoid)
+				$$.ins.push_back(new InstructionLoadLocal(f->return_var));
+		$$.output.push_back(*f->return_var->type_of_variable);
 		}
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { 
 		if ($3.output.size()!=1) program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);

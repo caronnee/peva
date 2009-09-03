@@ -113,6 +113,7 @@
     <InstructionStoreInteger/>
     <InstructionLoadGlobal>i</InstructionLoadGlobal>
     <Call begins="0">f</Call>
+    <InstructionLoadLocal>f#</InstructionLoadLocal>
     <InstructionConversionToInt/>
     <InstructionStoreInteger/>
     <InstructionEndBlock/>
