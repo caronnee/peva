@@ -162,7 +162,6 @@ type:	  simple_type { $$ = $1;}
 local_variables:  type names TOKEN_SEMICOLON 
 	       {  
 			std::cout << "deklarujem premenne" << std::endl;
-getc(stdin);
 			for(int i =0; i< $2.size(); i++)
 			{
 				Node * n = program->actualRobot->add($2[i].id, $1); //pridali sme do stromu pre neskorsie vyhladavanie
@@ -172,7 +171,6 @@ getc(stdin);
 					$$ = join_instructions($$, assign_default(@1,program->actualRobot, n, $2[i]));
 			}
 			std::cout << "dodeklarovane" << std::endl;
-getc(stdin);
 		}
 	;
 
@@ -426,10 +424,8 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1);}
 	for (size_t i =0; i< $2.output.size();i++)
 		{ 
 std::cout << "hhhh" ;
-   getc(stdin);
 			if (t.data_type == NULL)
 			{
-			std::cout<<"Tu sa dostanem" << std::endl;
 				program->actualRobot->error(@1,Robot::ErrorOutOfRange);
 				break;
 			}
@@ -633,11 +629,14 @@ int main(int argc, char ** argv)
 */
 	for(int i =0; i<q.actualRobot->defined_types.size(); i++)
 	{
-		std::cout<<"adresa prvku" <<i << q.actualRobot->defined_types[i] << ", datatype address:" << q.actualRobot->defined_types[i]->data_type << std::endl;
+	//	std::cout<<"adresa prvku" <<i << q.actualRobot->defined_types[i] << ", datatype address:" << q.actualRobot->defined_types[i]->data_type << std::endl;
 	}
 	if(q.actualRobot->errors)
 		std::cout << q.actualRobot->errorList << std::endl;
 	else
+	{
 		q.actualRobot->save_to_xml();
+   		q.actualRobot->execute();
+	}
 	return 0;	
 }

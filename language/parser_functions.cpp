@@ -55,7 +55,6 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 		Create_type * t = types.back();
 		std::cout << "typ je:" << t->type << "meno:" << n->name<< std::endl;
 		types.pop_back();
-		getc(stdin);
 		if (is_simple(t->type))
 		{
 			std::cout << "ano" << std::endl;
@@ -150,11 +149,9 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 				last_range.push_back(t->range);
 			access_id.push_back(0);
 			std::cout << "end else" << std::endl;
-			getc(stdin);
 		}
 	}
 	std::cout << "end default" << std::endl;
-	getc(stdin);
 	return ins;
 }
 
@@ -176,15 +173,11 @@ void set_breaks(Robot * p, Instructions ins)
 {
 	size_t size = ins.size();
 	std::cout << "Last loop number" << p->last_loop_number <<std::endl;
-	getc(stdin);
 	for (size_t i = 0; i< size; i++)
 	{
 		std::cout << "\t\t" << ins[i]->name_ << ins[i]->breaks()<< "\t" ;
-//		getc(stdin);
 		if(ins[i]->breaks() == p->last_loop_number)
 		{
-			std::cout << "IN:" << i <<std::endl;
-			getc(stdin);
 			InstructionBreak * b = (InstructionBreak *)ins[i];
 			b->jump = size - i -1;
 			b->depth -= p->core->depth; //rozdiel medzi zaciatkom breaku a jeho koncom

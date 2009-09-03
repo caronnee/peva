@@ -37,7 +37,9 @@ Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 		{
 			memory[id]->array.elements.push_back(assign(*type.data_type, id__, depth_));
 		}
+		return memory[id];
 	}	
+	std::cout<<"vraciam NULL"<< std::endl;
 	return NULL;
 }
 void Memory::free(size_t depth)
