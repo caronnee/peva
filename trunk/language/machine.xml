@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
+  <f>
+    <InstructionBegin/>
+    <InstructionLoadLocal>f#</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>5</TypeInteger>
+    </InstructionLoad>
+    <InstructionConversionToReal/>
+    <InstructionStoreReal/>
+    <InstructionReturn/>
+    <InstructionEndBlock/>
+    <InstructionRestore/>
+  </f>
   <InstructionCreate>i</InstructionCreate>
   <InstructionLoadGlobal>i</InstructionLoadGlobal>
   <InstructionLoad>
@@ -69,6 +81,22 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
+    <InstructionCreate>main#l</InstructionCreate>
+    <InstructionLoadLocal>main#l</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad/>
+    <InstructionLoad>
+      <TypeInteger>100</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionLoadLocal>main#l</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>1</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad/>
+    <InstructionStoreInteger/>
     <InstructionLoadGlobal>i</InstructionLoadGlobal>
     <InstructionLoad>
       <TypeInteger>6</TypeInteger>
@@ -82,6 +110,10 @@
     <InstructionLoad>
       <TypeInteger>3</TypeInteger>
     </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionLoadGlobal>i</InstructionLoadGlobal>
+    <Call begins="0">f</Call>
+    <InstructionConversionToInt/>
     <InstructionStoreInteger/>
     <InstructionEndBlock/>
   </main>
