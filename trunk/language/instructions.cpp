@@ -65,6 +65,8 @@ int InstructionLoadLocal::execute(Core * c)
 	Value v;
 	v.loaded = node->var.back().var;
 	c->values.push_back(v); //pridali sme value na stack
+	std::cout << "po pridani out:"<<c->values.size();
+	getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionLoadLocal::xml_format()
@@ -100,6 +102,7 @@ int InstructionLoadGlobal::execute(Core * c)
 	std::cout<<"Tu sa este dostanem, ve;lkost" <<c->values.size()<<"," << v.loaded<< std::endl;
 	c->values.push_back(v);
 	std::cout << "Hodnota:" << v.loaded->integerValue <<  "END"<< std::endl;
+	std::cout << "po pridani out:"<<c->values.size();
 	getc(stdin);
 	return 0;
 }
@@ -135,22 +138,21 @@ int InstructionLoad::execute(Core *c)
 {
 	if(constant)
 	{
-		std::cout << "Loadujem konstantu!" <<  "vaaaar" <<var <<std::endl;
+		std::cout << "Loadujem konstantu!"<<std::endl;
 		Value v;
 		v.loaded = var;
 		c->values.push_back(v);
-		std::cout << " hodnota: " << v.loaded->integerValue << std::endl;
+		std::cout << " Hodnota: " << v.loaded->integerValue << std::endl;
 		return 0;
 	}//else from stack
-	std::cout << "loadujem array" << c->values.size()<<std::endl; 
+	std::cout << "Loadujem array, velkost stacku je:" << c->values.size()<<std::endl; 
 	Value range = c->values.back();
 	c->values.pop_back();
 	Value comp = c->values.back();
 	c->values.pop_back();
-	std::cout << "ffffffff" << std::endl;
 	comp.loaded = comp.loaded->array.elements[range.loaded->integerValue];
 	c->values.push_back(comp);
-	std::cout << "fjiojfa"<<std::endl;
+	std::cout << "PO loadovan:" << c->values.size()<<std::endl; 
 	return 0;
 }
 xmlNodePtr InstructionLoad::xml_format()
@@ -217,9 +219,11 @@ InstructionStoreInteger::InstructionStoreInteger()
 }
 int InstructionStoreInteger::execute(Core * c)
 {
+	std::cout<<"StoreInteger, size:" <<c->values.size()<< std::endl;
 	int right = c->getIntFromStack();
 	c->values.back().loaded->integerValue = right;
 	c->values.pop_back();
+	std::cout<<"End StoreInteger" << std::endl;
 	return 0;
 }
 InstructionStoreReal::InstructionStoreReal()
@@ -228,6 +232,7 @@ InstructionStoreReal::InstructionStoreReal()
 }
 int InstructionStoreReal::execute(Core * c)
 {
+	std::cout<<"StoreReal" << std::endl;
 	float right = c->getFloatFromStack();
 	c->values.back().loaded->realValue = right;
 	c->values.pop_back();

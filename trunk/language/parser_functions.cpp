@@ -47,9 +47,18 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 	{
 		std::cout << "output" << i << ":" << l.output[i].type<< std::endl;
 	}
+	for (size_t i =0; i< l.ins.size(); i++)
+	{
+		if (l.ins[i] == NULL)
+			std::cout << "NULL" << std::endl;
+		else std::cout << l.ins[i]->name_ << std::endl;
+	}
+	getc(stdin);
 	size_t ins_iterator = 0;
+	int y = 0;
 	while (!types.empty())
 	{
+		
 		std::cout << "hoe much?" <<types.size() << std::endl;
 		std::cout << "loaded?" <<l.output.size() << std::endl;
 		Create_type * t = types.back();
@@ -78,11 +87,16 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 						access_id.back()++;
 				}
 			}
-			while(l.ins[ins_iterator]!=NULL)
+			while((ins_iterator< l.ins.size()) && (l.ins[ins_iterator]!=NULL))
 			{
+				std::cout << "pridavam instrukciu na loadovanie"<<std::endl;
 				ins.push_back(l.ins[ins_iterator]);
 				ins_iterator++;
 			}
+			y++;
+			ins_iterator++;
+			std::cout << "von z whileCyklu,interator:" <<ins_iterator<< std::endl;
+			getc(stdin);
 			switch (t->type)
 			{
 				case TypeInteger:
@@ -125,7 +139,6 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 					break;
 			}
 			
-			ins_iterator++;
 			l.output.pop_back();
 			
 
