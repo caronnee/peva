@@ -197,15 +197,16 @@ ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 //pozuite iba u local_variables
 names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); } //nic loaded
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression { $$.push_back(Constr($1,$3.ins, $3.output)); std::cout << "pocit instrukcii:" << $3.ins.size(); } 
-     	|TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $$.push_back(Constr($1, $4.ins, $4.output));std::cout << "pocit instr&&&ukcii:" << $4.ins.size(); } 
+     	|TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $$.push_back(Constr($1, $4.ins, $4.output));std::cout << "pocet naloadovanych:" << $4.output.size();getc(stdin); } 
      	|names TOKEN_COMMA TOKEN_IDENTIFIER { $1.push_back(Constr($3)); $$ = $1; } //OK, bez inicializacie
      	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN expression { $1.push_back(Constr($3,$5.ins,$5.output));$$ = $1; }  //OK, vysledok z expresny
-     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END { $1.push_back(Constr($3, $6.ins, $6.output));$$ = $1; } //inizializcia array a Location, laod vsetkych premenntch a poto spotupne storovanie
+     	|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END {
+ $1.push_back(Constr($3, $6.ins, $6.output));$$ = $1; } //inizializcia array a Location, laod vsetkych premenntch a poto spotupne storovanie
 	;
 
 /*pouzite len pri inicializacii, pravidlo names, preto tu mozu byt len zakladne typy*/
-values: expression { $$ = $1; $$.ins.push_back(NULL);} // blabla load nieco, {Instruction, Type}
-	| values TOKEN_COMMA expression {$$ = $1; $$.ins.push_back(NULL);$$.ins = join_instructions($$.ins, $3.ins); $$.output.push_back($3.output[0]); std::cout << "heee:" << $$.ins.size();}
+values: expression { $$ = $1; } // blabla load nieco, {Instruction, Type}
+	| values TOKEN_COMMA expression {$$ = $1; $$.ins.push_back(NULL);$$.ins = join_instructions($$.ins, $3.ins); $$.output.push_back($3.output[0]);}
 	| TOKEN_BEGIN values TOKEN_END { $$ = $2;} //TODO nejak specialne osterit,
 	| values TOKEN_COMMA TOKEN_BEGIN values TOKEN_END {$$ = $1; $$.ins = join_instructions($$.ins,$4.ins); for(size_t i=0; i<$4.output.size(); i++)$$.output.push_back($4.output[i]);} //addOputpuTokenNotDefined
 	;
@@ -627,10 +628,7 @@ int main(int argc, char ** argv)
 	std::cout << "haho!" << std::endl;
    	q.actualRobot->execute();
 */
-	for(int i =0; i<q.actualRobot->defined_types.size(); i++)
-	{
-	//	std::cout<<"adresa prvku" <<i << q.actualRobot->defined_types[i] << ", datatype address:" << q.actualRobot->defined_types[i]->data_type << std::endl;
-	}
+	std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
 	if(q.actualRobot->errors)
 		std::cout << q.actualRobot->errorList << std::endl;
 	else

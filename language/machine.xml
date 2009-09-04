@@ -13,7 +13,7 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>1</TypeInteger>
+    <TypeInteger>11</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
@@ -21,6 +21,9 @@
     <TypeInteger>1</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
+  <InstructionLoad>
+    <TypeInteger>21</TypeInteger>
+  </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
   <InstructionLoad>
@@ -28,7 +31,7 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>2</TypeInteger>
+    <TypeInteger>31</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
@@ -37,7 +40,7 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>3</TypeInteger>
+    <TypeInteger>41</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
@@ -46,7 +49,7 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>4</TypeInteger>
+    <TypeInteger>51</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
@@ -55,7 +58,7 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
+    <TypeInteger>52</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <InstructionLoadGlobal>a</InstructionLoadGlobal>
@@ -64,25 +67,11 @@
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
+    <TypeInteger>61</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
-    <InstructionLoadGlobal>i</InstructionLoadGlobal>
-    <InstructionLoad>
-      <TypeInteger>6</TypeInteger>
-    </InstructionLoad>
-    <InstructionStoreInteger/>
-    <InstructionLoadGlobal>a</InstructionLoadGlobal>
-    <InstructionLoad>
-      <TypeInteger>5</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad/>
-    <InstructionLoad>
-      <TypeInteger>3</TypeInteger>
-    </InstructionLoad>
-    <InstructionStoreInteger/>
     <InstructionEndBlock/>
   </main>
 </Machine>
