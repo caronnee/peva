@@ -635,6 +635,7 @@ int main(int argc, char ** argv)
 	{
 		q.actualRobot->save_to_xml();
    		q.actualRobot->execute();
+sleep(1);
 	}
 	return 0;	
 }
