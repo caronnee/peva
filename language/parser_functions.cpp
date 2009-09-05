@@ -89,14 +89,11 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 			}
 			while((ins_iterator< l.ins.size()) && (l.ins[ins_iterator]!=NULL))
 			{
-				std::cout << "pridavam instrukciu na loadovanie"<<std::endl;
 				ins.push_back(l.ins[ins_iterator]);
 				ins_iterator++;
 			}
 			y++;
 			ins_iterator++;
-			std::cout << "von z whileCyklu,interator:" <<ins_iterator<< std::endl;
-			getc(stdin);
 			switch (t->type)
 			{
 				case TypeInteger:

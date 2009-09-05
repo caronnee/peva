@@ -15,6 +15,7 @@ struct Array
 	Type element_type;
 	std::vector<Variable* > elements;
 };
+
 struct Variable // struktura premennych
 {
 	size_t owner;
@@ -28,6 +29,7 @@ struct Variable // struktura premennych
 	Variable();
 	Variable(std::string s,Type t);
 	void set_variable(Type t);
+	void copyValue(Variable * v);
 };
 
 
