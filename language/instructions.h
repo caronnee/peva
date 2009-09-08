@@ -406,12 +406,19 @@ class InstructionWait : public Instruction
 		virtual int execute(Core *s);
 		InstructionWait();
 };
-class InstructionShoot : public Instruction
+class InstructionShootLocation : public Instruction
 {
 	public:
 		virtual int execute(Core *s);
-		InstructionShoot();
+		InstructionShootLocation();
 };
+class InstructionShootAngle : public Instruction
+{
+	public:
+		virtual int execute(Core *s);
+		InstructionShootAngle();
+};
+
 class InstructionTurn : public Instruction
 {
 	public:
