@@ -421,43 +421,84 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 	e.output.push_back(Create_type(TypeInteger));
 	return e;
 }
-Instructions feature ( int line, Robot *r, ObjectFeatures feat, Expressions t )
+Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 {
-	Instructions ins;
+	Element ee;
 	switch(feat)
 	{
 		case FeatureIsPlayer:
-			ins.push_back( new InstructionIsPlayer());
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionIsPlayer());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
-	       	case FeatureIsWall:
-			ins.push_back( new InstructionIsWall());
+		case FeatureIsWall:
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionIsWall());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
-	 	case FeatureIsMissille:
-			ins.push_back( new InstructionIsMissille());
+		case FeatureIsMissille:
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionIsMissille());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureIsMoving:
-			ins.push_back( new InstructionIsMoving());
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionIsMoving());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
-		case FeatureLocate:
-			ins.push_back( new InstructionLocate());
+		case FeatureLocate: //vracia poziciu objektu, ak ho r vidi, ak nie, vyhodi -1, -1;
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionLocate());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeLocation));
 			break;
 		case FeatureSee:
-			ins.push_back( new InstructionSee());
+			if (e.output.size() == 0)
+				ee.ins.push_back( new InstructionSee());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
-		case FeatureHit:
-			ins.push_back( new InstructionHit());
+		case FeatureHit: //obbjekt nieco zasiahol, vracia NULL ak nikoho, Objekt ak ano. Robot musi strelu vidiet
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionHit());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeObject));
 			break;
 		case FeatureTurn:
-			ins.push_back( new InstructionTurn());
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionTurn());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnR:
-			ins.push_back( new InstructionTurnR());
+			if (e.output.size() == 0)
+				ee.ins.push_back( new InstructionTurnR());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnL:
-			ins.push_back( new InstructionTurnL());
+			if (e.output.size() == 0)
+				ee.ins.push_back( new InstructionTurnL());
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
+
 		default:
-			r->error(line, Robot::ErrorOperationNotSupported);
+			r->error(line, Robot::Robot::ErrorOperationNotSupported);
 	}
-	return ins;
+	return ee;
 }

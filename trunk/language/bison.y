@@ -46,7 +46,6 @@
 %token TOKEN_BEGIN
 %token TOKEN_END
 %token<of> TOKEN_OBJECT_FEATURE
-%token<of> TOKEN_OBJECT_FEATURE_PARAMETERS
 
 /* literals */
 %token<ident> TOKEN_IDENTIFIER
@@ -109,7 +108,6 @@
 %type<output> call_fce
 %type<output> call_parameters
 %type<output> array_access
-%type<output> call_parameters_int
 
 %type<positions> places
 
@@ -463,37 +461,20 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 			if (f->return_var->type_of_variable->type !=TypeVoid) 
 				$$.output.push_back(*f->return_var->type_of_variable);
 			}
-			if (f->return_var->type_of_variable->type!=TypeVoid)
-				$$.ins.push_back(new InstructionLoadLocal(f->return_var));
-		$$.output.push_back(*f->return_var->type_of_variable);
 		}
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { 
 		if ($3.output.size()!=1) program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
-			 $$.ins = feature(@1,program->actualRobot, $1, $3.output);
-		$$.output.push_back(Create_type(TypeInteger));
+			 $$ = feature(@1,program->actualRobot, $1, $3);
 		} 
-	|TOKEN_OBJECT_FEATURE_PARAMETERS TOKEN_LPAR call_parameters_int TOKEN_RPAR { 
-		if ($3.output.size()!=1) program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
-			 $$.ins = feature(@1,program->actualRobot, $1, $3.output);
-		$$.output.push_back(Create_type(TypeInteger));
-		}
 	;
-
-call_parameters_int: number { $$.ins = check_integer($1);
-		   $$.output.push_back(*program->actualRobot->find_type(TypeInteger));
-		   }
-   		   | call_parameters_int number
-			{
-				$$.ins = join_instructions($1.ins,check_integer($2));
-				$$.output = $1.output;
-				$$.output.push_back(*program->actualRobot->find_type(TypeInteger));
-			}
 						
 //Ok
-call_parameters: expression {$$ = $1;} //loaded
+call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 	 | /* ziadny parameter */ {$$.ins.clear();}
 	 |call_parameters TOKEN_COMMA expression 
-	{$$.ins = join_instructions($3.ins,$1.ins);
+	{
+		$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi onci output
+		$$.ins = join_instructions($3.ins,$1.ins);
 		$$.output = $3.output;
 		for (int i =0; i< $1.output.size();i++) 
 			$$.output.push_back($1.output[i]);
