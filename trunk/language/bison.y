@@ -627,7 +627,7 @@ int main(int argc, char ** argv)
     	}
 
 	GamePoints points;
-	Robots q(points); //TODO namiesto tohoto robot
+	Robots q(points);
 	Create_type t;
 	yyparse(&q);
     	fclose(yyin);

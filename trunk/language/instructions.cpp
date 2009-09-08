@@ -37,10 +37,7 @@ int InstructionCreate::execute(Core * c)
 {	
 	std::cout << "Vytvaram premennu " << node->name << "...";
 	Variable * v = c->memory.assign(*node->type_of_variable,node->ID, c->depth);
-	Var var;
-	var.var = v;
-	var.depth = c->depth;
-	node->var.push_back(var); //pridali sme pre akutialne zanorenie premenu
+	node->var.push_back(v); //pridali sme pre akutialne zanorenie premenu
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -66,7 +63,7 @@ int InstructionLoadLocal::execute(Core * c)
 {
 	std::cout << "Loading local variable " << node->name << "...";
 	Value v;
-	v.loaded = node->var.back().var;
+	v.loaded = node->var.back();
 	c->values.push_back(v); //pridali sme value na stack
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -93,12 +90,12 @@ int InstructionLoadGlobal::execute(Core * c)
 	std::cout << " Loading global variable: " << node->name << "...";
 	if (node->var.size() == 0) 
 	{
-		Var v;
-		v.var = c->memory.assign(*node->type_of_variable, node->ID, 0);
+		Variable * v;
+		v = c->memory.assign(*node->type_of_variable, node->ID, 0);
 		node->var.push_back(v);
 	}	
 	Value v;
-	v.loaded = node->var[0].var;
+	v.loaded = node->var[0];
 	c->values.push_back(v);
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -274,28 +271,28 @@ int Call::execute(Core * c)
 	std::cout << "Calling function: " << function->name << std::endl;
 	c->nested_functions.push_back(c->nested_function);
 	c->nested_function = function;
-	Var v;
+	Variable *v;
 	Node * ret = function->return_var;
-	v.var = c->memory.assign(*ret->type_of_variable,ret->ID, c->depth ); //aby zmizlo po ukonceni
+	v = c->memory.assign(*ret->type_of_variable,ret->ID, c->depth ); //aby zmizlo po ukonceni
 	ret->var.push_back(v);//skopiruje si zo stacku hodnoty svojich parametrov
 	for( size_t i = 0; i< function->parameters.size(); i++)
 	{
-		Var v;
+		Variable * v;
 		//ak pridane ako refeencia, skopiruj pointre
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
 			std::cout << "Storing parameter by reference" << std::endl;
-			v.var = c->values.back().loaded; //mozem to tam spravit, lebo v gramatike sa to da pouzit len pramo s premennou
+			v = c->values.back().loaded; //mozem to tam spravit, lebo v gramatike sa to da pouzit len pramo s premennou
 			//Musi byt premenna
 			function->parameters[i].node->var.push_back(v);
 		}
 		else
 		{
 			std::cout << "Storing parameter by value" << std::endl;
-			v.var = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
+			v = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back().loaded;
-			v.var->copyValue(vvv);	
+			v->copyValue(vvv);	
 			c->values.pop_back();
 		}
 	}
@@ -431,7 +428,7 @@ int InstructionReturn::execute(Core * c)
 	std::cout << "to depth" << c->depth <<"..."<< std::endl;
 	c->PC = c->nested_function->end -3; //za restore, end_block a ++ u PC
 	Value v;
-	v.loaded = c->nested_function->return_var->var.back().var;
+	v.loaded = c->nested_function->return_var->var.back();
 	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
 	c->values.push_back(v);
 	std::cout << "OK" << std::endl;

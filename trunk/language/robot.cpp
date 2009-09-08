@@ -22,6 +22,7 @@ Robot::Robot(std::string s, GamePoints p)
 	errors = false;//TODO pridat errorou hlasku
 	core = new Core();
 	toKill = NULL;
+	
 	defined_types.push_back(new Create_type(TypeVoid));
 	defined_types.push_back(new Create_type(TypeReal));
 	defined_types.push_back(new Create_type(TypeInteger));
@@ -29,6 +30,15 @@ Robot::Robot(std::string s, GamePoints p)
 	defined_types.push_back(new Create_type(TypeLocation));
 	defined_types.back()->add("x",find_type(TypeInteger));
 	defined_types.back()->add("y",find_type(TypeInteger));
+
+	Node *n = defined.add("NULL",find_type(TypeObject));
+	n->nested = Global;
+	n->var.push_back(core->memory.assign(*find_type(TypeObject),n->ID, 0));
+	n->var[0]->objectValue = NULL;
+	
+	n = defined.add("this",find_type(TypeObject));
+	n->nested = Global;
+	n->var.push_back(core->memory.assign(*find_type(TypeObject), n->ID,0));
 }
 Create_type * Robot::find_type(Type t)
 {
