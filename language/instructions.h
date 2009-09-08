@@ -392,7 +392,7 @@ class InstructionSee : public Instruction
 {
 	public:
 		virtual int execute(Core *s);
-		InstructionSee();
+		InstructionSee(Node *s);
 };
 class InstructionStep : public Instruction
 {

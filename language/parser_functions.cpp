@@ -22,7 +22,6 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	if (n == NULL)
 	{
 		r->error(line,Robot::Robot::ErrorVariableNotFound);
-		std::cout << "nenaslo mi premennu" <<std::endl;
 		return st;
 	}
 	if(n->nested == Local)
@@ -30,7 +29,6 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	else  
 		st.ins.push_back(new InstructionLoadGlobal(n));
 	st.output.push_back(*n->type_of_variable);
-	std::cout << "type identu:" << st.output.back().type;
 	if (st.output.back().type == TypeArray)
 	{
 		std::cout << "Array!"<<st.output.back().data_type << std::endl;
@@ -463,7 +461,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			break;
 		case FeatureSee:
 			if (e.output.size() == 0)
-				ee.ins.push_back( new InstructionSee());
+				ee.ins.push_back( new InstructionSee(r->find_var("seen")));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
