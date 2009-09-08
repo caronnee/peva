@@ -957,16 +957,29 @@ int InstructionWait::execute(Core *s)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
-InstructionShoot::InstructionShoot()
+InstructionShootLocation::InstructionShootLocation()
 {
-	name_ = "InstructionShoot";
+	name_ = "InstructionShootLocation";
 }
-int InstructionShoot::execute(Core *s)
+int InstructionShootLocation::execute(Core *s)
 {
-	std::cout << "Shooting ...";
+	std::cout << "Shooting at location...";
 	Value v;
 	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->Shoot(); //TODO kam sa shootinguje, location
+	v.loaded->integerValue = s->robot->Shoot(); //TODO location, vypocitat angle
+	std::cout << "OK" << std::endl;
+	return 0;
+}
+InstructionShootAngle::InstructionShootAngle()
+{
+	name_ = "InstructionShootAngle";
+}
+int InstructionShootAngle::execute(Core *s)
+{
+	std::cout << "Shooting at angle...";
+	Value v;
+	v.loaded = &v.hlp;
+	v.loaded->integerValue = s->robot->Shoot(); //TODO angle
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1009,7 +1022,6 @@ int InstructionTurnL::execute(Core *s)
 	Value v;
 	v.loaded = &v.hlp;
 	v.loaded->integerValue = s->robot->TurnL();
-	v.loaded->type = TypeInteger;
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1020,10 +1032,9 @@ InstructionHit::InstructionHit()
 int InstructionHit::execute(Core *s)
 {
 	std::cout << "Checking hit state of object ...";
-	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->Hit();
-	v.loaded->type = TypeInteger;
+	Object * o = s->values.back().loaded->objectValue;
+	s->values.back().loaded = &s->values.back().hlp;
+	s->values.back().loaded->integerValue = o->Hit();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1034,10 +1045,9 @@ InstructionIsPlayer::InstructionIsPlayer()
 int InstructionIsPlayer::execute(Core *s)
 {
 	std::cout << "Checking playerism ...";
-	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->IsPlayer();
-	v.loaded->type = TypeInteger;
+	Object * o = s->values.back().loaded->objectValue;
+	s->values.back().loaded = &s->values.back().hlp;
+	s->values.back().loaded->integerValue = o->IsPlayer();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1048,10 +1058,9 @@ InstructionIsWall::InstructionIsWall()
 int InstructionIsWall::execute(Core *s)
 {
 	std::cout << "Checking wallism ...";
-	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->IsWall();
-	v.loaded->type = TypeInteger;
+	Object * o = s->values.back().loaded->objectValue;
+	s->values.back().loaded = &s->values.back().hlp;
+	s->values.back().loaded->integerValue = o->IsWall();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1061,11 +1070,10 @@ InstructionIsMissille::InstructionIsMissille()
 }
 int InstructionIsMissille::execute(Core *s)
 {
-	std::cout <<"Checking missilism ...";
-	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->IsMissille();
-	v.loaded->type = TypeInteger;
+	std::cout <<"Checking missilism ..."; //s jednym parametrom
+	Object * o = s->values.back().loaded->objectValue;
+	s->values.back().loaded = &s->values.back().hlp;
+	s->values.back().loaded->integerValue = o->IsMissille();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1090,10 +1098,8 @@ int InstructionIsMoving::execute(Core *s)
 {
 	std::cout << "Checking movement ...";
 	Object * o = s->values.back().loaded->objectValue;
-	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = o->IsMoving();
-	v.loaded->type = TypeInteger;
+	s->values.back().loaded = &s->values.back().hlp;
+	s->values.back().loaded->integerValue = o->IsMoving();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }

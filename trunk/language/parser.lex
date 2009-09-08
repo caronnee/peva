@@ -45,19 +45,22 @@ var						{*l = line; return TOKEN_REFERENCE;}
 void						{*l = line; return TOKEN_VOID; }
 location					{*l = line;return TOKEN_LOCATION; }
 real 						{*l = line;return TOKEN_VAR_REAL; }
+
 IsPlayer					{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
 IsWall						{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
 IsMissille					{*l = line;lv->of = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
 IsMoving					{*l = line;lv->of = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
 Locate						{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
-step						{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
 see						{*l = line;lv->of = FeatureSee;return TOKEN_OBJECT_FEATURE;}
-shoot						{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
-wait						{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
 hit						{*l = line;lv->of = FeatureHit;return TOKEN_OBJECT_FEATURE;}
 turn						{*l = line;lv->of = FeatureTurn;return TOKEN_OBJECT_FEATURE;}
 turnL						{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
 turnR						{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
+
+wait						{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE_PARAMETERS;}
+shoot						{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE_PARAMETERS;}
+step						{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE_PARAMETERS;}
+
 integer						{*l = line;return TOKEN_VAR_INT; }
 function	 	 	 	 	{*l = line;return TOKEN_FUNCTION; }
 else 						{*l = line;return TOKEN_ELSE; }

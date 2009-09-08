@@ -1,5 +1,6 @@
 %{
 	#include <iostream>
+	#include <queue>
 	#include "header1.h"
 	#include "robot.h"
 	#include "parser_functions.h"
@@ -45,6 +46,7 @@
 %token TOKEN_BEGIN
 %token TOKEN_END
 %token<of> TOKEN_OBJECT_FEATURE
+%token<of> TOKEN_OBJECT_FEATURE_PARAMETERS
 
 /* literals */
 %token<ident> TOKEN_IDENTIFIER
@@ -107,6 +109,7 @@
 %type<output> call_fce
 %type<output> call_parameters
 %type<output> array_access
+%type<output> call_parameters_int
 
 %type<positions> places
 
@@ -317,7 +320,6 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 	|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
 			$$ = $2.ins;
-			std::cout << program->actualRobot->core->nested_function << "--Tu dorazim---"<<program->actualRobot->core->nested_function->return_var->type_of_variable << std::endl;
 			$$.insert($$.begin(), new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
 {
@@ -356,12 +358,25 @@ else{
 					$$.push_back(new InstructionLoad(1));	
 					$$.push_back(new InstructionStoreInteger());
 					break;
-				default://TODO predavanie arrayov?
+				case TypeArray://aj typeStruct, ak bude nejaky
+					{
+					int i,j;
+					std::queue<Create_type> types;
+					types.push($2.output.back());
+					while (!is_simple(types.front().type))
+					{
+						for (int i =0; i< types.front().range; i++)
+							types.push(*types.front().data_type);
+						types.pop();
+					}
+					break;
+}
+				default:
 				       program->actualRobot->error(@1,Robot::ErrorOperationNotSupported);
 					break;
 			}
 			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
-}
+	}
 		}
 	|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn(program->actualRobot->core->depth));} //v node zostane predchadzajuca hodnota
 	|TOKEN_BREAK TOKEN_SEMICOLON 
@@ -454,11 +469,26 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		}
 	|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR { 
 		if ($3.output.size()!=1) program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
-			 $$.ins = feature(@1,program->actualRobot, $1, $3.output.back());
+			 $$.ins = feature(@1,program->actualRobot, $1, $3.output);
 		$$.output.push_back(Create_type(TypeInteger));
 		} 
+	|TOKEN_OBJECT_FEATURE_PARAMETERS TOKEN_LPAR call_parameters_int TOKEN_RPAR { 
+		if ($3.output.size()!=1) program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
+			 $$.ins = feature(@1,program->actualRobot, $1, $3.output);
+		$$.output.push_back(Create_type(TypeInteger));
+		}
 	;
 
+call_parameters_int: number { $$.ins = check_integer($1);
+		   $$.output.push_back(*program->actualRobot->find_type(TypeInteger));
+		   }
+   		   | call_parameters_int number
+			{
+				$$.ins = join_instructions($1.ins,check_integer($2));
+				$$.output = $1.output;
+				$$.output.push_back(*program->actualRobot->find_type(TypeInteger));
+			}
+						
 //Ok
 call_parameters: expression {$$ = $1;} //loaded
 	 | /* ziadny parameter */ {$$.ins.clear();}
@@ -635,7 +665,6 @@ int main(int argc, char ** argv)
 	{
 		q.actualRobot->save_to_xml();
    		q.actualRobot->execute();
-sleep(1);
 	}
 	return 0;	
 }

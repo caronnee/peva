@@ -5,6 +5,16 @@
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
+Instructions check_integer(Element e)
+{
+	Instructions ins;
+	ins = e.ins;
+	if (e.output.back().type == TypeReal)
+	{
+		ins.push_back(new InstructionConversionToInt());
+	}
+	return ins;
+}
 Element ident_load(unsigned line, Robot * r, std::string s)
 {
 	Element st;
@@ -411,14 +421,9 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 	e.output.push_back(Create_type(TypeInteger));
 	return e;
 }
-Instructions feature ( int line, Robot *r, ObjectFeatures feat, Create_type t )
+Instructions feature ( int line, Robot *r, ObjectFeatures feat, Expressions t )
 {
 	Instructions ins;
-	if (t!=TypeObject)
-	{
-		r->error(line, Robot::ErrorOperationNotSupported);
-		return ins;
-	}
 	switch(feat)
 	{
 		case FeatureIsPlayer:
@@ -436,17 +441,11 @@ Instructions feature ( int line, Robot *r, ObjectFeatures feat, Create_type t )
 		case FeatureLocate:
 			ins.push_back( new InstructionLocate());
 			break;
-		case FeatureStep:
-			ins.push_back( new InstructionStep());
-			break;
 		case FeatureSee:
 			ins.push_back( new InstructionSee());
 			break;
 		case FeatureHit:
 			ins.push_back( new InstructionHit());
-			break;
-		case FeatureShoot:
-			ins.push_back( new InstructionShoot());//nutne musi zobrat
 			break;
 		case FeatureTurn:
 			ins.push_back( new InstructionTurn());
@@ -456,9 +455,6 @@ Instructions feature ( int line, Robot *r, ObjectFeatures feat, Create_type t )
 			break;
 		case FeatureTurnL:
 			ins.push_back( new InstructionTurnL());
-			break;
-		case FeatureWait:
-			ins.push_back( new InstructionWait());
 			break;
 		default:
 			r->error(line, Robot::ErrorOperationNotSupported);

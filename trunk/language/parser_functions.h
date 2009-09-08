@@ -8,6 +8,8 @@ typedef std::vector<std::string> strings;
 
 Element ident_load(unsigned line, Robot * r, std::string s);
 
+Instructions check_integer(Element e);
+
 Instruction * conversionToReal(Type t1, Type t2);
 void reg(Robot *p, std::vector<Parameter_entry> s, Instructions i);
 void set_breaks(Robot * p, Instructions i);
@@ -17,7 +19,7 @@ Element operRel(int line, Robot *r,Operation op, Create_type t1, Create_type t2)
 Element operMul(int line, Robot * r,Operation op, Create_type t1, Create_type t2);
 Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2);
 Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type T2);
-Instructions feature (int line, Robot * r, ObjectFeatures feat, Create_type t);
+Instructions feature (int line, Robot * r, ObjectFeatures feat, Expressions t);
 
 Instruction* possible_conversion(Type to, Type from);
 Instructions join_instructions(Instructions a, Instructions b);
