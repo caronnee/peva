@@ -1,3 +1,5 @@
+#ifndef _______
+#define _______
 #include "./robot.h"
 #include <iostream>
 
@@ -30,15 +32,27 @@ Robot::Robot(std::string s, GamePoints p)
 	defined_types.push_back(new Create_type(TypeLocation));
 	defined_types.back()->add("x",find_type(TypeInteger));
 	defined_types.back()->add("y",find_type(TypeInteger));
+	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
+	c->composite(find_type(TypeObject));
+	defined_types.push_back(c);
 
+	/*	Pridavanie defaultnych premennych	*/
+
+	//pridana premenna pre NULL;
 	Node *n = defined.add("NULL",find_type(TypeObject));
 	n->nested = Global;
 	n->var.push_back(core->memory.assign(*find_type(TypeObject),n->ID, 0));
 	n->var[0]->objectValue = NULL;
 	
+	//pridana premenna pre this;
 	n = defined.add("this",find_type(TypeObject));
 	n->nested = Global;
 	n->var.push_back(core->memory.assign(*find_type(TypeObject), n->ID,0));
+	n->var[0]->objectValue = body;
+	
+	//pridana premenna pre viditelnost
+	n = defined.add("seen",c);
+	n->nested = Global;
 }
 Create_type * Robot::find_type(Type t)
 {
@@ -73,6 +87,7 @@ Function * Robot::find_f(std::string nam)
 
 Node * Robot::find_var(std::string var_name)
 {
+	//najskor a hlada medzi premennymi deklarovanymi vo funkcii
 	std::string s = nested + var_name;
 	Tree * t = defined.find_string(s);
 	for (std::list<Node*>::iterator i = t->items.begin(); 
@@ -82,6 +97,7 @@ Node * Robot::find_var(std::string var_name)
 		if ((*i)->name == s)
 			return (*i);
 	}
+	//hlada sa medzi globalnymi premennymi
 	s = var_name;
 	t = defined.find_string(s);
 	for (std::list<Node*>::iterator i = t->items.begin(); 
@@ -351,3 +367,4 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 			break;
 	}
 }
+#endif

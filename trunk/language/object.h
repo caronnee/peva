@@ -7,18 +7,22 @@ class Object
 {
 	public:
 	int IsMoving(){
+		std::cout << "Object is not moving." << std::endl;
 		return 0;
 	}
 	int IsWall()
 	{
+		std::cout << "Object is not a Wall." << std::endl;
 		return 0;
 	}
 	int IsPlayer()
 	{
+		std::cout << "Object is not a Player." << std::endl;
 		return 0;
 	}
 	int IsMissille()
 	{
+		std::cout << "Object is not a Missille." << std::endl;
 		return 0;
 	}
 	int Locate()
@@ -33,13 +37,13 @@ class Object
 };
 struct Robot_body : public Object
 {
-	int Step(){
-		std::cout << "moving!" << std::endl;
+	int Step(int i){
+		std::cout << "moving "<< i << "positions" << std::endl;
 		return 0;
 	}
-	int Shoot()
+	int Shoot(int x,int y)
 	{
-		std::cout <<"shooting" <<std::endl;
+		std::cout <<"shooting at speed-dir [" << x << " ,"<< y  << "]." <<std::endl;
 		return 0;
 	}
 	int See()
@@ -47,24 +51,24 @@ struct Robot_body : public Object
 		std::cout << "Checking visibility" <<std::endl;
 		return 0;
 	}
-	int Wait()
+	int Wait(int i)
 	{
-		std::cout << "Waiting" <<std::endl;
+		std::cout << "Waiting " << i << "times." << std::endl;
 		return 0;
 	}
 	int Turn(int var)
 	{
-		std::cout << "otacam sa v smere:" << var <<std::endl;
+		std::cout << "Turning in direction " << var << "." <<std::endl;
 		return 0;
 	}
 	int TurnL()
 	{
-		std::cout << "otacam sa v dolava " <<std::endl;
+		std::cout << "Turning left." <<std::endl;
 		return 0;
 	}
 	int TurnR()
 	{
-		std::cout << "otacam sa doprava " <<std::endl;
+		std::cout << "Turning right." <<std::endl;
 		return 0;
 	}
 };

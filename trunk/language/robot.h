@@ -100,6 +100,8 @@ struct Robot
 	void addVisit(std::vector<Position> pos);
 	void addVisitSeq(std::vector<Position> pos);
 	void error(unsigned int line, ErrorCode c,std::string message="");
+private:
+	Robot_body * body;
 };
 
 enum Options

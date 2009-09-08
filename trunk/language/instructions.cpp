@@ -913,16 +913,19 @@ int InstructionEndBlock::execute(Core * c)
 	return 0;
 }
 //--------------------------------------------------
-InstructionSee::InstructionSee()
+InstructionSee::InstructionSee(Node * n) //uzol ktory sa ma naplnit viditelnymi objektami
 {
+	node = n;
 	name_ = "InstructionSee";
 }
-int InstructionSee::execute(Core *s)
+int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
 {
 	std::cout << "Filling objects in robot's see angle ...";
 	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->See();
+	c->values.push_back(v);
+	c->values.back().loaded = &c->values.back().hlp;
+//TODO napln variable	
+	c->values.back().loaded->integerValue = c->robot->See(); //TODO, kam to naplni
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -930,13 +933,13 @@ InstructionStep::InstructionStep()
 {
 	name_ = "InstructionStep";
 }
-int InstructionStep::execute(Core *s)
+int InstructionStep::execute(Core *c)
 {
 	std::cout << "Stepping ...";
 	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->Step();
-	v.loaded->type = TypeInteger;
+	c->values.push_back(v);
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->integerValue = c->robot->Step(c->getIntFromStack());
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -944,13 +947,13 @@ InstructionWait::InstructionWait()
 {
 	name_ = "InstructionWait";
 }
-int InstructionWait::execute(Core *s)
+int InstructionWait::execute(Core *c)
 {
 	std::cout << "Waiting ...";
 	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->Wait();
-	v.loaded->type = TypeInteger;
+	c->values.push_back(v);
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->integerValue = c->robot->Wait(c->getIntFromStack());
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -958,12 +961,15 @@ InstructionShootLocation::InstructionShootLocation()
 {
 	name_ = "InstructionShootLocation";
 }
-int InstructionShootLocation::execute(Core *s)
+int InstructionShootLocation::execute(Core *c)
 {
 	std::cout << "Shooting at location...";
 	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->Shoot(); //TODO location, vypocitat angle
+	int x = c->getIntFromStack();
+	int y = c->getIntFromStack();
+	c->values.push_back(v);
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->integerValue = c->robot->Shoot(x,y); //TODO vypocitat angle, smer x a smer y
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -971,12 +977,14 @@ InstructionShootAngle::InstructionShootAngle()
 {
 	name_ = "InstructionShootAngle";
 }
-int InstructionShootAngle::execute(Core *s)
+int InstructionShootAngle::execute(Core *c)
 {
 	std::cout << "Shooting at angle...";
+	int an = c->getIntFromStack();
 	Value v;
-	v.loaded = &v.hlp;
-	v.loaded->integerValue = s->robot->Shoot(); //TODO angle
+	c->values.push_back(v);
+	c->values.back().loaded = &c->values.back().hlp;
+	c->values.back().loaded->integerValue = c->robot->Shoot(an,an); //TODO angle
 	std::cout << "OK" << std::endl;
 	return 0;
 }
