@@ -396,7 +396,6 @@ simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 //pozor na to, co sa assignuje
 assign: variable_left TOKEN_ASSIGN expression 
       		{
-		std::cout << "Vstupujem do assignu" << $1.output.size()<<" " <<$3.output.size() << std::endl;
 		Node * n = $3.ins.back()->get_node();
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
 			$3.ins.push_back(new InstructionConversionToInt());

@@ -1,7 +1,8 @@
 #include "instructions.h"
 #include <iostream>
 
-//TODO premenovat floatfrom an real, aby to olo konzistentne
+//FIXME premenovat floatfrom an real, aby to olo konzistentne
+//FIXME docasne premenne vytvarat az v okamihu, ked je ich potreba, cez assign 
 Instruction::Instruction()
 {
 	name_ = "UndefinedInstruction";
@@ -262,7 +263,6 @@ Call::Call()
 Call::Call(Function * f_)
 {
 	node = NULL;
-	std::cout << "Creatinf instruction for calling function :" << f_ << std::endl;
 	function = f_;
 	name_ = "Call";
 }
@@ -278,7 +278,7 @@ int Call::execute(Core * c)
 	for( size_t i = 0; i< function->parameters.size(); i++)
 	{
 		Variable * v;
-		//ak pridane ako refeencia, skopiruj pointre
+		//ak pridane ako referencia, skopiruj pointre
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
 			std::cout << "Storing parameter by reference" << std::endl;
@@ -440,7 +440,7 @@ InstructionRestore::InstructionRestore()
 }
 int InstructionRestore::execute(Core *c)
 {
-	std::cout << "Restorin' "; //zmaz prebentivne navratove hodnoty a para,etre
+	std::cout << "Restorin' "; //zmaz prebentivne navratove hodnoty a parametre
 	c->restore();
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -912,7 +912,7 @@ int InstructionEndBlock::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
-//--------------------------------------------------
+//-------------------------ROBOT ACTIONS-------------------------
 InstructionSee::InstructionSee(Node * n) //uzol ktory sa ma naplnit viditelnymi objektami
 {
 	node = n;
@@ -933,7 +933,7 @@ InstructionStep::InstructionStep()
 {
 	name_ = "InstructionStep";
 }
-int InstructionStep::execute(Core *c)
+int InstructionStep::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Stepping ...";
 	Value v;
@@ -947,7 +947,7 @@ InstructionWait::InstructionWait()
 {
 	name_ = "InstructionWait";
 }
-int InstructionWait::execute(Core *c)
+int InstructionWait::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Waiting ...";
 	Value v;
@@ -961,7 +961,7 @@ InstructionShootLocation::InstructionShootLocation()
 {
 	name_ = "InstructionShootLocation";
 }
-int InstructionShootLocation::execute(Core *c)
+int InstructionShootLocation::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Shooting at location...";
 	Value v;
@@ -1086,12 +1086,16 @@ InstructionLocate::InstructionLocate()
 {
 	name_ = "InstructionLocate";
 }
-int InstructionLocate::execute(Core *s) //TODO location
+int InstructionLocate::execute(Core *c) //TODO location
 {
 	std::cout << "Getting location of object ...";
 	Value v;
 	v.loaded = &v.hlp;
-//	v.loaded->Array = s->robot->Locate();
+	Position p = c->robot->Locate();
+	c->values.back().loaded->integerValue = p.y;
+	c->values.pop_back();
+	c->values.back().loaded->integerValue = p.x;
+	c->values.pop_back();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
