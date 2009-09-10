@@ -6,8 +6,8 @@ Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
 	int id;
 	if (id_free_vars.size() > 0)
 		id = id_free_vars.top();
-	else id = 0; // v pripade, ne dojde pamat, nastanu nepredvidatelne nasledky:)
-	std::cout << "assigning " << id << std::endl;
+	else id = rand()%assigned.size();
+	std::cout << "Assigning " << id << std::endl;
 	id_free_vars.pop();
 	Memory_record record;
 	record.owner = id__;
@@ -56,6 +56,7 @@ void Memory::free(size_t depth)
 }
 Memory::Memory(int size)
 {
+	srand(time(NULL));
 	memory = new Variable*[size];
 	for(int i =0; i< size; i++)
 		memory[i] = new Variable();
@@ -67,6 +68,8 @@ void Memory::realok(int size)
 	if (memory)
 		delete memory;
 	memory = new Variable*[size];
+	for(int i =0; i< size; i++)
+		memory[i] = new Variable();
 	while(!id_free_vars.empty())
 	{
 		id_free_vars.pop();

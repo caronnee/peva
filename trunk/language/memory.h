@@ -2,6 +2,8 @@
 #define ___MEMORY____
 
 #include <stack>
+#include <ctime>
+#include <cstdlib>
 #include "variable.h"
 
 struct Memory_record

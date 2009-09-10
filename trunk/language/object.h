@@ -2,6 +2,7 @@
 #define __OBJECT_____
 
 #include <iostream>
+#include "position.h"
 
 class Object
 {
@@ -25,15 +26,16 @@ class Object
 		std::cout << "Object is not a Missille." << std::endl;
 		return 0;
 	}
-	int Locate()
+	Position Locate()
 	{
-		return 0;
+		Position p(107,107);
+		return p;
 	}
 	int Hit()
 	{
+		std::cout << "Object was not hit." << std::endl;
 		return 0;
 	}
-
 };
 struct Robot_body : public Object
 {
