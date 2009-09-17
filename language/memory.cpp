@@ -1,79 +1,149 @@
 #include "memory.h"
 #include "types.h"
 
-Variable * Memory::assign(Create_type type,size_t id__, size_t depth_)
+Variable * Memory::next_id(size_t ID)
 {
-	int id;
-	if (id_free_vars.size() > 0)
-		id = id_free_vars.top();
-	else id = rand()%assigned.size();
-	std::cout << "Assigning " << id << std::endl;
-	id_free_vars.pop();
-	Memory_record record;
-	record.owner = id__;
-	record.depth = depth_;
-	record.variable = memory[id];
-	record.id = id;
-	memory[id]->owner = id__;
-	if (depth_ == 0)
+	for(int i = position; i<memory_size; i++) 
 	{
-		assigned.insert(assigned.begin(), record);
+		if (memory[i]->owner < 0)
+		{
+			memory[i]->owner = ID;
+			return memory[i];
+		}
 	}
-	else 
-		assigned.push_back(record);
-	if (is_simple(type.type))
+	for(int i =0; i<position; i++) 
 	{
-		memory[id]->set_variable(type.type);
-		return memory[id];
+		if (memory[i]->owner < 0)
+		{
+			memory[i]->owner = ID;
+			return memory[i];
+		}
+	}
+	int id = rand()%memory_size;
+	return memory[id];
+}
+
+Memory::Memory(int size)
+{
+	position = 0;
+	srand(time(NULL));
+	memory = new Variable*[size];
+	for(int i =0; i< size; i++)
+		memory[i] = new Variable();
+}
+
+Variable * Memory::assign(Create_type type, size_t id, size_t depth_)
+{
+	Memory_record m;
+	m.variable = find_free(type, id);
+	m.depth = depth_;
+	assigned.push_back(m);
+	return m.variable;
+}
+
+Variable * Memory::assign_temp(Create_type t)
+{
+	Variable * v = find_free(t, 0); // 0 ako temprarily, TODO dat to nodes
+	temp.push(v);
+	return v;
+}
+void Memory::set_free(Variable * v)
+{
+	std::stack<Variable *> vars;
+	vars.push(v);
+	Variable * tmp;
+	while(!vars.empty())
+	{
+		tmp = vars.top();
+		tmp->owner = -1;
+		vars.pop();
+		for(size_t i =0; i<tmp->array.elements.size(); i++)		 
+		{
+			vars.push(tmp->array.elements[i]);
+		}
+		tmp->array.elements.clear();
+	}
+}
+
+void Memory::free_tmp()
+{
+	if (temp.size()>0)
+	{
+		set_free(temp.top());	
+		temp.pop();
 	}
 	else
-	{
-		for (size_t i =0; i< type.nested_vars.size(); i++)
-		{
-			memory[id]->array.elements.push_back(assign(*type.nested_vars[i].type, id__, depth_));
-		}
-		//v pripade, ze je to array
-		for (int i =0; i < type.range; i++)
-		{
-			memory[id]->array.elements.push_back(assign(*type.data_type, id__, depth_));
-		}
-		return memory[id];
-	}	
-	std::cout<<"vraciam NULL"<< std::endl;
-	return NULL;
+		std::cout <<"Error! Trying to free a nonempty temp" << std::endl;
 }
+
+Variable * Memory::find_free(Create_type t, size_t ID)
+{
+	//bez rekurzie pre istotu
+
+	std::stack<Create_type> types_to_assign;
+	std::stack<Variable *> variables_to_assign;
+	Variable * v = next_id(ID);
+	Variable * ret_v = NULL;
+	variables_to_assign.push(v);
+
+	bool first = true;
+	while(!types_to_assign.empty())
+	{
+		t = types_to_assign.top();
+		types_to_assign.pop();
+		v = variables_to_assign.top();
+		variables_to_assign.pop();
+		if(t.is_simple())
+		{
+			if (first)
+			{
+				return v;
+			}	
+			v = next_id(ID);
+			continue;
+		}
+		first = false;
+		Variable * tmp = NULL;
+		for(int i =0; i<t.range; i++) 
+		{
+			tmp = next_id(ID);
+			if (!t.element().is_simple())
+			{
+				types_to_assign.push(t.element());
+				variables_to_assign.push(tmp);
+			}
+			v->array.elements.push_back(tmp);
+		}
+		for(size_t i =0; i<t.nested_vars.size(); i++) 
+		{
+			tmp = next_id(ID);
+			if (!t.is_simple())
+			{
+				types_to_assign.push(t.nested_vars[i].type);
+				variables_to_assign.push(tmp);
+			}
+			v->array.elements.push_back(tmp);
+		}
+	}
+	return ret_v;
+}
+
 void Memory::free(size_t depth)
 {
 	while((!assigned.empty())&&(assigned.back().depth >= depth))
 	{
 		Memory_record r = assigned.back();
 		assigned.pop_back();
-		id_free_vars.push(r.id);
-		std::cout << "dealok " << r.id << std::endl;
-		r.variable->owner = -1;
+		set_free(r.variable); //TODO pre velke arrays a pod. to nejak penalizovat?
 	}
-	std::cout << assigned.size() << std::endl;
+	std::cout << "Memory freed"<< std::endl;
 }
-Memory::Memory(int size)
-{
-	srand(time(NULL));
-	memory = new Variable*[size];
-	for(int i =0; i< size; i++)
-		memory[i] = new Variable();
-	for(int i =0; i< size; i++)
-		id_free_vars.push(i);
-}
-void Memory::realok(int size)
+
+void Memory::realloc(int size)
 {
 	if (memory)
 		delete memory;
 	memory = new Variable*[size];
 	for(int i =0; i< size; i++)
 		memory[i] = new Variable();
-	while(!id_free_vars.empty())
-	{
-		id_free_vars.pop();
-	}
-	for(int i =0; i< size; i++)
-		id_free_vars.push(i);
 }
