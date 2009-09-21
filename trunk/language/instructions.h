@@ -17,7 +17,7 @@ public:
 	virtual std::string name();
 	virtual int breaks();
 	virtual xmlNodePtr xml_format();
-	virtual int execute(Core * s);
+	virtual int execute(Core * s) = 0;
 	Node * get_node();
 	Instruction();
 };
@@ -47,6 +47,7 @@ class InstructionLoadGlobal : public Instruction
 class InstructionLoad : public Instruction
 {
 	bool constant;
+	Type type;
 	Variable* var;
 	public:
 		virtual xmlNodePtr xml_format();
@@ -159,6 +160,14 @@ class InstructionRestore: public Instruction
 		virtual int execute(Core * c);
 		InstructionRestore();
 };
+
+class InstructionRemoveTemp: public Instruction
+{
+	public:
+		virtual int execute(Core * c);
+		InstructionRemoveTemp();
+};
+
 class InstructionPlusPlusInteger : public Instruction
 {
 	public:

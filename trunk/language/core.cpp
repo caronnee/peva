@@ -37,7 +37,7 @@ int Core::getIntFromStack()
 	int i;
 	if (!values.empty()) //TODO throw exception
 	{
-		i = values.back().loaded->integerValue;
+		i = values.back()->integerValue;
 		values.pop_back();
 	}
 	return i;
@@ -47,7 +47,7 @@ float Core::getFloatFromStack()
 	float i;
 	if (!values.empty()) //TODO throw exception
 	{
-		i = values.back().loaded->realValue;
+		i = values.back()->realValue;
 		values.pop_back();
 	}
 	return i;
@@ -57,7 +57,7 @@ Object * Core::getObjectFromStack()
 	Object * o = NULL;
 	if (!values.empty())
 	{
-		o = values.back().loaded->objectValue;
+		o = values.back()->objectValue;
 		values.pop_back();
 	}
 	return o;

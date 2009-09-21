@@ -5,13 +5,14 @@
 #include "parser_classes.h"
 
 typedef std::vector<Instruction *> Instructions;
-typedef std::vector<Value> Values;
+typedef std::vector<Variable *> Values;
 typedef std::vector<Create_type> Expressions;
 
 struct Element
 {
 	Instructions ins;
 	Expressions output;
+	bool temp;
 };
 
 typedef std::vector<Element> simulateStack;

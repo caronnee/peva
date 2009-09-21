@@ -5,11 +5,7 @@
 #include "variable.h"
 #include "functions.h"
 
-struct Value
-{
-	Variable hlp;
-	Variable * loaded;
-};
+typedef std::vector<Variable *> Values;
 
 struct Core
 {
@@ -21,9 +17,8 @@ struct Core
 	int depth;
 	bool error;
 	Robot_body * robot; //periferie, stav robota, interakcia s mapou
-//	Map * map;
 	Memory memory;
-	std::vector<Value> values;	
+	Values values;	
 	Core();
 	void save(int j);
 	void restore(); //+ pushnut vsetky parametre zadanej funkcie o jedno

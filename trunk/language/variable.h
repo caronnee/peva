@@ -12,15 +12,14 @@ struct Variable;
 struct Array
 {
 	int range; //rozmer pola
-	Type element_type;
+//	Type element_type; //netreba, type je aj tak vo variabloch:)
 	std::vector<Variable* > elements;
 };
 
 struct Variable // struktura premennych
 {
 	size_t owner;
-	Type type;
-	int active; //bola deklarovana v danom bloku, TODO zistit, ci sa este pouziva
+	int active; 
 	unsigned int last_access; //z  tohoto sa vypocita penalizacia
 	int integerValue;
 	float realValue;

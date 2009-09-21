@@ -19,7 +19,7 @@ class Memory
 	size_t position;
 
 	/* number of units that is possible to allocate */
-	int memory_size;
+	size_t memory_size;
 
 	/* structure to hold assigned variables */
 	std::vector<Memory_record> assigned;

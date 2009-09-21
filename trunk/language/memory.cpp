@@ -3,7 +3,7 @@
 
 Variable * Memory::next_id(size_t ID)
 {
-	for(int i = position; i<memory_size; i++) 
+	for(size_t i = position; i<memory_size; i++) 
 	{
 		if (memory[i]->owner < 0)
 		{
@@ -11,7 +11,7 @@ Variable * Memory::next_id(size_t ID)
 			return memory[i];
 		}
 	}
-	for(int i =0; i<position; i++) 
+	for(size_t i =0; i<position; i++) 
 	{
 		if (memory[i]->owner < 0)
 		{
