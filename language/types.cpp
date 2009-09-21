@@ -2,11 +2,11 @@
 #include <iostream>
 static Type simple[] = { TypeInteger, TypeReal, TypeObject };
 
-bool is_simple(Type t)
+bool Create_type::is_simple()
 {
 	for (size_t i =0; i< sizeof(simple)/sizeof(Type); i++)
 	{
-		if (simple[i] == t)
+		if (simple[i] == type)
 			return true;
 	}
 	return false;
@@ -39,14 +39,14 @@ Create_type::Create_type(const Create_type & t)
 }
 
 void Create_type::composite ( Create_type* t) //vrati sa novy typ, Location = type.add(TYPE_INTEGER, INT)
-{//TODO id podruhe, nejaky vykrik
+{//FIXME id podruhe, nejaky vykrik
 	this->data_type = t; 
 }
 void Create_type::add(std::string name, Create_type * t)
 {
 	Record r;
 	r.name = name;
-	r.type = t;
+	r.type = *t;
 	nested_vars.push_back(r);
 }
 bool Create_type::operator!=(const Create_type & t)
@@ -63,7 +63,7 @@ bool Create_type::operator==(const Create_type & t)
 	{
 		if (nested_vars[i].name!=t.nested_vars[i].name)
 			return false;
-		if ((*nested_vars[i].type) !=(*t.nested_vars[i].type))
+		if ((nested_vars[i].type) !=(t.nested_vars[i].type))
 			return false;
 	}
 	if (range!=t.range)
@@ -71,4 +71,8 @@ bool Create_type::operator==(const Create_type & t)
 	if (data_type == t.data_type) // ak sa rovnaju poitre, tak je zvysok zarucene stejny
 		return true;
 	return ((*data_type)==(*t.data_type));
+}
+Create_type Create_type::element()
+{
+	return *data_type;
 }

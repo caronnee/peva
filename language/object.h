@@ -43,7 +43,7 @@ struct Robot_body : public Object
 		std::cout << "moving "<< i << "positions" << std::endl;
 		return 0;
 	}
-	int Shoot(int x,int y)
+	int Shoot(int x,int y=1987)
 	{
 		std::cout <<"shooting at speed-dir [" << x << " ,"<< y  << "]." <<std::endl;
 		return 0;

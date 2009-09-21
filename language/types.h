@@ -25,18 +25,11 @@ enum NestedType
 	Local
 };
 
-bool is_simple(Type t);
-
-struct Create_type;
-
-struct Record
-{
-	std::string name;
-	Create_type * type;
-};
+struct Record;
 
 struct Create_type
 {
+	bool is_simple();
 	int range;
 	Create_type * data_type;
 	std::vector<Record> nested_vars; //pre strukty
@@ -48,6 +41,13 @@ struct Create_type
 	void add(std::string name, Create_type * t);
 	bool operator==(const Create_type& t);
 	bool operator!=(const Create_type& t);
+	Create_type element();
 };
 
+struct Record
+{
+	std::string name;
+	Create_type type;
+	Create_type typ();
+};
 #endif

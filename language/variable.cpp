@@ -2,7 +2,7 @@
 
 Variable::Variable()
 {
-	owner = 0; //nijaky node nevlastni
+	owner = -1; //nijaky node nevlastni
 	type = TypeUndefined;
 	objectValue = NULL;	
 }
