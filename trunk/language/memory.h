@@ -1,7 +1,7 @@
 #ifndef ___MEMORY____
 #define ___MEMORY____
 
-#include <stack>
+#include <queue>
 #include <ctime>
 #include <cstdlib>
 #include <vector>
@@ -25,7 +25,7 @@ class Memory
 	std::vector<Memory_record> assigned;
 
 	/* structure to hold temporarily assigned variables */
-	std::stack<Variable *> temp;
+	std::queue<Variable *> temp;
 
 	/* memory structure */
 	Variable ** memory;
