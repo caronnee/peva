@@ -12,7 +12,7 @@ struct Element
 {
 	Instructions ins;
 	Expressions output;
-	bool temp;
+	std::vector<bool> temp;
 };
 
 typedef std::vector<Element> simulateStack;
