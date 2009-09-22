@@ -256,7 +256,16 @@ declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_ins
 	program->actualRobot->leave(); 
 }
 		;
-number:		TOKEN_OPER_SIGNADD TOKEN_REAL { if (TOKEN_OPER_SIGNADD == OperationMinus ) {$2*=-1;} $$.ins.push_back(new InstructionLoad($2));$$.output.push_back(*program->actualRobot->find_type(TypeReal)); $$.output.back().temp = false;} 
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL 
+		{ 
+			if (TOKEN_OPER_SIGNADD == OperationMinus ) 
+			{
+				$2*=-1;
+			} 
+			$$.ins.push_back(new InstructionLoad($2));
+			$$.output.push_back(*program->actualRobot->find_type(TypeReal)); 
+			$$.output.back().temp = false;
+		} 
 		|TOKEN_OPER_SIGNADD TOKEN_UINT { if (TOKEN_OPER_SIGNADD == OperationMinus) {$2*=-1;} $$.ins.push_back(new InstructionLoad($2)); $$.output.push_back( *program->actualRobot->find_type(TypeInteger));$$.output.back().temp = false;} 
 		|TOKEN_REAL { $$.ins.push_back(new InstructionLoad($1)); $$.output.push_back(*program->actualRobot->find_type(TypeReal));$$.output.back().temp = false; } 
 		|TOKEN_UINT { $$.ins.push_back(new InstructionLoad($1)); $$.output.push_back(*program->actualRobot->find_type(TypeInteger));$$.output.back().temp = false; } 
@@ -581,47 +590,51 @@ expression_bool_or: expression_bool_base {$$ = $1; }
 	$$.output = e.output; //aj tak by tu vzy mal byt integer
 }
 		;
+expression_bool:	expression_bool_or
 		| expression_bool TOKEN_BOOL_AND expression_bool_or {$$.ins = join_instructions($1.ins, $3.ins); if ($1.output.back().type == TypeReal) $$.ins.push_back(new InstructionConversionToInt());
 	else if ($$.output.back().type!= TypeInteger) program->actualRobot->error(@2,Robot::ErrorConversionImpossible); 
+		}
 	;
-	%%
-		extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
-	static void yyerror(unsigned *line, Robots* ctx, const char *message)
+%%
+
+extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
+static void yyerror(unsigned *line, Robots* ctx, const char *message)
+{
+	printf("Syntax Error %s, line %d\n", message, *line);
+}
+
+int main(int argc, char ** argv)
+{
+	if(argc<2)
 	{
-		printf("Syntax Error %s, line %d\n", message, *line);
+		puts("Input nor found\n");
+		return 16;
 	}
-	int main(int argc, char ** argv)
+	if((yyin=fopen(argv[1], "r"))==0)
 	{
-		if(argc<2)
-		{
-			puts("Input nor found\n");
-			return 16;
-		}
-		if((yyin=fopen(argv[1], "r"))==0)
-		{
-			puts("Unable to open input\n");
-			return 16;
-		}
-		GamePoints points;
-		Robots q(points);
-		Create_type t;
-		yyparse(&q);
-		fclose(yyin);
-		std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
-		/*	q.actualRobot->output(&q.actualRobot->defined);
-			for (int i =0; i<q.actualRobot->instructions.size(); i++)
-			std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
-			q.actualRobot->save_to_xml();
-			std::cout << "haho!" << std::endl;
-			q.actualRobot->execute();
-		 */
-		std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
-		if(q.actualRobot->errors)
-			std::cout << q.actualRobot->errorList << std::endl;
-		else
-		{
-			q.actualRobot->save_to_xml();
-			q.actualRobot->execute();
-		}
-		return 0;	
+		puts("Unable to open input\n");
+		return 16;
 	}
+	GamePoints points;
+	Robots q(points);
+	Create_type t;
+	yyparse(&q);
+	fclose(yyin);
+	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
+	/*	q.actualRobot->output(&q.actualRobot->defined);
+		for (int i =0; i<q.actualRobot->instructions.size(); i++)
+		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
+		q.actualRobot->save_to_xml();
+		std::cout << "haho!" << std::endl;
+		q.actualRobot->execute();
+	 */
+	std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
+	if(q.actualRobot->errors)
+		std::cout << q.actualRobot->errorList << std::endl;
+	else
+	{
+		q.actualRobot->save_to_xml();
+		q.actualRobot->execute();
+	}
+	return 0;	
+}
