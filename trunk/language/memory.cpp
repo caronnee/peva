@@ -5,7 +5,7 @@ Variable * Memory::next_id(size_t ID)
 {
 	for(size_t i = position; i<memory_size; i++) 
 	{
-		if (memory[i]->owner < 0)
+		if (memory[i]->owner == -1 )
 		{
 			memory[i]->owner = ID;
 			return memory[i];
@@ -13,7 +13,7 @@ Variable * Memory::next_id(size_t ID)
 	}
 	for(size_t i =0; i<position; i++) 
 	{
-		if (memory[i]->owner < 0)
+		if (memory[i]->owner == -1)
 		{
 			memory[i]->owner = ID;
 			return memory[i];
@@ -79,12 +79,12 @@ void Memory::free_tmp()
 Variable * Memory::find_free(Create_type t, size_t ID)
 {
 	//bez rekurzie pre istotu
-
 	std::stack<Create_type> types_to_assign;
 	std::stack<Variable *> variables_to_assign;
 	Variable * v = next_id(ID);
 	Variable * ret_v = NULL;
 	variables_to_assign.push(v);
+	types_to_assign.push(t);
 
 	bool first = true;
 	while(!types_to_assign.empty())
