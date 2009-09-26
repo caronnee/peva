@@ -4,6 +4,7 @@
 #include <queue>
 #include <ctime>
 #include <cstdlib>
+#include <stack>
 #include <vector>
 #include "variable.h"
 

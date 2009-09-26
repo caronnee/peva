@@ -105,7 +105,7 @@ InstructionLoad::InstructionLoad()
 InstructionLoad::InstructionLoad(int i)
 {
 	constant = true;
-	var = new Variable("const",TypeInteger);
+	var = new Variable("const");
 	type = TypeInteger;
 	var->integerValue = i;
 	name_ = "InstructionLoad";
@@ -115,7 +115,7 @@ InstructionLoad::InstructionLoad(float f)
 	name_ = "InstructionLoad";
 	constant = true;
 	type = TypeReal;
-	var = new Variable("const",TypeReal);
+	var = new Variable("const");
 	var->realValue = f;
 }
 int InstructionLoad::execute(Core *c)
