@@ -7,8 +7,12 @@ bool Create_type::is_simple()
 	for (size_t i =0; i< sizeof(simple)/sizeof(Type); i++)
 	{
 		if (simple[i] == type)
+		{
+			std::cout << "Simple" << std::endl; //@@
 			return true;
+		}
 	}
+	std::cout << "Neni simple" << std::endl; //@@
 	return false;
 }
 

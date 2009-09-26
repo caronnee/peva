@@ -21,7 +21,7 @@ Robot::Robot(std::string s, GamePoints p)
 {
 	name = s;
 	nested = "";
-	errors = false;//TODO pridat errorou hlasku
+	errors = false;
 	core = new Core();
 	toKill = NULL;
 	
@@ -41,7 +41,8 @@ Robot::Robot(std::string s, GamePoints p)
 	//pridana premenna pre NULL;
 	Node *n = defined.add("NULL",find_type(TypeObject));
 	n->nested = Global;
-	n->var.push_back(core->memory.assign(*find_type(TypeObject),n->ID, 0));
+	Variable * v = core->memory.assign(*find_type(TypeObject),n->ID, 0);
+	n->var.push_back(v);
 	n->var[0]->objectValue = NULL;
 	
 	//pridana premenna pre this;
@@ -127,17 +128,17 @@ void Robot::add_global(Instructions ins)
 void Robot::output(Tree * t)
 {
 	for (std::list<Node*>::iterator i = t->items.begin();i!=t->items.end(); i++)
-		std::cout << "prvok s menom:" << (*i)->name <<std::endl;
+		std::cout << "prvok s menom:" << (*i)->name <<std::endl; 
 	for (int i = 0; i < 256; i++)
 	{
 		if (t->next[i]!=NULL)
 		{
-			std::cout << "Down:" <<i << std::endl;
+			std::cout << "Down:" <<i << std::endl; 
 			output(t->next[i]);
-			std::cout << "UP!" << std::endl;
+			std::cout << "UP!" << std::endl; 
 		}
 	}
-	std::cout << "END "<<std::endl;
+	std::cout << "END "<<std::endl; 
 }
 void Robot::add(Instructions ins)
 {
@@ -179,14 +180,14 @@ void Robot::save_to_xml()
 	xmlNodePtr parent = data.root_ptr;
 	xmlNodePtr ptr;
 	int fce_num = 0;
-	std::cout<< "Zapamatovane mena:" <<std::endl;
+	std::cout<< "Zapamatovane mena:" <<std::endl; 
 	for(int i =0; i< core->functions.size(); i++)
 	{
-		std::cout<< core->functions[i]->name<<std::endl;
+		std::cout<< core->functions[i]->name<<std::endl; 
 	}
 	for(int i =0; i< instructions.size(); i++)
 	{
-		//std::cout << i << "," << instructions[i]->name_ <<std::endl;
+		//std::cout << i << "," << instructions[i]->name_ <<std::endl; 
 		if(core->functions[fce_num]->end == i)
 		{
 			xmlAddChild(data.root_ptr, parent);
@@ -219,10 +220,11 @@ Robots::Robots(GamePoints g_)
 }
 void Robots::createNew(std::string name)
 {
+	std::cout << "Creating new robot" << std::endl; 
 	if (actualRobot!=NULL)
 		robots.push_back(actualRobot);
 	actualRobot = new Robot(name, g);
-	std::cout << "creating new robot" << std::endl;
+	std::cout << "New robot created" << std::endl; 
 	
 }
 
@@ -241,31 +243,31 @@ void Robots::set(Options o, size_t value)
 	switch(o) //TODO po zlinkovani
 	{
 		case OptionHealth:
-			std::cout << "setting health to:" << value << std::endl;
+			std::cout << "setting health to:" << value << std::endl; 
 			break;
 		case OptionSeeX:	       
-			std::cout << "setting SEE x to:" << value << std::endl;
+			std::cout << "setting SEE x to:" << value << std::endl; 
 			break;
 		case OptionSeeY:
-			std::cout << "setting SEE y to:" << value << std::endl;
+			std::cout << "setting SEE y to:" << value << std::endl; 
 			break;
 		case OptionSee:
-			std::cout << "setting SEE to:" << value << std::endl;
+			std::cout << "setting SEE to:" << value << std::endl; 
 			break;
 		case OptionMemory:
 			actualRobot->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
 			break;
 		case OptionAttack:
-			std::cout << "setting Attack x to:" << value << std::endl;
+			std::cout << "setting Attack x to:" << value << std::endl; 
 			break;
 		case OptionDefense:
-			std::cout << "setting defense to " << value << std::endl;
+			std::cout << "setting defense to " << value << std::endl; 
 			break;
 		case OptionMisilleAttack:
-			std::cout << "setting Missille attack to " << value << std::endl;
+			std::cout << "setting Missille attack to " << value << std::endl; 
 			break;
 		case OptionMisilleHealth:
-			std::cout << "setting Missille health to:" << value << std::endl;
+			std::cout << "setting Missille health to:" << value << std::endl; 
 			break;
 	}
 }

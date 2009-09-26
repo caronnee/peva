@@ -130,7 +130,7 @@ program: program robot
 	}
 	;
 define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER 
-	{ 
+	{ 	
 		program->createNew($2); 
 	}
 	;

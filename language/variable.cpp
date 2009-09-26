@@ -7,7 +7,7 @@ Variable::Variable()
 }
 Variable::Variable(std::string name_)
 {
-	owner = 0;
+	owner = -1;
 	objectValue = NULL;
 }
 /*void Variable::set_variable(Type t)
