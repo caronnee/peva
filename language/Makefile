@@ -69,3 +69,7 @@ distclean:
 run:
 	make
 	./bparser vstup
+rerun:
+	make distclean
+	make
+	./bparser vstup

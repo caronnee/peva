@@ -16,7 +16,8 @@ struct Memory_record
 
 class Memory
 {
-	/* Position where to begint o check free space */
+private:
+	/* position where to begint o check free space */
 	size_t position;
 
 	/* number of units that is possible to allocate */
@@ -40,6 +41,12 @@ class Memory
 	/* sets variable v and structures in it as free */
 	void set_free(Variable * v);
 
+	/* help function to fill variable element of type t */
+	void fill(Variable * &v, 
+		  Create_type & t, 
+		  std::stack<Variable *> &variables_to_assign, 
+		  std::stack<Create_type> & types_to_assign,
+		  size_t ID);
 public:
 	/* class constructor */
 	Memory(int size = 100);

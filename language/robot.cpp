@@ -210,7 +210,7 @@ void Robot::execute()
 	{
 		instructions[core->PC]->execute(core);
 		core->PC++;
-		sleep(1);
+		//sleep(1);
 	}
 }
 Robots::Robots(GamePoints g_)

@@ -14,9 +14,9 @@ ROBOT qqq
 	VISIT_SEQ( START[3], START[2], [13,18])
 	VISIT( [100,200])
 
-/*	integer i = 6;
+	integer i = 6;
 	integer [7] a = {11,21,31,41,51,52,61};
-
+/*
 	real function f()
 	{
 		return 5;
