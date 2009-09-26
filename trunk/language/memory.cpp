@@ -75,34 +75,14 @@ void Memory::free_tmp()
 	else
 		std::cout <<"Error! Trying to free a nonempty temp" << std::endl;
 }
-
-Variable * Memory::find_free(Create_type t, size_t ID)
+void Memory::fill(Variable * &v, 
+		  Create_type & t, 
+		  std::stack<Variable *> &variables_to_assign, 
+		  std::stack<Create_type> & types_to_assign,
+		  size_t ID)
 {
-	//bez rekurzie pre istotu
-	std::stack<Create_type> types_to_assign;
-	std::stack<Variable *> variables_to_assign;
-	Variable * v = next_id(ID);
-	Variable * ret_v = NULL;
-	variables_to_assign.push(v);
-	types_to_assign.push(t);
-
-	bool first = true;
-	while(!types_to_assign.empty())
+	if (!t.is_simple())
 	{
-		t = types_to_assign.top();
-		types_to_assign.pop();
-		v = variables_to_assign.top();
-		variables_to_assign.pop();
-		if(t.is_simple())
-		{
-			if (first)
-			{
-				return v;
-			}	
-			v = next_id(ID);
-			continue;
-		}
-		first = false;
 		Variable * tmp = NULL;
 		for(int i =0; i<t.range; i++) 
 		{
@@ -124,6 +104,28 @@ Variable * Memory::find_free(Create_type t, size_t ID)
 			}
 			v->array.elements.push_back(tmp);
 		}
+
+	}
+}
+
+Variable * Memory::find_free(Create_type t, size_t ID)
+{
+	//bez rekurzie pre istotu
+	std::stack<Create_type> types_to_assign;
+	std::stack<Variable *> variables_to_assign;
+	Variable * v = next_id(ID);
+	Variable * ret_v = v;
+	variables_to_assign.push(v);
+
+	fill(v,t, variables_to_assign, types_to_assign, ID);
+
+	while(!types_to_assign.empty())
+	{
+		t = types_to_assign.top();
+		types_to_assign.pop();
+		v = variables_to_assign.top();
+		variables_to_assign.pop();
+		fill(v,t,variables_to_assign, types_to_assign, ID);
 	}
 	return ret_v;
 }
