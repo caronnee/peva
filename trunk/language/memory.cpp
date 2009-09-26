@@ -69,7 +69,7 @@ void Memory::free_tmp()
 {
 	if (temp.size()>0)
 	{
-		set_free(temp.top());	
+		set_free(temp.front());	
 		temp.pop();
 	}
 	else

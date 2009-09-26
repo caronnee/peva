@@ -67,12 +67,10 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 	while (!types.empty())
 	{
 		
-		std::cout << "hoe much?" <<types.size() << std::endl;
-		std::cout << "loaded?" <<l.output.size() << std::endl;
 		Create_type * t = types.back();
 		std::cout << "typ je:" << t->type << "meno:" << n->name<< std::endl;
 		types.pop_back();
-		if (is_simple(t->type))
+		if (t->is_simple())
 		{
 			std::cout << "ano" << std::endl;
 			if (n->nested == Local)
@@ -154,7 +152,7 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 			for(size_t i = 0; i<t->nested_vars.size(); i++)
 			{
 				nest = true;
-				types.push_back(t->nested_vars[i].type);
+				types.push_back(&t->nested_vars[i].type); //TODO skarede
 			}
 			for(int i = 0; i<t->range; i++)
 			{

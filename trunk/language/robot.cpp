@@ -253,7 +253,7 @@ void Robots::set(Options o, size_t value)
 			std::cout << "setting SEE to:" << value << std::endl;
 			break;
 		case OptionMemory:
-			actualRobot->core->memory.realok(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
+			actualRobot->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
 			break;
 		case OptionAttack:
 			std::cout << "setting Attack x to:" << value << std::endl;

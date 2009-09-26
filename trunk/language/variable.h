@@ -26,8 +26,8 @@ struct Variable // struktura premennych
 	Array array;
 	Object * objectValue;
 	Variable();
-	Variable(std::string s,Type t);
-	void set_variable(Type t);
+	Variable(std::string s);
+///	void set_variable(Type t);
 	void copyValue(Variable * v);
 };
 

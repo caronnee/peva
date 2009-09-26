@@ -152,8 +152,8 @@ places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back
 	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  {$$ = $1; $$.push_back(Position(-1,$5)); }
 	;
 options: // defaultne opsny, normalny default alebo ako boli nadekralovane
-		| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4);}
-		;
+	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4);}
+	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 		|global_variables local_variables { $$=join_instructions($1,$2);}
 		;
@@ -162,15 +162,15 @@ type:	  simple_type { $$ = $1;}
 	; 
 /* definicie, lokalnych a globalnych premennych, local variables cez command_var */
 local_variables:  type names TOKEN_SEMICOLON 
-{  
-	for(int i =0; i< $2.size(); i++)
-	{
-		Node * n = program->actualRobot->add($2[i].id, $1); 
-		$$.push_back(new InstructionCreate(n)); 
-		if ($2[i].default_set) 
-			$$ = join_instructions($$, assign_default(@1,program->actualRobot, n, $2[i]));
-	}
-}
+		{  
+			for(int i =0; i< $2.size(); i++)
+			{
+				Node * n = program->actualRobot->add($2[i].id, $1); 
+				$$.push_back(new InstructionCreate(n)); 
+				if ($2[i].default_set) 
+					$$ = join_instructions($$, assign_default(@1,program->actualRobot, n, $2[i]));
+			}
+		}
 		;
 simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } //najdi REAL
 		|TOKEN_VAR_INT { $$ = program->actualRobot->find_type(TypeInteger); }
@@ -589,13 +589,13 @@ variable: TOKEN_IDENTIFIER
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
 				if ($$.output.back().nested_vars[i].name == $3)
 				{ 
-					Create_type t = *$$.output.back().nested_vars[i].type;
+					Create_type t = $$.output.back().nested_vars[i].type; //TODO ci to nehapruje
 					$$.output.pop_back();
 					$$.output.push_back(t);
 				}
 		}
 		;
-		//@@
+		
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA 
 		{ 
 			$$ = $2.ins; //exps musia by integery
@@ -603,35 +603,35 @@ array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 			{
 				if ($2.ins[i] == NULL)
 				{
-					$$.ins.push_back(new InstructionLoad());
+					$$.push_back(new InstructionLoad());
 					if ($2.temp[i])
-						$$.ins.push_back(new InstructionRemoveTemp());
+						$$.push_back(new InstructionRemoveTemp());
 				}
 				else
-					$$ = $2.ins[i];
+					$$.push_back($2.ins[i]);
 			}
 
 		} //vezme zo stacku dve hodnoty, pouzije a na stack prihodi novu z tempu
 		|array_access TOKEN_LSBRA exps TOKEN_RSBRA 
 		{
-			$$ = $1.ins;
+			$$ = $1;
 			for ( size_t i = 0; i < $3.ins.size();i++)
 			{
 				if ($3.ins[i] == NULL)
 				{
-					$$.ins.push_back(new InstructionLoad());
+					$$.push_back(new InstructionLoad());
 					if ($3.temp[i])
-						$$.ins.push_back(new InstructionRemoveTemp());
+						$$.push_back(new InstructionRemoveTemp());
 				}
 				else
-					$$ = $3.ins[i];
+					$$.push_back($3.ins[i]);
 			}
 		} 
 		;
 exps: expression {$$ = $1;$$.ins.push_back(NULL);} //Hack
 		| exps TOKEN_COMMA expression 
 		{ 
-			$1.push_back(NULL);
+			$1.ins.push_back(NULL);
 			$$.ins = join_instructions($1.ins, $3.ins);
 			$$.output = $1.output;
 			for (int i =0; i<$1.output.size(); i++)
