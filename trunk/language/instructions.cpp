@@ -64,9 +64,11 @@ int InstructionLoadLocal::execute(Core * c)
 }
 xmlNodePtr InstructionLoadLocal::xml_format()
 {
+	std::cout<<"BEGY";getc(stdin);
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr child = xmlNewText( BAD_CAST node->name.c_str());
 	xmlAddChild(n, child);
+	std::cout<<"BEGYend";getc(stdin);
 	return n;
 }
 InstructionLoadGlobal::InstructionLoadGlobal()
