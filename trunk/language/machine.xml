@@ -1,73 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
-  <InstructionCreate>i</InstructionCreate>
-  <InstructionLoadGlobal>i</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>6</TypeInteger>
-  </InstructionLoad>
-  <InstructionStoreInteger/>
-  <InstructionCreate>a</InstructionCreate>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
+  <InstructionCreate>l</InstructionCreate>
+  <InstructionLoadGlobal>l</InstructionLoadGlobal>
   <InstructionLoad>
     <TypeInteger>0</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>11</TypeInteger>
+    <TypeInteger>100</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
+  <InstructionLoadGlobal>l</InstructionLoadGlobal>
   <InstructionLoad>
     <TypeInteger>1</TypeInteger>
   </InstructionLoad>
   <InstructionLoad/>
   <InstructionLoad>
-    <TypeInteger>21</TypeInteger>
-  </InstructionLoad>
-  <InstructionStoreInteger/>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>2</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>31</TypeInteger>
-  </InstructionLoad>
-  <InstructionStoreInteger/>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>3</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>41</TypeInteger>
-  </InstructionLoad>
-  <InstructionStoreInteger/>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>4</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>51</TypeInteger>
-  </InstructionLoad>
-  <InstructionStoreInteger/>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>5</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>52</TypeInteger>
-  </InstructionLoad>
-  <InstructionStoreInteger/>
-  <InstructionLoadGlobal>a</InstructionLoadGlobal>
-  <InstructionLoad>
-    <TypeInteger>6</TypeInteger>
-  </InstructionLoad>
-  <InstructionLoad/>
-  <InstructionLoad>
-    <TypeInteger>61</TypeInteger>
+    <TypeInteger>200</TypeInteger>
   </InstructionLoad>
   <InstructionStoreInteger/>
   <main>
