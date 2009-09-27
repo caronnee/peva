@@ -32,6 +32,12 @@ Robot::Robot(std::string s, GamePoints p)
 	defined_types.push_back(new Create_type(TypeLocation));
 	defined_types.back()->add("x",find_type(TypeInteger));
 	defined_types.back()->add("y",find_type(TypeInteger));
+	Create_type *g = new Create_type(TypeLocation);
+	Record r;
+	r.name = "ii";
+//	r.type = Create_type(TypeArray);
+	g->nested_vars.push_back(r);
+	Create_type gg = *g;
 	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
 	c->composite(find_type(TypeObject));
 	defined_types.push_back(c);

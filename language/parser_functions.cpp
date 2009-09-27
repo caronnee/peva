@@ -61,7 +61,6 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 			std::cout << "NULL" << std::endl;
 		else std::cout << l.ins[i]->name_ << std::endl;
 	}
-	getc(stdin);
 	size_t ins_iterator = 0;
 	int y = 0;
 	while (!types.empty())

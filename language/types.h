@@ -29,7 +29,6 @@ struct Record;
 
 struct Create_type
 {
-	bool is_simple();
 	int range;
 	Create_type * data_type;
 	std::vector<Record> nested_vars; //pre strukty
@@ -42,6 +41,7 @@ struct Create_type
 	bool operator==(const Create_type& t);
 	bool operator!=(const Create_type& t);
 	Create_type element();
+	bool is_simple();
 };
 
 struct Record

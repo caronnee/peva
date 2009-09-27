@@ -34,15 +34,15 @@ Create_type::Create_type(const Create_type & t)
 	for(size_t i = 0; i<t.nested_vars.size(); i++)
 	{
 		Record r;
-		r.name = nested_vars[i].name;
-		r.type = nested_vars[i].type;
+		r.name = t.nested_vars[i].name;
+		r.type = t.nested_vars[i].type;
 		nested_vars.push_back(r);
 	}
 	data_type = t.data_type;
 	type = t.type;
 }
 
-void Create_type::composite ( Create_type* t) //vrati sa novy typ, Location = type.add(TYPE_INTEGER, INT)
+void Create_type::composite ( Create_type* t) 
 {//FIXME id podruhe, nejaky vykrik
 	this->data_type = t; 
 }

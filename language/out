@@ -1,85 +1,176 @@
-parser.cpp: In function ‘int yy_get_next_buffer()’:
-parser.cpp:4986: warning: comparison between signed and unsigned integer expressions
-parser_functions.cpp: In function ‘void add_variables(Program*, std::vector<Constr, std::allocator<Constr> >, Create_type)’:
-parser_functions.cpp:8: warning: comparison between signed and unsigned integer expressions
-parser_functions.cpp: In function ‘Instructions join_instructions(Instructions, Instructions)’:
-parser_functions.cpp:27: warning: comparison between signed and unsigned integer expressions
-parser_functions.cpp: In function ‘Instruction* operAdd(Operation)’:
-parser_functions.cpp:71: warning: enumeration value ‘OperationMultiply’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationDivide’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationModulo’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationLess’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationLessEqual’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationGreater’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationGreaterEqual’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationEqual’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationNotEqual’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationAnd’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationOr’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationNot’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationBoolAnd’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationBoolOr’ not handled in switch
-parser_functions.cpp:71: warning: enumeration value ‘OperationBoolNot’ not handled in switch
-parser_functions.cpp:78: warning: control reaches end of non-void function
-./tree/tree.cpp: In function ‘std::string quicksort(std::string)’:
-./tree/tree.cpp:24: warning: comparison between signed and unsigned integer expressions
-biflex.o: In function `operOr(Operation)':
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:84: undefined reference to `InstructionBinaryNot::InstructionBinaryNot()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:86: undefined reference to `InstructionBinaryOr::InstructionBinaryOr()'
-biflex.o: In function `operAdd(Operation)':
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:74: undefined reference to `InstructionPlus::InstructionPlus()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:76: undefined reference to `InstructionMinus::InstructionMinus()'
-biflex.o: In function `operMul(Operation)':
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:55: undefined reference to `InstructionMultiply::InstructionMultiply()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:57: undefined reference to `InstructionDivide::InstructionDivide()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:59: undefined reference to `InstructionModulo::InstructionModulo()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:61: undefined reference to `InstructionBinaryAnd::InstructionBinaryAnd()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:63: undefined reference to `InstructionBinaryOr::InstructionBinaryOr()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:65: undefined reference to `InstructionNot::InstructionNot()'
-biflex.o: In function `operRel(Operation)':
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:38: undefined reference to `InstructionLt::InstructionLt()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:40: undefined reference to `InstructionLe::InstructionLe()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:42: undefined reference to `InstructionEqual::InstructionEqual()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:44: undefined reference to `InstructionGt::InstructionGt()'
-/home/peva/bakalarka/trunk/language/parser_functions.cpp:46: undefined reference to `InstructionGe::InstructionGe()'
-bison.o: In function `yyparse(Program*)':
-bison.cpp:(.text+0xb70): undefined reference to `InstructionCreate::InstructionCreate(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0xc80): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0xe4f): undefined reference to `InstructionStore::InstructionStore()'
-bison.cpp:(.text+0x1659): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x172d): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x1f29): undefined reference to `InstructionLoad::InstructionLoad(float)'
-bison.cpp:(.text+0x1fa7): undefined reference to `InstructionLoad::InstructionLoad(int)'
-bison.cpp:(.text+0x2025): undefined reference to `InstructionLoad::InstructionLoad(float)'
-bison.cpp:(.text+0x20a3): undefined reference to `InstructionLoad::InstructionLoad(int)'
-bison.cpp:(.text+0x250b): undefined reference to `InstructionMustJump::InstructionMustJump(int)'
-bison.cpp:(.text+0x25c7): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x29a9): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x2a40): undefined reference to `InstructionMustJump::InstructionMustJump(int)'
-bison.cpp:(.text+0x2d0a): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x2d9c): undefined reference to `InstructionStore::InstructionStore()'
-bison.cpp:(.text+0x2e0a): undefined reference to `InstructionReturn::InstructionReturn()'
-bison.cpp:(.text+0x2e7b): undefined reference to `InstructionReturn::InstructionReturn()'
-bison.cpp:(.text+0x2eec): undefined reference to `InstructionBreak::InstructionBreak()'
-bison.cpp:(.text+0x2fc9): undefined reference to `InstructionPlusPlus::InstructionPlusPlus()'
-bison.cpp:(.text+0x303a): undefined reference to `InstructionMinusMinus::InstructionMinusMinus()'
-bison.cpp:(.text+0x30f1): undefined reference to `InstructionStore::InstructionStore()'
-bison.cpp:(.text+0x3193): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x326a): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x346f): undefined reference to `Call::Call(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x367f): undefined reference to `InstructionMustJump::InstructionMustJump(int)'
-bison.cpp:(.text+0x3720): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x3a25): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x3bd4): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x3d7b): undefined reference to `InstructionMustJump::InstructionMustJump(int)'
-bison.cpp:(.text+0x3e1c): undefined reference to `InstructionJump::InstructionJump(int, int)'
-bison.cpp:(.text+0x4129): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x4200): undefined reference to `InstructionLoad::InstructionLoad(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
-bison.cpp:(.text+0x43d1): undefined reference to `CallMethod::CallMethod()'
-bison.cpp:(.text+0x4486): undefined reference to `InstructionLoad::InstructionLoad()'
-bison.cpp:(.text+0x4616): undefined reference to `InstructionLoad::InstructionLoad()'
-bison.cpp:(.text+0x4824): undefined reference to `InstructionMinusMinus::InstructionMinusMinus()'
-bison.cpp:(.text+0x48b6): undefined reference to `InstructionPlusPlus::InstructionPlusPlus()'
-bison.cpp:(.text+0x5094): undefined reference to `InstructionBinaryAnd::InstructionBinaryAnd()'
-collect2: ld returned 1 exit status
-make: *** [bparser] Error 1
+Binárny súbor ./core.o je zodpovedajúci
+Binárny súbor ./.instructions.cpp.swp je zodpovedajúci
+Binárny súbor ./help.o je zodpovedajúci
+./parser_functions.cpp:	getc(stdin);
+Binárny súbor ./memory.o je zodpovedajúci
+Binárny súbor ./biflex.o je zodpovedajúci
+./parser.cpp:	 * if we're using stdio for input, then we want to use getc()
+./parser.cpp:			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
+Binárny súbor ./parser.o je zodpovedajúci
+Binárny súbor ./variable.o je zodpovedajúci
+Binárny súbor ./parser_classes.o je zodpovedajúci
+Binárny súbor ./targets.o je zodpovedajúci
+Binárny súbor ./.robot.cpp.swp je zodpovedajúci
+Binárny súbor ./tree.o je zodpovedajúci
+Binárny súbor ./functions.o je zodpovedajúci
+Binárny súbor ./types.o je zodpovedajúci
+Binárny súbor ./bparser je zodpovedajúci
+./node.cpp://	getc(stdin);
+Binárny súbor ./instructions.o je zodpovedajúci
+./tree.cpp://		getc(stdin);
+./tree.cpp://			getc(stdin);
+./tree.cpp://			getc(stdin);
+Binárny súbor ./position.o je zodpovedajúci
+./.svn/text-base/parser_functions.cpp.svn-base:	getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Assigning variable" << node->name << "...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Loading local variable " << node->name << "...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " Loading global variable: " << node->name << "...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:		std::cout << "Loading constant ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:		std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "size:" <<c->values.size();getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "blablabla" << comp;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "szkdfh?" << comp;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Converting" << c->values.back()->realValue;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "to integer" << c->values.back()->integerValue << "...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Converting" <<c->values.back()->integerValue;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "to real" << c->values.back()->realValue << "...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Duplicating variable" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout<<"Storing integer, value: " << c->values.back()->integerValue;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout<<"Storing real, value" <<c->values.back()->realValue<< "..." ;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Storing object, address:" << c->values.back()->objectValue <<"...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Calling function: " << function->name << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:			std::cout << "Storing parameter by reference" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:			std::cout << "Storing parameter by value" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Popping out variable from stack ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Jumping " << shift << "steps...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Conditional Jump, ";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:		std::cout <<" condition fulfilled ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:		std::cout <<" condition not fulfilled ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Breaking loop, from depth" <<c->depth;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "to depth " << c->depth <<"...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	//	std::cout << loop_label << ": loop_label in break" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "hlbka: " << depth_ << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Return from depth" << c->depth;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "to depth" << c->depth <<"..."<< std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Restorin' "; //zmaz prebentivne navratove hodnoty a parametregetc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Integer plusplus ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real plusplus ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Integer minusminus ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real minusminus ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << name_ << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Adding two integer numbers...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << name_ << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Adding two real numbers...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Substraction two integer numbers ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Substracting two real numbers ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Multiplying two integer numbers ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Multiplying two real numbers ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Dividing two integer numbers ..."; getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Dividing two real numbers ..."; getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Module ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " & ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " && ..."; getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " | ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " || ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " ~ ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " Not ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Integer > ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real > ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout<<"Integer >= ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout<<"Real >= ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << " Integer == ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real == ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Object == ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "object != ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real != ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Object != ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Integer < ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real < ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Integer <= ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Real <=";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << name_ << "Increasing depth to:" << c->depth +1<< "...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout <<"Ending depth"<< c->depth <<"...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Filling objects in robot's see angle ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Stepping ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Waiting ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Shooting at location...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Shooting at angle...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" << std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Turning ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Turning right ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Turning left ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Checking hit state of object ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Checking playerism ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Checking wallism ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout <<"Checking missilism ..."; //s jednym parametromgetc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Getting location of object ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "Checking movement ...";getc(stdin);
+./.svn/text-base/instructions.cpp.svn-base:	std::cout << "OK" <<std::endl;getc(stdin);
+./.svn/text-base/tree.cpp.svn-base://		getc(stdin);
+./.svn/text-base/tree.cpp.svn-base://			getc(stdin);
+./.svn/text-base/tree.cpp.svn-base://			getc(stdin);
+./.svn/text-base/node.cpp.svn-base://	getc(stdin);
+Binárny súbor ./node.o je zodpovedajúci
