@@ -15,8 +15,15 @@ ROBOT qqq
 	VISIT( [100,200])
 
 	location l = {100,200};
+	void function f(integer i, integer g, integer k)
+	{
+		i++;
+	}
 	main() // komentar
 	{
+		integer i =9;
+		f(i,i,i);
+	//	shoot(l);
 	/*	location l = {100,200};
 		i = 61;
 		a[5] = 3;

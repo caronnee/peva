@@ -500,31 +500,71 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1);}
 		;
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
-			$$ = $3; 
 			Function * f =program->actualRobot->find_f($1); 
 			if (f == NULL)
 				program->actualRobot->error(@1,Robot::ErrorFunctionNotDefined); 
-			else {
-				if (f->parameters.size()!=$3.output.size()) 
-					program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
-				$$.ins.push_back(new Call(f));
-				if (f->return_var->type_of_variable->type !=TypeVoid) 
-					$$.output.push_back(*f->return_var->type_of_variable);
-			}
-			for (size_t i =0; i< $3.temp.size(); i++)
+			else 
 			{
-				if ($3.temp[i])
-					$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+				if (f->parameters.size()!=$3.output.size()) 
+				{
+					program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
+				}
+				else
+				{
+					size_t iter_out = 0;
+					for (size_t i= 0; i< $3.ins.size(); i++)
+					{
+						if ($3.ins[i]!= NULL)
+						{
+							$$.ins.push_back($3.ins[i]);
+							continue;
+						}
+						if (($3.output[iter_out].type == TypeReal)
+								&&(f->parameters[iter_out].node->type_of_variable->type == TypeInteger))
+						{
+							$$.ins.push_back(new InstructionConversionToInt());
+							$3.output[iter_out] = *program->actualRobot->find_type(TypeInteger);
+						}
+						if (($3.output[i].type == TypeInteger)
+								&&(f->parameters[iter_out].node->type_of_variable->type == TypeReal))
+						{
+							$$.ins.push_back(new InstructionConversionToReal());
+							$3.output[iter_out] = *program->actualRobot->find_type(TypeReal);
+						}
+						if ($3.output[iter_out] != *f->parameters[iter_out].node->type_of_variable)
+						{
+							std::cout << iter_out << "chm!";
+							program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
+							break;
+						}
+						iter_out++;	
+					}
+					$$.ins.push_back(new Call(f));
+					if (f->return_var->type_of_variable->type !=TypeVoid) 
+						$$.output.push_back(*f->return_var->type_of_variable);
+				}
+				for (size_t i =0; i< $3.temp.size(); i++)
+				{
+					if ($3.temp[i])
+						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+				}
 			}
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
-			if ($3.output.size()!=1) program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
-			$$ = feature(@1,program->actualRobot, $1, $3);
-			for (size_t i =0; i< $3.temp.size(); i++)
+			if ($3.output.size()!=1)
 			{
-				if ($3.temp[i])
-					$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+				program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
+			}
+			else
+			{
+
+				$$ = feature(@1,program->actualRobot, $1, $3);
+				for (size_t i =0; i< $3.temp.size(); i++)
+				{
+					if ($3.temp[i])
+						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+				}
 			}
 		} 
 		;
@@ -719,7 +759,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		q.actualRobot->save_to_xml();
-		q.actualRobot->execute();
+//		q.actualRobot->execute();
 	}
 	return 0;	
 }

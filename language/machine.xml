@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
+  <f>
+    <InstructionBegin/>
+    <InstructionLoadLocal>f#i</InstructionLoadLocal>
+    <InstructionPlusPlusInteger/>
+    <InstructionPop/>
+    <InstructionEndBlock/>
+    <InstructionRestore/>
+  </f>
   <InstructionCreate>l</InstructionCreate>
   <InstructionLoadGlobal>l</InstructionLoadGlobal>
   <InstructionLoad>
@@ -21,6 +29,17 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
+    <InstructionCreate>main#i</InstructionCreate>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>9</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <Call begins="0">f</Call>
+    <InstructionPop/>
     <InstructionEndBlock/>
   </main>
 </Machine>

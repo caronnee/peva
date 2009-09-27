@@ -491,9 +491,32 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
-
+		case FeatureShoot:
+			if (e.output.size() != 1)
+			{
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+				break;
+			}
+			if (e.output.back() == *r->find_type(TypeReal))
+			{
+				ee.ins.push_back(new InstructionConversionToInt());
+				e.output.back() = *r->find_type(TypeInteger);
+			}
+			if (e.output.back() == *r->find_type(TypeInteger))
+			{
+				ee.ins.push_back(new InstructionShootAngle);
+				break;
+			}
+			if (e.output.back() == *r->find_type(TypeLocation))
+			{
+				ee.ins.push_back(new InstructionShootLocation());
+				break;
+			}
+			r->error(line, Robot::ErrorOperationNotSupported);
+			break;
 		default:
 			r->error(line, Robot::Robot::ErrorOperationNotSupported);
 	}
+	std::cout << "END";getc(stdin);
 	return ee;
 }

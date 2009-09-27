@@ -193,7 +193,9 @@ void Robot::save_to_xml()
 	}
 	for(int i =0; i< instructions.size(); i++)
 	{
-		//std::cout << i << "," << instructions[i]->name_ <<std::endl; 
+		std::cout << i << "," << instructions[i] <<std::endl; 
+		std::cout << i << "," << instructions[i]->name_ <<std::endl; 
+		getc(stdin);
 		if(core->functions[fce_num]->end == i)
 		{
 			xmlAddChild(data.root_ptr, parent);
