@@ -276,12 +276,14 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 		}
 		else
 		{
-			std::cout << "Storing parameter by value" << std::endl;
+			std::cout << "Storing parameter by value" << std::endl;getc(stdin);
 			v = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back();
+			std::cout << "begin parameter";getc(stdin);
 			v->copyValue(vvv);
 			c->values.pop_back();
+			std::cout << "end of pRmTER FUNCTION";getc(stdin);
 		}
 	}
 	Variable * v;
