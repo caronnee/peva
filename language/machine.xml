@@ -2,9 +2,15 @@
 <Machine>
   <f>
     <InstructionBegin/>
-    <InstructionLoadLocal>f#i</InstructionLoadLocal>
+    <InstructionLoadLocal>f#g</InstructionLoadLocal>
     <InstructionPlusPlusInteger/>
     <InstructionPop/>
+    <InstructionLoad>
+      <TypeReal>5.5</TypeReal>
+    </InstructionLoad>
+    <InstructionStoreReal/>
+    <InstructionLoadLocal>f#</InstructionLoadLocal>
+    <InstructionReturn/>
     <InstructionEndBlock/>
     <InstructionRestore/>
   </f>
@@ -35,9 +41,15 @@
       <TypeInteger>9</TypeInteger>
     </InstructionLoad>
     <InstructionStoreInteger/>
+    <InstructionLoadGlobal>l</InstructionLoadGlobal>
+    <InstructionShootLocation/>
+    <InstructionPop/>
+    <InstructionLoadGlobal>l</InstructionLoadGlobal>
     <InstructionLoadLocal>main#i</InstructionLoadLocal>
-    <InstructionLoadLocal>main#i</InstructionLoadLocal>
-    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>3</TypeInteger>
+    </InstructionLoad>
+    <InstructionConversionToReal/>
     <Call begins="0">f</Call>
     <InstructionPop/>
     <InstructionEndBlock/>
