@@ -512,8 +512,6 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 				}
 				else
 				{
-					std::cout << "naloadovanych parametro" << $3.output.size();
-					getc(stdin);
 					size_t iter_out = 0;
 					for (size_t i= 0; i< $3.ins.size(); i++)
 					{
@@ -758,7 +756,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		q.actualRobot->save_to_xml();
-//		q.actualRobot->execute();
+		q.actualRobot->execute();
 	}
 	return 0;	
 }

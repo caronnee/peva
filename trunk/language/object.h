@@ -45,7 +45,7 @@ struct Robot_body : public Object
 	}
 	int Shoot(int x,int y=1987)
 	{
-		std::cout <<"shooting at speed-dir [" << x << " ,"<< y  << "]." <<std::endl;
+		std::cout <<"shooting at location [" << x << " ,"<< y  << "]." <<std::endl;
 		return 0;
 	}
 	int See()

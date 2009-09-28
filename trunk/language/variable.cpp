@@ -22,10 +22,14 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 	realValue = v->realValue;
 	objectValue = v->objectValue;
 	//este sa postarat o arraye
+	std::cout << "elemnt size parametrer:" << v->array.elements.size(); getc(stdin);
+
+	std::cout << "size function parameter-" << array.elements[0]; getc(stdin);
 	std::vector<Variable *> variables_to_copy;
-	for ( size_t i = 0; i< array.elements.size(); i++)
+	for ( size_t i = 0; i< v->array.elements.size(); i++)
 	{
 		array.elements[i]->copyValue(v->array.elements[i]);
 	}//FIXME zauvazovat ad tym, ci by nemozlo rozumnejse ist cez store/load, poripade bez rekurzie
+	std::cout << "ksaa"; getc(stdin);
 }
 	
