@@ -419,6 +419,12 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 {
 	Element ee;
+	ee.ins = e.ins;
+	std::cout << "zacinam"; getc(stdin);
+	if ((!ee.ins.empty())&&(ee.ins.back() == NULL)) //aktualne moze mat len jedno output -> FIXME aj pre viacere
+	{
+		ee.ins.pop_back();
+	}
 	switch(feat)
 	{
 		case FeatureIsPlayer:
@@ -492,6 +498,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureShoot:
+			std::cout << "Som tu?"; getc(stdin);
 			if (e.output.size() != 1)
 			{
 				r->error(line, Robot::ErrorWrongNumberOfParameters);

@@ -1,4 +1,5 @@
 //TODO zrusit loadGlobal
+//TODO do unkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
 %{
 #include <iostream>
 #include <queue>
@@ -160,7 +161,7 @@ global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 type:	  simple_type { $$ = $1;}
 	| complex_type { $$ = $1;}
 	; 
-/* definicie, lokalnych a globalnych premennych, local variables cez command_var */
+/* definicie, lokalnych a globalnych premenn.ch, local variables cez command_var */
 local_variables:  type names TOKEN_SEMICOLON 
 		{  
 			for(int i =0; i< $2.size(); i++)
@@ -511,6 +512,8 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 				}
 				else
 				{
+					std::cout << "naloadovanych parametro" << $3.output.size();
+					getc(stdin);
 					size_t iter_out = 0;
 					for (size_t i= 0; i< $3.ins.size(); i++)
 					{
@@ -525,7 +528,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 							$$.ins.push_back(new InstructionConversionToInt());
 							$3.output[iter_out] = *program->actualRobot->find_type(TypeInteger);
 						}
-						if (($3.output[i].type == TypeInteger)
+						if (($3.output[iter_out].type == TypeInteger)
 								&&(f->parameters[iter_out].node->type_of_variable->type == TypeReal))
 						{
 							$$.ins.push_back(new InstructionConversionToReal());
@@ -533,7 +536,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						}
 						if ($3.output[iter_out] != *f->parameters[iter_out].node->type_of_variable)
 						{
-							std::cout << iter_out << "chm!";
+							std::cout << "zlyhalo to na:" << iter_out << "chm!";
 							program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 							break;
 						}
@@ -552,20 +555,13 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
-			if ($3.output.size()!=1)
+			$$ = feature(@1,program->actualRobot, $1, $3);
+			for (size_t i =0; i< $3.temp.size(); i++)
 			{
-				program->actualRobot->error(@1,Robot::ErrorWrongNumberOfParameters);
+				if ($3.temp[i])
+					$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
 			}
-			else
-			{
 
-				$$ = feature(@1,program->actualRobot, $1, $3);
-				for (size_t i =0; i< $3.temp.size(); i++)
-				{
-					if ($3.temp[i])
-						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
-				}
-			}
 		} 
 		;
 
@@ -574,10 +570,13 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 		|call_parameters TOKEN_COMMA expression 
 		{
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi onci output
-			$$.ins = join_instructions($3.ins,$1.ins);
-			$$.output = $3.output;
-			for (int i =0; i< $1.output.size();i++) 
-				$$.output.push_back($1.output[i]);
+			$$.ins = join_instructions($1.ins,$3.ins);
+			$$.output = $1.output;
+			for (int i =0; i< $3.output.size();i++) 
+			{
+				$$.output.push_back($3.output[i]);
+			//	$$.temp.push_back($3.temp[i]);
+			}
 		}
 		;
 //ziaden output
