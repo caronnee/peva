@@ -38,6 +38,7 @@ Variable * Memory::assign(Create_type type, size_t id, size_t depth_)
 	m.variable = find_free(type, id);
 	m.depth = depth_;
 	assigned.push_back(m);
+	std::cout << "assignovane #elements:" << m.variable->array.elements.size() << std::endl;
 	return m.variable;
 }
 

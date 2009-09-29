@@ -3,7 +3,7 @@
   <f>
     <InstructionBegin/>
     <InstructionLoadLocal>f#g</InstructionLoadLocal>
-    <InstructionPlusPlusInteger/>
+    <InstructionPlusPlusReal/>
     <InstructionPop/>
     <InstructionLoad>
       <TypeReal>5.5</TypeReal>
@@ -41,11 +41,10 @@
       <TypeInteger>9</TypeInteger>
     </InstructionLoad>
     <InstructionStoreInteger/>
-    <InstructionLoadGlobal>l</InstructionLoadGlobal>
-    <InstructionShootLocation/>
-    <InstructionPop/>
-    <InstructionLoadGlobal>l</InstructionLoadGlobal>
     <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionConversionToReal/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionConversionToReal/>
     <InstructionLoad>
       <TypeInteger>3</TypeInteger>
     </InstructionLoad>
