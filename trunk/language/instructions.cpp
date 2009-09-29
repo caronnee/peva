@@ -128,14 +128,11 @@ int InstructionLoad::execute(Core *c)
 		return 0;
 	}//else from stack
 	std::cout << "Loading array, element number:" << c->values.back()->integerValue <<"...";
-	std::cout << "size:" <<c->values.size();
 	int range = c->getIntFromStack();
 	Variable * comp = c->values.back();
 	c->values.pop_back();
-	std::cout << "blablabla" << comp;
 	comp = comp->array.elements[range];
 	c->values.push_back(comp);
-	std::cout << "szkdfh?" << comp;
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -190,8 +187,11 @@ InstructionConversionToReal::InstructionConversionToReal()
 }
 int InstructionConversionToReal::execute(Core * c)
 {
+	std::cout << "Konvert" << c->values.size();
+	getc(stdin);
 	std::cout << "Converting" <<c->values.back()->integerValue;
 	float f = (float)c->getIntFromStack();
+	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->realValue = f;
 	std::cout << "to real" << c->values.back()->realValue << "...";
 	std::cout << "OK" << std::endl;
@@ -280,10 +280,8 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 			v = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back();
-			std::cout << "begin parameter";getc(stdin);
 			v->copyValue(vvv);
 			c->values.pop_back();
-			std::cout << "end of pRmTER FUNCTION";getc(stdin);
 		}
 	}
 	Variable * v;

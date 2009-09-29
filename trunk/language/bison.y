@@ -218,7 +218,8 @@ values: expression { $$ = $1; }
 			$$ = $1; 
 			$$.ins.push_back(NULL);
 			$$.ins = join_instructions($$.ins, $3.ins);
-			$$.output.push_back($3.output[0]);
+			$$.output.push_back($3.output.back()); //FIXME
+			$$.temp.push_back($3.temp.back());
 		}
 		| TOKEN_BEGIN values TOKEN_END { $$ = $2;} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
 		| values TOKEN_COMMA TOKEN_BEGIN values TOKEN_END 
@@ -226,22 +227,31 @@ values: expression { $$ = $1; }
 			$$ = $1; 
 			$$.ins = join_instructions($$.ins,$4.ins); 
 			for(size_t i=0; i<$4.output.size(); i++)
+			{
 				$$.output.push_back($4.output[i]);
+				$$.temp.push_back($4.temp[i]);
+			}
 		} //addOputpuTokenNotDefined
 		;
 declare_functions: /*	ziadne deklarovane funkcie	*/ { program->actualRobot->enter("main", program->actualRobot->find_type(TypeVoid)); }
 		|declare_function_ { $$ = $1; program->actualRobot->enter("main", program->actualRobot->find_type(TypeVoid));}
 		;
-function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER { $$ = $3; program->actualRobot->enter($3, $1); } //zatial nepotrebujeme vediet zanoraenie , enter loop pre returny
+function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER 
+		{
+			 $$ = $3;
+			 program->actualRobot->enter($3, $1); 
+		} 
 		;
 return_type:	type { $$ = $1; } //normalne sa neda premenna taka, ze VOID
-		|TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid); }
+		|TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid);}
 		;
 parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); }
 		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->actualRobot->add($4, $3)));}
 		| TOKEN_REFERENCE type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($3,PARAMETER_BY_REFERENCE, program->actualRobot->add($3, $2))); }
 		| parameters TOKEN_COMMA TOKEN_REFERENCE type TOKEN_IDENTIFIER 
-{ $$.push_back(Parameter_entry($5,PARAMETER_BY_REFERENCE, program->actualRobot->add($5, $4))); }
+		{ 
+			$$.push_back(Parameter_entry($5,PARAMETER_BY_REFERENCE, program->actualRobot->add($5, $4))); 
+		}
 		;
 declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  
 		{ 
@@ -432,7 +442,11 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 				$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
 			}
 		}
-		|TOKEN_RETURN TOKEN_SEMICOLON {$$.push_back(new InstructionReturn(program->actualRobot->core->depth));} //v node zostane predchadzajuca hodnota//TODO ocheckovat vsetky vetvy
+		|TOKEN_RETURN TOKEN_SEMICOLON 
+		{
+			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
+		} //v node zostane predchadzajuca hodnota//TODO ocheckovat vsetky vetvy
+		
 		|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
 			std::cout << "Adding break to in depth" <<program->actualRobot->core->depth << std::endl;
@@ -451,16 +465,30 @@ command_var: local_variables { $$ = $1;} //tu nebude ziadny output, vyriesene v 
 		;
 //mal by byt prazdy output
 simple_command:	assign {$$ = $1;} //tu nie je ziadne output
-		|unary_var { $$ = $1.ins; for (size_t i =0; i<$1.output.size(); i++); $$.push_back(new InstructionPop());} //Plus Plus Plus neee:)
+		|unary_var 
+		{ 
+			$$ = $1.ins; 
+			if($1.output.size()>0)
+			{
+				$$.push_back(new InstructionPop());
+				if($1.temp.back())
+					$$.push_back(new InstructionRemoveTemp());
+			}
+		} //Plus Plus Plus neee:)
 		;
 //pozor na to, co sa assignuje. TODO array/struct, ako by to vyzeralo/struct, ako by to vyzeralo->FIXME
 assign: variable_left TOKEN_ASSIGN expression 
 	{
-		Node * n = $3.ins.back()->get_node();
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
+		{
 			$3.ins.push_back(new InstructionConversionToInt());
+			$3.temp.back() = true;
+		}
 		else if	(($1.output.back().type == TypeReal)&&($3.output.back().type == TypeInteger))
+		{
 			$3.ins.push_back(new InstructionConversionToReal());
+			$3.temp.back() = true;
+		}
 		else if ($1.output.back()!=$3.output.back())
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
 		$$ = join_instructions($1.ins, $3.ins); 
@@ -476,12 +504,9 @@ assign: variable_left TOKEN_ASSIGN expression
 				$$.push_back(new InstructionStoreObject());
 				break;
 			case TypeLocation:
+				$$.push_back(new InstructionDuplicate());
 				$$.push_back(new InstructionLoad(0));
 				$$.push_back(new InstructionStoreInteger());
-				if (n->nested == Local)
-					$$.push_back(new InstructionLoadLocal(n));
-				else 
-					$$.push_back(new InstructionLoadGlobal(n));
 				$$.push_back(new InstructionLoad(1));
 				$$.push_back(new InstructionStoreInteger()); //TODO type array
 				break;
@@ -489,14 +514,14 @@ assign: variable_left TOKEN_ASSIGN expression
 		}
 		if ($3.temp.back())
 			$$.push_back(new InstructionRemoveTemp());
-		std::cout << "Vystupujem do assignu" << std::endl;
 	}
 	;
-variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1);}
+variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); $$.temp.push_back(false);}
 		| TOKEN_IDENTIFIER array_access 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
 			$$.ins = join_instructions($$.ins, $2); //TODO check range
+			$$.temp.push_back(false);
 		} //TODO v loade checkovat, ci sa nestavam mimo ramec.
 		;
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
@@ -534,13 +559,13 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						}
 						if ($3.output[iter_out] != *f->parameters[iter_out].node->type_of_variable)
 						{
-							std::cout << "zlyhalo to na:" << iter_out << "chm!";
 							program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 							break;
 						}
 						iter_out++;	
 					}
 					$$.ins.push_back(new Call(f));
+					$$.temp.push_back(true);
 					if (f->return_var->type_of_variable->type !=TypeVoid) 
 						$$.output.push_back(*f->return_var->type_of_variable);
 				}
@@ -549,6 +574,8 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 					if ($3.temp[i])
 						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
 				}
+				$$.temp.push_back(false);
+				std::cout << "Tu sa dostanem" << std::endl; getc(stdin);
 			}
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
@@ -559,7 +586,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 				if ($3.temp[i])
 					$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
 			}
-
+			$$.temp.push_back(true);
 		} 
 		;
 
@@ -579,46 +606,61 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 		;
 //ziaden output
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
-{
-	$5.push_back(new InstructionMustJump($7.size()));
-	$3.ins.push_back(new InstructionJump(0,$5.size()));
-	$$ =join_instructions($3.ins,$5);
-	$$ =join_instructions($$,$7);
-}
-		| command_var {$$ = $1;} //prazdy output
-		|block_of_instructions { $$ = $1;}
-		;
+	{
+		$5.push_back(new InstructionMustJump($7.size()));
+		$3.ins.push_back(new InstructionJump(0,$5.size()));
+		$$ =join_instructions($3.ins,$5);
+		$$ =join_instructions($$,$7);
+	}
+	| command_var {$$ = $1;} //prazdy output
+	|block_of_instructions { $$ = $1;}
+	;
 //ziaden output
 unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
-		|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
-		|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched 
-{
-	$5.push_back(new InstructionMustJump($7.size())); //outputy sa tymto znicia
-	$3.ins.push_back(new InstructionJump(0,$5.size()));
-	$$ = join_instructions($3.ins,$5);
-	$$ = join_instructions($$,$7);
-}
+	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
+	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched 
+	{
+		$5.push_back(new InstructionMustJump($7.size())); //outputy sa tymto znicia
+		$3.ins.push_back(new InstructionJump(0,$5.size()));
+		$$ = join_instructions($3.ins,$5);
+		$$ = join_instructions($$,$7);
+	}
 		;
 //ziadny output nema zostat
 init: 	local_variables { $$ = $1;}
 		| assign TOKEN_SEMICOLON {$$ = $1;}
 		;
 unary_var: variable {$$ = $1;}
-		|variable TOKEN_PLUSPLUS {$$ = $1; if($$.output.back() == TypeReal) $$.ins.push_back(new InstructionPlusPlusReal());
-	else if ($$.output.back() == TypeInteger) $$.ins.push_back(new InstructionPlusPlusInteger());
-	else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);} 
-	|variable TOKEN_MINUSMINUS { $$ = $1; if($$.output.back() == TypeReal)$$.ins.push_back(new InstructionMinusMinusReal());
-		else if ($$.output.back() == TypeInteger) $$.ins.push_back(new InstructionMinusMinusInteger());
-		else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);}
+		|variable TOKEN_PLUSPLUS 
+		{
+			$$ = $1; 
+			if($$.output.back() == TypeReal) 
+				$$.ins.push_back(new InstructionPlusPlusReal());
+			else if ($$.output.back() == TypeInteger) 
+				$$.ins.push_back(new InstructionPlusPlusInteger());
+			else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);
+			$$.temp.push_back(true);
+		} 
+		|variable TOKEN_MINUSMINUS 
+		{
+			 $$ = $1; 
+			 if($$.output.back() == TypeReal)
+				 $$.ins.push_back(new InstructionMinusMinusReal());
+			else if ($$.output.back() == TypeInteger) 
+				$$.ins.push_back(new InstructionMinusMinusInteger());
+			else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);
+			$$.temp.push_back(true);
+			}
 variable: TOKEN_IDENTIFIER 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
+			$$.temp.push_back(false);
 		}
 		|TOKEN_IDENTIFIER array_access 
 		{ 
 			$$ = ident_load(@1,program->actualRobot, $1); //TODO??
 			$$.ins = join_instructions($$.ins,$2);
-			
+			$$.temp.push_back(false);	
 		}
 		|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
@@ -630,6 +672,7 @@ variable: TOKEN_IDENTIFIER
 					$$.output.pop_back();
 					$$.output.push_back(t);
 				}
+			$$.temp.push_back($1.temp.back());
 		}
 		;
 		
@@ -676,45 +719,58 @@ exps: expression {$$ = $1;$$.ins.push_back(NULL);} //Hack
 		}
 		;
 expression_base: unary_var { $$ = $1;}
-		|number{$$ = $1; std::cout << "number, type" << $$.output.back().type << std::endl;}
+		|number{$$ = $1; }
 		|TOKEN_LPAR expression TOKEN_RPAR {$$ = $2;}
 		;
-expression_mul:expression_base { $$ = $1; std::cout << "u expressny"<<$$.output.back().type;}
+expression_mul:expression_base { $$ = $1; }
 		|expression_mul TOKEN_OPER_MUL expression_base { 
 			$$.ins = join_instructions($1.ins, $3.ins);
 			Element e = operMul(@2, program->actualRobot, $2, $1.output.back(), $3.output.back());
 			$$.ins = join_instructions($$.ins, e.ins);
 			$$.output = e.output;
+			$$.temp.push_back(true);
 		}
 		;
 expression_add: expression_mul { $$ = $1; }
 		|expression_add TOKEN_OPER_SIGNADD expression_mul
-{
-	$$.ins = join_instructions($1.ins, $3.ins);
-	Element e = (operAdd(@2, program->actualRobot,$2,$1.output.back(), $3.output.back()));
-	$$.ins = join_instructions($$.ins, e.ins);
-	$$.output = e.output;
-}
+		{
+			$$.ins = join_instructions($1.ins, $3.ins);
+			Element e = (operAdd(@2, program->actualRobot,$2,$1.output.back(), $3.output.back()));
+			$$.ins = join_instructions($$.ins, e.ins);
+			$$.output = e.output;
+			$$.temp.push_back(true);
+		}
 		;
 expression:	expression_add { $$ = $1;}
 		;
 expression_bool_base: expression { $$ = $1;}
-		|expression TOKEN_OPER_REL expression {$$.ins = join_instructions($1.ins, $3.ins);
-	Element e = operRel(@2,program->actualRobot,$2,$3.output.back(),$1.output.back());
-	$$.ins = join_instructions($$.ins, e.ins);
-	$$.output = e.output;
-}
+		|expression TOKEN_OPER_REL expression 
+		{
+			$$.ins = join_instructions($1.ins, $3.ins);
+			Element e = operRel(@2,program->actualRobot,$2,$3.output.back(),$1.output.back());
+			$$.ins = join_instructions($$.ins, e.ins);
+			$$.output = e.output;
+			$$.temp.push_back(true);
+		}
 		;
 expression_bool_or: expression_bool_base {$$ = $1; }
 		| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR 
-{$$.ins = join_instructions($1.ins, $4.ins);
-	Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$4.output.back());
-	$$.output = e.output; //aj tak by tu vzy mal byt integer
-}
+		{
+			$$.ins = join_instructions($1.ins, $4.ins);
+			Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$4.output.back());
+			$$.output = e.output; //aj tak by tu vzy mal byt integer
+			$$.temp.push_back(true);
+		}
 		;
-expression_bool:	expression_bool_or
-		| expression_bool TOKEN_BOOL_AND expression_bool_or {$$.ins = join_instructions($1.ins, $3.ins); if ($1.output.back().type == TypeReal) $$.ins.push_back(new InstructionConversionToInt());
-	else if ($$.output.back().type!= TypeInteger) program->actualRobot->error(@2,Robot::ErrorConversionImpossible); 
+expression_bool:	expression_bool_or { $$ = $1;}
+		| expression_bool TOKEN_BOOL_AND expression_bool_or 
+		{
+			$$.ins = join_instructions($1.ins, $3.ins); 
+			if ($1.output.back().type == TypeReal) 
+				$$.ins.push_back(new InstructionConversionToInt());
+			else if ($$.output.back().type!= TypeInteger) 
+				program->actualRobot->error(@2,Robot::ErrorConversionImpossible); 
+			$$.temp.push_back(true);
 		}
 	;
 %%
@@ -756,7 +812,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		q.actualRobot->save_to_xml();
-		q.actualRobot->execute();
+//		q.actualRobot->execute();
 	}
 	return 0;	
 }
