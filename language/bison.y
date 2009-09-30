@@ -812,7 +812,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		q.actualRobot->save_to_xml();
-//		q.actualRobot->execute();
+		q.actualRobot->execute();
 	}
 	return 0;	
 }

@@ -954,6 +954,18 @@ InstructionStep::InstructionStep()
 int InstructionStep::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Stepping ...";
+	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
+	c->values.back()->integerValue = c->robot->Step();
+	std::cout << "OK" << std::endl;
+	return 0;
+}
+InstructionStepDefault::InstructionStepDefault()
+{
+	name_ = "InstructionStepDefault";
+}
+int InstructionStepDefault::execute(Core *c) //prave jeden parameter
+{
+	std::cout << "StepDefaultping ...";
 	int steps = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = c->robot->Step(steps);
@@ -980,8 +992,9 @@ InstructionShootLocation::InstructionShootLocation()
 int InstructionShootLocation::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Shooting at location...";
-	int x = c->getIntFromStack();
-	int y = c->getIntFromStack();
+	int x = c->values.back()->array.elements[0]->integerValue;
+	int y = c->values.back()->array.elements[1]->integerValue;
+	c->values.pop_back();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = c->robot->Shoot(x,y); //TODO vypocitat angle, smer x a smer y
 	std::cout << "OK" << std::endl;
@@ -993,7 +1006,7 @@ InstructionShootAngle::InstructionShootAngle()
 }
 int InstructionShootAngle::execute(Core *c) //TODO
 {
-	std::cout << "Shooting at angle...";
+	std::cout << "Shooting at angle...TODO convert";
 	int an = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = c->robot->Shoot(an,an); //TODO angle

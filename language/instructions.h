@@ -409,6 +409,12 @@ class InstructionStep : public Instruction
 		virtual int execute(Core *s);
 		InstructionStep();
 };
+class InstructionStepDefault : public Instruction
+{
+	public:
+		virtual int execute(Core *s);
+		InstructionStepDefault();
+};
 class InstructionWait : public Instruction
 {
 	public:

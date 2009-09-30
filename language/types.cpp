@@ -8,11 +8,9 @@ bool Create_type::is_simple()
 	{
 		if (simple[i] == type)
 		{
-			std::cout << "Simple" << std::endl; //@@
 			return true;
 		}
 	}
-	std::cout << "Neni simple" << std::endl; //@@
 	return false;
 }
 
