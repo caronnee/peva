@@ -574,7 +574,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 					if ($3.temp[i])
 						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
 				}
-				$$.temp.push_back(false);
+				$$.temp.push_back(true);
 				std::cout << "Tu sa dostanem" << std::endl; getc(stdin);
 			}
 		}
@@ -662,7 +662,7 @@ variable: TOKEN_IDENTIFIER
 			$$.ins = join_instructions($$.ins,$2);
 			$$.temp.push_back(false);	
 		}
-		|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		|call_fce {$$ = $1; std::cout << "temp:" << $$.temp.back();getc(stdin);} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
@@ -741,7 +741,7 @@ expression_add: expression_mul { $$ = $1; }
 			$$.temp.push_back(true);
 		}
 		;
-expression:	expression_add { $$ = $1;}
+expression:	expression_add { $$ = $1;std::cout << "output_size: " << $$.output.size() << "temp:" << $$.temp.back(); getc(stdin);}
 		;
 expression_bool_base: expression { $$ = $1;}
 		|expression TOKEN_OPER_REL expression 

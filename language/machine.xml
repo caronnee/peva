@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
-  <f>
-    <InstructionBegin/>
-    <InstructionLoadLocal>f#g</InstructionLoadLocal>
-    <InstructionPlusPlusReal/>
-    <InstructionPop/>
-    <InstructionLoad>
-      <TypeReal>5.5</TypeReal>
-    </InstructionLoad>
-    <InstructionStoreReal/>
-    <InstructionLoadLocal>f#</InstructionLoadLocal>
-    <InstructionReturn/>
-    <InstructionEndBlock/>
-    <InstructionRestore/>
-  </f>
   <InstructionCreate>l</InstructionCreate>
   <InstructionLoadGlobal>l</InstructionLoadGlobal>
   <InstructionLoad>
@@ -35,22 +21,17 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
-    <InstructionCreate>main#i</InstructionCreate>
-    <InstructionLoadLocal>main#i</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>9</TypeInteger>
-    </InstructionLoad>
-    <InstructionStoreInteger/>
-    <InstructionLoadLocal>main#i</InstructionLoadLocal>
-    <InstructionConversionToReal/>
-    <InstructionLoadLocal>main#i</InstructionLoadLocal>
-    <InstructionConversionToReal/>
-    <InstructionLoad>
-      <TypeInteger>3</TypeInteger>
-    </InstructionLoad>
-    <InstructionConversionToReal/>
-    <Call begins="0">f</Call>
+    <InstructionLoadGlobal>l</InstructionLoadGlobal>
+    <InstructionShootLocation/>
     <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionLoad>
+      <TypeReal>3.2</TypeReal>
+    </InstructionLoad>
+    <InstructionConversionToInt/>
+    <InstructionShootAngle/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
     <InstructionEndBlock/>
   </main>
 </Machine>
