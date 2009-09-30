@@ -19,6 +19,9 @@ ROBOT qqq
 	{
 		shoot(l);
 		shoot(3.2);
+		step(10);
+		step();
+		turnL();
 	}
 }
 

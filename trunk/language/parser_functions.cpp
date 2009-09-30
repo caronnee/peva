@@ -426,6 +426,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	}
 	switch(feat)
 	{
+				std::cout << "????"; getc(stdin);
 		case FeatureIsPlayer:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
 				ee.ins.push_back( new InstructionIsPlayer());
@@ -521,6 +522,35 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			}
 			r->error(line, Robot::ErrorOperationNotSupported);
 			break;
+		case FeatureStep:
+			{
+				std::cout << "????"; getc(stdin);
+				ee.output.push_back(*r->find_type(TypeInteger));
+				ee.temp.push_back(true);
+				if(e.output.size() == 0)
+				{
+					ee.ins.push_back(new InstructionStepDefault());
+					break;
+				}
+				if (e.output.size() == 1)
+				{
+					if (e.output.back() == *r->find_type(TypeReal))
+					{
+						ee.ins.push_back(new InstructionConversionToInt());
+						e.output.back() = *r->find_type(TypeReal); 
+						e.temp.back() = true;
+					}
+					if (e.output.back() == *r->find_type(TypeInteger))
+					{
+						ee.ins.push_back(new InstructionStepDefault());
+						break;
+					}
+					r->error(line, Robot::ErrorOperationNotSupported);
+					break;
+				}
+				r->error(line, Robot::ErrorOperationNotSupported);
+				break;
+			}
 		default:
 			r->error(line, Robot::Robot::ErrorOperationNotSupported);
 	}

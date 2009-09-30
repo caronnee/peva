@@ -39,13 +39,19 @@ class Object
 };
 struct Robot_body : public Object
 {
+	int Step()
+	{
+		std::cout << "Moving by default number" << std::endl;
+		return 0;
+
+	}
 	int Step(int i){
-		std::cout << "moving "<< i << "positions" << std::endl;
+		std::cout << "Moving "<< i << "positions" << std::endl;
 		return 0;
 	}
-	int Shoot(int x,int y=1987)
+	int Shoot(int x =2009, int y=1987)
 	{
-		std::cout <<"shooting at location [" << x << " ,"<< y  << "]." <<std::endl;
+		std::cout <<"Shooting at location [" << x << " ,"<< y  << "]." <<std::endl;
 		return 0;
 	}
 	int See()
