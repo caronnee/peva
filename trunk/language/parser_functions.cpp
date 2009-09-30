@@ -510,11 +510,13 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			if (e.output.back() == *r->find_type(TypeInteger))
 			{
 				ee.ins.push_back(new InstructionShootAngle);
+				ee.output.push_back(*r->find_type(TypeInteger));
 				break;
 			}
 			if (e.output.back() == *r->find_type(TypeLocation))
 			{
 				ee.ins.push_back(new InstructionShootLocation());
+				ee.output.push_back(*r->find_type(TypeInteger));
 				break;
 			}
 			r->error(line, Robot::ErrorOperationNotSupported);
@@ -522,5 +524,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 		default:
 			r->error(line, Robot::Robot::ErrorOperationNotSupported);
 	}
+	std::cout << "outputXX:" << ee.output.size(); getc(stdin);
 	return ee;
 }
