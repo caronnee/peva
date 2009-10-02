@@ -426,7 +426,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	}
 	switch(feat)
 	{
-				std::cout << "????"; getc(stdin);
 		case FeatureIsPlayer:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
 				ee.ins.push_back( new InstructionIsPlayer());
@@ -484,6 +483,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnR:
+			std::cout << "sssssRsssssssssss"; getc(stdin);
 			if (e.output.size() == 0)
 				ee.ins.push_back( new InstructionTurnR());
 			else
@@ -491,6 +491,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnL:
+			std::cout << "TURNING"<<e.output.size(); getc(stdin);
 			if (e.output.size() == 0)
 				ee.ins.push_back( new InstructionTurnL());
 			else
@@ -524,7 +525,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			break;
 		case FeatureStep:
 			{
-				std::cout << "????"; getc(stdin);
 				ee.output.push_back(*r->find_type(TypeInteger));
 				ee.temp.push_back(true);
 				if(e.output.size() == 0)
@@ -554,6 +554,5 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 		default:
 			r->error(line, Robot::Robot::ErrorOperationNotSupported);
 	}
-	std::cout << "outputXX:" << ee.output.size(); getc(stdin);
 	return ee;
 }

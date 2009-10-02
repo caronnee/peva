@@ -58,7 +58,7 @@ turnL						{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
 turnR						{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
 wait						{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
 shoot						{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
-step						{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
+step						{*l = line;lv->of = FeatureStep;return TOKEN_OBJECT_FEATURE;}
 
 integer						{*l = line;return TOKEN_VAR_INT; }
 function	 	 	 	 	{*l = line;return TOKEN_FUNCTION; }

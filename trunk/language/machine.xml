@@ -32,6 +32,18 @@
     <InstructionShootAngle/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
+    <InstructionLoad>
+      <TypeInteger>10</TypeInteger>
+    </InstructionLoad>
+    <InstructionStepDefault/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionStepDefault/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionTurnL/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
     <InstructionEndBlock/>
   </main>
 </Machine>

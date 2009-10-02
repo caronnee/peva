@@ -89,7 +89,7 @@ Function * Robot::find_f(std::string nam)
 			return core->functions[i];
 		}
 	}
-	return core->nested_function;
+	return NULL;
 }
 
 Node * Robot::find_var(std::string var_name)
@@ -163,7 +163,7 @@ void Robot::add_function(std::vector<Parameter_entry> c, Instructions ins)
 	{
 		instructions.push_back(ins[i]);
 	}
-	if(core->nested_function->name != "main") //TODO mohla by vracat tiez nejaku hodnotu
+	if(core->nested_function->name != "main") //TODO mohla by vracat tiez nejaku hodnotu a vracat sa na 'begin'
 		instructions.push_back(new InstructionRestore()); //pre procedury
 }
 void Robot::enter(std::string name, Create_type * return_type)

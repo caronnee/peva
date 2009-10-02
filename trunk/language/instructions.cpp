@@ -173,11 +173,11 @@ InstructionConversionToInt::InstructionConversionToInt()
 }
 int InstructionConversionToInt::execute(Core * c)
 {
-	std::cout << "Converting" << c->values.back()->realValue;
+	std::cout << "Converting " << c->values.back()->realValue;
 	float f=c->getFloatFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = (int)f;
-	std::cout << "to integer" << c->values.back()->integerValue << "...";
+	std::cout << " to integer" << c->values.back()->integerValue << "...";
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -991,7 +991,7 @@ InstructionShootLocation::InstructionShootLocation()
 }
 int InstructionShootLocation::execute(Core *c) //prave jeden parameter
 {
-	std::cout << "Shooting at location...";
+	std::cout << "Shooting at location...";getc(stdin);
 	int x = c->values.back()->array.elements[0]->integerValue;
 	int y = c->values.back()->array.elements[1]->integerValue;
 	c->values.pop_back();
