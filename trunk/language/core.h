@@ -24,6 +24,7 @@ struct Core
 	void restore(); //+ pushnut vsetky parametre zadanej funkcie o jedno
 	int getIntFromStack();
 	float getFloatFromStack(); //dalej su iba object a location
+	void loadElement(int range);
 	Object * getObjectFromStack();
 };
 #endif

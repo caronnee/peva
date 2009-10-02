@@ -5,7 +5,7 @@ Variable * Memory::next_id(size_t ID)
 {
 	for(size_t i = position; i<memory_size; i++) 
 	{
-		if (memory[i]->owner == -1 )
+		if (memory[i]->owner == (size_t)-1 )
 		{
 			memory[i]->owner = ID;
 			return memory[i];
@@ -13,7 +13,7 @@ Variable * Memory::next_id(size_t ID)
 	}
 	for(size_t i =0; i<position; i++) 
 	{
-		if (memory[i]->owner == -1)
+		if (memory[i]->owner == (size_t)-1)
 		{
 			memory[i]->owner = ID;
 			return memory[i];
@@ -25,6 +25,7 @@ Variable * Memory::next_id(size_t ID)
 
 Memory::Memory(int size)
 {
+	memory_size = size;
 	position = 0;
 	srand(time(NULL));
 	memory = new Variable*[size];
@@ -146,7 +147,13 @@ void Memory::realloc(int size)
 {
 	if (memory)
 		delete memory;
+	memory_size = size;
 	memory = new Variable*[size];
 	for(int i =0; i< size; i++)
 		memory[i] = new Variable();
+}
+
+Variable * Memory::random()
+{
+	return memory[rand()%memory_size];
 }

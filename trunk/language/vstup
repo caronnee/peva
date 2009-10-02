@@ -22,6 +22,9 @@ ROBOT qqq
 		step(10);
 		step();
 		turnL();
+      		turn(2);
+		turnR();
+		step(see());
 	}
 }
 

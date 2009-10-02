@@ -526,7 +526,6 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 		;
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
-			std::cout << " YYYYYYYYY " << $1 ; getc(stdin);
 			Function * f =program->actualRobot->find_f($1); 
 			if (f == NULL)
 				program->actualRobot->error(@1,Robot::ErrorFunctionNotDefined); 
@@ -580,7 +579,6 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{
-			std::cout << @1 << ":parameter calls" << $3.output.size(); getc(stdin); 
 			$$ = feature(@1,program->actualRobot, $1, $3);
 			for (size_t i =0; i< $3.temp.size(); i++)
 			{
@@ -592,7 +590,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		;
 
 call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
-		| /* ziadny parameter */ {$$.ins.clear(); $$.output.clear(); std::cout << "prazdne"; getc(stdin);}
+		| /* ziadny parameter */ {$$.ins.clear(); $$.output.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi onci output

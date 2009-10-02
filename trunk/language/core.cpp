@@ -40,7 +40,7 @@ int Core::getIntFromStack()
 		i = values.back()->integerValue;
 		values.pop_back();
 	}
-	return i;
+	return rand();
 }
 float Core::getFloatFromStack()
 {
@@ -50,7 +50,23 @@ float Core::getFloatFromStack()
 		i = values.back()->realValue;
 		values.pop_back();
 	}
-	return i;
+	return rand();
+}
+void Core::loadElement(int range)
+{
+	if (values.empty())
+	{
+		values.push_back(memory.random());
+		return;
+	}
+	Variable * v = values.back();
+	values.pop_back();
+	if (v->array.elements.size() - range > 0)
+	{
+		values.push_back(memory.random());
+		return;
+	}
+	return values.push_back(v->array.elements[range]);
 }
 Object * Core::getObjectFromStack()
 {
