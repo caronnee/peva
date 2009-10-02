@@ -28,11 +28,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 		st.ins.push_back(new InstructionLoadLocal(n));
 	else  
 		st.ins.push_back(new InstructionLoadGlobal(n));
-	st.output.push_back(*n->type_of_variable);
-	if (st.output.back().type == TypeArray)
-	{
-		std::cout << "Array!"<<st.output.back().data_type << std::endl;
-	}
+	st.output.push_back(*n->type_of_variable);	
 	return st;
 }
 Instruction * possible_conversion(Type to, Type from)
@@ -51,27 +47,16 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 	std::vector<int> last_range;//co vsetko ma loadnut
 	std::vector<Create_type *> types;
 	types.push_back(n->type_of_variable);
-	for (size_t i =0; i< l.output.size(); i++)
-	{
-		std::cout << "output" << i << ":" << l.output[i].type<< std::endl;
-	}
-	for (size_t i =0; i< l.ins.size(); i++)
-	{
-		if (l.ins[i] == NULL)
-			std::cout << "NULL" << std::endl;
-		else std::cout << l.ins[i]->name_ << std::endl;
-	}
 	size_t ins_iterator = 0;
 	int y = 0;
 	while (!types.empty())
 	{
 		
 		Create_type * t = types.back();
-		std::cout << "typ je:" << t->type << "meno:" << n->name<< std::endl;
 		types.pop_back();
+		//----------------------------------------------------------------------------------------------------
 		if (t->is_simple())
 		{
-			std::cout << "ano" << std::endl;
 			if (n->nested == Local)
 				ins.push_back(new InstructionLoadLocal(n));
 			else 
@@ -104,12 +89,11 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 				case TypeInteger:
 					if (l.output.back().type == TypeReal)
 					{
-						ins.push_back(new InstructionConversionToInt());
+						ins.push_back(new InstructionConversionToReal());
 						l.output.back() = TypeInteger;
 					}
 					else if (l.output.back()!=t->type)
 					{
-						std::cout << "tu";
 						r->error(line, Robot::ErrorConversionImpossible);
 						return ins;
 					}
@@ -119,7 +103,7 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 					if (l.output.back().type == TypeInteger)
 					{
 						l.output.back() = TypeReal;
-						ins.push_back(new InstructionConversionToInt());
+						ins.push_back(new InstructionConversionToReal());
 					}
 					else if (l.output.back()!=t->type)
 					{
@@ -139,12 +123,9 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 				default:
 					r->error(line,Robot::ErrorTypeNotRecognized);
 					break;
-			}
-			
+			}	
 			l.output.pop_back();
-			
-
-		}
+		}//----------------------------------------------------------------------------------------------------
 		else 
 		{
 			bool nest = false;
@@ -155,7 +136,6 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 			}
 			for(int i = 0; i<t->range; i++)
 			{
-				std::cout << " push datatype : " << t->data_type->type << std::endl;
 				types.push_back(t->data_type);
 			}
 			if (nest)
@@ -163,10 +143,8 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 			else 
 				last_range.push_back(t->range);
 			access_id.push_back(0);
-			std::cout << "end else" << std::endl;
 		}
 	}
-	std::cout << "end default" << std::endl;
 	return ins;
 }
 
@@ -187,10 +165,8 @@ Instructions join_instructions(const Instructions i1, const Instructions i2)
 void set_breaks(Robot * p, Instructions ins)
 {
 	size_t size = ins.size();
-	std::cout << "Last loop number" << p->last_loop_number <<std::endl;
 	for (size_t i = 0; i< size; i++)
 	{
-		std::cout << "\t\t" << ins[i]->name_ << ins[i]->breaks()<< "\t" ;
 		if(ins[i]->breaks() == p->last_loop_number)
 		{
 			InstructionBreak * b = (InstructionBreak *)ins[i];
@@ -198,7 +174,6 @@ void set_breaks(Robot * p, Instructions ins)
 			b->depth -= p->core->depth; //rozdiel medzi zaciatkom breaku a jeho koncom
 		}
 	}
-	//std::cout << "Nenajdeny break!" <<std::endl;
 }
 Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 {
@@ -297,7 +272,6 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 	Type output = t1.type;
 	if (i!=NULL)
 	{
-		std::cout << "konvertujem na real"<< t1.type<< " "<< t2.type << std::endl;
 		output = TypeReal;
 		e.ins.push_back(i);
 	}
@@ -476,14 +450,13 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeObject));
 			break;
 		case FeatureTurn:
-			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+			if (e.output.size() == 1) 
 				ee.ins.push_back( new InstructionTurn());
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnR:
-			std::cout << "sssssRsssssssssss"; getc(stdin);
 			if (e.output.size() == 0)
 				ee.ins.push_back( new InstructionTurnR());
 			else
@@ -491,7 +464,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnL:
-			std::cout << "TURNING"<<e.output.size(); getc(stdin);
 			if (e.output.size() == 0)
 				ee.ins.push_back( new InstructionTurnL());
 			else
@@ -542,7 +514,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 					}
 					if (e.output.back() == *r->find_type(TypeInteger))
 					{
-						ee.ins.push_back(new InstructionStepDefault());
+						ee.ins.push_back(new InstructionStep());
 						break;
 					}
 					r->error(line, Robot::ErrorOperationNotSupported);

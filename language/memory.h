@@ -1,3 +1,4 @@
+//TODO ztemplatovat, aby sa to dalo pouzit na vsetky variable
 #ifndef ___MEMORY____
 #define ___MEMORY____
 
@@ -65,6 +66,9 @@ public:
 
 	/* reallocatin memory to new size */
 	void realloc(int size);
+
+	/* returns actual mmory size*/
+	Variable * random();
 };
 
 #endif

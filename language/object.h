@@ -46,7 +46,7 @@ struct Robot_body : public Object
 
 	}
 	int Step(int i){
-		std::cout << "Moving "<< i << "positions" << std::endl;
+		std::cout << "Moving "<< i << " positions" << std::endl;
 		return 0;
 	}
 	int Shoot(int x =2009, int y=1987)
@@ -57,11 +57,11 @@ struct Robot_body : public Object
 	int See()
 	{
 		std::cout << "Checking visibility" <<std::endl;
-		return 0;
+		return 252;
 	}
 	int Wait(int i)
 	{
-		std::cout << "Waiting " << i << "times." << std::endl;
+		std::cout << "Waiting " << i << " times." << std::endl;
 		return 0;
 	}
 	int Turn(int var)

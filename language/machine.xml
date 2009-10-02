@@ -35,13 +35,27 @@
     <InstructionLoad>
       <TypeInteger>10</TypeInteger>
     </InstructionLoad>
-    <InstructionStepDefault/>
+    <InstructionStep/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
     <InstructionStepDefault/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
     <InstructionTurnL/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionLoad>
+      <TypeInteger>2</TypeInteger>
+    </InstructionLoad>
+    <InstructionTurn/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionTurnR/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionSee/>
+    <InstructionStep/>
+    <InstructionRemoveTemp/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
     <InstructionEndBlock/>

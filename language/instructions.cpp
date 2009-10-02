@@ -129,10 +129,7 @@ int InstructionLoad::execute(Core *c)
 	}//else from stack
 	std::cout << "Loading array, element number:" << c->values.back()->integerValue <<"...";
 	int range = c->getIntFromStack();
-	Variable * comp = c->values.back();
-	c->values.pop_back();
-	comp = comp->array.elements[range];
-	c->values.push_back(comp);
+	c->loadElement(range);
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -965,7 +962,7 @@ InstructionStepDefault::InstructionStepDefault()
 }
 int InstructionStepDefault::execute(Core *c) //prave jeden parameter
 {
-	std::cout << "StepDefaultping ...";
+	std::cout << "Stepping default...";
 	int steps = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = c->robot->Step(steps);
@@ -1022,7 +1019,7 @@ int InstructionTurn::execute(Core *c)
 	std::cout << "Turning ...";
 	int par = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
-	c->values.back()->integerValue = c->robot->Shoot(par); //TODO angle
+	c->values.back()->integerValue = c->robot->Turn(par); //TODO angle
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
