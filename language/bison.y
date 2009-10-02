@@ -526,6 +526,7 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 		;
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
+			std::cout << " YYYYYYYYY " << $1 ; getc(stdin);
 			Function * f =program->actualRobot->find_f($1); 
 			if (f == NULL)
 				program->actualRobot->error(@1,Robot::ErrorFunctionNotDefined); 
@@ -575,11 +576,11 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
 				}
 				$$.temp.push_back(true);
-				std::cout << "Tu sa dostanem" << std::endl; getc(stdin);
 			}
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
-		{ 
+		{
+			std::cout << @1 << ":parameter calls" << $3.output.size(); getc(stdin); 
 			$$ = feature(@1,program->actualRobot, $1, $3);
 			for (size_t i =0; i< $3.temp.size(); i++)
 			{
@@ -591,7 +592,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		;
 
 call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
-		| /* ziadny parameter */ {$$.ins.clear();}
+		| /* ziadny parameter */ {$$.ins.clear(); $$.output.clear(); std::cout << "prazdne"; getc(stdin);}
 		|call_parameters TOKEN_COMMA expression 
 		{
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi onci output
@@ -658,11 +659,11 @@ variable: TOKEN_IDENTIFIER
 		}
 		|TOKEN_IDENTIFIER array_access 
 		{ 
-			$$ = ident_load(@1,program->actualRobot, $1); //TODO??
+			$$ = ident_load(@1,program->actualRobot, $1); 
 			$$.ins = join_instructions($$.ins,$2);
 			$$.temp.push_back(false);	
 		}
-		|call_fce {$$ = $1; std::cout << "temp:" << $$.temp.back();getc(stdin);} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
@@ -741,7 +742,7 @@ expression_add: expression_mul { $$ = $1; }
 			$$.temp.push_back(true);
 		}
 		;
-expression:	expression_add { $$ = $1;std::cout << "output_size: " << $$.output.size() << "temp:" << $$.temp.back(); getc(stdin);}
+expression:	expression_add { $$ = $1;}
 		;
 expression_bool_base: expression { $$ = $1;}
 		|expression TOKEN_OPER_REL expression 
