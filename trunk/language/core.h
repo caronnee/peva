@@ -25,6 +25,10 @@ struct Core
 	int getIntFromStack();
 	float getFloatFromStack(); //dalej su iba object a location
 	void loadElement(int range);
+
+	void saveInteger();
+	void saveFloat();
+	void saveObject();
 	Object * getObjectFromStack();
 };
 #endif

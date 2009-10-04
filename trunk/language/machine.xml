@@ -53,7 +53,11 @@
     <InstructionTurnR/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
-    <InstructionSee/>
+    <InstructionStepDefault/>
+    <InstructionStep/>
+    <InstructionRemoveTemp/>
+    <InstructionStep/>
+    <InstructionRemoveTemp/>
     <InstructionStep/>
     <InstructionRemoveTemp/>
     <InstructionPop/>

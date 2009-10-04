@@ -79,7 +79,7 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 	node = n;
 	name_ = "InstructionLoadGlobal";
 }
-int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy tam nedam viac ako jednu premennu, pretoze sa nezanorujem
+int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy tam nedam viac ako jednu premennu, pretoze sa nezanorujem,osetrene  bisone
 {
 	std::cout << " Loading global variable: " << node->name << "...";
 	Variable * v;
@@ -130,6 +130,7 @@ int InstructionLoad::execute(Core *c)
 	std::cout << "Loading array, element number:" << c->values.back()->integerValue <<"...";
 	int range = c->getIntFromStack();
 	c->loadElement(range);
+	std::cout << "\t\t\t" << c->values.back();
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -184,8 +185,6 @@ InstructionConversionToReal::InstructionConversionToReal()
 }
 int InstructionConversionToReal::execute(Core * c)
 {
-	std::cout << "Konvert" << c->values.size();
-	getc(stdin);
 	std::cout << "Converting" <<c->values.back()->integerValue;
 	float f = (float)c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
@@ -212,9 +211,7 @@ InstructionStoreInteger::InstructionStoreInteger()
 int InstructionStoreInteger::execute(Core * c)
 {
 	std::cout<<"Storing integer, value: " << c->values.back()->integerValue;
-	int right = c->getIntFromStack();
-	c->values.back()->integerValue = right;
-	c->values.pop_back();
+	c->saveInteger();
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -225,9 +222,7 @@ InstructionStoreReal::InstructionStoreReal()
 int InstructionStoreReal::execute(Core * c)
 {
 	std::cout<<"Storing real, value" <<c->values.back()->realValue<< "..." ;
-	float right = c->getFloatFromStack();
-	c->values.back()->realValue = right;
-	c->values.pop_back();
+	c->saveFloat();
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -238,8 +233,7 @@ InstructionStoreObject::InstructionStoreObject()
 int InstructionStoreObject::execute(Core * c)
 {
 	std::cout << "Storing object, address:" << c->values.back()->objectValue <<"...";
-	Object * right = c->getObjectFromStack();
-	c->values.back()->objectValue = right;
+	c->saveObject();
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -988,7 +982,7 @@ InstructionShootLocation::InstructionShootLocation()
 }
 int InstructionShootLocation::execute(Core *c) //prave jeden parameter
 {
-	std::cout << "Shooting at location...";getc(stdin);
+	std::cout << "Shooting at location...";
 	int x = c->values.back()->array.elements[0]->integerValue;
 	int y = c->values.back()->array.elements[1]->integerValue;
 	c->values.pop_back();
