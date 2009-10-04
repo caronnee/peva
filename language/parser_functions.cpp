@@ -498,7 +498,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 		case FeatureStep:
 			{
 				ee.output.push_back(*r->find_type(TypeInteger));
-				ee.temp.push_back(true);
 				if(e.output.size() == 0)
 				{
 					ee.ins.push_back(new InstructionStepDefault());

@@ -580,6 +580,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{
 			$$ = feature(@1,program->actualRobot, $1, $3);
+			std::cout << $3.temp.size(); getc(stdin);
 			for (size_t i =0; i< $3.temp.size(); i++)
 			{
 				if ($3.temp[i])
@@ -599,7 +600,7 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 			for (int i =0; i< $3.output.size();i++) 
 			{
 				$$.output.push_back($3.output[i]);
-			//	$$.temp.push_back($3.temp[i]);
+				$$.temp.push_back($3.temp[i]);
 			}
 		}
 		;
@@ -661,7 +662,7 @@ variable: TOKEN_IDENTIFIER
 			$$.ins = join_instructions($$.ins,$2);
 			$$.temp.push_back(false);	
 		}
-		|call_fce {$$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		|call_fce {$$ = $1;std::cout <<" zz " << $$.temp.size(); getc(stdin);} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)

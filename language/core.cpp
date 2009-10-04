@@ -39,6 +39,7 @@ int Core::getIntFromStack()
 	{
 		i = values.back()->integerValue;
 		values.pop_back();
+		return i;
 	}
 	return rand();
 }
@@ -49,6 +50,7 @@ float Core::getFloatFromStack()
 	{
 		i = values.back()->realValue;
 		values.pop_back();
+		return i;
 	}
 	return rand();
 }
@@ -61,7 +63,7 @@ void Core::loadElement(int range)
 	}
 	Variable * v = values.back();
 	values.pop_back();
-	if (v->array.elements.size() - range > 0)
+	if (v->array.elements.size() - range < 0)
 	{
 		values.push_back(memory.random());
 		return;
@@ -77,4 +79,28 @@ Object * Core::getObjectFromStack()
 		values.pop_back();
 	}
 	return o;
+}
+void Core::saveInteger()
+{
+	int right = getIntFromStack();
+	if (values.empty())
+		return;
+	values.back()->integerValue = right;
+	values.pop_back();
+}
+void Core::saveFloat()
+{
+	float right = getFloatFromStack();
+	if (values.empty())
+		return;
+	values.back()->realValue = right;
+	values.pop_back();
+}
+void Core::saveObject()
+{
+	Object * right = getObjectFromStack();
+	if (values.empty())
+		return;
+	values.back()->objectValue = right;
+	values.pop_back();
 }
