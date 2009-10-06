@@ -945,8 +945,9 @@ InstructionStep::InstructionStep()
 int InstructionStep::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Stepping ...";
+	int steps = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
-	c->values.back()->integerValue = c->robot->Step();
+	c->values.back()->integerValue = c->robot->Step(steps);
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -957,9 +958,8 @@ InstructionStepDefault::InstructionStepDefault()
 int InstructionStepDefault::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Stepping default...";
-	int steps = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
-	c->values.back()->integerValue = c->robot->Step(steps);
+	c->values.back()->integerValue = c->robot->Step();
 	std::cout << "OK" << std::endl;
 	return 0;
 }

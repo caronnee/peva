@@ -17,14 +17,14 @@ ROBOT qqq
 	location l = {100,200};
 	main() // komentar
 	{
-		shoot(l);
-		shoot(3.2);
-		step(10);
-		step();
-		turnL();
-      		turn(2);
-		turnR();
-		step(step(step(step())));
+//		shoot(l);
+//		shoot(3.2);
+//		step(10);
+//		step();
+//		turnL();
+//     		turn(2);
+//		turnR();
+		step(4+3+2+1);
+//		step(step(step(step())));
 	}
 }
-

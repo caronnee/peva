@@ -21,43 +21,23 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
-    <InstructionLoadGlobal>l</InstructionLoadGlobal>
-    <InstructionShootLocation/>
-    <InstructionPop/>
-    <InstructionRemoveTemp/>
     <InstructionLoad>
-      <TypeReal>3.2</TypeReal>
+      <TypeInteger>4</TypeInteger>
     </InstructionLoad>
-    <InstructionConversionToInt/>
-    <InstructionShootAngle/>
-    <InstructionPop/>
-    <InstructionRemoveTemp/>
     <InstructionLoad>
-      <TypeInteger>10</TypeInteger>
+      <TypeInteger>3</TypeInteger>
     </InstructionLoad>
-    <InstructionStep/>
-    <InstructionPop/>
-    <InstructionRemoveTemp/>
-    <InstructionStepDefault/>
-    <InstructionPop/>
-    <InstructionRemoveTemp/>
-    <InstructionTurnL/>
-    <InstructionPop/>
-    <InstructionRemoveTemp/>
+    <InstructionPlusInteger/>
     <InstructionLoad>
       <TypeInteger>2</TypeInteger>
     </InstructionLoad>
-    <InstructionTurn/>
-    <InstructionPop/>
     <InstructionRemoveTemp/>
-    <InstructionTurnR/>
-    <InstructionPop/>
+    <InstructionPlusInteger/>
+    <InstructionLoad>
+      <TypeInteger>1</TypeInteger>
+    </InstructionLoad>
     <InstructionRemoveTemp/>
-    <InstructionStepDefault/>
-    <InstructionStep/>
-    <InstructionRemoveTemp/>
-    <InstructionStep/>
-    <InstructionRemoveTemp/>
+    <InstructionPlusInteger/>
     <InstructionStep/>
     <InstructionRemoveTemp/>
     <InstructionPop/>

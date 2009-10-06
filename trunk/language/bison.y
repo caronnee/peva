@@ -1,5 +1,5 @@
 //TODO zrusit loadGlobal
-//TODO do unkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
+//TODO do funkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
 %{
 #include <iostream>
 #include <queue>
@@ -590,11 +590,12 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		} 
 		;
 
-call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
-		| /* ziadny parameter */ {$$.ins.clear(); $$.output.clear(); }
+call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);std::cout <<"ecpression u call_p:"<< $$.temp.size()<< " " <<$$.temp.back();getc(stdin);} //loaded
+		| /* ziadny parameter */ {$$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
-			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi onci output
+			std::cout << "dalsi parameter!";getc(stdin);
+			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output
 			$$.ins = join_instructions($1.ins,$3.ins);
 			$$.output = $1.output;
 			for (int i =0; i< $3.output.size();i++) 
@@ -604,6 +605,7 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 			}
 		}
 		;
+
 //ziaden output
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
 	{
@@ -662,7 +664,7 @@ variable: TOKEN_IDENTIFIER
 			$$.ins = join_instructions($$.ins,$2);
 			$$.temp.push_back(false);	
 		}
-		|call_fce {$$ = $1;std::cout <<" zz " << $$.temp.size(); getc(stdin);} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		|call_fce { $$ = $1; } //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
@@ -719,33 +721,49 @@ exps: expression {$$ = $1;$$.ins.push_back(NULL);} //Hack
 		}
 		;
 expression_base: unary_var { $$ = $1;}
-		|number{$$ = $1; }
+		|number{$$ = $1;}
 		|TOKEN_LPAR expression TOKEN_RPAR {$$ = $2;}
 		;
 expression_mul:expression_base { $$ = $1; }
 		|expression_mul TOKEN_OPER_MUL expression_base { 
+			$$.clear();
 			$$.ins = join_instructions($1.ins, $3.ins);
+			if ($1.temp.back())
+			{
+				$$.ins.push_back(new InstructionRemoveTemp());
+			}
+			if ($3.temp.back())
+				$$.ins.push_back(new InstructionRemoveTemp());
 			Element e = operMul(@2, program->actualRobot, $2, $1.output.back(), $3.output.back());
 			$$.ins = join_instructions($$.ins, e.ins);
 			$$.output = e.output;
 			$$.temp.push_back(true);
 		}
 		;
-expression_add: expression_mul { $$ = $1; }
+expression_add: expression_mul { $$ = $1;}
 		|expression_add TOKEN_OPER_SIGNADD expression_mul
 		{
+			$$.clear();
 			$$.ins = join_instructions($1.ins, $3.ins);
+			if ($1.temp.back())
+			{
+				$$.ins.push_back(new InstructionRemoveTemp());
+			}
+			if ($3.temp.back())
+				$$.ins.push_back(new InstructionRemoveTemp());
 			Element e = (operAdd(@2, program->actualRobot,$2,$1.output.back(), $3.output.back()));
 			$$.ins = join_instructions($$.ins, e.ins);
 			$$.output = e.output;
+			std::cout << "pridavam TRUE";
 			$$.temp.push_back(true);
 		}
 		;
-expression:	expression_add { $$ = $1;}
+expression:	expression_add { $$ = $1; }
 		;
 expression_bool_base: expression { $$ = $1;}
 		|expression TOKEN_OPER_REL expression 
 		{
+			$$.clear();
 			$$.ins = join_instructions($1.ins, $3.ins);
 			Element e = operRel(@2,program->actualRobot,$2,$3.output.back(),$1.output.back());
 			$$.ins = join_instructions($$.ins, e.ins);
@@ -756,6 +774,7 @@ expression_bool_base: expression { $$ = $1;}
 expression_bool_or: expression_bool_base {$$ = $1; }
 		| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR 
 		{
+			$$.clear();
 			$$.ins = join_instructions($1.ins, $4.ins);
 			Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$4.output.back());
 			$$.output = e.output; //aj tak by tu vzy mal byt integer
@@ -765,6 +784,7 @@ expression_bool_or: expression_bool_base {$$ = $1; }
 expression_bool:	expression_bool_or { $$ = $1;}
 		| expression_bool TOKEN_BOOL_AND expression_bool_or 
 		{
+			$$.clear();
 			$$.ins = join_instructions($1.ins, $3.ins); 
 			if ($1.output.back().type == TypeReal) 
 				$$.ins.push_back(new InstructionConversionToInt());

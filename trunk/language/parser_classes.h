@@ -13,6 +13,7 @@ struct Element
 	Instructions ins;
 	Expressions output;
 	std::vector<bool> temp;
+	void clear();
 };
 
 typedef std::vector<Element> simulateStack;

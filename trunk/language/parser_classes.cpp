@@ -1,5 +1,11 @@
 #include "parser_classes.h"
 
+void Element::clear()
+{
+	ins.clear();
+	output.clear();
+	temp.clear();
+}
 Constr::Constr()
 {
 	default_set = false;
