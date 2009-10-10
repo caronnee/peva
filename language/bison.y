@@ -140,8 +140,9 @@ robot:  define_bot TOKEN_BEGIN options targets global_variables declare_function
 		std::vector<Parameter_entry> p;
 		program->actualRobot->add_global($5);
 		reg(program->actualRobot, p, $10); 
+		program->actualRobot->consolidate();
 	}
-		;
+	;
 targets: /* default target */
 	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->actualRobot->addKilled(@2,$3,$4);}
 	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->actualRobot->addVisit($4);}
@@ -153,7 +154,7 @@ places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back
 	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  {$$ = $1; $$.push_back(Position(-1,$5)); }
 	;
 options: // defaultne opsny, normalny default alebo ako boli nadekralovane
-	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4);}
+	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4); }
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 		|global_variables local_variables { $$=join_instructions($1,$2);}
@@ -262,7 +263,6 @@ declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_ins
 		{ 
 			reg(program->actualRobot,$4,$6); 
 			program->actualRobot->leave();
-			program->actualRobot->end_loop();
 		}
 		|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{ 
@@ -272,7 +272,6 @@ declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_ins
 		} 
 		|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
 		{
-			set_breaks(program->actualRobot, $5);
 			std::vector<Parameter_entry> a; 
 			reg(program->actualRobot, a, $5);
 			program->actualRobot->leave(); 
@@ -319,50 +318,43 @@ end:	TOKEN_END { program->actualRobot->core->depth--; }
 		;
 
 block_of_instructions: begin end { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
-		|begin TOKEN_SEMICOLON end  { $$.clear();$$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock()); }
 		|begin commands end { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
 		;
 
-commands: matched {$$ = $1;}
+commands: 	TOKEN_SEMICOLON { $$.clear(); }
+		| matched {$$ = $1;}
 		| commands matched { $$ = join_instructions($1, $2); }
 		| unmatched {$$ = $1;}
 		| commands unmatched { $$ = join_instructions($1, $2); }
 		;
 
-forcycle:	TOKEN_FOR { program->actualRobot->enter_loop();}
-		;
-
-do_cycle:	TOKEN_DO { program->actualRobot->enter_loop();}
-		;
-
-while_cycle:	TOKEN_WHILE { program->actualRobot->enter_loop();}
-		;
-
-command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR block_of_instructions 
+command:	TOKEN_FOR TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
 		{ 
-			$8 = join_instructions($8, $6); 
-			$3.push_back(new InstructionMustJump($8.size())); 
-			$4.ins.push_back(new InstructionJump(-1*$8.size()-$4.ins.size()-1,0));
-			$8 = join_instructions($8,$4.ins);
-			$$ = join_instructions($3,$8);
-			set_breaks(program->actualRobot, $$);
-			program->actualRobot->end_loop();
+			//INIT, BLOCK, COMMAND CONDITION
+			$9.push_back(new InstructionEndBlock($4.ins.size()+$6.size()+1));
+			$9 = join_instructions($9, $6); 
+			$3.push_back(new InstructionMustJump($9.size()+1)); 
+			$3.push_back(new InstructionBegin(program->actualRobot->core->depth));
+			$4.ins.push_back(new InstructionJump(-1*$9.size()-$4.ins.size()-2,0));
+			$9 = join_instructions($9,$4.ins);
+			$$ = join_instructions($3,$9);
 		}
-		|do_cycle block_of_instructions TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
+		|TOKEN_DO begin commands end TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ 
-			$$ = join_instructions($2,$5.ins); 
+			$$.push_back(new InstructionBegin(program->actualRobot->core->depth));
+			$3.push_back(new InstructionEndBlock($7.ins.size()+1));
+			$$ = join_instructions($$, $3);
+			$$ = join_instructions($$,$7.ins); 
 			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
-			set_breaks(program->actualRobot, $$);
-			program->actualRobot->end_loop();
 		}
-		|while_cycle TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
+		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_BEGIN commands TOKEN_END
 		{
-			$$.push_back(new InstructionMustJump($5.size()));
-			$3.ins = join_instructions($5,$3.ins);
-			$$ = join_instructions($$, $3.ins);
+			$$.push_back(new InstructionMustJump($6.size()+2));
+			$$.push_back(new InstructionBegin(program->actualRobot->core->depth));
+			$6.push_back(new InstructionEndBlock($3.ins.size()+1));
+			$$ = join_instructions($$,$6);
+			$$ = join_instructions($$,$3.ins);
 			$$.push_back(new InstructionJump(-1*$$.size(),0));
-			set_breaks(program->actualRobot, $$);
-			program->actualRobot->end_loop();
 		}
 		|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
@@ -450,13 +442,12 @@ command:	forcycle TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command
 		|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
 			std::cout << "Adding break to in depth" <<program->actualRobot->core->depth << std::endl;
-			$$.push_back(new InstructionBreak(program->actualRobot->last_loop_number, program->actualRobot->core->depth));
+			$$.push_back(new InstructionBreak(program->actualRobot->core->depth));
 		}
-		|TOKEN_CONTINUE TOKEN_SEMICOLON 
+		|TOKEN_CONTINUE TOKEN_SEMICOLON  //TODO nobreakable veci?
 		{
-			std::cout << "NOT IMPLEMENTED SO FAR!" << std::endl;
-			$$.push_back(new InstructionContinue(-100, -100));
-		}//TODO fistit, ci funguje
+			$$.push_back(new InstructionContinue(program->actualRobot->core->depth));
+		}
 		|simple_command TOKEN_SEMICOLON {$$ = $1;}
 		;
 //tu by mal byt prazdny output
@@ -580,7 +571,6 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{
 			$$ = feature(@1,program->actualRobot, $1, $3);
-			std::cout << $3.temp.size(); getc(stdin);
 			for (size_t i =0; i< $3.temp.size(); i++)
 			{
 				if ($3.temp[i])
@@ -590,7 +580,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		} 
 		;
 
-call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);std::cout <<"ecpression u call_p:"<< $$.temp.size()<< " " <<$$.temp.back();getc(stdin);} //loaded
+call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 		| /* ziadny parameter */ {$$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
@@ -627,7 +617,7 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions 
 		$$ = join_instructions($3.ins,$5);
 		$$ = join_instructions($$,$7);
 	}
-		;
+	;
 //ziadny output nema zostat
 init: 	local_variables { $$ = $1;}
 		| assign TOKEN_SEMICOLON {$$ = $1;}
@@ -832,7 +822,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		q.actualRobot->save_to_xml();
-		q.actualRobot->execute();
+//		q.actualRobot->execute();
 	}
 	return 0;	
 }

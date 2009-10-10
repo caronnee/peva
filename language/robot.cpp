@@ -1,5 +1,5 @@
-#ifndef _______
-#define _______
+#ifndef ___ROBOT____
+#define ___ROBOT____
 #include "./robot.h"
 #include <iostream>
 
@@ -32,22 +32,28 @@ Robot::Robot(std::string s, GamePoints p)
 	defined_types.push_back(new Create_type(TypeLocation));
 	defined_types.back()->add("x",find_type(TypeInteger));
 	defined_types.back()->add("y",find_type(TypeInteger));
-	Create_type *g = new Create_type(TypeLocation);
-	Record r;
-	r.name = "ii";
-//	r.type = Create_type(TypeArray);
-	g->nested_vars.push_back(r);
-	Create_type gg = *g;
 	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
 	c->composite(find_type(TypeObject));
 	defined_types.push_back(c);
 
 	/*	Pridavanie defaultnych premennych	*/
 
-	//pridana premenna pre NULL;
-	Node *n = defined.add("NULL",find_type(TypeObject));
+	Node * n = defined.add("true",find_type(TypeInteger));
 	n->nested = Global;
-	Variable * v = core->memory.assign(*find_type(TypeObject),n->ID, 0);
+	Variable * v = core->memory.assign(*find_type(TypeInteger),n->ID, 0);
+	n->var.push_back(v);
+	n->var[0]->integerValue = 1;
+
+	n = defined.add("false",find_type(TypeInteger));
+	n->nested = Global;
+	v = core->memory.assign(*find_type(TypeInteger),n->ID, 0);
+	n->var.push_back(v);
+	n->var[0]->integerValue = 0;
+
+	//pridana premenna pre NULL;
+	n = defined.add("NULL",find_type(TypeObject));
+	n->nested = Global;
+	v = core->memory.assign(*find_type(TypeObject),n->ID, 0);
 	n->var.push_back(v);
 	n->var[0]->objectValue = NULL;
 	
@@ -66,7 +72,7 @@ Create_type * Robot::find_type(Type t)
 	for (size_t i= 0; i< defined_types.size(); i++)
 		if (defined_types[i]->type == t)
 			return defined_types[i];
-	return NULL;//ZAVAZNA CHYBA! Ale zo strany programatora;)
+	return NULL;//ZAVAZNA CHYBA! Ale zo strany programatora;), mozno by to stalo za excepsnu
 }
 
 Create_type * Robot::find_array_type(int range, Create_type * descend)
@@ -233,16 +239,6 @@ void Robots::createNew(std::string name)
 	
 }
 
-void Robot::enter_loop()
-{
-	last_loop_number++; //v podstate loop_zanorenie
-	loop_labels.push(last_loop_number);
-}
-void Robot::end_loop()
-{
-	last_loop_number--;
-	loop_labels.pop();
-}
 void Robots::set(Options o, size_t value)
 {
 	switch(o) //TODO po zlinkovani
@@ -372,6 +368,71 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 			errors = true;
 			errorList += "Line:" + deconvert<int>(line) + "Unrecognized error\n";
 			break;
+	}
+}
+
+void Robot::consolidate()
+{
+	std::vector<InstructionBreak *> breaks;
+	std::vector<InstructionBegin *> begins;
+	std::vector<InstructionContinue *> conts;
+	std::vector<int> beg;
+	for(size_t i =0; i<instructions.size(); i++) 
+	{
+		std::cout << i << instructions[i]->name()<<",..\t";
+		InstructionContinue *c = dynamic_cast<InstructionContinue *>(instructions[i]);
+		if (c)
+		{
+			std::cout << i <<",1."<<std::endl;
+			conts.push_back(c);		
+			continue;
+		}
+		InstructionBreak *b= dynamic_cast<InstructionBreak *>(instructions[i]);
+		if (b)
+		{
+			std::cout << i <<",2."<<std::endl;
+			breaks.push_back(b);
+			continue;
+		}
+		InstructionBegin *be=dynamic_cast<InstructionBegin *>(instructions[i]);
+		if(be)
+		{
+			if (!be->depth) //ak nie je zaciatkom, end
+				continue;
+			std::cout << i <<",3."<< instructions[i]->name() <<std::endl;
+			breaks.push_back(NULL);
+			conts.push_back(NULL);
+			begins.push_back(be);
+			beg.push_back(i);
+			continue;
+		}
+		InstructionEndBlock * e= dynamic_cast<InstructionEndBlock *>(instructions[i]);
+		if(e)
+		{
+			if (!e->end_loop)
+				continue;
+			std::cout << i <<",4."<<breaks.empty() <<std::endl;
+			//resolve vsetky breaky az po NULL
+			while ((!breaks.empty())&&(breaks.back()!=NULL))
+			{
+				std::cout <<begins.size(); 
+				breaks.back()->set(i+e->end_loop, begins.back()->depth);
+				breaks.pop_back();
+			}
+			while ((!conts.empty())&&(conts.back()!=NULL))
+			{
+				conts.back()->set(i -1, begins.back()->depth);
+				conts.pop_back();
+			}
+			if (!conts.empty())
+				conts.pop_back();
+			if(!breaks.empty())
+				breaks.pop_back();
+			begins.pop_back();
+			beg.pop_back();
+			continue;
+		}
+		std::cout << i << "!" << std::endl;
 	}
 }
 #endif

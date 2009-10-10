@@ -15,7 +15,6 @@ class Instruction
 public:
 	std::string name_;
 	virtual std::string name();
-	virtual int breaks();
 	virtual xmlNodePtr xml_format();
 	virtual int execute(Core * s) = 0;
 	Node * get_node();
@@ -131,21 +130,17 @@ class InstructionJump : public Instruction
 
 class InstructionBreak : public Instruction
 {
-	protected:
-		int loop_label;
 	public:
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
 		int jump, depth;
-		InstructionBreak(int label = 1, int depth_ = 0);
-		virtual int breaks();
-		virtual void set(int jump, int size, int depth);
+		InstructionBreak(int depth_ = 0);
+		virtual void set(size_t jump, size_t depth);
 };
 class InstructionContinue : public InstructionBreak //stejne ako break, ale skace inam
 {
 	public:
-	InstructionContinue(int label = 0, int depth_ = 0);
-	virtual void set(int jump, int size, int depth);
+		InstructionContinue(int depth_ = 0);
 };
 class InstructionReturn : public Instruction
 {
@@ -387,14 +382,16 @@ class InstructionLeReal : public Instruction
 class InstructionBegin : public Instruction
 {
 	public:
+		size_t depth;
 		virtual int execute(Core *s);
-		InstructionBegin(); //Aby sme vedeli, kedy sa vynorujeme
+		InstructionBegin(size_t d = 0); //label for 
 };
 class InstructionEndBlock : public Instruction
 {
 	public:
+		size_t end_loop;
 		virtual int execute(Core *s);
-		InstructionEndBlock();
+		InstructionEndBlock(size_t end_l = 0);
 };
 //--------------------------------------------------Interaction--------------------------------------------------
 class InstructionSee : public Instruction

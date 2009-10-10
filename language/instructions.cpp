@@ -12,10 +12,6 @@ std::string Instruction::name()
 {
 	return name_;
 }
-int Instruction::breaks()
-{
-	return -1;
-}
 xmlNodePtr Instruction::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
@@ -354,10 +350,9 @@ xmlNodePtr InstructionJump::xml_format()
 	xmlNewChild(n,NULL,BAD_CAST "no",BAD_CAST deconvert<int>(no).c_str());
 	return n;
 }
-InstructionBreak::InstructionBreak(int label, int depth_)
+InstructionBreak::InstructionBreak(int depth_)
 {
 	depth = depth_;
-	loop_label = label;
 	name_ = "InstructionBreak";
 }
 int InstructionBreak::execute(Core * c)
@@ -376,26 +371,15 @@ xmlNodePtr InstructionBreak::xml_format()
 	xmlNewChild(n,NULL, BAD_CAST "Jump", BAD_CAST deconvert<int>(jump).c_str());
 	return n;
 }
-int InstructionBreak::breaks()
+void InstructionBreak::set(size_t jump_ , size_t depth_)
 {
-	//	std::cout << loop_label << ": loop_label in break" << std::endl;
-	return loop_label;
+	jump = jump_;
+	depth = depth_;
 }
-void InstructionBreak::set(int a, int b, int c)
-{
-	jump = b-a-1;
-	depth = c;
-}
-InstructionContinue::InstructionContinue(int label, int depth_)
+InstructionContinue::InstructionContinue(int depth_)
 {
 	depth = depth_;
-	loop_label = label;
 	name_ = "InstructionContinue";
-}
-void InstructionContinue::set(int jump, int size, int dep)
-{
-	jump = -jump;
-	depth = dep;
 }
 InstructionReturn::InstructionReturn(int depth_)
 {
@@ -901,8 +885,9 @@ int InstructionLeReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
-InstructionBegin::InstructionBegin()
+InstructionBegin::InstructionBegin(size_t depth_)
 {
+	depth = depth_;
 	name_ = "InstructionBegin";
 }
 int InstructionBegin::execute(Core * c)
@@ -912,8 +897,9 @@ int InstructionBegin::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
-InstructionEndBlock::InstructionEndBlock()
+InstructionEndBlock::InstructionEndBlock(size_t endl)
 {
+	end_loop = endl;
 	name_ = "InstructionEndBlock";
 }
 int InstructionEndBlock::execute(Core * c)
