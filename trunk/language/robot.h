@@ -57,6 +57,8 @@ struct Robot
 		ErrorOperationNotSupported,
 		ErrorWrongNumberOfParameters,
 		ErrorFunctionNotDefined,
+		ErrorBreak,
+		ErrorContinue,
 		ErrorOutOfRange
 	};
 	bool errors;
@@ -92,14 +94,11 @@ struct Robot
 	void add_function(std::vector<Parameter_entry> c, Instructions ins);
 	void leave();
 	void execute();
-	int last_loop_number;
-	std::stack<int> loop_labels;
-	void enter_loop();
-	void end_loop();
 	void addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
 	void addVisitSeq(std::vector<Position> pos);
 	void error(unsigned int line, ErrorCode c,std::string message="");
+	void consolidate();
 private:
 	Robot_body * body;
 };

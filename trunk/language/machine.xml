@@ -21,27 +21,33 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
-    <InstructionLoad>
-      <TypeInteger>4</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad>
-      <TypeInteger>3</TypeInteger>
-    </InstructionLoad>
-    <InstructionPlusInteger/>
-    <InstructionLoad>
-      <TypeInteger>2</TypeInteger>
-    </InstructionLoad>
-    <InstructionRemoveTemp/>
-    <InstructionPlusInteger/>
-    <InstructionLoad>
-      <TypeInteger>1</TypeInteger>
-    </InstructionLoad>
-    <InstructionRemoveTemp/>
-    <InstructionPlusInteger/>
-    <InstructionStep/>
-    <InstructionRemoveTemp/>
+    <InstructionMustJump>
+      <JumpCount>12</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionStepDefault/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
+    <InstructionContinue>
+      <Jump>23</Jump>
+    </InstructionContinue>
+    <InstructionLoadGlobal>true</InstructionLoadGlobal>
+    <InstructionJump>
+      <yes>0</yes>
+      <no>1</no>
+    </InstructionJump>
+    <InstructionBreak>
+      <Jump>26</Jump>
+    </InstructionBreak>
+    <InstructionStepDefault/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionEndBlock/>
+    <InstructionLoadGlobal>true</InstructionLoadGlobal>
+    <InstructionJump>
+      <yes>-14</yes>
+      <no>0</no>
+    </InstructionJump>
     <InstructionEndBlock/>
   </main>
 </Machine>

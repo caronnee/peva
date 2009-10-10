@@ -162,19 +162,7 @@ Instructions join_instructions(const Instructions i1, const Instructions i2)
 	}
 	return res;
 }
-void set_breaks(Robot * p, Instructions ins)
-{
-	size_t size = ins.size();
-	for (size_t i = 0; i< size; i++)
-	{
-		if(ins[i]->breaks() == p->last_loop_number)
-		{
-			InstructionBreak * b = (InstructionBreak *)ins[i];
-			b->jump = size - i -1;
-			b->depth -= p->core->depth; //rozdiel medzi zaciatkom breaku a jeho koncom
-		}
-	}
-}
+
 Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 {
 	Element e;
