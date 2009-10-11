@@ -8,6 +8,7 @@ Variable * Memory::next_id(size_t ID)
 		if (memory[i]->owner == (size_t)-1 )
 		{
 			memory[i]->owner = ID;
+			std::cout << "Assignujem " <<i<< std::endl;
 			return memory[i];
 		}
 	}
@@ -15,11 +16,13 @@ Variable * Memory::next_id(size_t ID)
 	{
 		if (memory[i]->owner == (size_t)-1)
 		{
+			std::cout << "Assignujem " <<i<< std::endl;
 			memory[i]->owner = ID;
 			return memory[i];
 		}
 	}
 	int id = rand()%memory_size;
+	std::cout << "Assignujem nahodne" << id << std::endl;
 	return memory[id];
 }
 
@@ -39,7 +42,6 @@ Variable * Memory::assign(Create_type type, size_t id, size_t depth_)
 	m.variable = find_free(type, id);
 	m.depth = depth_;
 	assigned.push_back(m);
-	std::cout << "assignovane #elements:" << m.variable->array.elements.size() << std::endl;
 	return m.variable;
 }
 

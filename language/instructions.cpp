@@ -358,7 +358,7 @@ InstructionBreak::InstructionBreak(int depth_)
 int InstructionBreak::execute(Core * c)
 {
 	std::cout << "Breaking loop, from depth" <<c->depth;
-	c->PC+=jump;
+	c->PC=jump;
 	c->depth -= depth;
 	std::cout << "to depth " << c->depth <<"...";
 	c->memory.free(c->depth+1); //vycisti do vratane az do hlbky povodneho, loop_label je povodny, tam by to chcelo nechat
@@ -374,7 +374,7 @@ xmlNodePtr InstructionBreak::xml_format()
 void InstructionBreak::set(size_t jump_ , size_t depth_)
 {
 	jump = jump_;
-	depth = depth_;
+	depth -= depth_;
 }
 InstructionContinue::InstructionContinue(int depth_)
 {

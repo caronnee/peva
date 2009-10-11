@@ -1,5 +1,6 @@
 //TODO zrusit loadGlobal
 //TODO do funkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
+//TODO pri for-e odtranit vytvorenie premennej, spravit sko  defauult temp
 %{
 #include <iostream>
 #include <queue>
@@ -35,6 +36,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_CONTINUE
 %token TOKEN_ROBOT
 %token<op> TOKEN_OPTION
+%token<of> TOKEN_OBJECT_FEATURE
 
 /* delimiters */
 %token TOKEN_SEMICOLON
@@ -47,8 +49,6 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_ASSIGN
 %token TOKEN_BEGIN
 %token TOKEN_END
-
-%token<of> TOKEN_OBJECT_FEATURE
 
 /* literals */
 %token<ident> TOKEN_IDENTIFIER
@@ -69,6 +69,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token<operation> TOKEN_MINUSMINUS
 %token<operation> TOKEN_BOOL_AND
 %token<operation> TOKEN_BOOL_OR
+
 %type<idents> names
 %type<type> simple_type
 %type<type> complex_type
@@ -77,6 +78,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<ranges> ranges
 %type<ident> function_header
 %type<entries> parameters
+%type<instructions> cycle_for
 %type<instructions> local_variables
 %type<instructions> block_of_instructions 
 %type<instructions> global_variables
@@ -311,10 +313,10 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL
 		} 
 		;
 
-begin:	TOKEN_BEGIN { program->actualRobot->core->depth++; }
+begin:	TOKEN_BEGIN { program->actualRobot->core->depth++; program->actualRobot->defined.new_block();}
 		;
 
-end:	TOKEN_END { program->actualRobot->core->depth--; }
+end:	TOKEN_END { program->actualRobot->core->depth--; program->actualRobot->defined.leave_block();}
 		;
 
 block_of_instructions: begin end { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
@@ -327,8 +329,10 @@ commands: 	TOKEN_SEMICOLON { $$.clear(); }
 		| unmatched {$$ = $1;}
 		| commands unmatched { $$ = join_instructions($1, $2); }
 		;
-
-command:	TOKEN_FOR TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
+//FIXME dalo by sa aj onteligentjsie? Rozlisovat, ci som vytvorila premennu a potom oachat cyklus
+cycle_for: TOKEN_FOR { program->actualRobot->core->depth++; $$.push_back(new InstructionBegin());program->actualRobot->defined.new_block();}
+		;
+command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
 		{ 
 			//INIT, BLOCK, COMMAND CONDITION
 			$9.push_back(new InstructionEndBlock($4.ins.size()+$6.size()+1));
@@ -338,6 +342,10 @@ command:	TOKEN_FOR TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			$4.ins.push_back(new InstructionJump(-1*$9.size()-$4.ins.size()-2,0));
 			$9 = join_instructions($9,$4.ins);
 			$$ = join_instructions($3,$9);
+			$$.push_back(new InstructionEndBlock());
+			$$ = join_instructions($1, $$);
+			program->actualRobot->core->depth--;
+			program->actualRobot->defined.leave_block();
 		}
 		|TOKEN_DO begin commands end TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ 

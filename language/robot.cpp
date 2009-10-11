@@ -235,8 +235,7 @@ void Robots::createNew(std::string name)
 	if (actualRobot!=NULL)
 		robots.push_back(actualRobot);
 	actualRobot = new Robot(name, g);
-	std::cout << "New robot created" << std::endl; 
-	
+	std::cout << "New robot created" << std::endl; 	
 }
 
 void Robots::set(Options o, size_t value)
