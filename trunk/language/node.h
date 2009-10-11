@@ -6,6 +6,7 @@
 struct Node
 {
 	size_t ID;
+	bool active;
 	NestedType nested;
 	std::string name;
 	Create_type * type_of_variable;

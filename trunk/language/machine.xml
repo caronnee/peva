@@ -21,33 +21,71 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
+    <InstructionBegin/>
+    <InstructionCreate>main#i</InstructionCreate>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
     <InstructionMustJump>
-      <JumpCount>12</JumpCount>
+      <JumpCount>10</JumpCount>
     </InstructionMustJump>
     <InstructionBegin/>
     <InstructionStepDefault/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
-    <InstructionContinue>
-      <Jump>23</Jump>
-    </InstructionContinue>
-    <InstructionLoadGlobal>true</InstructionLoadGlobal>
-    <InstructionJump>
-      <yes>0</yes>
-      <no>1</no>
-    </InstructionJump>
     <InstructionBreak>
-      <Jump>26</Jump>
+      <Jump>31</Jump>
     </InstructionBreak>
-    <InstructionStepDefault/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionPlusPlusInteger/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
-    <InstructionEndBlock/>
-    <InstructionLoadGlobal>true</InstructionLoadGlobal>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>100</TypeInteger>
+    </InstructionLoad>
+    <InstructionLtInteger/>
     <InstructionJump>
       <yes>-14</yes>
       <no>0</no>
     </InstructionJump>
+    <InstructionEndBlock/>
+    <InstructionBegin/>
+    <InstructionCreate>main#i</InstructionCreate>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionMustJump>
+      <JumpCount>10</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionStep/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionPlusPlusInteger/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>100</TypeInteger>
+    </InstructionLoad>
+    <InstructionLtInteger/>
+    <InstructionJump>
+      <yes>-14</yes>
+      <no>0</no>
+    </InstructionJump>
+    <InstructionEndBlock/>
+    <InstructionSee/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
     <InstructionEndBlock/>
   </main>
 </Machine>

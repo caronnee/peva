@@ -9,6 +9,21 @@ void Tree::reset()
 	depth = 0;
 	for (int i =0; i< 256; i++)
 		next[i] = NULL;
+	block_of_nodes.clear();
+}
+void Tree::new_block()
+{
+	block_of_nodes.push_back(NULL);
+}
+void Tree::leave_block()
+{
+	while(!block_of_nodes.empty() && (block_of_nodes.back()!=NULL))
+	{
+		block_of_nodes.back()->active = false;
+		block_of_nodes.pop_back();
+	}
+	if (!block_of_nodes.empty())
+		block_of_nodes.pop_back();
 }
 Tree::Tree()
 {
@@ -92,10 +107,10 @@ Node * Tree::add(std::string s, Create_type * type)
 		iter!=t->items.end(); 
 		iter++)
 	{
-		if ((*iter)->name == s) {
+		if (((*iter)->name == s)&& ((*iter)->active)) {
 
-			std::cout << "uz tam je "<< s <<std::endl;
-			exit(5);
+			std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;
+			return NULL;
 		}//kontrola, co tam nieco take uz nie je
 
 	} //TODO nejaka rozumnejsia metoda

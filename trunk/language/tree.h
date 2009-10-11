@@ -12,6 +12,7 @@ std::string quicksort(std::string s); // TODO template
 struct Tree
 {
 	int number_of_nodes;
+	std::vector<Node *> block_of_nodes;
 	std::string alphabet;
 	bool inner_node;
 	size_t depth;
@@ -22,6 +23,8 @@ struct Tree
 	Tree * find_string(std::string a);
 	int find_index(char a);
 	Node * add(std::string s, Create_type* type);
+	void new_block();
+	void leave_block();
 private:
 	void reset();
 };
