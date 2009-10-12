@@ -45,11 +45,12 @@
     <InstructionRemoveTemp/>
     <InstructionLoadLocal>main#i</InstructionLoadLocal>
     <InstructionLoad>
-      <TypeInteger>100</TypeInteger>
+      <TypeInteger>5</TypeInteger>
     </InstructionLoad>
     <InstructionLtInteger/>
+    <InstructionRemoveTemp/>
     <InstructionJump>
-      <yes>-14</yes>
+      <yes>-15</yes>
       <no>0</no>
     </InstructionJump>
     <InstructionEndBlock/>
@@ -75,11 +76,12 @@
     <InstructionRemoveTemp/>
     <InstructionLoadLocal>main#i</InstructionLoadLocal>
     <InstructionLoad>
-      <TypeInteger>100</TypeInteger>
+      <TypeInteger>0</TypeInteger>
     </InstructionLoad>
     <InstructionLtInteger/>
+    <InstructionRemoveTemp/>
     <InstructionJump>
-      <yes>-14</yes>
+      <yes>-15</yes>
       <no>0</no>
     </InstructionJump>
     <InstructionEndBlock/>

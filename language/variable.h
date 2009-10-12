@@ -17,13 +17,14 @@ struct Array
 
 struct Variable // struktura premennych
 {
+	size_t ID;
 	size_t owner;
 	size_t last_access; //z  tohoto sa vypocita penalizacia
 	int integerValue;
 	float realValue;
 	Array array;
 	Object * objectValue;
-	Variable();
+	Variable(size_t t = 0);
 	Variable(std::string s);
 	void copyValue(Variable * v);
 };

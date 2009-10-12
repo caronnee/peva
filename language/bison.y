@@ -339,6 +339,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			$9 = join_instructions($9, $6); 
 			$3.push_back(new InstructionMustJump($9.size()+1)); 
 			$3.push_back(new InstructionBegin(program->actualRobot->core->depth));
+			if ($4.output.size())
+				$4.ins.push_back(new InstructionRemoveTemp());
 			$4.ins.push_back(new InstructionJump(-1*$9.size()-$4.ins.size()-2,0));
 			$9 = join_instructions($9,$4.ins);
 			$$ = join_instructions($3,$9);
@@ -353,6 +355,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			$3.push_back(new InstructionEndBlock($7.ins.size()+1));
 			$$ = join_instructions($$, $3);
 			$$ = join_instructions($$,$7.ins); 
+			if ($7.output.size())
+				$$.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
 		}
 		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_BEGIN commands TOKEN_END
@@ -362,6 +366,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			$6.push_back(new InstructionEndBlock($3.ins.size()+1));
 			$$ = join_instructions($$,$6);
 			$$ = join_instructions($$,$3.ins);
+			if ($3.output.size())
+				$$.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionJump(-1*$$.size(),0));
 		}
 		|TOKEN_RETURN expression TOKEN_SEMICOLON
@@ -438,6 +444,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 					}
 					begin = 0; //aby mi to nezacinalo na zaciatku, na zaciatku je uz jedna vec loadnuta
 				}
+				if ($2.output.size())
+					$$.push_back(new InstructionRemoveTemp());
 				$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
 				$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
 			}
@@ -830,7 +838,7 @@ int main(int argc, char ** argv)
 	else
 	{
 		q.actualRobot->save_to_xml();
-//		q.actualRobot->execute();
+		q.actualRobot->execute();
 	}
 	return 0;	
 }
