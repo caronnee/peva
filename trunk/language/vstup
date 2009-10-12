@@ -17,12 +17,12 @@ ROBOT qqq
 	location l = {100,200};
 	main() // komentar
 	{
-		for(integer i =0; i<100; i++) 
+		for(integer i =0; i<5; i++) 
 		{
 			step();
 			break;
 		}
-		for(integer i =0; i<100; i++) 
+		for(integer i =0; i<0; i++) 
 		{
 			step(i);	
 		}

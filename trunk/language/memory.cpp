@@ -33,7 +33,7 @@ Memory::Memory(int size)
 	srand(time(NULL));
 	memory = new Variable*[size];
 	for(int i =0; i< size; i++)
-		memory[i] = new Variable();
+		memory[i] = new Variable(i);
 }
 
 Variable * Memory::assign(Create_type type, size_t id, size_t depth_)
@@ -60,6 +60,7 @@ void Memory::set_free(Variable * v)
 	{
 		tmp = vars.top();
 		tmp->owner = -1;
+		std::cout << "Freeing id: " << tmp->ID << std::endl;
 		vars.pop();
 		for(size_t i =0; i<tmp->array.elements.size(); i++)		 
 		{

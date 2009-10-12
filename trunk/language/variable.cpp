@@ -1,7 +1,8 @@
 #include "variable.h"
 
-Variable::Variable()
+Variable::Variable(size_t i)
 {
+	ID = i;
 	owner = -1; //nijaky node nevlastni
 	objectValue = NULL;	
 }
