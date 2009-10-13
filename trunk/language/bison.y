@@ -326,7 +326,7 @@ block_of_instructions: begin end { $$.push_back(new InstructionBegin()); $$.push
 commands: 	TOKEN_SEMICOLON { $$.clear(); }
 		| matched {$$ = $1;}
 		| commands matched { $$ = join_instructions($1, $2); }
-		| unmatched {$$ = $1;}
+		| unmatched { $$ = $1; }
 		| commands unmatched { $$ = join_instructions($1, $2); }
 		;
 //FIXME dalo by sa aj onteligentjsie? Rozlisovat, ci som vytvorila premennu a potom oachat cyklus
@@ -335,12 +335,12 @@ cycle_for: TOKEN_FOR { program->actualRobot->core->depth++; $$.push_back(new Ins
 command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
 		{ 
 			//INIT, BLOCK, COMMAND CONDITION
+			if ($4.output.size())
+				$4.ins.push_back(new InstructionRemoveTemp());
 			$9.push_back(new InstructionEndBlock($4.ins.size()+$6.size()+1));
 			$9 = join_instructions($9, $6); 
 			$3.push_back(new InstructionMustJump($9.size()+1)); 
 			$3.push_back(new InstructionBegin(program->actualRobot->core->depth));
-			if ($4.output.size())
-				$4.ins.push_back(new InstructionRemoveTemp());
 			$4.ins.push_back(new InstructionJump(-1*$9.size()-$4.ins.size()-2,0));
 			$9 = join_instructions($9,$4.ins);
 			$$ = join_instructions($3,$9);
@@ -351,23 +351,23 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		}
 		|TOKEN_DO begin commands end TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ 
+			if ($7.output.size())
+				$7.ins.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionBegin(program->actualRobot->core->depth));
 			$3.push_back(new InstructionEndBlock($7.ins.size()+1));
 			$$ = join_instructions($$, $3);
 			$$ = join_instructions($$,$7.ins); 
-			if ($7.output.size())
-				$$.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
 		}
 		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_BEGIN commands TOKEN_END
 		{
+			if ($3.output.size())
+				$3.ins.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionMustJump($6.size()+2));
 			$$.push_back(new InstructionBegin(program->actualRobot->core->depth));
 			$6.push_back(new InstructionEndBlock($3.ins.size()+1));
 			$$ = join_instructions($$,$6);
 			$$ = join_instructions($$,$3.ins);
-			if ($3.output.size())
-				$$.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionJump(-1*$$.size(),0));
 		}
 		|TOKEN_RETURN expression TOKEN_SEMICOLON
@@ -615,6 +615,10 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 //ziaden output
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
 	{
+		if ($3.output.size())
+		{
+			$3.ins.push_back(new InstructionRemoveTemp());
+		}
 		$5.push_back(new InstructionMustJump($7.size()));
 		$3.ins.push_back(new InstructionJump(0,$5.size()));
 		$$ =join_instructions($3.ins,$5);
@@ -673,12 +677,18 @@ variable: TOKEN_IDENTIFIER
 		|call_fce { $$ = $1; } //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
+			
+			std::cout << "Tu sa este dostanem"; getc(stdin);
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
 				if ($$.output.back().nested_vars[i].name == $3)
 				{ 
+					std::cout << "q"; getc(stdin);
 					Create_type t = $$.output.back().nested_vars[i].type; //TODO ci to nehapruje
 					$$.output.pop_back();
 					$$.output.push_back(t);
+					$$.ins.push_back(new InstructionLoad(i));
+					$$.ins.push_back(new InstructionLoad());
+					break;
 				}
 			$$.temp.push_back($1.temp.back());
 		}
