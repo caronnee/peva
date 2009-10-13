@@ -358,6 +358,7 @@ InstructionBreak::InstructionBreak(int depth_)
 int InstructionBreak::execute(Core * c)
 {
 	std::cout << "Breaking loop, from depth" <<c->depth;
+	std::cout << "jumping to instruction number: " << jump;
 	c->PC=jump;
 	c->depth -= depth;
 	std::cout << "to depth " << c->depth <<"...";

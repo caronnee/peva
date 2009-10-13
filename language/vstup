@@ -19,7 +19,7 @@ ROBOT qqq
 	{
 		for(integer i =0; i<5; i++) 
 		{
-			step();
+			step(l.x);
 			break;
 		}
 		for(integer i =0; i<0; i++) 

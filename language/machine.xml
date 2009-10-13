@@ -29,14 +29,19 @@
     </InstructionLoad>
     <InstructionStoreInteger/>
     <InstructionMustJump>
-      <JumpCount>10</JumpCount>
+      <JumpCount>13</JumpCount>
     </InstructionMustJump>
     <InstructionBegin/>
-    <InstructionStepDefault/>
+    <InstructionLoadGlobal>l</InstructionLoadGlobal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad/>
+    <InstructionStep/>
     <InstructionPop/>
     <InstructionRemoveTemp/>
     <InstructionBreak>
-      <Jump>31</Jump>
+      <Jump>35</Jump>
     </InstructionBreak>
     <InstructionEndBlock/>
     <InstructionLoadLocal>main#i</InstructionLoadLocal>
@@ -50,7 +55,7 @@
     <InstructionLtInteger/>
     <InstructionRemoveTemp/>
     <InstructionJump>
-      <yes>-15</yes>
+      <yes>-18</yes>
       <no>0</no>
     </InstructionJump>
     <InstructionEndBlock/>
