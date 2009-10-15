@@ -494,9 +494,9 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				if (e.output.size() == 1)
 				{
 					if (e.output.back() == *r->find_type(TypeReal))
-					{
+					{	
 						ee.ins.push_back(new InstructionConversionToInt());
-						e.output.back() = *r->find_type(TypeReal); 
+						e.output.back() = *r->find_type(TypeInteger); 
 						e.temp.back() = true;
 					}
 					if (e.output.back() == *r->find_type(TypeInteger))

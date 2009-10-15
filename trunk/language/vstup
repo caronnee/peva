@@ -15,9 +15,14 @@ ROBOT qqq
 	VISIT( [100,200])
 
 	location l = {100,200};
+	real function X()
+	{
+		return 6.5;
+	}
 	main() // komentar
 	{
-		for(integer i =0; i<5; i++) 
+		step(X());
+	/*	for(integer i =0; i<5; i++) 
 		{
 			step(l.x);
 			break;
