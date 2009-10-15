@@ -6,6 +6,9 @@
     <InstructionLoad>
       <TypeReal>6.5</TypeReal>
     </InstructionLoad>
+    <InstructionLoadLocal>X#x</InstructionLoadLocal>
+    <InstructionConversionToReal/>
+    <InstructionPlusReal/>
     <InstructionStoreReal/>
     <InstructionRemoveTemp/>
     <InstructionLoadLocal>X#</InstructionLoadLocal>
@@ -34,6 +37,10 @@
   <InstructionStoreInteger/>
   <main>
     <InstructionBegin/>
+    <InstructionLoad>
+      <TypeReal>7.5</TypeReal>
+    </InstructionLoad>
+    <InstructionConversionToInt/>
     <Call begins="0">X</Call>
     <InstructionConversionToInt/>
     <InstructionStep/>
