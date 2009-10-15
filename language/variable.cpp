@@ -25,7 +25,7 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 	//este sa postarat o arraye
 	std::cout << "element size parametrer:" << v->array.elements.size(); getc(stdin);
 
-	std::cout << "size function parameter-" << array.elements[0]; getc(stdin);
+//	std::cout << "size function parameter-" << array.elements[0]; getc(stdin);
 	std::vector<Variable *> variables_to_copy;
 	for ( size_t i = 0; i< v->array.elements.size(); i++)
 	{
