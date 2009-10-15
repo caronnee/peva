@@ -372,7 +372,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		}
 		|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
-			$$ = $2.ins;
+			$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
+			$$ = join_instructions($$,$2.ins);
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
 			{
 				$2.output.back() = *program->actualRobot->find_type(TypeReal);
@@ -678,11 +679,9 @@ variable: TOKEN_IDENTIFIER
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			
-			std::cout << "Tu sa este dostanem"; getc(stdin);
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
 				if ($$.output.back().nested_vars[i].name == $3)
 				{ 
-					std::cout << "q"; getc(stdin);
 					Create_type t = $$.output.back().nested_vars[i].type; //TODO ci to nehapruje
 					$$.output.pop_back();
 					$$.output.push_back(t);

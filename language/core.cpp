@@ -92,7 +92,11 @@ void Core::saveFloat()
 {
 	float right = getFloatFromStack();
 	if (values.empty())
+	{
+		std::cout << "HEEEEY!"; getc(stdin);
 		return;
+	}
+	std::cout << "vrazam to vo value: " <<values.back(); getc(stdin);
 	values.back()->realValue = right;
 	values.pop_back();
 }

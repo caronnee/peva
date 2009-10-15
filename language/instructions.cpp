@@ -217,7 +217,7 @@ InstructionStoreReal::InstructionStoreReal()
 }
 int InstructionStoreReal::execute(Core * c)
 {
-	std::cout<<"Storing real, value" <<c->values.back()->realValue<< "..." ;
+	std::cout<<"Storing real, value" <<c->values.back()->realValue<< "..."<< getc(stdin);
 	c->saveFloat();
 	std::cout << "OK" << std::endl;
 	return 0;
