@@ -2,15 +2,33 @@
 <Machine>
   <X>
     <InstructionBegin/>
-    <InstructionLoadLocal>X#</InstructionLoadLocal>
+    <InstructionCreate>X#k</InstructionCreate>
+    <InstructionLoadLocal>X#k</InstructionLoadLocal>
     <InstructionLoad>
-      <TypeReal>6.5</TypeReal>
+      <TypeInteger>0</TypeInteger>
     </InstructionLoad>
+    <InstructionLoad/>
     <InstructionLoadLocal>X#x</InstructionLoadLocal>
-    <InstructionConversionToReal/>
-    <InstructionPlusReal/>
-    <InstructionStoreReal/>
+    <InstructionStoreInteger/>
+    <InstructionLoadLocal>X#k</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>1</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad/>
+    <InstructionLoadLocal>X#x</InstructionLoadLocal>
+    <InstructionStoreInteger/>
+    <InstructionLoadLocal>X#k</InstructionLoadLocal>
+    <InstructionShootLocation/>
+    <InstructionPop/>
     <InstructionRemoveTemp/>
+    <InstructionLoadLocal>X#</InstructionLoadLocal>
+    <InstructionLoadLocal>X#k</InstructionLoadLocal>
+    <InstructionDuplicate/>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionLoad/>
+    <InstructionStoreInteger/>
     <InstructionLoadLocal>X#</InstructionLoadLocal>
     <InstructionReturn/>
     <InstructionEndBlock/>
@@ -38,12 +56,11 @@
   <main>
     <InstructionBegin/>
     <InstructionLoad>
-      <TypeReal>7.5</TypeReal>
+      <TypeReal>755.5</TypeReal>
     </InstructionLoad>
     <InstructionConversionToInt/>
     <Call begins="0">X</Call>
-    <InstructionConversionToInt/>
-    <InstructionStep/>
+    <InstructionShootLocation/>
     <InstructionRemoveTemp/>
     <InstructionRemoveTemp/>
     <InstructionPop/>

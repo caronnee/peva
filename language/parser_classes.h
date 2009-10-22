@@ -16,8 +16,7 @@ struct Element
 	void clear();
 };
 
-typedef std::vector<Element> simulateStack;
-
+//TODO zmenit na nieco lepsie
 struct Constr
 {
 	std::string id;
