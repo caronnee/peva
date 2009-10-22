@@ -386,8 +386,9 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 				$$.push_back(new InstructionConversionToInt());
 				$2.temp.back() = true;
 			}
-			if ($2.output.back()!=program->actualRobot->core->nested_function->return_var->type_of_variable->type)
+			if ($2.output.back()!= *program->actualRobot->core->nested_function->return_var->type_of_variable)
 			{
+				std::cout << "HERE"<<$2.output.back().type<<":"<<program->actualRobot->core->nested_function->return_var->type_of_variable->type; getc(stdin);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
 			else{
@@ -445,8 +446,10 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 					}
 					begin = 0; //aby mi to nezacinalo na zaciatku, na zaciatku je uz jedna vec loadnuta
 				}
-				if ($2.output.size())
+				if ($2.temp.back())
+				{
 					$$.push_back(new InstructionRemoveTemp());
+				}
 				$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
 				$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
 			}
