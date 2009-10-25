@@ -32,27 +32,23 @@ void Core::restore() //+ pushnut vsetky parametre zadanej funkcie o jedno
 	PCs.pop_back();
 	std::cout << "Context restored" << PC << std::endl;
 }
+Variable * Core::getVariableFromStack()
+{
+	if (values.empty())
+	{
+		return memory.random();
+	}
+	Variable * v = values.back();
+	values.pop_back();
+	return v;
+}
 int Core::getIntFromStack()
 {
-	int i;
-	if (!values.empty()) //TODO throw exception
-	{
-		i = values.back()->integerValue;
-		values.pop_back();
-		return i;
-	}
-	return rand();
+	return getVariableFromStack()->integerValue;
 }
 float Core::getFloatFromStack()
 {
-	float i;
-	if (!values.empty()) //TODO throw exception
-	{
-		i = values.back()->realValue;
-		values.pop_back();
-		return i;
-	}
-	return rand();
+	return getVariableFromStack()->realValue;
 }
 void Core::loadElement(int range)
 {
@@ -72,39 +68,26 @@ void Core::loadElement(int range)
 }
 Object * Core::getObjectFromStack()
 {
-	Object * o = NULL;
-	if (!values.empty())
-	{
-		o = values.back()->objectValue;
-		values.pop_back();
-	}
-	return o;
+	return getVariableFromStack()->objectValue;
 }
 void Core::saveInteger()
 {
 	int right = getIntFromStack();
-	if (values.empty())
-		return;
-	values.back()->integerValue = right;
-	values.pop_back();
+	getVariableFromStack()->integerValue = right;	
 }
 void Core::saveFloat()
 {
 	float right = getFloatFromStack();
-	if (values.empty())
-	{
-		std::cout << "HEEEEY!"; getc(stdin);
-		return;
-	}
-	std::cout << "vrazam to vo value: " <<values.back(); getc(stdin);
-	values.back()->realValue = right;
-	values.pop_back();
+	getVariableFromStack()->realValue = right;
 }
 void Core::saveObject()
 {
 	Object * right = getObjectFromStack();
-	if (values.empty())
-		return;
-	values.back()->objectValue = right;
-	values.pop_back();
+	getVariableFromStack()->objectValue = right;
+}
+void Core::switchVariable()
+{
+	Variable * right = getVariableFromStack();
+	Variable * left = getVariableFromStack();
+	right->swapValue(left);
 }

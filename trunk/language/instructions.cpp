@@ -17,10 +17,7 @@ xmlNodePtr Instruction::xml_format()
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	return n;	
 }
-Node * Instruction::get_node()
-{
-	return node;
-}
+
 InstructionCreate::InstructionCreate(Node * n)
 {
 	node = n;
@@ -231,6 +228,16 @@ int InstructionStoreObject::execute(Core * c)
 	std::cout << "Storing object, address:" << c->values.back()->objectValue <<"...";
 	c->saveObject();
 	std::cout << "OK" << std::endl;
+	return 0;
+}
+InstructionStore::InstructionStore()
+{
+	name_ = "InstructionStore";
+}
+// pouzije sa iba pri returne
+int InstructionStore::execute(Core * c)
+{
+	c->switchVariable();
 	return 0;
 }
 Call::Call()
