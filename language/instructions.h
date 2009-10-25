@@ -17,7 +17,6 @@ public:
 	virtual std::string name();
 	virtual xmlNodePtr xml_format();
 	virtual int execute(Core * s) = 0;
-	Node * get_node();
 	Instruction();
 };
 class InstructionCreate : public Instruction
@@ -85,7 +84,7 @@ class InstructionStoreReal : public Instruction
 		virtual int execute(Core *s);
 		InstructionStoreReal();
 };
-/*Location, struct, arrat sa robi v bisone, rozparsuje sa na jednotlive instrukcie*/
+/*Location, struct, array sa robi v InstructionStore, panlizacia potom vyppocitana*/
 
 class InstructionStoreObject : public Instruction
 { 
@@ -93,7 +92,12 @@ class InstructionStoreObject : public Instruction
 		virtual int execute(Core *s);
 		InstructionStoreObject();
 };
-
+class InstructionStore : public Instruction
+{
+	public:
+	virtual int execute(Core *c);
+	InstructionStore();
+};
 class Call : public Instruction
 {
 	Function* function;

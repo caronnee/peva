@@ -22,13 +22,16 @@ struct Core
 	Core();
 	void save(int j);
 	void restore(); //+ pushnut vsetky parametre zadanej funkcie o jedno
+
+	Variable * getVariableFromStack();
 	int getIntFromStack();
-	float getFloatFromStack(); //dalej su iba object a location
+	float getFloatFromStack();
+	Object * getObjectFromStack();
 	void loadElement(int range);
 
 	void saveInteger();
 	void saveFloat();
 	void saveObject();
-	Object * getObjectFromStack();
+	void switchVariable();
 };
 #endif

@@ -31,6 +31,32 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 	{
 		array.elements[i]->copyValue(v->array.elements[i]);
 	}//FIXME zauvazovat ad tym, ci by nemozlo rozumnejse ist cez store/load, poripade bez rekurzie
-	std::cout << "ksaa"; getc(stdin);
 }
-	
+void Variable::swapValue(Variable * v)
+{
+	/* swapping integer */
+	int i = v->integerValue;
+	v->integerValue = integerValue;
+	integerValue = i;
+
+	/* swapping real */
+	float f = v->realValue;
+	v->realValue = realValue;
+	realValue = f;
+
+	/* swapping Object */
+	Object * o = v->objectValue;
+	v->objectValue = objectValue;
+	objectValue = o;
+
+	/* swapping arrays */
+	int min = array.elements.size();
+	if (min > v->array.elements.size())
+		min = v->array.elements.size();
+	for(int i =0; i<min; i++) 
+	{
+		Variable * hlp = array.elements[i];
+		array.elements[i] = v->array.elements[i];
+		v->array.elements[i] = hlp;
+	}
+}

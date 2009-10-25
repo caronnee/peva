@@ -374,6 +374,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		{
 			$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));
 			$$ = join_instructions($$,$2.ins);
+			
+			/* Check for types compatibility */
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
 			{
 				$2.output.back() = *program->actualRobot->find_type(TypeReal);
@@ -386,73 +388,21 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 				$$.push_back(new InstructionConversionToInt());
 				$2.temp.back() = true;
 			}
+
+			/* Check for types equality */
 			if ($2.output.back()!= *program->actualRobot->core->nested_function->return_var->type_of_variable)
 			{
-				std::cout << "HERE"<<$2.output.back().type<<":"<<program->actualRobot->core->nested_function->return_var->type_of_variable->type; getc(stdin);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
-			else{
-				int begin = 1;
-				std::vector<Create_type> types; //malo by byt nieco ako stack alebo tak nejak?
-				types.push_back($2.output.back()); //poprve musi naloadovat o jedno menej, lebo to uz naloadovane mame
-				while (!types.empty()) //TODO co ak je to pole intov do pola realov
-				{
-					Create_type t = types.back();
-					types.pop_back();
-					if (t.is_simple())
-					{
-						switch(t.type)
-						{
-							case TypeInteger:
-								{
-									$$.push_back(new InstructionStoreInteger()); //budu vedla seba, takze by to malo prejst
-									break;
-								}
-							case TypeReal:
-								{
-									$$.push_back(new InstructionStoreReal());
-									break;
-								}
-							case TypeObject:
-								{
-									$$.push_back(new InstructionStoreObject());
-									break;	
-								}
-							default:
-								{
-									program->actualRobot->error(@1,Robot::ErrorOperationNotSupported);
-									break;
-								}
-						}
-						continue;
-					}
-					int size = 0;
-					for ( size_t i = begin; i< $2.output.back().range; i++)
-					{
-						size++;
-						$$.push_back(new InstructionDuplicate());
-						types.push_back(*types.back().data_type);
-					}
-					for (int i = begin; i< $2.output.back().nested_vars.size(); i++)
-					{
-						size++;
-						$$.push_back(new InstructionDuplicate());
-						types.push_back($2.output.back().nested_vars[i].type);
-					}
-					for ( int i =0; i< size; i++)
-					{
-						$$.push_back(new InstructionLoad(i));
-						$$.push_back(new InstructionLoad);
-					}
-					begin = 0; //aby mi to nezacinalo na zaciatku, na zaciatku je uz jedna vec loadnuta
-				}
-				if ($2.temp.back())
-				{
-					$$.push_back(new InstructionRemoveTemp());
-				}
-				$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
-				$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
+			else
+				$$.push_back(new InstructionStore());
+			if ($2.temp.back())
+			{
+				$$.push_back(new InstructionRemoveTemp());
 			}
+			$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
+			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
+			
 		}
 		|TOKEN_RETURN TOKEN_SEMICOLON 
 		{
@@ -513,6 +463,9 @@ assign: variable_left TOKEN_ASSIGN expression
 				break;
 			case TypeObject:
 				$$.push_back(new InstructionStoreObject());
+				break;
+			case TypeArray:
+				$$.push_back(new InstructionStore());
 				break;
 			case TypeLocation:
 				$$.push_back(new InstructionDuplicate());
@@ -604,7 +557,7 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 		| /* ziadny parameter */ {$$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
-			std::cout << "dalsi parameter!";getc(stdin);
+//			std::cout << "dalsi parameter!";getc(stdin);
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output
 			$$.ins = join_instructions($1.ins,$3.ins);
 			$$.output = $1.output;

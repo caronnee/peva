@@ -2,7 +2,7 @@
 #ifndef ___MEMORY____
 #define ___MEMORY____
 
-#include <queue>
+#include <deque>
 #include <ctime>
 #include <cstdlib>
 #include <stack>
@@ -28,7 +28,7 @@ private:
 	std::vector<Memory_record> assigned;
 
 	/* structure to hold temporarily assigned variables */
-	std::queue<Variable *> temp;
+	std::deque<Variable *> temp;
 
 	/* memory structure */
 	Variable ** memory;
@@ -67,7 +67,7 @@ public:
 	/* reallocatin memory to new size */
 	void realloc(int size);
 
-	/* returns actual mmory size*/
+	/* returns random memory point*/
 	Variable * random();
 };
 

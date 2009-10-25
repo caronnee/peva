@@ -47,8 +47,20 @@ Variable * Memory::assign(Create_type type, size_t id, size_t depth_)
 
 Variable * Memory::assign_temp(Create_type t)
 {
+/*	std::cout << "assigning TEMP..."<< std::endl;
+	std::cout << "before:";
+	for(size_t i = 0; i < temp.size(); i++) 
+	{
+		std::cout << temp[i]->ID << " ";
+	}*/
 	Variable * v = find_free(t, 0); // 0 ako temprarily, TODO dat to nodes
-	temp.push(v);
+	temp.push_back(v);
+/*	std::cout << "AFTER:" << std::endl;
+	for(size_t i = 0; i < temp.size(); i++) 
+	{
+		std::cout << temp[i]->ID << " ";
+	}
+	std::cout << "Consummatum est" << std::endl;*/
 	return v;
 }
 void Memory::set_free(Variable * v)
@@ -74,8 +86,8 @@ void Memory::free_tmp()
 {
 	if (temp.size()>0)
 	{
-		set_free(temp.front());	
-		temp.pop();
+		set_free(temp.back());	
+		temp.pop_back();
 	}
 	else
 		std::cout <<"Error! Trying to free a nonempty temp" << std::endl;

@@ -23,12 +23,7 @@
     <InstructionRemoveTemp/>
     <InstructionLoadLocal>X#</InstructionLoadLocal>
     <InstructionLoadLocal>X#k</InstructionLoadLocal>
-    <InstructionDuplicate/>
-    <InstructionLoad>
-      <TypeInteger>0</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad/>
-    <InstructionStoreInteger/>
+    <InstructionStore/>
     <InstructionLoadLocal>X#</InstructionLoadLocal>
     <InstructionReturn/>
     <InstructionEndBlock/>
