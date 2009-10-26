@@ -23,7 +23,9 @@ ROBOT qqq
 	}
 	main() // komentar
 	{
-		shoot(X(755.5));
+		integer[4][3][2] a;
+		a[3][2][0] = 9;
+	//	shoot(X(z[3][2][0]));
 	/*	for(integer i =0; i<5; i++) 
 		{
 			step(l.x);

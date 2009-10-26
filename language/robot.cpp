@@ -379,6 +379,11 @@ void Robot::consolidate()
 	std::vector<int> beg;
 	for(size_t i =0; i<instructions.size(); i++) 
 	{
+		if (instructions[i] == NULL)
+		{
+			std::cout << "OCH";getc(stdin);
+			continue;
+		}
 		std::cout << i << instructions[i]->name()<<",..\t";
 		InstructionContinue *c = dynamic_cast<InstructionContinue *>(instructions[i]);
 		if (c)

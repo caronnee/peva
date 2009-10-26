@@ -7,6 +7,12 @@
 #include "enums.h"
 #include "parser_classes.h"
 
+struct ArrayAccess
+{
+	int level;
+	Instructions ins;
+};
+
 struct Lval {
 	
 	int depth;
@@ -41,7 +47,8 @@ struct Lval {
 	std::vector<Position> positions;
 
 	Element output;
-
+	
+	ArrayAccess array_access;
 };
 
 // lex interface

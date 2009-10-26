@@ -90,7 +90,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<instructions> assign
 %type<instructions> command_var
 %type<instructions> simple_command
-%type<instructions> array_access
+%type<array_access> array_access
 %type<output> values
 %type<output> variable
 %type<output> variable_left
@@ -484,8 +484,17 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 		| TOKEN_IDENTIFIER array_access 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
-			$$.ins = join_instructions($$.ins, $2); //TODO check range
+			$$.ins = join_instructions($$.ins, $2.ins); //TODO check range
 			$$.temp.push_back(false);
+			for(int i =0; i<$2.level; i++) 
+			{
+				if ($$.output.back().data_type == NULL)
+				{
+					program->actualRobot->error(@1,Robot::ErrorOutOfRange);
+					break;
+				}
+				$$.output.back() == *$$.output.back().data_type;
+			}
 		} //TODO v loade checkovat, ci sa nestavam mimo ramec.
 		;
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
@@ -628,7 +637,7 @@ variable: TOKEN_IDENTIFIER
 		|TOKEN_IDENTIFIER array_access 
 		{ 
 			$$ = ident_load(@1,program->actualRobot, $1); 
-			$$.ins = join_instructions($$.ins,$2);
+			$$.ins = join_instructions($$.ins,$2.ins);
 			$$.temp.push_back(false);	
 		}
 		|call_fce { $$ = $1; } //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
@@ -651,17 +660,19 @@ variable: TOKEN_IDENTIFIER
 		
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA 
 		{ 
-			$$ = $2.ins; //exps musia by integery
+			$$.level = 0;
+			$$.ins.clear(); //exps musia by integery
 			for (size_t i =0; i< $2.ins.size(); i++)
 			{
 				if ($2.ins[i] == NULL)
 				{
-					$$.push_back(new InstructionLoad());
+					$$.ins.push_back(new InstructionLoad());
 					if ($2.temp[i])
-						$$.push_back(new InstructionRemoveTemp());
+						$$.ins.push_back(new InstructionRemoveTemp());
+					$$.level++;
 				}
 				else
-					$$.push_back($2.ins[i]);
+					$$.ins.push_back($2.ins[i]);
 			}
 
 		} //vezme zo stacku dve hodnoty, pouzije a na stack prihodi novu z tempu
@@ -672,12 +683,13 @@ array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 			{
 				if ($3.ins[i] == NULL)
 				{
-					$$.push_back(new InstructionLoad());
+					$$.ins.push_back(new InstructionLoad());
 					if ($3.temp[i])
-						$$.push_back(new InstructionRemoveTemp());
+						$$.ins.push_back(new InstructionRemoveTemp());
+					$$.level++;
 				}
 				else
-					$$.push_back($3.ins[i]);
+					$$.ins.push_back($3.ins[i]);
 			}
 		} 
 		;
