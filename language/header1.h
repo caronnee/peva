@@ -9,7 +9,7 @@
 
 struct ArrayAccess
 {
-	int level;
+	size_t dimension;
 	Instructions ins;
 };
 
