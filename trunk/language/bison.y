@@ -494,10 +494,10 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 		| TOKEN_IDENTIFIER array_access 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
-			$$.ins = join_instructions($$.ins, $2.ins); //TODO check range
+			$$.ins = join_instructions($$.ins, $2.ins);
 			$$.temp.push_back(false);
 			Create_type tt = $$.output.back();	
-			for(int i =$2.level; i>0; i--)  //idem od jednotly, aby som sa vyhla poslednemu datatype, ktory MA byt null
+			for(int i =$2.dimension; i>0; i--) 
 			{
 				if ($$.output.back().data_type == NULL)
 				{
@@ -507,7 +507,7 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 				Create_type * t = $$.output.back().data_type;
 				$$.output.back() = *t;
 			}
-		} //TODO v loade checkovat, ci sa nestavam mimo ramec.
+		}
 		;
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
@@ -671,7 +671,7 @@ variable: TOKEN_IDENTIFIER
 		
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA 
 		{ 
-			$$.level = 0;
+			$$.dimension = 0;
 			$$.ins.clear(); //exps musia by integery
 			for (size_t i =0; i< $2.ins.size(); i++)
 			{
@@ -680,7 +680,7 @@ array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 					$$.ins.push_back(new InstructionLoad());
 					if ($2.temp[i])
 						$$.ins.push_back(new InstructionRemoveTemp());
-					$$.level++;
+					$$.dimension++;
 				}
 				else
 					$$.ins.push_back($2.ins[i]);
@@ -697,7 +697,7 @@ array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 					$$.ins.push_back(new InstructionLoad());
 					if ($3.temp[i])
 						$$.ins.push_back(new InstructionRemoveTemp());
-					$$.level++;
+					$$.dimension++;
 				}
 				else
 					$$.ins.push_back($3.ins[i]);

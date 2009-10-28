@@ -50,7 +50,7 @@ void Variable::swapValue(Variable * v)
 	objectValue = o;
 
 	/* swapping arrays */
-	int min = array.elements.size();
+	size_t min = array.elements.size();
 	if (min > v->array.elements.size())
 		min = v->array.elements.size();
 	for(int i =0; i<min; i++) 
