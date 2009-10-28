@@ -1,54 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Machine>
-  <X>
-    <InstructionBegin/>
-    <InstructionCreate>X#k</InstructionCreate>
-    <InstructionLoadLocal>X#k</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>0</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad/>
-    <InstructionLoadLocal>X#x</InstructionLoadLocal>
-    <InstructionStoreInteger/>
-    <InstructionLoadLocal>X#k</InstructionLoadLocal>
-    <InstructionLoad>
-      <TypeInteger>1</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad/>
-    <InstructionLoadLocal>X#x</InstructionLoadLocal>
-    <InstructionStoreInteger/>
-    <InstructionLoadLocal>X#k</InstructionLoadLocal>
-    <InstructionShootLocation/>
-    <InstructionPop/>
-    <InstructionRemoveTemp/>
-    <InstructionLoadLocal>X#</InstructionLoadLocal>
-    <InstructionLoadLocal>X#k</InstructionLoadLocal>
-    <InstructionStore/>
-    <InstructionLoadLocal>X#</InstructionLoadLocal>
-    <InstructionReturn/>
-    <InstructionEndBlock/>
-    <InstructionRestore/>
-  </X>
   <InstructionCreate>a</InstructionCreate>
   <main>
     <InstructionBegin/>
-    <InstructionLoadGlobal>a</InstructionLoadGlobal>
-    <InstructionLoad>
-      <TypeInteger>2</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad/>
-    <InstructionLoad>
-      <TypeInteger>4</TypeInteger>
-    </InstructionLoad>
-    <InstructionLoad/>
+    <InstructionCreate>main#numb</InstructionCreate>
+    <InstructionLoadLocal>main#numb</InstructionLoadLocal>
     <InstructionLoad>
       <TypeInteger>0</TypeInteger>
     </InstructionLoad>
-    <InstructionLoad/>
+    <InstructionStoreInteger/>
+    <InstructionBegin/>
+    <InstructionCreate>main#i</InstructionCreate>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
     <InstructionLoad>
-      <TypeInteger>9</TypeInteger>
+      <TypeInteger>0</TypeInteger>
     </InstructionLoad>
     <InstructionStoreInteger/>
+    <InstructionMustJump>
+      <JumpCount>49</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionBegin/>
+    <InstructionCreate>main#j</InstructionCreate>
+    <InstructionLoadLocal>main#j</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionMustJump>
+      <JumpCount>32</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionBegin/>
+    <InstructionCreate>main#k</InstructionCreate>
+    <InstructionLoadLocal>main#k</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionStoreInteger/>
+    <InstructionMustJump>
+      <JumpCount>15</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionLoadGlobal>a</InstructionLoadGlobal>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad/>
+    <InstructionLoadLocal>main#j</InstructionLoadLocal>
+    <InstructionLoad/>
+    <InstructionLoadLocal>main#k</InstructionLoadLocal>
+    <InstructionLoad/>
+    <InstructionStep/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#k</InstructionLoadLocal>
+    <InstructionPlusPlusInteger/>
+    <InstructionPop/>
+    <InstructionLoadLocal>main#k</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>2</TypeInteger>
+    </InstructionLoad>
+    <InstructionLtInteger/>
+    <InstructionRemoveTemp/>
+    <InstructionJump>
+      <yes>-20</yes>
+      <no>0</no>
+    </InstructionJump>
+    <InstructionEndBlock/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#j</InstructionLoadLocal>
+    <InstructionPlusPlusInteger/>
+    <InstructionPop/>
+    <InstructionLoadLocal>main#j</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>5</TypeInteger>
+    </InstructionLoad>
+    <InstructionLtInteger/>
+    <InstructionRemoveTemp/>
+    <InstructionJump>
+      <yes>-37</yes>
+      <no>0</no>
+    </InstructionJump>
+    <InstructionEndBlock/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionPlusPlusInteger/>
+    <InstructionPop/>
+    <InstructionLoadLocal>main#i</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>3</TypeInteger>
+    </InstructionLoad>
+    <InstructionLtInteger/>
+    <InstructionRemoveTemp/>
+    <InstructionJump>
+      <yes>-54</yes>
+      <no>0</no>
+    </InstructionJump>
+    <InstructionEndBlock/>
     <InstructionSee/>
     <InstructionPop/>
     <InstructionRemoveTemp/>

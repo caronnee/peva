@@ -219,6 +219,7 @@ void Robot::execute()
 {
 	while(core->PC < instructions.size())
 	{
+		std::cout << "Number :" << core->PC;
 		instructions[core->PC]->execute(core);
 		core->PC++;
 	//	getc(stdin);

@@ -1,3 +1,4 @@
+//TODO namieto removetemp = opreacia +remove temp, aby to bolo atomicke
 #include "instructions.h"
 #include <iostream>
 

@@ -53,7 +53,7 @@ void Variable::swapValue(Variable * v)
 	size_t min = array.elements.size();
 	if (min > v->array.elements.size())
 		min = v->array.elements.size();
-	for(int i =0; i<min; i++) 
+	for(size_t i =0; i<min; i++) 
 	{
 		Variable * hlp = array.elements[i];
 		array.elements[i] = v->array.elements[i];

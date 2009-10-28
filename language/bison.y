@@ -90,7 +90,10 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<instructions> assign
 %type<instructions> command_var
 %type<instructions> simple_command
+
 %type<array_access> array_access
+
+%type<output> array
 %type<output> values
 %type<output> variable
 %type<output> variable_left
@@ -491,7 +494,9 @@ assign: variable_left TOKEN_ASSIGN expression
 	}
 	;
 variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); $$.temp.push_back(false);}
-		| TOKEN_IDENTIFIER array_access 
+	|array { $$ = $1;}
+	;		
+array: TOKEN_IDENTIFIER array_access 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
 			$$.ins = join_instructions($$.ins, $2.ins);
@@ -509,6 +514,7 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 			}
 		}
 		;
+
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{ 
 			Function * f =program->actualRobot->find_f($1); 
@@ -574,7 +580,11 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		} 
 		;
 
-call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
+call_parameters: expression 
+		{
+			$$ = $1; 
+			$$.ins.push_back(NULL);
+		} 
 		| /* ziadny parameter */ {$$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
@@ -628,7 +638,7 @@ unary_var: variable {$$ = $1;}
 			else if ($$.output.back() == TypeInteger) 
 				$$.ins.push_back(new InstructionPlusPlusInteger());
 			else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);
-			$$.temp.push_back(true);
+			$$.temp.push_back(false);
 		} 
 		|variable TOKEN_MINUSMINUS 
 		{
@@ -638,18 +648,13 @@ unary_var: variable {$$ = $1;}
 			else if ($$.output.back() == TypeInteger) 
 				$$.ins.push_back(new InstructionMinusMinusInteger());
 			else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);
-			$$.temp.push_back(true);
-			}
+			$$.temp.push_back(false);
+		}
+		;
 variable: TOKEN_IDENTIFIER 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
 			$$.temp.push_back(false);
-		}
-		|TOKEN_IDENTIFIER array_access 
-		{ 
-			$$ = ident_load(@1,program->actualRobot, $1); 
-			$$.ins = join_instructions($$.ins,$2.ins);
-			$$.temp.push_back(false);	
 		}
 		|call_fce { $$ = $1; } //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
@@ -667,6 +672,7 @@ variable: TOKEN_IDENTIFIER
 				}
 			$$.temp.push_back($1.temp.back());
 		}
+		|array
 		;
 		
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA 
