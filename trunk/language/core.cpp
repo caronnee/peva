@@ -59,7 +59,7 @@ void Core::loadElement(int range)
 	}
 	Variable * v = values.back();
 	values.pop_back();
-	if (v->array.elements.size() - range < 0)
+	if (v->array.elements.size() - range <= 0)
 	{
 		std::cout << "Loading WRONG element due to out of range"; getc(stdin);
 		values.push_back(memory.random());
