@@ -98,36 +98,30 @@ void Memory::fill(Variable * &v,
 		  std::stack<Create_type> & types_to_assign,
 		  size_t ID)
 {
-	if (!t.is_simple())
+	if (t.is_simple())
+		return;
+	Variable * tmp = NULL;
+	for(int i =0; i<t.range; i++) 
 	{
-		Variable * tmp = NULL;
-		for(int i =0; i<t.range; i++) 
-		{
-			tmp = next_id(ID);
-			if (!t.element().is_simple())
-			{
-				types_to_assign.push(t.element());
-				variables_to_assign.push(tmp);
-			}
-			v->array.elements.push_back(tmp);
-		}
-		for(size_t i =0; i<t.nested_vars.size(); i++) 
-		{
-			tmp = next_id(ID);
-			if (!t.is_simple())
-			{
-				types_to_assign.push(t.nested_vars[i].type);
-				variables_to_assign.push(tmp);
-			}
-			v->array.elements.push_back(tmp);
-		}
-
+		tmp = next_id(ID);
+		types_to_assign.push(t.element());
+		variables_to_assign.push(tmp);
+		v->array.elements.push_back(tmp);
 	}
+	for(size_t i =0; i<t.nested_vars.size(); i++) 
+	{
+		tmp = next_id(ID);
+		types_to_assign.push(t.nested_vars[i].type);
+		variables_to_assign.push(tmp);
+		v->array.elements.push_back(tmp);
+	}
+	std::cout << "end of block";
 }
 
 Variable * Memory::find_free(Create_type t, size_t ID)
 {
 	//bez rekurzie pre istotu
+	Create_type tt = t;
 	std::stack<Create_type> types_to_assign;
 	std::stack<Variable *> variables_to_assign;
 	Variable * v = next_id(ID);

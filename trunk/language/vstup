@@ -14,7 +14,8 @@ ROBOT qqq
 	VISIT_SEQ( START[3], START[2], [13,18])
 	VISIT( [100,200])
 
-	location l = {100,200};
+	integer[3][5][2] a;
+	//location l = {100,200};
 	location function X(integer x)
 	{
 		location k = {x,x};
@@ -23,8 +24,11 @@ ROBOT qqq
 	}
 	main() // komentar
 	{
-		integer[4][3][2] a;
-		a[3][2][0] = 9;
+		a[2][4][0] = 9;
+	/*	for(integer i =0; i<2; i++) 
+		{
+			i++;
+		}*/
 	//	shoot(X(z[3][2][0]));
 	/*	for(integer i =0; i<5; i++) 
 		{

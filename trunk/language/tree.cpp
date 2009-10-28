@@ -139,7 +139,6 @@ Node * Tree::add(std::string s, Create_type * type)
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
 		//burst!
-//		getc(stdin);
 		t->inner_node = true;
 		int splitted = -1,split = 0;
 		std::list<Node *> n;
@@ -154,7 +153,6 @@ Node * Tree::add(std::string s, Create_type * type)
 			}
 			int pointer = find_index(t->items.front()->name[t->depth]);
 //			std::cout << t->items.front()->name[t->depth] << "$:"<<pointer<<std::endl;
-//			getc(stdin);
 		 	if (t->next[pointer]==NULL) //
 			{
 			//	std::cout << "splittling" <<std::endl;
@@ -163,7 +161,6 @@ Node * Tree::add(std::string s, Create_type * type)
 				t->next[pointer] = new Tree(t->depth+1);
 			}
 			
-//			getc(stdin);
 			Tree * nxt = t->next[pointer];
 			nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
 		}

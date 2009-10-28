@@ -184,8 +184,16 @@ simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } 
 complex_type: simple_type ranges 
 		{ 
 			Create_type * t = $1; 
-			for(size_t i =0; i< $2.size(); i++) 
+			while(!$2.empty())
+			{
 				t = program->actualRobot->find_array_type($2.back(),t);
+				$2.pop_back();
+			}
+			Create_type y= *t;
+			while (y.data_type!=NULL)
+			{
+				y = *y.data_type;
+			}
 			$$ = t;
 		}//FIXME elegantnejsie
 		;
@@ -451,7 +459,9 @@ assign: variable_left TOKEN_ASSIGN expression
 			$3.temp.back() = true;
 		}
 		else if ($1.output.back()!=$3.output.back())
+		{
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
+		}
 		$$ = join_instructions($1.ins, $3.ins); 
 		switch ($1.output.back().type)
 		{
@@ -486,14 +496,16 @@ variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); 
 			$$ = ident_load(@1,program->actualRobot, $1);
 			$$.ins = join_instructions($$.ins, $2.ins); //TODO check range
 			$$.temp.push_back(false);
-			for(int i =0; i<$2.level; i++) 
+			Create_type tt = $$.output.back();	
+			for(int i =$2.level; i>0; i--)  //idem od jednotly, aby som sa vyhla poslednemu datatype, ktory MA byt null
 			{
 				if ($$.output.back().data_type == NULL)
 				{
 					program->actualRobot->error(@1,Robot::ErrorOutOfRange);
 					break;
 				}
-				$$.output.back() == *$$.output.back().data_type;
+				Create_type * t = $$.output.back().data_type;
+				$$.output.back() = *t;
 			}
 		} //TODO v loade checkovat, ci sa nestavam mimo ramec.
 		;
@@ -566,7 +578,6 @@ call_parameters: expression {$$ = $1; $$.ins.push_back(NULL);} //loaded
 		| /* ziadny parameter */ {$$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
-//			std::cout << "dalsi parameter!";getc(stdin);
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output
 			$$.ins = join_instructions($1.ins,$3.ins);
 			$$.output = $1.output;
