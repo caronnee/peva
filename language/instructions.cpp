@@ -26,6 +26,12 @@ InstructionCreate::InstructionCreate(Node * n)
 int InstructionCreate::execute(Core * c)
 {	
 	std::cout << "Assigning variable" << node->name << "...";
+	Create_type * t = node->type_of_variable;
+	while (t->data_type!=NULL)
+	{
+	//	std::cout << "hodnota:" << t->range<< std::endl;
+		t = t->data_type;
+	}
 	Variable * v = c->memory.assign(*node->type_of_variable,node->ID, c->depth);
 	node->var.push_back(v); //pridali sme pre akutialne zanorenie premenu
 	std::cout << "OK" << std::endl;
@@ -123,7 +129,6 @@ int InstructionLoad::execute(Core *c)
 	std::cout << "Loading array, element number:" << c->values.back()->integerValue <<"...";
 	int range = c->getIntFromStack();
 	c->loadElement(range);
-	std::cout << "\t\t\t" << c->values.back();
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -214,7 +219,7 @@ InstructionStoreReal::InstructionStoreReal()
 }
 int InstructionStoreReal::execute(Core * c)
 {
-	std::cout<<"Storing real, value" <<c->values.back()->realValue<< "..."<< getc(stdin);
+	std::cout<<"Storing real, value" <<c->values.back()->realValue<< "...";
 	c->saveFloat();
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -270,7 +275,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 		}
 		else
 		{
-			std::cout << "Storing parameter by value" << std::endl;getc(stdin);
+			std::cout << "Storing parameter by value" << std::endl;
 			v = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back();

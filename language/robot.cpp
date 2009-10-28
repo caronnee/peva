@@ -221,7 +221,7 @@ void Robot::execute()
 	{
 		instructions[core->PC]->execute(core);
 		core->PC++;
-		getc(stdin);
+	//	getc(stdin);
 		//sleep(1);
 	}
 }
