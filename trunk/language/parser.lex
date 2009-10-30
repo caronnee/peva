@@ -8,7 +8,7 @@
 %x COMMENT_LINE
 %x COMMENT
 %{
-	#include "header1.h"
+	#include "lval.h"
 	#include "bison.hpp"
 
 int line = 1;

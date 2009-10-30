@@ -1,5 +1,5 @@
-#ifndef HEADER_H_
-#define HEADER_H_
+#ifndef __LVAL__
+#define __LVAL__
 
 #include <string>
 #include "robot.h"
