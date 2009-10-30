@@ -90,13 +90,13 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<instructions> assign
 %type<instructions> command_var
 %type<instructions> simple_command
+%type<instructions> commands_and_empty
 
 %type<array_access> array_access
 
 %type<output> array
 %type<output> values
 %type<output> variable
-%type<output> variable_left
 %type<output> number
 %type<output> declare_functions
 %type<output> declare_function_
@@ -330,8 +330,10 @@ begin:	TOKEN_BEGIN { program->actualRobot->core->depth++; program->actualRobot->
 end:	TOKEN_END { program->actualRobot->core->depth--; program->actualRobot->defined.leave_block();}
 		;
 
-block_of_instructions: begin end { $$.push_back(new InstructionBegin()); $$.push_back(new InstructionEndBlock());}
-		|begin commands end { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
+block_of_instructions: begin commands_and_empty end { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
+		;
+commands_and_empty:  /* empty */ {$$.clear();}
+		| commands { $$ = $1; }
 		;
 
 commands: 	TOKEN_SEMICOLON { $$.clear(); }
@@ -449,7 +451,7 @@ simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 		} //Plus Plus Plus neee:)
 		;
 //pozor na to, co sa assignuje. TODO array/struct, ako by to vyzeralo/struct, ako by to vyzeralo->FIXME
-assign: variable_left TOKEN_ASSIGN expression 
+assign: variable TOKEN_ASSIGN expression 
 	{
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
 		{
@@ -493,9 +495,6 @@ assign: variable_left TOKEN_ASSIGN expression
 			$$.push_back(new InstructionRemoveTemp());
 	}
 	;
-variable_left: TOKEN_IDENTIFIER { $$ = ident_load(@1,program->actualRobot, $1); $$.temp.push_back(false);}
-	|array { $$ = $1;}
-	;		
 array: TOKEN_IDENTIFIER array_access 
 		{
 			$$ = ident_load(@1,program->actualRobot, $1);
