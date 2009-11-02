@@ -58,9 +58,9 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 }
 int InstructionLoadLocal::execute(Core * c)
 {
-	std::cout << "Loading local variable " << node->name << "...";
+	std::cout << "Loading local variable " << node->name << "..."<< node->var.back();//getc(stdin);
 	c->values.push_back(node->var.back());
-	std::cout << "OK" << std::endl;
+	std::cout << "OK" << std::endl;//getc(stdin);
 	return 0;
 }
 xmlNodePtr InstructionLoadLocal::xml_format()
@@ -244,7 +244,7 @@ InstructionStore::InstructionStore()
 // pouzije sa iba pri returne
 int InstructionStore::execute(Core * c)
 {
-	c->switchVariable();
+	c->copyVariable();
 	return 0;
 }
 Call::Call()
@@ -289,6 +289,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 	Node * ret = function->return_var;
 	v = c->memory.assign_temp(*ret->type_of_variable); //aby zmizlo po ukonceni
 	ret->var.push_back(v);//skopiruje si zo stacku hodnoty svojich parametrov
+	std::cout << "return value " << ret;
 	c->save(function->begin);	
 	std::cout << "OK" << std::endl;
 	return 0;

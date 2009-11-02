@@ -256,7 +256,7 @@ void Robots::set(Options o, size_t value)
 		case OptionSee:
 			std::cout << "setting SEE to:" << value << std::endl; 
 			break;
-		case OptionMemory:
+		case OptionMemory: //NEFUNGUJE kvoli tomu, ze uz su pridane hodnoty ako NULL
 			actualRobot->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
 			break;
 		case OptionAttack:

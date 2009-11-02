@@ -50,7 +50,7 @@ private:
 		  size_t ID);
 public:
 	/* class constructor */
-	Memory(int size = 100);
+	Memory(int size = 400);
 
 	/* returns variable added in depth d */
 	Variable * assign(Create_type t, size_t ID,size_t depth);

@@ -33,5 +33,6 @@ struct Core
 	void saveFloat();
 	void saveObject();
 	void switchVariable();
+	void copyVariable();
 };
 #endif
