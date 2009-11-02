@@ -10,7 +10,7 @@ bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o t
 parser_classes.o: parser_classes.h parser_classes.cpp
 	${CXX} ${CPPFLAGS} ${XML} ${CFLAGS} -o $@ -c parser_classes.cpp
 
-parser.o: parser.cpp header1.h 
+parser.o: parser.cpp lval.h 
 	${CXX} ${CPPFLAGS} ${CFLAGS} ${XML} -o $@ -c parser.cpp
 
 bison.o:bison.cpp

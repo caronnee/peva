@@ -19,14 +19,20 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 {
 	//OWNER sa nemeni!
 	//A musia byt rovnakehotypu, co sa arrayov tyka
+	if (v == NULL )
+	{
+		std::cout << "Error  - Copying NULL variable";
+		getc(stdin);
+		return;
+	}
+	if (array.elements.size() != v->array.elements.size() )
+	{
+		std::cout << "Error, arrays not same range, " << array.elements.size() << ":" << v->array.elements.size(); getc(stdin);
+		return;
+	}
 	integerValue = v->integerValue;
 	realValue = v->realValue;
 	objectValue = v->objectValue;
-	//este sa postarat o arraye
-//	std::cout << "element size parametrer:" << v->array.elements.size(); getc(stdin);
-
-//	std::cout << "size function parameter-" << array.elements[0]; getc(stdin);
-	std::vector<Variable *> variables_to_copy;
 	for ( size_t i = 0; i< v->array.elements.size(); i++)
 	{
 		array.elements[i]->copyValue(v->array.elements[i]);

@@ -22,7 +22,7 @@ Variable * Memory::next_id(size_t ID)
 		}
 	}
 	int id = rand()%memory_size;
-	std::cout << "Assignujem nahodne" << id << std::endl;
+	std::cout << "Assignujem nahodne" << id << std::endl;getc(stdin);
 	return memory[id];
 }
 
