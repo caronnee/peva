@@ -1,4 +1,5 @@
 #include "variable.h"
+#include <cstdio>
 
 Variable::Variable(size_t i)
 {
@@ -27,9 +28,11 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 	}
 	if (array.elements.size() != v->array.elements.size() )
 	{
+		std::cout << "Error : variable " << v << "tries to copy to " << this;getc(stdin);
 		std::cout << "Error, arrays not same range, " << array.elements.size() << ":" << v->array.elements.size(); getc(stdin);
 		return;
 	}
+	std::cout << "Integer value change from: " << integerValue << " to " << v->integerValue <<std::endl;
 	integerValue = v->integerValue;
 	realValue = v->realValue;
 	objectValue = v->objectValue;
