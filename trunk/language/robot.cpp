@@ -25,6 +25,7 @@ Robot::Robot(std::string s, GamePoints p)
 	core = new Core();
 	toKill = NULL;
 	
+	defined_types.push_back(new Create_type(TypeUndefined));
 	defined_types.push_back(new Create_type(TypeVoid));
 	defined_types.push_back(new Create_type(TypeReal));
 	defined_types.push_back(new Create_type(TypeInteger));
@@ -88,6 +89,10 @@ Create_type * Robot::find_array_type(int range, Create_type * descend)
 
 Function * Robot::find_f(std::string nam)
 {
+	if (core->nested_function->name == nam)
+	{
+		return core->nested_function;
+	}
 	for(int i =0; i< core->functions.size(); i++)
 	{
 		if(core->functions[i]->name == nam)
@@ -172,7 +177,7 @@ void Robot::add_function(std::vector<Parameter_entry> c, Instructions ins)
 	if(core->nested_function->name != "main") //TODO mohla by vracat tiez nejaku hodnotu a vracat sa na 'begin'
 		instructions.push_back(new InstructionRestore()); //pre procedury
 }
-void Robot::enter(std::string name, Create_type * return_type)
+void Robot::enter(std::string name, Create_type * return_type) //CONTINUE, add parameters_list
 {
 	nested += name + DELIMINER_CHAR;
 	core->nested_function = new Function(name, add("",return_type));

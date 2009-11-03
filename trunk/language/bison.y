@@ -292,7 +292,7 @@ declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_ins
 		;
 number:		TOKEN_OPER_SIGNADD TOKEN_REAL 
 		{ 
-			if (TOKEN_OPER_SIGNADD == OperationMinus ) 
+			if ($1 == OperationMinus ) 
 			{
 				$2*=-1;
 			} 
@@ -302,7 +302,7 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL
 		} 
 		|TOKEN_OPER_SIGNADD TOKEN_UINT 
 		{ 
-			if (TOKEN_OPER_SIGNADD == OperationMinus) 
+			if ($1 == OperationMinus) 
 			{
 				$2*=-1;
 			} 
@@ -330,10 +330,16 @@ begin:	TOKEN_BEGIN { program->actualRobot->core->depth++; program->actualRobot->
 end:	TOKEN_END { program->actualRobot->core->depth--; program->actualRobot->defined.leave_block();}
 		;
 
-block_of_instructions: begin commands_and_empty end { $$.push_back(new InstructionBegin()); $$ = join_instructions($$, $2);$$.push_back(new InstructionEndBlock()); }
+block_of_instructions: begin commands_and_empty end 
+			{ 
+				$$.push_back(new InstructionBegin()); 
+				$$ = join_instructions($$, $2);
+				$$.push_back(new InstructionEndBlock()); 
+			}
 		;
 commands_and_empty:  /* empty */ {$$.clear();}
-		| commands { $$ = $1; }
+		| commands { 
+			$$ = $1; }
 		;
 
 commands: 	TOKEN_SEMICOLON { $$.clear(); }
@@ -414,8 +420,7 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 				$$.push_back(new InstructionRemoveTemp());
 			}
 			$$.push_back(new InstructionLoadLocal(program->actualRobot->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
-			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));
-			
+			$$.push_back(new InstructionReturn(program->actualRobot->core->depth));	
 		}
 		|TOKEN_RETURN TOKEN_SEMICOLON 
 		{
@@ -518,7 +523,12 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		{ 
 			Function * f =program->actualRobot->find_f($1); 
 			if (f == NULL)
+			{
 				program->actualRobot->error(@1,Robot::ErrorFunctionNotDefined); 
+				$$.clear();
+				$$.output.push_back(*program->actualRobot->find_type(TypeUndefined));
+				$$.temp.push_back(true);
+			}
 			else 
 			{
 				if (f->parameters.size()!=$3.output.size()) 
@@ -655,7 +665,7 @@ variable: TOKEN_IDENTIFIER
 			$$ = ident_load(@1,program->actualRobot, $1);
 			$$.temp.push_back(false);
 		}
-		|call_fce { $$ = $1; } //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		|call_fce { $$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			
@@ -719,7 +729,7 @@ exps: expression {$$ = $1;$$.ins.push_back(NULL);} //Hack
 				$$.output.push_back($1.output[i]); //aj tak tu bude len jeden output, TODO
 		}
 		;
-expression_base: unary_var { $$ = $1;}
+expression_base: unary_var { $$ = $1; }
 		|number{$$ = $1;}
 		|TOKEN_LPAR expression TOKEN_RPAR {$$ = $2;}
 		;

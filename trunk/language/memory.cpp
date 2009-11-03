@@ -1,5 +1,6 @@
 #include "memory.h"
 #include "types.h"
+#include <stdio.h>
 
 Variable * Memory::next_id(size_t ID)
 {
