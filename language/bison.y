@@ -559,7 +559,6 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						iter_out++;	
 					}
 					$$.ins.push_back(new Call(f));
-					$$.temp.push_back(true);
 					if (f->return_var->type_of_variable->type !=TypeVoid) 
 						$$.output.push_back(*f->return_var->type_of_variable);
 				}
