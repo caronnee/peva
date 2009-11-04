@@ -90,8 +90,8 @@ struct Robot
 	Function * find_f(std::string s);
 	void add(Instructions ins);
 	Node * create_type(Type t);
-	void enter(std::string s, Create_type *t);
-	void add_function(std::vector<Parameter_entry> c, Instructions ins);
+	void enter(std::string s, std::vector<Parameter_entry> p,Create_type *t);
+	void add_function( Instructions ins);
 	void leave();
 	void execute();
 	void addKilled(unsigned l,Operation op, size_t number);

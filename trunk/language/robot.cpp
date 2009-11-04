@@ -164,9 +164,8 @@ void Robot::add(Instructions ins)
 		instructions.push_back(ins[i]);
 	}
 }
-void Robot::add_function(std::vector<Parameter_entry> c, Instructions ins)
+void Robot::add_function( Instructions ins)
 {
-	core->nested_function->parameters = c;
 	core->nested_function->begin = instructions.size();
 	core->nested_function->end = core->nested_function->begin + ins.size()+1;
 	core->functions.push_back(core->nested_function);
@@ -177,10 +176,10 @@ void Robot::add_function(std::vector<Parameter_entry> c, Instructions ins)
 	if(core->nested_function->name != "main") //TODO mohla by vracat tiez nejaku hodnotu a vracat sa na 'begin'
 		instructions.push_back(new InstructionRestore()); //pre procedury
 }
-void Robot::enter(std::string name, Create_type * return_type) //CONTINUE, add parameters_list
+void Robot::enter(std::string name, std::vector<Parameter_entry> params, Create_type * return_type) //CONTINUE, add parameters_list
 {
 	nested += name + DELIMINER_CHAR;
-	core->nested_function = new Function(name, add("",return_type));
+	core->nested_function = new Function(name, params,add("",return_type));
 }
 void Robot::leave() //odide z funkcie
 {
