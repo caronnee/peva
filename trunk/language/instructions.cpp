@@ -84,7 +84,7 @@ int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy ta
 {
 	std::cout << " Loading global variable: " << node->name << "...";
 	Variable * v;
-	v = node->var[0];
+	v = node->var.back();
 	c->values.push_back(v);
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -123,7 +123,7 @@ int InstructionLoad::execute(Core *c)
 {
 	if(constant)
 	{
-		std::cout << "Loading constant ...";
+		std::cout << "Loading constant ..." << var->integerValue;
 		c->values.push_back(var);
 		std::cout << "OK" << std::endl;
 		return 0;
@@ -282,6 +282,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 			function->parameters[i].node->var.push_back(v);
 			Variable * vvv = c->values.back();
 			v->copyValue(vvv);
+//			std::cout << "v:" << v->integerValue; getc(stdin);
 			c->values.pop_back();
 		}
 	}
@@ -289,7 +290,6 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 	Node * ret = function->return_var;
 	v = c->memory.assign_temp(*ret->type_of_variable); //aby zmizlo po ukonceni
 	ret->var.push_back(v);//skopiruje si zo stacku hodnoty svojich parametrov
-	std::cout << "return value " << ret;
 	c->save(function->begin);	
 	std::cout << "OK" << std::endl;
 	return 0;

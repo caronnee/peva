@@ -144,7 +144,7 @@ define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER
 robot:  define_bot TOKEN_BEGIN options targets global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions TOKEN_END
 	{ 
 		program->actualRobot->add_global($5);
-		program->actualRobot->add($10); 
+		program->actualRobot->add_function($10); 
 		program->actualRobot->consolidate();
 	}
 	;
@@ -275,12 +275,12 @@ parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY
 		;
 declare_function_:	function_header block_of_instructions  
 		{ 
-			program->actualRobot->add($2);
+			program->actualRobot->add_function($2);
 			program->actualRobot->leave();
 		} 
 		|declare_function_ function_header block_of_instructions 
 		{ 
-			program->actualRobot->add($3); 
+			program->actualRobot->add_function($3); 
 			program->actualRobot->leave();
 		}
 		;
