@@ -148,11 +148,6 @@ Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
 	return ins;
 }
 
-void reg(Robot * p, std::vector<Parameter_entry> c, Instructions b)
-{
-	p->add_function(c,b);
-}
-
 Instructions join_instructions(const Instructions i1, const Instructions i2)
 {
 	Instructions res = i1;

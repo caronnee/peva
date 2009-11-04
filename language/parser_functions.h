@@ -11,7 +11,6 @@ Element ident_load(unsigned line, Robot * r, std::string s);
 Instructions check_integer(Element e);
 
 Instruction * conversionToReal(Type t1, Type t2);
-void reg(Robot *p, std::vector<Parameter_entry> s, Instructions i);
 
 Instructions assign_default(int line, Robot * r, Node * n, Constr&l);
 Element operRel(int line, Robot *r,Operation op, Create_type t1, Create_type t2);

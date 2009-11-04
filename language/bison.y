@@ -77,6 +77,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<type> return_type
 %type<ranges> ranges
 %type<ident> function_header
+%type<entries> parameters_empty
 %type<entries> parameters
 %type<instructions> cycle_for
 %type<instructions> local_variables
@@ -142,9 +143,8 @@ define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER
 	;
 robot:  define_bot TOKEN_BEGIN options targets global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions TOKEN_END
 	{ 
-		std::vector<Parameter_entry> p;
 		program->actualRobot->add_global($5);
-		reg(program->actualRobot, p, $10); 
+		program->actualRobot->add($10); 
 		program->actualRobot->consolidate();
 	}
 	;
@@ -247,17 +247,23 @@ values: expression { $$ = $1; }
 			}
 		} //addOputpuTokenNotDefined
 		;
-declare_functions: /*	ziadne deklarovane funkcie	*/ { program->actualRobot->enter("main", program->actualRobot->find_type(TypeVoid)); }
-		|declare_function_ { $$ = $1; program->actualRobot->enter("main", program->actualRobot->find_type(TypeVoid));}
+declare_functions: /*	ziadne deklarovane funkcie	*/ { std::vector<Parameter_entry> em;
+						program->actualRobot->enter("main", em,program->actualRobot->find_type(TypeVoid)); }
+		|declare_function_ { $$ = $1;std::vector<Parameter_entry> em; program->actualRobot->enter("main", em, program->actualRobot->find_type(TypeVoid));}	
 		;
-function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER 
+
+function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR parameters_empty TOKEN_RPAR 
 		{
 			 $$ = $3;
-			 program->actualRobot->enter($3, $1); 
+			 program->actualRobot->enter($3,$5, $1); 
 		} 
 		;
 return_type:	type { $$ = $1; } //normalne sa neda premenna taka, ze VOID
 		|TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid);}
+		;
+
+parameters_empty:	{$$.clear();}
+		| parameters { $$ = $1;}
 		;
 parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); }
 		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->actualRobot->add($4, $3)));}
@@ -267,27 +273,15 @@ parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY
 			$$.push_back(Parameter_entry($5,PARAMETER_BY_REFERENCE, program->actualRobot->add($5, $4))); 
 		}
 		;
-declare_function_:	function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions  
+declare_function_:	function_header block_of_instructions  
 		{ 
-			reg(program->actualRobot,$3,$5);
+			program->actualRobot->add($2);
 			program->actualRobot->leave();
 		} 
-		|declare_function_ function_header TOKEN_LPAR parameters TOKEN_RPAR block_of_instructions 
+		|declare_function_ function_header block_of_instructions 
 		{ 
-			reg(program->actualRobot,$4,$6); 
+			program->actualRobot->add($3); 
 			program->actualRobot->leave();
-		}
-		|function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
-		{ 
-			std::vector<Parameter_entry> a; 
-			reg(program->actualRobot, a, $4); 
-			program->actualRobot->leave();
-		} 
-		|declare_function_ function_header TOKEN_LPAR TOKEN_RPAR block_of_instructions 
-		{
-			std::vector<Parameter_entry> a; 
-			reg(program->actualRobot, a, $5);
-			program->actualRobot->leave(); 
 		}
 		;
 number:		TOKEN_OPER_SIGNADD TOKEN_REAL 
