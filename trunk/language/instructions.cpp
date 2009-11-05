@@ -1,10 +1,11 @@
 //TODO namiesto removetemp = opreacia +remove temp, aby to bolo atomicke
+
 //TODO return value by sa mala vytvorit az v okamziku RETURN u
 #include "instructions.h"
 #include <iostream>
 
 //FIXME premenovat floatfrom an real, aby to olo konzistentne
-//TODO zmeit na list
+//TODO zmenit na list
 
 Instruction::Instruction()
 {

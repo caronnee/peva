@@ -1,4 +1,5 @@
 #include "tree.h"
+#include <cstdio>
 #include <iostream>
 
 void Tree::reset()
@@ -109,7 +110,7 @@ Node * Tree::add(std::string s, Create_type * type)
 	{
 		if (((*iter)->name == s)&& ((*iter)->active)) {
 
-			std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;
+			std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;getc(stdin);
 			return NULL;
 		}//kontrola, co tam nieco take uz nie je
 

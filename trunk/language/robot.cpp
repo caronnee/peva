@@ -1,6 +1,6 @@
 #ifndef ___ROBOT____
 #define ___ROBOT____
-#include "./robot.h"
+#include "robot.h"
 #include <iostream>
 
 FirstSection::FirstSection()
@@ -38,6 +38,8 @@ Robot::Robot(std::string s, GamePoints p)
 	defined_types.push_back(c);
 
 	/*	Pridavanie defaultnych premennych	*/
+
+	dev_null = new Node("dev/null", find_type(TypeUndefined), -1);
 
 	Node * n = defined.add("true",find_type(TypeInteger));
 	n->nested = Global;
@@ -103,7 +105,7 @@ Function * Robot::find_f(std::string nam)
 	return NULL;
 }
 
-Node * Robot::find_var(std::string var_name)
+Node * Robot::find_var(std::string var_name, bool & b)
 {
 	//najskor a hlada medzi premennymi deklarovanymi vo funkcii
 	std::string s = nested + var_name;
@@ -113,7 +115,10 @@ Node * Robot::find_var(std::string var_name)
 			i++)
 	{
 		if ((*i)->name == s)
+		{
+			b = true;
 			return (*i);
+		}
 	}
 	//hlada sa medzi globalnymi premennymi
 	s = var_name;
@@ -125,11 +130,16 @@ Node * Robot::find_var(std::string var_name)
 		if ((*i)->name == s)
 			return (*i);
 	}
-	return NULL;
+	b = false;
+	return dev_null;
 }
 Node * Robot::add(std::string name, Create_type * type)
 {
-	return defined.add(nested + name, type);
+	Node * n = defined.add(nested + name, type);
+	if (n == NULL)
+		return dev_null;
+	return n;
+
 }
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota

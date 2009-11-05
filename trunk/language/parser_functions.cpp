@@ -18,11 +18,12 @@ Instructions check_integer(Element e)
 Element ident_load(unsigned line, Robot * r, std::string s)
 {
 	Element st;
-	Node *n = r->find_var(s); 
-	if (n == NULL)
+	bool ok;
+	Node *n = r->find_var(s, ok); 
+	if (!ok)
 	{
+		std::cout << "Error, variable not found";getc(stdin);
 		r->error(line,Robot::Robot::ErrorVariableNotFound);
-		return st;
 	}
 	if(n->nested == Local)
 		st.ins.push_back(new InstructionLoadLocal(n));
@@ -420,7 +421,10 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			break;
 		case FeatureSee:
 			if (e.output.size() == 0)
-				ee.ins.push_back( new InstructionSee(r->find_var("seen")));
+			{
+				bool ok;
+				ee.ins.push_back( new InstructionSee(r->find_var("seen", ok)));
+			}
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
