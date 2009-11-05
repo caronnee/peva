@@ -70,6 +70,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token<operation> TOKEN_BOOL_AND
 %token<operation> TOKEN_BOOL_OR
 
+%type<ident> function_name
 %type<idents> names
 %type<type> simple_type
 %type<type> complex_type
@@ -167,6 +168,7 @@ global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 type:	  simple_type { $$ = $1;}
 	| complex_type { $$ = $1;}
 	; 
+
 /* definicie, lokalnych a globalnych premenn.ch, local variables cez command_var */
 local_variables:  type names TOKEN_SEMICOLON 
 		{  
@@ -252,23 +254,27 @@ declare_functions: /*	ziadne deklarovane funkcie	*/ { std::vector<Parameter_entr
 		|declare_function_ { $$ = $1;std::vector<Parameter_entry> em; program->actualRobot->enter("main", em, program->actualRobot->find_type(TypeVoid));}	
 		;
 
-function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR parameters_empty TOKEN_RPAR 
+function_header:return_type function_name TOKEN_LPAR parameters_empty TOKEN_RPAR 
 		{
-			 $$ = $3;
-			std::cout << "Tu sa este dostanem"; getc(stdin);
-			 program->actualRobot->enter($3,$5, $1); 
-			std::cout << "Tu sa este dostanem"; getc(stdin);
+			 $$ = $2;
+			 program->actualRobot->enter($2,$4, $1); 
 		} 
+		;
+function_name:	TOKEN_FUNCTION TOKEN_IDENTIFIER
+		{
+			$$ = $2;
+			program->actualRobot->nested += $2 + DELIMINER_CHAR;
+		}
 		;
 return_type:	type { $$ = $1; } //normalne sa neda premenna taka, ze VOID
 		|TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid);}
 		;
 
-parameters_empty:	{$$.clear();}
+parameters_empty:	{ $$.clear(); }
 		| parameters { $$ = $1;}
 		;
-parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); getc(stdin);}
-		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->actualRobot->add($4, $3)));}
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); }
+		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->actualRobot->add($4, $3))); }
 		| TOKEN_REFERENCE type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($3,PARAMETER_BY_REFERENCE, program->actualRobot->add($3, $2))); }
 		| parameters TOKEN_COMMA TOKEN_REFERENCE type TOKEN_IDENTIFIER 
 		{ 
@@ -277,7 +283,6 @@ parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY
 		;
 declare_function_:	function_header block_of_instructions  
 		{ 
-			std::cout << "Tu sa este dostanem 2"; getc(stdin);
 			program->actualRobot->add_function($2);
 			program->actualRobot->leave();
 		} 

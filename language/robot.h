@@ -98,7 +98,8 @@ struct Robot
 	void addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
 	void addVisitSeq(std::vector<Position> pos);
-	void error(unsigned int line, ErrorCode c,std::string message="");
+	//TODO zmenit na hlasky, co budu statcike a nie dynamicke
+	void error(unsigned int line, ErrorCode c,std::string message="Unrecognized");
 	void consolidate();
 private:
 	Robot_body * body;

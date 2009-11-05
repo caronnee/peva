@@ -37,13 +37,14 @@ Memory::Memory(int size)
 		memory[i] = new Variable(i);
 }
 
-Variable * Memory::assign(Create_type type, size_t id, size_t depth_)
+void Memory::assign(Node * node, size_t depth_)
 {
 	Memory_record m;
-	m.variable = find_free(type, id);
+	m.node = node;
+	m.variable = find_free(*node->type_of_variable, node->ID);
 	m.depth = depth_;
 	assigned.push_back(m);
-	return m.variable;
+	node->var.push_back(m.variable);
 }
 
 Variable * Memory::assign_temp(Create_type t)
