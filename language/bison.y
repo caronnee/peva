@@ -255,7 +255,9 @@ declare_functions: /*	ziadne deklarovane funkcie	*/ { std::vector<Parameter_entr
 function_header:return_type TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR parameters_empty TOKEN_RPAR 
 		{
 			 $$ = $3;
+			std::cout << "Tu sa este dostanem"; getc(stdin);
 			 program->actualRobot->enter($3,$5, $1); 
+			std::cout << "Tu sa este dostanem"; getc(stdin);
 		} 
 		;
 return_type:	type { $$ = $1; } //normalne sa neda premenna taka, ze VOID
@@ -265,7 +267,7 @@ return_type:	type { $$ = $1; } //normalne sa neda premenna taka, ze VOID
 parameters_empty:	{$$.clear();}
 		| parameters { $$ = $1;}
 		;
-parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); }
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->actualRobot->add($2, $1))); getc(stdin);}
 		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->actualRobot->add($4, $3)));}
 		| TOKEN_REFERENCE type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($3,PARAMETER_BY_REFERENCE, program->actualRobot->add($3, $2))); }
 		| parameters TOKEN_COMMA TOKEN_REFERENCE type TOKEN_IDENTIFIER 
@@ -275,6 +277,7 @@ parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY
 		;
 declare_function_:	function_header block_of_instructions  
 		{ 
+			std::cout << "Tu sa este dostanem 2"; getc(stdin);
 			program->actualRobot->add_function($2);
 			program->actualRobot->leave();
 		} 
@@ -559,8 +562,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						iter_out++;	
 					}
 					$$.ins.push_back(new Call(f));
-					if (f->return_var->type_of_variable->type !=TypeVoid) 
-						$$.output.push_back(*f->return_var->type_of_variable);
+					$$.output.push_back(*f->return_var->type_of_variable);
 				}
 				for (size_t i =0; i< $3.temp.size(); i++)
 				{
@@ -587,10 +589,10 @@ call_parameters: expression
 			$$ = $1; 
 			$$.ins.push_back(NULL);
 		} 
-		| /* ziadny parameter */ {$$.clear(); }
+		| /* ziadny parameter */ { $$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
-			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output
+			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output, TODO zmenit
 			$$.ins = join_instructions($1.ins,$3.ins);
 			$$.output = $1.output;
 			for (int i =0; i< $3.output.size();i++) 

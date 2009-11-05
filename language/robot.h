@@ -61,6 +61,7 @@ struct Robot
 		ErrorContinue,
 		ErrorOutOfRange
 	};
+	Node * dev_null;
 	bool errors;
 	bool warning;
 	std::string errorList;
@@ -76,15 +77,15 @@ struct Robot
 
 	std::vector<Create_type *> defined_types;
 	Tree defined;//root burst stromu
-	Instructions instructions; //kopa predefinovanych instrukcii
-	Values values;//stack ukazatelov do stromu
+	Instructions instructions; 
+	Values values;
 	MyXmlData data;
 	void save_to_xml();
 	Robot(std::string name, GamePoints g);
 	Core * core;
 	void add_global(Instructions ins);
 	void output(Tree * t);
-	Node * find_var(std::string);
+	Node * find_var(std::string s, bool & b);
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	Node * add(std::string name, Create_type * t);
 	Function * find_f(std::string s);
