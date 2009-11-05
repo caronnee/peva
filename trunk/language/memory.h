@@ -7,10 +7,12 @@
 #include <cstdlib>
 #include <stack>
 #include <vector>
+#include "node.h"
 #include "variable.h"
 
 struct Memory_record
 {
+	Node * node;
 	size_t depth;
 	Variable * variable;
 };
@@ -53,7 +55,7 @@ public:
 	Memory(int size = 400);
 
 	/* returns variable added in depth d */
-	Variable * assign(Create_type t, size_t ID,size_t depth);
+	void assign(Node *n ,size_t depth);
 
 	/* returns variable  temporarily added */
 	Variable * assign_temp(Create_type t);

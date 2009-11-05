@@ -41,34 +41,33 @@ Robot::Robot(std::string s, GamePoints p)
 
 	dev_null = new Node("dev/null", find_type(TypeUndefined), -1);
 
+	std::cout<<"xxx";getc(stdin);
 	Node * n = defined.add("true",find_type(TypeInteger));
 	n->nested = Global;
-	Variable * v = core->memory.assign(*find_type(TypeInteger),n->ID, 0);
-	n->var.push_back(v);
+	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 1;
 
 	n = defined.add("false",find_type(TypeInteger));
 	n->nested = Global;
-	v = core->memory.assign(*find_type(TypeInteger),n->ID, 0);
-	n->var.push_back(v);
+	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 0;
 
 	//pridana premenna pre NULL;
 	n = defined.add("NULL",find_type(TypeObject));
 	n->nested = Global;
-	v = core->memory.assign(*find_type(TypeObject),n->ID, 0);
-	n->var.push_back(v);
+	core->memory.assign(n, 0);
 	n->var[0]->objectValue = NULL;
 	
 	//pridana premenna pre this;
 	n = defined.add("this",find_type(TypeObject));
 	n->nested = Global;
-	n->var.push_back(core->memory.assign(*find_type(TypeObject), n->ID,0));
+	core->memory.assign(n,0);
 	n->var[0]->objectValue = body;
 	
 	//pridana premenna pre viditelnost
 	n = defined.add("seen",c);
 	n->nested = Global;
+	getc(stdin);
 }
 Create_type * Robot::find_type(Type t)
 {
@@ -128,7 +127,10 @@ Node * Robot::find_var(std::string var_name, bool & b)
 			i++)
 	{
 		if ((*i)->name == s)
+		{
+			b = true;
 			return (*i);
+		}
 	}
 	b = false;
 	return dev_null;
@@ -188,7 +190,7 @@ void Robot::add_function( Instructions ins)
 }
 void Robot::enter(std::string name, std::vector<Parameter_entry> params, Create_type * return_type) //CONTINUE, add parameters_list
 {
-	nested += name + DELIMINER_CHAR;
+//	nested += name + DELIMINER_CHAR;
 	core->nested_function = new Function(name, params,add("",return_type));
 }
 void Robot::leave() //odide z funkcie

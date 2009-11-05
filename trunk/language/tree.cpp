@@ -100,7 +100,7 @@ Tree * Tree::find_string(std::string s)
 
 Node * Tree::add(std::string s, Create_type * type)
 {
-//	std::cout << "pridavam meno:" << s << std::endl;
+	std::cout << "pridavam meno:" << s << std::endl;
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
 //	std::cout << "\t" << s <<std::endl; 
 	std::list<Node*>::iterator iter;

@@ -35,8 +35,8 @@ int InstructionCreate::execute(Core * c)
 	//	std::cout << "hodnota:" << t->range<< std::endl;
 		t = t->data_type;
 	}
-	Variable * v = c->memory.assign(*node->type_of_variable,node->ID, c->depth);
-	node->var.push_back(v); //pridali sme pre akutialne zanorenie premenu
+	
+	c->memory.assign( node, c->depth);
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -279,10 +279,9 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 		else
 		{
 			std::cout << "Storing parameter by value" << std::endl;
-			v = c->memory.assign(*function->parameters[i].node->type_of_variable,function->parameters[i].node->ID,c->depth + 1);
-			function->parameters[i].node->var.push_back(v);
+			c->memory.assign(function->parameters[i].node,c->depth + 1);
 			Variable * vvv = c->values.back();
-			v->copyValue(vvv);
+			function->parameters[i].node->var.back()->copyValue(vvv);
 //			std::cout << "v:" << v->integerValue; getc(stdin);
 			c->values.pop_back();
 		}
