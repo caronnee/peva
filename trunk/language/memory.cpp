@@ -150,6 +150,7 @@ void Memory::free(size_t depth)
 		Memory_record r = assigned.back();
 		assigned.pop_back();
 		set_free(r.variable); //TODO pre velke arrays a pod. to nejak penalizovat?
+		r.node->var.pop_back();
 	}
 	std::cout << "Memory freed"<< std::endl;
 }

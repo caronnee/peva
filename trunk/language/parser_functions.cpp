@@ -166,7 +166,7 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 	if (il!=NULL)
 	{
 		e.ins.push_back(il);
-		e.output.push_back(Create_type(TypeReal));
+		e.output.push_back(*r->find_type(TypeReal));
 	}
 	else if ( t1!=t2)
 	{
@@ -240,6 +240,7 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 		default:
 			r->error(l, Robot::ErrorOperationNotSupported);
 	}
+	e.ins.push_back(new InstructionRemoveTemp());
 	return e;
 }
 Instruction * conversionToReal(Type t1, Type t2)
