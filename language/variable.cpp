@@ -32,7 +32,7 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 		std::cout << "Error, arrays not same range, " << array.elements.size() << ":" << v->array.elements.size(); getc(stdin);
 		return;
 	}
-	std::cout << "Integer value change from: " << integerValue << " to " << v->integerValue <<std::endl;
+	std::cout << "Integer value change from: " << integerValue << "(id = " << ID << ") to " << v->integerValue << "(id ="<< v->ID <<")" << std::endl;
 	integerValue = v->integerValue;
 	realValue = v->realValue;
 	objectValue = v->objectValue;

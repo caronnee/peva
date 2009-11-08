@@ -356,8 +356,6 @@ cycle_for: TOKEN_FOR { program->actualRobot->core->depth++; $$.push_back(new Ins
 command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
 		{ 
 			//INIT, BLOCK, COMMAND CONDITION
-			if ($4.output.size())
-				$4.ins.push_back(new InstructionRemoveTemp());
 			$9.push_back(new InstructionEndBlock($4.ins.size()+$6.size()+1));
 			$9 = join_instructions($9, $6); 
 			$3.push_back(new InstructionMustJump($9.size()+1)); 
@@ -372,8 +370,6 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		}
 		|TOKEN_DO begin commands end TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
 		{ 
-			if ($7.output.size())
-				$7.ins.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionBegin(program->actualRobot->core->depth));
 			$3.push_back(new InstructionEndBlock($7.ins.size()+1));
 			$$ = join_instructions($$, $3);
@@ -382,8 +378,6 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		}
 		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_BEGIN commands TOKEN_END
 		{
-			if ($3.output.size())
-				$3.ins.push_back(new InstructionRemoveTemp());
 			$$.push_back(new InstructionMustJump($6.size()+2));
 			$$.push_back(new InstructionBegin(program->actualRobot->core->depth));
 			$6.push_back(new InstructionEndBlock($3.ins.size()+1));
@@ -611,10 +605,6 @@ call_parameters: expression
 //ziaden output
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
 	{
-		if ($3.output.size())
-		{
-			$3.ins.push_back(new InstructionRemoveTemp());
-		}
 		$5.push_back(new InstructionMustJump($7.size()));
 		$3.ins.push_back(new InstructionJump(0,$5.size()));
 		$$ =join_instructions($3.ins,$5);

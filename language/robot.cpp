@@ -41,7 +41,6 @@ Robot::Robot(std::string s, GamePoints p)
 
 	dev_null = new Node("dev/null", find_type(TypeUndefined), -1);
 
-	std::cout<<"xxx";getc(stdin);
 	Node * n = defined.add("true",find_type(TypeInteger));
 	n->nested = Global;
 	core->memory.assign(n, 0);
@@ -67,7 +66,6 @@ Robot::Robot(std::string s, GamePoints p)
 	//pridana premenna pre viditelnost
 	n = defined.add("seen",c);
 	n->nested = Global;
-	getc(stdin);
 }
 Create_type * Robot::find_type(Type t)
 {
@@ -398,7 +396,7 @@ void Robot::consolidate()
 	{
 		if (instructions[i] == NULL)
 		{
-			std::cout << "OCH";getc(stdin);
+			std::cout << "Null instruction, something forgotten?";getc(stdin);
 			continue;
 		}
 		std::cout << i << instructions[i]->name()<<",..\t";

@@ -60,6 +60,8 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 int InstructionLoadLocal::execute(Core * c)
 {
 	std::cout << "Loading local variable " << node->name << "..."<< node->var.back();//getc(stdin);
+	std::cout << " id =  " << node->var.back()->ID << "..." ;
+	std::cout << " value =  " << node->var.back()->integerValue << "..." ;
 	c->values.push_back(node->var.back());
 	std::cout << "OK" << std::endl;//getc(stdin);
 	return 0;
@@ -84,6 +86,7 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy tam nedam viac ako jednu premennu, pretoze sa nezanorujem,osetrene  bisone
 {
 	std::cout << " Loading global variable: " << node->name << "...";
+	std::cout << " id =  " << node->var.back()->ID << "...";
 	Variable * v;
 	v = node->var.back();
 	c->values.push_back(v);
@@ -245,7 +248,9 @@ InstructionStore::InstructionStore()
 // pouzije sa iba pri returne
 int InstructionStore::execute(Core * c)
 {
+	std::cout << "Stroring somplex variable ..." ;
 	c->copyVariable();
+	std::cout << "OK";
 	return 0;
 }
 Call::Call()
@@ -272,7 +277,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
 		{
 			std::cout << "Storing parameter by reference" << std::endl;
-			v = c->values.back(); //mozem to tam spravit, lebo v gramatike sa to da pouzit len pramo s premennou
+			v = c->getVariableFromStack(); //mozem to tam spravit, lebo v gramatike sa to da pouzit len pramo s premennou
 			//Musi byt premenna
 			function->parameters[i].node->var.push_back(v);
 		}
@@ -289,6 +294,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 	Variable * v;
 	Node * ret = function->return_var;
 	v = c->memory.assign_temp(*ret->type_of_variable); //aby zmizlo po ukonceni
+	std::cout << "RETURN VALUE = " << v->ID; getc(stdin);
 	ret->var.push_back(v);//skopiruje si zo stacku hodnoty svojich parametrov
 	c->save(function->begin);	
 	std::cout << "OK" << std::endl;
@@ -405,6 +411,12 @@ InstructionReturn::InstructionReturn(int depth_)
 }
 int InstructionReturn::execute(Core * c)
 {
+	std::cout << "RETURN: vo values je aktualne: " << c->values.size(); //zmaz prebentivne navratove hodnoty a parametre
+	for (size_t i =0; i< c->values.size(); i++)
+	{
+		std::cout << " " << c->values[i]->ID;
+	}
+	getc(stdin);
 	std::cout << "Return from depth" << c->depth;
 	c->depth -= depth-1;
 	std::cout << "to depth" << c->depth <<"..."<< std::endl;
@@ -412,8 +424,16 @@ int InstructionReturn::execute(Core * c)
 	Variable * v;
 	v = c->nested_function->return_var->var.back();
 	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
-	c->values.push_back(v);
+	std::cout << "zostalo rekurzii:" << c->nested_function->return_var->var.size();getc(stdin);
+	std::cout << "vraciam hodnotu" << v->integerValue; getc(stdin);
+//	c->values.push_back(v);
 	std::cout << "OK" << std::endl;
+std::cout << "RETURN: vo values je aktualne: " << c->values.size(); //zmaz prebentivne navratove hodnoty a parametre
+	for (size_t i =0; i< c->values.size(); i++)
+	{
+		std::cout << " " << c->values[i]->ID;
+	}
+	getc(stdin);
 	return 0;
 }
 InstructionRestore::InstructionRestore()
@@ -423,6 +443,12 @@ InstructionRestore::InstructionRestore()
 int InstructionRestore::execute(Core *c)
 {
 	std::cout << "Restorin' "; //zmaz prebentivne navratove hodnoty a parametre
+	std::cout << "vo values je aktualne: " << c->values.size()<< std::endl; //zmaz prebentivne navratove hodnoty a parametre
+	for (size_t i =0; i< c->values.size(); i++)
+	{
+		std::cout << " " << c->values[i]->ID;
+	}
+	getc(stdin);
 	c->restore();
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -433,7 +459,9 @@ InstructionRemoveTemp::InstructionRemoveTemp()
 }
 int InstructionRemoveTemp::execute(Core * c)
 {
+	std::cout << "Freeing temporary ...";
 	c->memory.free_tmp();
+	std::cout << "OK";
 	return 0;
 }
 
@@ -548,11 +576,16 @@ InstructionMultiplyInteger::InstructionMultiplyInteger()
 int InstructionMultiplyInteger::execute(Core * c)
 {
 	std::cout << "Multiplying two integer numbers ...";
+	std::cout << " right value" << c->values.back()->ID;
 	int right = c->getIntFromStack();
+	std::cout << "value " << right << std::endl;
+	std::cout << " left value" << c->values.back()->ID << " ";
 	int left = c->getIntFromStack();
+	std::cout << "value " << left << std::endl;
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = left * right;
 	std::cout << "OK" << std::endl;
+	getc(stdin);
 	return 0;
 }
 InstructionMultiplyReal::InstructionMultiplyReal()
