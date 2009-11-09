@@ -815,7 +815,7 @@ int main(int argc, char ** argv)
 	GamePoints points;
 	Robots q(points);
 	Create_type t;
-	yyparse(&q);
+	int err = yyparse(&q);
 	fclose(yyin);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
 	/*	q.actualRobot->output(&q.actualRobot->defined);
@@ -825,8 +825,9 @@ int main(int argc, char ** argv)
 		std::cout << "haho!" << std::endl;
 		q.actualRobot->execute();
 	 */
+	// std::cout << "yyparse vyhodil" << err;getc(stdin);
 	std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
-	if(q.actualRobot->errors)
+	if ((err) || (q.actualRobot->errors))
 		std::cout << q.actualRobot->errorList << std::endl;
 	else
 	{
