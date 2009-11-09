@@ -45,12 +45,7 @@ Variable * Core::getVariableFromStack()
 	return v;
 }
 int Core::getIntFromStack()
-{
-	if (values.size() == 0)
-	{
-		std::cout <<"chyba u integeru";
-		getc(stdin);
-	}
+{	
 	return getVariableFromStack()->integerValue;
 }
 float Core::getFloatFromStack()
@@ -81,9 +76,7 @@ Object * Core::getObjectFromStack()
 }
 void Core::saveInteger()
 {
-	std::cout << "Predtym" << values.back()->ID<< " ";
 	int right = getIntFromStack();
-	std::cout << "do [remennej" << values.back()->ID;getc(stdin);
 	getVariableFromStack()->integerValue = right;	
 }
 void Core::saveFloat()
