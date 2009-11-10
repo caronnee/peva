@@ -80,8 +80,7 @@ struct Robot
 	Instructions instructions; 
 	Values values;
 	MyXmlData data;
-	void save_to_xml();
-	Robot(std::string name, GamePoints g);
+
 	Core * core;
 	void add_global(Instructions ins);
 	void output(Tree * t);
@@ -103,6 +102,10 @@ struct Robot
 	void consolidate();
 private:
 	Robot_body * body;
+public:
+	Robot(std::string name, GamePoints g);
+	void save_to_xml();
+	~Robot();
 };
 
 enum Options

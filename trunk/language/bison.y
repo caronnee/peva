@@ -814,7 +814,6 @@ int main(int argc, char ** argv)
 	}
 	GamePoints points;
 	Robots q(points);
-	Create_type t;
 	int err = yyparse(&q);
 	fclose(yyin);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
