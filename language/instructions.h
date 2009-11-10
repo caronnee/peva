@@ -9,7 +9,7 @@
 
 class Instruction
 {
-	protected:
+protected:
 	Node * node;
 	bool constant;
 public:
@@ -18,6 +18,7 @@ public:
 	virtual xmlNodePtr xml_format();
 	virtual int execute(Core * s) = 0;
 	Instruction();
+	virtual ~Instruction();
 };
 class InstructionCreate : public Instruction
 {
@@ -25,6 +26,7 @@ class InstructionCreate : public Instruction
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
 		InstructionCreate(Node * n);
+		virtual ~InstructionCreate();
 };
 class InstructionLoadLocal : public Instruction
 {
@@ -33,6 +35,7 @@ class InstructionLoadLocal : public Instruction
 		virtual xmlNodePtr xml_format();
 		InstructionLoadLocal(Node * n);
 		InstructionLoadLocal(); //loadne z toho, co ma na value stacku
+		virtual ~InstructionLoadLocal();
 };
 class InstructionLoadGlobal : public Instruction
 {
@@ -41,6 +44,7 @@ class InstructionLoadGlobal : public Instruction
 		virtual int execute(Core *s);
 		InstructionLoadGlobal(Node * n);
 		InstructionLoadGlobal(); //loadne z toho, co ma na value stacku
+		virtual ~InstructionLoadGlobal();
 };
 class InstructionLoad : public Instruction
 {
@@ -52,37 +56,43 @@ class InstructionLoad : public Instruction
 		virtual int execute(Core *s);
 		InstructionLoad(int i);
 		InstructionLoad(float f);
-		InstructionLoad(); //loadne z toho, co ma na value stacku
+		InstructionLoad(); 
+		virtual ~InstructionLoad();
 };
 class InstructionConversionToInt : public Instruction
 {
 	public:
 		InstructionConversionToInt();
 		virtual int execute(Core *s);
+		virtual ~InstructionConversionToInt();
 };
 class InstructionConversionToReal: public Instruction
 {
 	public:
 		InstructionConversionToReal();
 		virtual int execute(Core *c);
+		virtual ~InstructionConversionToReal();
 };
 class InstructionDuplicate: public Instruction
 {
 	public:
 		virtual int execute(Core *s);
 		InstructionDuplicate();
+		virtual ~InstructionDuplicate();
 };
 class InstructionStoreInteger : public Instruction
 {
 	public:
 		virtual int execute(Core *s);
 		InstructionStoreInteger();
+		virtual ~InstructionStoreInteger();
 };
 class InstructionStoreReal : public Instruction
 {
 	public:
 		virtual int execute(Core *s);
 		InstructionStoreReal();
+		virtual ~InstructionStoreReal();
 };
 /*Location, struct, array sa robi v InstructionStore, panlizacia potom vyppocitana*/
 
@@ -91,21 +101,24 @@ class InstructionStoreObject : public Instruction
 	public:
 		virtual int execute(Core *s);
 		InstructionStoreObject();
+		virtual ~InstructionStoreObject();
 };
 class InstructionStore : public Instruction
 {
 	public:
-	virtual int execute(Core *c);
-	InstructionStore();
+		InstructionStore();
+		virtual int execute(Core *c);
+		virtual ~InstructionStore();
 };
 class Call : public Instruction
 {
 	Function* function;
 	public:
+		Call();
+		Call(Function * f);
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core *s);
-		Call(Function * f);
-		Call();
+		virtual ~Call();
 };
 
 class InstructionPop : public Instruction
@@ -113,15 +126,17 @@ class InstructionPop : public Instruction
 	public:
 		virtual int execute(Core *s);
 		InstructionPop();
+		virtual ~InstructionPop();
 };
 
 class InstructionMustJump : public Instruction
 {
 	int shift;
 	public:
+		InstructionMustJump(int steps);
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
-		InstructionMustJump(int steps);
+		virtual ~InstructionMustJump();
 };
 class InstructionJump : public Instruction
 {
@@ -130,21 +145,24 @@ class InstructionJump : public Instruction
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
 		InstructionJump(int stepsYes, int stepsNo);
+		virtual ~InstructionJump();
 };
 
 class InstructionBreak : public Instruction
 {
 	public:
+		InstructionBreak(int depth_ = 0);
+		int jump, depth;
 		virtual int execute(Core *s);
 		virtual xmlNodePtr xml_format();
-		int jump, depth;
-		InstructionBreak(int depth_ = 0);
 		virtual void set(size_t jump, size_t depth);
+		virtual ~InstructionBreak();
 };
 class InstructionContinue : public InstructionBreak //stejne ako break, ale skace inam
 {
 	public:
 		InstructionContinue(int depth_ = 0);
+		virtual ~InstructionContinue();
 };
 class InstructionReturn : public Instruction
 {
@@ -152,44 +170,53 @@ class InstructionReturn : public Instruction
 	public:
 		InstructionReturn(int dep);
 		virtual int execute(Core * c);
+		virtual ~InstructionReturn();
 };
 class InstructionRestore: public Instruction
 {
 	public:
 		virtual int execute(Core * c);
 		InstructionRestore();
+		virtual ~InstructionRestore();
 };
 
 class InstructionRemoveTemp: public Instruction
 {
 	public:
-		virtual int execute(Core * c);
 		InstructionRemoveTemp();
+		virtual int execute(Core * c);
+		virtual ~InstructionRemoveTemp();
 };
+
+//-----------------------------------COUNTING-----------------------------------------
 
 class InstructionPlusPlusInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionPlusPlusInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionPlusPlusInteger();
 };
 class InstructionPlusPlusReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionPlusPlusReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionPlusPlusReal();
 };
 class InstructionMinusMinusInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionMinusMinusInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionMinusMinusInteger();
 };
 class InstructionMinusMinusReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionMinusMinusReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionMinusMinusReal();
 };
 /*class InstructionPlus : public Instruction //pre pointre?Location
 {
@@ -200,294 +227,341 @@ class InstructionMinusMinusReal : public Instruction
 class InstructionPlusInteger : public Instruction //pre pointre
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionPlusInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionPlusInteger();
 };
 class InstructionPlusReal : public Instruction //pre pointre
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionPlusReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionPlusReal();
 };
 class InstructionMinusInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionMinusInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionMinusInteger();
 };
 
 class InstructionMinusReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionMinusReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionMinusReal();
 };
 class InstructionMultiplyInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionMultiplyInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionMultiplyInteger();
 };
 class InstructionMultiplyReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionMultiplyReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionMultiplyReal();
 };
 class InstructionDivideInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionDivideInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionDivideInteger();
 };
 class InstructionDivideReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionDivideReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionDivideReal();
 };
 class InstructionModulo : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionModulo();
+		virtual int execute(Core *s);
+		virtual ~InstructionModulo();
 };
 class InstructionBinaryAnd : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionBinaryAnd();
+		virtual int execute(Core *s);
+		virtual ~InstructionBinaryAnd();
 };
 class InstructionAnd : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionAnd();
+		virtual int execute(Core *s);
+		virtual ~InstructionAnd();
 };
 class InstructionBinaryOr : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionBinaryOr();
+		virtual int execute(Core *s);
+		virtual ~InstructionBinaryOr();
 };
 class InstructionOr : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionOr();
+		virtual int execute(Core *s);
+		virtual ~InstructionOr();
 };
 class InstructionBinaryNot : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionBinaryNot();
+		virtual int execute(Core *s);
+		virtual ~InstructionBinaryNot();
 };
 class InstructionNot : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionNot();
+		virtual int execute(Core *s);
+		virtual ~InstructionNot();
 };
 //-------------------------------------------------------------------------------------------------------Relation------------------------------
 class InstructionGtInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionGtInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionGtInteger();
 };
 class InstructionGtReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionGtReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionGtReal();
 };
 class InstructionGeInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionGeInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionGeInteger();
 };
 class InstructionGeReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionGeReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionGeReal();
 };
 class InstructionEqualInteger : public Instruction //na pointre
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionEqualInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionEqualInteger();
 };
 
 class InstructionEqualReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionEqualReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionEqualReal();
 };
 class InstructionEqualObject : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionEqualObject();
+		virtual int execute(Core *s);
+		virtual ~InstructionEqualObject();
 };
 class InstructionNotEqual : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionNotEqual();
+		virtual int execute(Core *s);
+		virtual ~InstructionNotEqual();
 };
 class InstructionNotEqualInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionNotEqualInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionNotEqualInteger();
 };
 class InstructionNotEqualReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionNotEqualReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionNotEqualReal();
 };
 class InstructionNotEqualObject : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionNotEqualObject();
+		virtual int execute(Core *s);
+		virtual ~InstructionNotEqualObject();
 };
 
 class InstructionLtInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionLtInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionLtInteger();
 };
 class InstructionLtReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionLtReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionLtReal();
 };
 class InstructionLeInteger : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionLeInteger();
+		virtual int execute(Core *s);
+		virtual ~InstructionLeInteger();
 };
 
 class InstructionLeReal : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionLeReal();
+		virtual int execute(Core *s);
+		virtual ~InstructionLeReal();
 };
 
 class InstructionBegin : public Instruction
 {
 	public:
+		InstructionBegin(size_t d = 0); //label for 
 		size_t depth;
 		virtual int execute(Core *s);
-		InstructionBegin(size_t d = 0); //label for 
+		virtual ~InstructionBegin(); //label for 
 };
 class InstructionEndBlock : public Instruction
 {
 	public:
+		InstructionEndBlock(size_t end_l = 0);
 		size_t end_loop;
 		virtual int execute(Core *s);
-		InstructionEndBlock(size_t end_l = 0);
+		virtual ~InstructionEndBlock();
 };
 //--------------------------------------------------Interaction--------------------------------------------------
 class InstructionSee : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionSee(Node *s);
+		virtual int execute(Core *s);
+		virtual ~InstructionSee();
 };
 class InstructionStep : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionStep();
+		virtual int execute(Core *s);
+		virtual ~InstructionStep();
 };
 class InstructionStepDefault : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionStepDefault();
+		virtual int execute(Core *s);
+		virtual ~InstructionStepDefault();
 };
 class InstructionWait : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionWait();
+		virtual int execute(Core *s);
+		virtual ~InstructionWait();
 };
 class InstructionShootLocation : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionShootLocation();
+		virtual int execute(Core *s);
+		virtual ~InstructionShootLocation();
 };
 class InstructionShootAngle : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionShootAngle();
+		virtual int execute(Core *s);
+		virtual ~InstructionShootAngle();
 };
 
 class InstructionTurn : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionTurn();
+		virtual int execute(Core *s);
+		virtual ~InstructionTurn();
 };
 class InstructionTurnR : public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionTurnR();
+		virtual int execute(Core *s);
+		virtual ~InstructionTurnR();
 };
 class InstructionTurnL: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionTurnL();
+		virtual int execute(Core *s);
+		virtual ~InstructionTurnL();
 };
 class InstructionHit: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionHit();
+		virtual int execute(Core *s);
+		virtual ~InstructionHit();
 };
 //--------------------------------------------
 class InstructionIsPlayer: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionIsPlayer();
+		virtual int execute(Core *s);
+		virtual ~InstructionIsPlayer();
 };
 class InstructionIsWall: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionIsWall();
+		virtual int execute(Core *s);
+		virtual ~InstructionIsWall();
 };
 class InstructionIsMissille: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionIsMissille();
+		virtual int execute(Core *s);
+		virtual ~InstructionIsMissille();
 };
 class InstructionLocate: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionLocate();
+		virtual int execute(Core *s);
+		virtual ~InstructionLocate();
 };
 class InstructionIsMoving: public Instruction
 {
 	public:
-		virtual int execute(Core *s);
 		InstructionIsMoving();
+		virtual int execute(Core *s);
+		virtual ~InstructionIsMoving();
 };
 #endif

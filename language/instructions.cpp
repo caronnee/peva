@@ -9,6 +9,7 @@
 
 Instruction::Instruction()
 {
+	node = NULL;
 	name_ = "UndefinedInstruction";
 }
 std::string Instruction::name()
@@ -20,12 +21,22 @@ xmlNodePtr Instruction::xml_format()
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	return n;	
 }
+Instruction::~Instruction()
+{
+	if (node !=NULL)
+	{
+		std::cout << "node not deleted";
+		delete node;
+		node = NULL;
+	}
+}
 
 InstructionCreate::InstructionCreate(Node * n)
 {
 	node = n;
 	name_ = "InstructionCreate";
 }
+
 int InstructionCreate::execute(Core * c)
 {	
 	std::cout << "Assigning variable" << node->name << "...";
@@ -47,6 +58,12 @@ xmlNodePtr InstructionCreate::xml_format()
 	xmlAddChild(n, child);
 	return n;
 }
+
+InstructionCreate::~InstructionCreate()
+{
+	/* nothing to destroy yet */
+}
+
 InstructionLoadLocal::InstructionLoadLocal()
 {
 	node = NULL;
@@ -74,6 +91,12 @@ xmlNodePtr InstructionLoadLocal::xml_format()
 	xmlAddChild(n, child);
 	return n;
 }
+
+InstructionLoadLocal::~InstructionLoadLocal()
+{
+	/* nothing to destroy yet */	
+}
+
 InstructionLoadGlobal::InstructionLoadGlobal()
 {
 	node = NULL;
@@ -101,10 +124,15 @@ xmlNodePtr InstructionLoadGlobal::xml_format()
 	xmlAddChild(n, child);
 	return n;
 }
+
+InstructionLoadGlobal::~InstructionLoadGlobal()
+{
+	/* nothing to destroy yet */	
+}
+
 InstructionLoad::InstructionLoad()
 {
 	constant = false;
-	node = NULL;
 	name_ = "InstructionLoad";
 	var = NULL;
 }
@@ -170,6 +198,13 @@ xmlNodePtr InstructionLoad::xml_format()
 	xmlAddChild(n, child);
 	return n;
 }
+
+InstructionLoad::~InstructionLoad()
+{
+	if(var)
+		delete var;
+	var = NULL;
+}
 InstructionConversionToInt::InstructionConversionToInt()
 {
 	name_ = "InstructionConversionToInt";
@@ -184,10 +219,17 @@ int InstructionConversionToInt::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+
+InstructionConversionToInt::~InstructionConversionToInt()
+{
+	/* nothing to be done yet */
+}
+
 InstructionConversionToReal::InstructionConversionToReal()
 {
 	name_ = "InstructionConversionToReal";
 }
+
 int InstructionConversionToReal::execute(Core * c)
 {
 	std::cout << "Converting" <<c->values.back()->integerValue;
@@ -198,10 +240,17 @@ int InstructionConversionToReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+
+InstructionConversionToReal::~InstructionConversionToReal()
+{
+	/* nothing to be done yet */
+}
+
 InstructionDuplicate::InstructionDuplicate()
 {
 	name_ = "InstructionDuplicate";
 }
+
 int InstructionDuplicate::execute(Core * c)
 {
 	std::cout << "Duplicating variable" << std::endl;
@@ -209,10 +258,17 @@ int InstructionDuplicate::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+
+InstructionDuplicate::~InstructionDuplicate()
+{
+	/* Nothing to be done yet*/
+}
+
 InstructionStoreInteger::InstructionStoreInteger()
 {
 	name_ = "InstructionStoreInteger";
 }
+
 int InstructionStoreInteger::execute(Core * c)
 {
 	std::cout<<"Storing integer, value: " << c->values.back()->integerValue;
@@ -220,6 +276,12 @@ int InstructionStoreInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+	
+InstructionStoreInteger::~InstructionStoreInteger()
+{
+	/* Nothing to be done yet*/
+}
+
 InstructionStoreReal::InstructionStoreReal()
 {
 	name_ = "InstructionStoreReal";
@@ -231,6 +293,11 @@ int InstructionStoreReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionStoreReal::~InstructionStoreReal()
+{
+	/* Nothing to be done yet*/
+}
+
 InstructionStoreObject::InstructionStoreObject()
 {
 	name_ = "InstructionStoreObject";
@@ -242,6 +309,10 @@ int InstructionStoreObject::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionStoreObject::~InstructionStoreObject()
+{
+	/* Nothing to be done yet */
+}
 InstructionStore::InstructionStore()
 {
 	name_ = "InstructionStore";
@@ -249,11 +320,17 @@ InstructionStore::InstructionStore()
 // pouzije sa iba pri returne
 int InstructionStore::execute(Core * c)
 {
-	std::cout << "Stroring somplex variable ..." ;
+	std::cout << "Storing complex variable ..." ;
 	c->copyVariable();
 	std::cout << "OK";
 	return 0;
 }
+
+InstructionStore::~InstructionStore()
+{
+	/* Nothing to be done yet */
+}
+
 Call::Call()
 {
 	node = NULL;
@@ -309,6 +386,10 @@ xmlNodePtr Call::xml_format()
 	xmlAddChild(n,n2);
 	return n;
 }
+Call::~Call()
+{
+	/* Nothing to be done yet */
+}
 InstructionPop::InstructionPop()
 {
 	name_ = "InstructionPop";
@@ -319,6 +400,10 @@ int InstructionPop::execute(Core *s)
 	s->values.pop_back();
 	std::cout << "OK" << std::endl;
 	return 0;
+}
+InstructionPop::~InstructionPop()
+{
+	/* Nothing to be done yet */
 }
 InstructionMustJump::InstructionMustJump(int steps)
 {
@@ -340,6 +425,10 @@ xmlNodePtr InstructionMustJump::xml_format()
 	xmlAddChild(n2,n3);
 	xmlAddChild(n,n2);
 	return n;
+}
+InstructionMustJump :: ~InstructionMustJump()
+{
+	/* nothing to be done yet */
 }
 InstructionJump::InstructionJump(int yes_, int no_)
 {
@@ -372,6 +461,10 @@ xmlNodePtr InstructionJump::xml_format()
 	xmlNewChild(n,NULL,BAD_CAST "no",BAD_CAST deconvert<int>(no).c_str());
 	return n;
 }
+InstructionJump::~InstructionJump()
+{
+	/* nothing to be done yet */
+}
 InstructionBreak::InstructionBreak(int depth_)
 {
 	depth = depth_;
@@ -399,10 +492,18 @@ void InstructionBreak::set(size_t jump_ , size_t depth_)
 	jump = jump_;
 	depth -= depth_;
 }
+InstructionBreak::~InstructionBreak()
+{
+	/* nothing to be done yet */
+}
 InstructionContinue::InstructionContinue(int depth_)
 {
 	depth = depth_;
 	name_ = "InstructionContinue";
+}
+InstructionContinue::~InstructionContinue()
+{
+	/* nothing to be done yet */
 }
 InstructionReturn::InstructionReturn(int depth_)
 {
@@ -428,16 +529,25 @@ int InstructionReturn::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionReturn::~InstructionReturn()
+{
+	/* nothing to be done */
+}
 InstructionRestore::InstructionRestore()
 {
 	name_ = "InstructionRestore";
 }
+
 int InstructionRestore::execute(Core *c)
 {
 	std::cout << "Restorin' "; //zmaz prebentivne navratove hodnoty a parametre
 	c->restore();
 	std::cout << "OK" << std::endl;
 	return 0;
+}
+InstructionRestore::~InstructionRestore()
+{
+	/* nothing to be done */
 }
 InstructionRemoveTemp::InstructionRemoveTemp()
 {
@@ -450,8 +560,11 @@ int InstructionRemoveTemp::execute(Core * c)
 	std::cout << "OK";
 	return 0;
 }
-
-//--------------------------POCITANIE--------------------------------------------------
+InstructionRemoveTemp::~InstructionRemoveTemp()
+{
+	/* nothing to be done */
+}
+//-----------------------------------COUNTING-----------------------------------------
 
 InstructionPlusPlusInteger::InstructionPlusPlusInteger()
 {
@@ -464,6 +577,10 @@ int InstructionPlusPlusInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionPlusPlusInteger::~InstructionPlusPlusInteger()
+{
+	/* Nothing to be done yet */
+}
 InstructionPlusPlusReal::InstructionPlusPlusReal()
 {
 	name_ = "InstructionPlusPlusReal";
@@ -474,6 +591,10 @@ int InstructionPlusPlusReal::execute(Core * c)
 	c->values.back()->realValue++;
 	std::cout << "OK" << std::endl;
 	return 0;
+}
+InstructionPlusPlusReal::~InstructionPlusPlusReal()
+{
+	/* Nothing to be done yet */
 }
 InstructionMinusMinusInteger::InstructionMinusMinusInteger()
 {
@@ -486,6 +607,10 @@ int InstructionMinusMinusInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionMinusMinusInteger::~InstructionMinusMinusInteger()
+{
+	/* Nothing to be done yet */
+}
 InstructionMinusMinusReal::InstructionMinusMinusReal()
 {
 	name_ = "InstructionMinusMinusReal";
@@ -496,6 +621,10 @@ int InstructionMinusMinusReal::execute(Core * c)
 	c->values.back()->realValue--;
 	std::cout << "OK" << std::endl;
 	return 0;
+}
+InstructionMinusMinusReal::~InstructionMinusMinusReal()
+{
+	/* Nothing to be done yet */
 }
 InstructionPlusInteger::InstructionPlusInteger()
 {
@@ -512,6 +641,8 @@ int InstructionPlusInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionPlusInteger::~InstructionPlusInteger()
+{}
 InstructionPlusReal::InstructionPlusReal()
 {
 	name_ = "InstructionPlusReal";
@@ -527,6 +658,8 @@ int InstructionPlusReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionPlusReal::~InstructionPlusReal()
+{}
 InstructionMinusInteger::InstructionMinusInteger()
 {
 	name_ = "InstructionMinusInteger";
@@ -541,6 +674,8 @@ int InstructionMinusInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionMinusInteger::~InstructionMinusInteger()
+{}
 InstructionMinusReal::InstructionMinusReal()
 {
 	name_ = "InstructionMinusReal";
@@ -555,6 +690,8 @@ int InstructionMinusReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionMinusReal::~InstructionMinusReal()
+{}
 InstructionMultiplyInteger::InstructionMultiplyInteger()
 {
 	name_ = "InstructionMultiplyInteger";
@@ -574,6 +711,8 @@ int InstructionMultiplyInteger::execute(Core * c)
 	//getc(stdin);
 	return 0;
 }
+InstructionMultiplyInteger::~InstructionMultiplyInteger()
+{}
 InstructionMultiplyReal::InstructionMultiplyReal()
 {
 	name_ = "InstructionMultiplyReal";
@@ -588,6 +727,8 @@ int InstructionMultiplyReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionMultiplyReal::~InstructionMultiplyReal()
+{}
 InstructionDivideInteger::InstructionDivideInteger()
 {
 	name_ = "InstructionDivideInteger";
@@ -602,6 +743,8 @@ int InstructionDivideInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionDivideInteger::~InstructionDivideInteger()
+{}
 InstructionDivideReal::InstructionDivideReal()
 {
 	name_ = "InstructionDivideReal";
@@ -616,6 +759,8 @@ int InstructionDivideReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionDivideReal::~InstructionDivideReal()
+{}
 InstructionModulo::InstructionModulo()
 {
 	name_ = "InstructionModulo";
@@ -630,6 +775,8 @@ int InstructionModulo::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionModulo::~InstructionModulo()
+{}
 InstructionBinaryAnd::InstructionBinaryAnd()
 {
 	name_ = "InstructionBinaryAnd";
@@ -644,6 +791,8 @@ int InstructionBinaryAnd::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionBinaryAnd::~InstructionBinaryAnd()
+{}
 InstructionAnd::InstructionAnd()
 {
 	name_ = "InstructionAnd";
@@ -663,6 +812,8 @@ int InstructionAnd::execute(Core *c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionAnd::~InstructionAnd()
+{}
 InstructionBinaryOr::InstructionBinaryOr()
 {
 	name_ = "InstructionBinaryOr";
@@ -677,6 +828,8 @@ int InstructionBinaryOr::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionBinaryOr::~InstructionBinaryOr()
+{}
 InstructionOr::InstructionOr()
 {
 	name_ = "InstructionOr";
@@ -695,6 +848,8 @@ int InstructionOr::execute(Core *c) //TODO skratene vyhodnocovanie??
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionOr::~InstructionOr()
+{}
 InstructionBinaryNot::InstructionBinaryNot()
 {
 	name_ = "InstructionBinaryNot";
@@ -708,6 +863,8 @@ int InstructionBinaryNot::execute(Core *c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionBinaryNot::~InstructionBinaryNot()
+{}
 InstructionNot::InstructionNot()
 {
 	name_ = "InstructionNot";
@@ -724,7 +881,9 @@ int InstructionNot::execute(Core *c) //POZOR, pri unarnych operaciach sa neda po
 	std::cout << "OK" << std::endl;
 	return 0;
 }
-//----------------------------------------------------------------------------------------------------
+InstructionNot::~InstructionNot()
+{}
+//----------------RELATION------------------------------------------------------------------------------------
 InstructionGtInteger::InstructionGtInteger()
 {
 	name_ = "InstructionGtInteger";
@@ -739,6 +898,8 @@ int InstructionGtInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionGtInteger::~InstructionGtInteger()
+{}
 InstructionGtReal::InstructionGtReal()
 {
 	name_ = "InstructionGtReal";
@@ -753,6 +914,8 @@ int InstructionGtReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionGtReal::~InstructionGtReal()
+{}
 InstructionGeInteger::InstructionGeInteger()
 {
 	name_ = "InstructionGeInteger";
@@ -767,6 +930,8 @@ int InstructionGeInteger::execute(Core *c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionGeInteger::~InstructionGeInteger()
+{}
 InstructionGeReal::InstructionGeReal()
 {
 	name_ = "InstructionGeReal";
@@ -781,6 +946,8 @@ int InstructionGeReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionGeReal::~InstructionGeReal()
+{}
 InstructionEqualInteger::InstructionEqualInteger()
 {
 	name_ = "InstructionEqualInteger";
@@ -795,6 +962,8 @@ int InstructionEqualInteger::execute(Core * c) //pre location nech si napisu fun
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionEqualInteger::~InstructionEqualInteger()
+{}
 InstructionEqualReal::InstructionEqualReal()
 {
 	name_ = "InstructionEqualReal";
@@ -809,6 +978,8 @@ int InstructionEqualReal::execute(Core *c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionEqualReal::~InstructionEqualReal()
+{}
 InstructionEqualObject::InstructionEqualObject()
 {
 	name_ = "InstructionEqualObject";
@@ -823,6 +994,10 @@ int InstructionEqualObject::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionEqualObject::~InstructionEqualObject()
+{}
+
+
 InstructionNotEqualInteger::InstructionNotEqualInteger()
 {
 	name_ = "InstructionNotEqualInteger";
@@ -837,6 +1012,8 @@ int InstructionNotEqualInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionNotEqualInteger::~InstructionNotEqualInteger()
+{}
 InstructionNotEqualReal::InstructionNotEqualReal()
 {
 	name_ = "InstructionNotEqualReal";
@@ -850,6 +1027,8 @@ int InstructionNotEqualReal::execute(Core * c)
 	c->values.back()->realValue = (left != right)? 1:0; 
 	return 0;
 }
+InstructionNotEqualReal::~InstructionNotEqualReal()
+{}
 InstructionNotEqualObject::InstructionNotEqualObject()
 {
 	name_ = "InstructionNotEqualObject";
@@ -864,6 +1043,8 @@ int InstructionNotEqualObject::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionNotEqualObject::~InstructionNotEqualObject()
+{}
 InstructionLtInteger::InstructionLtInteger()
 {
 	name_ = "InstructionLtInteger";
@@ -878,6 +1059,8 @@ int InstructionLtInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionLtInteger::~InstructionLtInteger()
+{}
 InstructionLtReal::InstructionLtReal()
 {
 	name_ = "InstructionLtReal";
@@ -892,6 +1075,8 @@ int InstructionLtReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionLtReal::~InstructionLtReal()
+{}
 InstructionLeInteger::InstructionLeInteger()
 {
 	name_ = "InstructionLeInteger";
@@ -906,6 +1091,8 @@ int InstructionLeInteger::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionLeInteger::~InstructionLeInteger()
+{}
 InstructionLeReal::InstructionLeReal()
 {
 	name_ = "InstructionLeReal";
@@ -920,6 +1107,8 @@ int InstructionLeReal::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionLeReal::~InstructionLeReal()
+{}
 InstructionBegin::InstructionBegin(size_t depth_)
 {
 	depth = depth_;
@@ -932,6 +1121,8 @@ int InstructionBegin::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionBegin::~InstructionBegin()
+{}
 InstructionEndBlock::InstructionEndBlock(size_t endl)
 {
 	end_loop = endl;
@@ -945,6 +1136,8 @@ int InstructionEndBlock::execute(Core * c)
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionEndBlock::~InstructionEndBlock()
+{}
 //-------------------------ROBOT ACTIONS-------------------------
 InstructionSee::InstructionSee(Node * n) //uzol ktory sa ma naplnit viditelnymi objektami
 {
@@ -959,6 +1152,8 @@ int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionSee::~InstructionSee()
+{}
 InstructionStep::InstructionStep()
 {
 	name_ = "InstructionStep";
@@ -972,6 +1167,9 @@ int InstructionStep::execute(Core *c) //prave jeden parameter
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+
+InstructionStep::~InstructionStep()
+{}
 InstructionStepDefault::InstructionStepDefault()
 {
 	name_ = "InstructionStepDefault";
@@ -984,6 +1182,8 @@ int InstructionStepDefault::execute(Core *c) //prave jeden parameter
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionStepDefault::~InstructionStepDefault()
+{}
 InstructionWait::InstructionWait()
 {
 	name_ = "InstructionWait";
@@ -997,6 +1197,8 @@ int InstructionWait::execute(Core *c) //prave jeden parameter
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionWait::~InstructionWait()
+{}
 InstructionShootLocation::InstructionShootLocation()
 {
 	name_ = "InstructionShootLocation";
@@ -1012,6 +1214,8 @@ int InstructionShootLocation::execute(Core *c) //prave jeden parameter
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionShootLocation::~InstructionShootLocation()
+{}
 InstructionShootAngle::InstructionShootAngle()
 {
 	name_ = "InstructionShootAngle";
@@ -1025,6 +1229,8 @@ int InstructionShootAngle::execute(Core *c) //TODO
 	std::cout << "OK" << std::endl;
 	return 0;
 }
+InstructionShootAngle::~InstructionShootAngle()
+{}
 InstructionTurn::InstructionTurn()
 {
 	name_ = "InstructionTurn";
@@ -1038,6 +1244,8 @@ int InstructionTurn::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionTurn::~InstructionTurn()
+{}
 InstructionTurnR::InstructionTurnR()
 {
 	name_ = "InstructionTurnR";
@@ -1050,6 +1258,8 @@ int InstructionTurnR::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionTurnR::~InstructionTurnR()
+{}
 InstructionTurnL::InstructionTurnL()
 {
 	name_ = "InstructionTurnL";
@@ -1062,6 +1272,8 @@ int InstructionTurnL::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionTurnL::~InstructionTurnL()
+{}
 InstructionHit::InstructionHit()
 {
 	name_ = "InstructionHit";
@@ -1075,6 +1287,8 @@ int InstructionHit::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionHit::~InstructionHit()
+{}
 InstructionIsPlayer::InstructionIsPlayer()
 {
 	name_ = "InstructionIsPlayer";
@@ -1088,6 +1302,8 @@ int InstructionIsPlayer::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionIsPlayer::~InstructionIsPlayer()
+{}
 InstructionIsWall::InstructionIsWall()
 {
 	name_ = "InstructionIsWall";
@@ -1101,6 +1317,8 @@ int InstructionIsWall::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionIsWall::~InstructionIsWall()
+{}
 InstructionIsMissille::InstructionIsMissille()
 {
 	name_ = "InstructionIsMissille";
@@ -1114,6 +1332,8 @@ int InstructionIsMissille::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionIsMissille::~InstructionIsMissille()
+{}
 InstructionLocate::InstructionLocate()
 {
 	name_ = "InstructionLocate";
@@ -1129,6 +1349,8 @@ int InstructionLocate::execute(Core *c) //TODO location
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionLocate::~InstructionLocate()
+{}
 InstructionIsMoving::InstructionIsMoving()
 {
 	name_ = "InstructionIsMoving";
@@ -1142,3 +1364,5 @@ int InstructionIsMoving::execute(Core *c)
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
+InstructionIsMoving::~InstructionIsMoving()
+{}

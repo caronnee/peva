@@ -34,5 +34,6 @@ struct Core
 	void saveObject();
 	void switchVariable();
 	void copyVariable();
+	~Core();
 };
 #endif

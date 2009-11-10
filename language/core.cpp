@@ -101,3 +101,11 @@ void Core::copyVariable()
 	Variable * left = getVariableFromStack();
 	left->copyValue(right);
 }
+Core::~Core()
+{
+	for (size_t i = 0; i< functions.size(); i++)
+	{
+		delete functions[i];
+	}
+	delete robot;
+}

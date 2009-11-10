@@ -456,4 +456,29 @@ void Robot::consolidate()
 		std::cout << i << "!" << std::endl;
 	}
 }
+Robot::~Robot()
+{
+	delete core;
+	delete dev_null;
+	delete toKill;
+	delete body;
+
+	for (size_t i = 0; i< defined_types.size(); i++)
+	{
+		delete defined_types[i];
+	}
+
+	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
+		i!= targets.end(); i++)
+	{
+		delete (*i);
+	}
+
+	//delete instructions
+
+	for (size_t i = 0; i < instructions.size(); i++)
+	{
+		delete instructions[i];
+	}
+}
 #endif

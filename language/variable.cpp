@@ -69,3 +69,7 @@ void Variable::swapValue(Variable * v)
 		v->array.elements[i] = hlp;
 	}
 }
+Variable::~Variable()
+{
+	/* nothing to dealocate, structure to hold somthing created elsewhere */
+}

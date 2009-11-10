@@ -28,6 +28,8 @@ struct Variable // struktura premennych
 	Variable(std::string s);
 	void copyValue(Variable * v);
 	void swapValue(Variable * v);
+public:
+	~Variable();
 };
 
 
