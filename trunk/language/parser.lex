@@ -118,3 +118,11 @@ continue					{*l = line;return TOKEN_CONTINUE; }
 }
 \n	line++;
 .	printf("Unrecognized token!Ignoring.Line %d, %s\n", line, yytext);
+%%
+
+void my_destroy()
+{
+	while (YY_CURRENT_BUFFER)
+		yy_delete_buffer(YY_CURRENT_BUFFER);
+	yy_init = 1;
+}

@@ -21,8 +21,10 @@ functions.o:functions.cpp functions.h
 
 bison.hpp:bison.cpp
 
+hflex.h:parser.lex
+
 parser.cpp:parser.lex bison.hpp
-	flex -Cf -b -p -p -o $@ $<
+	flex -Cf -b -p -p --header-file=hflex.h -o $@ $<
 
 bison.cpp: bison.y
 	bison --report=all -d -b bis -o $@ $<
@@ -75,7 +77,9 @@ rerun:
 	./bparser vstup
 
 debugMemory:
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./bparser vstup
+	make
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./bparser vstup
 
 debugGraph:
+	make
 	valgrind --tool=cachegrind ./bparser vstup

@@ -77,9 +77,9 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 int InstructionLoadLocal::execute(Core * c)
 {
 //	std::cout << " Ech?"; getc(stdin);
-	std::cout << "Loading local variable " << node->name << "..."<< node->var.size();//getc(stdin);
-	std::cout << " id =  " << node->var.back()->ID << "..." ;
-	std::cout << " value =  " << node->var.back()->integerValue << "..." ;
+	std::cout << "Loading local variable " << node->name << "..."<< node->var.size();getc(stdin);
+	//std::cout << " id =  " << node->var.back()->ID << "..." ;
+	//std::cout << " value =  " << node->var.back()->integerValue << "..." ;
 	c->values.push_back(node->var.back());
 	std::cout << "OK" << std::endl;
 	return 0;
