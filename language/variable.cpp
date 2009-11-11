@@ -5,17 +5,20 @@ Variable::Variable(size_t i)
 {
 	ID = i;
 	owner = -1; //nijaky node nevlastni
-	objectValue = NULL;	
+	integerValue = 2009;
+	realValue = 11.11;
+	array.range = -1;
+	objectValue = NULL;
 }
 Variable::Variable(std::string name_)
 {
 	owner = -1;
+	last_access = 0;
+	integerValue = 1986;
+	realValue = 18.05;
+	array.range = -1;
 	objectValue = NULL;
 }
-/*void Variable::set_variable(Type t)
-{
-	type = t;
-}*/
 void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, mozno by bolo lepsie previest na LOAD/STORE, ale takto mi to pride transprantnejsie v XMLku:)
 {
 	//OWNER sa nemeni!

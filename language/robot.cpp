@@ -458,6 +458,8 @@ void Robot::consolidate()
 }
 Robot::~Robot()
 {
+	std::cout << "hee";
+	getc(stdin);
 	delete core;
 	delete dev_null;
 	delete toKill;

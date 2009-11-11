@@ -7,6 +7,7 @@
 #include "lval.h"
 #include "robot.h"
 #include "parser_functions.h"
+#include "hflex.h"
 
 #define YYSTYPE Lval 
 #define YYLTYPE unsigned
@@ -236,6 +237,7 @@ values: expression { $$ = $1; }
 			$$.ins = join_instructions($$.ins, $3.ins);
 			$$.output.push_back($3.output.back()); //FIXME
 			$$.temp.push_back($3.temp.back());
+			
 		}
 		| TOKEN_BEGIN values TOKEN_END { $$ = $2;} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
 		| values TOKEN_COMMA TOKEN_BEGIN values TOKEN_END 
@@ -249,8 +251,11 @@ values: expression { $$ = $1; }
 			}
 		} //addOputpuTokenNotDefined
 		;
-declare_functions: /*	ziadne deklarovane funkcie	*/ { std::vector<Parameter_entry> em;
-						program->actualRobot->enter("main", em,program->actualRobot->find_type(TypeVoid)); }
+declare_functions: /*	ziadne deklarovane funkcie	*/ 
+			{ 
+				std::vector<Parameter_entry> em;
+				program->actualRobot->enter("main", em,program->actualRobot->find_type(TypeVoid)); 	
+			}
 		|declare_function_ { $$ = $1;std::vector<Parameter_entry> em; program->actualRobot->enter("main", em, program->actualRobot->find_type(TypeVoid));}	
 		;
 
@@ -333,15 +338,14 @@ end:	TOKEN_END { program->actualRobot->core->depth--; program->actualRobot->defi
 		;
 
 block_of_instructions: begin commands_and_empty end 
-			{ 
-				$$.push_back(new InstructionBegin()); 
-				$$ = join_instructions($$, $2);
-				$$.push_back(new InstructionEndBlock()); 
-			}
+		{ 
+			$$.push_back(new InstructionBegin()); 
+			$$ = join_instructions($$, $2);
+			$$.push_back(new InstructionEndBlock()); 
+		}
 		;
 commands_and_empty:  /* empty */ {$$.clear();}
-		| commands { 
-			$$ = $1; }
+		| commands {  $$ = $1; }
 		;
 
 commands: 	TOKEN_SEMICOLON { $$.clear(); }
@@ -350,12 +354,12 @@ commands: 	TOKEN_SEMICOLON { $$.clear(); }
 		| unmatched { $$ = $1; }
 		| commands unmatched { $$ = join_instructions($1, $2); }
 		;
-//FIXME dalo by sa aj onteligentjsie? Rozlisovat, ci som vytvorila premennu a potom oachat cyklus
+//FIXME dalo by sa aj inteligentjsie? Rozlisovat, ci som vytvorila premennu a potom oachat cyklus
 cycle_for: TOKEN_FOR { program->actualRobot->core->depth++; $$.push_back(new InstructionBegin());program->actualRobot->defined.new_block();}
 		;
 command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
 		{ 
-			//INIT, BLOCK, COMMAND CONDITION
+		//	INIT, BLOCK, COMMAND CONDITION
 			$9.push_back(new InstructionEndBlock($4.ins.size()+$6.size()+1));
 			$9 = join_instructions($9, $6); 
 			$3.push_back(new InstructionMustJump($9.size()+1)); 
@@ -434,11 +438,9 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		}
 		|simple_command TOKEN_SEMICOLON {$$ = $1;}
 		;
-//tu by mal byt prazdny output
 command_var: local_variables { $$ = $1;} //tu nebude ziadny output, vyriesene v Locale;
 		| command { $$ = $1;} //vyriesene v commande
 		;
-//mal by byt prazdy output
 simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 		|unary_var 
 		{ 
@@ -601,8 +603,6 @@ call_parameters: expression
 			}
 		}
 		;
-
-//ziaden output
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
 	{
 		$5.push_back(new InstructionMustJump($7.size()));
@@ -613,7 +613,6 @@ matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matche
 	| command_var {$$ = $1;} //prazdy output
 	|block_of_instructions { $$ = $1;}
 	;
-//ziaden output
 unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
 	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
 	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched 
@@ -624,7 +623,6 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions 
 		$$ = join_instructions($$,$7);
 	}
 	;
-//ziadny output nema zostat
 init: 	local_variables { $$ = $1;}
 		| assign TOKEN_SEMICOLON {$$ = $1;}
 		;
@@ -795,6 +793,7 @@ expression_bool:	expression_bool_or { $$ = $1;}
 %%
 
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
+extern void my_destroy();
 static void yyerror(unsigned *line, Robots* ctx, const char *message)
 {
 	printf("Syntax Error %s, line %d\n", message, *line);
@@ -814,8 +813,9 @@ int main(int argc, char ** argv)
 	}
 	GamePoints points;
 	Robots q(points);
+	unsigned int i;
+	Lval l;
 	int err = yyparse(&q);
-	fclose(yyin);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
 	/*	q.actualRobot->output(&q.actualRobot->defined);
 		for (int i =0; i<q.actualRobot->instructions.size(); i++)
@@ -824,7 +824,7 @@ int main(int argc, char ** argv)
 		std::cout << "haho!" << std::endl;
 		q.actualRobot->execute();
 	 */
-	// std::cout << "yyparse vyhodil" << err;getc(stdin);
+	 std::cout << "yyparse vyhodil" << err;getc(stdin);
 	std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
 	if ((err) || (q.actualRobot->errors))
 		std::cout << q.actualRobot->errorList << std::endl;
@@ -833,5 +833,7 @@ int main(int argc, char ** argv)
 		q.actualRobot->save_to_xml();
 		q.actualRobot->execute();
 	}
+	fclose(yyin);	
+	my_destroy();
 	return 0;	
 }
