@@ -229,6 +229,7 @@ void Robot::save_to_xml()
 	xmlAddChild(data.root_ptr, parent);
 	xmlSaveFormatFileEnc("machine.xml", data.doc, "UTF-8", 1);
 	xmlFreeDoc(data.doc);
+	xmlCleanupParser();
 }
 
 void Robot::execute()

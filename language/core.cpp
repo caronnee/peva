@@ -106,15 +106,10 @@ void Core::set_body(Robot_body *r )
 }
 Core::~Core()
 {
-	std::cout << "Deleting CORE"; getc(stdin);
 	while (!functions.empty())
 	{
-		std::cout << "??";
 		Function * f = functions.back();
-		std::cout << "deleting function" << f->name; getc(stdin);
 		delete f;
 		functions.pop_back();
-		std::cout << "SUCCESS";getc(stdin);
 	}
-	std::cout << "core deleted";
 }

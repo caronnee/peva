@@ -19,6 +19,5 @@ Function::Function(std::string s,std::vector<Parameter_entry>params, Node * n)
 Function::~Function()
 {
 	return_var = NULL;
-	std::cout << "Deletetin " << name; getc(stdin);
 }
 
