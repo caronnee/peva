@@ -22,7 +22,9 @@ Robot::Robot(std::string s, GamePoints p)
 	name = s;
 	nested = "";
 	errors = false;
+	body = new Robot_body();
 	core = new Core();
+	core->set_body(body);
 	toKill = NULL;
 	
 	defined_types.push_back(new Create_type(TypeUndefined));
@@ -458,13 +460,10 @@ void Robot::consolidate()
 }
 Robot::~Robot()
 {
-	std::cout << "hee";
-	getc(stdin);
 	delete core;
 	delete dev_null;
 	delete toKill;
 	delete body;
-
 	for (size_t i = 0; i< defined_types.size(); i++)
 	{
 		delete defined_types[i];
@@ -478,9 +477,19 @@ Robot::~Robot()
 
 	//delete instructions
 
+	std::cout << instructions.size() << std::endl;
 	for (size_t i = 0; i < instructions.size(); i++)
 	{
 		delete instructions[i];
 	}
+}
+Robots::~Robots()
+{
+	for (size_t i = 0; i< robots.size(); i++)
+	{
+		delete robots[i];
+	}
+	robots.clear();
+	actualRobot = NULL;
 }
 #endif

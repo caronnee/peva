@@ -13,6 +13,7 @@ struct Node
 	std::vector<Variable *> var;
 	Node();
 	Node(std::string name_, Create_type* t, size_t ID_);
+	~Node();
 };
 
 #endif

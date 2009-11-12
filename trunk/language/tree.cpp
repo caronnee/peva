@@ -9,7 +9,11 @@ void Tree::reset()
 	inner_node = false;
 	depth = 0;
 	for (int i =0; i< 256; i++)
+	{
+		if (next[i])
+			delete next[i];
 		next[i] = NULL;
+	}
 	block_of_nodes.clear();
 }
 void Tree::new_block()
@@ -175,4 +179,17 @@ Node * Tree::add(std::string s, Create_type * type)
 	}
 	//std::cout << "adresa return " << nod << std::endl;
 	return nod;
+}
+Tree::~Tree()
+{
+	for (size_t i =0; i< block_of_nodes.size(); i++)
+	{
+		delete block_of_nodes[i];
+	}
+	block_of_nodes.clear();
+	for (size_t i =0; i< ASCII_NUMBER; i++)
+	{
+		if (next[i])
+			delete next[i];
+	}
 }

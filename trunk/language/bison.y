@@ -824,7 +824,6 @@ int main(int argc, char ** argv)
 		std::cout << "haho!" << std::endl;
 		q.actualRobot->execute();
 	 */
-	 std::cout << "yyparse vyhodil" << err;getc(stdin);
 	std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
 	if ((err) || (q.actualRobot->errors))
 		std::cout << q.actualRobot->errorList << std::endl;

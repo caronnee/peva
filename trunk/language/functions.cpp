@@ -16,4 +16,9 @@ Function::Function(std::string s,std::vector<Parameter_entry>params, Node * n)
 	parameters = params;
 	return_var = n; //potom sa priradi, ked bude funkcia zavolana
 }
+Function::~Function()
+{
+	return_var = NULL;
+	std::cout << "Deletetin " << name; getc(stdin);
+}
 

@@ -130,5 +130,6 @@ struct Robots
 	Robots(GamePoints g);
 	void createNew(std::string name);
 	void set(Options op, size_t value);
+	~Robots();
 };
 #endif

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "node.h"
+#include <cstdio>
 
 enum Parameter_type
 {
@@ -27,6 +28,7 @@ struct Function
 	int end;
 	Node * return_var;
 	Function(std::string name, std::vector<Parameter_entry>params,Node * n);
+	~Function();
 };
 
 #endif

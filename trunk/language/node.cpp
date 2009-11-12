@@ -16,3 +16,7 @@ Node::Node(std::string name_, Create_type * t, size_t ID_)
 //	std::cout << "pridavam create_type:" << t.data_type->type;
 //	getc(stdin);
 }
+Node::~Node()
+{
+	/* nothing to clean it up */
+}

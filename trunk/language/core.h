@@ -28,12 +28,13 @@ struct Core
 	float getFloatFromStack();
 	Object * getObjectFromStack();
 	void loadElement(int range);
-
+public:
 	void saveInteger();
 	void saveFloat();
 	void saveObject();
 	void switchVariable();
 	void copyVariable();
+	void set_body(Robot_body * r);
 	~Core();
 };
 #endif

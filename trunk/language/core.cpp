@@ -6,7 +6,6 @@ Core::Core()
 	PC =0;
 	values.clear();	
 	error = false;
-	robot = new Robot_body();
 	depth = 0;
 }
 
@@ -101,11 +100,21 @@ void Core::copyVariable()
 	Variable * left = getVariableFromStack();
 	left->copyValue(right);
 }
+void Core::set_body(Robot_body *r )
+{
+	robot = r;
+}
 Core::~Core()
 {
-	for (size_t i = 0; i< functions.size(); i++)
+	std::cout << "Deleting CORE"; getc(stdin);
+	while (!functions.empty())
 	{
-		delete functions[i];
+		std::cout << "??";
+		Function * f = functions.back();
+		std::cout << "deleting function" << f->name; getc(stdin);
+		delete f;
+		functions.pop_back();
+		std::cout << "SUCCESS";getc(stdin);
 	}
-	delete robot;
+	std::cout << "core deleted";
 }

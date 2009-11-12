@@ -75,4 +75,6 @@ void Variable::swapValue(Variable * v)
 Variable::~Variable()
 {
 	/* nothing to dealocate, structure to hold somthing created elsewhere */
+	array.elements.clear();
+	array.range = -1;
 }

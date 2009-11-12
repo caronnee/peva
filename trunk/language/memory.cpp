@@ -159,6 +159,7 @@ void Memory::realloc(int size)
 {
 	if (memory)
 		delete memory;
+	delete[] memory;
 	memory_size = size;
 	memory = new Variable*[size];
 	for(int i =0; i< size; i++)
@@ -168,4 +169,14 @@ void Memory::realloc(int size)
 Variable * Memory::random()
 {
 	return memory[rand()%memory_size];
+}
+Memory::~Memory()
+{
+	for (size_t i =0; i< memory_size; i++)
+		delete memory[i];
+	delete[] memory;
+	position = 0;
+	memory_size = -1;
+	temp.clear();
+	assigned.clear();
 }
