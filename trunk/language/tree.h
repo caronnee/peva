@@ -13,6 +13,7 @@ std::string quicksort(std::string s); // TODO template
 struct Tree
 {
 	int number_of_nodes;
+	/* Block of nodes that are active */
 	std::vector<Node *> block_of_nodes;
 	std::string alphabet;
 	bool inner_node;

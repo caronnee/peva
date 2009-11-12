@@ -68,6 +68,7 @@ Robot::Robot(std::string s, GamePoints p)
 	//pridana premenna pre viditelnost
 	n = defined.add("seen",c);
 	n->nested = Global;
+
 }
 Create_type * Robot::find_type(Type t)
 {
@@ -137,7 +138,8 @@ Node * Robot::find_var(std::string var_name, bool & b)
 }
 Node * Robot::add(std::string name, Create_type * type)
 {
-	Node * n = defined.add(nested + name, type);
+	std::string name_ = nested + name;
+	Node * n = defined.add(name_, type);
 	if (n == NULL)
 		return dev_null;
 	return n;

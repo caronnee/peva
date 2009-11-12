@@ -14,6 +14,11 @@ void Tree::reset()
 			delete next[i];
 		next[i] = NULL;
 	}
+	while (!items.empty())
+	{
+		delete (*(items.begin()));
+		items.pop_front();
+	}
 	block_of_nodes.clear();
 }
 void Tree::new_block()
@@ -32,10 +37,14 @@ void Tree::leave_block()
 }
 Tree::Tree()
 {
+	for (size_t i = 0; i< ASCII_NUMBER; i++)
+		next[i] = NULL;
 	reset();
 }
 Tree::Tree(int d)
 {
+	for (size_t i = 0; i< ASCII_NUMBER; i++)
+		next[i] = NULL;
 	reset();
 	depth = d;
 }
@@ -106,7 +115,6 @@ Node * Tree::add(std::string s, Create_type * type)
 {
 	std::cout << "pridavam meno:" << s << std::endl;
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
-//	std::cout << "\t" << s <<std::endl; 
 	std::list<Node*>::iterator iter;
 	for (iter = t->items.begin(); 
 		iter!=t->items.end(); 
@@ -122,6 +130,7 @@ Node * Tree::add(std::string s, Create_type * type)
 
 	number_of_nodes++;
 	Node * nod = new Node(s, type, number_of_nodes);
+//	std::cout << "node" << nod; getc(stdin);
 	if (s.find(DELIMINER_CHAR) == std::string::npos)
 	{
 		nod->nested = Global;
@@ -143,7 +152,7 @@ Node * Tree::add(std::string s, Create_type * type)
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
-		//burst!
+		std::cout << "BURSTING!";getc(stdin);
 		t->inner_node = true;
 		int splitted = -1,split = 0;
 		std::list<Node *> n;
@@ -182,14 +191,5 @@ Node * Tree::add(std::string s, Create_type * type)
 }
 Tree::~Tree()
 {
-	for (size_t i =0; i< block_of_nodes.size(); i++)
-	{
-		delete block_of_nodes[i];
-	}
-	block_of_nodes.clear();
-	for (size_t i =0; i< ASCII_NUMBER; i++)
-	{
-		if (next[i])
-			delete next[i];
-	}
+	reset();
 }
