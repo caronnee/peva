@@ -1,5 +1,4 @@
 //TODO namiesto removetemp = opreacia +remove temp, aby to bolo atomicke
-
 //TODO return value by sa mala vytvorit az v okamziku RETURN u
 #include "instructions.h"
 #include <iostream>
@@ -25,10 +24,13 @@ Instruction::~Instruction()
 {
 	if (node !=NULL)
 	{
-		std::cout << "node not deleted";
+		std::cout << "node not deleted" << std::endl;
 		delete node;
 		node = NULL;
+		std::cout << "node deleted OK" << std::endl;getc(stdin);
 	}
+	else 
+		std::cout << "Null node"<< std::endl;
 }
 
 InstructionCreate::InstructionCreate(Node * n)
@@ -61,7 +63,7 @@ xmlNodePtr InstructionCreate::xml_format()
 
 InstructionCreate::~InstructionCreate()
 {
-	/* nothing to destroy yet */
+	node = NULL; //node from talbe, destructed at table
 }
 
 InstructionLoadLocal::InstructionLoadLocal()
@@ -76,8 +78,7 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 }
 int InstructionLoadLocal::execute(Core * c)
 {
-//	std::cout << " Ech?"; getc(stdin);
-	std::cout << "Loading local variable " << node->name << "..."<< node->var.size();getc(stdin);
+	std::cout << "Loading local variable " << node->name << "..."<< node->var.size();
 	//std::cout << " id =  " << node->var.back()->ID << "..." ;
 	//std::cout << " value =  " << node->var.back()->integerValue << "..." ;
 	c->values.push_back(node->var.back());
@@ -94,7 +95,7 @@ xmlNodePtr InstructionLoadLocal::xml_format()
 
 InstructionLoadLocal::~InstructionLoadLocal()
 {
-	/* nothing to destroy yet */	
+	node = NULL;
 }
 
 InstructionLoadGlobal::InstructionLoadGlobal()
@@ -127,7 +128,7 @@ xmlNodePtr InstructionLoadGlobal::xml_format()
 
 InstructionLoadGlobal::~InstructionLoadGlobal()
 {
-	/* nothing to destroy yet */	
+	node = NULL;
 }
 
 InstructionLoad::InstructionLoad()
@@ -204,6 +205,7 @@ InstructionLoad::~InstructionLoad()
 	if(var)
 		delete var;
 	var = NULL;
+	node = NULL; //node tu vlastne ani nepotrebujem
 }
 InstructionConversionToInt::InstructionConversionToInt()
 {
@@ -222,7 +224,7 @@ int InstructionConversionToInt::execute(Core * c)
 
 InstructionConversionToInt::~InstructionConversionToInt()
 {
-	/* nothing to be done yet */
+	/* nothing to be done yet, node is already null*/
 }
 
 InstructionConversionToReal::InstructionConversionToReal()
@@ -1153,7 +1155,9 @@ int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
 	return 0;
 }
 InstructionSee::~InstructionSee()
-{}
+{
+	node = NULL;
+}
 InstructionStep::InstructionStep()
 {
 	name_ = "InstructionStep";

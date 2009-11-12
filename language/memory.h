@@ -50,6 +50,7 @@ private:
 		  std::stack<Variable *> &variables_to_assign, 
 		  std::stack<Create_type> & types_to_assign,
 		  size_t ID);
+
 public:
 	/* class constructor */
 	Memory(int size = 400);
@@ -71,6 +72,9 @@ public:
 
 	/* returns random memory point*/
 	Variable * random();
+
+	/* destructor */
+	~Memory();
 };
 
 #endif
