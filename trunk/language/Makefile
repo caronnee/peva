@@ -78,7 +78,7 @@ rerun:
 
 debugMemory:
 	make
-	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./bparser vstup
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes --num-callers=20 --track-fds=yes ./bparser vstup
 
 debugGraph:
 	make

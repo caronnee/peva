@@ -123,6 +123,10 @@ continue					{*l = line;return TOKEN_CONTINUE; }
 void my_destroy()
 {
 	while (YY_CURRENT_BUFFER)
+	{
 		yy_delete_buffer(YY_CURRENT_BUFFER);
+		YY_CURRENT_BUFFER_LVALUE = NULL;
+		yypop_buffer_state();
+	}
 	yy_init = 1;
 }
