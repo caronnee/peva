@@ -37,6 +37,8 @@ class Object
 		return 0;
 	}
 };
+class Nullable : public Object
+{}
 struct Robot_body : public Object
 {
 	int Step()
