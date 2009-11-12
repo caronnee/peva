@@ -24,13 +24,9 @@ Instruction::~Instruction()
 {
 	if (node !=NULL)
 	{
-		std::cout << "node not deleted" << std::endl;
 		delete node;
 		node = NULL;
-		std::cout << "node deleted OK" << std::endl;getc(stdin);
 	}
-	else 
-		std::cout << "Null node"<< std::endl;
 }
 
 InstructionCreate::InstructionCreate(Node * n)
@@ -347,7 +343,7 @@ Call::Call(Function * f_)
 }
 int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 {
-	std::cout << "Calling function: " << function->name << std::endl;
+	std::cout << "Calling function: " << function->parameters[0].node->var.size();
 	c->nested_functions.push_back(c->nested_function);
 	c->nested_function = function;
 	for( size_t i = 0; i< function->parameters.size(); i++)
@@ -576,6 +572,7 @@ int InstructionPlusPlusInteger::execute(Core * c)
 {
 	std::cout << "Integer plusplus ...";
 	c->values.back()->integerValue++;
+	std::cout << c->values.back()->integerValue;
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -710,7 +707,6 @@ int InstructionMultiplyInteger::execute(Core * c)
 	c->values.push_back(c->memory.assign_temp(Create_type(TypeInteger)));
 	c->values.back()->integerValue = left * right;
 	std::cout << "OK" << std::endl;
-	//getc(stdin);
 	return 0;
 }
 InstructionMultiplyInteger::~InstructionMultiplyInteger()
