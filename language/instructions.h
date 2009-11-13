@@ -552,8 +552,9 @@ class InstructionIsMissille: public Instruction
 };
 class InstructionLocate: public Instruction
 {
+	Create_type type;
 	public:
-		InstructionLocate();
+		InstructionLocate(Create_type t);
 		virtual int execute(Core *s);
 		virtual ~InstructionLocate();
 };

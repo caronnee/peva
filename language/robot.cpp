@@ -26,6 +26,7 @@ Robot::Robot(std::string s, GamePoints p)
 	core = new Core();
 	core->set_body(body);
 	toKill = NULL;
+	nullable = new Nullable();
 	
 	defined_types.push_back(new Create_type(TypeUndefined));
 	defined_types.push_back(new Create_type(TypeVoid));
@@ -57,7 +58,7 @@ Robot::Robot(std::string s, GamePoints p)
 	n = defined.add("NULL",find_type(TypeObject));
 	n->nested = Global;
 	core->memory.assign(n, 0);
-	n->var[0]->objectValue = NULL;
+	n->var[0]->objectValue = nullable;
 	
 	//pridana premenna pre this;
 	n = defined.add("this",find_type(TypeObject));
@@ -467,6 +468,8 @@ Robot::~Robot()
 	delete dev_null;
 	delete toKill;
 	delete body;
+	delete nullable;
+
 	for (size_t i = 0; i< defined_types.size(); i++)
 	{
 		delete defined_types[i];

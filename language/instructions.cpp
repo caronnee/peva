@@ -1334,8 +1334,9 @@ int InstructionIsMissille::execute(Core *c)
 }
 InstructionIsMissille::~InstructionIsMissille()
 {}
-InstructionLocate::InstructionLocate()
+InstructionLocate::InstructionLocate(Create_type t)
 {
+	type = t;
 	name_ = "InstructionLocate";
 }
 int InstructionLocate::execute(Core *c) //TODO location
@@ -1343,7 +1344,9 @@ int InstructionLocate::execute(Core *c) //TODO location
 	std::cout << "Getting location of object ...";
 	Object * o = c->getObjectFromStack();
 	Position p = o->Locate();
-	c->values.push_back(c->memory.assign_temp(Create_type(TypeLocation))); //BIG TODO referencia na location, lebo netusi, ao location vyzera
+//	getc(stdin);
+	c->values.push_back(c->memory.assign_temp(type)); //BIG TODO referencia na location, lebo netusi, ao location vyzera
+//	getc(stdin);
 	c->values.back()->array.elements[0]->integerValue = p.x;
 	c->values.back()->array.elements[1]->integerValue = p.y;
 	std::cout << "OK" <<std::endl;
