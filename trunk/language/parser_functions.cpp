@@ -415,7 +415,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			break;
 		case FeatureLocate: //vracia poziciu objektu, ak ho r vidi, ak nie, vyhodi -1, -1;
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionLocate());
+				ee.ins.push_back( new InstructionLocate(*r->find_type(TypeLocation)));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeLocation));

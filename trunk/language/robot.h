@@ -62,6 +62,7 @@ struct Robot
 		ErrorOutOfRange
 	};
 	Node * dev_null;
+	Nullable * nullable;
 	bool errors;
 	bool warning;
 	std::string errorList;
