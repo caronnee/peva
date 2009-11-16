@@ -75,15 +75,42 @@ Create_type * Robot::find_type(Type t)
 {
 	for (size_t i= 0; i< defined_types.size(); i++)
 		if (defined_types[i]->type == t)
+		{
+			last_type = *defined_types[i];
 			return defined_types[i];
+		}
 	return NULL;//ZAVAZNA CHYBA! Ale zo strany programatora;), mozno by to stalo za excepsnu
 }
 
+void Robot::declare_type()
+{
+	active_type.push(last_type);
+}
+void Robot::leave_type()
+{
+	active_type.pop();
+}
+void Robot::declare_next()
+{
+	if (active_type.top().data_type == NULL)	
+	{
+		error(-1, Robot::ErrorToMuchInitializers);
+		active_type.push(*active_type.top().data_type);
+	}
+	else
+		active_type.push(active_type.top());
+	return;
+}
 Create_type * Robot::find_array_type(int range, Create_type * descend)
 {
 	for (size_t i= 0; i< defined_types.size(); i++)
-		if ((defined_types[i]->type == TypeArray)&&(defined_types[i]->data_type == descend))
+		if ((defined_types[i]->type == TypeArray)
+			&&(defined_types[i]->data_type == descend)
+			&&(defined_types[i]->range == range))
+		{
+			last_type = *defined_types[i];
 			return defined_types[i];
+		}
 	Create_type * t = new Create_type(TypeArray, range);
 	t->composite(descend);
 	defined_types.push_back(t);
@@ -137,6 +164,7 @@ Node * Robot::find_var(std::string var_name, bool & b)
 	b = false;
 	return dev_null;
 }
+
 Node * Robot::add(std::string name, Create_type * type)
 {
 	std::string name_ = nested + name;
@@ -145,6 +173,11 @@ Node * Robot::add(std::string name, Create_type * type)
 		return dev_null;
 	return n;
 
+}
+
+Node * Robot::add(std::string name)
+{
+	return add(name, &active_type.top());
 }
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota

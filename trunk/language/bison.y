@@ -72,15 +72,20 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token<operation> TOKEN_BOOL_OR
 
 %type<ident> function_name
-%type<idents> names
+
 %type<type> simple_type
 %type<type> complex_type
 %type<type> type
 %type<type> return_type
+
 %type<ranges> ranges
 %type<ident> function_header
+
 %type<entries> parameters_empty
 %type<entries> parameters
+
+%type<instructions> names
+%type<instructions> names_
 %type<instructions> cycle_for
 %type<instructions> local_variables
 %type<instructions> block_of_instructions 
@@ -97,8 +102,9 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 
 %type<array_access> array_access
 
+%type<defVal> values
+
 %type<output> array
-%type<output> values
 %type<output> variable
 %type<output> number
 %type<output> declare_functions
@@ -160,26 +166,18 @@ places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back
 	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position(-1, $3)); }
 	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  {$$ = $1; $$.push_back(Position(-1,$5)); }
 	;
-options: // defaultne opsny, normalny default alebo ako boli nadekralovane
+options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4); }
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
-		|global_variables local_variables { $$=join_instructions($1,$2);}
+		| global_variables local_variables { $$= join_instructions($1,$2);}
 		;
-type:	  simple_type { $$ = $1;}
-	| complex_type { $$ = $1;}
+type:	  simple_type { $$ = $1; program->actualRobot->declare_type();}
+	| complex_type { $$ = $1;program->actualRobot->declare_type();}
 	; 
-
-/* definicie, lokalnych a globalnych premenn.ch, local variables cez command_var */
 local_variables:  type names TOKEN_SEMICOLON 
-		{  
-			for(int i =0; i< $2.size(); i++)
-			{
-				Node * n = program->actualRobot->add($2[i].id, $1); 
-				$$.push_back(new InstructionCreate(n)); 
-				if ($2[i].default_set) 
-					$$ = join_instructions($$, assign_default(@1,program->actualRobot, n, $2[i]));
-			}
+		{
+			$$ = $2;
 		}
 		;
 simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } //najdi REAL
@@ -206,49 +204,87 @@ complex_type: simple_type ranges
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 		|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
 		;
-		//pouzite len pri inicializovani
-names:	TOKEN_IDENTIFIER { $$.push_back(Constr($1)); } //nic loaded
+names_:	TOKEN_IDENTIFIER 
+		{ 
+			$$.push_back(new InstructionCreate(program->actualRobot->add($1))); 
+		} 
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
 		{ 
-			$$.push_back(Constr($1,$3.ins, $3.output)); 
+			std::cout << "expressna u assignut" << $3.output.back().type;getc(stdin);
+			Node *n = program->actualRobot->add($1);
+			$$.push_back(new InstructionCreate(n));
+			Instruction * in = possible_conversion($3.output.back().type,program->actualRobot->active_type.top().type);
+			if (in)
+			{
+				$$.push_back(in);
+				$3.output.back() = program->actualRobot->active_type.top();
+			}
+			$$.push_back(get_store_type(@1, program->actualRobot, $3.output.back()));
 		} 
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END 
 		{ 
-			$$.push_back(Constr($1, $4.ins, $4.output));
+			std::cout << "a3," <<@2;getc(stdin); 
+			Node *n = program->actualRobot->add($1);
+			$$.push_back(new InstructionCreate(n));
+			$$ = join_instructions($$, $4.ins);
 		} 
-		|names TOKEN_COMMA TOKEN_IDENTIFIER 
-		{ 
-			$1.push_back(Constr($3)); $$ = $1; 
-		} 
-		|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
-		{ 
-			$1.push_back(Constr($3,$5.ins,$5.output));$$ = $1; 
-		}
-		|names TOKEN_COMMA TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END 
-		{
-			$1.push_back(Constr($3, $6.ins, $6.output));$$ = $1;
-		}
 		;
-values: expression { $$ = $1; } 
+names: names_ { $$ = $1; }
+	|names names_ { $$ = join_instructions($1, $2);}
+		;
+begin_type: TOKEN_BEGIN { program->actualRobot->declare_next(); }
+		;
+end_type: TOKEN_END { program->actualRobot->leave_type(); }
+		;
+values:		expression { 
+			$$.ins.push_back(new InstructionLoad(0));
+			$$.ins.push_back(new InstructionLoad());
+			$$.ins = join_instructions($$.ins, $1.ins);
+			Instruction * in = possible_conversion($1.output.back().type, program->actualRobot->active_type.top().type);
+			if (in)
+			{
+				$$.ins.push_back(in);
+				$1.output.back() = program->actualRobot->active_type.top();
+			}
+			if ($1.output.back()!=program->actualRobot->active_type.top())
+				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
+			else
+			{
+				$$.ins.push_back(get_store_type(@1, program->actualRobot, $1.output.back()));
+				$$.level = 1;
+			}
+		} 
 		| values TOKEN_COMMA expression 
 		{
-			$$ = $1; 
-			$$.ins.push_back(NULL);
-			$$.ins = join_instructions($$.ins, $3.ins);
-			$$.output.push_back($3.output.back()); //FIXME
-			$$.temp.push_back($3.temp.back());
-			
+			$$.ins.push_back(new InstructionLoad($1.level));
+			$$.ins.push_back(new InstructionLoad());
+			$$.ins = join_instructions($$.ins , $1.ins); 
+			$$.ins = join_instructions($$.ins , $3.ins);
+			Instruction * in = possible_conversion($3.output.back().type, program->actualRobot->active_type.top().type);
+			if (in)
+			{
+				$$.ins.push_back(in);
+				$3.output.back() = program->actualRobot->active_type.top();
+			}
+			$$.ins.push_back(get_store_type(@1, program->actualRobot, $3.output.back()));
+			if ($3.temp.back())
+			{
+				$$.ins.push_back(new InstructionRemoveTemp());
+			}	
+			$$.level = $1.level + 1;
 		}
-		| TOKEN_BEGIN values TOKEN_END { $$ = $2;} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
-		| values TOKEN_COMMA TOKEN_BEGIN values TOKEN_END 
+		| begin_type values end_type
+		{ 
+			$$.ins.push_back(new InstructionLoad(0)); //todo do actual type pridat, ze sme o type dalej, array dalej atd
+			$$.ins.push_back(new InstructionLoad());
+			$$.ins = join_instructions($$.ins, $2.ins);
+			$$.level = 1;
+			$$ = $2;
+		} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
+		| values TOKEN_COMMA begin_type values end_type
 		{
 			$$ = $1; 
-			$$.ins = join_instructions($$.ins,$4.ins); 
-			for(size_t i=0; i<$4.output.size(); i++)
-			{
-				$$.output.push_back($4.output[i]);
-				$$.temp.push_back($4.temp[i]);
-			}
+			$$.ins = join_instructions($1.ins,$4.ins); 
 		} //addOputpuTokenNotDefined
 		;
 declare_functions: /*	ziadne deklarovane funkcie	*/ 
@@ -256,7 +292,11 @@ declare_functions: /*	ziadne deklarovane funkcie	*/
 				std::vector<Parameter_entry> em;
 				program->actualRobot->enter("main", em,program->actualRobot->find_type(TypeVoid)); 	
 			}
-		|declare_function_ { $$ = $1;std::vector<Parameter_entry> em; program->actualRobot->enter("main", em, program->actualRobot->find_type(TypeVoid));}	
+		|declare_function_ 
+		{ 
+			$$ = $1;std::vector<Parameter_entry> em;
+			program->actualRobot->enter("main", em, program->actualRobot->find_type(TypeVoid));
+		}
 		;
 
 function_header:return_type function_name TOKEN_LPAR parameters_empty TOKEN_RPAR 
@@ -271,8 +311,8 @@ function_name:	TOKEN_FUNCTION TOKEN_IDENTIFIER
 			program->actualRobot->nested += $2 + DELIMINER_CHAR;
 		}
 		;
-return_type:	type { $$ = $1; } //normalne sa neda premenna taka, ze VOID
-		|TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid);}
+return_type:	TOKEN_VOID { $$ = program->actualRobot->find_type(TypeVoid);program->actualRobot->declare_type();}
+		|type { $$ = $1; }
 		;
 
 parameters_empty:	{ $$.clear(); }
@@ -468,6 +508,7 @@ assign: variable TOKEN_ASSIGN expression
 		}
 		else if ($1.output.back()!=$3.output.back())
 		{
+			std::cout << "grrr" ; getc(stdin);
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
 		}
 		$$ = join_instructions($1.ins, $3.ins); 
@@ -813,8 +854,6 @@ int main(int argc, char ** argv)
 	}
 	GamePoints points;
 	Robots q(points);
-	unsigned int i;
-	Lval l;
 	int err = yyparse(&q);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
 	/*	q.actualRobot->output(&q.actualRobot->defined);
