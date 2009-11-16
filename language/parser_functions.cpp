@@ -41,113 +41,6 @@ Instruction * possible_conversion(Type to, Type from)
 	return NULL;
 }
 //constr je load vsetkych funkcii
-Instructions assign_default(int line, Robot * r,Node * n, Constr& l) //
-{
-	Instructions ins;
-	std::vector<int> access_id;//co vsetko ma loadnut
-	std::vector<int> last_range;//co vsetko ma loadnut
-	std::vector<Create_type *> types;
-	types.push_back(n->type_of_variable);
-	size_t ins_iterator = 0;
-	int y = 0;
-	while (!types.empty())
-	{
-		
-		Create_type * t = types.back();
-		types.pop_back();
-		//----------------------------------------------------------------------------------------------------
-		if (t->is_simple())
-		{
-			if (n->nested == Local)
-				ins.push_back(new InstructionLoadLocal(n));
-			else 
-				ins.push_back(new InstructionLoadGlobal(n));
-			if(access_id.size())
-			{
-				for(size_t i =0; i< access_id.size(); i++)
-				{
-					ins.push_back(new InstructionLoad(access_id[i]));
-					ins.push_back(new InstructionLoad()); //loadni element
-				}
-				access_id.back()++;
-				while ((!access_id.empty())&&(access_id.back() == last_range.back()))
-				{
-					access_id.pop_back();
-					last_range.pop_back();
-					if (!access_id.empty())
-						access_id.back()++;
-				}
-			}
-			while((ins_iterator< l.ins.size()) && (l.ins[ins_iterator]!=NULL))
-			{
-				ins.push_back(l.ins[ins_iterator]);
-				ins_iterator++;
-			}
-			y++;
-			ins_iterator++;
-			switch (t->type)
-			{
-				case TypeInteger:
-					if (l.output.back().type == TypeReal)
-					{
-						ins.push_back(new InstructionConversionToReal());
-						l.output.back() = TypeInteger;
-					}
-					else if (l.output.back()!=t->type)
-					{
-						r->error(line, Robot::ErrorConversionImpossible);
-						return ins;
-					}
-					ins.push_back(new InstructionStoreInteger());
-					break;
-				case TypeReal:
-					if (l.output.back().type == TypeInteger)
-					{
-						l.output.back() = TypeReal;
-						ins.push_back(new InstructionConversionToReal());
-					}
-					else if (l.output.back()!=t->type)
-					{
-						r->error(line, Robot::ErrorConversionImpossible);
-						return ins;
-					}
-					ins.push_back(new InstructionStoreReal());
-					break;
-				case TypeObject:
-					if(l.output.back()!=TypeObject)
-					{
-						r->error(line,Robot::ErrorConversionImpossible);
-						return ins;
-					}
-					ins.push_back(new InstructionStoreObject());
-					break;
-				default:
-					r->error(line,Robot::ErrorTypeNotRecognized);
-					break;
-			}	
-			l.output.pop_back();
-		}//----------------------------------------------------------------------------------------------------
-		else 
-		{
-			bool nest = false;
-			for(size_t i = 0; i<t->nested_vars.size(); i++)
-			{
-				nest = true;
-				types.push_back(&t->nested_vars[i].type); //TODO skarede
-			}
-			for(int i = 0; i<t->range; i++)
-			{
-				types.push_back(t->data_type);
-			}
-			if (nest)
-				last_range.push_back(t->nested_vars.size());
-			else 
-				last_range.push_back(t->range);
-			access_id.push_back(0);
-		}
-	}
-	return ins;
-}
 
 Instructions join_instructions(const Instructions i1, const Instructions i2)
 {
@@ -514,4 +407,19 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			r->error(line, Robot::Robot::ErrorOperationNotSupported);
 	}
 	return ee;
+}
+Instruction * get_store_type ( unsigned l, Robot * r, Create_type t)
+{
+
+	switch ( t.type )
+	{
+		case  TypeReal:
+			return new InstructionStoreReal();
+		case TypeInteger:
+			return new InstructionStoreInteger();
+		case TypeObject:
+			return new InstructionStoreObject();
+		default:
+			return new InstructionStore();
+	}
 }

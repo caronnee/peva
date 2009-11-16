@@ -70,9 +70,6 @@ struct Robot
 	std::string nested;
 	std::string name;
 	
-	Create_type * find_type(Type t);
-	Create_type * find_array_type(int i, Create_type * t);
-
 	std::list<TargetVisit *> targets;
 	TargetKillNumber * toKill;
 
@@ -88,6 +85,7 @@ struct Robot
 	Node * find_var(std::string s, bool & b);
 	/* Vracia, ci sa podarilo pridat alebo nie*/
 	Node * add(std::string name, Create_type * t);
+	Node * add(std::string name);
 	Function * find_f(std::string s);
 	void add(Instructions ins);
 	Node * create_type(Type t);
@@ -101,10 +99,20 @@ struct Robot
 	//TODO zmenit na hlasky, co budu statcike a nie dynamicke
 	void error(unsigned int line, ErrorCode c,std::string message="Unrecognized");
 	void consolidate();
+	std::stack<Create_type> active_type;
+	Create_type last_type;
 private:
 	Robot_body * body;
 public:
 	Robot(std::string name, GamePoints g);
+
+	void declare_type();
+	void declare_next();
+	void leave_type();
+
+	Create_type * find_type(Type t);
+	Create_type * find_array_type(int i, Create_type * t);
+
 	void save_to_xml();
 	~Robot();
 };

@@ -12,7 +12,6 @@ Instructions check_integer(Element e);
 
 Instruction * conversionToReal(Type t1, Type t2);
 
-Instructions assign_default(int line, Robot * r, Node * n, Constr&l);
 Element operRel(int line, Robot *r,Operation op, Create_type t1, Create_type t2);
 Element operMul(int line, Robot * r,Operation op, Create_type t1, Create_type t2);
 Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2);
@@ -22,4 +21,5 @@ Element feature (int line, Robot * r, ObjectFeatures feat, Element t);
 Instruction* possible_conversion(Type to, Type from);
 Instructions join_instructions(Instructions a, Instructions b);
 Instructions load_full(Node * n);
+Instruction * get_store_type (unsigned l, Robot * r, Create_type t);
 #endif

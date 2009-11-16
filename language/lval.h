@@ -12,6 +12,11 @@ struct ArrayAccess
 	size_t dimension;
 	Instructions ins;
 };
+struct DefaultValue
+{
+	int level;
+	Instructions ins;
+};
 
 struct Lval {
 	
@@ -49,6 +54,8 @@ struct Lval {
 	Element output;
 	
 	ArrayAccess array_access;
+
+	DefaultValue defVal;
 };
 
 // lex interface
