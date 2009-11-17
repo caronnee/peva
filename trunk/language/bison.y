@@ -229,6 +229,10 @@ names_:	TOKEN_IDENTIFIER
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
+			for (size_t i =1; i < $4.level; i++)
+			{
+				$$.push_back(new InstructionDuplicate());
+			}
 			$$ = join_instructions($$, $4.ins);
 		} 
 		;
@@ -251,7 +255,7 @@ values:		expression {
 			}
 			if ($1.output.back()!=program->actualRobot->active_type.top())
 			{
-				std::cout <<"nnnnnn?"; getc(stdin);
+				std::cout <<"nnnnnn?"<<@1 << program->actualRobot->active_type.top().type; getc(stdin);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
 			else
@@ -262,9 +266,9 @@ values:		expression {
 		} 
 		| values TOKEN_COMMA expression 
 		{
+			$$.ins = $1.ins;
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
-			$$.ins = join_instructions($$.ins , $1.ins); 
 			$$.ins = join_instructions($$.ins , $3.ins);
 			Instruction * in = possible_conversion($3.output.back().type, program->actualRobot->active_type.top().type);
 			if (in)

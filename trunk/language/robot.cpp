@@ -88,11 +88,11 @@ void Robot::declare_type()
 }
 void Robot::leave_type()
 {
+	active_type.top().reset(); //aj tak to nepreba, bo su to premenne skopirovane
 	active_type.pop();
 }
 void Robot::declare_next()
 {
-	std::cout << active_type.size(); getc(stdin);
 	bool ok;
 	Create_type t = active_type.top().next(ok);
 	if (!ok)
@@ -517,9 +517,13 @@ Robot::~Robot()
 
 	//delete instructions
 
-	std::cout << instructions.size() << std::endl;
+	std::cout << "Instuctions size:" << instructions.size() << std::endl;
 	for (size_t i = 0; i < instructions.size(); i++)
 	{
+		if (instructions[i] == NULL)
+		{
+			std::cout << "Eeeeek!"; getc(stdin);
+		}
 		delete instructions[i];
 	}
 }

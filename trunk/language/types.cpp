@@ -1,5 +1,6 @@
 #include "types.h"
 #include <iostream>
+#include <cstdio>
 static Type simple[] = { TypeInteger, TypeReal, TypeObject };
 
 /* TODO nelubi sa mi to, ok by malo skor vracat?*/
@@ -16,8 +17,14 @@ Create_type Create_type::next(bool &ok)
 		iterator++;
 		return nested_vars[iterator-1].type;
 	}
+	std::cout <<"HE?"<<iterator;getc(stdin);
 	ok = false;
 	return *this;
+}
+//reset sa d apouzit jedine v pripade, ze sa neopakuju typy a to je nemozne -> cyklus
+void Create_type::reset()
+{
+	iterator = 0;
 }
 bool Create_type::is_simple()
 {
@@ -33,18 +40,21 @@ bool Create_type::is_simple()
 
 Create_type::Create_type()
 {
+	iterator = 0;
 	range = 0;
 	type = TypeUndefined;
 	data_type = NULL;
 }
 Create_type::Create_type(Type t, int rang)
 {
+	iterator = 0;
 	range = rang;
 	type = t;
 	data_type = NULL;
 }
 Create_type::Create_type(const Create_type & t)
 {
+	iterator = 0;
 	range = t.range;
 	data_type = NULL;
 	for(size_t i = 0; i<t.nested_vars.size(); i++)

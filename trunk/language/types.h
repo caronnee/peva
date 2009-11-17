@@ -44,6 +44,7 @@ struct Create_type
 	size_t iterator; //kolkaty prvok sme uz pozreli
 public:
 	Create_type next(bool &ok);
+	void reset();
 	bool is_simple();
 };
 
