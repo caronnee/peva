@@ -21,9 +21,9 @@ functions.o:functions.cpp functions.h
 
 bison.hpp:bison.cpp
 
-hflex.h:parser.lex
+hflex.h:parser.cpp
 
-parser.cpp:parser.lex bison.hpp
+parser.cpp:parser.lex
 	flex -Cf -b -p -p --header-file=hflex.h -o $@ $<
 
 bison.cpp: bison.y

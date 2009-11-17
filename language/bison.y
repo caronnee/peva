@@ -213,6 +213,8 @@ names_:	TOKEN_IDENTIFIER
 			std::cout << "expressna u assignut" << $3.output.back().type;getc(stdin);
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
+			$$.push_back(new InstructionLoadLocal(n));
+			$$ = join_instructions($$, $3.ins);
 			Instruction * in = possible_conversion($3.output.back().type,program->actualRobot->active_type.top().type);
 			if (in)
 			{
