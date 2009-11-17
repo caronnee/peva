@@ -103,7 +103,7 @@ void Memory::fill(Variable * &v,
 	if (t.is_simple())
 		return;
 	Variable * tmp = NULL;
-	for(int i =0; i<t.range; i++) 
+	for(size_t i =0; i<t.range; i++) 
 	{
 		tmp = next_id(ID);
 		types_to_assign.push(t.element());
