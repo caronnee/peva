@@ -92,14 +92,15 @@ void Robot::leave_type()
 }
 void Robot::declare_next()
 {
-	if (active_type.top().data_type == NULL)	
+	std::cout << active_type.size(); getc(stdin);
+	bool ok;
+	Create_type t = active_type.top().next(ok);
+	if (!ok)
 	{
-		error(-1, Robot::ErrorToMuchInitializers);
-		active_type.push(*active_type.top().data_type);
+		error(-1, Robot::ErrorOutOfRange);
+		return;
 	}
-	else
-		active_type.push(active_type.top());
-	return;
+	active_type.push(t);
 }
 Create_type * Robot::find_array_type(int range, Create_type * descend)
 {

@@ -2,6 +2,23 @@
 #include <iostream>
 static Type simple[] = { TypeInteger, TypeReal, TypeObject };
 
+/* TODO nelubi sa mi to, ok by malo skor vracat?*/
+Create_type Create_type::next(bool &ok)
+{
+	ok = true;
+	if (iterator < range)
+	{
+		iterator++;
+		return *data_type;
+	}
+	if (iterator < nested_vars.size())
+	{
+		iterator++;
+		return nested_vars[iterator-1].type;
+	}
+	ok = false;
+	return *this;
+}
 bool Create_type::is_simple()
 {
 	for (size_t i =0; i< sizeof(simple)/sizeof(Type); i++)
@@ -16,6 +33,7 @@ bool Create_type::is_simple()
 
 Create_type::Create_type()
 {
+	range = 0;
 	type = TypeUndefined;
 	data_type = NULL;
 }

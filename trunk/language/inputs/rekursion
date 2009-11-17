@@ -16,7 +16,7 @@ ROBOT qqq
 	VISIT_SEQ( START[3], START[2], [13,18])
 	VISIT( [100,200])
 
-//	integer x=10;
+	integer x=10;
 
 	integer function rekurz(integer x)
 	{
@@ -27,11 +27,6 @@ ROBOT qqq
 		step(f);
 		return 2*f;
 	}
-/*	integer function E()
-	{
-		integer x = 9;
-		return x;
-	}*/
 	main() // komentar
 	{
 		step(rekurz(10));
