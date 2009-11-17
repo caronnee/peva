@@ -13,7 +13,7 @@ parser_classes.o: parser_classes.h parser_classes.cpp
 parser.o: parser.cpp lval.h 
 	${CXX} ${CPPFLAGS} ${CFLAGS} ${XML} -o $@ -c parser.cpp
 
-bison.o:bison.cpp
+bison.o:bison.cpp hflex.h
 	${CXX} ${CPPFLAGS} ${XML} -o $@ -c $<
 
 functions.o:functions.cpp functions.h
@@ -66,7 +66,7 @@ position.o: position.h position.cpp
 	${CXX} ${CFLAGS} -c -o $@ position.cpp
 
 distclean:
-	rm -f *.o bparser parser.cpp bison.cpp bison.hpp
+	rm -f *.o bparser hflex.h parser.cpp bison.cpp bison.hpp
 
 run:
 	make

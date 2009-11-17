@@ -223,11 +223,12 @@ names_:	TOKEN_IDENTIFIER
 			}
 			$$.push_back(get_store_type(@1, program->actualRobot, $3.output.back()));
 		} 
-		|TOKEN_IDENTIFIER TOKEN_ASSIGN TOKEN_BEGIN values TOKEN_END 
+		|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
 		{ 
-			std::cout << "a3," <<@2;getc(stdin); 
+			std::cout << "a3";getc(stdin); 
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
+			$$.push_back(new InstructionLoadLocal(n));
 			$$ = join_instructions($$, $4.ins);
 		} 
 		;
@@ -249,7 +250,10 @@ values:		expression {
 				$1.output.back() = program->actualRobot->active_type.top();
 			}
 			if ($1.output.back()!=program->actualRobot->active_type.top())
+			{
+				std::cout <<"nnnnnn?"; getc(stdin);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
+			}
 			else
 			{
 				$$.ins.push_back(get_store_type(@1, program->actualRobot, $1.output.back()));
