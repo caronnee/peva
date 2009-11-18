@@ -231,12 +231,11 @@ names_:	TOKEN_IDENTIFIER
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
 		{ 
 			$$.clear();
-			std::cout << "expressna u assignu" << $3.output.back().type;getc(stdin);
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
 			$$ = join_instructions($$, $3.ins);
-			Instruction * in = possible_conversion($3.output.back().type,program->actualRobot->active_type.top().type);
+			Instruction * in = possible_conversion(program->actualRobot->active_type.top().type,$3.output.back().type);
 			if (in)
 			{
 				$$.push_back(in);
@@ -247,7 +246,6 @@ names_:	TOKEN_IDENTIFIER
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
 		{ 
 			$$.clear();
-		//	std::cout << "a3";getc(stdin); 
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
@@ -270,7 +268,7 @@ values:		expression {
 			$$.ins.push_back(new InstructionLoad(0));
 			$$.ins.push_back(new InstructionLoad());
 			$$.ins = join_instructions($$.ins, $1.ins);
-			Instruction * in = possible_conversion($1.output.back().type, program->actualRobot->active_type.top().type);
+			Instruction * in = possible_conversion( program->actualRobot->active_type.top().type,$1.output.back().type);
 			if (in)
 			{
 				$$.ins.push_back(in);
@@ -294,7 +292,7 @@ values:		expression {
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
 			$$.ins = join_instructions($$.ins , $3.ins);
-			Instruction * in = possible_conversion($3.output.back().type, program->actualRobot->active_type.top().type);
+			Instruction * in = possible_conversion(program->actualRobot->active_type.top().type,$3.output.back().type );
 			if (in)
 			{
 				$$.ins.push_back(in);
