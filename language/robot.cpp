@@ -115,6 +115,7 @@ Create_type * Robot::find_array_type(int range, Create_type * descend)
 	Create_type * t = new Create_type(TypeArray, range);
 	t->composite(descend);
 	defined_types.push_back(t);
+	last_type = *t;
 	return t;
 }
 
