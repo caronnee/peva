@@ -30,7 +30,7 @@ struct Lval {
 
 	float f_number;
 
-	std::vector<int> ranges;
+	std::deque<int> ranges;
 
 	Node * node;
 	std::vector<Node *> nodes; //kde su ulozene premenne

@@ -1,0 +1,34 @@
+//blbne integer i, integer i
+
+ROBOT qqq
+{
+	HEALTH = 100
+	ATTACK = 33			
+	SEE_WIDTH = 8
+	SEE_HEIGHT = 4
+	SEE = 56
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
+        ID = 5			
+
+	KILLED < 5
+	VISIT_SEQ( START[3], START[2], [13,18])
+	VISIT( [100,200])
+
+	location l = { 10, 20 };
+
+	integer function rekurz(integer x)
+	{
+		if ( x <= 0)
+			return 1;
+		integer f ;
+		f = rekurz(x-1);
+		step(f);
+		return 2*f;
+	}
+	main() // komentar
+	{
+		shoot(l);
+	}
+}

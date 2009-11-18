@@ -161,13 +161,32 @@ targets: /* default target */
 	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->actualRobot->addVisit($4);}
 	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->addVisitSeq($4);}
 	;
-places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position($2,$4)); }
-	| places TOKEN_COMMA TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA {$$ = $1; $$.push_back(Position($4,$6)); }
-	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back(Position(-1, $3)); }
-	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  {$$ = $1; $$.push_back(Position(-1,$5)); }
+places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA 
+	{ 
+		$$.clear(); 
+		$$.push_back(Position($2,$4)); 
+	}
+	| places TOKEN_COMMA TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA 
+	{
+		$$ = $1; 
+		$$.push_back(Position($4,$6)); 
+	}
+	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA 
+	{ 
+		$$.clear(); 
+		$$.push_back(Position(-1, $3)); 
+	}
+	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  
+	{
+		$$ = $1; 
+		$$.push_back(Position(-1,$5)); 
+	}
 	;
 options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
-	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT { program->set($2,$4); }
+	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT 
+	{ 
+		program->set($2,$4); 
+	}
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 		| global_variables local_variables { $$= join_instructions($1,$2);}
@@ -190,8 +209,8 @@ complex_type: simple_type ranges
 			Create_type * t = $1; 
 			while(!$2.empty())
 			{
-				t = program->actualRobot->find_array_type($2.back(),t);
-				$2.pop_back();
+				t = program->actualRobot->find_array_type($2.front(),t);
+				$2.pop_front();
 			}
 			Create_type y= *t;
 			while (y.data_type!=NULL)
@@ -206,11 +225,13 @@ ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 		;
 names_:	TOKEN_IDENTIFIER 
 		{ 
+			$$.clear();
 			$$.push_back(new InstructionCreate(program->actualRobot->add($1))); 
 		} 
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
 		{ 
-			std::cout << "expressna u assignut" << $3.output.back().type;getc(stdin);
+			$$.clear();
+			std::cout << "expressna u assignu" << $3.output.back().type;getc(stdin);
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
@@ -225,7 +246,8 @@ names_:	TOKEN_IDENTIFIER
 		} 
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
 		{ 
-			std::cout << "a3";getc(stdin); 
+			$$.clear();
+		//	std::cout << "a3";getc(stdin); 
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
@@ -237,13 +259,14 @@ names_:	TOKEN_IDENTIFIER
 		} 
 		;
 names: names_ { $$ = $1; }
-	|names names_ { $$ = join_instructions($1, $2);}
+	|names names_ { $$ = join_instructions($1, $2); }
 		;
 begin_type: TOKEN_BEGIN { program->actualRobot->declare_next(); }
 		;
 end_type: TOKEN_END { program->actualRobot->leave_type(); }
 		;
 values:		expression { 
+			$$.ins.clear();
 			$$.ins.push_back(new InstructionLoad(0));
 			$$.ins.push_back(new InstructionLoad());
 			$$.ins = join_instructions($$.ins, $1.ins);
@@ -266,6 +289,7 @@ values:		expression {
 		} 
 		| values TOKEN_COMMA expression 
 		{
+			$$.ins.clear();
 			$$.ins = $1.ins;
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
@@ -285,16 +309,28 @@ values:		expression {
 		}
 		| begin_type values end_type
 		{ 
+			$$.ins.clear();	
 			$$.ins.push_back(new InstructionLoad(0)); //todo do actual type pridat, ze sme o type dalej, array dalej atd
 			$$.ins.push_back(new InstructionLoad());
+			for (size_t i = 1; i < $2.level; i++)
+			{
+				$$.ins.push_back(new InstructionDuplicate());
+			}
 			$$.ins = join_instructions($$.ins, $2.ins);
 			$$.level = 1;
-			$$ = $2;
 		} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
 		| values TOKEN_COMMA begin_type values end_type
 		{
 			$$ = $1; 
-			$$.ins = join_instructions($1.ins,$4.ins); 
+			$$.ins.push_back(new InstructionLoad($1.level));
+			$$.ins.push_back(new InstructionLoad());
+			for (size_t i = 1; i < $4.level; i++)
+			{
+				$$.ins.push_back(new InstructionDuplicate());
+			}
+
+			$$.ins = join_instructions($$.ins,$4.ins); 
+			$$.level++;
 		} //addOputpuTokenNotDefined
 		;
 declare_functions: /*	ziadne deklarovane funkcie	*/ 
