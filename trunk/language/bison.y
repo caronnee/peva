@@ -311,7 +311,7 @@ values:		expression {
 		}
 		| begin_type values end_type
 		{ 
-			/*$$.ins.clear();	
+			$$.ins.clear();	
 			$$.ins.push_back(new InstructionLoad(0)); //todo do actual type pridat, ze sme o type dalej, array dalej atd
 			$$.ins.push_back(new InstructionLoad());
 			for (size_t i = 1; i < $2.level; i++)
@@ -320,12 +320,11 @@ values:		expression {
 			}
 			$$.ins = join_instructions($$.ins, $2.ins);
 			$$.level = 1;
-			*/
 		} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
 		| values TOKEN_COMMA begin_type values end_type
 		{
 			$$.ins.clear();
-/*			$$ = $1; 
+			$$ = $1; 
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
 			for (size_t i = 1; i < $4.level; i++)
@@ -335,7 +334,6 @@ values:		expression {
 
 			$$.ins = join_instructions($$.ins,$4.ins); 
 			$$.level++;
-			*/
 		} //addOputpuTokenNotDefined
 		;
 declare_functions: /*	ziadne deklarovane funkcie	*/ 
