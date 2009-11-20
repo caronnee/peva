@@ -29,9 +29,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 		st.ins.push_back(new InstructionLoadLocal(n));
 	else  
 		st.ins.push_back(new InstructionLoadGlobal(n));
-	std::cout << "Tu sa este dostanem eident 2:"<<n->type_of_variable; getc(stdin);
 	st.output.push_back(*n->type_of_variable);	
-	std::cout << "Tu sa este dojdshgskjgbhkrsjdstanem eident 2:"<<n->type_of_variable; getc(stdin);
 	return st;
 }
 Instruction * possible_conversion(Type to, Type from)

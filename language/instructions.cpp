@@ -32,19 +32,15 @@ Instruction::~Instruction()
 InstructionCreate::InstructionCreate(Node * n)
 {
 	node = n;
-	std::cout << n << " a tp:" << n->type_of_variable->type;getc(stdin);
 	name_ = "InstructionCreate";
 }
 
 int InstructionCreate::execute(Core * c)
 {	
-	std::cout << "Node::" << node; getc(stdin);
 	std::cout << "Assigning variable '" << node->name << "'...";
 	Create_type * t = node->type_of_variable;
-	std::cout << "of type.." << node->type_of_variable->type; getc(stdin);
 	while (t->data_type!=NULL)
 	{
-	//	std::cout << "hodnota:" << t->range<< std::endl;
 		t = t->data_type;
 	}	
 	c->memory.assign( node, c->depth);

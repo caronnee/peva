@@ -81,17 +81,13 @@ Create_type * Robot::find_type(Type t)
 
 void Robot::declare_type()
 {
-	if ( last_type->type == TypeLocation)
-	{
-		std::cout << last_type->nested_vars[0].name;getc(stdin);
-	}
 	active_type.push(last_type);
 }
 void Robot::leave_type()
 {
 	if (active_type.empty())
 	{ 
-		std::cout << "ech?"; getc(stdin);
+		std::cout << "ech?Active prazdna"; getc(stdin);
 		return;
 	}
 	active_type.top()->reset(); // prejde, pretoze hierarchicka struktura(nemoze zas ebou rovnake triedy, takze vzdy ked resetujeme, bude to potom mio stacku)
@@ -102,7 +98,7 @@ void Robot::declare_next()
 	Create_type * t = active_type.top()->next();
 	if (NULL)
 	{
-		std::cout << "No NEXT"; getc(stdin);
+		std::cout << "Error:No NEXT"; getc(stdin);
 		error(-1, Robot::ErrorOutOfRange);
 		return;
 	}
@@ -168,7 +164,6 @@ Node * Robot::add(std::string name, Create_type * type)
 	Node * n = defined.add(name_, type);
 	if (n == NULL)
 		return dev_null;
-	std::cout << "pridavane memo '" << name << "'typu" << n->type_of_variable->type;getc(stdin);
 	return n;
 
 }
@@ -274,11 +269,9 @@ void Robot::execute()
 {
 	while(core->PC < instructions.size())
 	{
-		std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();//getc(stdin);
+		std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();
 		instructions[core->PC]->execute(core);
-		std::cout << " OOOOOK"; //getc(stdin);
 		core->PC++;
-	//	getc(stdin);
 		//sleep(1);
 	}
 }
