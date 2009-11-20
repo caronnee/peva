@@ -2,7 +2,7 @@
 #define ___TYPES____
 
 #include <vector>
-#include<string>
+#include <string>
 
 enum Type
 {
@@ -40,10 +40,9 @@ struct Create_type
 	void add(std::string name, Create_type * t);
 	bool operator==(const Create_type& t);
 	bool operator!=(const Create_type& t);
-	Create_type element();
 	size_t iterator; //kolkaty prvok sme uz pozreli
 public:
-	Create_type next(bool &ok);
+	Create_type * next();
 	void reset();
 	bool is_simple();
 };
@@ -51,7 +50,6 @@ public:
 struct Record
 {
 	std::string name;
-	Create_type type;
-	Create_type typ();
+	Create_type * type;
 };
 #endif

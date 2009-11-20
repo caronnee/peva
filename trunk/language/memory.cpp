@@ -27,7 +27,7 @@ Variable * Memory::next_id(size_t ID)
 	return memory[id];
 }
 
-Memory::Memory(int size)
+Memory::Memory( int size )
 {
 	memory_size = size;
 	position = 0;
@@ -41,13 +41,13 @@ void Memory::assign(Node * node, size_t depth_)
 {
 	Memory_record m;
 	m.node = node;
-	m.variable = find_free(*node->type_of_variable, node->ID);
+	m.variable = find_free(node->type_of_variable, node->ID);
 	m.depth = depth_;
 	assigned.push_back(m);
 	node->var.push_back(m.variable);
 }
 
-Variable * Memory::assign_temp(Create_type t)
+Variable * Memory::assign_temp(Create_type * t)
 {
 /*	std::cout << "assigning TEMP..."<< std::endl;
 	std::cout << "before:";
@@ -95,36 +95,35 @@ void Memory::free_tmp()
 		std::cout <<"Error! Trying to free a nonempty temp" << std::endl;
 }
 void Memory::fill(Variable * &v, 
-		  Create_type & t, 
+		  Create_type * &t, 
 		  std::stack<Variable *> &variables_to_assign, 
-		  std::stack<Create_type> & types_to_assign,
+		  std::stack<Create_type *> & types_to_assign,
 		  size_t ID)
 {
-	if (t.is_simple())
+	if (t->is_simple())
 		return;
 	Variable * tmp = NULL;
-	for(size_t i =0; i<t.range; i++) 
+	for(size_t i =0; i<t->range; i++) 
 	{
 		tmp = next_id(ID);
-		types_to_assign.push(t.element());
+		types_to_assign.push(t->data_type);
 		variables_to_assign.push(tmp);
 		v->array.elements.push_back(tmp);
 	}
-	for(size_t i =0; i<t.nested_vars.size(); i++) 
+	for(size_t i =0; i<t->nested_vars.size(); i++) 
 	{
 		tmp = next_id(ID);
-		types_to_assign.push(t.nested_vars[i].type);
+		types_to_assign.push(t->nested_vars[i].type);
 		variables_to_assign.push(tmp);
 		v->array.elements.push_back(tmp);
 	}
 	std::cout << "end of block";
 }
 
-Variable * Memory::find_free(Create_type t, size_t ID)
+Variable * Memory::find_free(Create_type * t, size_t ID)
 {
 	//bez rekurzie pre istotu
-	Create_type tt = t;
-	std::stack<Create_type> types_to_assign;
+	std::stack<Create_type *> types_to_assign;
 	std::stack<Variable *> variables_to_assign;
 	Variable * v = next_id(ID);
 	Variable * ret_v = v;

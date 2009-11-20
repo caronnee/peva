@@ -10,6 +10,7 @@
 #include "node.h"
 #include "variable.h"
 
+struct Robots;
 struct Memory_record
 {
 	Node * node;
@@ -39,27 +40,26 @@ private:
 	Variable * next_id(size_t ID);
 
 	/* returns variable with Type t */
-	Variable * find_free(Create_type t, size_t ID);
+	Variable * find_free(Create_type * t, size_t ID);
 
 	/* sets variable v and structures in it as free */
 	void set_free(Variable * v);
 
 	/* help function to fill variable element of type t */
 	void fill(Variable * &v, 
-		  Create_type & t, 
+		  Create_type * &t, 
 		  std::stack<Variable *> &variables_to_assign, 
-		  std::stack<Create_type> & types_to_assign,
+		  std::stack<Create_type *> & types_to_assign,
 		  size_t ID);
-
 public:
 	/* class constructor */
-	Memory(int size = 400);
+	Memory( int size = 400 );
 
 	/* returns variable added in depth d */
 	void assign(Node *n ,size_t depth);
 
 	/* returns variable  temporarily added */
-	Variable * assign_temp(Create_type t);
+	Variable * assign_temp(Create_type * t);
 
 	/* frees occupied memory with depth greater or equal to depth */
 	void free(size_t depth);
