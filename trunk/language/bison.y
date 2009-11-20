@@ -250,7 +250,6 @@ names_:	TOKEN_IDENTIFIER
 		{ 
 			$$.clear();
 			Node *n = program->actualRobot->add($1);
-//			std::cout << "dodane meno '"<< $1 << "' typu " << n->type_of_variable->type<< " " <<n; getc(stdin);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
 			for (size_t i =1; i < $4.level; i++)
