@@ -45,6 +45,7 @@ var						{*l = line; return TOKEN_REFERENCE;}
 void						{*l = line; return TOKEN_VOID; }
 location					{*l = line;return TOKEN_LOCATION; }
 real 						{*l = line;return TOKEN_VAR_REAL; }
+seen 						{*l = line;return TOKEN_SEEN; }
 
 IsPlayer					{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
 IsWall						{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}

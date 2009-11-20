@@ -193,6 +193,7 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 			break;
 		default: r->error(line,Robot::ErrorOperationNotSupported);
 	}
+	e.temp.push_back(true);
 	e.output.push_back(Create_type(output));
 	return e;
 }
