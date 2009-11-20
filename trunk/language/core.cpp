@@ -1,8 +1,9 @@
 #include "core.h"
 #include <cstdio>
 
-Core::Core()
+Core::Core(TypeContainer * t)
 {
+	typeContainer = t;
 	PC =0;
 	values.clear();	
 	error = false;

@@ -30,7 +30,7 @@ struct Core
 	Object * getObjectFromStack();
 	void loadElement(int range);
 public:
-	Core();
+	Core(TypeContainer *t);
 	void saveInteger();
 	void saveFloat();
 	void saveObject();

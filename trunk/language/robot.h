@@ -1,5 +1,6 @@
 #ifndef ___STACK___
 #define ___STACK___
+
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <list>
@@ -74,7 +75,7 @@ struct Robot
 	std::list<TargetVisit *> targets;
 	TargetKillNumber * toKill;
 
-	TypeContainer defined_types;
+	TypeContainer * defined_types;
 
 	Tree defined;//root burst stromu
 	Instructions instructions; 
