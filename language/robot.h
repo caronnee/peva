@@ -12,6 +12,7 @@
 #include "targets.h"
 #include "enums.h"
 #include "parser_classes.h"
+#include "typeContainer.h"
 
 #define DELIMINER_CHAR '#'
 
@@ -73,7 +74,8 @@ struct Robot
 	std::list<TargetVisit *> targets;
 	TargetKillNumber * toKill;
 
-	std::vector<Create_type *> defined_types;
+	TypeContainer defined_types;
+
 	Tree defined;//root burst stromu
 	Instructions instructions; 
 	Values values;
@@ -99,20 +101,19 @@ struct Robot
 	//TODO zmenit na hlasky, co budu statcike a nie dynamicke
 	void error(unsigned int line, ErrorCode c,std::string message="Unrecognized");
 	void consolidate();
-	std::stack<Create_type> active_type;
-	Create_type last_type;
+	//TODO tot by mohlo byt tiez typeContainer?
+	std::stack<Create_type *> active_type;
+	Create_type * last_type;
 private:
 	Robot_body * body;
 public:
 	Robot(std::string name, GamePoints g);
 
+	Create_type * find_type(Type t);
+	Create_type * find_array_type(int range, Create_type * descend);
 	void declare_type();
 	void declare_next();
 	void leave_type();
-
-	Create_type * find_type(Type t);
-	Create_type * find_array_type(int i, Create_type * t);
-
 	void save_to_xml();
 	~Robot();
 };

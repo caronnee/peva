@@ -28,40 +28,41 @@ Robot::Robot(std::string s, GamePoints p)
 	toKill = NULL;
 	nullable = new Nullable();
 	
-	defined_types.push_back(new Create_type(TypeUndefined));
-	defined_types.push_back(new Create_type(TypeVoid));
-	defined_types.push_back(new Create_type(TypeReal));
-	defined_types.push_back(new Create_type(TypeInteger));
-	defined_types.push_back(new Create_type(TypeObject));
-	defined_types.push_back(new Create_type(TypeLocation));
-	defined_types.back()->add("x",find_type(TypeInteger));
-	defined_types.back()->add("y",find_type(TypeInteger));
+	defined_types.add(new Create_type(TypeUndefined));
+	defined_types.add(new Create_type(TypeVoid));
+	defined_types.add(new Create_type(TypeReal));
+	defined_types.add(new Create_type(TypeInteger));
+	defined_types.add(new Create_type(TypeObject));
+	Create_type * t = new Create_type(TypeLocation);
+	t->add("x",defined_types.find_type(TypeInteger));
+	t->add("y",defined_types.find_type(TypeInteger));
+	defined_types.add(t);
 	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
-	c->composite(find_type(TypeObject));
-	defined_types.push_back(c);
+	c->composite(defined_types.find_type(TypeObject));
+	defined_types.add(c);
 
 	/*	Pridavanie defaultnych premennych	*/
 
-	dev_null = new Node("dev/null", find_type(TypeUndefined), -1);
+	dev_null = new Node("dev/null", defined_types.find_type(TypeUndefined), -1);
 
-	Node * n = defined.add("true",find_type(TypeInteger));
+	Node * n = defined.add("true",defined_types.find_type(TypeInteger));
 	n->nested = Global;
 	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 1;
 
-	n = defined.add("false",find_type(TypeInteger));
+	n = defined.add("false",defined_types.find_type(TypeInteger));
 	n->nested = Global;
 	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 0;
 
 	//pridana premenna pre NULL;
-	n = defined.add("NULL",find_type(TypeObject));
+	n = defined.add("NULL",defined_types.find_type(TypeObject));
 	n->nested = Global;
 	core->memory.assign(n, 0);
 	n->var[0]->objectValue = nullable;
 	
 	//pridana premenna pre this;
-	n = defined.add("this",find_type(TypeObject));
+	n = defined.add("this",defined_types.find_type(TypeObject));
 	n->nested = Global;
 	core->memory.assign(n,0);
 	n->var[0]->objectValue = body;
@@ -73,30 +74,34 @@ Robot::Robot(std::string s, GamePoints p)
 }
 Create_type * Robot::find_type(Type t)
 {
-	for (size_t i= 0; i< defined_types.size(); i++)
-		if (defined_types[i]->type == t)
-		{
-			last_type = *defined_types[i];
-			return defined_types[i];
-		}
-	return NULL;//ZAVAZNA CHYBA! Ale zo strany programatora;), mozno by to stalo za excepsnu
+	last_type = defined_types.find_type(t);	
+	return last_type;
 }
 
 void Robot::declare_type()
 {
+	if ( last_type->type == TypeLocation)
+	{
+		std::cout << last_type->nested_vars[0].name;getc(stdin);
+	}
 	active_type.push(last_type);
 }
 void Robot::leave_type()
 {
-	active_type.top().reset(); //aj tak to nepreba, bo su to premenne skopirovane
+	if (active_type.empty())
+	{ 
+		std::cout << "ech?"; getc(stdin);
+		return;
+	}
+	active_type.top()->reset(); // prejde, pretoze hierarchicka struktura(nemoze zas ebou rovnake triedy, takze vzdy ked resetujeme, bude to potom mio stacku)
 	active_type.pop();
 }
 void Robot::declare_next()
 {
-	bool ok;
-	Create_type t = active_type.top().next(ok);
-	if (!ok)
+	Create_type * t = active_type.top()->next();
+	if (NULL)
 	{
+		std::cout << "No NEXT"; getc(stdin);
 		error(-1, Robot::ErrorOutOfRange);
 		return;
 	}
@@ -104,19 +109,8 @@ void Robot::declare_next()
 }
 Create_type * Robot::find_array_type(int range, Create_type * descend)
 {
-	for (size_t i= 0; i< defined_types.size(); i++)
-		if ((defined_types[i]->type == TypeArray)
-			&&(defined_types[i]->data_type == descend)
-			&&(defined_types[i]->range == range))
-		{
-			last_type = *defined_types[i];
-			return defined_types[i];
-		}
-	Create_type * t = new Create_type(TypeArray, range);
-	t->composite(descend);
-	defined_types.push_back(t);
-	last_type = *t;
-	return t;
+	last_type = defined_types.find_array_type(range, descend);
+	return last_type;
 }
 
 Function * Robot::find_f(std::string nam)
@@ -173,13 +167,18 @@ Node * Robot::add(std::string name, Create_type * type)
 	Node * n = defined.add(name_, type);
 	if (n == NULL)
 		return dev_null;
+	std::cout << "pridavane memo '" << name << "'typu" << n->type_of_variable->type;getc(stdin);
 	return n;
 
 }
 
 Node * Robot::add(std::string name)
 {
-	return add(name, &active_type.top());
+	if (active_type.empty())
+	{
+		std::cout << "empty active type";
+	}
+	return add(name, active_type.top());
 }
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
@@ -504,11 +503,6 @@ Robot::~Robot()
 	delete toKill;
 	delete body;
 	delete nullable;
-
-	for (size_t i = 0; i< defined_types.size(); i++)
-	{
-		delete defined_types[i];
-	}
 
 	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
 		i!= targets.end(); i++)

@@ -197,6 +197,8 @@ type:	  simple_type { $$ = $1; program->actualRobot->declare_type();}
 local_variables:  type names TOKEN_SEMICOLON 
 		{
 			$$ = $2;
+			
+			program->actualRobot->leave_type();
 		}
 		;
 simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } //najdi REAL
@@ -226,7 +228,8 @@ ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 names_:	TOKEN_IDENTIFIER 
 		{ 
 			$$.clear();
-			$$.push_back(new InstructionCreate(program->actualRobot->add($1))); 
+			Node *n = program->actualRobot->add($1);
+			$$.push_back(new InstructionCreate(n)); 
 		} 
 		|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
 		{ 
@@ -235,11 +238,11 @@ names_:	TOKEN_IDENTIFIER
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
 			$$ = join_instructions($$, $3.ins);
-			Instruction * in = possible_conversion(program->actualRobot->active_type.top().type,$3.output.back().type);
+			Instruction * in = possible_conversion(program->actualRobot->active_type.top()->type,$3.output.back().type);
 			if (in)
 			{
 				$$.push_back(in);
-				$3.output.back() = program->actualRobot->active_type.top();
+				$3.output.back() = *program->actualRobot->active_type.top();
 			}
 			$$.push_back(get_store_type(@1, program->actualRobot, $3.output.back()));
 		} 
@@ -247,6 +250,7 @@ names_:	TOKEN_IDENTIFIER
 		{ 
 			$$.clear();
 			Node *n = program->actualRobot->add($1);
+//			std::cout << "dodane meno '"<< $1 << "' typu " << n->type_of_variable->type<< " " <<n; getc(stdin);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
 			for (size_t i =1; i < $4.level; i++)
@@ -268,15 +272,15 @@ values:		expression {
 			$$.ins.push_back(new InstructionLoad(0));
 			$$.ins.push_back(new InstructionLoad());
 			$$.ins = join_instructions($$.ins, $1.ins);
-			Instruction * in = possible_conversion( program->actualRobot->active_type.top().type,$1.output.back().type);
+			Instruction * in = possible_conversion( program->actualRobot->active_type.top()->type,$1.output.back().type);
 			if (in)
 			{
 				$$.ins.push_back(in);
-				$1.output.back() = program->actualRobot->active_type.top();
+				$1.output.back() = *program->actualRobot->active_type.top();
 			}
-			if ($1.output.back()!=program->actualRobot->active_type.top())
+			if ($1.output.back()!=*program->actualRobot->active_type.top())
 			{
-				std::cout <<"nnnnnn?"<<@1 << program->actualRobot->active_type.top().type; getc(stdin);
+				std::cout <<"nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type; getc(stdin);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
 			else
@@ -292,11 +296,11 @@ values:		expression {
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
 			$$.ins = join_instructions($$.ins , $3.ins);
-			Instruction * in = possible_conversion(program->actualRobot->active_type.top().type,$3.output.back().type );
+			Instruction * in = possible_conversion(program->actualRobot->active_type.top()->type,$3.output.back().type );
 			if (in)
 			{
 				$$.ins.push_back(in);
-				$3.output.back() = program->actualRobot->active_type.top();
+				$3.output.back() = *program->actualRobot->active_type.top();
 			}
 			$$.ins.push_back(get_store_type(@1, program->actualRobot, $3.output.back()));
 			if ($3.temp.back())
@@ -307,7 +311,7 @@ values:		expression {
 		}
 		| begin_type values end_type
 		{ 
-			$$.ins.clear();	
+			/*$$.ins.clear();	
 			$$.ins.push_back(new InstructionLoad(0)); //todo do actual type pridat, ze sme o type dalej, array dalej atd
 			$$.ins.push_back(new InstructionLoad());
 			for (size_t i = 1; i < $2.level; i++)
@@ -316,10 +320,12 @@ values:		expression {
 			}
 			$$.ins = join_instructions($$.ins, $2.ins);
 			$$.level = 1;
+			*/
 		} //TODO nejak specialne osterit, zaborky a podobne vecu u struktur
 		| values TOKEN_COMMA begin_type values end_type
 		{
-			$$ = $1; 
+			$$.ins.clear();
+/*			$$ = $1; 
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
 			for (size_t i = 1; i < $4.level; i++)
@@ -329,6 +335,7 @@ values:		expression {
 
 			$$.ins = join_instructions($$.ins,$4.ins); 
 			$$.level++;
+			*/
 		} //addOputpuTokenNotDefined
 		;
 declare_functions: /*	ziadne deklarovane funkcie	*/ 
@@ -745,7 +752,7 @@ variable: TOKEN_IDENTIFIER
 			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
 				if ($$.output.back().nested_vars[i].name == $3)
 				{ 
-					Create_type t = $$.output.back().nested_vars[i].type; //TODO ci to nehapruje
+					Create_type t = *$$.output.back().nested_vars[i].type; 
 					$$.output.pop_back();
 					$$.output.push_back(t);
 					$$.ins.push_back(new InstructionLoad(i));

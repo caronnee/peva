@@ -4,11 +4,13 @@
 #include "memory.h"
 #include "variable.h"
 #include "functions.h"
+#include "typeContainer.h"
 
 typedef std::vector<Variable *> Values;
 
 struct Core
 {
+	TypeContainer * typeContainer;
 	size_t PC;
 	std::vector<size_t> PCs;
 	Function * nested_function;
@@ -19,7 +21,6 @@ struct Core
 	Robot_body * robot; //periferie, stav robota, interakcia s mapou
 	Memory memory;
 	Values values;	
-	Core();
 	void save(int j);
 	void restore(); //+ pushnut vsetky parametre zadanej funkcie o jedno
 
@@ -29,6 +30,7 @@ struct Core
 	Object * getObjectFromStack();
 	void loadElement(int range);
 public:
+	Core();
 	void saveInteger();
 	void saveFloat();
 	void saveObject();
