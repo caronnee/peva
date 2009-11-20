@@ -22,47 +22,48 @@ Robot::Robot(std::string s, GamePoints p)
 	name = s;
 	nested = "";
 	errors = false;
+	defined_types = new TypeContainer();
 	body = new Robot_body();
-	core = new Core();
+	core = new Core( defined_types);
 	core->set_body(body);
 	toKill = NULL;
 	nullable = new Nullable();
 	
-	defined_types.add(new Create_type(TypeUndefined));
-	defined_types.add(new Create_type(TypeVoid));
-	defined_types.add(new Create_type(TypeReal));
-	defined_types.add(new Create_type(TypeInteger));
-	defined_types.add(new Create_type(TypeObject));
+	defined_types->add(new Create_type(TypeUndefined));
+	defined_types->add(new Create_type(TypeVoid));
+	defined_types->add(new Create_type(TypeReal));
+	defined_types->add(new Create_type(TypeInteger));
+	defined_types->add(new Create_type(TypeObject));
 	Create_type * t = new Create_type(TypeLocation);
-	t->add("x",defined_types.find_type(TypeInteger));
-	t->add("y",defined_types.find_type(TypeInteger));
-	defined_types.add(t);
+	t->add("x",defined_types->find_type(TypeInteger));
+	t->add("y",defined_types->find_type(TypeInteger));
+	defined_types->add(t);
 	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
-	c->composite(defined_types.find_type(TypeObject));
-	defined_types.add(c);
+	c->composite(defined_types->find_type(TypeObject));
+	defined_types->add(c);
 
 	/*	Pridavanie defaultnych premennych	*/
 
-	dev_null = new Node("dev/null", defined_types.find_type(TypeUndefined), -1);
+	dev_null = new Node("dev/null", defined_types->find_type(TypeUndefined), -1);
 
-	Node * n = defined.add("true",defined_types.find_type(TypeInteger));
+	Node * n = defined.add("true",defined_types->find_type(TypeInteger));
 	n->nested = Global;
 	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 1;
 
-	n = defined.add("false",defined_types.find_type(TypeInteger));
+	n = defined.add("false",defined_types->find_type(TypeInteger));
 	n->nested = Global;
 	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 0;
 
 	//pridana premenna pre NULL;
-	n = defined.add("NULL",defined_types.find_type(TypeObject));
+	n = defined.add("NULL",defined_types->find_type(TypeObject));
 	n->nested = Global;
 	core->memory.assign(n, 0);
 	n->var[0]->objectValue = nullable;
 	
 	//pridana premenna pre this;
-	n = defined.add("this",defined_types.find_type(TypeObject));
+	n = defined.add("this",defined_types->find_type(TypeObject));
 	n->nested = Global;
 	core->memory.assign(n,0);
 	n->var[0]->objectValue = body;
@@ -74,7 +75,7 @@ Robot::Robot(std::string s, GamePoints p)
 }
 Create_type * Robot::find_type(Type t)
 {
-	last_type = defined_types.find_type(t);	
+	last_type = defined_types->find_type(t);	
 	return last_type;
 }
 
@@ -109,7 +110,7 @@ void Robot::declare_next()
 }
 Create_type * Robot::find_array_type(int range, Create_type * descend)
 {
-	last_type = defined_types.find_array_type(range, descend);
+	last_type = defined_types->find_array_type(range, descend);
 	return last_type;
 }
 
@@ -503,6 +504,7 @@ Robot::~Robot()
 	delete toKill;
 	delete body;
 	delete nullable;
+	delete defined_types;
 
 	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
 		i!= targets.end(); i++)
