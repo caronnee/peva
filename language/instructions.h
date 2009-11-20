@@ -464,6 +464,13 @@ class InstructionSee : public Instruction
 		virtual int execute(Core *s);
 		virtual ~InstructionSee();
 };
+class InstructionEye : public Instruction
+{
+	public:
+		InstructionEye();
+		virtual int execute(Core *s);
+		virtual ~InstructionEye();
+};
 class InstructionStep : public Instruction
 {
 	public:

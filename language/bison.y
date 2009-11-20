@@ -55,6 +55,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token<ident> TOKEN_IDENTIFIER
 %token<number> TOKEN_UINT
 %token<f_number> TOKEN_REAL
+%token TOKEN_SEEN
 
 /* target of game*/
 %token TOKEN_VISIT
@@ -604,6 +605,19 @@ array: TOKEN_IDENTIFIER array_access
 				$$.output.back() = *t;
 			}
 		}
+		|TOKEN_SEEN TOKEN_LSBRA number TOKEN_RSBRA
+		{
+			$$.clear();
+			$$.ins = $3.ins;
+			$$.output.push_back(*program->actualRobot->find_type(TypeObject));
+			Instruction * in = possible_conversion($3.output.back().type, TypeInteger);
+			if (in!=NULL)
+			{
+				$$.ins.push_back(in);
+			}
+			$$.ins.push_back(new InstructionEye());
+			$$.temp.push_back(true);
+		}
 		;
 
 call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
@@ -694,6 +708,11 @@ call_parameters: expression
 		;
 matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matched 
 	{
+		$$.clear();
+		if ($3.temp.back())
+			{
+				$3.ins.push_back(new InstructionRemoveTemp());
+			}
 		$5.push_back(new InstructionMustJump($7.size()));
 		$3.ins.push_back(new InstructionJump(0,$5.size()));
 		$$ =join_instructions($3.ins,$5);
@@ -702,10 +721,30 @@ matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matche
 	| command_var {$$ = $1;} //prazdy output
 	|block_of_instructions { $$ = $1;}
 	;
-unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
-	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command {$3.ins.push_back(new InstructionJump(0,$5.size()));$$ = join_instructions($3.ins,$5);}
+unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions 
+		{
+			if ($3.temp.back())
+			{
+				$3.ins.push_back(new InstructionRemoveTemp());
+			}
+			$3.ins.push_back(new InstructionJump(0,$5.size()));
+			$$ = join_instructions($3.ins,$5);
+		}
+	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command 
+	{
+		if ($3.temp.back())
+			{
+				$3.ins.push_back(new InstructionRemoveTemp());
+			}
+		$3.ins.push_back(new InstructionJump(0,$5.size()));
+		$$ = join_instructions($3.ins,$5);
+	}
 	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE unmatched 
 	{
+		if ($3.temp.back())
+			{
+				$3.ins.push_back(new InstructionRemoveTemp());
+			}
 		$5.push_back(new InstructionMustJump($7.size())); //outputy sa tymto znicia
 		$3.ins.push_back(new InstructionJump(0,$5.size()));
 		$$ = join_instructions($3.ins,$5);

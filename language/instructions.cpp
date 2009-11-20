@@ -1,4 +1,4 @@
-//TODO namiesto removetemp = opreacia +remove temp, aby to bolo atomicke
+//TODO namiesto removetemp = operacia +remove temp, aby to bolo atomicke
 //TODO return value by sa mala vytvorit az v okamziku RETURN u
 #include "instructions.h"
 #include <iostream>
@@ -1144,11 +1144,30 @@ int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
 {
 	std::cout << "Filling objects in robot's see angle ...";
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->robot->See(); //TODO, kam to naplni
+	c->values.back()->integerValue = c->robot->See(); 
 	std::cout << "OK" << std::endl;
 	return 0;
 }
 InstructionSee::~InstructionSee()
+{
+	node = NULL;
+}
+InstructionEye::InstructionEye() //uzol ktory sa ma naplnit viditelnymi objektami
+{
+	node = NULL;
+	name_ = "InstructionEye";
+}
+int InstructionEye::execute(Core *c) 
+{
+	std::cout << "Getting object from the eye ...";
+	Object * o = c->robot->Eye(c->values.back()->integerValue);
+	c->values.pop_back(); 
+	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeObject)));
+	c->values.back()->objectValue = o; 
+	std::cout << "OK" << std::endl;
+	return 0;
+}
+InstructionEye::~InstructionEye()
 {
 	node = NULL;
 }

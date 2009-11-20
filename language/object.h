@@ -75,6 +75,10 @@ public:
 };
 struct Robot_body : public Object
 {
+	virtual Object* Eye(size_t i)
+	{
+		return this;
+	}
 	virtual int Step()
 	{
 		std::cout << "Moving by default number" << std::endl;
