@@ -92,7 +92,10 @@ void Memory::free_tmp()
 		temp.pop_back();
 	}
 	else
+	{
 		std::cout <<"Error! Trying to free a nonempty temp" << std::endl;
+		getc(stdin);
+	}
 }
 void Memory::fill(Variable * &v, 
 		  Create_type * &t, 
@@ -148,7 +151,7 @@ void Memory::free(size_t depth)
 	{
 		Memory_record r = assigned.back();
 		assigned.pop_back();
-		std::cout << "NOde" << r.variable;
+		std::cout << "Node" << r.variable;
 		set_free(r.variable); //TODO pre velke arrays a pod. to nejak penalizovat?
 		r.node->var.pop_back();
 	}

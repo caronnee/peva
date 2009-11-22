@@ -133,7 +133,6 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 		default:
 			r->error(l, Robot::ErrorOperationNotSupported);
 	}
-	e.ins.push_back(new InstructionRemoveTemp());
 	return e;
 }
 Instruction * conversionToReal(Type t1, Type t2)

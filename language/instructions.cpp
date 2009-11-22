@@ -37,12 +37,13 @@ InstructionCreate::InstructionCreate(Node * n)
 
 int InstructionCreate::execute(Core * c)
 {	
-	std::cout << "Assigning variable '" << node->name << "'...";
+	std::cout << "Creating variable '" << node->name << "'...";
 	Create_type * t = node->type_of_variable;
 	while (t->data_type!=NULL)
 	{
 		t = t->data_type;
 	}	
+	std::cout << " in depth" << c->depth;getc(stdin);
 	c->memory.assign( node, c->depth);
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -104,8 +105,9 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 }
 int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy tam nedam viac ako jednu premennu, pretoze sa nezanorujem,osetrene  bisone
 {
-	std::cout << " Loading global variable: " << node->name << "...";
-	std::cout << " id =  " << node->var.back()->ID << "...";
+	std::cout << " Loading global variable: " << node->name << "...";//getc(stdin);
+	std::cout << " id =  " << node->var.size() << "...";
+//	std::cout << " Loading global variable: " << node->name << "...";getc(stdin);
 	Variable * v;
 	v = node->var.back();
 	c->values.push_back(v);
@@ -473,7 +475,6 @@ int InstructionBreak::execute(Core * c)
 	c->PC=jump;
 	c->depth -= depth;
 	std::cout << "to depth " << c->depth <<"...";
-	c->memory.free(c->depth+1); //vycisti do vratane az do hlbky povodneho, loop_label je povodny, tam by to chcelo nechat
 	std::cout << "OK" << std::endl;
 	return 0;
 }
