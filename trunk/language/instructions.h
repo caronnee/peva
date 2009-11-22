@@ -162,6 +162,7 @@ class InstructionContinue : public InstructionBreak //stejne ako break, ale skac
 {
 	public:
 		InstructionContinue(int depth_ = 0);
+		virtual int execute(Core * c);
 		virtual ~InstructionContinue();
 };
 class InstructionReturn : public Instruction
