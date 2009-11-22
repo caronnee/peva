@@ -124,17 +124,4 @@ continue					{*l = line;return TOKEN_CONTINUE; }
 void my_destroy()
 { 
 	yylex_destroy ();
-/*	while (YY_CURRENT_BUFFER)
-	{
-		yy_delete_buffer(YY_CURRENT_BUFFER);
-		YY_CURRENT_BUFFER_LVALUE = NULL;
-		yypop_buffer_state();
-	}
-	if (yy_buffer_stack)
-	{
-		std::cout << " fff"; getc(stdin);
-		yy_delete_buffer(yy_buffer_stack);
-	}
-	yy_init = 1;
-	*/
 }
