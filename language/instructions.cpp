@@ -475,6 +475,7 @@ int InstructionBreak::execute(Core * c)
 	c->PC=jump;
 	c->depth -= depth;
 	std::cout << "to depth " << c->depth <<"...";
+//	c->memory.free(c->depth+1); //vycisti do vratane az do hlbky povodneho, loop_label je povodny, tam by to chcelo nechat
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -495,8 +496,19 @@ InstructionBreak::~InstructionBreak()
 }
 InstructionContinue::InstructionContinue(int depth_)
 {
-	depth = depth_;
+	depth = depth_-1; //TODO v bisone
 	name_ = "InstructionContinue";
+}
+int InstructionContinue::execute(Core * c)
+{
+	std::cout << "Breaking loop, from depth" <<c->depth;
+	std::cout << "jumping to instruction number: " << jump;
+	c->PC=jump;
+	c->depth -= depth;
+	std::cout << "to depth " << c->depth <<"...";
+	c->memory.free(c->depth); //vycisti do vratane az do hlbky povodneho, loop_label je povodny, tam by to chcelo nechat
+	std::cout << "OK" << std::endl;
+	return 0;
 }
 InstructionContinue::~InstructionContinue()
 {
