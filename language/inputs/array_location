@@ -22,26 +22,33 @@ ROBOT qqq
 		shoot(k);
 		return k;
 	}*/
-	void function f(location[6] x)
+	void function f(location[3] x)
 	{
 		see();
-		for(integer i =0; i<6; i++) 
+		for(integer i =0; i<3; i++) 
 		{
 			x[i].x = 0-i;
 			x[i].y = 0-i;
 		}
-		for(integer i =0; i<6; i++) 
+		for(integer i =0; i<3; i++) 
 		{
 			shoot(x[i]);
 		}
 		see();
 	}
+	void function ff()
+	{
+		for (integer i =0; i< 10; i++)
+		{
+			step(i);
+		}
+	}
 	main() // komentar
 	{
 		integer numb = 0;
-		for(integer i =0; i<3; i++) 
+		for(integer i =0; i<6; i++) 
 		{
-			for(integer j =0; j<6; j++) 
+			for(integer j =0; j<3; j++) 
 			{
 				a[i][j].x = numb;
 				a[i][j].y = 0-numb;
@@ -50,60 +57,10 @@ ROBOT qqq
 		}
 		see();
 		f(a[1]);
-		for(integer z =0; z<6; z++) 
+		for(integer z =0; z<3; z++) 
 		{
 			shoot(a[1][z]);
 		}
 
-	/*	for(integer i =0; i<5; i++) 
-		{
-			step(l.x);
-			break;
-		}
-		for(integer i =0; i<0; i++) 
-		{
-			step(i);	
-		}
-	/*	while(true)
-		{
-			step();
-			continue;
-			if (true)
-				break;
-			step();
-			for(integer i =0; i<100; i++) 
-			{
-				integer X;
-				break;
-			}
-			integer X;
-			step();
-		}*/
-	//	see();
-	/*	for(integer i =0; i<100; i++) 
-		{
-			step(i);
-			break;
-			step(i);
-		}*/
-/*		do 
-		{
-			 step();
-			 continue;
-			 step();
-			 step(step());
-		}
-		while(true);*/
-		/*
-		shoot(l);
-		shoot(3.2);
-		step(10);
-		step();
-		turnL();
-     		turn(2);
-		turnR();
-		step(4+3+2+1);
-		step(step(step(step())));
-		*/
 	}
 }

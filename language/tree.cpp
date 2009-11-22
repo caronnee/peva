@@ -29,6 +29,7 @@ void Tree::leave_block()
 {
 	while(!block_of_nodes.empty() && (block_of_nodes.back()!=NULL))
 	{
+//		std::cout << "hushushus";getc(stdin);
 		block_of_nodes.back()->active = false;
 		block_of_nodes.pop_back();
 	}
@@ -113,17 +114,19 @@ Tree * Tree::find_string(std::string s)
 
 Node * Tree::add(std::string s, Create_type * type)
 {
-	std::cout << "pridavam meno:" << s << std::endl;
+	std::cout << "pridavam meno:" << s << " typu "<< type->type<< std::endl;
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
 	std::list<Node*>::iterator iter;
 	for (iter = t->items.begin(); 
-		iter!=t->items.end(); 
-		iter++)
+			iter!=t->items.end(); 
+			iter++)
 	{
-		if (((*iter)->name == s)&& ((*iter)->active)) {
-
-			std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;getc(stdin);
-			return NULL;
+		if ((*iter)->name == s)
+		{
+			if ((*iter)->active)
+				std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;getc(stdin);
+				std::cout << "huuula";getc(stdin);
+			return *iter;
 		}//kontrola, co tam nieco take uz nie je
 
 	} //TODO nejaka rozumnejsia metoda
@@ -186,6 +189,8 @@ Node * Tree::add(std::string s, Create_type * type)
 			t = t->next[splitted];
 		}
 	}
+	nod->active = true;
+	block_of_nodes.push_back(nod);
 	//std::cout << "adresa return " << nod << std::endl;
 	return nod;
 }
