@@ -87,19 +87,35 @@ bool Create_type::operator!=(const Create_type & t)
 bool Create_type::operator==(const Create_type & t)
 {
 	if (t.type!=type)
+	{
+		std::cout << "1";
 		return false;
+	}
 	if (nested_vars.size()!=t.nested_vars.size())
+	{
+		std::cout << "2";
 		return false;
+	}
 	for(size_t i =0; i<nested_vars.size(); i++)
 	{
 		if (nested_vars[i].name!=t.nested_vars[i].name)
+		{
+			std::cout << "3";
 			return false;
+		}
 		if ((nested_vars[i].type) !=(t.nested_vars[i].type))
-			return false;
+			{
+				std::cout << "4";
+				return false;
+			}
 	}
 	if (range!=t.range)
+	{
+		std::cout << "ranges:" << range << " " << t.range;
 		return false;
-	if (data_type == t.data_type) // ak sa rovnaju poitre, tak je zvysok zarucene stejny
-		return true;
-	return ((*data_type)==(*t.data_type));
+	}
+	
+	if (data_type != t.data_type) // ak sa rovnaju poitre, tak je zvysok zarucene stejny
+		return false;
+	return true;
 }

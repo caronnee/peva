@@ -43,8 +43,9 @@ int InstructionCreate::execute(Core * c)
 	{
 		t = t->data_type;
 	}	
-	std::cout << " in depth" << c->depth;getc(stdin);
+	std::cout << " in depth" << c->depth;
 	c->memory.assign( node, c->depth);
+	std::cout << "result:" << node->var.size()<< " " <<node<< " ";
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -73,9 +74,14 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 }
 int InstructionLoadLocal::execute(Core * c)
 {
-	std::cout << "Loading local variable " << node->name << "..."<< node->var.size();
+	std::cout << "Loading local variable " << node->name << "..."<< node->var.size() << " " << node << " ";
 	//std::cout << " id =  " << node->var.back()->ID << "..." ;
 	//std::cout << " value =  " << node->var.back()->integerValue << "..." ;
+	if (node->var.size() == 0)
+	{
+		std::cout <<"error, prazdna premenna";
+		getc(stdin);
+	}
 	c->values.push_back(node->var.back());
 	std::cout << "OK" << std::endl;
 	return 0;
@@ -343,7 +349,7 @@ Call::Call(Function * f_)
 }
 int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 {
-	std::cout << "Calling function: " << function->parameters[0].node->var.size();
+	std::cout << "Calling function: "; 
 	c->nested_functions.push_back(c->nested_function);
 	c->nested_function = function;
 	for( size_t i = 0; i< function->parameters.size(); i++)

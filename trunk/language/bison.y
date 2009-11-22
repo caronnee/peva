@@ -477,7 +477,7 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			$$ = join_instructions($$,$7.ins); 
 			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
 		}
-		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR TOKEN_BEGIN commands TOKEN_END
+		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR begin commands end
 		{
 			if ($3.temp.back())
 			{
@@ -613,6 +613,7 @@ array: TOKEN_IDENTIFIER array_access
 					program->actualRobot->error(@1,Robot::ErrorOutOfRange);
 					break;
 				}
+				
 				Create_type * t = $$.output.back().data_type;
 				$$.output.back() = *t;
 			}
@@ -678,14 +679,21 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						iter_out++;	
 					}
 					$$.ins.push_back(new Call(f));
-					$$.output.push_back(*f->return_var->type_of_variable);
+					if (f->return_var->type_of_variable->type == TypeVoid)
+						$$.output.clear();
+					else
+						$$.output.push_back(*f->return_var->type_of_variable);
 				}
 				for (size_t i =0; i< $3.temp.size(); i++)
 				{
 					if ($3.temp[i])
 						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+
 				}
-				$$.temp.push_back(true);
+				if (f->return_var->type_of_variable->type!= TypeVoid)
+					$$.temp.push_back(true);
+				else 
+					$$.temp.push_back(false);
 			}
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
@@ -954,8 +962,9 @@ int main(int argc, char ** argv)
 	Robots q(points);
 	int err = yyparse(&q);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
-	/*	q.actualRobot->output(&q.actualRobot->defined);
-		for (int i =0; i<q.actualRobot->instructions.size(); i++)
+		q.actualRobot->output(&q.actualRobot->defined);
+		getc(stdin);
+		/*for (int i =0; i<q.actualRobot->instructions.size(); i++)
 		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
 		q.actualRobot->save_to_xml();
 		std::cout << "haho!" << std::endl;
