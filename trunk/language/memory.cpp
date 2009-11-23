@@ -23,6 +23,10 @@ Variable * Memory::next_id(size_t ID)
 		}
 	}
 	int id = rand()%memory_size;
+/*	for (size_t i =0; i< memory_size; i++)
+	{
+		std::cout << memory[i]->ID<< " ";
+	}*/
 	std::cout << "Assignujem nahodne" << id << std::endl;getc(stdin);
 	return memory[id];
 }
