@@ -498,12 +498,20 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			/* Check for types compatibility */
 			if (($2.output.back().type == TypeInteger) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeReal))
 			{
+				if ($2.temp.back())
+				{
+					$$.push_back(new InstructionRemoveTemp());
+				}
 				$2.output.back() = *program->actualRobot->find_type(TypeReal);
 				$$.push_back(new InstructionConversionToReal());
 				$2.temp.back() = true;
 			}
 			else if (($2.output.back().type == TypeReal) && (program->actualRobot->core->nested_function->return_var->type_of_variable->type == TypeInteger))
 			{
+				if ($2.temp.back())
+				{
+					$$.push_back(new InstructionRemoveTemp());
+				}
 				$2.output.back() = *program->actualRobot->find_type(TypeInteger);
 				$$.push_back(new InstructionConversionToInt());
 				$2.temp.back() = true;
@@ -559,11 +567,19 @@ assign: variable TOKEN_ASSIGN expression
 	{
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
 		{
+			if ($3.temp.back())
+			{
+				$$.push_back(new InstructionRemoveTemp());
+			}
 			$3.ins.push_back(new InstructionConversionToInt());
 			$3.temp.back() = true;
 		}
 		else if	(($1.output.back().type == TypeReal)&&($3.output.back().type == TypeInteger))
 		{
+			if ($3.temp.back())
+			{
+				$$.push_back(new InstructionRemoveTemp());
+			}
 			$3.ins.push_back(new InstructionConversionToReal());
 			$3.temp.back() = true;
 		}
@@ -662,12 +678,22 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						if (($3.output[iter_out].type == TypeReal)
 								&&(f->parameters[iter_out].node->type_of_variable->type == TypeInteger))
 						{
+							if ($3.temp.back())
+							{
+								$$.ins.push_back(new InstructionRemoveTemp());
+							}
 							$$.ins.push_back(new InstructionConversionToInt());
+							$3.temp.back() = true;
 							$3.output[iter_out] = *program->actualRobot->find_type(TypeInteger);
 						}
 						if (($3.output[iter_out].type == TypeInteger)
 								&&(f->parameters[iter_out].node->type_of_variable->type == TypeReal))
 						{
+							if ($3.temp.back())
+							{
+								$$.ins.push_back(new InstructionRemoveTemp());
+							}
+							$3.temp.back() = true;
 							$$.ins.push_back(new InstructionConversionToReal());
 							$3.output[iter_out] = *program->actualRobot->find_type(TypeReal);
 						}
@@ -867,7 +893,7 @@ exps: expression {$$ = $1;$$.ins.push_back(NULL);} //Hack
 		;
 expression_base: unary_var { $$ = $1; }
 		|number{$$ = $1;}
-		|TOKEN_LPAR expression TOKEN_RPAR {$$ = $2;}
+		|TOKEN_LPAR expression_bool TOKEN_RPAR {$$ = $2;}
 		;
 expression_mul:expression_base { $$ = $1; }
 		|expression_mul TOKEN_OPER_MUL expression_base { 
@@ -909,6 +935,10 @@ expression_bool_base: expression { $$ = $1;}
 		{
 			$$.clear();
 			$$.ins = join_instructions($1.ins, $3.ins);
+			if ($1.temp.back())
+				$$.ins.push_back(new InstructionRemoveTemp());
+			if ($3.temp.back())
+				$$.ins.push_back(new InstructionRemoveTemp());
 			Element e = operRel(@2,program->actualRobot,$2,$3.output.back(),$1.output.back());
 			$$.ins = join_instructions($$.ins, e.ins);
 			$$.output = e.output;
@@ -916,11 +946,11 @@ expression_bool_base: expression { $$ = $1;}
 		}
 		;
 expression_bool_or: expression_bool_base {$$ = $1; }
-		| expression_bool_or TOKEN_BOOL_OR TOKEN_LPAR expression_bool TOKEN_RPAR 
+		| expression_bool_or TOKEN_BOOL_OR expression_bool_base
 		{
 			$$.clear();
-			$$.ins = join_instructions($1.ins, $4.ins);
-			Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$4.output.back());
+			$$.ins = join_instructions($1.ins, $3.ins);
+			Element e = operOr(@2,program->actualRobot,$2,$1.output.back(),$3.output.back());
 			$$.output = e.output; //aj tak by tu vzy mal byt integer
 			$$.temp.push_back(true);
 		}
@@ -931,9 +961,29 @@ expression_bool:	expression_bool_or { $$ = $1;}
 			$$.clear();
 			$$.ins = join_instructions($1.ins, $3.ins); 
 			if ($1.output.back().type == TypeReal) 
+			{
+				if ($1.temp.back())
+				{
+					$$.ins.push_back(new InstructionRemoveTemp());
+				}
 				$$.ins.push_back(new InstructionConversionToInt());
-			else if ($$.output.back().type!= TypeInteger) 
+				$$.output.push_back(Create_type(TypeInteger));
+			}
+			else if ($1.output.back().type!= TypeInteger) 
 				program->actualRobot->error(@2,Robot::ErrorConversionImpossible); 
+
+			if ($3.output.back().type == TypeReal) 
+			{
+				if ($3.temp.back())
+				{
+					$$.ins.push_back(new InstructionRemoveTemp());
+				}
+				$$.ins.push_back(new InstructionConversionToInt());
+				$$.output.push_back(Create_type(TypeInteger));
+			}
+			else if ($3.output.back().type!= TypeInteger) 
+				program->actualRobot->error(@2,Robot::ErrorConversionImpossible); 
+			$$.ins.push_back(new InstructionAnd);
 			$$.temp.push_back(true);
 		}
 	;
