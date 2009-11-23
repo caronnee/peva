@@ -728,7 +728,9 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 			for (size_t i =0; i< $3.temp.size(); i++)
 			{
 				if ($3.temp[i])
-					$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+					{
+						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+					}
 			}
 			$$.temp.push_back(true);
 		} 
