@@ -272,16 +272,14 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 {
 	Element ee;
 	ee.ins = e.ins; //FIXME pouzivam parameter funcke
-	while (!e.temp.empty())
-	{
-		if (e.temp.back())
-			ee.ins.push_back(new InstructionRemoveTemp());
-		e.temp.pop_back();
-	}
-
-	if ((!ee.ins.empty())&&(ee.ins.back() == NULL)) //aktualne moze mat len jedno output -> FIXME aj pre viacere
+	if ((!ee.ins.empty())&&(ee.ins.back() == NULL)) //aktualne moze mat len jedno output -> FIXME aj pre viacere, maze NULLy
 	{
 		ee.ins.pop_back();
+	}
+	for (size_t i =0; i< e.temp.size(); i++)
+	{
+		if (e.temp[i])
+			ee.ins.push_back(new InstructionRemoveTemp());
 	}
 	switch(feat)
 	{
