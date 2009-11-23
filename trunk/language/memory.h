@@ -53,7 +53,7 @@ private:
 		  size_t ID);
 public:
 	/* class constructor */
-	Memory( int size = 400 );
+	Memory( int size = 50 );
 
 	/* returns variable added in depth d */
 	void assign(Node *n ,size_t depth);
