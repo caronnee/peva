@@ -1154,9 +1154,9 @@ int InstructionEndBlock::execute(Core * c)
 InstructionEndBlock::~InstructionEndBlock()
 {}
 //-------------------------ROBOT ACTIONS-------------------------
-InstructionSee::InstructionSee(Node * n) //uzol ktory sa ma naplnit viditelnymi objektami
+InstructionSee::InstructionSee() //uzol ktory sa ma naplnit viditelnymi objektami
 {
-	node = n;
+	node = NULL;
 	name_ = "InstructionSee";
 }
 int InstructionSee::execute(Core *c) //	ziadne dlasie parametre

@@ -678,22 +678,22 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						if (($3.output[iter_out].type == TypeReal)
 								&&(f->parameters[iter_out].node->type_of_variable->type == TypeInteger))
 						{
-							if ($3.temp.back())
+							if ($3.temp[iter_out])
 							{
 								$$.ins.push_back(new InstructionRemoveTemp());
 							}
 							$$.ins.push_back(new InstructionConversionToInt());
-							$3.temp.back() = true;
+							$3.temp[iter_out] = true;
 							$3.output[iter_out] = *program->actualRobot->find_type(TypeInteger);
 						}
 						if (($3.output[iter_out].type == TypeInteger)
 								&&(f->parameters[iter_out].node->type_of_variable->type == TypeReal))
 						{
-							if ($3.temp.back())
+							if ($3.temp[iter_out])
 							{
 								$$.ins.push_back(new InstructionRemoveTemp());
 							}
-							$3.temp.back() = true;
+							$3.temp[iter_out] = true;
 							$$.ins.push_back(new InstructionConversionToReal());
 							$3.output[iter_out] = *program->actualRobot->find_type(TypeReal);
 						}
@@ -724,14 +724,8 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 		}
 		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
 		{
+			$$.clear();
 			$$ = feature(@1,program->actualRobot, $1, $3);
-			for (size_t i =0; i< $3.temp.size(); i++)
-			{
-				if ($3.temp[i])
-					{
-						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
-					}
-			}
 			$$.temp.push_back(true);
 		} 
 		;
@@ -744,6 +738,7 @@ call_parameters: expression
 		| /* ziadny parameter */ { $$.clear(); }
 		|call_parameters TOKEN_COMMA expression 
 		{
+			$$.clear();
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output, TODO zmenit
 			$$.ins = join_instructions($1.ins,$3.ins);
 			$$.output = $1.output;
@@ -811,7 +806,7 @@ unary_var: variable {$$ = $1;}
 			else if ($$.output.back() == TypeInteger) 
 				$$.ins.push_back(new InstructionPlusPlusInteger());
 			else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);
-			$$.temp.push_back(false);
+			$$.temp.push_back($1.temp.back());
 		} 
 		|variable TOKEN_MINUSMINUS 
 		{
@@ -821,7 +816,7 @@ unary_var: variable {$$ = $1;}
 			else if ($$.output.back() == TypeInteger) 
 				$$.ins.push_back(new InstructionMinusMinusInteger());
 			else program->actualRobot->error(@2,Robot::ErrorOperationNotSupported);
-			$$.temp.push_back(false);
+			$$.temp.push_back($1.temp.back());
 		}
 		;
 variable: TOKEN_IDENTIFIER 

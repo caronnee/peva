@@ -279,7 +279,9 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	for (size_t i =0; i< e.temp.size(); i++)
 	{
 		if (e.temp[i])
+		{
 			ee.ins.push_back(new InstructionRemoveTemp());
+		}
 	}
 	switch(feat)
 	{
@@ -321,8 +323,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 		case FeatureSee:
 			if (e.output.size() == 0)
 			{
-				bool ok;
-				ee.ins.push_back( new InstructionSee(r->find_var("seen", ok)));
+				ee.ins.push_back( new InstructionSee());
 			}
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
@@ -368,6 +369,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			if (e.output.back() == *r->find_type(TypeReal))
 			{
 				ee.ins.push_back(new InstructionConversionToInt());
+				ee.ins.push_back(new InstructionRemoveTemp());
 				e.output.back() = *r->find_type(TypeInteger);
 			}
 			if (e.output.back() == *r->find_type(TypeInteger))
@@ -397,8 +399,8 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 					if (e.output.back() == *r->find_type(TypeReal))
 					{	
 						ee.ins.push_back(new InstructionConversionToInt());
+						ee.ins.push_back(new InstructionRemoveTemp());
 						e.output.back() = *r->find_type(TypeInteger); 
-						e.temp.back() = true;
 					}
 					if (e.output.back() == *r->find_type(TypeInteger))
 					{
