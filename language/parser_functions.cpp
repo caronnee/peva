@@ -267,11 +267,18 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 	}
 	e.output.push_back(Create_type(TypeInteger));
 	return e;
-}
+}//TODO rozdelit na tie, co vyzaduju object a tie, co vyzaduju integer
 Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 {
 	Element ee;
-	ee.ins = e.ins;
+	ee.ins = e.ins; //FIXME pouzivam parameter funcke
+	while (!e.temp.empty())
+	{
+		if (e.temp.back())
+			ee.ins.push_back(new InstructionRemoveTemp());
+		e.temp.pop_back();
+	}
+
 	if ((!ee.ins.empty())&&(ee.ins.back() == NULL)) //aktualne moze mat len jedno output -> FIXME aj pre viacere
 	{
 		ee.ins.pop_back();
@@ -331,8 +338,11 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeObject));
 			break;
 		case FeatureTurn:
-			if (e.output.size() == 1) 
+			if (e.output.size() == 1)
+			{
+				//TODO conversion int
 				ee.ins.push_back( new InstructionTurn());
+			}
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
