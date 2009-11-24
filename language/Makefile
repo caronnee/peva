@@ -4,9 +4,12 @@ XML=`xml2-config --cflags`
 
 all:bparser 
 
-bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o functions.o targets.o core.o position.o parser_classes.o typeContainer.o
+bparser: bison.o help.o instructions.o memory.o node.o biflex.o parser.o bot.o types.o  tree.o variable.o functions.o targets.o core.o position.o parser_classes.o typeContainer.o language.o
 	$(CXX) $(LDFLAGS) *.o -o bparser
 
+language.o:  language.cpp bison.hpp robot.h
+	${CXX} ${CPPFLAGS} ${CFLAGS} ${XML} -o $@ -c language.cpp
+	
 typeContainer.o: typeContainer.h typeContainer.cpp
 	${CXX} ${CPPFLAGS} ${XML} ${CFLAGS} -o $@ -c typeContainer.cpp
 
