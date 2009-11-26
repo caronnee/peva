@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Machine>
+  <f>
+    <InstructionBegin/>
+    <InstructionCreate>f#t</InstructionCreate>
+    <InstructionCreate>f#b</InstructionCreate>
+    <InstructionEndBlock/>
+    <InstructionRestore/>
+  </f>
+  <InstructionCreate>left</InstructionCreate>
+  <InstructionCreate>right</InstructionCreate>
+  <main>
+    <InstructionBegin/>
+    <InstructionCreate>main#a</InstructionCreate>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>0</TypeInteger>
+    </InstructionLoad>
+    <InstructionStore/>
+    <InstructionMustJump>
+      <JumpCount>7</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoadGlobal>left</InstructionLoadGlobal>
+    <InstructionStore/>
+    <InstructionEndBlock/>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionPlusPlus/>
+    <InstructionLoadLocal>main#a</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>10</TypeInteger>
+    </InstructionLoad>
+    <InstructionLt/>
+    <InstructionJump>
+      <yes>-10</yes>
+      <no>1</no>
+    </InstructionJump>
+    <InstructionEndBlock/>
+    <InstructionMustJump>
+      <JumpCount>-18</JumpCount>
+    </InstructionMustJump>
+  </main>
+</Machine>

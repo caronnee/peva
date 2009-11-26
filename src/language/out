@@ -1,0 +1,2251 @@
+make
+make[1]: Entering directory `/home/peva/codewars/trunk/language'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/peva/codewars/trunk/language'
+valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes --num-callers=20 --track-fds=yes ./bparser vstup
+==3693== Memcheck, a memory error detector
+==3693== Copyright (C) 2002-2009, and GNU GPL'd, by Julian Seward et al.
+==3693== Using Valgrind-3.5.0-Debian and LibVEX; rerun with -h for copyright info
+==3693== Command: ./bparser vstup
+==3693== 
+--3693-- Valgrind options:
+--3693--    --suppressions=/usr/lib/valgrind/debian-libc6-dbg.supp
+--3693--    -v
+--3693--    --tool=memcheck
+--3693--    --leak-check=yes
+--3693--    --show-reachable=yes
+--3693--    --track-origins=yes
+--3693--    --num-callers=20
+--3693--    --track-fds=yes
+--3693-- Contents of /proc/version:
+--3693--   Linux version 2.6.31-14-generic (buildd@rothera) (gcc version 4.4.1 (Ubuntu 4.4.1-4ubuntu8) ) #48-Ubuntu SMP Fri Oct 16 14:04:26 UTC 2009
+--3693-- Arch and hwcaps: X86, x86-sse1-sse2
+--3693-- Page sizes: currently 4096, max supported 4096
+--3693-- Valgrind library directory: /usr/lib/valgrind
+--3693-- Reading syms from /lib/ld-2.10.1.so (0x4000000)
+--3693-- Reading debug info from /lib/ld-2.10.1.so ..
+--3693-- .. CRC mismatch (computed 87a7f164 wanted cece0b9f)
+--3693-- Reading debug info from /usr/lib/debug/lib/ld-2.10.1.so ..
+--3693-- Reading syms from /home/peva/codewars/trunk/language/bparser (0x8048000)
+--3693-- Reading syms from /usr/lib/valgrind/memcheck-x86-linux (0x38000000)
+--3693--    object doesn't have a dynamic symbol table
+--3693-- Reading suppressions file: /usr/lib/valgrind/debian-libc6-dbg.supp
+--3693-- Reading suppressions file: /usr/lib/valgrind/default.supp
+--3693-- REDIR: 0x4015ed0 (index) redirected to 0x3803e013 (vgPlain_x86_linux_REDIR_FOR_index)
+--3693-- Reading syms from /usr/lib/valgrind/vgpreload_core-x86-linux.so (0x401f000)
+--3693-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so (0x4022000)
+==3693== WARNING: new redirection conflicts with existing -- ignoring it
+--3693--     new: 0x04015ed0 (index               ) R-> 0x040258c0 index
+--3693-- REDIR: 0x4016080 (strlen) redirected to 0x4025bb0 (strlen)
+--3693-- Reading syms from /usr/lib/libxml2.so.2.7.5 (0x403b000)
+--3693-- Reading debug info from /usr/lib/libxml2.so.2.7.5 ..
+--3693-- .. CRC mismatch (computed da26728d wanted 301a9288)
+--3693--    object doesn't have a symbol table
+--3693-- Reading syms from /usr/lib/libstdc++.so.6.0.13 (0x4164000)
+--3693-- Reading debug info from /usr/lib/libstdc++.so.6.0.13 ..
+--3693-- .. CRC mismatch (computed 87ee00d3 wanted e88f2d04)
+--3693--    object doesn't have a symbol table
+--3693-- Reading syms from /lib/tls/i686/cmov/libm-2.10.1.so (0x4257000)
+--3693-- Reading debug info from /lib/tls/i686/cmov/libm-2.10.1.so ..
+--3693-- .. CRC mismatch (computed 7e5d19b7 wanted c31079fc)
+--3693-- Reading debug info from /usr/lib/debug/lib/tls/i686/cmov/libm-2.10.1.so ..
+--3693-- Reading syms from /lib/libgcc_s.so.1 (0x427d000)
+--3693-- Reading debug info from /lib/libgcc_s.so.1 ..
+--3693-- .. CRC mismatch (computed 7937395a wanted eb9394b3)
+--3693--    object doesn't have a symbol table
+--3693-- Reading syms from /lib/tls/i686/cmov/libc-2.10.1.so (0x429b000)
+--3693-- Reading debug info from /lib/tls/i686/cmov/libc-2.10.1.so ..
+--3693-- .. CRC mismatch (computed 74ff2163 wanted e27b476b)
+--3693-- Reading debug info from /usr/lib/debug/lib/tls/i686/cmov/libc-2.10.1.so ..
+--3693-- Reading syms from /lib/tls/i686/cmov/libdl-2.10.1.so (0x43df000)
+--3693-- Reading debug info from /lib/tls/i686/cmov/libdl-2.10.1.so ..
+--3693-- .. CRC mismatch (computed f2aaa5ba wanted 04923e38)
+--3693-- Reading debug info from /usr/lib/debug/lib/tls/i686/cmov/libdl-2.10.1.so ..
+--3693-- Reading syms from /lib/libz.so.1.2.3.3 (0x43e3000)
+--3693-- Reading debug info from /lib/libz.so.1.2.3.3 ..
+--3693-- .. CRC mismatch (computed fa87372a wanted f6426980)
+--3693--    object doesn't have a symbol table
+--3693-- REDIR: 0x430e2c0 (rindex) redirected to 0x40257d0 (rindex)
+--3693-- REDIR: 0x430df10 (strlen) redirected to 0x4025b90 (strlen)
+--3693-- REDIR: 0x430a810 (malloc) redirected to 0x4024b97 (malloc)
+--3693-- REDIR: 0x421eb90 (operator new(unsigned int)) redirected to 0x402530b (operator new(unsigned int))
+--3693-- REDIR: 0x430ffc0 (memcpy) redirected to 0x4026010 (memcpy)
+--3693-- REDIR: 0x430fad0 (memset) redirected to 0x4026b60 (memset)
+--3693-- REDIR: 0x430fa60 (memmove) redirected to 0x4026bd0 (memmove)
+--3693-- REDIR: 0x421c6d0 (operator delete(void*)) redirected to 0x40244c8 (operator delete(void*))
+Creating new robot
+--3693-- REDIR: 0x421ecd0 (operator new[](unsigned int)) redirected to 0x4024f9f (operator new[](unsigned int))
+pridavam meno:true typu 1
+--3693-- REDIR: 0x430f5d0 (memchr) redirected to 0x4025fd0 (memchr)
+Assignujem 0
+pridavam meno:false typu 1
+Assignujem 1
+pridavam meno:NULL typu 3
+--3693-- REDIR: 0x430f770 (bcmp) redirected to 0x4026820 (bcmp)
+Assignujem 2
+pridavam meno:this typu 3
+Assignujem 3
+pridavam meno:seen typu 5
+New robot created
+setting health to:100
+setting Attack x to:33
+setting SEE x to:8
+setting SEE y to:4
+setting SEE to:56
+setting defense to 22
+--3693-- REDIR: 0x430fb30 (mempcpy) redirected to 0x4026ca0 (mempcpy)
+setting Missille attack to 50
+setting Missille health to:20
+pridavam meno:i typu 1
+pridavam meno:a typu 5
+pridavam meno:f# typu 2
+InstructionPlusInteger
+hlbka: 1
+pridavam meno: typu 8
+==3693== Invalid read of size 4
+==3693==    at 0x804CFB2: std::_Bit_reference::operator=(bool) (stl_bvector.h:84)
+==3693==    by 0x804CB78: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:403)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  Address 0x443a48c is 4 bytes before a block of size 4 alloc'd
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804FF83: __gnu_cxx::new_allocator<unsigned long>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x804F821: std::_Bvector_base<std::allocator<bool> >::_M_allocate(unsigned int) (stl_bvector.h:438)
+==3693==    by 0x805ED06: std::vector<bool, std::allocator<bool> >::_M_initialize(unsigned int) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805D656: std::vector<bool, std::allocator<bool> >::vector(std::vector<bool, std::allocator<bool> > const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805BB99: Element::Element(Element const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805757B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== Invalid write of size 4
+==3693==    at 0x804CFBC: std::_Bit_reference::operator=(bool) (stl_bvector.h:84)
+==3693==    by 0x804CB78: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:403)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  Address 0x443a48c is 4 bytes before a block of size 4 alloc'd
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804FF83: __gnu_cxx::new_allocator<unsigned long>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x804F821: std::_Bvector_base<std::allocator<bool> >::_M_allocate(unsigned int) (stl_bvector.h:438)
+==3693==    by 0x805ED06: std::vector<bool, std::allocator<bool> >::_M_initialize(unsigned int) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805D656: std::vector<bool, std::allocator<bool> >::vector(std::vector<bool, std::allocator<bool> > const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805BB99: Element::Element(Element const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805757B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+0InstructionBegin,..	1InstructionLoadLocal,..	1!
+2InstructionLoad,..	2!
+3InstructionLoad,..	3!
+4InstructionLoad,..	4!
+5InstructionMultiplyInteger,..	5!
+6InstructionRemoveTemp,..	6!
+7InstructionPlusInteger,..	7!
+8InstructionLoadGlobal,..	8!
+9InstructionLoadGlobal,..	9!
+10InstructionMultiplyInteger,..	10!
+11InstructionRemoveTemp,..	11!
+12InstructionRemoveTemp,..	12!
+13InstructionMinusInteger,..	13!
+14InstructionRemoveTemp,..	14!
+15InstructionConversionToReal,..	15!
+16InstructionStore,..	16!
+17InstructionRemoveTemp,..	17!
+18InstructionLoadLocal,..	18!
+19InstructionReturn,..	19!
+20InstructionEndBlock,..	21InstructionRestore,..	21!
+22InstructionCreate,..	22!
+23InstructionLoadLocal,..	23!
+24InstructionLoad,..	24!
+25InstructionStoreInteger,..	25!
+26InstructionCreate,..	26!
+27InstructionLoadLocal,..	27!
+28InstructionDuplicate,..	28!
+29InstructionDuplicate,..	29!
+30InstructionDuplicate,..	30!
+31InstructionDuplicate,..	31!
+32InstructionDuplicate,..	32!
+33InstructionDuplicate,..	33!
+34InstructionLoad,..	34!
+35InstructionLoad,..	35!
+36InstructionLoad,..	36!
+37InstructionStoreInteger,..	37!
+38InstructionLoad,..	38!
+39InstructionLoad,..	39!
+40InstructionLoad,..	40!
+41InstructionStoreInteger,..	41!
+42InstructionLoad,..	42!
+43InstructionLoad,..	43!
+44InstructionLoad,..	44!
+45InstructionStoreInteger,..	45!
+46InstructionLoad,..	46!
+47InstructionLoad,..	47!
+48InstructionLoad,..	48!
+49InstructionStoreInteger,..	49!
+50InstructionLoad,..	50!
+51InstructionLoad,..	51!
+52InstructionLoad,..	52!
+53InstructionStoreInteger,..	53!
+54InstructionLoad,..	54!
+55InstructionLoad,..	55!
+56InstructionLoad,..	56!
+57InstructionStoreInteger,..	57!
+58InstructionLoad,..	58!
+59InstructionLoad,..	59!
+60InstructionLoad,..	60!
+61InstructionStoreInteger,..	61!
+62InstructionBegin,..	63InstructionMustJump,..	63!
+64InstructionBegin,..	64,3.InstructionBegin
+65Call,..	65!
+Null instruction, something forgotten?67InstructionRemoveTemp,..	67!
+68InstructionConversionToInt,..	68!
+69InstructionStep,..	69!
+70InstructionRemoveTemp,..	70!
+71InstructionPop,..	71!
+72InstructionRemoveTemp,..	72!
+73InstructionEndBlock,..	73,4.0
+74InstructionLoadGlobal,..	74!
+75InstructionJump,..	75!
+76InstructionEndBlock,..	-------------------------------------END---------------------------------------------------------------
+prvok s menom:true
+prvok s menom:false
+prvok s menom:NULL
+prvok s menom:this
+prvok s menom:seen
+prvok s menom:i
+prvok s menom:a
+prvok s menom:f#
+prvok s menom:
+END 
+Zacinam na:22
+Zapamatovane mena:
+f
+main
+==3693== Invalid read of size 4
+==3693==    at 0x80673E8: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==3693== 
+==3693== 
+==3693== Process terminating with default action of signal 11 (SIGSEGV)
+==3693==  Access not within mapped region at address 0x0
+==3693==    at 0x80673E8: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  If you believe this happened as a result of a stack
+==3693==  overflow in your program's main thread (unlikely but
+==3693==  possible), you can try to increase the size of the
+==3693==  main thread stack using the --main-stacksize= flag.
+==3693==  The main thread stack size used in this run was 16777216.
+--3693-- REDIR: 0x430a730 (free) redirected to 0x40247b1 (free)
+==3693== 
+==3693== FILE DESCRIPTORS: 4 open at exit.
+==3693== Open file descriptor 3: vstup
+==3693==    at 0x4357843: __open_nocancel (in /lib/tls/i686/cmov/libc-2.10.1.so)
+==3693==    by 0x4302B17: _IO_file_fopen@@GLIBC_2.1 (fileops.c:335)
+==3693==    by 0x42F6E4C: __fopen_internal (iofopen.c:93)
+==3693==    by 0x42F6EAB: fopen@@GLIBC_2.1 (iofopen.c:107)
+==3693==    by 0x805B1EC: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== Open file descriptor 2: /home/peva/codewars/trunk/language/out
+==3693==    <inherited from parent>
+==3693== 
+==3693== Open file descriptor 1: /home/peva/codewars/trunk/language/out
+==3693==    <inherited from parent>
+==3693== 
+==3693== Open file descriptor 0: /dev/pts/5
+==3693==    <inherited from parent>
+==3693== 
+==3693== 
+==3693== HEAP SUMMARY:
+==3693==     in use at exit: 37,719 bytes in 552 blocks
+==3693==   total heap usage: 2,071 allocs, 1,519 frees, 196,900 bytes allocated
+==3693== 
+==3693== Searching for pointers to 552 not-freed blocks
+==3693== Checked 145,080 bytes
+==3693== 
+==3693== 2 bytes in 1 blocks are still reachable in loss record 1 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073CE4: Call::xml_format() (instructions.cpp:388)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 2 bytes in 1 blocks are still reachable in loss record 2 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE60: xmlNewDocText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4080457: ??? (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073D27: Call::xml_format() (instructions.cpp:389)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 3 bytes in 1 blocks are still reachable in loss record 3 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8074139: InstructionMustJump::xml_format() (instructions.cpp:428)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 4 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x8080A99: yyalloc(unsigned int) (parser.cpp:10498)
+==3693==    by 0x8080669: yyensure_buffer_stack() (parser.cpp:10199)
+==3693==    by 0x807ED7C: yylex(Lval*, unsigned int*, Robots*) (parser.cpp:9061)
+==3693==    by 0x805121B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 5 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065CE0: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 6 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065D8C: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 7 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8070E05: __gnu_cxx::new_allocator<Variable*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x8070BF3: std::_Vector_base<Variable*, std::allocator<Variable*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x80705CC: std::vector<Variable*, std::allocator<Variable*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Variable**, std::vector<Variable*, std::allocator<Variable*> > >, Variable* const&) (vector.tcc:322)
+==3693==    by 0x806FEA0: std::vector<Variable*, std::allocator<Variable*> >::push_back(Variable* const&) (stl_vector.h:741)
+==3693==    by 0x807BDDF: Memory::assign(Node*, unsigned int) (memory.cpp:47)
+==3693==    by 0x80662C7: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 8 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8070E05: __gnu_cxx::new_allocator<Variable*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x8070BF3: std::_Vector_base<Variable*, std::allocator<Variable*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x80705CC: std::vector<Variable*, std::allocator<Variable*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Variable**, std::vector<Variable*, std::allocator<Variable*> > >, Variable* const&) (vector.tcc:322)
+==3693==    by 0x806FEA0: std::vector<Variable*, std::allocator<Variable*> >::push_back(Variable* const&) (stl_vector.h:741)
+==3693==    by 0x807BDDF: Memory::assign(Node*, unsigned int) (memory.cpp:47)
+==3693==    by 0x80663B3: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 9 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8070E05: __gnu_cxx::new_allocator<Variable*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x8070BF3: std::_Vector_base<Variable*, std::allocator<Variable*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x80705CC: std::vector<Variable*, std::allocator<Variable*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Variable**, std::vector<Variable*, std::allocator<Variable*> > >, Variable* const&) (vector.tcc:322)
+==3693==    by 0x806FEA0: std::vector<Variable*, std::allocator<Variable*> >::push_back(Variable* const&) (stl_vector.h:741)
+==3693==    by 0x807BDDF: Memory::assign(Node*, unsigned int) (memory.cpp:47)
+==3693==    by 0x806649F: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 10 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8070E05: __gnu_cxx::new_allocator<Variable*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x8070BF3: std::_Vector_base<Variable*, std::allocator<Variable*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x80705CC: std::vector<Variable*, std::allocator<Variable*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Variable**, std::vector<Variable*, std::allocator<Variable*> > >, Variable* const&) (vector.tcc:322)
+==3693==    by 0x806FEA0: std::vector<Variable*, std::allocator<Variable*> >::push_back(Variable* const&) (stl_vector.h:741)
+==3693==    by 0x807BDDF: Memory::assign(Node*, unsigned int) (memory.cpp:47)
+==3693==    by 0x806658D: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 11 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80620D7: __gnu_cxx::new_allocator<Robot*>::allocate(unsigned int, void const*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8060BCF: std::_Vector_base<Robot*, std::allocator<Robot*> >::_M_allocate(unsigned int) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805EE90: std::vector<Robot*, std::allocator<Robot*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Robot**, std::vector<Robot*, std::allocator<Robot*> > >, Robot* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805D07E: std::vector<Robot*, std::allocator<Robot*> >::push_back(Robot* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051465: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 12 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D400D: xmlNewMutex (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x408EBC6: xmlInitMemory (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x406531D: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 1 blocks are still reachable in loss record 13 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407E1BD: xmlNewDoc (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8067227: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 2 blocks are still reachable in loss record 14 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807217B: InstructionLoadGlobal::xml_format() (instructions.cpp:126)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 4 bytes in 2 blocks are still reachable in loss record 15 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071A6B: InstructionCreate::xml_format() (instructions.cpp:55)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 5 bytes in 1 blocks are still reachable in loss record 16 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D291: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 5 bytes in 1 blocks are still reachable in loss record 17 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073CCB: Call::xml_format() (instructions.cpp:387)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 6 bytes in 1 blocks are still reachable in loss record 18 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D1B7: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 6 bytes in 1 blocks are still reachable in loss record 19 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D25B: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 7 bytes in 1 blocks are still reachable in loss record 20 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D223: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 7 bytes in 1 blocks are still reachable in loss record 21 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40805E2: ??? (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073D27: Call::xml_format() (instructions.cpp:389)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 7 bytes in 2 blocks are still reachable in loss record 22 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x80673CA: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 8 bytes in 1 blocks are still reachable in loss record 23 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806DBCD: __gnu_cxx::new_allocator<Function*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x806CD1B: std::_Vector_base<Function*, std::allocator<Function*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x806B270: std::vector<Function*, std::allocator<Function*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Function**, std::vector<Function*, std::allocator<Function*> > >, Function* const&) (vector.tcc:322)
+==3693==    by 0x806A404: std::vector<Function*, std::allocator<Function*> >::push_back(Function* const&) (stl_vector.h:741)
+==3693==    by 0x8066FCA: Robot::add_function(std::vector<Instruction*, std::allocator<Instruction*> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805156C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 8 bytes in 1 blocks are still reachable in loss record 24 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8067245: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 9 bytes in 1 blocks are still reachable in loss record 25 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D1D3: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 9 bytes in 1 blocks are still reachable in loss record 26 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D1FB: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 9 bytes in 1 blocks are still reachable in loss record 27 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D271: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 10 bytes in 1 blocks are still reachable in loss record 28 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807410B: InstructionMustJump::xml_format() (instructions.cpp:427)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 10 bytes in 4 blocks are still reachable in loss record 29 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071E15: InstructionLoadLocal::xml_format() (instructions.cpp:92)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 11 bytes in 1 blocks are still reachable in loss record 30 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D8FB: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D245: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 31 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8066CC9: Robot::add(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051D37: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 32 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065CAC: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 33 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x806626A: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 34 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066356: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 35 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066442: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 36 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066530: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 37 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x806660C: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 38 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8067AE3: Robot::addKilled(unsigned int, Operation, unsigned int) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x80515EE: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 39 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806E3F1: __gnu_cxx::new_allocator<std::_List_node<TargetVisit*> >::allocate(unsigned int, void const*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806DC5A: std::_List_base<TargetVisit*, std::allocator<TargetVisit*> >::_M_get_node() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806CE03: std::list<TargetVisit*, std::allocator<TargetVisit*> >::_M_create_node(TargetVisit* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806B507: std::list<TargetVisit*, std::allocator<TargetVisit*> >::_M_insert(std::_List_iterator<TargetVisit*>, TargetVisit* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806A4F5: std::list<TargetVisit*, std::allocator<TargetVisit*> >::push_back(TargetVisit* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8067D2D: Robot::addVisitSeq(std::vector<Position, std::allocator<Position> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805169B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 40 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806E3F1: __gnu_cxx::new_allocator<std::_List_node<TargetVisit*> >::allocate(unsigned int, void const*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806DC5A: std::_List_base<TargetVisit*, std::allocator<TargetVisit*> >::_M_get_node() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806CE03: std::list<TargetVisit*, std::allocator<TargetVisit*> >::_M_create_node(TargetVisit* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806B507: std::list<TargetVisit*, std::allocator<TargetVisit*> >::_M_insert(std::_List_iterator<TargetVisit*>, TargetVisit* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806A4F5: std::list<TargetVisit*, std::allocator<TargetVisit*> >::push_back(TargetVisit* const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8067C9A: Robot::addVisit(std::vector<Position, std::allocator<Position> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051630: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 41 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8066CC9: Robot::add(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805209C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 42 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x80670FE: Robot::enter(std::string, std::vector<Parameter_entry, std::allocator<Parameter_entry> >, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053492: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 12 bytes in 1 blocks are still reachable in loss record 43 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x808434D: __gnu_cxx::new_allocator<std::_List_node<Node*> >::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x80842B2: std::_List_base<Node*, std::allocator<Node*> >::_M_get_node() (stl_list.h:316)
+==3693==    by 0x808414B: std::list<Node*, std::allocator<Node*> >::_M_create_node(Node* const&) (stl_list.h:461)
+==3693==    by 0x8083E27: std::list<Node*, std::allocator<Node*> >::_M_insert(std::_List_iterator<Node*>, Node* const&) (stl_list.h:1407)
+==3693==    by 0x808384F: std::list<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_list.h:920)
+==3693==    by 0x80831CA: Tree::add(std::string, Create_type*) (tree.cpp:154)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x80670FE: Robot::enter(std::string, std::vector<Parameter_entry, std::allocator<Parameter_entry> >, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053354: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 13 bytes in 1 blocks are possibly lost in loss record 44 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80671F5: Robot::leave() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053B29: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 14 bytes in 1 blocks are possibly lost in loss record 45 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB0A7: std::string::_Rep::_M_clone(std::allocator<char> const&, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FBEDC: std::string::reserve(unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC3AF: std::string::append(std::string const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x806A2C5: std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (basic_string.h:2168)
+==3693==    by 0x8066BC5: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8066CC9: Robot::add(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051D37: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 14 bytes in 1 blocks are possibly lost in loss record 46 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8065FAD: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 14 bytes in 1 blocks are possibly lost in loss record 47 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8066044: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 14 bytes in 1 blocks are possibly lost in loss record 48 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB0A7: std::string::_Rep::_M_clone(std::allocator<char> const&, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FBEDC: std::string::reserve(unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC3AF: std::string::append(std::string const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x806A2C5: std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (basic_string.h:2168)
+==3693==    by 0x8066BC5: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8066CC9: Robot::add(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805209C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 15 bytes in 1 blocks are possibly lost in loss record 49 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB0A7: std::string::_Rep::_M_clone(std::allocator<char> const&, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FBEDC: std::string::reserve(unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC3AF: std::string::append(std::string const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC493: std::string::operator+=(std::string const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x805354A: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 50 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8051D74: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 51 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8051DD0: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 52 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804CE61: get_store_type(unsigned int, Robot*, Create_type) (parser_functions.cpp:429)
+==3693==    by 0x8052001: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 53 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8050271: __gnu_cxx::new_allocator<Record>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x804FB07: std::_Vector_base<Record, std::allocator<Record> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x8085840: std::vector<Record, std::allocator<Record> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Record*, std::vector<Record, std::allocator<Record> > >, Record const&) (vector.tcc:322)
+==3693==    by 0x8085682: std::vector<Record, std::allocator<Record> >::push_back(Record const&) (stl_vector.h:741)
+==3693==    by 0x8085357: Create_type::add(std::string, Create_type*) (types.cpp:81)
+==3693==    by 0x8066074: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 54 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8067C67: Robot::addVisit(std::vector<Position, std::allocator<Position> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051630: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 55 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804CE61: get_store_type(unsigned int, Robot*, Create_type) (parser_functions.cpp:429)
+==3693==    by 0x8052852: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 56 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80520D9: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 57 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8052135: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 58 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804B295: operAdd(int, Robot*, Operation, Create_type, Create_type) (parser_functions.cpp:220)
+==3693==    by 0x8059B64: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 59 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80599F4: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 60 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804B2E5: operAdd(int, Robot*, Operation, Create_type, Create_type) (parser_functions.cpp:223)
+==3693==    by 0x8059B64: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 61 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805532C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 62 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805551B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 63 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80555AC: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 64 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80558E1: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 65 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805596B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 66 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80559BD: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 67 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8067041: Robot::add_function(std::vector<Instruction*, std::allocator<Instruction*> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053AED: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 68 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804B8DC: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:278)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 69 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804CAD1: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:401)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 70 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804CBB7: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:407)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 71 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8057696: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 72 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8055CE7: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16 bytes in 1 blocks are still reachable in loss record 73 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8055D70: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 17 bytes in 1 blocks are possibly lost in loss record 74 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8066237: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 17 bytes in 1 blocks are possibly lost in loss record 75 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8066429: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 17 bytes in 1 blocks are possibly lost in loss record 76 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8066517: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 17 bytes in 1 blocks are possibly lost in loss record 77 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80665F0: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 17 bytes in 1 blocks are possibly lost in loss record 78 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x805332B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 18 bytes in 1 blocks are possibly lost in loss record 79 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x806633D: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 80 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8057392: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 81 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8054F92: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 82 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8054FE8: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 83 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805506D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 84 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D1B7: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 85 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D1D3: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 86 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D1FB: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 87 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D223: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 88 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D245: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 89 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D25B: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 90 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D271: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 91 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D914: xmlNewCharEncodingHandler (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x405D291: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 20 bytes in 1 blocks are still reachable in loss record 92 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x80740F3: InstructionMustJump::xml_format() (instructions.cpp:426)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 21 bytes in 1 blocks are possibly lost in loss record 93 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB340: ??? (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB525: std::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8066171: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 24 bytes in 1 blocks are still reachable in loss record 94 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8061E97: __gnu_cxx::new_allocator<Position>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x8060865: std::_Vector_base<Position, std::allocator<Position> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x805E93B: Position* std::vector<Position, std::allocator<Position> >::_M_allocate_and_copy<__gnu_cxx::__normal_iterator<Position const*, std::vector<Position, std::allocator<Position> > > >(unsigned int, __gnu_cxx::__normal_iterator<Position const*, std::vector<Position, std::allocator<Position> > >, __gnu_cxx::__normal_iterator<Position const*, std::vector<Position, std::allocator<Position> > >) (stl_vector.h:963)
+==3693==    by 0x805CACB: std::vector<Position, std::allocator<Position> >::operator=(std::vector<Position, std::allocator<Position> > const&) (vector.tcc:165)
+==3693==    by 0x80817B8: TargetVisitSequence::TargetVisitSequence(std::vector<Position, std::allocator<Position> >) (targets.cpp:53)
+==3693==    by 0x8067D13: Robot::addVisitSeq(std::vector<Position, std::allocator<Position> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805169B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 24 bytes in 1 blocks are still reachable in loss record 95 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8055A28: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 24 bytes in 1 blocks are still reachable in loss record 96 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80552CB: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 97 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065DB2: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 98 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065E05: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 99 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065E58: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 100 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065EAB: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 101 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065EFE: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 102 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065F51: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 103 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80660DC: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 104 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8067D03: Robot::addVisitSeq(std::vector<Position, std::allocator<Position> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805169B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 105 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80844C7: TypeContainer::find_array_type(unsigned int, Create_type*) (typeContainer.cpp:22)
+==3693==    by 0x8066867: Robot::find_array_type(int, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051B1A: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 106 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805246A: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 107 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80524C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 108 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806710D: Robot::enter(std::string, std::vector<Parameter_entry, std::allocator<Parameter_entry> >, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053492: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 28 bytes in 1 blocks are still reachable in loss record 109 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806710D: Robot::enter(std::string, std::vector<Parameter_entry, std::allocator<Parameter_entry> >, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053354: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 30 bytes in 2 blocks are possibly lost in loss record 110 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x807F46C: yylex(Lval*, unsigned int*, Robots*) (parser.lex:85)
+==3693==    by 0x805121B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 111 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8066CC9: Robot::add(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8051D37: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 112 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806E091: __gnu_cxx::new_allocator<Create_type**>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x806D812: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_M_allocate_map(unsigned int) (stl_deque.h:455)
+==3693==    by 0x806C76E: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_M_initialize_map(unsigned int) (stl_deque.h:500)
+==3693==    by 0x806C93F: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_Deque_base(std::allocator<Create_type*> const&, unsigned int) (stl_deque.h:379)
+==3693==    by 0x806AFB0: std::deque<Create_type*, std::allocator<Create_type*> >::deque(std::deque<Create_type*, std::allocator<Create_type*> > const&) (stl_deque.h:723)
+==3693==    by 0x806A1FF: std::stack<Create_type*, std::deque<Create_type*, std::allocator<Create_type*> > >::stack(std::deque<Create_type*, std::allocator<Create_type*> > const&) (stl_stack.h:127)
+==3693==    by 0x8065C49: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 113 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x807E12D: __gnu_cxx::new_allocator<Variable**>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x807DC3C: std::_Deque_base<Variable*, std::allocator<Variable*> >::_M_allocate_map(unsigned int) (stl_deque.h:455)
+==3693==    by 0x807D63E: std::_Deque_base<Variable*, std::allocator<Variable*> >::_M_initialize_map(unsigned int) (stl_deque.h:500)
+==3693==    by 0x807CC0B: std::_Deque_base<Variable*, std::allocator<Variable*> >::_Deque_base() (stl_deque.h:375)
+==3693==    by 0x807C7A8: std::deque<Variable*, std::allocator<Variable*> >::deque() (stl_deque.h:691)
+==3693==    by 0x807BCA2: Memory::Memory(int) (memory.cpp:30)
+==3693==    by 0x806F3E7: Core::Core(TypeContainer*) (core.cpp:4)
+==3693==    by 0x8065D36: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 114 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806E347: __gnu_cxx::new_allocator<Create_type*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x8084C11: std::_Vector_base<Create_type*, std::allocator<Create_type*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x8084838: std::vector<Create_type*, std::allocator<Create_type*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Create_type**, std::vector<Create_type*, std::allocator<Create_type*> > >, Create_type* const&) (vector.tcc:322)
+==3693==    by 0x80846EA: std::vector<Create_type*, std::allocator<Create_type*> >::push_back(Create_type* const&) (stl_vector.h:741)
+==3693==    by 0x8084549: TypeContainer::add(Create_type*) (typeContainer.cpp:29)
+==3693==    by 0x8065F2E: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 115 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8066198: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 116 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x806626A: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 117 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066356: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 118 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066442: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 119 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066530: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 120 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x806660C: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 121 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8066CC9: Robot::add(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805209C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 122 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x80670FE: Robot::enter(std::string, std::vector<Parameter_entry, std::allocator<Parameter_entry> >, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053492: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 1 blocks are still reachable in loss record 123 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80830C8: Tree::add(std::string, Create_type*) (tree.cpp:135)
+==3693==    by 0x8066BF6: Robot::add(std::string, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x80670FE: Robot::enter(std::string, std::vector<Parameter_entry, std::allocator<Parameter_entry> >, Create_type*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053354: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 2 blocks are still reachable in loss record 124 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804AC8D: operMul(int, Robot*, Operation, Create_type, Create_type) (parser_functions.cpp:161)
+==3693==    by 0x80596B4: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 32 bytes in 2 blocks are still reachable in loss record 125 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8059A7B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 126 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8071898: InstructionCreate::InstructionCreate(Node*) (instructions.cpp:32)
+==3693==    by 0x8051D8A: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 127 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8071C66: InstructionLoadLocal::InstructionLoadLocal(Node*) (instructions.cpp:70)
+==3693==    by 0x8051DE6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 128 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8072437: InstructionLoad::InstructionLoad(int) (instructions.cpp:142)
+==3693==    by 0x805247E: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 129 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x80722BC: InstructionLoad::InstructionLoad() (instructions.cpp:136)
+==3693==    by 0x80524D2: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 130 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8071898: InstructionCreate::InstructionCreate(Node*) (instructions.cpp:32)
+==3693==    by 0x80520EF: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 131 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8071C66: InstructionLoadLocal::InstructionLoadLocal(Node*) (instructions.cpp:70)
+==3693==    by 0x805214B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 132 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8071C66: InstructionLoadLocal::InstructionLoadLocal(Node*) (instructions.cpp:70)
+==3693==    by 0x8055351: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 133 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x80737A4: InstructionStore::InstructionStore() (instructions.cpp:320)
+==3693==    by 0x80558ED: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 134 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8071C66: InstructionLoadLocal::InstructionLoadLocal(Node*) (instructions.cpp:70)
+==3693==    by 0x80559E2: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 135 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8074B3A: InstructionReturn::InstructionReturn(int) (instructions.cpp:523)
+==3693==    by 0x8055A4A: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 136 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8074E42: InstructionRestore::InstructionRestore() (instructions.cpp:551)
+==3693==    by 0x806704D: Robot::add_function(std::vector<Instruction*, std::allocator<Instruction*> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x8053AED: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 137 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8073A08: Call::Call(Function*) (instructions.cpp:344)
+==3693==    by 0x80573A8: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 138 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8079BD0: InstructionStep::InstructionStep() (instructions.cpp:1193)
+==3693==    by 0x804CBC3: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:407)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 139 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8073E66: InstructionPop::InstructionPop() (instructions.cpp:397)
+==3693==    by 0x8055CF3: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 140 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8074000: InstructionMustJump::InstructionMustJump(int) (instructions.cpp:412)
+==3693==    by 0x8054FA2: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 141 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x80793A4: InstructionBegin::InstructionBegin(unsigned int) (instructions.cpp:1127)
+==3693==    by 0x805500C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 142 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8079584: InstructionEndBlock::InstructionEndBlock(unsigned int) (instructions.cpp:1141)
+==3693==    by 0x805507D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 33 bytes in 1 blocks are possibly lost in loss record 143 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x807429E: InstructionJump::InstructionJump(int, int) (instructions.cpp:437)
+==3693==    by 0x80552E3: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 36 bytes in 2 blocks are still reachable in loss record 144 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071A4F: InstructionCreate::xml_format() (instructions.cpp:54)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 36 bytes in 18 blocks are still reachable in loss record 145 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE0B: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807290D: InstructionLoad::xml_format() (instructions.cpp:185)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 40 bytes in 1 blocks are still reachable in loss record 146 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x807247B: InstructionLoad::InstructionLoad(int) (instructions.cpp:145)
+==3693==    by 0x805247E: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 40 bytes in 2 blocks are still reachable in loss record 147 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8053F27: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 40 bytes in 2 blocks are still reachable in loss record 148 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8054077: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 44 bytes in 2 blocks are still reachable in loss record 149 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807215F: InstructionLoadGlobal::xml_format() (instructions.cpp:125)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 48 bytes in 1 blocks are still reachable in loss record 150 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x8080A99: yyalloc(unsigned int) (parser.cpp:10498)
+==3693==    by 0x80802E8: yy_create_buffer(_IO_FILE*, int) (parser.cpp:10037)
+==3693==    by 0x807EDA2: yylex(Lval*, unsigned int*, Robots*) (parser.cpp:9063)
+==3693==    by 0x805121B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 48 bytes in 1 blocks are still reachable in loss record 151 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x807DE07: __gnu_cxx::new_allocator<Memory_record>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x807D923: std::_Vector_base<Memory_record, std::allocator<Memory_record> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x807CE84: std::vector<Memory_record, std::allocator<Memory_record> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Memory_record*, std::vector<Memory_record, std::allocator<Memory_record> > >, Memory_record const&) (vector.tcc:322)
+==3693==    by 0x807C8A8: std::vector<Memory_record, std::allocator<Memory_record> >::push_back(Memory_record const&) (stl_vector.h:741)
+==3693==    by 0x807BDC7: Memory::assign(Node*, unsigned int) (memory.cpp:46)
+==3693==    by 0x806649F: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 48 bytes in 1 blocks are still reachable in loss record 152 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40803E6: ??? (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073D27: Call::xml_format() (instructions.cpp:389)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 48 bytes in 3 blocks are still reachable in loss record 153 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804A2AA: ident_load(unsigned int, Robot*, std::string) (parser_functions.cpp:31)
+==3693==    by 0x8058AC1: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 154 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8073293: InstructionStoreInteger::InstructionStoreInteger() (instructions.cpp:273)
+==3693==    by 0x804CE6D: get_store_type(unsigned int, Robot*, Create_type) (parser_functions.cpp:429)
+==3693==    by 0x8052001: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 155 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8073293: InstructionStoreInteger::InstructionStoreInteger() (instructions.cpp:273)
+==3693==    by 0x804CE6D: get_store_type(unsigned int, Robot*, Create_type) (parser_functions.cpp:429)
+==3693==    by 0x8052852: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 156 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8075823: InstructionPlusInteger::InstructionPlusInteger() (instructions.cpp:647)
+==3693==    by 0x804B2A1: operAdd(int, Robot*, Operation, Create_type, Create_type) (parser_functions.cpp:220)
+==3693==    by 0x8059B64: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 157 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x8059A00: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 158 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8075C83: InstructionMinusInteger::InstructionMinusInteger() (instructions.cpp:681)
+==3693==    by 0x804B2F1: operAdd(int, Robot*, Operation, Create_type, Create_type) (parser_functions.cpp:223)
+==3693==    by 0x8059B64: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 159 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x8055527: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 160 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8072E8F: InstructionConversionToReal::InstructionConversionToReal() (instructions.cpp:234)
+==3693==    by 0x80555B8: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 161 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x8055977: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 162 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x804B8E8: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:278)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 163 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8072C2B: InstructionConversionToInt::InstructionConversionToInt() (instructions.cpp:214)
+==3693==    by 0x804CADD: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:401)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 164 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x80576A2: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 53 bytes in 1 blocks are possibly lost in loss record 165 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x8055D7C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 166 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8067245: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 167 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x80740F3: InstructionMustJump::xml_format() (instructions.cpp:426)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 168 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807410B: InstructionMustJump::xml_format() (instructions.cpp:427)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 169 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8074139: InstructionMustJump::xml_format() (instructions.cpp:428)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 170 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073CCB: Call::xml_format() (instructions.cpp:387)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 171 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073CE4: Call::xml_format() (instructions.cpp:388)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 60 bytes in 1 blocks are still reachable in loss record 172 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DE60: xmlNewDocText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4080457: ??? (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8073D27: Call::xml_format() (instructions.cpp:389)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 64 bytes in 1 blocks are still reachable in loss record 173 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8061AFB: __gnu_cxx::new_allocator<Node*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x806041D: std::_Vector_base<Node*, std::allocator<Node*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x8083B44: std::vector<Node*, std::allocator<Node*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&) (vector.tcc:322)
+==3693==    by 0x80836E6: std::vector<Node*, std::allocator<Node*> >::push_back(Node* const&) (stl_vector.h:741)
+==3693==    by 0x808255F: Tree::new_block() (tree.cpp:26)
+==3693==    by 0x8053EE5: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 66 bytes in 2 blocks are possibly lost in loss record 174 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x80793A4: InstructionBegin::InstructionBegin(unsigned int) (instructions.cpp:1127)
+==3693==    by 0x8053F3B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 66 bytes in 2 blocks are possibly lost in loss record 175 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8079584: InstructionEndBlock::InstructionEndBlock(unsigned int) (instructions.cpp:1141)
+==3693==    by 0x805408B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 77 bytes in 1 blocks are possibly lost in loss record 176 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FB0A7: std::string::_Rep::_M_clone(std::allocator<char> const&, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FBEDC: std::string::reserve(unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC3AF: std::string::append(std::string const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x806A2C5: std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (basic_string.h:2168)
+==3693==    by 0x8082CC6: quicksort(std::string) (tree.cpp:94)
+==3693==    by 0x80823C6: Tree::reset() (tree.cpp:7)
+==3693==    by 0x8082718: Tree::Tree() (tree.cpp:43)
+==3693==    by 0x8065C06: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 84 bytes in 4 blocks are still reachable in loss record 177 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071DF9: InstructionLoadLocal::xml_format() (instructions.cpp:91)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 96 bytes in 1 blocks are still reachable in loss record 178 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407E196: xmlNewDoc (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8067227: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 96 bytes in 6 blocks are still reachable in loss record 179 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804CE61: get_store_type(unsigned int, Robot*, Create_type) (parser_functions.cpp:429)
+==3693==    by 0x8052B8D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 96 bytes in 6 blocks are still reachable in loss record 180 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805219D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 106 bytes in 2 blocks are possibly lost in loss record 181 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8076079: InstructionMultiplyInteger::InstructionMultiplyInteger() (instructions.cpp:713)
+==3693==    by 0x804AC99: operMul(int, Robot*, Operation, Create_type, Create_type) (parser_functions.cpp:161)
+==3693==    by 0x80596B4: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 106 bytes in 2 blocks are possibly lost in loss record 182 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8074FED: InstructionRemoveTemp::InstructionRemoveTemp() (instructions.cpp:569)
+==3693==    by 0x8059A87: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 120 bytes in 2 blocks are still reachable in loss record 183 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x80673CA: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 120 bytes in 2 blocks are still reachable in loss record 184 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807215F: InstructionLoadGlobal::xml_format() (instructions.cpp:125)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 120 bytes in 2 blocks are still reachable in loss record 185 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807217B: InstructionLoadGlobal::xml_format() (instructions.cpp:126)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 120 bytes in 2 blocks are still reachable in loss record 186 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071A4F: InstructionCreate::xml_format() (instructions.cpp:54)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 120 bytes in 2 blocks are still reachable in loss record 187 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071A6B: InstructionCreate::xml_format() (instructions.cpp:55)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 136 bytes in 1 blocks are still reachable in loss record 188 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8065D09: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 159 bytes in 3 blocks are possibly lost in loss record 189 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8072038: InstructionLoadGlobal::InstructionLoadGlobal(Node*) (instructions.cpp:110)
+==3693==    by 0x804A2BD: ident_load(unsigned int, Robot*, std::string) (parser_functions.cpp:31)
+==3693==    by 0x8058AC1: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 168 bytes in 6 blocks are still reachable in loss record 190 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x80528F5: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 168 bytes in 6 blocks are still reachable in loss record 191 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x805295E: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 198 bytes in 6 blocks are possibly lost in loss record 192 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8072437: InstructionLoad::InstructionLoad(int) (instructions.cpp:142)
+==3693==    by 0x8052916: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 198 bytes in 6 blocks are possibly lost in loss record 193 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x80722BC: InstructionLoad::InstructionLoad() (instructions.cpp:136)
+==3693==    by 0x805296A: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 198 bytes in 6 blocks are possibly lost in loss record 194 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x80730C2: InstructionDuplicate::InstructionDuplicate() (instructions.cpp:253)
+==3693==    by 0x80521A9: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 200 bytes in 1 blocks are still reachable in loss record 195 of 217
+==3693==    at 0x4025024: operator new[](unsigned int) (vg_replace_malloc.c:258)
+==3693==    by 0x807BCD6: Memory::Memory(int) (memory.cpp:35)
+==3693==    by 0x806F3E7: Core::Core(TypeContainer*) (core.cpp:4)
+==3693==    by 0x8065D36: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 200 bytes in 1 blocks are still reachable in loss record 196 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x405D14E: xmlInitCharEncodingHandlers (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4065324: xmlInitParser (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x4061856: xmlCheckVersion (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x806721A: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 216 bytes in 18 blocks are still reachable in loss record 197 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x80728DC: InstructionLoad::xml_format() (instructions.cpp:183)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 240 bytes in 4 blocks are still reachable in loss record 198 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071DF9: InstructionLoadLocal::xml_format() (instructions.cpp:91)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 240 bytes in 4 blocks are still reachable in loss record 199 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071E15: InstructionLoadLocal::xml_format() (instructions.cpp:92)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 240 bytes in 6 blocks are still reachable in loss record 200 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x807247B: InstructionLoad::InstructionLoad(int) (instructions.cpp:145)
+==3693==    by 0x8052916: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 308 bytes in 11 blocks are still reachable in loss record 201 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8053E14: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 318 bytes in 6 blocks are possibly lost in loss record 202 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x8073293: InstructionStoreInteger::InstructionStoreInteger() (instructions.cpp:273)
+==3693==    by 0x804CE6D: get_store_type(unsigned int, Robot*, Create_type) (parser_functions.cpp:429)
+==3693==    by 0x8052B8D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 352 bytes in 1 blocks are still reachable in loss record 203 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x42F6DDE: __fopen_internal (iofopen.c:76)
+==3693==    by 0x42F6EAB: fopen@@GLIBC_2.1 (iofopen.c:107)
+==3693==    by 0x805B1EC: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 363 bytes in 11 blocks are possibly lost in loss record 204 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x41FA435: std::string::_Rep::_S_create(unsigned int, unsigned int, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC69F: std::string::_M_mutate(unsigned int, unsigned int, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC839: std::string::_M_replace_safe(unsigned int, unsigned int, char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FC8DD: std::string::assign(char const*, unsigned int) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x41FCA74: std::string::operator=(char const*) (in /usr/lib/libstdc++.so.6.0.13)
+==3693==    by 0x80715AA: Instruction::Instruction() (instructions.cpp:12)
+==3693==    by 0x8072437: InstructionLoad::InstructionLoad(int) (instructions.cpp:142)
+==3693==    by 0x8053E2D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 400 bytes in 25 blocks are still reachable in loss record 205 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8072899: InstructionLoad::xml_format() (instructions.cpp:175)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 440 bytes in 11 blocks are still reachable in loss record 206 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x807247B: InstructionLoad::InstructionLoad(int) (instructions.cpp:145)
+==3693==    by 0x8053E2D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 512 bytes in 1 blocks are still reachable in loss record 207 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x806E347: __gnu_cxx::new_allocator<Create_type*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x806DB2C: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_M_allocate_node() (stl_deque.h:444)
+==3693==    by 0x806D862: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_M_create_nodes(Create_type***, Create_type***) (stl_deque.h:538)
+==3693==    by 0x806C7B1: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_M_initialize_map(unsigned int) (stl_deque.h:512)
+==3693==    by 0x806C93F: std::_Deque_base<Create_type*, std::allocator<Create_type*> >::_Deque_base(std::allocator<Create_type*> const&, unsigned int) (stl_deque.h:379)
+==3693==    by 0x806AFB0: std::deque<Create_type*, std::allocator<Create_type*> >::deque(std::deque<Create_type*, std::allocator<Create_type*> > const&) (stl_deque.h:723)
+==3693==    by 0x806A1FF: std::stack<Create_type*, std::deque<Create_type*, std::allocator<Create_type*> > >::stack(std::deque<Create_type*, std::allocator<Create_type*> > const&) (stl_stack.h:127)
+==3693==    by 0x8065C49: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 512 bytes in 1 blocks are still reachable in loss record 208 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8070E05: __gnu_cxx::new_allocator<Variable*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x807D9E4: std::_Deque_base<Variable*, std::allocator<Variable*> >::_M_allocate_node() (stl_deque.h:444)
+==3693==    by 0x807DC8C: std::_Deque_base<Variable*, std::allocator<Variable*> >::_M_create_nodes(Variable***, Variable***) (stl_deque.h:538)
+==3693==    by 0x807D681: std::_Deque_base<Variable*, std::allocator<Variable*> >::_M_initialize_map(unsigned int) (stl_deque.h:512)
+==3693==    by 0x807CC0B: std::_Deque_base<Variable*, std::allocator<Variable*> >::_Deque_base() (stl_deque.h:375)
+==3693==    by 0x807C7A8: std::deque<Variable*, std::allocator<Variable*> >::deque() (stl_deque.h:691)
+==3693==    by 0x807BCA2: Memory::Memory(int) (memory.cpp:30)
+==3693==    by 0x806F3E7: Core::Core(TypeContainer*) (core.cpp:4)
+==3693==    by 0x8065D36: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 512 bytes in 1 blocks are still reachable in loss record 209 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804FC9D: __gnu_cxx::new_allocator<Instruction*>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x804F26F: std::_Vector_base<Instruction*, std::allocator<Instruction*> >::_M_allocate(unsigned int) (stl_vector.h:140)
+==3693==    by 0x804E3DC: std::vector<Instruction*, std::allocator<Instruction*> >::_M_insert_aux(__gnu_cxx::__normal_iterator<Instruction**, std::vector<Instruction*, std::allocator<Instruction*> > >, Instruction* const&) (vector.tcc:322)
+==3693==    by 0x804D866: std::vector<Instruction*, std::allocator<Instruction*> >::push_back(Instruction* const&) (stl_vector.h:741)
+==3693==    by 0x8066FFA: Robot::add_function(std::vector<Instruction*, std::allocator<Instruction*> >) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805156C: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 682 bytes in 31 blocks are still reachable in loss record 210 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x40D74A8: xmlStrndup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x40D758F: xmlStrdup (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x407DFF7: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071685: Instruction::xml_format() (instructions.cpp:20)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 1,080 bytes in 18 blocks are still reachable in loss record 211 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x80728DC: InstructionLoad::xml_format() (instructions.cpp:183)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 1,080 bytes in 18 blocks are still reachable in loss record 212 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DDD8: xmlNewText (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x807290D: InstructionLoad::xml_format() (instructions.cpp:185)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 1,192 bytes in 1 blocks are still reachable in loss record 213 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x8067723: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 1,500 bytes in 25 blocks are still reachable in loss record 214 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8072899: InstructionLoad::xml_format() (instructions.cpp:175)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 1,860 bytes in 31 blocks are still reachable in loss record 215 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x407DFD4: xmlNewNode (in /usr/lib/libxml2.so.2.7.5)
+==3693==    by 0x8071685: Instruction::xml_format() (instructions.cpp:20)
+==3693==    by 0x80673F3: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 2,000 bytes in 50 blocks are still reachable in loss record 216 of 217
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x807BCF3: Memory::Memory(int) (memory.cpp:37)
+==3693==    by 0x806F3E7: Core::Core(TypeContainer*) (core.cpp:4)
+==3693==    by 0x8065D36: Robot::Robot(std::string, GamePoints) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x806776D: Robots::createNew(std::string) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805149D: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 16,386 bytes in 1 blocks are still reachable in loss record 217 of 217
+==3693==    at 0x4024C1C: malloc (vg_replace_malloc.c:195)
+==3693==    by 0x8080A99: yyalloc(unsigned int) (parser.cpp:10498)
+==3693==    by 0x8080317: yy_create_buffer(_IO_FILE*, int) (parser.cpp:10046)
+==3693==    by 0x807EDA2: yylex(Lval*, unsigned int*, Robots*) (parser.cpp:9063)
+==3693==    by 0x805121B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== LEAK SUMMARY:
+==3693==    definitely lost: 0 bytes in 0 blocks
+==3693==    indirectly lost: 0 bytes in 0 blocks
+==3693==      possibly lost: 3,323 bytes in 92 blocks
+==3693==    still reachable: 34,396 bytes in 460 blocks
+==3693==         suppressed: 0 bytes in 0 blocks
+==3693== 
+==3693== ERROR SUMMARY: 58 errors from 58 contexts (suppressed: 25 from 8)
+==3693== 
+==3693== 1 errors in context 1 of 58:
+==3693== Invalid read of size 4
+==3693==    at 0x80673E8: Robot::save_to_xml() (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B359: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==3693== 
+==3693== 
+==3693== 1 errors in context 2 of 58:
+==3693== Invalid write of size 4
+==3693==    at 0x804CFBC: std::_Bit_reference::operator=(bool) (stl_bvector.h:84)
+==3693==    by 0x804CB78: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:403)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  Address 0x443a48c is 4 bytes before a block of size 4 alloc'd
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804FF83: __gnu_cxx::new_allocator<unsigned long>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x804F821: std::_Bvector_base<std::allocator<bool> >::_M_allocate(unsigned int) (stl_bvector.h:438)
+==3693==    by 0x805ED06: std::vector<bool, std::allocator<bool> >::_M_initialize(unsigned int) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805D656: std::vector<bool, std::allocator<bool> >::vector(std::vector<bool, std::allocator<bool> > const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805BB99: Element::Element(Element const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805757B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+==3693== 
+==3693== 1 errors in context 3 of 58:
+==3693== Invalid read of size 4
+==3693==    at 0x804CFB2: std::_Bit_reference::operator=(bool) (stl_bvector.h:84)
+==3693==    by 0x804CB78: feature(int, Robot*, ObjectFeatures, Element) (parser_functions.cpp:403)
+==3693==    by 0x80575C6: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693==  Address 0x443a48c is 4 bytes before a block of size 4 alloc'd
+==3693==    at 0x4025390: operator new(unsigned int) (vg_replace_malloc.c:214)
+==3693==    by 0x804FF83: __gnu_cxx::new_allocator<unsigned long>::allocate(unsigned int, void const*) (new_allocator.h:89)
+==3693==    by 0x804F821: std::_Bvector_base<std::allocator<bool> >::_M_allocate(unsigned int) (stl_bvector.h:438)
+==3693==    by 0x805ED06: std::vector<bool, std::allocator<bool> >::_M_initialize(unsigned int) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805D656: std::vector<bool, std::allocator<bool> >::vector(std::vector<bool, std::allocator<bool> > const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805BB99: Element::Element(Element const&) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805757B: yyparse(Robots*) (in /home/peva/codewars/trunk/language/bparser)
+==3693==    by 0x805B282: main (in /home/peva/codewars/trunk/language/bparser)
+==3693== 
+--3693-- 
+--3693-- used_suppression:     25 dl-hack3-cond-1
+==3693== 
+==3693== ERROR SUMMARY: 58 errors from 58 contexts (suppressed: 25 from 8)
+make: *** [debugMemory] Segmentation fault
