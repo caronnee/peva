@@ -72,6 +72,7 @@ debugGraph:
 	valgrind --tool=cachegrind ./bparser vstup
 
 dep:
+	touch Makefile.dep
 	@if [ ! -d o ]; then echo "Creating compile objects directory"; mkdir o; fi
 	find . -name "*.cpp" |xargs  makedepend -Y -f Makefile.dep  2> /dev/null	
 	rm -f Makefile.dep.bak
