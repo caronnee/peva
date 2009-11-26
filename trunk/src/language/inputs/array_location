@@ -1,0 +1,66 @@
+ROBOT qqq
+{
+	HEALTH = 100
+	ATTACK = 33			
+	SEE_WIDTH = 8
+	SEE_HEIGHT = 4
+	SEE = 56
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
+        ID = 5			
+
+	KILLED < 5
+	VISIT_SEQ( START[3], START[2], [13,18])
+	VISIT( [100,200])
+
+	location[3][6] a;
+	//location l = {100,200};
+/*	location function X(integer x)
+	{
+		location k = {x,x};
+		shoot(k);
+		return k;
+	}*/
+	void function f(location[3] x)
+	{
+		see();
+		for(integer i =0; i<3; i++) 
+		{
+			x[i].x = 0-i;
+			x[i].y = 0-i;
+		}
+		for(integer i =0; i<3; i++) 
+		{
+			shoot(x[i]);
+		}
+		see();
+	}
+	void function ff()
+	{
+		for (integer i =0; i< 10; i++)
+		{
+			step(i);
+		}
+	}
+	main() // komentar
+	{
+		integer numb = 0;
+		for(integer i =0; i<6; i++) 
+		{
+			for(integer j =0; j<3; j++) 
+			{
+				a[i][j].x = numb;
+				a[i][j].y = 0-numb;
+				numb++;
+			}
+		}
+		see();
+		f(a[1]);
+		for(integer z =0; z<3; z++) 
+		{
+			shoot(a[1][z]);
+		}
+
+	}
+}

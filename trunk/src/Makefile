@@ -1,53 +1,79 @@
 CFLAGS=-O0 -g -Wall
-LDFLAGS= `sdl-config --cflags --libs` -lSDL_ttf -lSDL_image `xml2-config --cflags --libs`
+LDFLAGS=`sdl-config --cflags --libs` -lSDL_ttf -lSDL_image `xml2-config --cflags --libs`
+XML=`xml2-config --cflags`
+HEADER_DIR=h/
+OBJECT_DIR=o/
+SRC=cpp/
+lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/parser_functions.o \
+	o/parser.o o/robot.o o/types.o o/tree.o o/variable.o o/functions.o \
+	o/targets.o o/core.o o/position.o o/parser_classes.o o/typeContainer.o \
+	o/body.o o/objects.o
+	
+gOBJECTS=o/help_functions.o o/position.o o/movement.o o/snake.o \
+	o/create_map.o o/graphic.o o/main_menu.o \
+	o/other.o o/map.o o/body.o o/missille.o o/objects.o o/seer.o \
+	o/wall.o
+	
+LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 
-.PHONY: all
+.PHONY:bparse distclean debugMemory debugGraph
 
-all: codewars
+all: dep bparser codewars
 
-distclean: 
-		rm -f codewars *.o codewars.config
+codewars:$(lOBJECTS) $(gOBJECTS) o/main.o
+		g++ $(LDFLAGS) -o $@ $^
 
-codewars: game.o graphic.o objects.o wall.o help.o create.o main_menu.o other.o position.o movement.o snake.o map.o missille.o
-		g++ $(LDFLAGS) -o codewars *.o
+bparser: $(LANGUAGE_OBJECTS)
+	$(CXX) $(LDFLAGS) $(LANGUAGE_OBJECTS) -o bparser
 
-game.o: main.cpp
-		g++ -c $(CFLAGS) -o game.o main.cpp 
+language/h/bison.h:language/cpp/bison.cpp
 
-graphic.o: graphic.h graphic.cpp
-		g++ -c $(CFLAGS) -o graphic.o graphic.cpp 
+language/h/hflex.h:language/cpp/parser.cpp
 
-objects.o: objects.h objects.cpp
-		g++ -c $(CFLAGS) -o objects.o objects.cpp
+language/cpp/parser.cpp:language/parser.lex
+	flex -Cf -b -p -p --header-file=language/$(HEADER_DIR)hflex.h -o $@ $<
 
-wall.o: wall.h wall.cpp
-		g++ -c $(CFLAGS) -o wall.o wall.cpp
+language/cpp/bison.cpp: language/bison.y language/h/hflex.h
+	bison --report=all -d -b bis --defines=language/$(HEADER_DIR)bison.h -o $@ $<
 
-help.o:help_functions.h help_functions.cpp
-		g++ -c $(CFLAGS) -o help.o help_functions.cpp
+o/bison.o: language/cpp/bison.cpp 
+	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
-create.o:create_map.h create_map.cpp
-		g++ -c `xml2-config --cflags` -o create.o create_map.cpp
+o/parser.o: language/cpp/parser.cpp
+	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
-main_menu.o:main_menu.h main_menu.cpp
-		g++ -c $(CFLAGS) -o main_menu.o main_menu.cpp
+o/language.o: language/h/bison.h
 
-other.o:other.h other.cpp
-		g++ -c $(CFLAGS) -o other.o other.cpp
+o/language.o: language/h/hflex.h
 
-position.o: position.h position.cpp
-		g++ -c $(CFLAGS) -o position.o position.cpp
+o/%.o: */cpp/%.cpp
+	@echo "Compiling "
+	@echo $@
+	@echo " from $*..."
+	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
-movement.o: movement.h movement.cpp
-		g++ -c $(CFLAGS) -o movement.o movement.cpp
-
-snake.o: snake.h snake.cpp
-	g++ -c $(CFLAGS) -o snake.o snake.cpp
-map.o: map.cpp map.h
-	g++ -c $(CFLAGS) -o map.o map.cpp
-missille.o: missille.h missille.cpp map.h
-	g++ -c $(CFLAGS) -o missille.o missille.cpp
+distclean:
+	rm -f $(OBJECT_DIR)*.o bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h
 
 run:
 	make
-	./codewars
+	./bparser vstup
+rerun:
+	make distclean
+	make
+	./bparser vstup
+
+debugMemory:
+	make
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes --num-callers=20 --track-fds=yes ./bparser vstup
+
+debugGraph:
+	make
+	valgrind --tool=cachegrind ./bparser vstup
+
+dep:
+	@if [ ! -d o ]; then echo "Creating compile objects directory"; mkdir o; fi
+	find . -name "*.cpp" |xargs  makedepend -Y -f Makefile.dep  2> /dev/null	
+	rm -f Makefile.dep.bak
+
+-include Makefile.dep

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Machine>
+  <f>
+    <InstructionBegin/>
+    <InstructionLoadLocal>f#</InstructionLoadLocal>
+    <InstructionLoad>
+      <TypeInteger>4</TypeInteger>
+    </InstructionLoad>
+    <InstructionConversionToReal/>
+    <InstructionStore/>
+    <InstructionRemoveTemp/>
+    <InstructionLoadLocal>f#</InstructionLoadLocal>
+    <InstructionReturn/>
+    <InstructionEndBlock/>
+    <InstructionRestore/>
+  </f>
+  <InstructionCreate>i</InstructionCreate>
+  <InstructionLoadLocal>i</InstructionLoadLocal>
+  <InstructionLoad>
+    <TypeInteger>6</TypeInteger>
+  </InstructionLoad>
+  <InstructionStoreInteger/>
+  <main>
+    <InstructionBegin/>
+    <InstructionMustJump>
+      <JumpCount>9</JumpCount>
+    </InstructionMustJump>
+    <InstructionBegin/>
+    <Call begins="0">f</Call>
+    <InstructionRemoveTemp/>
+    <InstructionConversionToInt/>
+    <InstructionRemoveTemp/>
+    <InstructionStep/>
+    <InstructionPop/>
+    <InstructionRemoveTemp/>
+    <InstructionEndBlock/>
+    <InstructionLoadGlobal>true</InstructionLoadGlobal>
+    <InstructionJump>
+      <yes>-11</yes>
+      <no>0</no>
+    </InstructionJump>
+    <InstructionEndBlock/>
+  </main>
+</Machine>
