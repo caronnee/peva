@@ -22,6 +22,7 @@ all: dep bparser codewars
 
 codewars:$(lOBJECTS) $(gOBJECTS) o/main.o
 		g++ $(LDFLAGS) -o $@ $^
+		./codewars
 
 bparser: $(LANGUAGE_OBJECTS)
 	$(CXX) $(LDFLAGS) $(LANGUAGE_OBJECTS) -o bparser

@@ -196,7 +196,8 @@ void Map::add(Object * o)
 	Position pos= o->get_pos();
 	pos.x /=BOX_WIDTH;
 	pos.y /=BOX_HEIGHT;
-//	std::cout << pos << std::endl;
+	std::cout << pos << " " << map[pos.x][pos.y] << std::endl;
+	getc(stdin);
 	map[pos.x][pos.y]->objects.push_back(o);
 	std::cout << "added to" << pos << std::endl;
 }
