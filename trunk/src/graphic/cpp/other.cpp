@@ -199,6 +199,7 @@ void Play::process()
 							Object * o = new Missille(Position(100,100), Position(-50,-60));
 							objects.push_back(o);
 							m->add(o);
+							getc(stdin);
 							break;
 						}
 					case SDLK_ESCAPE:

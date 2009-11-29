@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "../../graphic/h/graphic.h"
+#include "../../graphic/h/images.h"
 
 //config file
 #define CONFIG "./codewars.config"
