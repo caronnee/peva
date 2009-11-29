@@ -4,7 +4,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <string>
+#include <map>
 
+typedef std::map<std::string, size_t> myMap;
 
 enum RobotImageObjects
 {
@@ -19,13 +21,22 @@ enum WallImageObjects
 	WallTrapId,
 	NumberObjectsImages
 };
-class ImageSet
+class Skin
 {
-	std::string namesOfSet;
+protected:
+	size_t size;
+	std::string nameOfSet;
 	std::string* filenames;
-	public:
 	SDL_Surface ** images;
-	ImageSet(std::string name);
-	~ImageSet();
+public:
+	enum Type
+	{
+		MapSkin,
+		BotSkin
+	};
+	Skin(std::string name, myMap s, Skin::Type t);
+	Skin();
+	SDL_Surface * get_surface(size_t index);
+	virtual ~Skin();
 };
 #endif
