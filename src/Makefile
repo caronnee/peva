@@ -1,5 +1,5 @@
 CFLAGS=-O0 -g -Wall
-LDFLAGS=`sdl-config --cflags --libs` -lSDL_ttf -lSDL_image `xml2-config --cflags --libs`
+LDFLAGS=`sdl-config --cflags --libs` -lSDL_ttf -lSDL_image `xml2-config --cflags --libs` -lboost_filesystem
 XML=`xml2-config --cflags`
 HEADER_DIR=h/
 OBJECT_DIR=o/
@@ -12,7 +12,7 @@ lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/par
 gOBJECTS=o/help_functions.o o/position.o o/movement.o o/snake.o \
 	o/create_map.o o/graphic.o o/main_menu.o \
 	o/other.o o/map.o o/body.o o/missille.o o/objects.o o/seer.o \
-	o/wall.o
+	o/wall.o o/images.o
 	
 LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 
@@ -22,7 +22,6 @@ all: dep bparser codewars
 
 codewars:$(lOBJECTS) $(gOBJECTS) o/main.o
 		g++ $(LDFLAGS) -o $@ $^
-		./codewars
 
 bparser: $(LANGUAGE_OBJECTS)
 	$(CXX) $(LDFLAGS) $(LANGUAGE_OBJECTS) -o bparser
@@ -71,6 +70,14 @@ debugMemory:
 debugGraph:
 	make
 	valgrind --tool=cachegrind ./bparser vstup
+
+debugGMemory:
+	make
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes --num-callers=20 --track-fds=yes ./codewars
+
+debugGGraph:
+	make
+	valgrind --tool=cachegrind ./codewars
 
 dep:
 	touch Makefile.dep
