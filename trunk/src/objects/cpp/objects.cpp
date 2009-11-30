@@ -18,18 +18,18 @@ Position Object::get_pos() const
 
 SDL_Surface * Object::show()
 {
-	return image; 
+	return skinWork->get_image(); 
 }
 
 void Object::action(Map * m) {}
 
-bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls
+bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {
 	Rectangle r1;
 	r1.x = movement.position_in_map.x;
 	r1.y = movement.position_in_map.y;
-	r1.width = image->w;
-	r1.height = image->h;
+	r1.width = skinWork->width();
+	r1.height = skinWork->height();
 	Rectangle r2;
 	r2.x = o->get_pos().x; //TODO vlastna fce overlaps
 	r2.y = o->get_pos().y;
@@ -53,7 +53,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		//	return false;
 			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole doprava
 			{
-				c-=perpVector.x*(movement.old_pos.x+image->w) + perpVector.y*(movement.old_pos.y + image->h); //priamka pravy dolny roh
+				c-=perpVector.x*(movement.old_pos.x+skinWork->width() + perpVector.y*(movement.old_pos.y + skinWork->height())); //priamka pravy dolny roh
 				del.x = o->movement.position_in_map.x; //lavy horny roh, ok
 				del.y = o->movement.position_in_map.y;
 			//	std::cout << perpVector << " c:" << c << std::endl;
@@ -64,7 +64,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 					std::cout << "I horna stena" << std::endl;
 					movement.direction.y *=-1;
 				//	std::cout << "Menim poziciu o:" <<movement.position_in_map.y + image->h - del.y  << std::endl;
-					movement.position_in_map.y -= movement.position_in_map.y + image->h - del.y;
+					movement.position_in_map.y -= movement.position_in_map.y + skinWork->height() - del.y;
 				//	std::cout << "PO: direction:" << movement.direction << std::endl;
 					//getc(stdin);
 				}
@@ -74,7 +74,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 					//getc(stdin);
 				//	return false;
 					movement.direction.x *= -1; 
-					movement.position_in_map.x -= del.x - movement.position_in_map.x - image->w;
+					movement.position_in_map.x -= del.x - movement.position_in_map.x - skinWork->width();
 				//	std::cout << "here:" << movement.position_in_map << ", direction:" << movement.direction << " o:" << o->movement.position_in_map << "direction"<< o->movement.direction << std::endl;
 				}
 
@@ -85,7 +85,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 			//	std::cout << "id:" << this << ", kolidujuca pozicia: " << movement.position_in_map << std::endl;
 				del.x = o->movement.position_in_map.x;
 				del.y = o->movement.position_in_map.y + o->show()->h; 
-				c-=perpVector.x*(movement.old_pos.x + image->w) + perpVector.y*(movement.old_pos.y); //priamka pravy horny roh
+				c-=perpVector.x*(movement.old_pos.x + skinWork->width()) + perpVector.y*(movement.old_pos.y); //priamka pravy horny roh
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na dolnu stenu
 				{
 					std::cout << "II vrch" << std::endl;
@@ -99,7 +99,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 					std::cout << "II bok" << std::endl;
 					//getc(stdin);
 					movement.direction.x *=-1;
-					movement.position_in_map.x += del.x - movement.position_in_map.x - image->w;
+					movement.position_in_map.x += del.x - movement.position_in_map.x - skinWork->width();
 				}	
 			}
 		}
@@ -110,13 +110,13 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 			//	return false;
 				del.x = o->movement.position_in_map.x+o->show()->w;
 				del.y = o->movement.position_in_map.y;
-				c-=perpVector.x*(movement.old_pos.x) + perpVector.y*(movement.old_pos.y + image->h); //priamka pravy horny roh
+				c-=perpVector.x*(movement.old_pos.x) + perpVector.y*(movement.old_pos.y + skinWork->height()); //priamka pravy horny roh
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
 				{	
 					std::cout << "III vrch" << std::endl;
 					//getc(stdin);
 					movement.direction.y *=-1;
-					movement.position_in_map.y -= movement.position_in_map.y + image->h - del.y;
+					movement.position_in_map.y -= movement.position_in_map.y + skinWork->height() - del.y;
 				}
 				else
 				{

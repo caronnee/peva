@@ -7,13 +7,7 @@ Missille::Missille(Position P, Position dir)
 	movement.old_pos = P;
 	milisec = 0;
 	ticks = SDL_GetTicks();
-	name = "Misille";
-	image = IMG_Load("../images/Missille.png"); //TODO dat do samostatnej classy
-	if (image == NULL)
-	{
-		std::cout << "NOT LOADED!";
-	}
-	getc(stdin);
+	name = "Missille";
 }
 bool Missille::is_blocking()
 {

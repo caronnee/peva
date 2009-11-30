@@ -65,7 +65,6 @@ class Play:public Menu
 	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
-	ImageTile t;
 	void redraw();
 	std::list<Object *> objects; //all activ objects
 	void init(int, int);

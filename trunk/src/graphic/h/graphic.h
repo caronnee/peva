@@ -68,7 +68,7 @@ public:
 	SDL_Surface * background; //background pre hlavne okno 
 	Window(Graphic * g_);
 	void tapestry();
-	int Toggle_screen(); //change from full screen to window screen and vice-versa
+	int toggle_screen(); //change from full screen to window screen and vice-versa
 	void add(Menu * m);
 	bool Init();
 	void Destroy();

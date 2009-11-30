@@ -8,11 +8,10 @@
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
 
-class Box
+struct Box
 {
+	Box();
 	Rectangle bounds;
-	public:
-	Box(Rectangle rect);
 	Position box_resolution;
 	std::list<Object *> objects; //objects in area
 };
@@ -20,8 +19,7 @@ class Box
 class Map
 {
 public:
-	Box *** map;
-	ImageTile m;
+	Box ** map;
 	SDL_Rect** rects;
 	Position resolution; //velkost mapy v pixeloch
 	Position tiles; //kolko policok sa zmesti

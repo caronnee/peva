@@ -8,9 +8,11 @@
 Create_map::Create_map(Window *w_)
 {
 	name = "Create map";
+	skin = new Skin("grass", Skin::MapSkin);
+	getc(stdin);
 	w = w_;
 	map= NULL;
-	std::string txt = "Write map resolution:";
+	/*std::string txt = "Write map resolution:";
 	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);//resize 2.krat
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
 	if (text == NULL)  std::cout << "hejdgfjlg";
@@ -70,11 +72,11 @@ Create_map::Create_map(Window *w_)
 	}
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	reset();
-}
+*/}
 void Create_map::init() {} //zatial nic, pozdejc sa to bude odstrranovat
 
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
-{
+{/*
 	int i;
 	for (i = 0; i < max; i++)
 	{
@@ -87,9 +89,9 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 	std::cout <<x << " medzi " << rects[UP].x << " " <<rects[UP].x + rects[UP].w << " " << std::endl;
 	std::cout <<y << " medzi " << rects[UP].y << " " <<rects[UP].y + rects[UP].h << " " << std::endl;
 	return i;
-}
+*/}
 void Create_map::reset()
-{
+{/*
 	state = RESOLUTION;
 	file_name = "";
 	x = false;
@@ -108,9 +110,9 @@ void Create_map::reset()
 	begin_y = 0;
 	window_begin_x = rects[MAP].x;
 	window_begin_y = rects[MAP].y;
-}
+*/}
 void Create_map::draw_resol()
-{
+{/*
 	SDL_Rect r;
 	r.x = (w->g->screen->w >> 1) - (text_width >> 1);
 	r.y = (w->g->screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
@@ -128,9 +130,9 @@ void Create_map::draw_resol()
 		SDL_BlitSurface(resol[written_y[i] - '0'], NULL,w->g->screen, &r);
 		r.x+=resol_width[written_y[i] - '0'];// TODO potom to vycentrovat, samostatna funkcia
 	}
-}
+*/}
 void Create_map::draw()
-{
+{/*
 	w->tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
 	if (state == RESOLUTION)
 	{
@@ -187,9 +189,9 @@ void Create_map::draw()
 		}
 	}
 	SDL_Flip(w->g->screen);
-}
+*/}
 void Create_map::process_resolution()
-{
+{/*
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -249,9 +251,9 @@ void Create_map::process_resolution()
 				break;
 			}
 	}
-}
+*/}
 bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
-{
+{/*
 	//TODO uistit sa, ze to podpurujeme, ak nie, iny format (napriklad cisto textovy, fuj!:)
 	xmlDocPtr doc = NULL;
 	xmlNodePtr root_node = NULL;
@@ -308,9 +310,9 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
 	return true; //TODO checkovanie, ci sa to podarilo
-}
+*/}
 void Create_map::generuj(Position resolution)
-{
+{/*
 	//zaplnime to solidnymi stenami vsetko
 	for (int i = 0; i < resolX; i++)
 		for (int j = 0; j < resolY; j++)
@@ -372,9 +374,9 @@ void Create_map::generuj(Position resolution)
 		}
 		f << "\n";
 	}
-}
+*/}
 void Create_map::saving()
-{
+{/*
 	//napis do stredu vyzvus menom, meno nesmie byt viac ako povedzme 8 pismen
 	switch (w->g->event.type)
 	{
@@ -429,10 +431,10 @@ void Create_map::saving()
 					w->state.pop();
 			}
 	}
-}
+*/}
 
 void Create_map::process_map()
-{
+{/*
 	//TODO if SLD_KEY PRESSED, do last action
 	switch (w->g->event.type)
 	{
@@ -549,10 +551,10 @@ void Create_map::process_map()
 				break;
 			}
 	}
-}
+*/}
 
 void Create_map::process()
-{
+{/*
 	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}//movement!
 	if (state == DRAW) {
 		process_map();
@@ -569,8 +571,8 @@ void Create_map::process()
 		std::cout << "start saving function" << std::endl;
 		saving();
 	}
-}
+*/}
 
 Create_map::~Create_map()throw()
-{
-} //TODO uvolnovanie premennych
+{/*
+*/} //TODO uvolnovanie premennych
