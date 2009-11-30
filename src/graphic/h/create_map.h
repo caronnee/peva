@@ -4,6 +4,7 @@
 #include "graphic.h"
 #include "menu.h"
 #include "../../editor/h/snake.h"
+#include "../../graphic/h/images.h"
 
 class Create_map:public Menu
 {
@@ -28,6 +29,7 @@ class Create_map:public Menu
 		SAVING
 	};
 	Window * w;
+	Skin* skin;
 	Win_type state;
 	bool x; //x = oddelovac u resolution
 	bool mouse_down; //bola vybrana/ uklada sa tile
@@ -41,7 +43,6 @@ class Create_map:public Menu
 	int select;
 	int get_rect(int x, int y, SDL_Rect * r,int max);
 
-	ImageTile t;
 	SDL_Rect tile_rect[NumberOfWalls_];
 	SDL_Rect rects[NumberOfMapDivision];
 

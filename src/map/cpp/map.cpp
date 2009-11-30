@@ -7,9 +7,8 @@
 //height of box in pixels
 #define BOX_HEIGHT 500
 
-Box::Box(Rectangle rect)
+Box::Box()
 {
-	bounds = rect;
 	objects.clear();
 }
 
@@ -20,19 +19,20 @@ Map::Map(Position resol) //map resolution in pixels
 	float boxesInRow = (float)resolution.x/ BOX_WIDTH; 
 	float boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
 	Rectangle begin(0,0,BOX_WIDTH,BOX_HEIGHT);
-	map = new Box **[(int)boxesInRow +1 ];
+	map = new Box *[(int)boxesInRow +1 ];
 //	std::cout << boxesInRow << "grgrgrg" << boxesInColumn << std::endl;
 	for(int i = 0; i < boxesInRow; i++) //tolko framov vytvorime v x osi
 	{
-		map[i] = new Box * [(int)boxesInColumn + 1]; //+1 because of real numbers
+		map[i] = new Box [(int)boxesInColumn + 1]; //+1 because of real numbers
 		for(int j = 0; j < boxesInColumn; j++)
 		{
-			map[i][j] = new Box(begin);
+			map[i][j].bounds = begin;
 			begin.y+= BOX_HEIGHT;	
 		}
 		begin.x+=BOX_HEIGHT;
 		begin.y = 0;
 	}
+	//TODO solid steny na koncoch
 }
 
 void Map::redraw(Window * w, Position begin_draw_at) 
@@ -46,7 +46,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	{
 		for(int j =0; j< w->g->screen->h; j+=IMG_HEIGHT)
 		{
-			SDL_BlitSurface(m.tiles[FreeTile],NULL, w->g->screen, &r);
+		//	SDL_BlitSurface(m.tiles[FreeTile],NULL, w->g->screen, &r);
 			r.y+=IMG_HEIGHT;
 		}
 		r.y = 0;
@@ -69,10 +69,10 @@ void Map::redraw(Window * w, Position begin_draw_at)
 			else std::cout << "not empty"<< map[pos.x][pos.y]->objects.size() << std::endl;
 //	getc(stdin);
 		*/
-			std::list<Object *>::iterator iter = map[pos.x][pos.y]->objects.begin();
+			std::list<Object *>::iterator iter = map[pos.x][pos.y].objects.begin();
 //	std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
 //	getc(stdin);
-			while(iter != map[pos.x][pos.y]->objects.end())
+			while(iter != map[pos.x][pos.y].objects.end())
 			{
 //			std::cout << "HE??" << std::endl;
 				Object * o = (*iter);
@@ -152,12 +152,12 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 		std::cout << "TODO" << std::endl;
 	}
 	//pre vsetky v tej povodnej, ci sa nam to skolidovalo
-	Box * b = map[oldBox.x][oldBox.y];
+	Box b = map[oldBox.x][oldBox.y];
 	Object * nearest = NULL; //TODO kontrola, ci to fakt je nutne
 	float dist = BOX_WIDTH*BOX_HEIGHT; //nekonecno
 	Position colVector;
-	std::list<Object *>::iterator iter = b->objects.begin();
-	while (iter!=b->objects.end())
+	std::list<Object *>::iterator iter = b.objects.begin();
+	while (iter!=b.objects.end())
 	{
 		if ( o != (* iter))
 
@@ -196,8 +196,7 @@ void Map::add(Object * o)
 	Position pos= o->get_pos();
 	pos.x /=BOX_WIDTH;
 	pos.y /=BOX_HEIGHT;
-	std::cout << pos << " " << map[pos.x][pos.y] << std::endl;
-	map[pos.x][pos.y]->objects.push_back(o);
+	map[pos.x][pos.y].objects.push_back(o);
 	std::cout << "added to" << pos << std::endl;
 }
 
@@ -205,11 +204,8 @@ Map::~Map()
 {
 	
 	float boxesInRow = (float)resolution.x/ BOX_WIDTH; 
-	float boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
 	for(int i = 0; i< boxesInRow; i++)
 	{
-		for(int j =0; j< boxesInColumn; j++)
-			delete map[i][j];
 		delete [] map[i];
 	}
 	delete map;

@@ -47,8 +47,6 @@ int main(int argc, char *argv[])
 			if (name == "font-size") g.set_font_size(par);
 			if (name == "font") g.set_font(par);
 			if (name == "background") w.set_background(par);
-		//	if (name == "timeout") w.set_timeout(par);
-		//	TODO timeout nepatri do grafiky ale do hry -> gamestate
 		}
 		config.close();
 	}
@@ -57,11 +55,11 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
-	w.state.top()->draw();
+/*	w.state.top()->draw();
 	while (!w.state.empty())
 	{
 		w.state.top()->process();
-	}
+	}*/
 	g.Destroy();
 	w.Destroy(); //odalokovavanie premennych a podobne
 	return 0;

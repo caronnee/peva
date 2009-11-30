@@ -127,7 +127,7 @@ void Window::tapestry()
 	}
 }
 
-int Window::Toggle_screen()
+int Window::toggle_screen()
 {
 	if (WIN_FLAGS && SDL_FULLSCREEN) //z fullscreenu do okna
 	{

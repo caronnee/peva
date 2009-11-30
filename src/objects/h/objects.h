@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "../../add-ons/h/position.h"
+#include "../../graphic/h/images.h"
 
 struct Map;
 
@@ -10,6 +11,7 @@ struct Type_bot
 {
 	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
 };
+
 struct Type_missille
 {
 	int attack, hitpoints; //a tak podobne, TODO!
@@ -22,12 +24,13 @@ struct ObjectMovement
 	Position direction;
 	float fps;
 };
+
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
+	ImageSkinWork * skinWork;
 public:
 	Map * map;
 	virtual bool is_blocking();
-	SDL_Surface * image;
 	ObjectMovement movement; //kde sa prave nachadza na mape
 	std::string name;
 	int defense, attack;

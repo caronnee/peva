@@ -14,25 +14,18 @@ enum WallType
 	TrapWall_,
 	NumberOfWalls_
 };
-class ImageTile
-{
-	public:
-		SDL_Surface ** tiles;
-		ImageTile(); //naloaduje vsetky obrazky
-		SDL_Surface * get_image(WallType);
-};
+
 class Tile:public Object 
 {
 public:
 	Tile();
-	Tile(ImageTile *);
 	virtual bool is_blocking();
 //	virtual void damage(Object * sender);
 };
 class SolidWall:public Tile //nic specialneho, proste sten a s nejkou odolnostou
 {
 public:
-	SolidWall(ImageTile *);
+	SolidWall();//TODO
 	//virtual void damage(Object * sender); 
 };
 
@@ -40,14 +33,14 @@ class PushableWall:public Tile //da sa nou pohnut
 {
 	int shift; //o kolko sa posunie
 public:
-	PushableWall(ImageTile *);
+	PushableWall();
 //	virtual void damage(Object * sender);
 	virtual void action(Map * m);
 };
 class TrapWall:public Tile // opstey na zemi sa vystrkujuce:)
 {
 public:
-	TrapWall(ImageTile *);
+	TrapWall();
 //	virtual void damage(Object * sender);
 };
 #endif
