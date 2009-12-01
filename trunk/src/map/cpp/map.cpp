@@ -12,8 +12,9 @@ Box::Box()
 	objects.clear();
 }
 
-Map::Map(Position resol) //map resolution in pixels
+Map::Map(Position resol, std::string skinName) //map resolution in pixels + maap lookout
 {
+	skin = new Skin(skinName, Skin::MapSkin);
 	std::cout << "Konstruktor mapy" << resol << std::endl;
 	resolution = resol; 
 	float boxesInRow = (float)resolution.x/ BOX_WIDTH; 
@@ -42,15 +43,15 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	r.x = 0;
 	r.y = 0;
 	Position pos(begin_draw_at);
-	for (int i =0; i< w->g->screen->w; i+=IMG_WIDTH)
+	for (int i =0; i< w->g->screen->w; i+=skin->get_size().x)
 	{
-		for(int j =0; j< w->g->screen->h; j+=IMG_HEIGHT)
+		for(int j =0; j< w->g->screen->h; j+=skin->get_size().y)
 		{
 		//	SDL_BlitSurface(m.tiles[FreeTile],NULL, w->g->screen, &r);
-			r.y+=IMG_HEIGHT;
+			r.y+=skin->get_size().y;
 		}
 		r.y = 0;
-		r.x+=IMG_WIDTH;
+		r.x+=skin->get_size().x;
 	}
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
 //	std::cout << "zacina vykreslovanie objektov" << std::endl;
@@ -87,13 +88,13 @@ void Map::redraw(Window * w, Position begin_draw_at)
 					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
 				}
 //		pos.y++;
-//		r.y+=IMG_HEIGHT;
+//		r.y+=skin->get_size().y;
 			}
 		}
 		r.y = 0;
 		pos.y = begin_draw_at.y;
 		pos.x++;
-//	r.x+=IMG_WIDTH;
+//	r.x+=skin->get_size().x;
 //	r.x = 0;
 	}
 	SDL_Flip(w->g->screen);

@@ -19,14 +19,16 @@ struct Box
 class Map
 {
 public:
+	Skin * skin;
 	Box ** map;
 	SDL_Rect** rects;
+	Skin * mapSkin;
 	Position resolution; //velkost mapy v pixeloch
 	Position tiles; //kolko policok sa zmesti
 	std::vector<Position> bot_begins;
 	//Position begin_draw_at;	
 	void collision(Object * o1, Object * o2);
-	Map(Position resolution);
+	Map(Position resolution, std::string name);
 	void move(ObjectMovement& m, Object * o); //ak sa chce object pohnut, vracia ako moc sa to pokazilo
 	~Map();
 	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko

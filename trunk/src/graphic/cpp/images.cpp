@@ -56,17 +56,13 @@ Skin::Skin(std::string name, Skin::Type t)
 	}
 	directory = directory+name + '/';
 	bf::directory_iterator end_itr;
-	int loaded = 0;
 	for (bf::directory_iterator iter (directory); iter!= end_itr; iter++)
 	{
 		for (size_t i = 0; i<size; i++ )
 		{
-			std::cout << "checkujem:" << iter->leaf();
 			if (load[i] == iter->leaf())
 			{
-				std::cout << "LOADING!"<<directory + load[i];getc(stdin);
-				images[loaded] = IMG_Load((directory + load[i]).c_str());
-				loaded++;
+				images[i] = IMG_Load((directory + load[i]).c_str());
 				break;
 			}
 		}
@@ -77,8 +73,6 @@ Skin::Skin(std::string name, Skin::Type t)
 		begin_in_picture.y = 0;
 		shift.x = 0;
 		shift.y = 0;
-		std::cout << "images" << images[0];
-		getc(stdin);
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
 		return; //exception?

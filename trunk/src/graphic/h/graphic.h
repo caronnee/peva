@@ -21,9 +21,6 @@
 #define WIN_MAX_WIDTH 1280
 #define WIN_MAX_HEIGHT 1024
 
-#define IMG_WIDTH 50
-#define IMG_HEIGHT 50
-
 #define ICON "./images/icon.png"
 
 //defaults:
