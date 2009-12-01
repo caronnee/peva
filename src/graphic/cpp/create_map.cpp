@@ -15,7 +15,8 @@ Create_map::Create_map(Window *w_)
 	std::string txt = "Write map resolution:";
 	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);//resize 2.krat
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
-	if (text == NULL)  std::cout << "hejdgfjlg";
+	if (text == NULL)  
+		std::cout << "Ajta krajta, nevytvoril sa text!";
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
 	for (int i =0; i< NUMCHARS; i++)
 	{
@@ -35,7 +36,7 @@ Create_map::Create_map(Window *w_)
 
 	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
-	rects[CHOOSE].w = 2*IMG_WIDTH; //TODO! co ak sa to bude menit? 
+	rects[CHOOSE].w = 2*skin->get_size().x; 
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->screen->w /3;
 
@@ -59,12 +60,12 @@ Create_map::Create_map(Window *w_)
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
 	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
 
-	int pom = rects[CHOOSE].y + IMG_HEIGHT/2;
+	int pom = rects[CHOOSE].y + skin->get_size().y/2;
 	for (int i =1; i< NumberObjectsImages; i++)
 	{
-		tile_rect[i].x = rects[CHOOSE].x+ IMG_WIDTH/2;
+		tile_rect[i].x = rects[CHOOSE].x+ skin->get_size().x/2;
 		tile_rect[i].y = pom;
-		pom+=3*IMG_HEIGHT/2; //TODO konstanta
+		pom+=3*skin->get_size().y/2; //TODO konstanta
 	}
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	reset();
@@ -139,8 +140,8 @@ void Create_map::draw()
 		//TODO vysvietit tu, o sa ma zmazat/ zmaze sa to procese klikom lavym tlacitkom
 		//nakresli pole
 		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
-		int max_width = rects[MAP].x + min(rects[MAP].w,IMG_WIDTH*resolX);
-		int max_heigth = rects[MAP].y + min(rects[MAP].h, IMG_HEIGHT*resolY);
+		int max_width = rects[MAP].x + min(rects[MAP].w,skin->get_size().x*resolX);
+		int max_heigth = rects[MAP].y + min(rects[MAP].h, skin->get_size().y*resolY);
 		SDL_SetClipRect(w->g->screen,&rects[MAP]);
 		SDL_Rect rect;//TODO dokreslit sipky
 		rect.x = window_begin_x;
@@ -160,13 +161,13 @@ void Create_map::draw()
 					}
 				}
 				else SDL_BlitSurface(skin->get_surface(WallFree),NULL,w->g->screen,&rect);
-				rect.x+=IMG_WIDTH;
+				rect.x+=skin->get_size().x;
 				tile_x++;
 				if (tile_x == resolX)
 					break;
 			}
 			rect.x = window_begin_x;
-			rect.y += IMG_HEIGHT;
+			rect.y += skin->get_size().y;
 			tile_y++;
 			if (tile_y == resolY)
 				break;
@@ -176,7 +177,7 @@ void Create_map::draw()
 		SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< NumberObjectsImages; i++) //bez grass
 		{
-			std::cout << "huuu" << i <<std::endl;
+			//std::cout << "huuu" << i <<std::endl;
 			SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen,&tile_rect[i]);
 		}
 		if (select < NumberObjectsImages)
@@ -468,9 +469,9 @@ void Create_map::process_map()
 											  int x, y;
 											  x = w->g->event.button.x - rects[MAP].x;
 											  y = w->g->event.button.y - rects[MAP].y;
-											  if((begin_x + x/IMG_WIDTH >= resolX)|| (begin_y + y/IMG_HEIGHT >= resolY))
+											  if((begin_x + x/skin->get_size().x >= resolX)|| (begin_y + y/skin->get_size().y >= resolY))
 												  return;
-											  map[begin_x + x/IMG_WIDTH][begin_y + y/IMG_HEIGHT] |= (1 << select);
+											  map[begin_x + x/skin->get_size().x][begin_y + y/skin->get_size().y] |= (1 << select);
 											  draw();
 										  }
 										  break;
@@ -520,12 +521,12 @@ void Create_map::process_map()
 										 draw();
 										 break;}
 								case  DOWN:{begin_y++;
-										   if (begin_y + rects[MAP].h/IMG_HEIGHT > resolY )
+										   if (begin_y + rects[MAP].h/skin->get_size().y > resolY )
 											   begin_y--;
 										   draw();
 										   break;}
 								case  RIGHT:{begin_x++;
-										    if (begin_x > resolX - rects[MAP].w/IMG_WIDTH)
+										    if (begin_x > resolX - rects[MAP].w/skin->get_size().x)
 											    begin_x--;
 										    draw();
 										    break;}

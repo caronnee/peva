@@ -50,12 +50,6 @@ struct Letter
 
 class Play:public Menu
 {
-	enum PlayType
-	{
-		Editor,
-		Game
-	};
-
 	Map * m;
 	Window * w;
 	Position p;

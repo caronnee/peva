@@ -156,8 +156,9 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {
+
 	resolution = Position(x,y);
-	m = new Map(resolution);
+	m = new Map(resolution, "grass");
 	objects.clear();
 	Position speed(100,100);
 //	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
