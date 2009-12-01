@@ -94,7 +94,7 @@ void Create_map::reset()
 	state = RESOLUTION;
 	file_name = "";
 	x = false;
-	select = 0;
+	select = NumberObjectsImages;
 	mouse_down = false;
 	written_x = "";
 	written_y = "";
@@ -156,7 +156,7 @@ void Create_map::draw()
 			{
 				if (map[tile_x][tile_y]!=WallFree)
 				{
-					for (int i = 0; i < NumberObjectsImages; i++)
+					for (int i = 0; i < SelectedID; i++)
 					{
 						if (map[tile_x][tile_y] & (1<<i))
 							SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen, &rect); //mutacie vidielny len ten prvy povrch
@@ -177,12 +177,12 @@ void Create_map::draw()
 		}
 		//dokreslime panel
 		SDL_SetClipRect(w->g->screen, NULL);
-		for (int i =1 ; i< NumberObjectsImages; i++) //bez grass
+		for (int i =1 ; i< SelectedID; i++) //bez grass
 		{
 			//std::cout << "huuu" << i <<std::endl;
 			SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen,&tile_rect[i]);
 		}
-		if (select < NumberObjectsImages)
+		if (select < SelectedID)
 		{
 			SDL_BlitSurface(skin->get_surface(SelectedID),NULL,w->g->screen,&tile_rect[select]);
 		}
@@ -466,7 +466,7 @@ void Create_map::process_map()
 							switch (number)
 							{
 								case  MAP:{
-										  if (select < NumberObjectsImages) //mame nieco vyebrane
+										  if (select < SelectedID) //mame nieco vyebrane
 										  {
 											  int x, y;
 											  x = w->g->event.button.x - rects[MAP].x;
