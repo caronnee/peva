@@ -9,7 +9,7 @@
 Create_map::Create_map(Window *w_)
 {
 	name = "Create map";
-	skin = new Skin("grass", Skin::MapSkin);
+	skin = new Skin("grass", Skin::MapSkin);//TODO nacitaj zo suboru, co ma vytvorit
 	w = w_;
 	map= NULL;
 	std::string txt = "Write map resolution:";
@@ -40,7 +40,7 @@ Create_map::Create_map(Window *w_)
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->screen->w /3;
 
-	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;//TODO!
+	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;
 	rects[CHOOSE].h = w->g->screen->h - rects[EXIT].h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
@@ -61,6 +61,8 @@ Create_map::Create_map(Window *w_)
 	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
 
 	int pom = rects[CHOOSE].y + skin->get_size().y/2;
+	std::cout << skin->get_size().x << "...." << skin->get_size().y;
+	getc(stdin);
 	for (int i =1; i< NumberObjectsImages; i++)
 	{
 		tile_rect[i].x = rects[CHOOSE].x+ skin->get_size().x/2;

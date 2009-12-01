@@ -98,8 +98,6 @@ void Map::redraw(Window * w, Position begin_draw_at)
 //	r.x = 0;
 	}
 	SDL_Flip(w->g->screen);
-//	std::cout << "end";
-//getc(stdin);
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca

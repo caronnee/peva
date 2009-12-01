@@ -14,6 +14,7 @@ enum WallImageObjects
 	WallSolidId,
 	WallPushId,
 	WallTrapId,
+	WallExitId,
 	SelectedID,
 	NumberObjectsImages
 };
