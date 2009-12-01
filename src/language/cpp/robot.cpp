@@ -262,7 +262,10 @@ void Robot::save_to_xml()
 	xmlFreeDoc(data.doc);
 	xmlCleanupParser();
 }
-
+void Robot::add_kill(size_t id)
+{
+	killTarget.push_back(id);
+}
 void Robot::execute()
 {
 	while(core->PC < instructions.size())
