@@ -57,11 +57,11 @@ distclean:
 
 run:
 	make
-	./bparser vstup
+	./codewars
 rerun:
 	make distclean
 	make
-	./bparser vstup
+	./codewars
 
 debugMemory:
 	make

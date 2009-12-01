@@ -43,7 +43,7 @@ class Create_map:public Menu
 	int select;
 	int get_rect(int x, int y, SDL_Rect * r,int max);
 
-	SDL_Rect tile_rect[NumberOfWalls_];
+	SDL_Rect tile_rect[NumberObjectsImages];
 	SDL_Rect rects[NumberOfMapDivision];
 
 	SDL_Surface * info_o;
