@@ -88,13 +88,5 @@ public:
 	TargetKillNumberNot(int i);
 	virtual ~TargetKillNumberNot();
 };
-class TargetKillId : public Target
-{
-	size_t ID;
-public:
-	bool fullfilled(size_t id);
-	TargetKillId(int i);
-	virtual ~TargetKillId();
-};
 
 #endif

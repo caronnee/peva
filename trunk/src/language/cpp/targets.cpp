@@ -214,16 +214,3 @@ TargetKillNumberNot::~TargetKillNumberNot()
 	   Nothing to destroy yet
 	*/
 }
-bool TargetKillId::fullfilled(size_t id)
-{
-	if (id == ID)
-		ok = true;
-	return true;
-}
-
-TargetKillId::~TargetKillId()
-{
-	/*
-	   Nothing to destroy yet
-	*/
-}

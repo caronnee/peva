@@ -63,6 +63,10 @@ struct Robot
 		ErrorContinue,
 		ErrorOutOfRange
 	};
+
+	std::stack<std::string> resolveKill;
+	std::stack<std::string> resolveSkin;
+
 	Node * dev_null;
 	Nullable * nullable;
 	bool errors;
@@ -74,6 +78,7 @@ struct Robot
 	
 	std::list<TargetVisit *> targets;
 	TargetKillNumber * toKill;
+	std::vector<size_t> killTarget;
 
 	TypeContainer * defined_types;
 
@@ -116,6 +121,7 @@ public:
 	void declare_next();
 	void leave_type();
 	void save_to_xml();
+	void add_kill(size_t id);
 	~Robot();
 };
 
@@ -133,11 +139,19 @@ enum Options
 	OptionId
 };
 
+struct ResolveName
+{
+	Robot * robot;
+	std::string name; //koho ma killnut
+};
+
 struct Robots
 {	
 	GamePoints g;
 	Robot * actualRobot;
 	std::vector<Robot *> robots;
+	std::vector<ResolveName> resolveName;
+	std::vector<std::string> resolveSkin;
 	Robots(GamePoints g);
 	void createNew(std::string name);
 	void set(Options op, size_t value);

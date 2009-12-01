@@ -61,6 +61,8 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_VISIT
 %token TOKEN_VISIT_SEQUENCE
 %token TOKEN_KILLED
+%token TOKEN_SKIN
+%token TOKEN_KILL
 %token TOKEN_START
 
 /* group tokens */
@@ -188,6 +190,11 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 	{ 
 		program->set($2,$4); 
 	}
+	| options TOKEN_KILL TOKEN_IDENTIFIER { 
+		ResolveName n;n.robot = program->actualRobot;
+		n.name = $3;
+		program->resolveName.push_back(n);}
+	| options TOKEN_SKIN TOKEN_IDENTIFIER {	program->resolveSkin.push_back($3);}
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 		| global_variables local_variables { $$= join_instructions($1,$2);}
