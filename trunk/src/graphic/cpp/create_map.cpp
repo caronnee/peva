@@ -10,7 +10,6 @@ Create_map::Create_map(Window *w_)
 {
 	name = "Create map";
 	skin = new Skin("grass", Skin::MapSkin);
-	getc(stdin);
 	w = w_;
 	map= NULL;
 	std::string txt = "Write map resolution:";
@@ -129,7 +128,7 @@ void Create_map::draw_resol()
 	}
 }
 void Create_map::draw()
-{/*
+{
 	w->tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
 	if (state == RESOLUTION)
 	{
@@ -157,10 +156,10 @@ void Create_map::draw()
 					for (int i = 0; i < NumberObjectsImages; i++)
 					{
 						if (map[tile_x][tile_y] & (1<<i))
-							SDL_BlitSurface(t.tiles[i],NULL,w->g->screen, &rect); //mutacie vidielny len ten prvy povrch
+							SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen, &rect); //mutacie vidielny len ten prvy povrch
 					}
 				}
-				else SDL_BlitSurface(t.tiles[WallFree],NULL,w->g->screen,&rect);
+				else SDL_BlitSurface(skin->get_surface(WallFree),NULL,w->g->screen,&rect);
 				rect.x+=IMG_WIDTH;
 				tile_x++;
 				if (tile_x == resolX)
@@ -178,17 +177,17 @@ void Create_map::draw()
 		for (int i =1 ; i< NumberObjectsImages; i++) //bez grass
 		{
 			std::cout << "huuu" << i <<std::endl;
-			SDL_BlitSurface(t.tiles[i],NULL,w->g->screen,&tile_rect[i]);
+			SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen,&tile_rect[i]);
 		}
 		if (select < NumberObjectsImages)
 		{
-			SDL_BlitSurface(s->get_surface(SelectedID),NULL,w->g->screen,&tile_rect[select]);
+			SDL_BlitSurface(skin->get_surface(SelectedID),NULL,w->g->screen,&tile_rect[select]);
 		}
 	}
 	SDL_Flip(w->g->screen);
-*/}
+}
 void Create_map::process_resolution()
-{/*
+{
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -248,7 +247,7 @@ void Create_map::process_resolution()
 				break;
 			}
 	}
-*/}
+}
 bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 {
 	//TODO uistit sa, ze to podpurujeme, ak nie, iny format (napriklad cisto textovy, fuj!:)
