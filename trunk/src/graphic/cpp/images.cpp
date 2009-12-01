@@ -15,11 +15,12 @@ Skin::Skin()
 std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png", "missille.png" };
 
 //TODO akonsa steny rozbijaju
-std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushWall.png", "TrapWall.png","selected.png" };
+std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "selected.png" };
 
 //TODO predat len nejaky parameter alebo kopirovat;)
 Skin::Skin(std::string name, Skin::Type t)
 {
+	std::cout << "ON!";
 	nameOfSet = name;
 	std::string * load;
 	std::string directory = "./mapSkins"; 
@@ -75,6 +76,10 @@ Skin::Skin(std::string name, Skin::Type t)
 		shift.y = 0;
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
+		for (size_t i =0; i< size; i++)
+		{
+			std::cout << images[i] << " ";
+		}
 		return; //exception?
 	}
 	std::fstream f;
@@ -88,6 +93,12 @@ Skin::Skin(std::string name, Skin::Type t)
 		f >>shift.x;	
 		f >>shift.y;	
 	}
+	std::cout << "BEG~";
+	for (size_t i =0; i< size; i++)
+	{
+		std::cout << images[i] << " ";
+	}
+	std::cout << "EBEG~";
 }
 SDL_Surface * Skin::get_surface(size_t index)
 {
