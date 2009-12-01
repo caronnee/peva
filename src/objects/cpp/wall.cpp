@@ -1,15 +1,6 @@
 #include <iostream>
 #include "../h/wall.h"
 
-Tile::Tile(){
-
-}
- 
-bool Tile::is_blocking()
-{
-	return true;
-}
-
 SolidWall::SolidWall()
 {
 	name = "SolidWall";

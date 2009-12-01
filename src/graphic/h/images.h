@@ -10,9 +10,11 @@
 
 enum WallImageObjects
 {
+	WallFree,
 	WallSolidId,
 	WallPushId,
 	WallTrapId,
+	SelectedID,
 	NumberObjectsImages
 };
 enum Actions

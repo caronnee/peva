@@ -15,7 +15,7 @@ Skin::Skin()
 std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png", "missille.png" };
 
 //TODO akonsa steny rozbijaju
-std::string toLoadMap[] = {"solidWall.png", "pushWall.png", "trapWall.png" };
+std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushWall.png", "TrapWall.png","selected.png" };
 
 //TODO predat len nejaky parameter alebo kopirovat;)
 Skin::Skin(std::string name, Skin::Type t)
@@ -54,14 +54,19 @@ Skin::Skin(std::string name, Skin::Type t)
 		getc(stdin);
 		return;
 	}
+	directory = directory+name + '/';
 	bf::directory_iterator end_itr;
+	int loaded = 0;
 	for (bf::directory_iterator iter (directory); iter!= end_itr; iter++)
 	{
 		for (size_t i = 0; i<size; i++ )
 		{
+			std::cout << "checkujem:" << iter->leaf();
 			if (load[i] == iter->leaf())
 			{
-				images[i] = IMG_Load((directory + load[i]).c_str());
+				std::cout << "LOADING!"<<directory + load[i];getc(stdin);
+				images[loaded] = IMG_Load((directory + load[i]).c_str());
+				loaded++;
 				break;
 			}
 		}
@@ -72,8 +77,10 @@ Skin::Skin(std::string name, Skin::Type t)
 		begin_in_picture.y = 0;
 		shift.x = 0;
 		shift.y = 0;
-		imageSize.x = 0;
-		imageSize.y = 0;
+		std::cout << "images" << images[0];
+		getc(stdin);
+		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
+		imageSize.y = images[0]->h;
 		return; //exception?
 	}
 	std::fstream f;
