@@ -262,6 +262,7 @@ void Robot::save_to_xml()
 	xmlFreeDoc(data.doc);
 	xmlCleanupParser();
 }
+
 void Robot::add_kill(size_t id)
 {
 	killTarget.push_back(id);
@@ -281,6 +282,19 @@ Robots::Robots(GamePoints g_)
 	g = g_;
 	actualRobot = NULL;
 }
+Skin * Robots::addSkin(std::string name)
+{
+	Skin * s;
+	for (size_t i = 0; i< skins.size(); i++)
+	{
+		if (skins[i]->nameOfSet == name)
+			return skins[i];
+	}
+	s = new Skin(name, Skin::BotSkin);
+	skins.push_back(s);
+	return s;
+}
+
 void Robots::createNew(std::string name)
 {
 	std::cout << "Creating new robot" << std::endl; 
@@ -503,6 +517,8 @@ Robot::~Robot()
 	delete nullable;
 	delete defined_types;
 
+	
+
 	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
 		i!= targets.end(); i++)
 	{
@@ -523,6 +539,12 @@ Robot::~Robot()
 }
 Robots::~Robots()
 {
+	//deleting skins
+	while(!skins.empty())
+	{
+		delete(skins.back());
+		skins.pop_back();
+	}
 	for (size_t i = 0; i< robots.size(); i++)
 	{
 		delete robots[i];

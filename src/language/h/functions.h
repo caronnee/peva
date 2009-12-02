@@ -24,8 +24,8 @@ struct Function
 {
 	std::string name;
 	std::vector<Parameter_entry> parameters;
-	int begin; //kde to zacina v stacku
-	int end;
+	size_t begin; //kde to zacina v stacku
+	size_t end;
 	Node * return_var;
 	Function(std::string name, std::vector<Parameter_entry>params,Node * n);
 	~Function();

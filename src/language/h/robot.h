@@ -14,6 +14,7 @@
 #include "enums.h"
 #include "parser_classes.h"
 #include "typeContainer.h"
+#include "../../graphic/h/images.h"
 
 #define DELIMINER_CHAR '#'
 
@@ -64,8 +65,6 @@ struct Robot
 		ErrorOutOfRange
 	};
 
-	std::stack<std::string> resolveKill;
-	std::stack<std::string> resolveSkin;
 
 	Node * dev_null;
 	Nullable * nullable;
@@ -115,6 +114,7 @@ public:
 	Robot(std::string name, GamePoints g);
 	Robot();
 
+	Skin * skin;
 	Create_type * find_type(Type t);
 	Create_type * find_array_type(int range, Create_type * descend);
 	void declare_type();
@@ -151,10 +151,14 @@ struct Robots
 	Robot * actualRobot;
 	std::vector<Robot *> robots;
 	std::vector<ResolveName> resolveName;
-	std::vector<std::string> resolveSkin;
 	Robots(GamePoints g);
+
+	std::stack<std::string> resolveKill;
+	std::vector<Skin *> skins;
+
 	void createNew(std::string name);
 	void set(Options op, size_t value);
+	Skin * addSkin(std::string name);
 	~Robots();
 };
 #endif
