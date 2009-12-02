@@ -34,13 +34,13 @@ class Skin
 {
 protected:
 	size_t size;
-	std::string nameOfSet;
 	std::string* filenames;
 	SDL_Surface ** images;
 	Position imageSize;
 	Position shift;
 	Position begin_in_picture; //kolko toho ma urezat zo zaciatku
 public:
+	std::string nameOfSet;
 	enum Type
 	{
 		MapSkin,
