@@ -1,8 +1,6 @@
 .PHONY:all
 
 all:
-	cd src
-	make
-	mv codewars ..
+	cd src; make;mv codewars ..
 
 
