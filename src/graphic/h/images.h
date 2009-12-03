@@ -26,7 +26,6 @@ enum Actions
 	ActionAttack,
 	ActionHit,
 	ActionDead,
-	ActionMissille,
 	NumberOfActions
 };
 
@@ -34,7 +33,6 @@ class Skin
 {
 protected:
 	size_t size;
-	std::string* filenames;
 	SDL_Surface ** images;
 	Position imageSize;
 	Position shift;
@@ -44,7 +42,8 @@ public:
 	enum Type
 	{
 		MapSkin,
-		BotSkin
+		BotSkin,
+		MissilleSkin
 	};
 	Skin(std::string name, Skin::Type t);
 	Skin();
@@ -67,12 +66,12 @@ public:
 	SDL_Surface * get_image();
 	SDL_Rect get_rect();
 	ImageSkinWork(Skin * s);
-	void add_state(States s);
+	void switch_state(States s, Actions a);
 	void go_to_state(size_t i);
 	void removeState();
 	size_t width();
 	size_t height();
-private:
+protected:
 	size_t pRow; //natocenie
 	Skin * s;
 	States state; //aktualny stav

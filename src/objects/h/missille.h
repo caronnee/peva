@@ -1,6 +1,7 @@
 #ifndef ___MISILLE____
 #define ___MISILLE____
 #include "../../map/h/map.h"
+#include "../../graphic/h/images.h"
 #include "objects.h"
 
 class Missille : public Object
@@ -13,7 +14,7 @@ public:
 	virtual void damage(Object* sender);
 	virtual void action(Map * m); //penalizacia
 	virtual void defense();
-	Missille(Position p, Position dir);
+	Missille(Position p, Position dir, Skin*s);
 	~Missille();
 };
 

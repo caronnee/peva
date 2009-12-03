@@ -18,6 +18,7 @@ struct Box
 
 class Map
 {
+//	std::vector<Robot *> robots;
 public:
 	Skin * skin;
 	Box ** map;
@@ -33,7 +34,7 @@ public:
 	~Map();
 	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko
 	void update(Window *, Position);
-	void add(Object * o); //object si uz drzi informacie o svojej pozicii, je private a
+	void add(Object * o); 
 //	bool checkCollision(Object * def, Object * att);
 //	void update(SDL_Rect rec);
 //	void move(Position p, Position p2);

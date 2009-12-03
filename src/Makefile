@@ -55,6 +55,9 @@ o/%.o: */cpp/%.cpp
 distclean:
 	rm -f $(OBJECT_DIR)*.o bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h
 
+brun:
+	make
+	./bparser vstup
 run:
 	make
 	./codewars
