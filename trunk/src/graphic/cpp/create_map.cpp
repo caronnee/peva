@@ -62,7 +62,6 @@ Create_map::Create_map(Window *w_)
 
 	int pom = rects[CHOOSE].y + skin->get_size().y/2;
 	std::cout << skin->get_size().x << "...." << skin->get_size().y;
-	getc(stdin);
 	for (int i =1; i< NumberObjectsImages; i++)
 	{
 		tile_rect[i].x = rects[CHOOSE].x+ skin->get_size().x/2;

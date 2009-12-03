@@ -55,30 +55,25 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	}
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
 //	std::cout << "zacina vykreslovanie objektov" << std::endl;
-//getc(stdin);
 //zacinaju sa vykreslovat objekty na viditelnej ploche
 	for (int i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
 //	std::cout << "huhu"<< pos << std::endl;
-//getc(stdin);
 		/*	if (map[pos.x][pos.y]->objects.empty())
 			{
 				std::cout << "wdygvure" <<std::endl;
 			}
 			else std::cout << "not empty"<< map[pos.x][pos.y]->objects.size() << std::endl;
-//	getc(stdin);
 		*/
 			std::list<Object *>::iterator iter = map[pos.x][pos.y].objects.begin();
 //	std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
-//	getc(stdin);
 			while(iter != map[pos.x][pos.y].objects.end())
 			{
 //			std::cout << "HE??" << std::endl;
 				Object * o = (*iter);
 //			std::cout << "goin";
-//				getc(stdin);
 				iter++;
 				if(o!=NULL)
 				{
@@ -119,12 +114,10 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 	if (o->movement.position_in_map.x < 0)
 	{
 	//	std::cout << o->movement.position_in_map << std::endl;
-	//	getc(stdin);
 		o->movement.direction.x *= -1;
 		o->movement.position_in_map.x *= -1;
 		o->movement.position_in_map.x = o->movement.position_in_map.x;
 	//	std::cout << o->movement.position_in_map << std::endl;
-	//	getc(stdin);
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-o->show()->w)

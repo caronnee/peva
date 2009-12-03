@@ -1,6 +1,6 @@
 #include "../h/missille.h"
 
-Missille::Missille(Position P, Position dir)
+Missille::Missille(Position P, Position dir, Skin* s)
 {
 	movement.direction = dir;
 	movement.position_in_map = P;
@@ -8,6 +8,7 @@ Missille::Missille(Position P, Position dir)
 	milisec = 0;
 	ticks = SDL_GetTicks();
 	name = "Missille";
+	skinWork = new ImageSkinWork(s);
 }
 bool Missille::is_blocking()
 {

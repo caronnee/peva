@@ -27,6 +27,7 @@ struct ObjectMovement
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
+protected:
 	ImageSkinWork * skinWork;
 public:
 	Map * map;

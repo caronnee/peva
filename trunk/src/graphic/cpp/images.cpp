@@ -9,10 +9,10 @@ Skin::Skin()
 {
 	size = 0;
 	nameOfSet = "Undefined";
-	filenames = NULL;
 }
 
-std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png", "missille.png" };
+std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png" };
+std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
 std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "selected.png" };
@@ -34,6 +34,14 @@ Skin::Skin(std::string name, Skin::Type t)
 			images = new SDL_Surface *[size];
 			break;
 		}
+		case MissilleSkin:
+		{
+			directory = "./botSkins/";
+			load = toLoadMissille;
+			size = NumberOfActions;
+			images = new SDL_Surface *[size];
+			break;
+		}
 		case BotSkin:
 		{
 			directory = "./botSkins/";
@@ -49,9 +57,13 @@ Skin::Skin(std::string name, Skin::Type t)
 			load = NULL;
 		}
 	}
+	for (size_t i =0; i< size; i++)
+	{
+		images[i] = NULL;
+	}
 	if (!bf::exists(directory + name))
 	{
-		std::cerr << "Directory " <<directory + name<< " not found!"<< std::endl; //TODO exception
+		std::cerr << "Error! Directory " <<directory + name<< " not found!"<< std::endl; //TODO exception
 		getc(stdin);
 		return;
 	}
@@ -68,6 +80,11 @@ Skin::Skin(std::string name, Skin::Type t)
 			}
 		}
 	}	
+	for (size_t i =1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
+	{
+		if (images[i]==NULL)
+			images[i] = images[i-1];
+	}
 	if (!bf::exists(directory + "config"))
 	{
 		begin_in_picture.x = 0;
@@ -76,10 +93,6 @@ Skin::Skin(std::string name, Skin::Type t)
 		shift.y = 0;
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
-		for (size_t i =0; i< size; i++)
-		{
-			std::cout << images[i] << " ";
-		}
 		return; //exception?
 	}
 	std::fstream f;
@@ -102,6 +115,8 @@ Skin::Skin(std::string name, Skin::Type t)
 }
 SDL_Surface * Skin::get_surface(size_t index)
 {
+//	std::cout << "images" << images[index];
+//	getc(stdin);
 	return images[index];
 }
 Position Skin::get_size()
@@ -125,6 +140,12 @@ Skin::~Skin()
 	delete[] images;
 }
 
+ImageSkinWork::ImageSkinWork(Skin * skin)
+{
+	s = skin;
+	state = StateDefault;
+	states[StateDefault] = ActionDefault; //ostatene sa budu prepisovat
+}
 SDL_Surface * ImageSkinWork::get_image()
 {
 	return s->get_surface(states[state]);
@@ -138,9 +159,10 @@ SDL_Rect ImageSkinWork::get_rect()
 	}
 	return rect;	
 }
-void ImageSkinWork::add_state(States index)
+void ImageSkinWork::switch_state(States index, Actions action)
 {
 	state = index;
+	states[index] = action;
 }
 void ImageSkinWork::removeState()
 {

@@ -4,6 +4,7 @@ Object::Object()
 {
 	ticks = 100; // TODO
 	name =" Object";
+	skinWork = NULL;
 }
 
 bool Object::is_blocking()
