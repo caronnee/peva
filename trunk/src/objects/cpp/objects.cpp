@@ -25,7 +25,10 @@ SDL_Surface * Object::show()
 {
 	return skinWork->get_image(); 
 }
-
+Position Object::get_size()
+{
+	return skinWork->get_size();
+}
 void Object::action(Map * m) {}
 
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
@@ -38,8 +41,8 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 	Rectangle r2;
 	r2.x = o->get_pos().x; //TODO vlastna fce overlaps
 	r2.y = o->get_pos().y;
-	r2.width = o->show()->w;
-	r2.height = o->show()->h;
+	r2.width = o->get_size().x;
+	r2.height = o->get_size().y;
 	if (!(r1.x >= r2.x + r2.width) //metoda separating axis?
 		&& !(r1.x + r1.width <= r2.x)
 		&& !(r1.y >= r2.y + r2.height)
