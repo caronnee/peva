@@ -71,19 +71,22 @@ void Map::redraw(Window * w, Position begin_draw_at)
 //	std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
 			while(iter != map[pos.x][pos.y].objects.end())
 			{
-//			std::cout << "HE??" << std::endl;
 				Object * o = (*iter);
-//			std::cout << "goin";
 				iter++;
 				if(o!=NULL)
 				{
 					SDL_Rect rects;
 					rects.x = o->get_pos().x - begin_draw_at.x;
 					rects.y = o->get_pos().y - begin_draw_at.y;
-					SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
+					SDL_Rect r = o->get_rect();
+			//		std::cout << "r.x: " << r.x;
+			//		std::cout << "r.y: " << r.y;
+			//		std::cout << "r.w: " << r.w;
+			//		std::cout << "r.h: " << r.h;
+//					getc(stdin);
+					
+					SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				}
-//		pos.y++;
-//		r.y+=skin->get_size().y;
 			}
 		}
 		r.y = 0;

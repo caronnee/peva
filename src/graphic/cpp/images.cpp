@@ -23,7 +23,8 @@ Skin::Skin(std::string name, Skin::Type t)
 	std::cout << "ON!";
 	nameOfSet = name;
 	std::string * load;
-	std::string directory = "./mapSkins"; 
+	std::string directory = "./"; 
+	bool x = false;
 	switch (t)
 	{
 		case MapSkin:
@@ -37,9 +38,10 @@ Skin::Skin(std::string name, Skin::Type t)
 		case MissilleSkin:
 		{
 			directory = "./botSkins/";
+			x = true;
 			load = toLoadMissille;
-			size = NumberOfActions;
-			images = new SDL_Surface *[size];
+			size = 1;
+			images = new SDL_Surface *[NumberOfActions];
 			break;
 		}
 		case BotSkin:
@@ -61,6 +63,7 @@ Skin::Skin(std::string name, Skin::Type t)
 	{
 		images[i] = NULL;
 	}
+	
 	if (!bf::exists(directory + name))
 	{
 		std::cerr << "Error! Directory " <<directory + name<< " not found!"<< std::endl; //TODO exception
@@ -80,10 +83,20 @@ Skin::Skin(std::string name, Skin::Type t)
 			}
 		}
 	}	
+
 	for (size_t i =1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
 	{
 		if (images[i]==NULL)
 			images[i] = images[i-1];
+	}
+	if (t == MissilleSkin)
+	{
+		begin_in_picture.x = 0;
+		begin_in_picture.y = 0;
+		shift.x = images[0]->h;
+		shift.y = 0;
+		imageSize.x = imageSize.y = images[0]->h; //strely u stvorcove
+		return;
 	}
 	if (!bf::exists(directory + "config"))
 	{
@@ -93,6 +106,12 @@ Skin::Skin(std::string name, Skin::Type t)
 		shift.y = 0;
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
+		std::cout << "BEG~";
+		for (size_t i =0; i< size; i++)
+		{
+			std::cout << images[i] << " ";
+		}
+		std::cout << "EBEG~";
 		return; //exception?
 	}
 	std::fstream f;
@@ -145,6 +164,8 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 	s = skin;
 	state = StateDefault;
 	states[StateDefault] = ActionDefault; //ostatene sa budu prepisovat
+	rect.w = skin->get_size().x;
+	rect.h = skin->get_size().y;
 }
 SDL_Surface * ImageSkinWork::get_image()
 {

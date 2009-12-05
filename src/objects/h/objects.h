@@ -22,7 +22,7 @@ struct ObjectMovement
 	Position old_pos;
 	Position position_in_map;
 	Position direction;
-	float fps;
+	float fps; //maximalne rychlost
 };
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
@@ -48,6 +48,7 @@ public:
 	int IsWall();
 	int IsPlayer();
 	int IsMissille();
+	SDL_Rect get_rect();
 	Position Locate();
 	int Hit();
 };
