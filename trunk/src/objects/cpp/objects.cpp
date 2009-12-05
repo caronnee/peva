@@ -17,6 +17,10 @@ Position Object::get_pos() const
 	return movement.position_in_map;
 }
 
+SDL_Rect Object::get_rect()
+{
+	return skinWork->get_rect();
+}
 SDL_Surface * Object::show()
 {
 	return skinWork->get_image(); 
