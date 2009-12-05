@@ -44,6 +44,9 @@ public:
 	virtual void action(Map * m);
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
+	Position get_size();
+
+
 	int IsMoving();
 	int IsWall();
 	int IsPlayer();

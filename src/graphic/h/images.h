@@ -71,6 +71,7 @@ public:
 	void removeState();
 	size_t width();
 	size_t height();
+	Position get_size();
 protected:
 	size_t pRow; //natocenie
 	Skin * s;
