@@ -1,0 +1,5 @@
+rm *.aux *.toc *.log *.dvi *.pdf
+cslatex $1.tex
+cslatex $1.tex
+dvipdf $1.dvi
+evince $1.pdf &
