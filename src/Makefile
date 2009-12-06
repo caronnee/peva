@@ -11,7 +11,7 @@ lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/par
 	
 gOBJECTS=o/help_functions.o o/position.o o/movement.o o/snake.o \
 	o/create_map.o o/graphic.o o/main_menu.o \
-	o/other.o o/map.o o/body.o o/missille.o o/objects.o o/seer.o \
+	o/other.o o/map.o o/body.o o/missille.o o/objects.o \
 	o/wall.o o/images.o
 	
 LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
@@ -68,7 +68,7 @@ rerun:
 
 debugMemory:
 	make
-	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes --num-callers=20 --track-fds=yes ./bparser vstup
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./bparser vstup
 
 debugGraph:
 	make
@@ -76,7 +76,7 @@ debugGraph:
 
 debugGMemory:
 	make
-	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes --num-callers=20 --track-fds=yes ./codewars
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./codewars
 
 debugGGraph:
 	make
@@ -87,5 +87,9 @@ dep:
 	@if [ ! -d o ]; then echo "Creating compile objects directory"; mkdir o; fi
 	find . -name "*.cpp" |xargs  makedepend -Y -f Makefile.dep  2> /dev/null	
 	rm -f Makefile.dep.bak
+
+remake:
+	make distclean
+	make
 
 -include Makefile.dep

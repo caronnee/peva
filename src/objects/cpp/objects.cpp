@@ -30,7 +30,14 @@ Position Object::get_size()
 	return skinWork->get_size();
 }
 void Object::action(Map * m) {}
-
+size_t Object::width()
+{
+	return skinWork->width();
+}
+size_t Object::height()
+{
+	return skinWork->height();
+}
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {
 	Rectangle r1;
@@ -92,7 +99,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		//		return false;
 			//	std::cout << "id:" << this << ", kolidujuca pozicia: " << movement.position_in_map << std::endl;
 				del.x = o->movement.position_in_map.x;
-				del.y = o->movement.position_in_map.y + o->show()->h; 
+				del.y = o->movement.position_in_map.y + o->height(); 
 				c-=perpVector.x*(movement.old_pos.x + skinWork->width()) + perpVector.y*(movement.old_pos.y); //priamka pravy horny roh
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na dolnu stenu
 				{
@@ -116,7 +123,7 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole dolava
 			{
 			//	return false;
-				del.x = o->movement.position_in_map.x+o->show()->w;
+				del.x = o->movement.position_in_map.x+o->width();
 				del.y = o->movement.position_in_map.y;
 				c-=perpVector.x*(movement.old_pos.x) + perpVector.y*(movement.old_pos.y + skinWork->height()); //priamka pravy horny roh
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
@@ -139,8 +146,8 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 			//	return false;
 				//TESTED
 				c-=perpVector.x*(movement.old_pos.x) + perpVector.y*(movement.old_pos.y); //priamka pravy horny roh
-				del.x = o->movement.position_in_map.x + o->show()->w;
-				del.y = o->movement.position_in_map.y + o->show()->h;
+				del.x = o->movement.position_in_map.x + o->width();
+				del.y = o->movement.position_in_map.y + o->height();
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
 				{
 					std::cout << "IV bok" << std::endl;
@@ -174,7 +181,7 @@ void Object::collision(Position collidedVector)
 	movement.direction.y = 0;
 }
 int Object::IsMoving(){
-	return 0;
+	return movement.direction.x | movement.direction.y;
 }
 int Object::IsWall()
 {

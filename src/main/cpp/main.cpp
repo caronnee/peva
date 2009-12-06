@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 		{
 			config.getline(buffer, 256);
 			line = std::string (buffer);
-			unsigned int pos = line.find(DELIMINER);
+			size_t pos = line.find(DELIMINER);
 			if (pos == std::string::npos) continue;
 			std::string name = line.substr(0,pos);
 			std::string par = line.substr(pos+1);
@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
-	w.state.top()->draw();
 	while (!w.state.empty())
 	{
 		w.state.top()->process();
