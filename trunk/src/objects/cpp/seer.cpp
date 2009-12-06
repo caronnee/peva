@@ -1,6 +1,6 @@
 #include "../h/seer.h"
 
-Seer::Seer(Position p) //mame iba resolution
+Seer::Seer(Position p) 
 {
 	resolution = p;
 	masks = new Mask*[p.x];

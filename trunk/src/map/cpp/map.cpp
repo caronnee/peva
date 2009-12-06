@@ -9,22 +9,23 @@
 
 Box::Box()
 {
+	bounds.x = bounds.y =  bounds.height = bounds.width = 0;
 	objects.clear();
 }
 
-Map::Map(Position resol, std::string skinName) //map resolution in pixels + maap lookout
+Map::Map(Position resol, std::string skinName) 
 {
 	skin = new Skin(skinName, Skin::MapSkin);
-	std::cout << "Konstruktor mapy" << resol << std::endl;
+	skinWork = new ImageSkinWork(skin);
 	resolution = resol; 
 	float boxesInRow = (float)resolution.x/ BOX_WIDTH; 
 	float boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
 	Rectangle begin(0,0,BOX_WIDTH,BOX_HEIGHT);
 	map = new Box *[(int)boxesInRow +1 ];
-//	std::cout << boxesInRow << "grgrgrg" << boxesInColumn << std::endl;
-	for(int i = 0; i < boxesInRow; i++) //tolko framov vytvorime v x osi
+	for(int i = 0; i < boxesInRow; i++) 
 	{
-		map[i] = new Box [(int)boxesInColumn + 1]; //+1 because of real numbers
+		/* +1 because of real numbers */
+		map[i] = new Box [(int)boxesInColumn + 1]; 
 		for(int j = 0; j < boxesInColumn; j++)
 		{
 			map[i][j].bounds = begin;
@@ -38,7 +39,6 @@ Map::Map(Position resol, std::string skinName) //map resolution in pixels + maap
 
 void Map::redraw(Window * w, Position begin_draw_at) 
 {
-//vytapetuj to naskor prazdnymi tilom
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
@@ -47,7 +47,8 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	{
 		for(int j =0; j< w->g->screen->h; j+=skin->get_size().y)
 		{
-		//	SDL_BlitSurface(m.tiles[FreeTile],NULL, w->g->screen, &r);
+			SDL_Rect sr = skinWork->get_rect();
+			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
 			r.y+=skin->get_size().y;
 		}
 		r.y = 0;
@@ -56,9 +57,9 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
 //	std::cout << "zacina vykreslovanie objektov" << std::endl;
 //zacinaju sa vykreslovat objekty na viditelnej ploche
-	for (int i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
+	for (size_t i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
-		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
+		for(size_t j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
 //	std::cout << "huhu"<< pos << std::endl;
 		/*	if (map[pos.x][pos.y]->objects.empty())
@@ -79,12 +80,6 @@ void Map::redraw(Window * w, Position begin_draw_at)
 					rects.x = o->get_pos().x - begin_draw_at.x;
 					rects.y = o->get_pos().y - begin_draw_at.y;
 					SDL_Rect r = o->get_rect();
-			//		std::cout << "r.x: " << r.x;
-			//		std::cout << "r.y: " << r.y;
-			//		std::cout << "r.w: " << r.w;
-			//		std::cout << "r.h: " << r.h;
-//					getc(stdin);
-					
 					SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				}
 			}
@@ -92,16 +87,13 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		r.y = 0;
 		pos.y = begin_draw_at.y;
 		pos.x++;
-//	r.x+=skin->get_size().x;
-//	r.x = 0;
 	}
-	SDL_Flip(w->g->screen);
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 {
 /*	if (o1->attack > o2->defense)
-	{
+	{d
 		o2->damage-=o1->attack;
 	}
 	else
@@ -123,20 +115,20 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 	//	std::cout << o->movement.position_in_map << std::endl;
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
-	else if (o->movement.position_in_map.x > resolution.x-o->show()->w)
+	else if (o->movement.position_in_map.x > resolution.x-o->width())
 	{
 		o->movement.direction.x *= -1;
-		o->movement.position_in_map.x = 2*(resolution.x-o->show()->w) - o->movement.position_in_map.x;
+		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
 		o->movement.direction.y *= -1;
 		o->movement.position_in_map.y *= -1;
 	}
-	else if(o->movement.position_in_map.y > resolution.y-o->show()->h)
+	else if(o->movement.position_in_map.y > resolution.y-o->height())
 	{
 		o->movement.direction.y *= -1;
-		o->movement.position_in_map.y = 2*(resolution.y - o->show()->h) - o->movement.position_in_map.y;
+		o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
 	}
 //	pre kazdy roh sa pozri, akom je boxe. Ak rozny, checkuj kolizi pre kazdy objekt v boxe s useckou (A,B)
 //	vieme urcite, ze dalsi boc bude vedlajsi z velkosti boxi a z maximu pohyby za sekundu
@@ -147,11 +139,14 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 		std::cout << "TODO" << std::endl;
 	}
 	//pre vsetky v tej povodnej, ci sa nam to skolidovalo
+	//std::cout << oldBox.x <<  " " <<oldBox.y;
+	//getc(stdin);
 	Box b = map[oldBox.x][oldBox.y];
 	Object * nearest = NULL; //TODO kontrola, ci to fakt je nutne
 	float dist = BOX_WIDTH*BOX_HEIGHT; //nekonecno
 	Position colVector;
 	std::list<Object *>::iterator iter = b.objects.begin();
+
 	while (iter!=b.objects.end())
 	{
 		if ( o != (* iter))
@@ -166,33 +161,13 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 	}
 }
 
-void Map::update(Window * w, Position p)
-{
-/*	Position pos(p.x-1,p.y-1);	
-	SDL_Rect r;
-	for (int i =0; i<=2; i++)
-	{
-		for (int j =0; j<=2; j++)
-		{
-			SDL_BlitSurface(m.tiles[FreeTile],NULL,w->g->screen, &r);
-		}
-	}
-	for (int i =-1; i<=1; i++)
-	{
-		for (int j =-1; j<=1; j++)
-		{
-			SDL_BlitSurface(map[x.x][y.y],NULL,w->g->screen, &r);
-		}
-	}*/
-}
-
 void Map::add(Object * o)
 {
 	Position pos= o->get_pos();
-	pos.x /=BOX_WIDTH;
-	pos.y /=BOX_HEIGHT;
+	std::cout << "Position" << pos << std::endl;
+	pos.x /= BOX_WIDTH;
+	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.push_back(o);
-	std::cout << "added to" << pos << std::endl;
 }
 
 Map::~Map() 

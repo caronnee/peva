@@ -192,27 +192,28 @@ void Play::process()
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
+		{
+			switch(w->g->event.key.keysym.sym)
 			{
-				switch(w->g->event.key.keysym.sym)
+				case SDLK_a:
 				{
-					case SDLK_a:
-						{
-							Object * o = new Missille(Position(100,100), Position(-50,-60),new Skin("dragon", Skin::MissilleSkin));
-							objects.push_back(o);
-							m->add(o);
-							break;
-						}
-					case SDLK_ESCAPE:
-						{
-							clear();
-							w->state.pop();
-							break;
-						}
-					default:
-						break;
+					std::cout << "pridavam"<<std::endl;
+					Object * o = new Missille(Position(100,100), Position(-50,-60),new Skin("dragon", Skin::MissilleSkin));
+					objects.push_back(o);
+					m->add(o);
+					break;
 				}
-				break;
+				case SDLK_ESCAPE:
+				{
+					clear();
+					w->state.pop();
+					break;
+				}
+				default:
+					break;
 			}
+			break;
+		}
 	}
 }
 

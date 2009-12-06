@@ -53,7 +53,7 @@ class Play:public Menu
 	Map * m;
 	Window * w;
 	Position p;
-	Position begin; //whre to begin drae gameboard
+	Position begin; //where to begin draw gameboard
 	Position resolution;//map resolution in pixels
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	std::list<Letter *> letts;

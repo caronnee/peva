@@ -30,7 +30,6 @@ class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls
 protected:
 	ImageSkinWork * skinWork;
 public:
-	Map * map;
 	virtual bool is_blocking();
 	ObjectMovement movement; //kde sa prave nachadza na mape
 	std::string name;
@@ -45,6 +44,8 @@ public:
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
 	Position get_size();
+	size_t width();
+	size_t height();
 
 
 	int IsMoving();
