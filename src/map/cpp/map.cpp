@@ -155,11 +155,13 @@ void Map::move(ObjectMovement& move , Object * o) //TODO vracat position
 
 void Map::add(Object * o)
 {
+	getc(stdin);
 	Position pos= o->get_pos();
 	std::cout << "Position" << pos << std::endl;
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.push_back(o);
+	std::cout << "robot" <<o->skinWork;getc(stdin);
 }
 
 Map::~Map() 

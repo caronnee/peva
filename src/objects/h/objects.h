@@ -56,6 +56,7 @@ public:
 	Position Locate();
 	int Hit();
 };
+/* dummy object */
 class Nullable : public Object
 {
 };
