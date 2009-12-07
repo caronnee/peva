@@ -20,7 +20,6 @@ std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "Trap
 //TODO predat len nejaky parameter alebo kopirovat;)
 Skin::Skin(std::string name, Skin::Type t)
 {
-	std::cout << "ON!";
 	nameOfSet = name;
 	std::string * load;
 	std::string directory = "./"; 
@@ -166,6 +165,8 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 	states[StateDefault] = ActionDefault; //ostatene sa budu prepisovat
 	rect.w = skin->get_size().x;
 	rect.h = skin->get_size().y;
+	rect.x = 0;
+	rect.y = 0;
 }
 SDL_Surface * ImageSkinWork::get_image()
 {

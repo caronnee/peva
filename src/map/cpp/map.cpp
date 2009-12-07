@@ -55,25 +55,15 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		r.x+=skin->get_size().x;
 	}
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
-//	std::cout << "zacina vykreslovanie objektov" << std::endl;
-//zacinaju sa vykreslovat objekty na viditelnej ploche
 	for (size_t i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		for(size_t j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
-//	std::cout << "huhu"<< pos << std::endl;
-		/*	if (map[pos.x][pos.y]->objects.empty())
-			{
-				std::cout << "wdygvure" <<std::endl;
-			}
-			else std::cout << "not empty"<< map[pos.x][pos.y]->objects.size() << std::endl;
-		*/
+			int  a = 0;
 			std::list<Object *>::iterator iter = map[pos.x][pos.y].objects.begin();
-//	std::cout << pos << w->g->screen->w << w->g->screen->h<<std::endl;
 			while(iter != map[pos.x][pos.y].objects.end())
 			{
 				Object * o = (*iter);
-				iter++;
 				if(o!=NULL)
 				{
 					SDL_Rect rects;
@@ -82,6 +72,8 @@ void Map::redraw(Window * w, Position begin_draw_at)
 					SDL_Rect r = o->get_rect();
 					SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				}
+				iter++;
+				a++;
 			}
 		}
 		r.y = 0;

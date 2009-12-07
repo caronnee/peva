@@ -27,7 +27,7 @@ struct ObjectMovement
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
-protected:
+public:
 	ImageSkinWork * skinWork;
 public:
 	virtual bool is_blocking();

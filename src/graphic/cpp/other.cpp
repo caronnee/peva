@@ -3,6 +3,12 @@
 #include "../h/other.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/missille.h"
+#include "../../language/h/bison.h"
+#include "../../language/h/robot.h"
+
+extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
+extern void my_destroy();
+extern int yyparse(Robots *);
 
 Join::Join(Window *w_)
 {
@@ -144,8 +150,15 @@ Play::~Play()throw(){} //uz predtym sa zavola clear, takze to netreba
 
 void Play::redraw()
 {
-	w->tapestry();
-	draw();
+	//draw();
+/*	std::list< Object *> ::iterator obj = m->map[0][0].objects.begin();
+	while(obj != m->map[0][0].objects.end())
+	{
+		SDL_BlitSurface((*obj)->show(),NULL, w->g->screen, NULL);
+		obj++;
+	}*/
+	m->redraw(w, begin);
+	SDL_Flip(w->g->screen);
 }
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
@@ -156,7 +169,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {
-
+	skin = new Skin("bowman", Skin::MissilleSkin);
 	resolution = Position(x,y);
 	m = new Map(resolution, "grass");
 	objects.clear();
@@ -188,6 +201,10 @@ void Play::process()
 		(*iter)->action(m);
 	}
 	redraw();
+	std::list<Object *>::iterator iter = objects.begin();
+	SDL_Rect rect;
+	rect.x = 0;
+	rect.y = 0;
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
 	{
@@ -197,10 +214,26 @@ void Play::process()
 			{
 				case SDLK_a:
 				{
-					std::cout << "pridavam"<<std::endl;
-					Object * o = new Missille(Position(100,100), Position(-50,-60),new Skin("dragon", Skin::MissilleSkin));
+					Object * o = new Missille(Position(rand()%300,rand()%200), Position(-50,-60),skin);
 					objects.push_back(o);
 					m->add(o);
+					break;
+				}
+				case SDLK_r:
+				{	
+					if((yyin=fopen("vstup", "r"))==0)
+					{
+						puts("Unable to open input\n");
+						break;
+					}
+					int err = yyparse(&robots);
+					for ( size_t i =0; i< robots.robots.size(); i++)
+						{
+							m->add(robots.robots[i]);
+							objects.push_back(robots.robots[i]);
+						}
+					fclose(yyin);	
+					my_destroy();
 					break;
 				}
 				case SDLK_ESCAPE:
