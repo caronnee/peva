@@ -47,12 +47,12 @@ struct MyXmlData
 };
 class Robot : public Object
 {
+public:
 	enum ErrorCode
 	{
 		WarningKillAlreadyDefined,
 		WarningConversionToInt,
 		WarningRedefinedOption,
-		WarningQouOfRange,
 		ErrorVariableNotDefined,
 		ErrorToMuchInitializers,
 		ErrorTypeNotRecognized,
@@ -65,7 +65,6 @@ class Robot : public Object
 		ErrorContinue,
 		ErrorOutOfRange
 	};
-
 
 	Node * dev_null;
 	Nullable * nullable;
@@ -115,7 +114,6 @@ public:
 	Robot(std::string name, GamePoints g);
 	Robot();
 
-	Skin * skin;
 	Create_type * find_type(Type t);
 	Create_type * find_array_type(int range, Create_type * descend);
 	void declare_type();
@@ -160,6 +158,7 @@ struct Robots
 
 	void createNew(std::string name);
 	void set(Options op, size_t value);
+	void checkSkins();
 	Skin * addSkin(std::string name);
 	~Robots();
 };

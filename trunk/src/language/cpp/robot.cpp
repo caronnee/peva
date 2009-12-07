@@ -17,6 +17,12 @@ SecondSection::SecondSection()
 
 Robot::Robot(std::string s, GamePoints p)
 {
+	/* Object data*/
+	movement.position_in_map.x = 100;
+	movement.position_in_map.y = 50;
+	movement.direction.x = 0;
+	movement.direction.y = 0;
+	/* robot data */
 	name = s;
 	nested = "";
 	errors = false;
@@ -539,6 +545,16 @@ Robot::~Robot()
 			std::cout << "Eeeeek!"; getc(stdin);
 		}
 		delete instructions[i];
+	}
+}
+void Robots::checkSkins()
+{
+	for (size_t i =0; i< robots.size(); i++)
+	{
+		if (robots[i]->skinWork == NULL)
+		{
+			robots[i]->skinWork = new ImageSkinWork(addSkin("dragon"));
+		}
 	}
 }
 Robots::~Robots()

@@ -227,6 +227,7 @@ void Play::process()
 						break;
 					}
 					int err = yyparse(&robots);
+					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
 							m->add(robots.robots[i]);
