@@ -5,6 +5,7 @@
 #include <vector>
 #include "../../map/h/map.h"
 #include "../../add-ons/h/position.h"
+#include "../../language/h/robot.h"
 #include "graphic.h"
 
 
@@ -51,8 +52,10 @@ struct Letter
 class Play:public Menu
 {
 	Map * m;
+	Skin *skin;
 	Window * w;
 	Position p;
+	Robots robots;
 	Position begin; //where to begin draw gameboard
 	Position resolution;//map resolution in pixels
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;

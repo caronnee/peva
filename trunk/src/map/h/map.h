@@ -32,7 +32,7 @@ struct MapData
 
 /* class resolving movement */
 
-class Map
+struct Map
 {
 	/* data about positions of object in map */
 	std::list<MapData> activeObjects;	

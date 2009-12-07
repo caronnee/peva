@@ -282,6 +282,10 @@ Robots::Robots(GamePoints g_)
 	g = g_;
 	actualRobot = NULL;
 }
+Robots::Robots()
+{
+	actualRobot = NULL;
+}
 Skin * Robots::addSkin(std::string name)
 {
 	Skin * s;

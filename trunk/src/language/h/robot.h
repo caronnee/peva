@@ -15,6 +15,7 @@
 #include "parser_classes.h"
 #include "typeContainer.h"
 #include "../../graphic/h/images.h"
+#include "../../objects/h/objects.h"
 
 #define DELIMINER_CHAR '#'
 
@@ -44,7 +45,7 @@ struct MyXmlData
 	xmlNodePtr root_ptr;
 	xmlNodePtr node;
 };
-struct Robot 
+class Robot : public Object
 {
 	enum ErrorCode
 	{
@@ -152,6 +153,7 @@ struct Robots
 	std::vector<Robot *> robots;
 	std::vector<ResolveName> resolveName;
 	Robots(GamePoints g);
+	Robots();
 
 	std::stack<std::string> resolveKill;
 	std::vector<Skin *> skins;
