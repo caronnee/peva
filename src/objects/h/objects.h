@@ -19,44 +19,88 @@ struct Type_missille
 
 struct ObjectMovement
 {
+	/* used when moving for determinig old position, not necessary */
 	Position old_pos;
+	/* actual positio in map */
 	Position position_in_map;
+	/* direction */
 	Position direction;
 	float fps; //maximalne rychlost
+	/* how many steps is object allowed to take */
+	int steps;
 };
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
-public:
-	ImageSkinWork * skinWork;
-public:
-	virtual void action();
-	virtual bool is_blocking();
-	ObjectMovement movement; //kde sa prave nachadza na mape
+protected:
+	/* name of th object, for debugging purposes */
 	std::string name;
-	int defense, attack;
-	int hitpoints;
-	Uint32 ticks; //zdravie a interval, po jakom sa naplanuje dalsia akcia
+
+	/* Worker with the inages representing states of object */
+	ImageSkinWork * skinWork;
+
+	/* object properties */
+	int defense, attack, hitpoints;
+
+	/* find out how much tim e passed since last blit */
+	Uint32 ticks;
+public:
+	/* constructor */
 	Object();
+
+	/* moves in the desired direction, not mentioning obstacles */
+	void move();
+
+	/* do an action, change state or so */
+	virtual void action();
+
+	/* for visibility, it is good to know whether object is transparent */
+	virtual bool is_blocking();
+
+	/* data considering move action, public because of map correction */
+	ObjectMovement movement; 
+
+	/* return acual position from movement, just user friendly function */
 	Position get_pos() const;
-//	virtual void damage(Object * sender) = 0;
+
+	/* for drawing purposes, function return image of object in all states */
 	SDL_Surface * show();
+
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
+
+	/* returns size of image that should be visible */
 	Position get_size();
+
+	/* return width of image being drawn */
 	size_t width();
+
+	/* return height of image being drawn */
 	size_t height();
 
-
-	int isMoving();
-	int isWall();
-	int isPlayer();
-	int isMissille();
-	SDL_Rect get_rect();
+	/* for robot questioning state of object */
 	Position Locate();
+
+	/* for robot questioning state of object */
 	int Hit();
+
+	/* check, whether objcet is moving for optimalization and robot instruction purposes */
+	int isMoving();
+
+	/* for robot questioning state of object */
+	int isWall();
+
+	/* for robot questioning state of object */
+	int isPlayer();
+
+	/* for robot questioning state of object */
+	int isMissille();
+
+	/* return SDL rectangle information about inage to be blit */
+	SDL_Rect get_rect();
 };
-/* dummy object */
+
+/* dummy object used as singleton representing NULL */
 class Nullable : public Object
 {
 };

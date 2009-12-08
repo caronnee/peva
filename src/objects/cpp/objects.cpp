@@ -2,11 +2,16 @@
 
 Object::Object()
 {
-	ticks = 100; // TODO
 	name =" Object";
 	skinWork = NULL;
 }
 
+void Object::move()
+{
+	movement.old_pos = movement.position_in_map;
+	movement.position_in_map.x = movement.direction.x/movement.fps;
+	movement.position_in_map.y = movement.direction.y/movement.fps;
+}
 bool Object::is_blocking()
 {
 	return false;

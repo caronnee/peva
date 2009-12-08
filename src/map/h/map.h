@@ -36,7 +36,7 @@ struct Map
 	/* size of map in pixels */
 	Position resolution; 
 
-	/* map skin */
+	/* map skin *///TODO je ho vlastne potreba?
 	Skin * skin;
 
 	/* skin worker */
@@ -47,6 +47,7 @@ struct Map
 	
 	/* check whether actual position is legal */
 	void resolveBorders(Object * o);
+
 	/* resolves move actions, chek collision etc.*/
 	void resolveMove(Object * o);
 

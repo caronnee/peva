@@ -126,7 +126,7 @@ Object * Map::checkCollision(Object * o)
 }
 void Map::performe()
 {
-//for all boxes, do action
+	//for all boxes, do action
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
@@ -152,7 +152,7 @@ void Map::performe()
 			}
 		}
 }
-void Map::resolveBorders(Object *o ) //todo zmazat, budu tam solid steny
+void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny
 {
 	if (o->movement.position_in_map.x < 0)
 	{
@@ -178,8 +178,11 @@ void Map::resolveBorders(Object *o ) //todo zmazat, budu tam solid steny
 }
 void Map::resolveMove(Object * o)
 {
-	if (!(o->isMoving()))
+	if (!(o->isMoving())) //pokial je mrtvy, tak je taky nemoving
 		return;
+
+	/* move, actually */
+	o->move();
 	resolveBorders(o);
 	Object *collidedWith = checkCollision(o);
 	if (collidedWith!=NULL)
@@ -190,13 +193,10 @@ void Map::resolveMove(Object * o)
 
 void Map::add(Object * o)
 {
-	getc(stdin);
 	Position pos= o->get_pos();
-	std::cout << "Position" << pos << std::endl;
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.push_back(o);
-	std::cout << "robot" <<o->skinWork;getc(stdin);
 }
 
 Map::~Map() 

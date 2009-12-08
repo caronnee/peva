@@ -20,6 +20,8 @@ Robot::Robot(std::string s, GamePoints p)
 	/* Object data*/
 	movement.direction.x = 0;
 	movement.direction.y = 0;
+	movement.position_in_map.x = 100;
+	movement.position_in_map.y = 100;
 	/* robot data */
 	name = s;
 	nested = "";
@@ -81,6 +83,10 @@ Create_type * Robot::find_type(Type t)
 	return last_type;
 }
 
+void Robot::setSkin(Skin*s)
+{
+	skinWork = new ImageSkinWork(s);
+}
 void Robot::declare_type()
 {
 	active_type.push(last_type);
@@ -549,11 +555,15 @@ void Robots::checkSkins()
 {
 	for (size_t i =0; i< robots.size(); i++)
 	{
-		if (robots[i]->skinWork == NULL)
+		if (robots[i]->skined())
 		{
-			robots[i]->skinWork = new ImageSkinWork(addSkin("dragon"));
+			robots[i]->setSkin(addSkin("dragon"));
 		}
 	}
+}
+bool Robot::skined()
+{
+	return skinWork == NULL;
 }
 Robots::~Robots()
 {
