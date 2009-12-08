@@ -30,6 +30,7 @@ class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls
 public:
 	ImageSkinWork * skinWork;
 public:
+	virtual void action();
 	virtual bool is_blocking();
 	ObjectMovement movement; //kde sa prave nachadza na mape
 	std::string name;
@@ -40,7 +41,6 @@ public:
 	Position get_pos() const;
 //	virtual void damage(Object * sender) = 0;
 	SDL_Surface * show();
-	virtual void action(Map * m);
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
 	Position get_size();
@@ -48,10 +48,10 @@ public:
 	size_t height();
 
 
-	int IsMoving();
-	int IsWall();
-	int IsPlayer();
-	int IsMissille();
+	int isMoving();
+	int isWall();
+	int isPlayer();
+	int isMissille();
 	SDL_Rect get_rect();
 	Position Locate();
 	int Hit();

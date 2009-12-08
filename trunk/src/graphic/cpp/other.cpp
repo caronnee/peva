@@ -150,15 +150,9 @@ Play::~Play()throw(){} //uz predtym sa zavola clear, takze to netreba
 
 void Play::redraw()
 {
-	//draw();
-/*	std::list< Object *> ::iterator obj = m->map[0][0].objects.begin();
-	while(obj != m->map[0][0].objects.end())
-	{
-		SDL_BlitSurface((*obj)->show(),NULL, w->g->screen, NULL);
-		obj++;
-	}*/
 	m->redraw(w, begin);
 	SDL_Flip(w->g->screen);
+	sleep(1);
 }
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
@@ -174,9 +168,6 @@ void Play::init(int x, int y)
 	m = new Map(resolution, "grass");
 	objects.clear();
 	Position speed(100,100);
-//	Object *o =new Missille(Position(rand()%resolution.x, rand()%resolution.y), speed);
-//	objects.push_back(o);
-//	m->add(o);
 }
 
 void Play::clear()
@@ -198,7 +189,7 @@ void Play::process()
 {
 	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
 	{
-		(*iter)->action(m);
+		(*iter)->action();
 	}
 	redraw();
 	std::list<Object *>::iterator iter = objects.begin();

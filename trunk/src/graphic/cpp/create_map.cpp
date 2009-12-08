@@ -472,7 +472,7 @@ void Create_map::process_map()
 											  y = w->g->event.button.y - rects[MAP].y;
 											  if((begin_x + x/skin->get_size().x >= resolX)|| (begin_y + y/skin->get_size().y >= resolY))
 												  return;
-											  map[begin_x + x/skin->get_size().x][begin_y + y/skin->get_size().y] |= (1 << select);
+											  map[begin_x + x/skin->get_size().x][begin_y + y/skin->get_size().y] = (1 << select);
 											  draw();
 										  }
 										  break;

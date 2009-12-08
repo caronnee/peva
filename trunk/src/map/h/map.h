@@ -22,21 +22,14 @@ struct Box
 	std::list<Object *> objects; //objects in area
 };
 
-/* for all animated object we need to have information */
-
-struct MapData
-{
-	Object * o;
-	Position positionInMap; //or which map  we are in
-};
-
 /* class resolving movement */
 
 struct Map
 {
-	/* data about positions of object in map */
-	std::list<MapData> activeObjects;	
-
+	/* how many column boxes */
+	float boxesInColumn;
+	/* how many row boxes */
+	float boxesInRow;
 	/* where bot th initial positions of bots for fair play*/
 	std::vector<Position> bot_begins;
 
@@ -51,18 +44,29 @@ struct Map
 
 	/* map is a join of areas */
 	Box ** map;
+	
+	/* check whether actual position is legal */
+	void resolveBorders(Object * o);
+	/* resolves move actions, chek collision etc.*/
+	void resolveMove(Object * o);
 
 public:
-	/* checking for colision and resolving it*/
-	void collision(Object * o1, Object * o2);
-
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);
 
-	/* map finds out */
-	void move(ObjectMovement& m, Object * o); 
+	/* check and collision */
+	Object * checkCollision(Object * o);
 
-	/* destructor destorying alocated space, no need to be virtual so far */
+	/* checking for colision and resolving it*/
+	void collision(Object * o1, Object * o2);
+
+	/* map finds out the object movement*/
+	void move(Object * o); 
+
+	/* events in map */
+	void performe();
+
+	/* destructor destorying allocated space, no need to be virtual so far */
 	~Map();
 
 	/* draws all visible place */
@@ -70,6 +74,4 @@ public:
 	/* add an object to the map, not walls */
 	void add(Object * o); 
 };
-
-
 #endif

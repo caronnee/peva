@@ -42,6 +42,6 @@ void Missille::action(Map * m)
 //	std::cout << "pozicia po:" << movement.position_in_map << std::endl;
 //	getc(stdin);
 	ticks = SDL_GetTicks();
-	m->move(movement, this);
+//	m->move(movement, this);
 }
 Missille::~Missille() {} //zatial nic specialne nerobi
