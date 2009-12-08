@@ -12,7 +12,7 @@ class Missille : public Object
 public:
 	virtual bool is_blocking();
 	virtual void damage(Object* sender);
-	virtual void action(Map * m); //penalizacia
+	virtual void action(); 
 	virtual void defense();
 	Missille(Position p, Position dir, Skin*s);
 	~Missille();

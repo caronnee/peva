@@ -17,7 +17,7 @@ bool Missille::is_blocking()
 void Missille::damage(Object * sender)
 {
 //	Position p = sender->position_in_map;
-	this->hitpoints -= sender->attack;
+//	this->hitpoints -= sender->attack;
 }
 void Missille::defense() //zkladne sa a odide, odkial prisla
 {
@@ -25,7 +25,7 @@ void Missille::defense() //zkladne sa a odide, odkial prisla
 	movement.direction.y *=-1; //TODO to sa vrati odkial prisla
 }
 
-void Missille::action(Map * m)
+void Missille::action()
 {
 	movement.old_pos = movement.position_in_map;
 	milisec = SDL_GetTicks() - ticks;
@@ -42,6 +42,5 @@ void Missille::action(Map * m)
 //	std::cout << "pozicia po:" << movement.position_in_map << std::endl;
 //	getc(stdin);
 	ticks = SDL_GetTicks();
-//	m->move(movement, this);
 }
 Missille::~Missille() {} //zatial nic specialne nerobi

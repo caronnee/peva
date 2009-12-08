@@ -121,6 +121,8 @@ public:
 	void leave_type();
 	void save_to_xml();
 	void add_kill(size_t id);
+	void setSkin(Skin * a);
+	bool skined();
 	~Robot();
 };
 

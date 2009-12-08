@@ -194,7 +194,7 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 		ResolveName n;n.robot = program->actualRobot;
 		n.name = $3;
 		program->resolveName.push_back(n);}
-	| options TOKEN_SKIN TOKEN_IDENTIFIER {	program->actualRobot->skinWork = new ImageSkinWork(program->addSkin($3));}
+	| options TOKEN_SKIN TOKEN_IDENTIFIER {	program->actualRobot->setSkin(program->addSkin($3)); }
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
 		| global_variables local_variables { $$= join_instructions($1,$2);}
