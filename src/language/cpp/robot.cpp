@@ -18,8 +18,6 @@ SecondSection::SecondSection()
 Robot::Robot(std::string s, GamePoints p)
 {
 	/* Object data*/
-	movement.position_in_map.x = 100;
-	movement.position_in_map.y = 50;
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 	/* robot data */

@@ -12,11 +12,6 @@ bool Object::is_blocking()
 	return false;
 }
 
-Position Object::get_pos() const
-{
-	return movement.position_in_map;
-}
-
 SDL_Rect Object::get_rect()
 {
 	return skinWork->get_rect();
@@ -29,10 +24,16 @@ Position Object::get_size()
 {
 	return skinWork->get_size();
 }
-void Object::action(Map * m) {}
+Position Object::get_pos() const
+{
+	return movement.position_in_map;
+}
 size_t Object::width()
 {
 	return skinWork->width();
+}
+void Object::action()
+{
 }
 size_t Object::height()
 {
@@ -180,18 +181,18 @@ void Object::collision(Position collidedVector)
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 }
-int Object::IsMoving(){
+int Object::isMoving(){
 	return movement.direction.x | movement.direction.y;
 }
-int Object::IsWall()
+int Object::isWall()
 {
 	return 0;
 }
-int Object::IsPlayer()
+int Object::isPlayer()
 { 
 	return 0;
 }
-int Object::IsMissille()
+int Object::isMissille()
 {
 	return 0;
 }

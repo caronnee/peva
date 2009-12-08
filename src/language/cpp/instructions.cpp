@@ -1407,7 +1407,7 @@ int InstructionIsPlayer::execute(Core *c)
 	std::cout << "Checking playerism ...";
 	Object * o = c->getObjectFromStack();	
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = o->IsPlayer();
+	c->values.back()->integerValue = o->isPlayer();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1423,7 +1423,7 @@ int InstructionIsWall::execute(Core *c)
 	std::cout << "Checking wallism ...";
 	Object * o = c->getObjectFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = o->IsWall();
+	c->values.back()->integerValue = o->isWall();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1439,7 +1439,7 @@ int InstructionIsMissille::execute(Core *c)
 	std::cout <<"Checking missilism ..."; //s jednym parametrom
 	Object * o = c->getObjectFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = o->IsMissille();
+	c->values.back()->integerValue = o->isMissille();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1476,7 +1476,7 @@ int InstructionIsMoving::execute(Core *c)
 	std::cout << "Checking movement ...";
 	Object * o = c->getObjectFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = o->IsMoving();
+	c->values.back()->integerValue = o->isMoving();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
