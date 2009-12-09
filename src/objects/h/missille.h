@@ -1,6 +1,5 @@
 #ifndef ___MISILLE____
 #define ___MISILLE____
-#include "../../map/h/map.h"
 #include "../../graphic/h/images.h"
 #include "objects.h"
 
