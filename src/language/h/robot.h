@@ -16,6 +16,7 @@
 #include "typeContainer.h"
 #include "../../graphic/h/images.h"
 #include "../../objects/h/objects.h"
+#include "../../objects/h/missille.h"
 
 #define DELIMINER_CHAR '#'
 
@@ -45,8 +46,11 @@ struct MyXmlData
 	xmlNodePtr root_ptr;
 	xmlNodePtr node;
 };
-class Robot : public Object
+class Robot
 {
+	Skin * mSkin;
+	size_t missilles;
+	std::list<Missille *> ammo;
 public:
 	enum ErrorCode
 	{
@@ -96,10 +100,12 @@ public:
 	Function * find_f(std::string s);
 	void add(Instructions ins);
 	Node * create_type(Type t);
+	
 	void enter(std::string s, std::vector<Parameter_entry> p,Create_type *t);
 	void add_function( Instructions ins);
 	void leave();
 	void execute();
+	virtual void action();
 	void addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
 	void addVisitSeq(std::vector<Position> pos);
@@ -113,7 +119,7 @@ public:
 public:
 	Robot(std::string name, GamePoints g);
 	Robot();
-
+	
 	Create_type * find_type(Type t);
 	Create_type * find_array_type(int range, Create_type * descend);
 	void declare_type();
@@ -122,7 +128,9 @@ public:
 	void save_to_xml();
 	void add_kill(size_t id);
 	void setSkin(Skin * a);
+	void setmSkin(Skin * a);
 	bool skined();
+	Body * getBody();
 	~Robot();
 };
 
@@ -157,11 +165,13 @@ struct Robots
 
 	std::stack<std::string> resolveKill;
 	std::vector<Skin *> skins;
+	std::vector<Skin *> mSkins;
 
 	void createNew(std::string name);
 	void set(Options op, size_t value);
 	void checkSkins();
 	Skin * addSkin(std::string name);
+	Skin * addmSkin(std::string name);
 	~Robots();
 };
 #endif

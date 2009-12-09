@@ -19,20 +19,34 @@ struct Type_missille
 
 struct ObjectMovement
 {
+	/* object speed, pixels per turn */
+	size_t speed;
+
 	/* used when moving for determinig old position, not necessary */
 	Position old_pos;
+
 	/* actual positio in map */
 	Position position_in_map;
+
 	/* direction */
 	Position direction;
-	float fps; //maximalne rychlost
+
+	/* frame per second */
+	float fps; 
+
 	/* how many steps is object allowed to take */
 	int steps;
+	
+	/* actual angle */
+	int angle;
 };
 
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
 protected:
+	/* who cause the object to live, animate etc. */
+	size_t owner;
+
 	/* name of th object, for debugging purposes */
 	std::string name;
 
@@ -50,6 +64,9 @@ public:
 
 	/* moves in the desired direction, not mentioning obstacles */
 	void move();
+
+	/* turn sin desired position */
+	void turn(int angle);
 
 	/* do an action, change state or so */
 	virtual void action();

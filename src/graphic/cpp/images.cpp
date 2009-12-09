@@ -5,12 +5,6 @@
 
 namespace bf = boost::filesystem;
 
-Skin::Skin()
-{
-	size = 0;
-	nameOfSet = "Undefined";
-}
-
 std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png" };
 std::string toLoadMissille[] = {"missille.png"};
 
@@ -105,12 +99,6 @@ Skin::Skin(std::string name, Skin::Type t)
 		shift.y = 0;
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
-		std::cout << "BEG~";
-		for (size_t i =0; i< size; i++)
-		{
-			std::cout << images[i] << " ";
-		}
-		std::cout << "EBEG~";
 		return; //exception?
 	}
 	std::fstream f;
@@ -124,17 +112,9 @@ Skin::Skin(std::string name, Skin::Type t)
 		f >>shift.x;	
 		f >>shift.y;	
 	}
-	std::cout << "BEG~";
-	for (size_t i =0; i< size; i++)
-	{
-		std::cout << images[i] << " ";
-	}
-	std::cout << "EBEG~";
 }
 SDL_Surface * Skin::get_surface(size_t index)
 {
-//	std::cout << "images" << images[index];
-//	getc(stdin);
 	return images[index];
 }
 Position Skin::get_size()
@@ -218,4 +198,20 @@ size_t ImageSkinWork::height() //bude sa pytat kvoli kolizii
 Position ImageSkinWork::get_size()
 {
 	return s->get_size();
+}
+
+float ImageSkinWork::turn(int degree)
+{
+	while (degree < 0)
+	{
+		degree += 360;
+	}
+	size_t directions = get_image()->h / s->get_shift().y;
+	float dirShift = 360 / directions;
+	int sh = degree / dirShift;
+	std::cout << "aekfh"; getc(stdin);
+	rect.y += sh*s->get_shift().y;
+	rect.y %= get_image()->h;
+	std::cout << "aekfh"; getc(stdin);
+	return dirShift;
 }

@@ -17,17 +17,13 @@ SecondSection::SecondSection()
 
 Robot::Robot(std::string s, GamePoints p)
 {
-	/* Object data*/
-	movement.direction.x = 0;
-	movement.direction.y = 0;
-	movement.position_in_map.x = 100;
-	movement.position_in_map.y = 100;
+	missilles = 10;
 	/* robot data */
 	name = s;
 	nested = "";
 	errors = false;
 	defined_types = new TypeContainer();
-	body = new Body();
+	body = NULL;
 	core = new Core( defined_types);
 	core->set_body(body);
 	toKill = NULL;
@@ -82,10 +78,16 @@ Create_type * Robot::find_type(Type t)
 	last_type = defined_types->find_type(t);	
 	return last_type;
 }
-
+Body * Robot::getBody ()
+{
+	return body;
+}
 void Robot::setSkin(Skin*s)
 {
-	skinWork = new ImageSkinWork(s);
+	if (body)
+		delete body;
+	body = new Body (s);
+	mSkin = s;
 }
 void Robot::declare_type()
 {
@@ -281,11 +283,15 @@ void Robot::execute()
 {
 	while(core->PC < instructions.size())
 	{
-		std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();
-		instructions[core->PC]->execute(core);
-		core->PC++;
-		std::cout << "core:" << core->values.size();
+		action();
 	}
+}
+void Robot::action()
+{
+	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();
+	instructions[core->PC]->execute(core);
+	core->PC++;
+	std::cout << "core:" << core->values.size();
 }
 Robots::Robots(GamePoints g_)
 {
@@ -305,6 +311,8 @@ Skin * Robots::addSkin(std::string name)
 			return skins[i];
 	}
 	s = new Skin(name, Skin::BotSkin);
+	Skin *ms = new Skin(name, Skin::MissilleSkin );
+	mSkins.push_back(ms);
 	skins.push_back(s);
 	return s;
 }
@@ -486,7 +494,6 @@ void Robot::consolidate()
 		{
 			if (!be->depth) //ak nie je zaciatkom, end
 				continue;
-			std::cout << i <<",3."<< instructions[i]->name() <<std::endl;
 			breaks.push_back(NULL);
 			conts.push_back(NULL);
 			begins.push_back(be);
@@ -498,7 +505,6 @@ void Robot::consolidate()
 		{
 			if (!e->end_loop)
 				continue;
-			std::cout << i <<",4."<<breaks.empty() <<std::endl;
 			//resolve vsetky breaky az po NULL
 			while ((!breaks.empty())&&(breaks.back()!=NULL))
 			{
@@ -519,7 +525,6 @@ void Robot::consolidate()
 			beg.pop_back();
 			continue;
 		}
-		std::cout << i << "!" << std::endl;
 	}
 }
 Robot::~Robot()
@@ -531,13 +536,17 @@ Robot::~Robot()
 	delete nullable;
 	delete defined_types;
 
-	
-
+	for (std::list<Missille *>::iterator i = ammo.begin();
+		i!=ammo.end();
+		i++ )
+		delete (*i);	
+	ammo.clear();
 	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
 		i!= targets.end(); i++)
 	{
 		delete (*i);
 	}
+	targets.clear();
 
 	//delete instructions
 
@@ -550,6 +559,33 @@ Robot::~Robot()
 		}
 		delete instructions[i];
 	}
+	instructions.clear();
+}
+Skin * Robots::addmSkin( std::string name)
+{
+	for (size_t i = 0; i< mSkins.size(); i++)
+	{
+		if (mSkins[i]->nameOfSet == name)
+			return mSkins[i];
+	}
+	Skin *ms = new Skin(name, Skin::MissilleSkin );
+	mSkins.push_back(ms);
+	return ms;
+}
+
+void Robot::setmSkin(Skin* s)
+{
+	mSkin = s; 
+	if (!ammo.empty())
+	{
+		for (std::list<Missille *>::iterator i = ammo.begin();
+			i!=ammo.end();
+			i++)
+		delete (*i);
+	}
+	ammo.clear();
+	for(size_t i =0; i<missilles; i++)
+		ammo.push_back(new Missille(mSkin));
 }
 void Robots::checkSkins()
 {
@@ -558,12 +594,13 @@ void Robots::checkSkins()
 		if (robots[i]->skined())
 		{
 			robots[i]->setSkin(addSkin("dragon"));
+			robots[i]->setmSkin(addmSkin("dragon"));
 		}
 	}
 }
 bool Robot::skined()
 {
-	return skinWork == NULL;
+	return body == NULL;
 }
 Robots::~Robots()
 {
@@ -572,6 +609,11 @@ Robots::~Robots()
 	{
 		delete(skins.back());
 		skins.pop_back();
+	}
+	while(!mSkins.empty())
+	{
+		delete(mSkins.back());
+		mSkins.pop_back();
 	}
 	for (size_t i = 0; i< robots.size(); i++)
 	{
@@ -584,5 +626,7 @@ Robots::~Robots()
 Robot::Robot()
 {
 	name = "Robot";
+	missilles = 10; //TODO konfigrovatelne
+	ammo.clear();
 }
 

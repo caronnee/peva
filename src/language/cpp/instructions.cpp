@@ -83,7 +83,7 @@ int InstructionLoadLocal::execute(Core * c)
 	//std::cout << " value =  " << node->var.back()->integerValue << "..." ;
 	if (node->var.size() == 0)
 	{
-		std::cout <<"error, prazdna premenna";
+		std::cout <<"Error, prazdna premenna";
 		getc(stdin);
 	}
 	c->values.push_back(node->var.back());
@@ -117,9 +117,8 @@ InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 }
 int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy tam nedam viac ako jednu premennu, pretoze sa nezanorujem,osetrene  bisone
 {
-	std::cout << " Loading global variable: " << node->name << "...";//getc(stdin);
+	std::cout << " Loading global variable: " << node->name << "...";
 	std::cout << " id =  " << node->var.size() << "...";
-//	std::cout << " Loading global variable: " << node->name << "...";getc(stdin);
 	Variable * v;
 	v = node->var.back();
 	c->values.push_back(v);
@@ -388,7 +387,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 			Variable * vvv = c->values.back();
 			function->parameters[i].node->var.back()->copyValue(vvv);
 			c->values.pop_back();
-			std::cout << "end storin";//getc(stdin);
+			std::cout << "end storin";//etc(stdin);
 		}
 	}
 	Variable * v;
@@ -397,7 +396,6 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 	ret->var.push_back(v);//skopiruje si zo stacku hodnoty svojich parametrov
 	c->save(function->begin);	
 	std::cout << "OK" << std::endl;
-	//getc(stdin);
 	return 0;
 }
 xmlNodePtr Call::xml_format()
@@ -1306,7 +1304,7 @@ InstructionShootLocation::InstructionShootLocation()
 	name_ = "InstructionShootLocation";
 	group = IGroup_shootlocation;
 }
-int InstructionShootLocation::execute(Core *c) //prave jeden parameter
+int InstructionShootLocation::execute(Core *c)
 {
 	std::cout << "Shooting at location...";
 	int x = c->values.back()->array.elements[0]->integerValue;
@@ -1456,9 +1454,7 @@ int InstructionLocate::execute(Core *c) //TODO location
 	std::cout << "Getting location of object ...";
 	Object * o = c->getObjectFromStack();
 	Position p = o->Locate();
-//	getc(stdin);
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger))); 
-//	getc(stdin);
 	c->values.back()->array.elements[0]->integerValue = p.x;
 	c->values.back()->array.elements[1]->integerValue = p.y;
 	std::cout << "OK" <<std::endl;
