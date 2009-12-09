@@ -7,8 +7,6 @@ class Body : public Object
 {
 	int default_steps;
 public:
-	/* Contructor */
-	Body(Skin * s);
 
 	/* return number of objects, that can robot see */
 	int See();

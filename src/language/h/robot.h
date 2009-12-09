@@ -115,7 +115,6 @@ public:
 	//TODO tot by mohlo byt tiez typeContainer?
 	std::stack<Create_type *> active_type;
 	Create_type * last_type;
-	Body * body;
 public:
 	Robot(std::string name, GamePoints g);
 	Robot();

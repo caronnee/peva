@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 
+#define TICKS 200
+
 namespace bf = boost::filesystem;
 
 std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png" };
@@ -11,7 +13,6 @@ std::string toLoadMissille[] = {"missille.png"};
 //TODO akonsa steny rozbijaju
 std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "selected.png" };
 
-//TODO predat len nejaky parameter alebo kopirovat;)
 Skin::Skin(std::string name, Skin::Type t)
 {
 	nameOfSet = name;
@@ -147,6 +148,7 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 	rect.h = skin->get_size().y;
 	rect.x = 0;
 	rect.y = 0;
+	lastUpdate = 0;
 }
 SDL_Surface * ImageSkinWork::get_image()
 {
@@ -154,7 +156,12 @@ SDL_Surface * ImageSkinWork::get_image()
 }
 SDL_Rect ImageSkinWork::get_rect()
 {
-	rect.x +=s->get_shift().x;
+	Uint32 t =SDL_GetTicks();
+	if (t - lastUpdate > TICKS)
+		{
+			rect.x +=s->get_shift().x;
+		}
+	lastUpdate = SDL_GetTicks();
 	if (rect.x >= s->get_surface(states[state])->w)
 	{
 		rect.x = s->get_begin().x;
@@ -209,9 +216,7 @@ float ImageSkinWork::turn(int degree)
 	size_t directions = get_image()->h / s->get_shift().y;
 	float dirShift = 360 / directions;
 	int sh = degree / dirShift;
-	std::cout << "aekfh"; getc(stdin);
 	rect.y += sh*s->get_shift().y;
 	rect.y %= get_image()->h;
-	std::cout << "aekfh"; getc(stdin);
 	return dirShift;
 }

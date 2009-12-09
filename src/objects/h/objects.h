@@ -44,6 +44,7 @@ struct ObjectMovement
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
 protected:
+public:
 	/* who cause the object to live, animate etc. */
 	size_t owner;
 
