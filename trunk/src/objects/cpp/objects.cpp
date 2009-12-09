@@ -1,9 +1,16 @@
 #include "../h/objects.h"
+#include <cmath>
 
 Object::Object()
 {
 	name =" Object";
 	skinWork = NULL;
+	movement.position_in_map.x = 0;
+	movement.position_in_map.y = 0;
+	movement.direction.x = 0;
+	movement.direction.y = 0;
+	movement.angle = 0;
+	movement.speed = 30;
 }
 
 void Object::move()
@@ -39,10 +46,18 @@ size_t Object::width()
 }
 void Object::action()
 {
+	/* no action */
 }
 size_t Object::height()
 {
 	return skinWork->height();
+}
+void Object::turn(int angle)
+{
+	skinWork->turn(angle);
+	movement.angle+=angle;
+	movement.direction.x = sin(movement.angle)*movement.speed ;
+	movement.direction.y  = sin(movement.angle)*movement.speed;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {

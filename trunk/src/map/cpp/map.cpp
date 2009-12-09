@@ -126,6 +126,11 @@ Object * Map::checkCollision(Object * o)
 }
 void Map::performe()
 {
+	/* for all robots, do an instruction, if schedulled */
+	for (size_t i = 0; i < robots.size(); i++)
+	{
+		robots[i]->action();
+	}
 	//for all boxes, do action
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
@@ -198,7 +203,11 @@ void Map::add(Object * o)
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.push_back(o);
 }
-
+void Map::add(Robot * r)
+{
+	robots.push_back(r);
+	add(r->getBody());
+}
 Map::~Map() 
 {
 	

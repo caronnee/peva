@@ -7,6 +7,7 @@
 #include "../../graphic/h/graphic.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
+#include "../../language/h/robot.h"
 
 /* structure hold object in area */
 
@@ -26,10 +27,15 @@ struct Box
 
 struct Map
 {
+	/* active bots with instructions */
+	std::vector<Robot *> robots;
+
 	/* how many column boxes */
 	float boxesInColumn;
+
 	/* how many row boxes */
 	float boxesInRow;
+
 	/* where bot th initial positions of bots for fair play*/
 	std::vector<Position> bot_begins;
 
@@ -61,6 +67,7 @@ public:
 	/* checking for colision and resolving it*/
 	void collision(Object * o1, Object * o2);
 
+
 	/* map finds out the object movement*/
 	void move(Object * o); 
 
@@ -72,7 +79,11 @@ public:
 
 	/* draws all visible place */
 	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko
+
 	/* add an object to the map, not walls */
 	void add(Object * o); 
+
+	/* add an robot to the map, not walls */
+	void add(Robot * o); 
 };
 #endif

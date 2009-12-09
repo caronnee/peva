@@ -63,7 +63,6 @@ class Play:public Menu
 	SDL_Rect rect;
 	Letter letters[256];
 	void redraw();
-	std::list<Object *> objects; //all activ objects
 	void init(int, int);
 	void clear();
 	virtual void init();

@@ -1,5 +1,9 @@
 #include "../h/body.h"
 //TODO dopisat movement a pod
+Body::Body(Skin * s)
+{
+	skinWork = new ImageSkinWork(s);
+}
 bool Body::is_blocking()
 {
 	return true;
@@ -26,17 +30,19 @@ int Body::Step()
 }
 int Body::Turn(int angle)
 {
-	std::cout << "turning in angle";
+	skinWork->turn(angle);
 	return 0;
 }
 int Body::TurnL()
 {
 	std::cout << "Turning left";
+	skinWork->turn(90);
 	return 0;
 }
 int Body::TurnR()
 {
 	std::cout << "Turning reight";
+	skinWork->turn(-90);
 	return 0;
 }
 int Body::Wait(int x)
