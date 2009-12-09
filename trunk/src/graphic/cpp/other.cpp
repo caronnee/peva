@@ -185,6 +185,7 @@ void Play::init()
 }
 void Play::process()
 {
+	m->performe();
 	redraw();
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)

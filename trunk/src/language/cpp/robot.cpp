@@ -23,9 +23,7 @@ Robot::Robot(std::string s, GamePoints p)
 	nested = "";
 	errors = false;
 	defined_types = new TypeContainer();
-	body = NULL;
 	core = new Core( defined_types);
-	core->set_body(body);
 	toKill = NULL;
 	nullable = new Nullable();
 	
@@ -66,7 +64,7 @@ Robot::Robot(std::string s, GamePoints p)
 	n = defined.add("this",defined_types->find_type(TypeObject));
 	n->nested = Global;
 	core->memory.assign(n,0);
-	n->var[0]->objectValue = body;
+	n->var[0]->objectValue = core->body;
 	
 	//pridana premenna pre viditelnost
 	n = defined.add("seen",c);
@@ -80,13 +78,11 @@ Create_type * Robot::find_type(Type t)
 }
 Body * Robot::getBody ()
 {
-	return body;
+	return core->body;
 }
 void Robot::setSkin(Skin*s)
 {
-	if (body)
-		delete body;
-	body = new Body (s);
+	core->body->skinWork = new  ImageSkinWork(s);
 	mSkin = s;
 }
 void Robot::declare_type()
@@ -97,7 +93,7 @@ void Robot::leave_type()
 {
 	if (active_type.empty())
 	{ 
-		std::cout << "ech?Active prazdna"; getc(stdin);
+		std::cout << "Ech? Active prazdna"; getc(stdin);
 		return;
 	}
 	active_type.top()->reset(); // prejde, pretoze hierarchicka struktura(nemoze zas ebou rovnake triedy, takze vzdy ked resetujeme, bude to potom mio stacku)
@@ -532,7 +528,6 @@ Robot::~Robot()
 	delete core;
 	delete dev_null;
 	delete toKill;
-	delete body;
 	delete nullable;
 	delete defined_types;
 
@@ -600,7 +595,7 @@ void Robots::checkSkins()
 }
 bool Robot::skined()
 {
-	return body == NULL;
+	return core->body->skinWork == NULL;
 }
 Robots::~Robots()
 {

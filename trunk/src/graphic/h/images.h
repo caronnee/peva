@@ -87,6 +87,8 @@ public:
 
 class ImageSkinWork
 {
+	/* miliseconds grom the last blit */
+	Uint32 lastUpdate;
 public:
 	/* constructor */
 	ImageSkinWork(Skin * s);

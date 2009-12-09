@@ -19,7 +19,7 @@ struct Core
 	std::vector<Function *> nested_functions;
 	int depth;
 	bool error;
-	Body * robot; //periferie, stav robota, interakcia s mapou
+	Body * body; //periferie, stav robota, interakcia s mapou
 	Memory memory;
 	Values values;	
 	void save(int j);
@@ -37,7 +37,6 @@ public:
 	void saveObject();
 	void switchVariable();
 	void copyVariable();
-	void set_body(Body * r);
 	~Core();
 };
 #endif

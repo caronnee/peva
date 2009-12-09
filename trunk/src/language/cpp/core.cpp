@@ -8,6 +8,7 @@ Core::Core(TypeContainer * t)
 	values.clear();	
 	error = false;
 	depth = 0;
+	body = new Body();
 }
 
 void Core::save(int j)
@@ -97,12 +98,9 @@ void Core::copyVariable()
 	Variable * left = getVariableFromStack();
 	left->copyValue(right);
 }
-void Core::set_body(Body *r )
-{
-	robot = r;
-}
 Core::~Core()
 {
+	delete body;
 	while (!functions.empty())
 	{
 		Function * f = functions.back();
