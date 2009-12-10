@@ -285,8 +285,14 @@ void Robot::execute()
 void Robot::action()
 {
 	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();
-	instructions[core->PC]->execute(core);
-	core->PC++;
+	if (core->body->isMoving())
+		return;
+	while (scheduller->ready())
+	{
+		instructions[core->PC]->execute(core);
+		scheduller->penalize(instructions[core->PC]);
+		core->PC++;
+	}
 }
 Robots::Robots(GamePoints g_)
 {
@@ -458,6 +464,7 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 
 void Robot::consolidate()
 {
+	scheduller = new SchedulleRound();
 	std::vector<InstructionBreak *> breaks;
 	std::vector<InstructionBegin *> begins;
 	std::vector<InstructionContinue *> conts;
@@ -524,6 +531,7 @@ void Robot::consolidate()
 }
 Robot::~Robot()
 {
+	delete scheduller;
 	delete core;
 	delete dev_null;
 	delete toKill;

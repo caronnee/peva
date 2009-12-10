@@ -5,24 +5,28 @@
 
 class Scheduller
 {
-	size_t penalties[100]; //spravit dynamicky, neviem ,kolko bude instrukcii
-	size_t quantum;
+	protected:
+	size_t penalties[IGroups]; //spravit dynamicky, neviem ,kolko bude instrukcii
+	int quantum;
 	public:
-	void penalize(Instruction i);
-	virtual int ready() = 0;
+	Scheduller();
+	void penalize(Instruction * i);
+	virtual bool ready() = 0;
 	virtual ~Scheduller();
 
 };
 class SchedulleTime: public Scheduller
 {
 	public:
-	virtual int ready();
-	~SchedulleTime();
+	SchedulleTime();
+	virtual bool ready();
+	virtual ~SchedulleTime();
 };
 class SchedulleRound: public Scheduller
 {
 	public:
-	virtual int ready();
-	~SchedulleRound();
+	SchedulleRound();
+	virtual bool ready();
+	virtual ~SchedulleRound();
 };
 #endif

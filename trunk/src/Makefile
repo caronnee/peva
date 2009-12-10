@@ -7,7 +7,7 @@ SRC=cpp/
 lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/parser_functions.o \
 	o/parser.o o/robot.o o/types.o o/tree.o o/variable.o o/functions.o \
 	o/targets.o o/core.o o/position.o o/parser_classes.o o/typeContainer.o \
-	o/body.o o/objects.o o/missille.o o/images.o
+	o/body.o o/objects.o o/missille.o o/images.o o/scheduller.o
 	
 gOBJECTS=o/help_functions.o o/position.o o/movement.o o/snake.o \
 	o/create_map.o o/graphic.o o/main_menu.o \

@@ -17,6 +17,7 @@
 #include "../../graphic/h/images.h"
 #include "../../objects/h/objects.h"
 #include "../../objects/h/missille.h"
+#include "../../scheduller/h/scheduller.h"
 
 #define DELIMINER_CHAR '#'
 
@@ -90,6 +91,7 @@ public:
 	Values values;
 	MyXmlData data;
 
+	Scheduller * scheduller;
 	Core * core;
 	void add_global(Instructions ins);
 	void output(Tree * t);
