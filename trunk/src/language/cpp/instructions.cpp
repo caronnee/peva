@@ -1371,7 +1371,6 @@ InstructionTurnL::InstructionTurnL()
 }
 int InstructionTurnL::execute(Core *c)
 {
-	std::cout << "Turning left ...";
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->turnL();
 	std::cout << "OK" <<std::endl;

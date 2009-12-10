@@ -598,6 +598,7 @@ void Robots::checkSkins()
 			robots[i]->setSkin(addSkin("dragon"));
 			robots[i]->setmSkin(addmSkin("dragon"));
 		}
+		robots[i]->core->body->turn(0);
 	}
 }
 bool Robot::skined()

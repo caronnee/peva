@@ -20,10 +20,10 @@ ROBOT qqq
 
 	main() // komentar
 	{
-		turn(10);
 		while(true)
 		{
-			step (10);
+			step(1);
+			turnL();
 		}
 	}
 }

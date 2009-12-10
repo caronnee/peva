@@ -1,5 +1,4 @@
 #include "../h/body.h"
-#include <cmath>
 
 Body::Body()
 {
@@ -27,8 +26,6 @@ Object * Body::eye(int index)
 int Body::step(int steps)
 {
 	movement.steps = steps * movement.speed;
-	movement.direction.x = sin (movement.angle)*movement.speed;
-	movement.direction.y = cos (movement.angle)*movement.speed;
 	return 0;
 }
 int Body::step()
@@ -38,13 +35,13 @@ int Body::step()
 }
 int Body::turnL()
 {
-	skinWork->turn(90);
+	turn(90);
 	return 0;
 }
 int Body::turnR()
 {
-	std::cout << "Turning reight";
-	skinWork->turn(-90);
+	std::cout << "Turning right";
+	turn(-90);
 	return 0;
 }
 int Body::wait(int x)
