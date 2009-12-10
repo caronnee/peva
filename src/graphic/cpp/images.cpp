@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-#define TICKS 20
+#define TICKS 130
 
 namespace bf = boost::filesystem;
 
@@ -157,11 +157,12 @@ SDL_Surface * ImageSkinWork::get_image()
 SDL_Rect ImageSkinWork::get_rect()
 {
 	Uint32 t =SDL_GetTicks();
+	std::cout <<t - lastUpdate<<std::endl;
 	if (t - lastUpdate > TICKS)
 		{
 			rect.x +=s->get_shift().x;
+			lastUpdate = SDL_GetTicks();
 		}
-	lastUpdate = SDL_GetTicks();
 	if (rect.x >= s->get_surface(states[state])->w)
 	{
 		rect.x = s->get_begin().x;
