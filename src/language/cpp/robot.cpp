@@ -287,7 +287,6 @@ void Robot::action()
 	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();
 	instructions[core->PC]->execute(core);
 	core->PC++;
-	std::cout << "core:" << core->values.size();
 }
 Robots::Robots(GamePoints g_)
 {

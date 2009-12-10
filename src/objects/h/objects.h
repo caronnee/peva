@@ -67,7 +67,7 @@ public:
 	void move();
 
 	/* turn sin desired position */
-	void turn(int angle);
+	int turn(int angle);
 
 	/* do an action, change state or so */
 	virtual void action();

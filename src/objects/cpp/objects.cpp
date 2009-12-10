@@ -6,18 +6,20 @@ Object::Object()
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
-	movement.position_in_map.y = 0;
+	movement.position_in_map.x = 0;
+	movement.old_pos = movement.position_in_map;
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 	movement.angle = 0;
 	movement.speed = 30;
+	movement.fps = 20;
 }
 
 void Object::move()
 {
 	movement.old_pos = movement.position_in_map;
-	movement.position_in_map.x = movement.direction.x/movement.fps;
-	movement.position_in_map.y = movement.direction.y/movement.fps;
+	movement.position_in_map.x += movement.direction.x/movement.fps;
+	movement.position_in_map.y += movement.direction.y/movement.fps;
 }
 bool Object::is_blocking()
 {
@@ -52,12 +54,13 @@ size_t Object::height()
 {
 	return skinWork->height();
 }
-void Object::turn(int angle)
+int Object::turn(int angle)
 {
 	skinWork->turn(angle);
 	movement.angle+=angle;
 	movement.direction.x = sin(movement.angle)*movement.speed ;
 	movement.direction.y  = sin(movement.angle)*movement.speed;
+	return 0;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {
@@ -102,12 +105,10 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				//	std::cout << "Menim poziciu o:" <<movement.position_in_map.y + image->h - del.y  << std::endl;
 					movement.position_in_map.y -= movement.position_in_map.y + skinWork->height() - del.y;
 				//	std::cout << "PO: direction:" << movement.direction << std::endl;
-					//getc(stdin);
 				}
 				else
 				{
 					std::cout << "I bocna stena" << std::endl; //narazil na lavu bocnu stenu
-					//getc(stdin);
 				//	return false;
 					movement.direction.x *= -1; 
 					movement.position_in_map.x -= del.x - movement.position_in_map.x - skinWork->width();
@@ -125,7 +126,6 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na dolnu stenu
 				{
 					std::cout << "II vrch" << std::endl;
-					//getc(stdin);
 					movement.direction.y *=-1;
 					movement.position_in_map.y = 2*del.y - movement.position_in_map.y; //TODO check
 				}
@@ -133,7 +133,6 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				{
 					//return false;
 					std::cout << "II bok" << std::endl;
-					//getc(stdin);
 					movement.direction.x *=-1;
 					movement.position_in_map.x += del.x - movement.position_in_map.x - skinWork->width();
 				}	
@@ -150,14 +149,12 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
 				{	
 					std::cout << "III vrch" << std::endl;
-					//getc(stdin);
 					movement.direction.y *=-1;
 					movement.position_in_map.y -= movement.position_in_map.y + skinWork->height() - del.y;
 				}
 				else
 				{
 					std::cout << "III bok" << std::endl;
-					//getc(stdin);
 					movement.direction.x *=-1;
 					movement.position_in_map.x = 2*del.x - movement.position_in_map.x;
 				}
@@ -172,16 +169,13 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
 				{
 					std::cout << "IV bok" << std::endl;
-					//getc(stdin);
 				//	std::cout << "uch! bocna stena" << std::endl;
-				//	//getc(stdin);
 					movement.direction.x *=-1;
 					movement.position_in_map.x += del.x - movement.position_in_map.x ;
 				}
 				else
 				{
 					std::cout << "IV vrch" << std::endl;
-					//getc(stdin);
 					movement.direction.y *=-1;
 					movement.position_in_map.y = 2*del.y - movement.position_in_map.y;
 				}

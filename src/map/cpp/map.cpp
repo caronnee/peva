@@ -97,14 +97,16 @@ void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 Object * Map::checkCollision(Object * o)
 {	
 	//	pre kazdy roh sa pozri, akom je boxe. Ak rozny, checkuj kolizi pre kazdy objekt v boxe s useckou (A,B)
-	//	vieme urcite, ze dalsi boc bude vedlajsi z velkosti boxi a z maximu pohyby za sekundu
+	//	vieme urcite, ze dalsi boc bude vedlajsi z velkosti boxi a z maximu pohyby za sekund
 	Position oldBox(o->movement.old_pos.x/BOX_WIDTH,o->movement.old_pos.y/BOX_HEIGHT);
 	Position newBox(o->movement.position_in_map.x/BOX_WIDTH,o->movement.position_in_map.y/BOX_HEIGHT);
+	std::cout << o ; getc(stdin);
 	//TODO spravt nearest
 	for (int x = oldBox.x; x<=newBox.x; x++)
 	{
 		for (int y =oldBox.y; y <= newBox.y; y++)
 		{
+			std::cout << x << " " << y << std::endl; getc(stdin);
 			Box b = map[x][y];
 			Position colVector;
 			std::list<Object *>::iterator iter = b.objects.begin();			
@@ -198,6 +200,11 @@ void Map::resolveMove(Object * o)
 
 void Map::add(Object * o)
 {
+	 if (o == NULL)
+		{
+			std::cout << "ERROR! null object!"; getc(stdin); 
+		}
+		std::cout << "adding" << o<< std::endl;
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;

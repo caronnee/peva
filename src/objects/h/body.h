@@ -7,33 +7,32 @@ class Body : public Object
 {
 	int default_steps;
 public:
+	/* Constructor */
+	Body();
 
 	/* return number of objects, that can robot see */
-	int See();
+	int see();
 	
 	/* return object that can robot see at index position */
-	Object * Eye(int index);
+	Object * eye(int index);
 
 	/* Return an indication, wheter robot can be moved steps steps */
-	int Step(int steps);
+	int step(int steps);
 
 	/* set movement to default steps */
-	int Step();
+	int step();
 	
 	/* for later use */
-	int Wait(int x = 0);
+	int wait(int x = 0);
 	
 	/* Shoots a missille in the direction dir, if any left */
-	int Shoot(int x, int y);
-	
-	/* turn in the direction dir */
-	int Turn(int angle);
+	int shoot(int x, int y);
 	
 	/* turns left*/
-	int TurnL();
+	int turnL();
 	
 	/* turns right*/
-	int TurnR();
+	int turnR();
 
 	/* returns true, becuse it is not transparent */
 	virtual bool is_blocking();
