@@ -199,9 +199,9 @@ void Map::resolveMove(Object * o)
 void Map::add(Object * o)
 {
 	 if (o == NULL)
-		{
-			std::cout << "ERROR! null object!"; getc(stdin); 
-		}
+	 {
+		 std::cout << "ERROR! null object!"; getc(stdin); 
+	 }
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;

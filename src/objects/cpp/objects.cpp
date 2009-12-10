@@ -1,32 +1,37 @@
 #include "../h/objects.h"
 #include <cmath>
 
+#define MAX_PX_PER_SECOND 300
 Object::Object()
 {
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
-	movement.position_in_map.x = 0;
+	movement.position_in_map.y = 0;
 	movement.old_pos = movement.position_in_map;
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 	movement.angle = 0;
 	movement.speed = 30;
-	movement.fps = 20;
+	movement.fps = 200;
+	movement.steps = 0;
 }
 
 void Object::move()
 {
 	movement.old_pos = movement.position_in_map;
+	
 	Position passed(movement.direction.x/movement.fps,movement.direction.y/movement.fps);
-	int diff = passed.x*passed.x + passed.y*passed.y - movement.speed*movement.speed;
-	if(diff > 0)
+	int stepsPass = passed.x*passed.x + passed.y*passed.y;
+	if (stepsPass > movement.steps)
 	{
-		passed.x /= diff;
-		passed.y /= diff; //TODO lepsie, rozparsovat na Position steps
+		stepsPass = movement.steps;
+		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
+		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
 	}
-	movement.position_in_map.x += movement.direction.x/movement.fps;
-	movement.position_in_map.y += movement.direction.y/movement.fps;
+	movement.steps -= stepsPass;
+	movement.position_in_map.x += passed.x;
+	movement.position_in_map.y += passed.y;
 }
 bool Object::is_blocking()
 {
@@ -64,9 +69,13 @@ size_t Object::height()
 int Object::turn(int angle)
 {
 	movement.angle+=angle;
+	while (movement.angle < 0)
+		movement.angle+=360;
+	while (movement.angle > 360)
+		movement.angle-=360;
 	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
-//	movement.direction.x = sin(movement.angle)*movement.speed ;
-//	movement.direction.y  = sin(movement.angle)*movement.speed;
+	movement.direction.x = sin(movement.angle)*MAX_PX_PER_SECOND ;
+	movement.direction.y = cos(movement.angle)*MAX_PX_PER_SECOND;
 	return 0;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
@@ -203,7 +212,7 @@ void Object::collision(Position collidedVector)
 	movement.direction.y = 0;
 }
 int Object::isMoving(){
-	return movement.direction.x | movement.direction.y;
+	return movement.steps>0;
 }
 int Object::isWall()
 {
