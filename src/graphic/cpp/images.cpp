@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-#define TICKS 330
+#define TICKS 100
 
 namespace bf = boost::filesystem;
 
