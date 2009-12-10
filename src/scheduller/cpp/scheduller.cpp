@@ -28,7 +28,7 @@ SchedulleRound::SchedulleRound() {}
 bool SchedulleRound::ready()
 {
 	quantum--;
-	return quantum <= 0;
+	return quantum < 0;
 }
 Scheduller::~Scheduller()
 {

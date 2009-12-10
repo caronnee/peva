@@ -284,7 +284,7 @@ void Robot::execute()
 }
 void Robot::action()
 {
-	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name();
+	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
 	if (core->body->isMoving())
 		return;
 	while (scheduller->ready())
