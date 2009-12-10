@@ -2,6 +2,8 @@
 #include <cmath>
 
 #define MAX_PX_PER_SECOND 300
+#define PI 3.14159265
+
 Object::Object()
 {
 	name =" Object";
@@ -33,6 +35,7 @@ void Object::move()
 	movement.position_in_map.x += passed.x;
 	movement.position_in_map.y += passed.y;
 }
+
 bool Object::is_blocking()
 {
 	return false;
@@ -42,6 +45,7 @@ SDL_Rect Object::get_rect()
 {
 	return skinWork->get_rect();
 }
+
 SDL_Surface * Object::show()
 {
 	return skinWork->get_image(); 
@@ -74,8 +78,8 @@ int Object::turn(int angle)
 	while (movement.angle > 360)
 		movement.angle-=360;
 	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
-	movement.direction.x = sin(movement.angle)*MAX_PX_PER_SECOND ;
-	movement.direction.y = cos(movement.angle)*MAX_PX_PER_SECOND;
+	movement.direction.x = sin(movement.angle*PI/180)*MAX_PX_PER_SECOND ;
+	movement.direction.y = cos(movement.angle*PI/180)*MAX_PX_PER_SECOND;
 	return 0;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
