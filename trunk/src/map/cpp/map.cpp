@@ -161,27 +161,22 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny
 {
 	if (o->movement.position_in_map.x < 0)
 	{
-		std::cout << "xxxxxx1" << o->movement.position_in_map;getc(stdin);
 		o->movement.direction.x *= -1;
 		o->movement.position_in_map.x *= -1; //odrazene
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-o->width())
 	{
-		std::cout << "xxxxxx2" << o->movement.position_in_map;getc(stdin);
 		o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
-		std::cout << "yyyyyyyy1" << o->movement.position_in_map;getc(stdin);
 		o->movement.direction.y *= -1;
 		o->movement.position_in_map.y *= -1;
-		std::cout << "\t" << o->movement.direction;getc(stdin);
 	}
 	else if(o->movement.position_in_map.y > resolution.y-o->height())
 	{
-		std::cout << "yyyyyyyy2" << o->movement.position_in_map;getc(stdin);
 		o->movement.direction.y *= -1;
 		o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
 	}
