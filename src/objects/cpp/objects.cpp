@@ -56,10 +56,10 @@ size_t Object::height()
 }
 int Object::turn(int angle)
 {
-	skinWork->turn(angle);
 	movement.angle+=angle;
-	movement.direction.x = sin(movement.angle)*movement.speed ;
-	movement.direction.y  = sin(movement.angle)*movement.speed;
+	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
+//	movement.direction.x = sin(movement.angle)*movement.speed ;
+//	movement.direction.y  = sin(movement.angle)*movement.speed;
 	return 0;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
