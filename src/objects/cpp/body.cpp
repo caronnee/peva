@@ -1,4 +1,5 @@
 #include "../h/body.h"
+#include <cmath>
 
 Body::Body()
 {
@@ -25,7 +26,9 @@ Object * Body::eye(int index)
 }
 int Body::step(int steps)
 {
-	std::cout << "Go " << steps << " steps";
+	movement.steps = steps * movement.speed;
+	movement.direction.x = sin (movement.angle)*movement.speed;
+	movement.direction.y = cos (movement.angle)*movement.speed;
 	return 0;
 }
 int Body::step()

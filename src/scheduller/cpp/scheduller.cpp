@@ -1,16 +1,21 @@
-#include "../h/scheduller"
+#include "../h/scheduller.h"
 #include <SDL/SDL.h>
 
 Scheduller::Scheduller()
 {
 	quantum = 0;
-	r = NULL;
+	for (size_t i =0; i< IGroups; i++) //TODO nacitavat zo suboru
+	{
+		penalties[i] = 1;
+	}
 }
 
-void Scheduller::penalize(Instruction i)
+void Scheduller::penalize(Instruction * i)
 {
-	quantum+=penalties[i->group];
+	quantum=penalties[i->group];
 }
+
+SchedulleTime::SchedulleTime() {}
 
 bool SchedulleTime::ready()
 {
@@ -18,10 +23,12 @@ bool SchedulleTime::ready()
 	return quantum - ticks;
 }
 
+SchedulleRound::SchedulleRound() {}
+
 bool SchedulleRound::ready()
 {
 	quantum--;
-	return quantum;
+	return quantum <= 0;
 }
 Scheduller::~Scheduller()
 {

@@ -18,6 +18,13 @@ Object::Object()
 void Object::move()
 {
 	movement.old_pos = movement.position_in_map;
+	Position passed(movement.direction.x/movement.fps,movement.direction.y/movement.fps);
+	int diff = passed.x*passed.x + passed.y*passed.y - movement.speed*movement.speed;
+	if(diff > 0)
+	{
+		passed.x /= diff;
+		passed.y /= diff; //TODO lepsie, rozparsovat na Position steps
+	}
 	movement.position_in_map.x += movement.direction.x/movement.fps;
 	movement.position_in_map.y += movement.direction.y/movement.fps;
 }
