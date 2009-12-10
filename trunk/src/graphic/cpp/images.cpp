@@ -216,7 +216,7 @@ float ImageSkinWork::turn(int degree)
 	size_t directions = get_image()->h / s->get_shift().y;
 	float dirShift = 360 / directions;
 	int sh = degree / dirShift;
-	rect.y += sh*s->get_shift().y;
+	rect.y = sh*s->get_shift().y;
 	rect.y %= get_image()->h;
 	return dirShift;
 }

@@ -100,13 +100,11 @@ Object * Map::checkCollision(Object * o)
 	//	vieme urcite, ze dalsi boc bude vedlajsi z velkosti boxi a z maximu pohyby za sekund
 	Position oldBox(o->movement.old_pos.x/BOX_WIDTH,o->movement.old_pos.y/BOX_HEIGHT);
 	Position newBox(o->movement.position_in_map.x/BOX_WIDTH,o->movement.position_in_map.y/BOX_HEIGHT);
-	std::cout << o ; getc(stdin);
 	//TODO spravt nearest
 	for (int x = oldBox.x; x<=newBox.x; x++)
 	{
 		for (int y =oldBox.y; y <= newBox.y; y++)
 		{
-			std::cout << x << " " << y << std::endl; getc(stdin);
 			Box b = map[x][y];
 			Position colVector;
 			std::list<Object *>::iterator iter = b.objects.begin();			
