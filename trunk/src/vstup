@@ -22,8 +22,7 @@ ROBOT qqq
 	{
 		while(true)
 		{
-			turnL();
-			step(15);
+			turn(10);
 		}
 	}
 }

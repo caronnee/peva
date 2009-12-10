@@ -1223,7 +1223,7 @@ int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
 {
 	std::cout << "Filling objects in robot's see angle ...";
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->See(); 
+	c->values.back()->integerValue = c->body->see(); 
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1240,7 +1240,7 @@ InstructionEye::InstructionEye() //uzol ktory sa ma naplnit viditelnymi objektam
 int InstructionEye::execute(Core *c) 
 {
 	std::cout << "Getting object from the eye ...";
-	Object * o = c->body->Eye(c->values.back()->integerValue);
+	Object * o = c->body->eye(c->values.back()->integerValue);
 	c->values.pop_back(); 
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeObject)));
 	c->values.back()->objectValue = o; 
@@ -1261,7 +1261,7 @@ int InstructionStep::execute(Core *c) //prave jeden parameter
 	std::cout << "Stepping ...";
 	int steps = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->Step(steps);
+	c->values.back()->integerValue = c->body->step(steps);
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1277,7 +1277,7 @@ int InstructionStepDefault::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Stepping default...";
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->Step();
+	c->values.back()->integerValue = c->body->step();
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1293,7 +1293,7 @@ int InstructionWait::execute(Core *c) //prave jeden parameter
 	std::cout << "Waiting ...";
 	int waits = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->Wait(waits);
+	c->values.back()->integerValue = c->body->wait(waits);
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1311,7 +1311,7 @@ int InstructionShootLocation::execute(Core *c)
 	int y = c->values.back()->array.elements[1]->integerValue;
 	c->values.pop_back();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->Shoot(x,y); //TODO vypocitat angle, smer x a smer y
+	c->values.back()->integerValue = c->body->shoot(x,y); //TODO vypocitat angle, smer x a smer y
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1327,7 +1327,7 @@ int InstructionShootAngle::execute(Core *c) //TODO
 	std::cout << "Shooting at angle...TODO convert";
 	int an = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->Shoot(an,an); //TODO angle
+	c->values.back()->integerValue = c->body->shoot(an,an); //TODO angle
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1343,7 +1343,7 @@ int InstructionTurn::execute(Core *c)
 	std::cout << "Turning ...";
 	int par = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->Turn(par); //TODO angle
+	c->values.back()->integerValue = c->body->turn(par); //TODO angle
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1358,7 +1358,7 @@ int InstructionTurnR::execute(Core *c)
 {
 	std::cout << "Turning right ...";
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->TurnR();
+	c->values.back()->integerValue = c->body->turnR();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
@@ -1373,7 +1373,7 @@ int InstructionTurnL::execute(Core *c)
 {
 	std::cout << "Turning left ...";
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->TurnL();
+	c->values.back()->integerValue = c->body->turnL();
 	std::cout << "OK" <<std::endl;
 	return 0;
 }
