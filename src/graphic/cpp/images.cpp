@@ -96,8 +96,8 @@ Skin::Skin(std::string name, Skin::Type t)
 	{
 		begin_in_picture.x = 0;
 		begin_in_picture.y = 0;
-		shift.x = 0;
-		shift.y = 0;
+		shift.x = images[0]->h;
+		shift.y = images[0]->w;
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
 		return; //exception?
@@ -106,10 +106,10 @@ Skin::Skin(std::string name, Skin::Type t)
 	f.open((directory + "config").c_str());
 	if (f.good())
 	{
-		f >> (begin_in_picture.x);	
+		f >>begin_in_picture.x;	
 		f >>begin_in_picture.y;	
 		f >>imageSize.x;	
-		f >>imageSize.y;	
+		f >>imageSize.y;
 		f >>shift.x;	
 		f >>shift.y;	
 	}
@@ -144,8 +144,9 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 	s = skin;
 	state = StateDefault;
 	states[StateDefault] = ActionDefault; //ostatene sa budu prepisovat
-	rect.w = skin->get_size().x;
-	rect.h = skin->get_size().y;
+	rect.w = skin->get_shift().x;
+	rect.h = skin->get_shift().y;
+	std::cout << "shift" << skin->get_shift() << std::endl;
 	rect.x = 0;
 	rect.y = 0;
 	lastUpdate = 0;
@@ -164,7 +165,7 @@ SDL_Rect ImageSkinWork::get_rect()
 		}
 	if (rect.x >= s->get_surface(states[state])->w)
 	{
-		rect.x = s->get_begin().x;
+		rect.x = 0;
 	}
 	return rect;	
 }
@@ -207,7 +208,7 @@ Position ImageSkinWork::get_size()
 	return s->get_size();
 }
 
-float ImageSkinWork::turn(int degree)
+float ImageSkinWork::turn(int degree)//nastavi uhol na degree
 {
 	size_t directions = get_image()->h / s->get_shift().y;
 	float dirShift = 360 / directions;

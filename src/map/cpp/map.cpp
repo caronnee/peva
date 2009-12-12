@@ -43,7 +43,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	r.x = 0;
 	r.y = 0;
 	Position pos(begin_draw_at);
-	for (int i =0; i< w->g->screen->w; i+=skin->get_size().x)
+	for (int i =0; i< w->g->screen->w; i+=skin->get_size().x) // pre tapety
 	{
 		for(int j =0; j< w->g->screen->h; j+=skin->get_size().y)
 		{
@@ -157,9 +157,9 @@ void Map::performe()
 			}
 		}
 }
-void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny
+void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {
-	if (o->movement.position_in_map.x < 0)
+	if (o->movement.position_in_map.x <0)
 	{
 		o->movement.direction.x *= -1;
 		o->movement.position_in_map.x *= -1; //odrazene
@@ -200,7 +200,8 @@ void Map::add(Object * o)
 {
 	 if (o == NULL)
 	 {
-		 std::cout << "ERROR! null object!"; getc(stdin); 
+		 std::cout << "ERROR! null object!"; 
+		 getc(stdin); 
 	 }
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
