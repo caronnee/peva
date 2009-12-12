@@ -82,7 +82,7 @@ Body * Robot::getBody ()
 }
 void Robot::setSkin(Skin*s)
 {
-	core->body->skinWork = new  ImageSkinWork(s);
+	core->body->setSkin(s);
 	mSkin = s;
 }
 void Robot::declare_type()
@@ -593,7 +593,7 @@ void Robots::checkSkins()
 {
 	for (size_t i =0; i< robots.size(); i++)
 	{
-		if (robots[i]->skined())
+		if (!robots[i]->skined())
 		{
 			robots[i]->setSkin(addSkin("dragon"));
 			robots[i]->setmSkin(addmSkin("dragon"));
@@ -603,7 +603,7 @@ void Robots::checkSkins()
 }
 bool Robot::skined()
 {
-	return core->body->skinWork == NULL;
+	return core->body->hasSkin();
 }
 Robots::~Robots()
 {

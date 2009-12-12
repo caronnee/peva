@@ -25,7 +25,7 @@ struct ObjectMovement
 	/* used when moving for determinig old position, not necessary */
 	Position old_pos;
 
-	/* actual positio in map */
+	/* actual position in map */
 	Position position_in_map;
 
 	/* direction */
@@ -44,7 +44,6 @@ struct ObjectMovement
 class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
 {
 protected:
-public:
 	/* who cause the object to live, animate etc. */
 	size_t owner;
 
@@ -83,6 +82,12 @@ public:
 
 	/* for drawing purposes, function return image of object in all states */
 	SDL_Surface * show();
+
+	/* ~Setting skin */
+	void setSkin(Skin * s);
+
+	/* asking about skin */
+	bool hasSkin();
 
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);

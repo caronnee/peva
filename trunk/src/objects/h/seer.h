@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include "../../add-ons/h/position.h"
-#include "../../map/h/map.h"
 
 struct Mask
 {
@@ -26,9 +25,9 @@ class Seer
 	std::vector<Position> positions;
 	Position resolution;
 	Mask ** masks;
-	Seer(Position p);
+	Seer(Position eyeDimension);
 	void set_masks();
-	void see(Direction d, Map * m, Position pos);
+	void see(Map * m);
 	std::vector<Object *> objects;
 	void output();
 };

@@ -1,14 +1,14 @@
 #include "../h/seer.h"
 
-Seer::Seer(Position p) 
+Seer::Seer(Position eyeDimension) 
 {
-	resolution = p;
-	masks = new Mask*[p.x];
+	resolution = eyeDimension;
+	masks = new Mask*[eyeDimension.x];
 	int ID = 0;
-	for(int i =0; i < p.x; i++)
+	for(int i =0; i < eyeDimension.x; i++)
 	{
-		masks[i] = new Mask[p.y];
-		for(int j =0; j < p.y; j++)
+		masks[i] = new Mask[eyeDimension.y];
+		for(int j =0; j < eyeDimension.y; j++)
 		{
 			masks[i][j].mask = 0; //ziadne navaznosti
 			masks[i][j].ID = ID;
