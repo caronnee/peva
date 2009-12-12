@@ -124,25 +124,9 @@ Object * Map::checkCollision(Object * o)
 	}	
 	return NULL;
 }
+
 void Map::performe()
 {
-	/* for all robots, do an instruction, if schedulled */
-	for (size_t i = 0; i < robots.size(); i++)
-	{
-		robots[i]->action();
-	}
-	//for all boxes, do action
-	for (size_t i = 0; i< boxesInRow; i++ )
-		for (size_t j = 0; j< boxesInColumn; j++ )
-		{
-			Box b = map[i][j];
-			for (std::list<Object *>::iterator iter = b.objects.begin();
-				iter != b.objects.end();
-				iter ++)
-			{
-				(*iter)->action(); //scheduller je v tom
-			}
-		}
 	/* resolving he move action that happened */
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
@@ -156,36 +140,57 @@ void Map::performe()
 				resolveMove(o);
 			}
 		}
+	//for all boxes, do action
+	for (size_t i = 0; i< boxesInRow; i++ )
+		for (size_t j = 0; j< boxesInColumn; j++ )
+		{
+			Box b = map[i][j];
+			for (std::list<Object *>::iterator iter = b.objects.begin();
+				iter != b.objects.end();
+				iter ++)
+			{
+				(*iter)->action(); //scheduller je v tom
+			}
+		}
+
+	/* for all robots, do an instruction, if schedulled */
+	for (size_t i = 0; i < robots.size(); i++)
+	{
+		robots[i]->action();
+	}
+
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {
 	if (o->movement.position_in_map.x <0)
 	{
-		o->movement.direction.x *= -1;
-		o->movement.position_in_map.x *= -1; //odrazene
+	//	o->movement.direction.x *= -1;
+		o->movement.position_in_map.x = -1; //odrazene
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-o->width())
 	{
-		o->movement.direction.x *= -1;
-		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
+	//	o->movement.direction.x *= -1;
+//		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
+		o->movement.position_in_map.x = resolution.x - o->width(); //odrazene
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
-		o->movement.direction.y *= -1;
-		o->movement.position_in_map.y *= -1;
+	//	o->movement.direction.y *= -1;
+//		o->movement.position_in_map.y *= -1;
+		o->movement.position_in_map.y = 0; //odrazene
 	}
 	else if(o->movement.position_in_map.y > resolution.y-o->height())
 	{
-		o->movement.direction.y *= -1;
-		o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
+	//	o->movement.direction.y *= -1;
+	//	o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
+		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
 	}
 }
 void Map::resolveMove(Object * o)
 {
 	if (!(o->isMoving())) //pokial je mrtvy, tak je taky nemoving
 		return;
-
 	/* move, actually */
 	o->move();
 	resolveBorders(o);
