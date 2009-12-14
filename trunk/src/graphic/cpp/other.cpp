@@ -185,6 +185,10 @@ void Play::init()
 }
 void Play::process()
 {
+	for (size_t i = 0; i< robots.robots.size();i++)
+	{
+		robots.robots[i]->action();
+	}
 	m->performe();
 	redraw();
 	while (SDL_PollEvent(&w->g->event))
@@ -211,7 +215,8 @@ void Play::process()
 					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
-							m->add(robots.robots[i]);
+							robots.robots[i]->getBody()->setPosition(Position (100,40));
+							m->add(robots.robots[i]->getBody());
 						}
 					fclose(yyin);	
 					my_destroy();

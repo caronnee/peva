@@ -7,7 +7,6 @@
 #include "../../graphic/h/graphic.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
-#include "../../language/h/robot.h"
 
 /* structure hold object in area */
 
@@ -27,9 +26,6 @@ struct Box
 
 struct Map
 {
-	/* active bots with instructions */
-	std::vector<Robot *> robots;
-
 	/* how many column boxes */
 	float boxesInColumn;
 
@@ -82,8 +78,5 @@ public:
 
 	/* add an object to the map, not walls */
 	void add(Object * o); 
-
-	/* add an robot to the map, not walls */
-	void add(Robot * o); 
 };
 #endif
