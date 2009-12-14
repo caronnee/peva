@@ -19,6 +19,13 @@ Object::Object()
 	movement.steps = 0;
 }
 
+void Object::setPosition(Position p, int angle)
+{
+	movement.position_in_map = p;
+	movement.old_pos = p;
+	movement.angle = 0;
+	turn(angle);
+}
 bool Object::hasSkin()
 {
 	return skinWork != NULL;

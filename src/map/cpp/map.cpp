@@ -152,13 +152,6 @@ void Map::performe()
 				(*iter)->action(); //scheduller je v tom
 			}
 		}
-
-	/* for all robots, do an instruction, if schedulled */
-	for (size_t i = 0; i < robots.size(); i++)
-	{
-		robots[i]->action();
-	}
-
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {
@@ -212,11 +205,6 @@ void Map::add(Object * o)
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.push_back(o);
-}
-void Map::add(Robot * r)
-{
-	robots.push_back(r);
-	add(r->getBody());
 }
 Map::~Map() 
 {

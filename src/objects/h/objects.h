@@ -1,3 +1,4 @@
+//VIRTUALNE JE LEN KOLIZIA, OVE PREBOEHA STEJNE
 #ifndef __OBJECTS__
 #define __OBJECTS__
 #include <SDL/SDL.h>
@@ -37,7 +38,7 @@ struct ObjectMovement
 	/* how many steps is object allowed to take */
 	int steps;
 	
-	/* actual angle */
+	/* actual angle of robot */
 	int angle;
 };
 
@@ -61,6 +62,9 @@ protected:
 public:
 	/* constructor */
 	Object();
+
+	/* where exactly is the object, filling movement */
+	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
 	void move();

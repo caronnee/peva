@@ -2,10 +2,14 @@
 #define ___BODY_INTERFACE____
 
 #include "../../objects/h/objects.h"
+#include "../../map/h/map.h"
 
 class Body : public Object
 {
 	int default_steps;
+
+	/* in which map is thi located */
+	Map * map;
 public:
 	/* Constructor */
 	Body();
