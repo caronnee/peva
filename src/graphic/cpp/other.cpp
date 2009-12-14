@@ -215,7 +215,7 @@ void Play::process()
 					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
-							robots.robots[i]->getBody()->setPosition(Position (100,40));
+							robots.robots[i]->getBody()->place(m,Position (100,40));
 							m->add(robots.robots[i]->getBody());
 						}
 					fclose(yyin);	

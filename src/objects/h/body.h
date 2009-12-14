@@ -2,13 +2,14 @@
 #define ___BODY_INTERFACE____
 
 #include "../../objects/h/objects.h"
+#include "../../add-ons/h/position.h"
 #include "../../map/h/map.h"
 
 class Body : public Object
 {
-	int default_steps;
+	int default_steps; //makro
 
-	/* in which map is thi located */
+	/* in which map is an object located */
 	Map * map;
 public:
 	/* Constructor */
@@ -22,6 +23,9 @@ public:
 
 	/* Return an indication, wheter robot can be moved steps steps */
 	int step(int steps);
+
+	/* sets information about map */
+	void place(Map * m, Position p, int angle = 0);
 
 	/* set movement to default steps */
 	int step();
