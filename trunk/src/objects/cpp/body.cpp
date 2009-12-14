@@ -23,6 +23,11 @@ Object * Body::eye(int index)
 	std::cout << "Getting object from fills";
 	return this;
 }
+void Body::place (Map * m, Position p, int angle)
+{
+	Object::setPosition(p, angle);
+	map = m;
+}
 int Body::step(int steps)
 {
 	movement.steps = steps * movement.speed;

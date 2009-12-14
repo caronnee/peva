@@ -98,7 +98,6 @@ int Object::turn(int angle)
 	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
 	movement.direction.x = sin(movement.angle*PI/180)*MAX_PX_PER_SECOND ;
 	movement.direction.y = -cos(movement.angle*PI/180)*MAX_PX_PER_SECOND;
-	std::cout << " actual direction " << movement.direction << " by angle " <<movement.angle;getc(stdin);
 	return 0;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
