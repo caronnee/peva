@@ -17,12 +17,40 @@ int main()
 	List l2;
 	l.add(o1);
 	l.add(o2);
+	l.add(o3);
+	l.add(o4);
+	l.add(o5);
 	std::cout<<std::endl;
-	for (size_t i = 0; i< 10; i++)
+	for (size_t i = 0; i< l.size(); i++)
 	{
-		std::cout << l.items->data << "\t";
+		std::cout << i << "_" <<l.items->data << "\t";
 		l.next();
 	}
+	l.clear();
 	std::cout<<std::endl;
+	for (size_t i = 0; i< 6; i++)
+	{
+		std::cout << i << "_" <<l.items->data << "\t";
+		l.next();
+	}
+	std::cout << std::endl;
+	l.add(o1);
+	l.add(o2);
+	l.add(o3);
+	l.add(o4);
+	l.add(o5);
+	l.moveHead(l2);
+	l.moveHead(l2);
+	l.moveHead(l2);
+	for (size_t i = 0; i< 6; i++)
+	{
+		std::cout << i << ":" <<l.items->data << std::endl;
+		l.next();
+	}
+	for (size_t i = 0; i< 6; i++)
+	{
+		std::cout << i << ":" <<l2.items->data << std::endl;
+		l2.next();
+	}
 	return 0;
 }

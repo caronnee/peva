@@ -1,5 +1,6 @@
 #ifndef __LIST__
 #define __LIST__
+
 #include "objects.h"
 
 struct Item
@@ -21,7 +22,7 @@ public:
 	void add(Item * data);
 	void clear();
 	bool remove(Object * data);
-	void moveHead(List * dest);
+	void moveHead(List & dest);
 	void next();
 };
 
