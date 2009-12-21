@@ -63,12 +63,12 @@ void List::add(Item *item)
 	size_++;
 }
 
-void List::moveHead(List * dest)
+void List::moveHead(List & dest)
 {
 	Item * i = items;
 	items->previous->next = items->next;
 	i->next->previous = i->next;
-	dest->add(i);
+	dest.add(i);
 	size_--;
 }
 void List::next()
