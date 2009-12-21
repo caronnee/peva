@@ -4,6 +4,7 @@ XML=`xml2-config --cflags`
 HEADER_DIR=h/
 OBJECT_DIR=o/
 SRC=cpp/
+
 lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/parser_functions.o \
 	o/parser.o o/robot.o o/types.o o/tree.o o/variable.o o/functions.o \
 	o/targets.o o/core.o o/position.o o/parser_classes.o o/typeContainer.o \
@@ -19,7 +20,10 @@ LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 .PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph
 
 
-all: dep bparser codewars
+all: dep bparser codewars test
+
+test:	o/list.o o/test.o o/objects.o o/position.o o/images.o
+	g++ $(LDFLAGS) -o $@ $^
 
 codewars:$(lOBJECTS) $(gOBJECTS) o/main.o
 		g++ $(LDFLAGS) -o $@ $^
