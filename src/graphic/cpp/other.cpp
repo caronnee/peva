@@ -112,7 +112,7 @@ Play::Play(Window *w_)
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
 
 	}
-	init (300,400);//TODO zmenit na mapy, ktore uzivatel zada
+	init (400,500);//TODO zmenit na mapy, ktore uzivatel zada
 	//mapa o velkosti 10x10
 /*	for(int i = 0; i<8; i++)
 	{
@@ -215,7 +215,7 @@ void Play::process()
 					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
-							robots.robots[i]->getBody()->place(m,Position (100,40));
+							robots.robots[i]->getBody()->place(m,Position (90,40));
 							m->add(robots.robots[i]->getBody());
 						}
 					fclose(yyin);	

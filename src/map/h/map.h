@@ -7,6 +7,7 @@
 #include "../../graphic/h/graphic.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
+#include "../../objects/h/list.h"
 
 /* structure hold object in area */
 
@@ -19,7 +20,7 @@ struct Box
 	Rectangle bounds; 
 
 	/* Objects in area */
-	std::list<Object *> objects; //objects in area
+	List objects; //objects in area
 };
 
 /* class resolving movement */

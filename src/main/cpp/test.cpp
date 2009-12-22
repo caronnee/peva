@@ -23,14 +23,14 @@ int main()
 	std::cout<<std::endl;
 	for (size_t i = 0; i< l.size(); i++)
 	{
-		std::cout << i << "_" <<l.items->data << "\t";
+		std::cout << i << "_" <<l.data->value << "\t";
 		l.next();
 	}
 	l.clear();
 	std::cout<<std::endl;
 	for (size_t i = 0; i< 6; i++)
 	{
-		std::cout << i << "_" <<l.items->data << "\t";
+		std::cout << i << "_" <<l.data->value << "\t";
 		l.next();
 	}
 	std::cout << std::endl;
@@ -44,12 +44,12 @@ int main()
 	l.moveHead(l2);
 	for (size_t i = 0; i< 6; i++)
 	{
-		std::cout << i << ":" <<l.items->data << std::endl;
+		std::cout << i << ":" <<l.data->value << std::endl;
 		l.next();
 	}
 	for (size_t i = 0; i< 6; i++)
 	{
-		std::cout << i << ":" <<l2.items->data << std::endl;
+		std::cout << i << ":" <<l2.data->value << std::endl;
 		l2.next();
 	}
 	return 0;
