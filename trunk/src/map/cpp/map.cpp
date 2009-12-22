@@ -3,9 +3,9 @@
 #include "../../add-ons/h/help_functions.h"
 
 //width of box in pixels
-#define BOX_WIDTH 500
+#define BOX_WIDTH 100
 //height of box in pixels
-#define BOX_HEIGHT 500
+#define BOX_HEIGHT 100
 
 Box::Box()
 {
@@ -59,21 +59,15 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	{
 		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
-			int  a = 0;
-			std::list<Object *>::iterator iter = map[pos.x][pos.y].objects.begin();
-			while(iter != map[pos.x][pos.y].objects.end())
+			Object * o = map[pos.x][pos.y].objects.read();
+			while(o!=NULL)
 			{
-				Object * o = (*iter);
-				if(o!=NULL)
-				{
-					SDL_Rect rects;
-					rects.x = o->get_pos().x - begin_draw_at.x;
-					rects.y = o->get_pos().y - begin_draw_at.y;
-					SDL_Rect r = o->get_rect();
-					SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
-				}
-				iter++;
-				a++;
+				SDL_Rect rects;
+				rects.x = o->get_pos().x - begin_draw_at.x;
+				rects.y = o->get_pos().y - begin_draw_at.y;
+				SDL_Rect r = o->get_rect();
+				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
+				o = map[pos.x][pos.y].objects.read();
 			}
 		}
 		r.y = 0;
@@ -107,18 +101,18 @@ Object * Map::checkCollision(Object * o)
 		{
 			Box b = map[x][y];
 			Position colVector;
-			std::list<Object *>::iterator iter = b.objects.begin();			
-			while (iter!=b.objects.end())
+			/* no need to reset */
+			for (size_t i = 0; i<b.objects.size(); i++)
 			{
-				if ( o != (* iter))
-
-					if (o->collideWith(*iter, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
+				Object * objectInBox = b.objects.read();			
+				if (( objectInBox == NULL ) || ( o == objectInBox ))
+					continue;
+				if (o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
 					{
-						(*iter)->collision(colVector);
+						objectInBox->collision(colVector);
 						//			iter = b->objects.begin();
 					}		
 				//		else
-				iter++;
 			}
 		}
 	}	
@@ -132,12 +126,11 @@ void Map::performe()
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box b = map[i][j];
-			for (std::list<Object *>::iterator iter = b.objects.begin();
-				iter != b.objects.end();
-				iter ++)
+			Object * o = b.objects.read();
+			while (o!=NULL)
 			{
-				Object * o = (*iter);
 				resolveMove(o);
+				o = b.objects.read();
 			}
 		}
 	//for all boxes, do action
@@ -145,11 +138,11 @@ void Map::performe()
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box b = map[i][j];
-			for (std::list<Object *>::iterator iter = b.objects.begin();
-				iter != b.objects.end();
-				iter ++)
+			Object * o = b.objects.read();
+			while (o!=NULL)
 			{
-				(*iter)->action(); //scheduller je v tom
+				o->action(); //scheduller je v tom
+				o = b.objects.read();
 			}
 		}
 }
@@ -204,7 +197,7 @@ void Map::add(Object * o)
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
-	map[pos.x][pos.y].objects.push_back(o);
+	map[pos.x][pos.y].objects.add(o);
 }
 Map::~Map() 
 {

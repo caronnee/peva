@@ -5,7 +5,7 @@
 
 struct Item
 {
-	Object * data;
+	Object * value;
 	Item * next;
 	Item * previous;
 };
@@ -16,7 +16,7 @@ class List
 	Item * tail;
 public:
 	List();
-	Item * items;
+	Item * data;
 	size_t size();
 	void add(Object * data);
 	void add(Item * data);
@@ -24,6 +24,8 @@ public:
 	bool remove(Object * data);
 	void moveHead(List & dest);
 	void next();
+	void reset();
+	Object * read();
 };
 
 #endif
