@@ -36,20 +36,21 @@ int main()
 	std::cout << std::endl;
 	l.add(o1);
 	l.add(o2);
-	l.add(o3);
-	l.add(o4);
-	l.add(o5);
-	l.moveHead(l2);
-	l.moveHead(l2);
-	l.moveHead(l2);
+//	l.add(o3);
+//	l.add(o4);
+//	l.add(o5);
+	std::cout <<"MOVING 1!:"<<l.size() << ":" << l2.size() << std::endl;
+	l.moveHead(l);
+//	l.moveHead(l2);
+//	l.moveHead(l2);
+	std::cout <<"MOVING 2!:"<<l.size() << ":" << l2.size() << std::endl;
+	l.reset();
+	l2.reset();
 	for (size_t i = 0; i< 6; i++)
 	{
 		std::cout << i << ":" <<l.data->value << std::endl;
+		std::cout << i << "::" <<l2.data->value << std::endl;
 		l.next();
-	}
-	for (size_t i = 0; i< 6; i++)
-	{
-		std::cout << i << ":" <<l2.data->value << std::endl;
 		l2.next();
 	}
 	return 0;
