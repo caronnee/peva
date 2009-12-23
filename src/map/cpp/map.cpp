@@ -63,8 +63,6 @@ void Map::redraw(Window * w, Position begin_draw_at)
 			Object * o = map[pos.x][pos.y].objects.read();
 			while(o!=NULL)
 			{
-				std::cout << "HA!";
-				getc(stdin);
 				SDL_Rect rects;
 				rects.x = o->get_pos().x - begin_draw_at.x;
 				rects.y = o->get_pos().y - begin_draw_at.y;
