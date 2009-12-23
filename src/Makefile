@@ -17,7 +17,7 @@ gOBJECTS=o/help_functions.o o/position.o o/movement.o o/snake.o \
 	
 LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 
-.PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph
+.PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph test bparser codewars
 
 
 all: dep bparser codewars test
@@ -58,7 +58,8 @@ o/%.o: */cpp/%.cpp
 	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
 distclean:
-	rm -rf o bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h
+	rm -rf o/* bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp \
+	language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h test
 
 brun:
 	make

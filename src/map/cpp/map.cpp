@@ -9,7 +9,7 @@
 
 Box::Box()
 {
-	bounds.x = bounds.y =  bounds.height = bounds.width = 0;
+	bounds.x = bounds.y = bounds.height = bounds.width = 0;
 	objects.clear();
 }
 
@@ -59,9 +59,12 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	{
 		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
 		{
+			map[pos.x][pos.y].objects.reset();
 			Object * o = map[pos.x][pos.y].objects.read();
 			while(o!=NULL)
 			{
+				std::cout << "HA!";
+				getc(stdin);
 				SDL_Rect rects;
 				rects.x = o->get_pos().x - begin_draw_at.x;
 				rects.y = o->get_pos().y - begin_draw_at.y;
@@ -69,6 +72,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				o = map[pos.x][pos.y].objects.read();
 			}
+			pos.y++;
 		}
 		r.y = 0;
 		pos.y = begin_draw_at.y;
@@ -99,7 +103,7 @@ Object * Map::checkCollision(Object * o)
 	{
 		for (int y =oldBox.y; y <= newBox.y; y++)
 		{
-			Box b = map[x][y];
+			Box & b = map[x][y];
 			Position colVector;
 			/* no need to reset */
 			for (size_t i = 0; i<b.objects.size(); i++)
@@ -125,25 +129,34 @@ void Map::performe()
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
-			Box b = map[i][j];
+			Box &b = map[i][j];
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
 				resolveMove(o);
-				o = b.objects.read();
+				Position p = o->get_pos();
+				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
+				o = b.objects.data->value;
 			}
 		}
 	//for all boxes, do action
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
-			Box b = map[i][j];
+			Box &b = map[i][j];
+			b.objects.reset();
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
 				o->action(); //scheduller je v tom
 				o = b.objects.read();
 			}
+			b.objects.reset();
+			for(size_t i =0; i< b.objects.size(); i++)
+				{
+					std::cout<<b.objects.read()<< "_";
+				}
+				std::cout<<std::endl;
 		}
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
