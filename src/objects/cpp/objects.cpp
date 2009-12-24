@@ -37,14 +37,17 @@ void Object::setSkin(Skin * s)
 		delete skinWork;
 	skinWork = new ImageSkinWork(s);
 }
+//TODO zmenit na float, aby aj pre male steps to fungovalo
+//TODO da sa aj krajsie
 void Object::move()
 {
 	movement.old_pos = movement.position_in_map;
 	
 	Position passed(movement.direction.x/movement.fps,movement.direction.y/movement.fps);
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
-	if (stepsPass > movement.steps)
+	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
+		skinWork->removeState();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;

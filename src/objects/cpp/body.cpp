@@ -30,7 +30,9 @@ void Body::place (Map * m, Position p, int angle)
 }
 int Body::step(int steps)
 {
+	//TODO presunut to do movmentu
 	movement.steps = steps * movement.speed;
+	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionHit);
 	return 0;
 }
 int Body::step()
@@ -56,6 +58,7 @@ int Body::wait(int x)
 }
 int Body::shoot(int x, int y)
 {
+
 	std::cout << "Shooting at direction [ " << x << "," <<y<<"]" ;
 	return 0;
 }

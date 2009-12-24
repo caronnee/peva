@@ -150,11 +150,6 @@ void Map::performe()
 				o = b.objects.read();
 			}
 			b.objects.reset();
-			for(size_t i =0; i< b.objects.size(); i++)
-				{
-					std::cout<<b.objects.read()<< "_";
-				}
-				std::cout<<std::endl;
 		}
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
