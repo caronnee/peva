@@ -216,6 +216,7 @@ void Play::process()
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
 							robots.robots[i]->getBody()->place(m,Position (90,40));
+							robots.robots[i]->save_to_xml();
 							m->add(robots.robots[i]->getBody());
 						}
 					fclose(yyin);	
