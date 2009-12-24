@@ -89,6 +89,7 @@ class ImageSkinWork
 {
 	/* miliseconds grom the last blit */
 	Uint32 lastUpdate;
+	size_t count;
 public:
 	/* constructor */
 	ImageSkinWork(Skin * s);

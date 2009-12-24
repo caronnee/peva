@@ -1,4 +1,5 @@
 #include "../h/images.h"
+#include "../../add-ons/h/help_functions.h"
 #include "boost/filesystem.hpp"
 #include <iostream>
 #include <fstream>
@@ -141,18 +142,25 @@ Skin::~Skin()
 
 ImageSkinWork::ImageSkinWork(Skin * skin)
 {
+	count = 0;
 	s = skin;
 	state = StateDefault;
 	states[StateDefault] = ActionDefault; //ostatene sa budu prepisovat
 	rect.w = skin->get_shift().x;
 	rect.h = skin->get_shift().y;
-	std::cout << "shift" << skin->get_shift() << std::endl;
 	rect.x = 0;
 	rect.y = 0;
 	lastUpdate = 0;
 }
 SDL_Surface * ImageSkinWork::get_image()
 {
+	count++;
+	states[StateDefault] = count > 10 ? ActionSleep:ActionDefault;
+	if (count > 10)
+	{
+		std::cout << "menim";
+		getc(stdin);
+	}
 	return s->get_surface(states[state]);
 }
 SDL_Rect ImageSkinWork::get_rect()
@@ -171,12 +179,15 @@ SDL_Rect ImageSkinWork::get_rect()
 }
 void ImageSkinWork::switch_state(States index, Actions action)
 {
-	state = index;
+	count = 0;
+	states[StateDefault] = ActionDefault;
+	state = max<States>(state,index);
 	states[index] = action;
 }
 void ImageSkinWork::removeState()
 {
-	//FIXME moc sa mne nelubi, drak spi a potom kychne a zase spi?
+	count = 0;
+	states[StateDefault] = ActionDefault;
 	switch (state)
 	{
 		case ImageSkinWork::StateTemporarily:
