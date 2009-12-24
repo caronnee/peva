@@ -1,3 +1,4 @@
+//blbne to pri unknown identifir
 ROBOT qqq
 {
 	HEALTH = 100
@@ -22,8 +23,14 @@ ROBOT qqq
 	{
 		while(true)
 		{
-			step(2);
 			turn(45);
+			integer i =0;
+			i = (6+8-10*6)*0;
+			step(2);
+			while (i < 50)
+			{
+				i++;
+			}
 		}
 	}
 }

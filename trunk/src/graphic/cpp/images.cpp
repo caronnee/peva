@@ -5,6 +5,7 @@
 #include <fstream>
 
 #define TICKS 100
+#define BORED_AFTER 100
 
 namespace bf = boost::filesystem;
 
@@ -155,12 +156,7 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 SDL_Surface * ImageSkinWork::get_image()
 {
 	count++;
-	states[StateDefault] = count > 10 ? ActionSleep:ActionDefault;
-	if (count > 10)
-	{
-		std::cout << "menim";
-		getc(stdin);
-	}
+	states[StateDefault] = count > BORED_AFTER ? ActionSleep:ActionDefault;
 	return s->get_surface(states[state]);
 }
 SDL_Rect ImageSkinWork::get_rect()
@@ -221,6 +217,8 @@ Position ImageSkinWork::get_size()
 
 float ImageSkinWork::turn(int degree)//nastavi uhol na degree
 {
+	count = 0;
+	states[StateDefault]=ActionDefault;
 	size_t directions = get_image()->h / s->get_shift().y;
 	float dirShift = 360 / directions;
 	int sh = degree / dirShift;
