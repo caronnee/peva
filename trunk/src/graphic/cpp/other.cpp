@@ -162,7 +162,6 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {
-	skin = new Skin("bowman", Skin::MissilleSkin);
 	resolution = Position(x,y);
 	m = new Map(resolution, "grass");
 	Position speed(100,100);
@@ -186,7 +185,7 @@ void Play::init()
 void Play::process()
 {
 	for (size_t i = 0; i< robots.robots.size();i++)
-	{
+	{	
 		robots.robots[i]->action();
 	}
 	m->performe();
@@ -200,7 +199,7 @@ void Play::process()
 			{
 				case SDLK_a:
 				{
-					Object * o = new Missille(Position(rand()%300,rand()%200), Position(-50,-60),skin);
+					Object * o = new Missille(Position(15,20), Position(-50,-60),new Skin("dragon",Skin::MissilleSkin));
 					m->add(o);
 					break;
 				}
@@ -217,7 +216,7 @@ void Play::process()
 						{
 							robots.robots[i]->getBody()->place(m,Position (90,40));
 							robots.robots[i]->save_to_xml();
-							m->add(robots.robots[i]->getBody());
+					//		m->add(robots.robots[i]->getBody());
 						}
 					fclose(yyin);	
 					my_destroy();

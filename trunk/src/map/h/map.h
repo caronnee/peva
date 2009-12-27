@@ -9,6 +9,12 @@
 #include "../../objects/h/objects.h"
 #include "../../objects/h/list.h"
 
+//width of box in pixels
+#define BOX_WIDTH 100
+//height of box in pixels
+#define BOX_HEIGHT 100
+
+
 /* structure hold object in area */
 
 struct Box
@@ -63,7 +69,6 @@ public:
 
 	/* checking for colision and resolving it*/
 	void collision(Object * o1, Object * o2);
-
 
 	/* map finds out the object movement*/
 	void move(Object * o); 

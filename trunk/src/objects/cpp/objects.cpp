@@ -49,6 +49,8 @@ void Object::move()
 	{
 		skinWork->removeState();
 		stepsPass = movement.steps;
+		std::cout << "KONIEC!";
+		getc(stdin);
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
 	}
@@ -105,6 +107,7 @@ int Object::turn(int angle)
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {
+	return false;
 	Rectangle r1;
 	r1.x = movement.position_in_map.x;
 	r1.y = movement.position_in_map.y;

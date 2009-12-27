@@ -7,13 +7,19 @@
 
 class Body : public Object
 {
-	int default_steps; //makro
+	int default_steps; //settings?
 
 	/* in which map is an object located */
 	Map * map;
+
+	/* ammo, that can be shot */
+	List ammo;
 public:
 	/* Constructor */
 	Body();
+
+	/* method to add ammo, ammo can be every object, body including */
+	void addAmmo(Object * o);
 
 	/* return number of objects, that can robot see */
 	int see();
@@ -21,7 +27,7 @@ public:
 	/* return object that can robot see at index position */
 	Object * eye(int index);
 
-	/* Return an indication, wheter robot can be moved steps steps */
+	/* Return an indication, whether robot can be moved steps steps */
 	int step(int steps);
 
 	/* sets information about map */

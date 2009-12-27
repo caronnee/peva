@@ -2,11 +2,6 @@
 #include "../h/map.h"
 #include "../../add-ons/h/help_functions.h"
 
-//width of box in pixels
-#define BOX_WIDTH 100
-//height of box in pixels
-#define BOX_HEIGHT 100
-
 Box::Box()
 {
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
@@ -123,18 +118,28 @@ Object * Map::checkCollision(Object * o)
 
 void Map::performe()
 {
+	for (size_t i = 0; i< boxesInRow; i++ )
+		for (size_t j = 0; j< boxesInColumn; j++ )
+			map[i][j].objects.reset();
 	/* resolving he move action that happened */
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box &b = map[i][j];
+			b.objects.reset();
+			for (int i =0; i< b.objects.size(); i++)
+				b.objects.read();
+			std::cout << std::endl;
+			b.objects.reset();
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
 				resolveMove(o);
 				Position p = o->get_pos();
 				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
-				o = b.objects.data->value;
+				o = b.objects.data->value();
+				std::cout <<" "<< o ;
+				getc(stdin);
 			}
 		}
 	//for all boxes, do action
@@ -156,24 +161,32 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 {
 	if (o->movement.position_in_map.x <0)
 	{
+		std::cout << 1;
+		getc(stdin);
 	//	o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = -1; //odrazene
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-o->width())
 	{
+		std::cout << 1;
+		getc(stdin);
 	//	o->movement.direction.x *= -1;
 //		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
 		o->movement.position_in_map.x = resolution.x - o->width(); //odrazene
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
+		std::cout << 1;
+		getc(stdin);
 	//	o->movement.direction.y *= -1;
 //		o->movement.position_in_map.y *= -1;
 		o->movement.position_in_map.y = 0; //odrazene
 	}
 	else if(o->movement.position_in_map.y > resolution.y-o->height())
 	{
+		std::cout << 1;
+		getc(stdin);
 	//	o->movement.direction.y *= -1;
 	//	o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
 		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
@@ -182,7 +195,10 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 void Map::resolveMove(Object * o)
 {
 	if (!(o->isMoving())) //pokial je mrtvy, tak je taky nemoving
+	{
+		std::cout << "NOn MOVING";//getc(stdin);
 		return;
+	}
 	/* move, actually */
 	o->move();
 	resolveBorders(o);
@@ -195,11 +211,11 @@ void Map::resolveMove(Object * o)
 
 void Map::add(Object * o)
 {
-	 if (o == NULL)
-	 {
-		 std::cout << "ERROR! null object!"; 
-		 getc(stdin); 
-	 }
+	if (o == NULL)
+	{
+		std::cout << "Error! null object!"; 
+		getc(stdin); 
+	}
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;

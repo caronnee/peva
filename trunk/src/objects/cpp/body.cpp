@@ -9,6 +9,11 @@ Body::Body()
 	movement.angle = 0;
 }
 
+void Body::addAmmo(Object * o)
+{
+	ammo.add(o);
+}
+
 bool Body::is_blocking()
 {
 	return true;
@@ -58,7 +63,28 @@ int Body::wait(int x)
 }
 int Body::shoot(int x, int y)
 {
-
 	std::cout << "Shooting at direction [ " << x << "," <<y<<"]" ;
+	if (ammo.empty())
+	{
+		std::cout << "Prazdne ammo!";
+		getc(stdin);
+		return 0;
+	}
+	Position mP = this->get_pos();
+	
+	Position p = skinWork->head();
+	if (ammo.data->value == NULL)
+		ammo.next();
+	mP.x += p.x;
+	mP.y += p.y;
+
+	ammo.data->value->movement.steps = 100;
+	ammo.data->value->movement.direction = movement.direction;
+	ammo.data->value->movement.speed = 50;
+	ammo.data->value->movement.position_in_map = mP;
+	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
+
+	std::cout << "done!"<< ammo.size();
+	getc(stdin);
 	return 0;
 }

@@ -80,10 +80,10 @@ Body * Robot::getBody ()
 {
 	return core->body;
 }
-void Robot::setSkin(Skin*s)
+void Robot::setSkin(Skin * s)
 {
+	skinName = s->nameOfSet;
 	core->body->setSkin(s);
-	mSkin = s;
 }
 void Robot::declare_type()
 {
@@ -464,7 +464,7 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 
 void Robot::consolidate()
 {
-	scheduller = new SchedulleRound();
+	scheduller = new SchedulleRound(); //TPDP konfigurovatelne
 	std::vector<InstructionBreak *> breaks;
 	std::vector<InstructionBegin *> begins;
 	std::vector<InstructionContinue *> conts;
@@ -480,14 +480,12 @@ void Robot::consolidate()
 		InstructionContinue *c = dynamic_cast<InstructionContinue *>(instructions[i]);
 		if (c)
 		{
-			std::cout << i <<",1."<<std::endl;
 			conts.push_back(c);		
 			continue;
 		}
 		InstructionBreak *b= dynamic_cast<InstructionBreak *>(instructions[i]);
 		if (b)
 		{
-			std::cout << i <<",2."<<std::endl;
 			breaks.push_back(b);
 			continue;
 		}
@@ -510,7 +508,6 @@ void Robot::consolidate()
 			//resolve vsetky breaky az po NULL
 			while ((!breaks.empty())&&(breaks.back()!=NULL))
 			{
-				std::cout <<begins.size(); 
 				breaks.back()->set(i+e->end_loop, begins.back()->depth);
 				breaks.pop_back();
 			}
@@ -538,11 +535,6 @@ Robot::~Robot()
 	delete nullable;
 	delete defined_types;
 
-	for (std::list<Missille *>::iterator i = ammo.begin();
-		i!=ammo.end();
-		i++ )
-		delete (*i);	
-	ammo.clear();
 	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
 		i!= targets.end(); i++)
 	{
@@ -575,20 +567,13 @@ Skin * Robots::addmSkin( std::string name)
 	return ms;
 }
 
-void Robot::setmSkin(Skin* s)
+//zbytocne!
+void Robot::setmSkin(Skin* mSkin)
 {
-	mSkin = s; 
-	if (!ammo.empty())
-	{
-		for (std::list<Missille *>::iterator i = ammo.begin();
-			i!=ammo.end();
-			i++)
-		delete (*i);
-	}
-	ammo.clear();
-	for(size_t i =0; i<missilles; i++)
-		ammo.push_back(new Missille(mSkin));
+	for(size_t i=0; i<missilles; i++)
+		core->body->addAmmo(new Missille(mSkin));
 }
+
 void Robots::checkSkins()
 {
 	for (size_t i =0; i< robots.size(); i++)
@@ -596,8 +581,8 @@ void Robots::checkSkins()
 		if (!robots[i]->skined())
 		{
 			robots[i]->setSkin(addSkin("dragon"));
-			robots[i]->setmSkin(addmSkin("dragon"));
 		}
+		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
 		robots[i]->core->body->turn(0);
 	}
 }
@@ -630,6 +615,5 @@ Robot::Robot()
 {
 	name = "Robot";
 	missilles = 10; //TODO konfigrovatelne
-	ammo.clear();
 }
 
