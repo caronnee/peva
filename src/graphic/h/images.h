@@ -127,7 +127,11 @@ public:
 	/* changes the direction of object */
 	float turn(int degree);
 
+	/* returns position od supposed head character according size */
+	Position head();
+
 protected:
+
 	Skin * s;
 	States state; //aktualny stav
 	size_t states[NumberOfStates];

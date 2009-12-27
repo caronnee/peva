@@ -21,7 +21,6 @@ void List::add(Object* o)
 	data->previous->next = i;
 	data->previous = i;
 	i->value = o;
-	std::cout << "increase";
 	size_++;
 	data = i;
 }
@@ -69,7 +68,7 @@ void List::moveHead(List & dest)
 	Item * i = data;
 	data = data->previous;
 	data->next = i->next;
-	data->next->previous=data;
+	data->next->previous = data;
 	dest.add(i);
 	size_--;
 }
@@ -86,4 +85,14 @@ Object * List::read()
 	next();
 	Object * o = data->value;
 	return o;
+}
+bool List::empty()
+{
+	return !(size_ > 1);
+}
+List::~List()
+{
+	tail = NULL;
+	delete data;
+	size_ = 0;
 }

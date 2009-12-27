@@ -32,7 +32,7 @@ struct ObjectMovement
 	/* direction */
 	Position direction;
 
-	/* frame per second */
+	/* frame per second */ //TODO global
 	float fps; 
 
 	/* how many steps is object allowed to take */

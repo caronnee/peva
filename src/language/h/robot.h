@@ -49,9 +49,7 @@ struct MyXmlData
 };
 class Robot
 {
-	Skin * mSkin;
 	size_t missilles;
-	std::list<Missille *> ammo;
 public:
 	enum ErrorCode
 	{
@@ -118,6 +116,8 @@ public:
 	std::stack<Create_type *> active_type;
 	Create_type * last_type;
 public:
+	
+	std::string skinName;
 	Robot(std::string name, GamePoints g);
 	Robot();
 	

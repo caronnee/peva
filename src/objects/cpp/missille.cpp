@@ -4,6 +4,7 @@ Missille::Missille(Skin*s)
 {
 	movement.direction = Position (0,0);
 	movement.position_in_map = Position (0,0);
+	movement.speed = 100;
 	milisec = 0;
 	ticks = 0;
 	name = "Missille";
@@ -15,6 +16,9 @@ Missille::Missille(Position P, Position dir, Skin* s)
 	movement.position_in_map = P;
 	movement.old_pos = P;
 	milisec = 0;
+	movement.angle = 50;
+	movement.steps = 20;
+	movement.speed = 100;
 	ticks = SDL_GetTicks();
 	name = "Missille";
 	skinWork = new ImageSkinWork(s);
@@ -34,8 +38,9 @@ void Missille::defense() //zkladne sa a odide, odkial prisla
 	movement.direction.y *=-1; //TODO to sa vrati odkial prisla
 }
 
-void Missille::action()
-{
+//TODO zmazat a dat do ineho listu, kde nebude action
+void Missille::action(){}
+	/*
 	movement.old_pos = movement.position_in_map;
 	milisec = SDL_GetTicks() - ticks;
 	if (milisec == 0)
@@ -51,6 +56,6 @@ void Missille::action()
 //	std::cout << "pozicia po:" << movement.position_in_map << std::endl;
 //	getc(stdin);
 	ticks = SDL_GetTicks();
-}
+}*/
 Missille::~Missille() 
 {} 

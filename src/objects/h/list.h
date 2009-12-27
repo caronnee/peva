@@ -20,12 +20,14 @@ public:
 	size_t size();
 	void add(Object * data);
 	void add(Item * data);
-	void clear();
-	bool remove(Object * data);
 	void moveHead(List & dest);
 	void next();
+	void clear();
 	void reset();
+	bool remove(Object * data);
+	bool empty();
 	Object * read();
+	~List();
 };
 
 #endif

@@ -52,7 +52,6 @@ struct Letter
 class Play:public Menu
 {
 	Map * m;
-	Skin *skin;
 	Window * w;
 	Position p;
 	Robots robots;

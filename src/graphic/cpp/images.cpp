@@ -9,7 +9,7 @@
 
 namespace bf = boost::filesystem;
 
-std::string toLoadBot[] = {"default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png" };
+std::string toLoadBot[] = { "default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png" };
 std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
@@ -90,7 +90,7 @@ Skin::Skin(std::string name, Skin::Type t)
 		begin_in_picture.x = 0;
 		begin_in_picture.y = 0;
 		shift.x = images[0]->h;
-		shift.y = 0;
+		shift.y = images[0]->h;
 		imageSize.x = imageSize.y = images[0]->h; //strely u stvorcove
 		return;
 	}
@@ -225,4 +225,40 @@ float ImageSkinWork::turn(int degree)//nastavi uhol na degree
 	rect.y = sh*s->get_shift().y;
 	rect.y %= get_image()->h;
 	return dirShift;
+}
+Position ImageSkinWork::head()
+{
+	Position p = s->get_begin();
+	// plus jedna, pretoze zaciname od severu
+	size_t directions = 1 + get_image()->h / s->get_shift().y;
+	size_t oneSide = directions/4;
+	size_t dir = rect.y / s->get_shift().y;
+	float add = 1 / oneSide;
+	int side = dir/oneSide; 
+	switch (side)
+	{
+		case 0:
+		{
+			p.x += (dir%oneSide)*add*s->get_size().x;
+			break;
+		}
+		case 1:
+		{
+			p.x += s->get_size().x;
+			p.y += (dir%oneSide)*add*s->get_size().y;
+			break;
+		}
+		case 2:
+		{
+			p.x += ( oneSide - dir % oneSide )*add*s->get_size().x;
+			p.y += s->get_size().y;
+			break;
+		}
+		case 3:
+		{
+			p.y += (oneSide - dir % oneSide )* add * s->get_size().y;
+			break;
+		}
+	}
+	return p;
 }
