@@ -1,19 +1,22 @@
 #include <iostream>
 #include "../h/wall.h"
 
-SolidWall::SolidWall()
+Wall::Wall()
 {
-	name = "SolidWall";
+	name = "Wall";
+}
+Wall::Wall(Position p, WallSkin * s)
+{
+	movement.angle = 0;
+	movement.direction = Position (0,0);
+	movement.position_in_map = movement.old_pos = p;
+	movement.steps = 0;
+	skinWork =  new ImageSkinWork(s);
 }
 PushableWall::PushableWall()
 {
 	movement.direction.x = 0;
 	movement.direction.y = 0;
-	ticks = SDL_GetTicks() + 100;
-}
-void PushableWall::action(Map * m)
-{
-
 }
 TrapWall::TrapWall()
 {

@@ -56,7 +56,6 @@ class Play:public Menu
 	Position p;
 	Robots robots;
 	Position begin; //where to begin draw gameboard
-	Position resolution;//map resolution in pixels
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	std::list<Letter *> letts;
 	SDL_Rect rect;

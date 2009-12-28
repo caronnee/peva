@@ -15,12 +15,15 @@ std::string toLoadMissille[] = {"missille.png"};
 //TODO akonsa steny rozbijaju
 std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "selected.png" };
 
+Skin::Skin()
+{
+	images = NULL;
+}
 Skin::Skin(std::string name, Skin::Type t)
 {
 	nameOfSet = name;
 	std::string * load;
 	std::string directory = "./"; 
-	bool x = false;
 	switch (t)
 	{
 		case MapSkin:
@@ -34,7 +37,6 @@ Skin::Skin(std::string name, Skin::Type t)
 		case MissilleSkin:
 		{
 			directory = "./botSkins/";
-			x = true;
 			load = toLoadMissille;
 			size = 1;
 			images = new SDL_Surface *[NumberOfActions];
@@ -67,23 +69,15 @@ Skin::Skin(std::string name, Skin::Type t)
 		return;
 	}
 	directory = directory+name + '/';
-	bf::directory_iterator end_itr;
-	for (bf::directory_iterator iter (directory); iter!= end_itr; iter++)
+	for (size_t i = 0; i<size; i++ )
 	{
-		for (size_t i = 0; i<size; i++ )
-		{
-			if (load[i] == iter->leaf())
-			{
-				images[i] = IMG_Load((directory + load[i]).c_str());
-				break;
-			}
-		}
-	}	
+		images[i] = IMG_Load((directory + load[i]).c_str());
+	}
 
 	for (size_t i =1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
 	{
 		if (images[i]==NULL)
-			images[i] = images[i-1];
+			images[i] = IMG_Load(load[i-1].c_str()); //aby sa dalo pouzit free
 	}
 	if (t == MissilleSkin)
 	{
@@ -141,6 +135,31 @@ Skin::~Skin()
 	delete[] images;
 }
 
+WallSkin::WallSkin(std::string name, size_t wall)
+{
+	nameOfSet = name;
+	std::string directory = "./mapSkins/" + name + "/";
+	if (!bf::exists(directory))
+	{
+		std::cout << "Nonexistent maps!";//TODO vynimka
+		getc(stdin);
+		return;
+	}
+	size = NumberOfActions;
+	images = new SDL_Surface *[size];
+	//TODO zatial, pridat sleep veci a pod.
+	for (size_t i =0; i< size; i++)
+	{
+		images[i] = IMG_Load((directory +toLoadMap[wall]).c_str());
+	}
+	begin_in_picture.x = 0;
+	begin_in_picture.y = 0;
+	shift.x = images[0]->h;
+	shift.y = images[0]->w;
+	imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
+	imageSize.y = images[0]->h;
+}
+
 ImageSkinWork::ImageSkinWork(Skin * skin)
 {
 	count = 0;
@@ -153,6 +172,7 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 	rect.y = 0;
 	lastUpdate = 0;
 }
+//BIG TODO walls to vadi, ale do default by sa nikdy nemali dostat
 SDL_Surface * ImageSkinWork::get_image()
 {
 	count++;
@@ -173,6 +193,8 @@ SDL_Rect ImageSkinWork::get_rect()
 	}
 	return rect;	
 }
+
+//stane sa pri hit object
 void ImageSkinWork::switch_state(States index, Actions action)
 {
 	count = 0;
@@ -228,35 +250,35 @@ float ImageSkinWork::turn(int degree)//nastavi uhol na degree
 }
 Position ImageSkinWork::head()
 {
-	Position p = s->get_begin();
+	Position p(0,0);
 	// plus jedna, pretoze zaciname od severu
 	size_t directions = 1 + get_image()->h / s->get_shift().y;
 	size_t oneSide = directions/4;
-	size_t dir = rect.y / s->get_shift().y;
-	float add = 1 / oneSide;
+	size_t dir = 1 + rect.y / s->get_shift().y;
+	float add = 1.0f / oneSide;
 	int side = dir/oneSide; 
 	switch (side)
 	{
 		case 0:
 		{
-			p.x += (dir%oneSide)*add*s->get_size().x;
+			p.x += (dir%oneSide)*add*s->get_shift().x;
 			break;
 		}
 		case 1:
 		{
-			p.x += s->get_size().x;
-			p.y += (dir%oneSide)*add*s->get_size().y;
+			p.x += s->get_shift().x;
+			p.y += (dir%oneSide)*add*s->get_shift().y;
 			break;
 		}
 		case 2:
 		{
-			p.x += ( oneSide - dir % oneSide )*add*s->get_size().x;
-			p.y += s->get_size().y;
+			p.x += ( oneSide - dir % oneSide )*add*s->get_shift().x;
+			p.y += s->get_shift().y;
 			break;
 		}
 		case 3:
 		{
-			p.y += (oneSide - dir % oneSide )* add * s->get_size().y;
+			p.y += (oneSide - dir % oneSide )* add * s->get_shift().y;
 			break;
 		}
 	}

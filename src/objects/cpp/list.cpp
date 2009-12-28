@@ -66,9 +66,9 @@ void List::add(Item *item)
 void List::moveHead(List & dest)
 {
 	Item * i = data;
-	data = data->previous;
-	data->next = i->next;
-	data->next->previous = data;
+	data = data->next;
+	data->previous = i->previous;
+	data->previous->next = data;
 	dest.add(i);
 	size_--;
 }
