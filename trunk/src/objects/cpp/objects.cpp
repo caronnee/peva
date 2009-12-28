@@ -6,11 +6,12 @@
 
 Object::Object()
 {
+	owner = this;
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
 	movement.position_in_map.y = 0;
-	movement.old_pos = movement.position_in_map;
+	movement.old_pos = movement.position_in_map = Position (0,0);
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 	movement.angle = 0;

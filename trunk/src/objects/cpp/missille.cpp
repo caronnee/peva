@@ -6,7 +6,6 @@ Missille::Missille(Skin*s)
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
 	milisec = 0;
-	ticks = 0;
 	name = "Missille";
 	skinWork = new ImageSkinWork(s);
 }
@@ -19,7 +18,6 @@ Missille::Missille(Position P, Position dir, Skin* s)
 	movement.angle = 50;
 	movement.steps = 20;
 	movement.speed = 100;
-	ticks = SDL_GetTicks();
 	name = "Missille";
 	skinWork = new ImageSkinWork(s);
 }

@@ -6,8 +6,6 @@
 #include "../../add-ons/h/position.h"
 #include "../../graphic/h/images.h"
 
-struct Map;
-
 struct Type_bot
 {
 	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
@@ -42,11 +40,11 @@ struct ObjectMovement
 	int angle;
 };
 
-class Object // abstraktna klassa, ktora je predkom botov, strely aj Walls 
+class Object
 {
 protected:
 	/* who cause the object to live, animate etc. */
-	size_t owner;
+	Object * owner;
 
 	/* name of th object, for debugging purposes */
 	std::string name;
@@ -57,8 +55,6 @@ protected:
 	/* object properties */
 	int defense, attack, hitpoints;
 
-	/* find out how much tim e passed since last blit */
-	Uint32 ticks;
 public:
 	/* constructor */
 	Object();
@@ -93,6 +89,7 @@ public:
 	/* asking about skin */
 	bool hasSkin();
 
+//TODO
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
 

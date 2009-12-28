@@ -12,7 +12,7 @@
 
 enum WallImageObjects
 {
-	WallFree,
+	WallFree = 0,
 	WallSolidId,
 	WallPushId,
 	WallTrapId,
@@ -54,6 +54,8 @@ protected:
 	/* how many pixels in the begining is 'empty' */
 	Position begin_in_picture; //kolko toho ma urezat zo zaciatku
 public:
+	Skin();
+
 	/* name of set for memory optimalization, no need to be private */
 	std::string nameOfSet;
 
@@ -82,7 +84,11 @@ public:
 	/* destructor */
 	virtual ~Skin();
 };
-
+class WallSkin:public Skin
+{
+	public:
+	WallSkin(std::string name, size_t wall); //ktory wall ma naloadovat
+};
 /* class for handling the skin */
 
 class ImageSkinWork
@@ -137,5 +143,10 @@ protected:
 	size_t states[NumberOfStates];
 	//size_t row; netreba, zostane stale stejna
 	SDL_Rect rect; //kde prave som
+};
+class ImageSkinWallWorker: public ImageSkinWork
+{
+	public:
+	virtual void switch_state(States s, Actions a);
 };
 #endif

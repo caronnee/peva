@@ -7,12 +7,21 @@ Box::Box()
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
 	objects.clear();
 }
-
+Map::Map(std::string configFile, std::string name)
+{
+}
 Map::Map(Position resol, std::string skinName) 
 {
+	wskins.clear();
 	skin = new Skin(skinName, Skin::MapSkin);
+	for (size_t i = 0; i< NumberObjectsImages; i++)
+	{
+		wskins.push_back( new WallSkin(skinName, i));
+	}
 	skinWork = new ImageSkinWork(skin);
 	resolution = resol; 
+	resolution.x +=  2*skin->get_shift().x;
+	resolution.y +=  2*skin->get_shift().y;
 	boxesInRow = (float)resolution.x/ BOX_WIDTH; 
 	boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
 	Rectangle begin(0,0,BOX_WIDTH,BOX_HEIGHT);
@@ -29,7 +38,38 @@ Map::Map(Position resol, std::string skinName)
 		begin.x+=BOX_HEIGHT;
 		begin.y = 0;
 	}
-	//TODO solid steny na koncoch
+	/* adding solid walls to ends */
+	Position p(skin->get_size().x,0);
+	ObjectMovement movement;
+	movement.speed = 0;
+	movement.direction = Position(0,0);
+	movement.angle = 0;
+	movement.old_pos = movement.position_in_map = p;
+	int a = 0;
+	while (p.x < resolution.x - wskins[1]->get_size().x)
+	{
+		a++;
+		p.y = 0;
+		Wall * w1 = new Wall(p, wskins[1]);
+		p.y = resol.y + wskins[1]->get_size().y; //povodne resol;
+		Wall * w2 = new Wall(p, wskins[1]);
+		add(w1);
+		add(w2);
+		p.x += skin->get_size().x;
+	}	
+	int tmp = p.x;
+	std::cout << "Preslo " << a << "-krat";
+	p.y = 0;
+	while (p.y < resolution.y)
+	{
+		p.x = 0;
+		Wall * w1 = new Wall(p, wskins[1]);
+		p.x = tmp;
+		Wall * w2 = new Wall(p, wskins[1]);
+		p.y += skin->get_size().y;
+		add(w1);
+		add(w2);
+	}
 }
 
 void Map::redraw(Window * w, Position begin_draw_at) 
@@ -38,6 +78,12 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	r.x = 0;
 	r.y = 0;
 	Position pos(begin_draw_at);
+	SDL_Rect clip;
+	clip.x = 0;
+	clip.y = 0;
+	clip.w = resolution.x; 
+	clip.h = resolution.y;
+	SDL_SetClipRect(w->g->screen, &clip);
 	for (int i =0; i< w->g->screen->w; i+=skin->get_size().x) // pre tapety
 	{
 		for(int j =0; j< w->g->screen->h; j+=skin->get_size().y)
@@ -50,6 +96,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		r.x+=skin->get_size().x;
 	}
 	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
+	int a = 0;
 	for (int i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
@@ -58,11 +105,14 @@ void Map::redraw(Window * w, Position begin_draw_at)
 			Object * o = map[pos.x][pos.y].objects.read();
 			while(o!=NULL)
 			{
+				a++;
 				SDL_Rect rects;
 				rects.x = o->get_pos().x - begin_draw_at.x;
 				rects.y = o->get_pos().y - begin_draw_at.y;
 				SDL_Rect r = o->get_rect();
-				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
+			//	std::cout << rects.x << " " << rects.y << rects.w << " " << rects.h << std::endl;
+			//	std::cout << o->show()<< std::endl;
+				SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
 				o = map[pos.x][pos.y].objects.read();
 			}
 			pos.y++;
@@ -71,6 +121,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		pos.y = begin_draw_at.y;
 		pos.x++;
 	}
+	SDL_SetClipRect(w->g->screen, NULL);
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
@@ -126,20 +177,13 @@ void Map::performe()
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box &b = map[i][j];
-			b.objects.reset();
-			for (int i =0; i< b.objects.size(); i++)
-				b.objects.read();
-			std::cout << std::endl;
-			b.objects.reset();
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
 				resolveMove(o);
 				Position p = o->get_pos();
 				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
-				o = b.objects.data->value();
-				std::cout <<" "<< o ;
-				getc(stdin);
+				o = b.objects.data->value;
 			}
 		}
 	//for all boxes, do action
@@ -196,7 +240,7 @@ void Map::resolveMove(Object * o)
 {
 	if (!(o->isMoving())) //pokial je mrtvy, tak je taky nemoving
 	{
-		std::cout << "NOn MOVING";//getc(stdin);
+	//	std::cout << "NOn MOVING";//getc(stdin);
 		return;
 	}
 	/* move, actually */

@@ -33,6 +33,9 @@ struct Box
 
 struct Map
 {
+	/* strucutre holdin images of wall */
+	std::vector<WallSkin *> wskins;
+
 	/* how many column boxes */
 	float boxesInColumn;
 
@@ -63,6 +66,9 @@ struct Map
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);
+
+	/* constructor from config file */
+	Map(std::string file, std::string skinName);
 
 	/* check and collision */
 	Object * checkCollision(Object * o);

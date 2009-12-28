@@ -100,8 +100,6 @@ Play::Play(Window *w_)
 	rect.x = 0;
 	rect.y = 0;
 	iter = iter_beg = letts.begin();
-	resolution.x = 500;
-	resolution.y = 300;
 	begin.x = 0;
 	begin.y = 0; //TODO  vystredit
 	for (int i = 0; i< 256; i++)
@@ -112,7 +110,7 @@ Play::Play(Window *w_)
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
 
 	}
-	init (400,500);//TODO zmenit na mapy, ktore uzivatel zada
+	init (400,200);//TODO zmenit na mapy, ktore uzivatel zada
 	//mapa o velkosti 10x10
 /*	for(int i = 0; i<8; i++)
 	{
@@ -162,17 +160,13 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {
-	resolution = Position(x,y);
-	m = new Map(resolution, "grass");
-	Position speed(100,100);
+	m = new Map(Position (x,y), "grass");
 }
 
 void Play::clear()
 {
 	begin.x = 0;
 	begin.y = 0;
-	resolution.x = 0;
-	resolution.y = 0;
 	delete m;
 //	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
 //		delete (*iter); //mazeme zatial iba missile, pozor na boxy, mazat to v mape
@@ -180,7 +174,7 @@ void Play::clear()
 }
 void Play::init()
 {
-	init(300,400);
+	//este sa nic neinituje
 }
 void Play::process()
 {
@@ -216,7 +210,7 @@ void Play::process()
 						{
 							robots.robots[i]->getBody()->place(m,Position (90,40));
 							robots.robots[i]->save_to_xml();
-					//		m->add(robots.robots[i]->getBody());
+							m->add(robots.robots[i]->getBody());
 						}
 					fclose(yyin);	
 					my_destroy();
