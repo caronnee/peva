@@ -17,13 +17,16 @@ ROBOT qqq
 
 //	integer i;
 
-	//ZAKAZNAY VSTUP ZATIAL
-
 	main() // komentar
 	{
 		while(true)
 		{
 			shoot(30);
+			integer i =0;
+			while (i<10)
+			{
+				i++;
+			}
 		}
 	}
 }

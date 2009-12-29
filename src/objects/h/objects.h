@@ -43,8 +43,6 @@ struct ObjectMovement
 class Object
 {
 protected:
-	/* who cause the object to live, animate etc. */
-	Object * owner;
 
 	/* name of th object, for debugging purposes */
 	std::string name;
@@ -56,9 +54,14 @@ protected:
 	int defense, attack, hitpoints;
 
 public:
+	/* who cause the object to live, animate etc. */
+	Object * owner;
+
 	/* constructor */
 	Object();
 
+	/* for optimaliozation */
+	bool blocksMove();
 	/* where exactly is the object, filling movement */
 	void setPosition(Position p, int angle = 0);
 
@@ -109,7 +112,7 @@ public:
 	int Hit();
 
 	/* check, whether objcet is moving for optimalization and robot instruction purposes */
-	int isMoving();
+	bool isMoving();
 
 	/* for robot questioning state of object */
 	int isWall();

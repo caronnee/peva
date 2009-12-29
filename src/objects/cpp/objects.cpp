@@ -48,10 +48,9 @@ void Object::move()
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
+		std::cout << "removing state after finishong movement";
 		skinWork->removeState();
 		stepsPass = movement.steps;
-		std::cout << "KONIEC!";
-		getc(stdin);
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
 	}
@@ -239,9 +238,9 @@ void Object::collision(Position collidedVector)
 {
 	movement.direction.x = 0;
 	movement.direction.y = 0;
-}
-int Object::isMoving(){
-	return movement.steps>0;
+;}
+bool Object::isMoving(){
+	return movement.steps;
 }
 int Object::isWall()
 {
@@ -251,6 +250,11 @@ int Object::isPlayer()
 { 
 	return 0;
 }
+bool Object::blocksMove()
+{
+	return !isMoving() || skinWork->processing();
+}
+
 int Object::isMissille()
 {
 	return 0;
