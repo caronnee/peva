@@ -111,8 +111,8 @@ void Map::redraw(Window * w, Position begin_draw_at)
 				rects.y = o->get_pos().y - begin_draw_at.y;
 				SDL_Rect r = o->get_rect();
 			//	std::cout << rects.x << " " << rects.y << rects.w << " " << rects.h << std::endl;
-			//	std::cout << o->show()<< std::endl;
-				SDL_BlitSurface(o->show(),NULL,w->g->screen, &rects);
+				std::cout << o->show()<< std::endl;
+				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				o = map[pos.x][pos.y].objects.read();
 			}
 			pos.y++;
@@ -238,7 +238,7 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 }
 void Map::resolveMove(Object * o)
 {
-	if (!(o->isMoving())) //pokial je mrtvy, tak je taky nemoving
+	if (o->blocksMove()) //pokial je mrtvy, tak je taky nemoving
 	{
 	//	std::cout << "NOn MOVING";//getc(stdin);
 		return;

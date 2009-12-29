@@ -12,6 +12,7 @@ Body::Body()
 void Body::addAmmo(Object * o)
 {
 	ammo.add(o);
+	o->owner = this;
 }
 
 bool Body::is_blocking()
@@ -70,6 +71,7 @@ int Body::shoot(int x, int y)
 		getc(stdin);
 		return 0;
 	}
+	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionAttack);
 	Position mP = this->get_pos();
 	
 	Position p = skinWork->head();
@@ -85,6 +87,6 @@ int Body::shoot(int x, int y)
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 
 	std::cout << "done!"<< ammo.size();
-	getc(stdin);
+//	getc(stdin);
 	return 0;
 }

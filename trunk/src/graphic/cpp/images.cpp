@@ -164,10 +164,10 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 {
 	count = 0;
 	s = skin;
-	state = StateDefault;
+	state.push(StateDefault);
 	states[StateDefault] = ActionDefault; //ostatene sa budu prepisovat
-	rect.w = skin->get_shift().x;
 	rect.h = skin->get_shift().y;
+	rect.w = skin->get_shift().x;
 	rect.x = 0;
 	rect.y = 0;
 	lastUpdate = 0;
@@ -177,19 +177,25 @@ SDL_Surface * ImageSkinWork::get_image()
 {
 	count++;
 	states[StateDefault] = count > BORED_AFTER ? ActionSleep:ActionDefault;
-	return s->get_surface(states[state]);
+	std::cout << "ht_image state" << state.top()
+	<< " "<<states[state.top()];
+	return s->get_surface(states[state.top()]);
 }
 SDL_Rect ImageSkinWork::get_rect()
 {
 	Uint32 t =SDL_GetTicks();
 	if (t - lastUpdate > TICKS)
 		{
-			rect.x +=s->get_shift().x;
+			rect.x += s->get_shift().x;
 			lastUpdate = SDL_GetTicks();
 		}
-	if (rect.x >= s->get_surface(states[state])->w)
+	if (rect.x >= s->get_surface(states[state.top()])->w)
 	{
 		rect.x = 0;
+		if (state.top() == StateTemporarily)
+		{
+			removeState();
+		}
 	}
 	return rect;	
 }
@@ -198,31 +204,30 @@ SDL_Rect ImageSkinWork::get_rect()
 void ImageSkinWork::switch_state(States index, Actions action)
 {
 	count = 0;
-	states[StateDefault] = ActionDefault;
-	state = max<States>(state,index);
 	states[index] = action;
+	states[StateDefault] = ActionDefault;
+	if (index<state.top())
+	{
+		//zarad to pod aktual
+		States s = state.top();
+		removeState();
+		switch_state(s,states[s]);
+		state.push(index);
+		index = s;
+	}
+	state.push(index);
+}
+bool ImageSkinWork::processing()
+{
+	return state.top() == StateTemporarily;
 }
 void ImageSkinWork::removeState()
 {
 	count = 0;
 	states[StateDefault] = ActionDefault;
-	switch (state)
-	{
-		case ImageSkinWork::StateTemporarily:
-			{
-				state = ImageSkinWork::StatePermanent;
-				break;
-			}
-		case ImageSkinWork::StatePermanent:
-			{
-				state = ImageSkinWork::StateDefault;
-				states[ImageSkinWork::StateDefault] = 0; //not sleeping
-				break;
-			}
-		default:
-			break;
-
-	}	
+	state.pop();
+	if(state.empty())
+		state.push(StateDefault);
 }
 size_t ImageSkinWork::width() //bude sa pytat kvoli kolizii
 {

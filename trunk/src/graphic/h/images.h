@@ -4,7 +4,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <string>
-#include <map>
+#include <stack>
 
 #include "../../add-ons/h/position.h"
 
@@ -93,14 +93,7 @@ class WallSkin:public Skin
 
 class ImageSkinWork
 {
-	/* miliseconds grom the last blit */
-	Uint32 lastUpdate;
-	size_t count;
 public:
-	/* constructor */
-	ImageSkinWork(Skin * s);
-
-	/* behaviour of states */
 	enum States
 	{
 		StateDefault = 0,
@@ -108,6 +101,18 @@ public:
 		StateTemporarily,
 		NumberOfStates
 	};
+
+private:
+	/* miliseconds grom the last blit */
+	Uint32 lastUpdate;
+	size_t count;
+	std::stack<States> state;
+public:
+	/* constructor */
+	ImageSkinWork(Skin * s);
+
+	/* return whether temporary action is still running */
+	bool processing();	
 
 	/* returns the actual picture of state */
 	SDL_Surface * get_image();
@@ -139,8 +144,7 @@ public:
 protected:
 
 	Skin * s;
-	States state; //aktualny stav
-	size_t states[NumberOfStates];
+	Actions states[NumberOfStates];
 	//size_t row; netreba, zostane stale stejna
 	SDL_Rect rect; //kde prave som
 };
