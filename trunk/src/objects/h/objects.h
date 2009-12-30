@@ -5,6 +5,7 @@
 #include <SDL/SDL_image.h>
 #include "../../add-ons/h/position.h"
 #include "../../graphic/h/images.h"
+#include "../h/list.h"
 
 struct Type_bot
 {
@@ -43,7 +44,6 @@ struct ObjectMovement
 class Object
 {
 protected:
-
 	/* name of th object, for debugging purposes */
 	std::string name;
 
@@ -54,8 +54,20 @@ protected:
 	int defense, attack, hitpoints;
 
 public:
+	/* item containing this object */
+	Item * item;
+
+	/* who cause the object to live, animate etc. */
+	Object * assistance;
+
 	/* who cause the object to live, animate etc. */
 	Object * owner;
+
+	/* what will object do when is dead */
+	virtual void clean();
+
+	/* returns whether is object alive */
+	bool alive();
 
 	/* constructor */
 	Object();

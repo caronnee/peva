@@ -6,7 +6,11 @@
 
 Object::Object()
 {
-	owner = this;
+	assistance = this;
+	item = new Item(this);
+	hitpoints = 100; //TODO zmenit
+	/* item containing this object */
+	Item * item;
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
@@ -38,6 +42,14 @@ void Object::setSkin(Skin * s)
 		delete skinWork;
 	skinWork = new ImageSkinWork(s);
 }
+bool Object::alive()
+{
+	return hitpoints > 0;
+}
+void Object::clean()
+{
+	//predefinovane pre podtyoy	ivirtuL!
+}
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie
 void Object::move()
@@ -53,6 +65,7 @@ void Object::move()
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
+//		getc(stdin);
 	}
 	movement.steps -= stepsPass;
 	movement.position_in_map.x += passed.x;

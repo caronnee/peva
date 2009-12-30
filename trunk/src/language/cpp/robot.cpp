@@ -571,7 +571,7 @@ Skin * Robots::addmSkin( std::string name)
 void Robot::setmSkin(Skin* mSkin)
 {
 	for(size_t i=0; i<missilles; i++)
-		core->body->addAmmo(new Missille(mSkin));
+		core->body->addAmmo(new Missille(mSkin, core->body));
 }
 
 void Robots::checkSkins()

@@ -1,7 +1,8 @@
 #include "../h/missille.h"
 
-Missille::Missille(Skin*s)
+Missille::Missille(Skin*s, Body * body)
 {
+	owner = body;
 	movement.direction = Position (0,0);
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
@@ -36,8 +37,15 @@ void Missille::defense() //zkladne sa a odide, odkial prisla
 	movement.direction.y *=-1; //TODO to sa vrati odkial prisla
 }
 
+void Missille::clean()
+{
+	owner->addAmmo(item);
+}
 //TODO zmazat a dat do ineho listu, kde nebude action
-void Missille::action(){}
+void Missille::action()
+{
+	hitpoints = movement.steps;
+}
 	/*
 	movement.old_pos = movement.position_in_map;
 	milisec = SDL_GetTicks() - ticks;

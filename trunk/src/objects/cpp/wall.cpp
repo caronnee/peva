@@ -13,6 +13,11 @@ Wall::Wall(Position p, WallSkin * s)
 	movement.steps = 0;
 	skinWork =  new ImageSkinWork(s);
 }
+BreakableWall::BreakableWall()
+{
+	movement.direction.x = 0;
+	movement.direction.y = 0;
+}
 PushableWall::PushableWall()
 {
 	movement.direction.x = 0;

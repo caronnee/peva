@@ -19,11 +19,12 @@ ROBOT qqq
 
 	main() // komentar
 	{
+		turnL();
 		while(true)
 		{
 			shoot(30);
-			integer i =0;
-			while (i<10)
+			integer i = 0;
+			while (i<1)
 			{
 				i++;
 			}

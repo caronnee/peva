@@ -9,10 +9,14 @@ Body::Body()
 	movement.angle = 0;
 }
 
-void Body::addAmmo(Object * o)
+void Body::addAmmo( Object * o)
 {
-	ammo.add(o);
+	ammo.add(o->item);
 	o->owner = this;
+}
+void Body::addAmmo( Item * i)
+{
+	ammo.add(i); //owner jw spravny
 }
 
 bool Body::is_blocking()
@@ -86,7 +90,5 @@ int Body::shoot(int x, int y)
 	ammo.data->value->movement.position_in_map = mP;
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 
-	std::cout << "done!"<< ammo.size();
-//	getc(stdin);
 	return 0;
 }
