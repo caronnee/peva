@@ -14,6 +14,12 @@ public:
 	//virtual void damage(Object * sender); 
 };
 
+class BreakableWall:public Object //da sa nou pohnut
+{
+public:
+	BreakableWall();
+//	virtual void damage(Object * sender);
+};
 class PushableWall:public Object //da sa nou pohnut
 {
 public:

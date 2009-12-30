@@ -2,6 +2,7 @@
 #include "../h/map.h"
 #include "../../add-ons/h/help_functions.h"
 
+//TODO externe si pamatat steny pre bezpecne odmonotvanie
 Box::Box()
 {
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
@@ -83,6 +84,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 	clip.y = 0;
 	clip.w = resolution.x; 
 	clip.h = resolution.y;
+//	getc(stdin);
 	SDL_SetClipRect(w->g->screen, &clip);
 	for (int i =0; i< w->g->screen->w; i+=skin->get_size().x) // pre tapety
 	{
@@ -111,7 +113,6 @@ void Map::redraw(Window * w, Position begin_draw_at)
 				rects.y = o->get_pos().y - begin_draw_at.y;
 				SDL_Rect r = o->get_rect();
 			//	std::cout << rects.x << " " << rects.y << rects.w << " " << rects.h << std::endl;
-				std::cout << o->show()<< std::endl;
 				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				o = map[pos.x][pos.y].objects.read();
 			}
@@ -172,6 +173,7 @@ void Map::performe()
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 			map[i][j].objects.reset();
+
 	/* resolving he move action that happened */
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
@@ -180,10 +182,17 @@ void Map::performe()
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
+				if (!o->alive())
+				{
+					b.objects.remove(b.objects.data);
+					o = b.objects.data->value;
+					continue;
+				}
 				resolveMove(o);
 				Position p = o->get_pos();
 				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
 				o = b.objects.data->value;
+				usleep(50);
 			}
 		}
 	//for all boxes, do action
@@ -263,7 +272,7 @@ void Map::add(Object * o)
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
-	map[pos.x][pos.y].objects.add(o);
+	map[pos.x][pos.y].objects.add(o->item);
 }
 Map::~Map() 
 {

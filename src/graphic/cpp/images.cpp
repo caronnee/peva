@@ -24,6 +24,7 @@ Skin::Skin(std::string name, Skin::Type t)
 	nameOfSet = name;
 	std::string * load;
 	std::string directory = "./"; 
+	int sizeLoaded;
 	switch (t)
 	{
 		case MapSkin:
@@ -31,6 +32,7 @@ Skin::Skin(std::string name, Skin::Type t)
 			directory = "./mapSkins/";
 			load = toLoadMap;
 			size = NumberObjectsImages;
+			sizeLoaded = size;
 			images = new SDL_Surface *[size];
 			break;
 		}
@@ -38,7 +40,8 @@ Skin::Skin(std::string name, Skin::Type t)
 		{
 			directory = "./botSkins/";
 			load = toLoadMissille;
-			size = 1;
+			size = NumberOfActions;
+			sizeLoaded = 1;
 			images = new SDL_Surface *[NumberOfActions];
 			break;
 		}
@@ -47,6 +50,7 @@ Skin::Skin(std::string name, Skin::Type t)
 			directory = "./botSkins/";
 			load = toLoadBot;
 			size = NumberOfActions;
+			sizeLoaded = NumberOfActions;
 			images = new SDL_Surface *[size];
 			break;
 		}
@@ -69,7 +73,7 @@ Skin::Skin(std::string name, Skin::Type t)
 		return;
 	}
 	directory = directory+name + '/';
-	for (size_t i = 0; i<size; i++ )
+	for (size_t i = 0; i<sizeLoaded; i++ )
 	{
 		images[i] = IMG_Load((directory + load[i]).c_str());
 	}
@@ -77,7 +81,7 @@ Skin::Skin(std::string name, Skin::Type t)
 	for (size_t i =1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
 	{
 		if (images[i]==NULL)
-			images[i] = IMG_Load(load[i-1].c_str()); //aby sa dalo pouzit free
+			images[i] = IMG_Load((directory + load[0]).c_str()); //aby sa dalo pouzit free
 	}
 	if (t == MissilleSkin)
 	{
@@ -108,7 +112,7 @@ Skin::Skin(std::string name, Skin::Type t)
 		f >>imageSize.y;
 		f >>shift.x;	
 		f >>shift.y;	
-	}
+	}	
 }
 SDL_Surface * Skin::get_surface(size_t index)
 {
@@ -177,8 +181,6 @@ SDL_Surface * ImageSkinWork::get_image()
 {
 	count++;
 	states[StateDefault] = count > BORED_AFTER ? ActionSleep:ActionDefault;
-	std::cout << "ht_image state" << state.top()
-	<< " "<<states[state.top()];
 	return s->get_surface(states[state.top()]);
 }
 SDL_Rect ImageSkinWork::get_rect()
@@ -189,6 +191,7 @@ SDL_Rect ImageSkinWork::get_rect()
 			rect.x += s->get_shift().x;
 			lastUpdate = SDL_GetTicks();
 		}
+	usleep(50);
 	if (rect.x >= s->get_surface(states[state.top()])->w)
 	{
 		rect.x = 0;

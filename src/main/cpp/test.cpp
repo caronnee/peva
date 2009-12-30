@@ -1,9 +1,10 @@
 #include <iostream>
 #include "../../objects/h/list.h"
+#include "../../objects/h/list.h"
 
 int main()
 {
-	Object * o1 = new Object();
+/*	Object * o1 = new Object();
 	std::cout << o1 << "\t";
 	Object * o2 = new Object();
 	std::cout << o2 << "\t";
@@ -52,6 +53,6 @@ int main()
 		std::cout << i << "::" <<l2.data->value << std::endl;
 		l.next();
 		l2.next();
-	}
+	}*/
 	return 0;
 }

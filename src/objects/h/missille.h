@@ -2,16 +2,20 @@
 #define ___MISILLE____
 #include "../../graphic/h/images.h"
 #include "objects.h"
+#include "body.h"
 
 class Missille : public Object
 {
 	Uint32 milisec;
 public:
+	
+	Body * owner;
 	virtual bool is_blocking();
 	virtual void damage(Object* sender);
 	virtual void action();
 	virtual void defense();
-	Missille(Skin * s);
+	virtual void clean();
+	Missille(Skin * s, Body *);
 	Missille(Position p, Position dir, Skin*s);
 	~Missille();
 };

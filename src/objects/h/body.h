@@ -20,6 +20,7 @@ public:
 
 	/* method to add ammo, ammo can be every object, body including */
 	void addAmmo(Object * o);
+	void addAmmo(Item * o);
 
 	/* return number of objects, that can robot see */
 	int see();
