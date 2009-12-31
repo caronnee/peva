@@ -144,9 +144,13 @@ Object * Map::checkCollision(Object * o)
 	Position oldBox(o->movement.old_pos.x/BOX_WIDTH,o->movement.old_pos.y/BOX_HEIGHT);
 	Position newBox(o->movement.position_in_map.x/BOX_WIDTH,o->movement.position_in_map.y/BOX_HEIGHT);
 	//TODO spravt nearest
-	for (int x = oldBox.x; x<=newBox.x; x++)
+	Object nearestColObject = NULL;
+	size_t nearest = 0;
+	//budem pocitat zatial s tym, ze rychlosti nebudu moc velike a nebude moc telies tan
+	std::cout << data->value << " " <<data->next->value;
+	for (int x = min(oldBox.x,newBox.x); x<=max(newBox.x,oldBox.x); x++)
 	{
-		for (int y =oldBox.y; y <= newBox.y; y++)
+		for (int y =min(oldBox.y,newBox.y); y <= max(newBox.y,oldBox.y); y++)
 		{
 			Box & b = map[x][y];
 			Position colVector;
@@ -156,16 +160,20 @@ Object * Map::checkCollision(Object * o)
 				Object * objectInBox = b.objects.read();			
 				if (( objectInBox == NULL ) || ( o == objectInBox ))
 					continue;
-				if (o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
-					{
-						objectInBox->collision(colVector);
-						//			iter = b->objects.begin();
-					}		
-				//		else
+
+				if ((o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
+				&&(getDistance(objectInBox, o) < nearest))	
+				{
+
+				}		
 			}
 		}
 	}	
 	return NULL;
+}
+size_t Map::getDistance(Object * o1, Object * o2)
+{
+	return
 }
 
 void Map::performe()
