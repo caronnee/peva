@@ -36,6 +36,12 @@ bool Position::operator!=(Position& p)
 {
 	return !((*this)==p);
 }
+Position& Position::substractVector( Position p2 )
+{
+	x-=p2.x;
+	y-=p2.y;
+	return (*this);
+}
 
 Rectangle::Rectangle()
 {

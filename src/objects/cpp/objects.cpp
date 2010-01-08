@@ -46,9 +46,9 @@ bool Object::alive()
 {
 	return hitpoints > 0;
 }
-void Object::clean()
+void Object::stoppedMoving()
 {
-	//predefinovane pre podtyoy	ivirtuL!
+	skinWork->removeState();
 }
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie
@@ -61,7 +61,7 @@ void Object::move()
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
 		std::cout << "removing state after finishong movement";
-		skinWork->removeState();
+		stoppedMoving();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;

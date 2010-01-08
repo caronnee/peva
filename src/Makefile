@@ -23,13 +23,23 @@ LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 all: dep bparser codewars test
 
 test:	o/list.o o/test.o o/objects.o o/position.o o/images.o
+	@echo ""
+	@echo "..........................................."
+	@echo "Creating test for testing list...:"
 	g++ $(LDFLAGS) -o $@ $^
+	@echo "..........................................."
 
 codewars:$(lOBJECTS) $(gOBJECTS) o/main.o
-		g++ $(LDFLAGS) -o $@ $^
+	@echo "..........................................."
+	@echo "Creating main project file..."
+	g++ $(LDFLAGS) -o $@ $^
+	@echo "..........................................."
 
 bparser: $(LANGUAGE_OBJECTS)
+	@echo "..........................................."
+	@echo "Creatinf file for testing language:"
 	$(CXX) $(LDFLAGS) $(LANGUAGE_OBJECTS) -o bparser
+	@echo "..........................................."
 
 language/h/bison.h:language/cpp/bison.cpp
 
@@ -52,9 +62,8 @@ o/language.o: language/h/bison.h
 o/language.o: language/h/hflex.h
 
 o/%.o: */cpp/%.cpp
-	@echo "Compiling "
-	@echo $@
-	@echo " from $*..."
+	@echo ""
+	@echo "Compiling " + $@ + " from $*...:"
 	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
 distclean:

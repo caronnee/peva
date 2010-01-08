@@ -164,17 +164,18 @@ Object * Map::checkCollision(Object * o)
 				if ((o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
 				&&(getDistance(objectInBox, o) < nearest))	
 				{
-
+					nearestColObject = objectInBox;
 				}		
 			}
 		}
 	}	
-	return NULL;
+	return nearestColObject;
 }
+//TODO dat to do position?
 size_t Map::getDistance(Object * o1, Object * o2)
 {
 	Position pos = o1->get_pos().substractVector(o2->get_pos());
-	return pos.x*pos.x;
+	return pos.x*pos.x+pos.y*pos.y; //su to dostatocne male cisla, aby sa to sem voslo
 }
 
 void Map::performe()
@@ -191,6 +192,8 @@ void Map::performe()
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
+				std::cout << "\t\t\tbegin ....";
+				usleep(50);
 				if (!o->alive())
 				{
 					b.objects.remove(b.objects.data);
@@ -201,6 +204,7 @@ void Map::performe()
 				Position p = o->get_pos();
 				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
 				o = b.objects.data->value;
+				std::cout << "\t\t\t\tend";
 				usleep(50);
 			}
 		}
@@ -267,6 +271,8 @@ void Map::resolveMove(Object * o)
 	if (collidedWith!=NULL)
 	{
 		//TODO vypocitaj vektor, zblazni sa
+		std::cout << "Kollidujem!";
+		getc(stdin);
 	}
 }
 

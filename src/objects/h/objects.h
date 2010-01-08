@@ -63,8 +63,8 @@ public:
 	/* who cause the object to live, animate etc. */
 	Object * owner;
 
-	/* what will object do when is dead */
-	virtual void clean();
+	/* what will object do when is finished movement */
+	virtual void stoppedMoving();
 
 	/* returns whether is object alive */
 	bool alive();
