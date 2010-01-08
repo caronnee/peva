@@ -63,6 +63,8 @@ struct Map
 	/* resolves move actions, chek collision etc.*/
 	void resolveMove(Object * o);
 
+	size_t getDistance(Object * o1, Object * o2);
+
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);
