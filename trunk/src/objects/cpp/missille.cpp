@@ -37,9 +37,13 @@ void Missille::defense() //zkladne sa a odide, odkial prisla
 	movement.direction.y *=-1; //TODO to sa vrati odkial prisla
 }
 
-void Missille::clean()
+void Missille::stoppedMoving()
 {
+	std::cout << "begin!";
+	getc(stdin);
 	owner->addAmmo(item);
+	std::cout << "enda!";
+	getc(stdin);
 }
 //TODO zmazat a dat do ineho listu, kde nebude action
 void Missille::action()

@@ -14,7 +14,7 @@ public:
 	virtual void damage(Object* sender);
 	virtual void action();
 	virtual void defense();
-	virtual void clean();
+	virtual void stoppedMoving();
 	Missille(Skin * s, Body *);
 	Missille(Position p, Position dir, Skin*s);
 	~Missille();

@@ -1,6 +1,7 @@
 #ifndef __POSITION_____
 #define __POSITION_____
 
+//TODO zovsebecnit ne vektory
 #include <cstdlib> 
 #include <iostream>
 
@@ -12,6 +13,7 @@ public:
 	Position(int x_,int y_);
 	Position& operator=(const Position &a);
 	Position& operator+=(const Position &a);
+	Position& substractVector(Position p1);
 	bool operator>=(Position &a);
 	bool operator==(Position &p);
 	bool operator!=(Position &p);
