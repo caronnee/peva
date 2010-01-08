@@ -144,10 +144,9 @@ Object * Map::checkCollision(Object * o)
 	Position oldBox(o->movement.old_pos.x/BOX_WIDTH,o->movement.old_pos.y/BOX_HEIGHT);
 	Position newBox(o->movement.position_in_map.x/BOX_WIDTH,o->movement.position_in_map.y/BOX_HEIGHT);
 	//TODO spravt nearest
-	Object nearestColObject = NULL;
+	Object * nearestColObject = NULL;
 	size_t nearest = 0;
 	//budem pocitat zatial s tym, ze rychlosti nebudu moc velike a nebude moc telies tan
-	std::cout << data->value << " " <<data->next->value;
 	for (int x = min(oldBox.x,newBox.x); x<=max(newBox.x,oldBox.x); x++)
 	{
 		for (int y =min(oldBox.y,newBox.y); y <= max(newBox.y,oldBox.y); y++)
@@ -157,6 +156,7 @@ Object * Map::checkCollision(Object * o)
 			/* no need to reset */
 			for (size_t i = 0; i<b.objects.size(); i++)
 			{
+				//TODO dat to do samostatnej funkcie
 				Object * objectInBox = b.objects.read();			
 				if (( objectInBox == NULL ) || ( o == objectInBox ))
 					continue;
@@ -173,7 +173,8 @@ Object * Map::checkCollision(Object * o)
 }
 size_t Map::getDistance(Object * o1, Object * o2)
 {
-	return
+	Position pos = o1->get_pos().substractVector(o2->get_pos());
+	return pos.x*pos.x;
 }
 
 void Map::performe()
@@ -255,9 +256,8 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 }
 void Map::resolveMove(Object * o)
 {
-	if (o->blocksMove()) //pokial je mrtvy, tak je taky nemoving
+	if (o->blocksMove()) 
 	{
-	//	std::cout << "NOn MOVING";//getc(stdin);
 		return;
 	}
 	/* move, actually */
