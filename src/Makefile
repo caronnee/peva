@@ -91,7 +91,7 @@ debugGraph:
 
 debugGMemory:
 	make
-	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./codewars
+	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=42 --time-stamp=yes --log-file=debug --malloc-fill=0 --free-fill=0 ./codewars
 
 debugGGraph:
 	make
