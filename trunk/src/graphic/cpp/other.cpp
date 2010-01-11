@@ -182,8 +182,14 @@ void Play::process()
 	{	
 		robots.robots[i]->action();
 	}
+	std::cout << "performing...";
+	usleep(20);
 	m->performe();
+	std::cout << "performed...";
+	usleep(20);
 	redraw();
+	std::cout << "redraw"<<std::endl;
+	usleep(20);
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
 	{

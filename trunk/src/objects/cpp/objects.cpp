@@ -6,6 +6,7 @@
 
 Object::Object()
 {
+	owner = NULL;
 	assistance = this;
 	item = new Item(this);
 	hitpoints = 100; //TODO zmenit
@@ -61,6 +62,7 @@ void Object::move()
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
 		std::cout << "removing state after finishong movement";
+		getc(stdin);
 		stoppedMoving();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;

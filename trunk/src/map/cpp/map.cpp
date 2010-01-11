@@ -75,6 +75,7 @@ Map::Map(Position resol, std::string skinName)
 
 void Map::redraw(Window * w, Position begin_draw_at) 
 {
+	std::cout << "begin ...";
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
@@ -123,6 +124,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		pos.x++;
 	}
 	SDL_SetClipRect(w->g->screen, NULL);
+	std::cout << "end"<<std::endl;
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
@@ -189,11 +191,10 @@ void Map::performe()
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box &b = map[i][j];
+			std::cout << "-" << i << "," <<j <<":"<<b.objects.size()<<"-";
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
-				std::cout << "\t\t\tbegin ....";
-				usleep(50);
 				if (!o->alive())
 				{
 					b.objects.remove(b.objects.data);
@@ -204,10 +205,11 @@ void Map::performe()
 				Position p = o->get_pos();
 				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
 				o = b.objects.data->value;
-				std::cout << "\t\t\t\tend";
 				usleep(50);
 			}
 		}
+		std::cout <<std::endl;
+		sleep(1);
 	//for all boxes, do action
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
