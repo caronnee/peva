@@ -3,7 +3,6 @@
 Missille::Missille(Skin*s, Body * body)
 {
 	owner = body;
-	movement.direction = Position (0,0);
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
 	milisec = 0;
@@ -12,12 +11,13 @@ Missille::Missille(Skin*s, Body * body)
 }
 Missille::Missille(Position P, Position dir, Skin* s)
 {
+	owner = NULL;
 	movement.direction = dir;
 	movement.position_in_map = P;
 	movement.old_pos = P;
 	milisec = 0;
 	movement.angle = 50;
-	movement.steps = 20;
+	movement.steps = 0;
 	movement.speed = 100;
 	name = "Missille";
 	skinWork = new ImageSkinWork(s);
@@ -39,10 +39,12 @@ void Missille::defense() //zkladne sa a odide, odkial prisla
 
 void Missille::stoppedMoving()
 {
-	std::cout << "begin!";
+	std::cout << "MYbegin!"<<owner;
 	getc(stdin);
+	std::cout << " " << owner->ammo.data  << ":";
 	owner->addAmmo(item);
-	std::cout << "enda!";
+	std::cout << " " << owner->ammo.size()  << std::endl;
+	std::cout << "MYenda!";
 	getc(stdin);
 }
 //TODO zmazat a dat do ineho listu, kde nebude action

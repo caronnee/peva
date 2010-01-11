@@ -11,7 +11,7 @@ class Body : public Object
 
 	/* in which map is an object located */
 	Map * map;
-
+public:
 	/* ammo, that can be shot */
 	List ammo;
 public:
