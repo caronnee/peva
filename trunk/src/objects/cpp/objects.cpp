@@ -11,6 +11,7 @@ Object::Object()
 	item = new Item(this);
 	hitpoints = 100; //TODO zmenit
 	/* item containing this object */
+	Item * item;
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
@@ -63,7 +64,7 @@ void Object::move()
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
 		std::cout << "removing state after finishong movement";
-		getc(stdin);
+	//	getc(stdin);
 		skinWork->removeState();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
@@ -99,10 +100,6 @@ Position Object::get_pos() const
 size_t Object::width()
 {
 	return skinWork->width();
-}
-void Object::action()
-{
-	/* no action */
 }
 size_t Object::height()
 {
