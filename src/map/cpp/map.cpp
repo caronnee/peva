@@ -197,15 +197,9 @@ void Map::performe()
 			{
 				if (!o->alive())
 				{
-					std::cout << o->name << ":"<<o<<":";
-					std::cout << "size"<<b.objects.size();
 					b.objects.remove(b.objects.data);
 					o->dead();
-					std::cout << "size"<<b.objects.size();
-					getc(stdin);
 					o = b.objects.data->value;
-					if(o!=NULL)
-						std::cout << ", next:"<<o->name << ":"<<o<<":";
 					continue;
 				}
 				resolveMove(o);
@@ -217,20 +211,6 @@ void Map::performe()
 		}
 		std::cout <<std::endl;
 	//	sleep(1);
-	//for all boxes, do action
-	for (size_t i = 0; i< boxesInRow; i++ )
-		for (size_t j = 0; j< boxesInColumn; j++ )
-		{
-			Box &b = map[i][j];
-			b.objects.reset();
-			Object * o = b.objects.read();
-			while (o!=NULL)
-			{
-				o->action(); //scheduller je v tom
-				o = b.objects.read();
-			}
-			b.objects.reset();
-		}
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {

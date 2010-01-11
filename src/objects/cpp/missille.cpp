@@ -3,8 +3,6 @@
 Missille::Missille(Skin*s, Body * body)
 {
 	owner = body;
-	std::cout << "Owner:" <<owner;
-	getc(stdin);
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
 	milisec = 0;
@@ -43,27 +41,10 @@ void Missille::dead()
 {
 	owner->addAmmo(this->item);
 }
-//TODO zmazat a dat do ineho listu, kde nebude action
-void Missille::action()
+void Missille::move()
 {
+	Object::move();
 	hitpoints = movement.steps;
 }
-	/*
-	movement.old_pos = movement.position_in_map;
-	milisec = SDL_GetTicks() - ticks;
-	if (milisec == 0)
-		milisec = 1;
-	movement.fps = 1000.0f / milisec;
-//	std::cout << "fps" << fps <<std::endl;
-	if(movement.fps == 0)
-		movement.fps = 1;
-	movement.fps = 30; //TODO napevno dana fps!
-//	std::cout << "pozicia pred:" << movement.position_in_map << std::endl;
-	movement.position_in_map.x += movement.direction.x/movement.fps;
-	movement.position_in_map.y += movement.direction.y/movement.fps;
-//	std::cout << "pozicia po:" << movement.position_in_map << std::endl;
-//	getc(stdin);
-	ticks = SDL_GetTicks();
-}*/
 Missille::~Missille() 
 {} 

@@ -79,13 +79,10 @@ public:
 	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
-	void move();
+	virtual void move();
 
 	/* turn sin desired position */
 	int turn(int angle);
-
-	/* do an action, change state or so */
-	virtual void action();
 
 	/* for visibility, it is good to know whether object is transparent */
 	virtual bool is_blocking();
