@@ -191,14 +191,21 @@ void Map::performe()
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box &b = map[i][j];
-			std::cout << "-" << i << "," <<j <<":"<<b.objects.size()<<"-";
+			std::cout << "-" << i << "," <<j <<":"<<b.objects.size()<<"-"<<std::endl;
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
 				if (!o->alive())
 				{
+					std::cout << o->name << ":"<<o<<":";
+					std::cout << "size"<<b.objects.size();
 					b.objects.remove(b.objects.data);
+					o->dead();
+					std::cout << "size"<<b.objects.size();
+					getc(stdin);
 					o = b.objects.data->value;
+					if(o!=NULL)
+						std::cout << ", next:"<<o->name << ":"<<o<<":";
 					continue;
 				}
 				resolveMove(o);
@@ -209,7 +216,7 @@ void Map::performe()
 			}
 		}
 		std::cout <<std::endl;
-		sleep(1);
+	//	sleep(1);
 	//for all boxes, do action
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )

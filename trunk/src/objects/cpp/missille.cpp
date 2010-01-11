@@ -3,6 +3,8 @@
 Missille::Missille(Skin*s, Body * body)
 {
 	owner = body;
+	std::cout << "Owner:" <<owner;
+	getc(stdin);
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
 	milisec = 0;
@@ -37,15 +39,9 @@ void Missille::defense() //zkladne sa a odide, odkial prisla
 	movement.direction.y *=-1; //TODO to sa vrati odkial prisla
 }
 
-void Missille::stoppedMoving()
+void Missille::dead()
 {
-	std::cout << "MYbegin!"<<owner;
-	getc(stdin);
-	std::cout << " " << owner->ammo.data  << ":";
-	owner->addAmmo(item);
-	std::cout << " " << owner->ammo.size()  << std::endl;
-	std::cout << "MYenda!";
-	getc(stdin);
+	owner->addAmmo(this->item);
 }
 //TODO zmazat a dat do ineho listu, kde nebude action
 void Missille::action()

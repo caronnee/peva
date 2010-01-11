@@ -44,6 +44,7 @@ struct ObjectMovement
 class Object
 {
 protected:
+public:
 	/* name of th object, for debugging purposes */
 	std::string name;
 
@@ -64,7 +65,7 @@ public:
 	Object * owner;
 
 	/* what will object do when is finished movement */
-	virtual void stoppedMoving();
+	virtual void dead();
 
 	/* returns whether is object alive */
 	bool alive();

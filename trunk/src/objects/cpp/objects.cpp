@@ -11,7 +11,6 @@ Object::Object()
 	item = new Item(this);
 	hitpoints = 100; //TODO zmenit
 	/* item containing this object */
-	Item * item;
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
@@ -47,9 +46,11 @@ bool Object::alive()
 {
 	return hitpoints > 0;
 }
-void Object::stoppedMoving()
+void Object::dead()
 {
+	/* set skin to die
 	skinWork->removeState();
+	*/
 }
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie
@@ -63,11 +64,10 @@ void Object::move()
 	{
 		std::cout << "removing state after finishong movement";
 		getc(stdin);
-		stoppedMoving();
+		skinWork->removeState();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
-//		getc(stdin);
 	}
 	movement.steps -= stepsPass;
 	movement.position_in_map.x += passed.x;
