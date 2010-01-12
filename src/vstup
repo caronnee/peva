@@ -22,7 +22,7 @@ ROBOT qqq
 		turnL();
 		while(true)
 		{
-			shoot(30);
+			shoot(35);
 			integer i = 0;
 			while (i<1)
 			{

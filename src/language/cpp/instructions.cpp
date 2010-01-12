@@ -1311,7 +1311,7 @@ int InstructionShootLocation::execute(Core *c)
 	int y = c->values.back()->array.elements[1]->integerValue;
 	c->values.pop_back();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->shoot(x,y); //TODO vypocitat angle, smer x a smer y
+	c->values.back()->integerValue = c->body->shoot(x); //TODO vypocitat angle, smer x a smer y
 	std::cout << "OK" << std::endl;
 	return 0;
 }
@@ -1327,7 +1327,7 @@ int InstructionShootAngle::execute(Core *c) //TODO
 	std::cout << "Shooting at angle...TODO convert";
 	int an = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->shoot(an,an); //TODO angle
+	c->values.back()->integerValue = c->body->shoot(an); //TODO angle
 	std::cout << "OK" << std::endl;
 	return 0;
 }
