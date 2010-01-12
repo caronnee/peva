@@ -66,9 +66,9 @@ int Body::wait(int x)
 	std::cout << "Waiting " << x << "times" ;
 	return 0;
 }
-int Body::shoot(int x, int y)
+int Body::shoot(int angle)
 {
-	std::cout << "Shooting at direction [ " << x << "," <<y<<"]" <<ammo.size();
+	std::cout << "Shooting at angle [ " << angle <<std::endl;
 //	getc(stdin);
 	if (ammo.empty())
 	{
@@ -87,10 +87,16 @@ int Body::shoot(int x, int y)
 
 	Object * o= ammo.data->value;
 	ammo.data->value->movement.steps = 50;
+	ammo.data->value->movement.angle = movement.angle;
 	ammo.data->value->hitpoints = 50;
 	ammo.data->value->movement.direction = movement.direction;
+	std::cout << "PRED:" << ammo.data->value->movement.direction<< " ";
 	ammo.data->value->movement.speed = 50;
 	ammo.data->value->movement.position_in_map = mP;
+	ammo.data->value->movement.realX = 0;
+	ammo.data->value->movement.realY = 0;
+	o->turn(angle);
+	std::cout << "PO:" << ammo.data->value->movement.direction<< " ";
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 	std::cout << "shooted!"<<mP<< " "<<ammo.size()<<" "<<o->alive();
 //	getc(stdin);

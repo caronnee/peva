@@ -19,6 +19,10 @@ struct Type_missille
 
 struct ObjectMovement
 {
+	/* real x coord*/
+	float realX;
+	/* real y coord*/
+	float realY;
 	/* object speed, pixels per turn */
 	size_t speed;
 

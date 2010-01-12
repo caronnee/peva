@@ -41,7 +41,7 @@ public:
 	int wait(int x = 0);
 	
 	/* Shoots a missille in the direction dir, if any left */
-	int shoot(int x, int y);
+	int shoot(int angle);
 	
 	/* turns left*/
 	int turnL();

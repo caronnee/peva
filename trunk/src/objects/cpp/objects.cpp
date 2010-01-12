@@ -11,7 +11,6 @@ Object::Object()
 	item = new Item(this);
 	hitpoints = 100; //TODO zmenit
 	/* item containing this object */
-	Item * item;
 	name =" Object";
 	skinWork = NULL;
 	movement.position_in_map.x = 0;
@@ -54,12 +53,23 @@ void Object::dead()
 	*/
 }
 //TODO zmenit na float, aby aj pre male steps to fungovalo
-//TODO da sa aj krajsie
+//TODO da sa aj krajsie?
 void Object::move()
 {
 	movement.old_pos = movement.position_in_map;
-	
-	Position passed(movement.direction.x/movement.fps,movement.direction.y/movement.fps);
+
+	movement.realX+=movement.direction.x/movement.fps;
+	movement.realY+=movement.direction.y/movement.fps;
+
+	Position passed(movement.realX,movement.realY);
+	movement.realX-=passed.x;
+	movement.realY-=passed.y;
+	if (name == "Missille")
+	{
+		std::cout <<movement.direction<<std::endl;
+		std::cout << "passed:"<<passed<< " "<<movement.fps;
+		getc(stdin);
+	}
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
