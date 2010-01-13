@@ -162,15 +162,18 @@ Object * Map::checkCollision(Object * o)
 				Object * objectInBox = b.objects.read();			
 				if (( objectInBox == NULL ) || ( o == objectInBox ))
 					continue;
-
-				if ((o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
-				&&(getDistance(objectInBox, o) < nearest))	
+				std::cout << "checking with object:" << objectInBox->name;
+				if ((o->substance+objectInBox->substance) 
+					&& (o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
+				)	
 				{
 					nearestColObject = objectInBox;
 				}		
 			}
 		}
 	}	
+	std::cout << "end checkCol"<<std::endl;
+//	sleep(1);
 	return nearestColObject;
 }
 //TODO dat to do position?
@@ -256,12 +259,14 @@ void Map::resolveMove(Object * o)
 	/* move, actually */
 	o->move();
 	resolveBorders(o);
+	std::cout << "checkujem koliziu so:" <<o->name;
 	Object *collidedWith = checkCollision(o);
 	if (collidedWith!=NULL)
 	{
 		//TODO vypocitaj vektor, zblazni sa
-		std::cout << "Kollidujem!";
-		getc(stdin);
+		std::cout << "Kollidujem!" << o->name << "s" << collidedWith->name;
+		//sleep(2);
+	//	getc(stdin);
 	}
 }
 

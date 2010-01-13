@@ -17,7 +17,7 @@ gOBJECTS=o/help_functions.o o/position.o o/movement.o o/snake.o \
 	
 LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 
-.PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph test bparser codewars
+#.PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph test bparser codewars
 
 
 all: dep bparser codewars test

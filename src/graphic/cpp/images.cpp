@@ -89,7 +89,7 @@ Skin::Skin(std::string name, Skin::Type t)
 		begin_in_picture.y = 0;
 		shift.x = images[0]->h;
 		shift.y = images[0]->h;
-		imageSize.x = imageSize.y = images[0]->h; //strely u stvorcove
+		imageSize.x = imageSize.y = images[0]->h; //strely su stvorcove
 		return;
 	}
 	if (!bf::exists(directory + "config"))

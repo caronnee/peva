@@ -7,6 +7,7 @@ Wall::Wall()
 }
 Wall::Wall(Position p, WallSkin * s)
 {
+	name = "Wall";
 	movement.angle = 0;
 	movement.direction = Position (0,0);
 	movement.position_in_map = movement.old_pos = p;
@@ -15,11 +16,13 @@ Wall::Wall(Position p, WallSkin * s)
 }
 BreakableWall::BreakableWall()
 {
+	name = "Wall";
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 }
 PushableWall::PushableWall()
 {
+	name = "Wall";
 	movement.direction.x = 0;
 	movement.direction.y = 0;
 }

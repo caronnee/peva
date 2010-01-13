@@ -6,6 +6,7 @@
 
 Object::Object()
 {
+	substance = 1;
 	owner = NULL;
 	assistance = this;
 	item = new Item(this);
@@ -64,12 +65,12 @@ void Object::move()
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
-	if (name == "Missille")
+/*	if (name == "Missille")
 	{
 		std::cout <<movement.direction<<std::endl;
 		std::cout << "passed:"<<passed<< " "<<movement.fps;
 		getc(stdin);
-	}
+	}*/
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
@@ -129,7 +130,6 @@ int Object::turn(int angle)
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {
-	return false;
 	Rectangle r1;
 	r1.x = movement.position_in_map.x;
 	r1.y = movement.position_in_map.y;
