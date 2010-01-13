@@ -197,12 +197,12 @@ void Play::process()
 		{
 			switch(w->g->event.key.keysym.sym)
 			{
-				case SDLK_a:
+			/*	case SDLK_a:
 				{
 					Object * o = new Missille(Position(15,20), Position(-50,-60),new Skin("dragon",Skin::MissilleSkin));
 					m->add(o);
 					break;
-				}
+				}*/
 				case SDLK_r:
 				{	
 					if((yyin=fopen("vstup", "r"))==0)
@@ -252,7 +252,11 @@ void Settings::draw()
 
 void Settings::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
+	if (SDL_WaitEvent(&w->g->event) == 0)
+	{
+		w->state.pop();
+		return;
+	}
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:

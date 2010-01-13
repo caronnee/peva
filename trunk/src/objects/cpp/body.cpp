@@ -2,6 +2,7 @@
 
 Body::Body()
 {
+	name = "Robot";
 	movement.old_pos.x = 30;
 	movement.old_pos.y = 130;
 	movement.position_in_map = movement.old_pos;
@@ -86,7 +87,7 @@ int Body::shoot(int angle)
 	mP.y += p.y;
 
 	Object * o= ammo.data->value;
-	ammo.data->value->movement.steps = 50;
+	ammo.data->value->movement.steps = 1500;
 	ammo.data->value->movement.angle = movement.angle;
 	ammo.data->value->hitpoints = 50;
 	ammo.data->value->movement.direction = movement.direction;

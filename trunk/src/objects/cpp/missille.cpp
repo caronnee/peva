@@ -2,6 +2,7 @@
 
 Missille::Missille(Skin*s, Body * body)
 {
+	substance = 0;
 	owner = body;
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
@@ -11,6 +12,7 @@ Missille::Missille(Skin*s, Body * body)
 }
 Missille::Missille(Position P, Position dir, Skin* s)
 {
+	substance = 0;
 	owner = NULL;
 	movement.direction = dir;
 	movement.position_in_map = P;

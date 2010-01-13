@@ -22,13 +22,12 @@ ROBOT qqq
 		turnL();
 		while(true)
 		{
-			shoot(35);
-			integer i = 0;
-			while (i<1)
+			integer i;
+			for ( i=-45; i<=45; i++)
 			{
-				i++;
+				shoot(i);
 			}
+			turn(10);
 		}
 	}
 }
-

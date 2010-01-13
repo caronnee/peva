@@ -7,6 +7,8 @@
 #include "../../graphic/h/images.h"
 #include "../h/list.h"
 
+#define PROBABILITY 10
+
 struct Type_bot
 {
 	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
@@ -49,16 +51,19 @@ class Object
 {
 protected:
 public:
-	/* name of th object, for debugging purposes */
+	/* name of the object, for debugging purposes */
 	std::string name;
 
 	/* Worker with the inages representing states of object */
 	ImageSkinWork * skinWork;
 
+public:
+	/* substance */
+	int substance;
+
 	/* object properties */
 	int defense, attack, hitpoints;
 
-public:
 	/* item containing this object */
 	Item * item;
 
@@ -79,6 +84,7 @@ public:
 
 	/* for optimaliozation */
 	bool blocksMove();
+
 	/* where exactly is the object, filling movement */
 	void setPosition(Position p, int angle = 0);
 
@@ -106,12 +112,14 @@ public:
 	/* asking about skin */
 	bool hasSkin();
 
-//TODO
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
 
 	/* returns size of image that should be visible */
 	Position get_size();
+
+	/* returns size of image that should be visible */
+	Position get_begin();
 
 	/* return width of image being drawn */
 	size_t width();
@@ -137,7 +145,7 @@ public:
 	/* for robot questioning state of object */
 	int isMissille();
 
-	/* return SDL rectangle information about inage to be blit */
+	/* return SDL rectangle information about image to be blit */
 	SDL_Rect get_rect();
 };
 
