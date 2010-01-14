@@ -140,6 +140,14 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 	r2.y = o->get_pos().y;
 	r2.width = o->get_size().x;
 	r2.height = o->get_size().y;
+	if (o->name == "Wall")
+	{
+		std::cout << "Wall!"<<std::endl;
+		std::cout << "x:"<<r1.x << ", y:"<<r1.y << ",w:"<<r1.width << ",h:" << r1.height<<std::endl;
+		std::cout << "x:"<<r2.x << ", y:"<<r2.y << ",w:"<<r2.width << ",h:" << r2.height<<std::endl;
+		std::cout << (!(r1.x >= r2.x + r2.width) && !(r1.x + r1.width <= r2.x) && !(r1.y >= r2.y + r2.height) && !(r1.y + r1.height <= r2.y));
+	//	getc(stdin);
+	}
 	if (!(r1.x >= r2.x + r2.width) //metoda separating axis?
 		&& !(r1.x + r1.width <= r2.x)
 		&& !(r1.y >= r2.y + r2.height)
@@ -147,6 +155,8 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 	{
 		//nastala kolizia
 
+		std::cout << "RESOLVING!";
+		getc(stdin);
 		collisionVector = movement.direction; //pre druhy object, tento sa iba odrazi
 		
 		Position perpVector(movement.old_pos.y - movement.position_in_map.y, movement.position_in_map.x-movement.old_pos.x);//Ax +By = c;
@@ -155,7 +165,6 @@ bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne ib
 		Position del;
 		if(movement.old_pos.x < movement.position_in_map.x)
 		{
-		//	return false;
 			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole doprava
 			{
 				c-=perpVector.x*(movement.old_pos.x+skinWork->width() + perpVector.y*(movement.old_pos.y + skinWork->height())); //priamka pravy dolny roh

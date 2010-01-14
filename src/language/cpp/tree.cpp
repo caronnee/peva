@@ -124,8 +124,10 @@ Node * Tree::add(std::string s, Create_type * type)
 		if ((*iter)->name == s)
 		{
 			if ((*iter)->active)
-				std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;getc(stdin);
-				std::cout << "huuula";getc(stdin);
+			{
+				std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;
+				getc(stdin);
+			}
 			return *iter;
 		}//kontrola, co tam nieco take uz nie je
 
