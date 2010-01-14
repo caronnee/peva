@@ -149,10 +149,16 @@ Object * Map::checkCollision(Object * o)
 	Object * nearestColObject = NULL;
 	size_t nearest = 0;
 	//budem pocitat zatial s tym, ze rychlosti nebudu moc velike a nebude moc telies tan
-	for (int x = min(oldBox.x,newBox.x); x<=max(newBox.x,oldBox.x); x++)
+	for (int x = min(oldBox.x,newBox.x)-1; x<=max(newBox.x,oldBox.x); x++) //staci -1, bo ideme od minima
 	{
-		for (int y =min(oldBox.y,newBox.y); y <= max(newBox.y,oldBox.y); y++)
+		if (x == -1)
+			continue;
+		for (int y =min(oldBox.y,newBox.y)-1; y <= max(newBox.y,oldBox.y); y++)
 		{
+			if (y == -1)
+				continue;
+			std::cout << "x" <<x<< " y:" <<y;
+//			sleep(1);
 			Box & b = map[x][y];
 			Position colVector;
 			/* no need to reset */
@@ -162,7 +168,6 @@ Object * Map::checkCollision(Object * o)
 				Object * objectInBox = b.objects.read();			
 				if (( objectInBox == NULL ) || ( o == objectInBox ))
 					continue;
-				std::cout << "checking with object:" << objectInBox->name;
 				if ((o->substance+objectInBox->substance) 
 					&& (o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
 				)	
