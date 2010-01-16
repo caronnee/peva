@@ -5,7 +5,7 @@
 #include <SDL/SDL_image.h>
 #include "../../add-ons/h/position.h"
 #include "../../graphic/h/images.h"
-#include "../h/list.h"
+#include "list.h"
 
 #define PROBABILITY 10
 
@@ -51,6 +51,9 @@ class Object
 {
 protected:
 public:
+	/* for colliion purposes */
+	Rectangle imageCut;
+
 	/* name of the object, for debugging purposes */
 	std::string name;
 
@@ -80,7 +83,7 @@ public:
 	bool alive();
 
 	/* constructor */
-	Object();
+	Object(Skin * s);
 
 	/* for optimaliozation */
 	bool blocksMove();
@@ -112,6 +115,7 @@ public:
 	/* asking about skin */
 	bool hasSkin();
 
+	Rectangle collisionSize() const;
 	void collision(Position collidedVector);
 	bool collideWith(Object * o, Position& pos);
 
@@ -147,11 +151,6 @@ public:
 
 	/* return SDL rectangle information about image to be blit */
 	SDL_Rect get_rect();
-};
-
-/* dummy object used as singleton representing NULL */
-class Nullable : public Object
-{
 };
 
 #endif

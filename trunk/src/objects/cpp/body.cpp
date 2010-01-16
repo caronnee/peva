@@ -1,6 +1,6 @@
 #include "../h/body.h"
 
-Body::Body()
+Body::Body(): Object(NULL)
 {
 	name = "Robot";
 	movement.old_pos.x = 30;

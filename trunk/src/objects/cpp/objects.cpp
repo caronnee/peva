@@ -4,16 +4,24 @@
 #define MAX_PX_PER_SECOND 300
 #define PI 3.14159265
 
-Object::Object()
+Object::Object(Skin * s)
 {
 	substance = 1;
 	owner = NULL;
 	assistance = this;
 	item = new Item(this);
-	hitpoints = 100; //TODO zmenit
+	hitpoints = 100; //TODO zmenit podla requestov
 	/* item containing this object */
 	name =" Object";
-	skinWork = NULL;
+	if (s == NULL)
+		skinWork = NULL;
+	else
+		skinWork = new ImageSkinWork(s);
+
+	imageCut.x = skinWork->get_begin().x;
+	imageCut.y = skinWork->get_begin().y;
+	imageCut.width = skinWork->get_size().x;
+	imageCut.height = skinWork->get_size().y;
 	movement.position_in_map.x = 0;
 	movement.position_in_map.y = 0;
 	movement.old_pos = movement.position_in_map = Position (0,0);
@@ -127,6 +135,10 @@ int Object::turn(int angle)
 	movement.direction.x = sin(movement.angle*PI/180)*MAX_PX_PER_SECOND ;
 	movement.direction.y = -cos(movement.angle*PI/180)*MAX_PX_PER_SECOND;
 	return 0;
+}
+Rectangle Object::collisionSize() const
+{
+	return imageCut;
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {

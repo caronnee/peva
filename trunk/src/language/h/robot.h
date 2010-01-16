@@ -70,7 +70,7 @@ public:
 	};
 
 	Node * dev_null;
-	Nullable * nullable;
+	Object * nullable;
 	bool errors;
 	bool warning;
 	std::string errorList;

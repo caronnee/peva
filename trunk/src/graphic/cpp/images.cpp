@@ -240,6 +240,10 @@ size_t ImageSkinWork::height() //bude sa pytat kvoli kolizii
 {
 	return s->get_size().y;
 }
+Position ImageSkinWork::get_begin()const
+{
+	return s->get_begin();
+}
 Position ImageSkinWork::get_size()
 {
 	return s->get_size();

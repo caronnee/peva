@@ -1,6 +1,6 @@
 #include "../h/missille.h"
 
-Missille::Missille(Skin*s, Body * body)
+Missille::Missille(Skin*s, Body * body):Object(s)
 {
 	substance = 0;
 	owner = body;
@@ -8,9 +8,9 @@ Missille::Missille(Skin*s, Body * body)
 	movement.speed = 100;
 	milisec = 0;
 	name = "Missille";
-	skinWork = new ImageSkinWork(s);
+//	skinWork = new ImageSkinWork(s);
 }
-Missille::Missille(Position P, Position dir, Skin* s)
+Missille::Missille(Position P, Position dir, Skin* s):Object(s)
 {
 	substance = 0;
 	owner = NULL;

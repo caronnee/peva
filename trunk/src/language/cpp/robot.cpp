@@ -25,7 +25,7 @@ Robot::Robot(std::string s, GamePoints p)
 	defined_types = new TypeContainer();
 	core = new Core( defined_types);
 	toKill = NULL;
-	nullable = new Nullable();
+	nullable = new Object(NULL);
 	
 	defined_types->add(new Create_type(TypeUndefined));
 	defined_types->add(new Create_type(TypeVoid));

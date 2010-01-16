@@ -1,11 +1,7 @@
 #include <iostream>
 #include "../h/wall.h"
 
-Wall::Wall()
-{
-	name = "Wall";
-}
-Wall::Wall(Position p, WallSkin * s)
+Wall::Wall(Position p, WallSkin * s):Object(s)
 {
 	name = "Wall";
 	movement.angle = 0;
@@ -14,7 +10,7 @@ Wall::Wall(Position p, WallSkin * s)
 	movement.steps = 0;
 	skinWork =  new ImageSkinWork(s);
 }
-BreakableWall::BreakableWall()
+/*BreakableWall::BreakableWall()
 {
 	name = "Wall";
 	movement.direction.x = 0;
@@ -29,5 +25,5 @@ PushableWall::PushableWall()
 TrapWall::TrapWall()
 {
 	name = "TrapWall";	
-}
+}*/
 
