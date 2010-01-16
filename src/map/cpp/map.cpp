@@ -59,7 +59,6 @@ Map::Map(Position resol, std::string skinName)
 		p.x += skin->get_size().x;
 	}	
 	int tmp = p.x;
-	std::cout << "Preslo " << a << "-krat";
 	p.y = 0;
 	while (p.y < resolution.y)
 	{

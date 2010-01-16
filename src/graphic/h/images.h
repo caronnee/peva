@@ -141,6 +141,9 @@ public:
 	/* returns position od supposed head character according size */
 	Position head();
 
+	/* return beginning of the picture */
+	Position get_begin()const;
+
 protected:
 
 	Skin * s;
