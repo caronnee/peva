@@ -13,15 +13,7 @@ Object::Object(Skin * s)
 	hitpoints = 100; //TODO zmenit podla requestov
 	/* item containing this object */
 	name =" Object";
-	if (s == NULL)
-		skinWork = NULL;
-	else
-		skinWork = new ImageSkinWork(s);
 
-	imageCut.x = skinWork->get_begin().x;
-	imageCut.y = skinWork->get_begin().y;
-	imageCut.width = skinWork->get_size().x;
-	imageCut.height = skinWork->get_size().y;
 	movement.position_in_map.x = 0;
 	movement.position_in_map.y = 0;
 	movement.old_pos = movement.position_in_map = Position (0,0);
@@ -31,6 +23,11 @@ Object::Object(Skin * s)
 	movement.speed = 30;
 	movement.fps = 200;
 	movement.steps = 0;
+
+	if (s == NULL)
+		skinWork = NULL;
+	else
+		skinWork = new ImageSkinWork(s);
 }
 
 void Object::setPosition(Position p, int angle)
@@ -138,7 +135,7 @@ int Object::turn(int angle)
 }
 Rectangle Object::collisionSize() const
 {
-	return imageCut;
+	return skinWork->getCollissionRectagle();
 }
 bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
 {

@@ -210,16 +210,28 @@ void Play::process()
 						puts("Unable to open input\n");
 						break;
 					}
+					std::cout << "begin";
+					getc(stdin);
 					int err = yyparse(&robots);
+					std::cout << "end";
+					getc(stdin);
 					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
 							robots.robots[i]->getBody()->place(m,Position (90,40));
 							robots.robots[i]->save_to_xml();
+							getc(stdin);
 							m->add(robots.robots[i]->getBody());
+							std::cout <<"nnnn";
+							getc(stdin);
 						}
 					fclose(yyin);	
 					my_destroy();
+					std::cout << "BG";
+					getc(stdin);
+					std::cout << robots.robots[0]->core->body->show();
+					std::cout << "end";
+					getc(stdin);
 					break;
 				}
 				case SDLK_ESCAPE:
