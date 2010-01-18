@@ -17,19 +17,19 @@ public:
 class BreakableWall:public Object //da sa nou pohnut
 {
 public:
-	BreakableWall();
+//	BreakableWall();
 //	virtual void damage(Object * sender);
 };
 class PushableWall:public Object //da sa nou pohnut
 {
 public:
-	PushableWall();
+//	PushableWall();
 //	virtual void damage(Object * sender);
 };
 class TrapWall:public Object // opstey na zemi sa vystrkujuce:)
 {
 public:
-	TrapWall();
+//	TrapWall();
 //	virtual void damage(Object * sender);
 };
 #endif

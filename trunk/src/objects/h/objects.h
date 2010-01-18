@@ -23,8 +23,10 @@ struct ObjectMovement
 {
 	/* real x coord*/
 	float realX;
+
 	/* real y coord*/
 	float realY;
+
 	/* object speed, pixels per turn */
 	size_t speed;
 
@@ -51,9 +53,6 @@ class Object
 {
 protected:
 public:
-	/* for colliion purposes */
-	Rectangle imageCut;
-
 	/* name of the object, for debugging purposes */
 	std::string name;
 

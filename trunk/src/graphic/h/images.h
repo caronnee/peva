@@ -107,9 +107,13 @@ private:
 	Uint32 lastUpdate;
 	size_t count;
 	std::stack<States> state;
+
+	Rectangle imageCut;
 public:
 	/* constructor */
 	ImageSkinWork(Skin * s);
+
+	Rectangle getCollissionRectagle() const;
 
 	/* return whether temporary action is still running */
 	bool processing();	

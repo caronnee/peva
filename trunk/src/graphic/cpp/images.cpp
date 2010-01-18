@@ -174,6 +174,10 @@ ImageSkinWork::ImageSkinWork(Skin * skin)
 	rect.w = skin->get_shift().x;
 	rect.x = 0;
 	rect.y = 0;
+	imageCut.x = skin->get_begin().x;
+	imageCut.y = skin->get_begin().y;
+	imageCut.width = skin->get_size().x;
+	imageCut.height = skin->get_size().y;
 	lastUpdate = 0;
 }
 //BIG TODO walls to vadi, ale do default by sa nikdy nemali dostat
@@ -240,7 +244,11 @@ size_t ImageSkinWork::height() //bude sa pytat kvoli kolizii
 {
 	return s->get_size().y;
 }
-Position ImageSkinWork::get_begin()const
+Rectangle ImageSkinWork::getCollissionRectagle() const
+{
+	return imageCut;
+}
+Position ImageSkinWork::get_begin() const
 {
 	return s->get_begin();
 }
