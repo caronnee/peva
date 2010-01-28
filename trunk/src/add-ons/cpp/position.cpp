@@ -26,6 +26,12 @@ Position& Position::operator+=(const Position &p)
 	y +=p.y;
 	return *this;
 }
+size_t Position::getDistance(Position p) 
+{
+	Position pos = substractVector(p);
+	return pos.x*pos.x+pos.y*pos.y; //su to dostatocne male cisla, aby sa to sem voslo
+}
+
 bool Position::operator==(Position& p)
 {
 	if ((x !=p.x)||( y!=p.y))

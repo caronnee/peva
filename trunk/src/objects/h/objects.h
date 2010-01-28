@@ -8,6 +8,7 @@
 #include "list.h"
 
 #define PROBABILITY 10
+#define MY_INFINITY ~0
 
 struct Type_bot
 {
@@ -51,8 +52,9 @@ struct ObjectMovement
 
 class Object
 {
+private:
+	Object * last_attack;
 protected:
-public:
 	/* name of the object, for debugging purposes */
 	std::string name;
 
@@ -105,6 +107,9 @@ public:
 	/* return acual position from movement, just user friendly function */
 	Position get_pos() const;
 
+	/* return acual position from movement, just user friendly function */
+	Position get_old_pos() const;
+
 	/* for drawing purposes, function return image of object in all states */
 	SDL_Surface * show();
 
@@ -114,9 +119,15 @@ public:
 	/* asking about skin */
 	bool hasSkin();
 
+	/* returns rectagle of image with collision */
 	Rectangle collisionSize() const;
-	void collision(Position collidedVector);
-	bool collideWith(Object * o, Position& pos);
+
+	/*resolves item behaviour if it is hit */
+	virtual void hit(Object *o);
+
+	void hitted(Object * o, Position direction, int attack);
+	/* checks if ther is a collision */
+
 
 	/* returns size of image that should be visible */
 	Position get_size();

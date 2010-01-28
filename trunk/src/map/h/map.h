@@ -60,10 +60,8 @@ struct Map
 	/* check whether actual position is legal */
 	void resolveBorders(Object * o);
 
-	/* resolves move actions, chek collision etc.*/
+	/* resolves move actions, check collision etc.*/
 	void resolveMove(Object * o);
-
-	size_t getDistance(Object * o1, Object * o2);
 
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
@@ -74,6 +72,9 @@ public:
 
 	/* check and collision */
 	Object * checkCollision(Object * o);
+
+	//TODO dat do rectangle
+	bool collideWith(Object * o1, Object * o2);
 
 	/* checking for colision and resolving it*/
 	void collision(Object * o1, Object * o2);
