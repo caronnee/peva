@@ -1308,7 +1308,6 @@ int InstructionShootLocation::execute(Core *c)
 {
 	std::cout << "Shooting at location...";
 	int x = c->values.back()->array.elements[0]->integerValue;
-	int y = c->values.back()->array.elements[1]->integerValue;
 	c->values.pop_back();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->shoot(x); //TODO vypocitat angle, smer x a smer y

@@ -23,7 +23,7 @@ ROBOT qqq
 		while(true)
 		{
 			integer i = 0;
-			while (i<5)
+			while (i<1)
 			{
 				i++;
 				shoot(0);

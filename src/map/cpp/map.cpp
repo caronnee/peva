@@ -11,6 +11,22 @@ Box::Box()
 Map::Map(std::string configFile, std::string name)
 {
 }
+
+bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne walls, zatial
+{
+	Rectangle r1 = o1->collisionSize();
+	r1.x += o1->movement.position_in_map.x;
+	r1.y += o1->movement.position_in_map.y;
+
+	Rectangle r2 = o2->collisionSize();
+	r2.x += o2->get_pos().x; //TODO vlastna fce overlaps
+	r2.y += o2->get_pos().y;
+
+	return  (!(r1.x >= r2.x + r2.width) //metoda separating axis?
+		&& !(r1.x + r1.width <= r2.x)
+		&& !(r1.y >= r2.y + r2.height)
+		&& !(r1.y + r1.height <= r2.y))	;
+}
 Map::Map(Position resol, std::string skinName) 
 {
 	wskins.clear();
@@ -34,7 +50,7 @@ Map::Map(Position resol, std::string skinName)
 		for(int j = 0; j < boxesInColumn; j++)
 		{
 			map[i][j].bounds = begin;
-			begin.y+= BOX_HEIGHT;	
+			begin.y+= BOX_HEIGHT;
 		}
 		begin.x+=BOX_HEIGHT;
 		begin.y = 0;
@@ -74,7 +90,8 @@ Map::Map(Position resol, std::string skinName)
 
 void Map::redraw(Window * w, Position begin_draw_at) 
 {
-	std::cout << "begin ...";
+	std::cout << "begin redrawing...";
+	usleep(100);
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
@@ -140,13 +157,11 @@ void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 }
 Object * Map::checkCollision(Object * o)
 {	
-	//	pre kazdy roh sa pozri, akom je boxe. Ak rozny, checkuj kolizi pre kazdy objekt v boxe s useckou (A,B)
-	//	vieme urcite, ze dalsi boc bude vedlajsi z velkosti boxi a z maximu pohyby za sekund
 	Position oldBox(o->movement.old_pos.x/BOX_WIDTH,o->movement.old_pos.y/BOX_HEIGHT);
 	Position newBox(o->movement.position_in_map.x/BOX_WIDTH,o->movement.position_in_map.y/BOX_HEIGHT);
 	//TODO spravt nearest
 	Object * nearestColObject = NULL;
-	size_t nearest = 0;
+	size_t nearest = MY_INFINITY;
 	//budem pocitat zatial s tym, ze rychlosti nebudu moc velike a nebude moc telies tan
 	for (int x = min(oldBox.x,newBox.x)-1; x<=max(newBox.x,oldBox.x); x++) //staci -1, bo ideme od minima
 	{
@@ -156,10 +171,7 @@ Object * Map::checkCollision(Object * o)
 		{
 			if (y == -1)
 				continue;
-			std::cout << "x" <<x<< " y:" <<y;
-//			sleep(1);
 			Box & b = map[x][y];
-			Position colVector;
 			/* no need to reset */
 			for (size_t i = 0; i<b.objects.size(); i++)
 			{
@@ -167,11 +179,14 @@ Object * Map::checkCollision(Object * o)
 				Object * objectInBox = b.objects.read();			
 				if (( objectInBox == NULL ) || ( o == objectInBox ))
 					continue;
-				if ((o->substance+objectInBox->substance) 
-					&& (o->collideWith(objectInBox, colVector)) //ak skoliduje, budeme predpokladat, ze spravne
-				)	
+				if (!((o->substance + objectInBox->substance) 
+					&& (collideWith(o, objectInBox))))
+					continue;
+				size_t dist = o->get_old_pos().getDistance(objectInBox->get_pos());
+				if (dist < nearest)	
 				{
 					nearestColObject = objectInBox;
+					nearest = dist;
 				}		
 			}
 		}
@@ -179,12 +194,6 @@ Object * Map::checkCollision(Object * o)
 	std::cout << "end checkCol"<<std::endl;
 //	sleep(1);
 	return nearestColObject;
-}
-//TODO dat to do position?
-size_t Map::getDistance(Object * o1, Object * o2)
-{
-	Position pos = o1->get_pos().substractVector(o2->get_pos());
-	return pos.x*pos.x+pos.y*pos.y; //su to dostatocne male cisla, aby sa to sem voslo
 }
 
 void Map::performe()
@@ -198,7 +207,6 @@ void Map::performe()
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box &b = map[i][j];
-			std::cout << "-" << i << "," <<j <<":"<<b.objects.size()<<"-"<<std::endl;
 			Object * o = b.objects.read();
 			while (o!=NULL)
 			{
@@ -221,6 +229,7 @@ void Map::performe()
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {
+	//TODO vobec by nmalo nastavat
 	if (o->movement.position_in_map.x <0)
 	{
 		std::cout << 1;
@@ -229,7 +238,7 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 		o->movement.position_in_map.x = -1; //odrazene
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
-	else if (o->movement.position_in_map.x > resolution.x-o->width())
+	else if (o->movement.position_in_map.x > resolution.x-(int)o->width())
 	{
 		std::cout << 1;
 		getc(stdin);
@@ -245,7 +254,7 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 //		o->movement.position_in_map.y *= -1;
 		o->movement.position_in_map.y = 0; //odrazene
 	}
-	else if(o->movement.position_in_map.y > resolution.y-o->height())
+	else if(o->movement.position_in_map.y > resolution.y-(int)o->height())
 	{
 		std::cout << 1;
 		getc(stdin);
@@ -263,14 +272,10 @@ void Map::resolveMove(Object * o)
 	/* move, actually */
 	o->move();
 	resolveBorders(o);
-	std::cout << "checkujem koliziu so:" <<o->name;
-	Object *collidedWith = checkCollision(o);
+	Object * collidedWith= checkCollision(o);
 	if (collidedWith!=NULL)
 	{
-		//TODO vypocitaj vektor, zblazni sa
-		std::cout << "Kollidujem!" << o->name << "s" << collidedWith->name;
-		//sleep(2);
-	//	getc(stdin);
+		o->hit(collidedWith);
 	}
 }
 

@@ -6,6 +6,7 @@
 
 Object::Object(Skin * s)
 {
+	last_attack = NULL;
 	substance = 1;
 	owner = NULL;
 	assistance = this;
@@ -113,6 +114,10 @@ Position Object::get_pos() const
 {
 	return movement.position_in_map;
 }
+Position Object::get_old_pos() const
+{
+	return movement.old_pos;
+}
 size_t Object::width()
 {
 	return skinWork->width();
@@ -137,148 +142,58 @@ Rectangle Object::collisionSize() const
 {
 	return skinWork->getCollissionRectagle();
 }
-bool Object::collideWith(Object * o, Position& collisionVector) // pouzitelne iba pre vzajomne walls, zatial
+void Object::hitted(Object * o, Position p, int attack)
 {
-	Rectangle r1;
-	r1.x = movement.position_in_map.x;
-	r1.y = movement.position_in_map.y;
-	r1.width = skinWork->width();
-	r1.height = skinWork->height();
-	Rectangle r2;
-	r2.x = o->get_pos().x; //TODO vlastna fce overlaps
-	r2.y = o->get_pos().y;
-	r2.width = o->get_size().x;
-	r2.height = o->get_size().y;
-	if (o->name == "Wall")
-	{
-		std::cout << "Wall!"<<std::endl;
-		std::cout << "x:"<<r1.x << ", y:"<<r1.y << ",w:"<<r1.width << ",h:" << r1.height<<std::endl;
-		std::cout << "x:"<<r2.x << ", y:"<<r2.y << ",w:"<<r2.width << ",h:" << r2.height<<std::endl;
-		std::cout << (!(r1.x >= r2.x + r2.width) && !(r1.x + r1.width <= r2.x) && !(r1.y >= r2.y + r2.height) && !(r1.y + r1.height <= r2.y));
-	//	getc(stdin);
-	}
-	if (!(r1.x >= r2.x + r2.width) //metoda separating axis?
-		&& !(r1.x + r1.width <= r2.x)
-		&& !(r1.y >= r2.y + r2.height)
-		&& !(r1.y + r1.height <= r2.y))	
-	{
-		//nastala kolizia
-
-		std::cout << "RESOLVING!";
-		getc(stdin);
-		collisionVector = movement.direction; //pre druhy object, tento sa iba odrazi
-		
-		Position perpVector(movement.old_pos.y - movement.position_in_map.y, movement.position_in_map.x-movement.old_pos.x);//Ax +By = c;
-		int c = 0;
-//		c-=perpVector.x*(movement.old_pos.x+image->w/2) + perpVector.y*(movement.old_pos.y - image->h/2); //priamka cez stred
-		Position del;
-		if(movement.old_pos.x < movement.position_in_map.x)
-		{
-			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole doprava
-			{
-				c-=perpVector.x*(movement.old_pos.x+skinWork->width() + perpVector.y*(movement.old_pos.y + skinWork->height())); //priamka pravy dolny roh
-				del.x = o->movement.position_in_map.x; //lavy horny roh, ok
-				del.y = o->movement.position_in_map.y;
-			//	std::cout << perpVector << " c:" << c << std::endl;
-			//	std::cout << del << std::endl;
-			//	std::cout << perpVector.x*(movement.position_in_map.x+image->w) + perpVector.y*(movement.position_in_map.y - image->h);
-				if (perpVector.x*del.x + perpVector.y*del.y + c > 0 ) //narazil na hornu stenu
-				{
-					std::cout << "I horna stena" << std::endl;
-					movement.direction.y *=-1;
-				//	std::cout << "Menim poziciu o:" <<movement.position_in_map.y + image->h - del.y  << std::endl;
-					movement.position_in_map.y -= movement.position_in_map.y + skinWork->height() - del.y;
-				//	std::cout << "PO: direction:" << movement.direction << std::endl;
-				}
-				else
-				{
-					std::cout << "I bocna stena" << std::endl; //narazil na lavu bocnu stenu
-				//	return false;
-					movement.direction.x *= -1; 
-					movement.position_in_map.x -= del.x - movement.position_in_map.x - skinWork->width();
-				//	std::cout << "here:" << movement.position_in_map << ", direction:" << movement.direction << " o:" << o->movement.position_in_map << "direction"<< o->movement.direction << std::endl;
-				}
-
-			}
-			else //sikmo hore doprava
-			{
-		//		return false;
-			//	std::cout << "id:" << this << ", kolidujuca pozicia: " << movement.position_in_map << std::endl;
-				del.x = o->movement.position_in_map.x;
-				del.y = o->movement.position_in_map.y + o->height(); 
-				c-=perpVector.x*(movement.old_pos.x + skinWork->width()) + perpVector.y*(movement.old_pos.y); //priamka pravy horny roh
-				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na dolnu stenu
-				{
-					std::cout << "II vrch" << std::endl;
-					movement.direction.y *=-1;
-					movement.position_in_map.y = 2*del.y - movement.position_in_map.y; //TODO check
-				}
-				else
-				{
-					//return false;
-					std::cout << "II bok" << std::endl;
-					movement.direction.x *=-1;
-					movement.position_in_map.x += del.x - movement.position_in_map.x - skinWork->width();
-				}	
-			}
-		}
-		else
-		{
-			if ( movement.old_pos.y < movement.position_in_map.y) // sikmo dole dolava
-			{
-			//	return false;
-				del.x = o->movement.position_in_map.x+o->width();
-				del.y = o->movement.position_in_map.y;
-				c-=perpVector.x*(movement.old_pos.x) + perpVector.y*(movement.old_pos.y + skinWork->height()); //priamka pravy horny roh
-				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazil na bocnu stenu
-				{	
-					std::cout << "III vrch" << std::endl;
-					movement.direction.y *=-1;
-					movement.position_in_map.y -= movement.position_in_map.y + skinWork->height() - del.y;
-				}
-				else
-				{
-					std::cout << "III bok" << std::endl;
-					movement.direction.x *=-1;
-					movement.position_in_map.x = 2*del.x - movement.position_in_map.x;
-				}
-			}
-			else //sikmo dole dolava
-			{
-			//	return false;
-				//TESTED
-				c-=perpVector.x*(movement.old_pos.x) + perpVector.y*(movement.old_pos.y); //priamka pravy horny roh
-				del.x = o->movement.position_in_map.x + o->width();
-				del.y = o->movement.position_in_map.y + o->height();
-				if (perpVector.x*del.x + perpVector.y*del.y + c < 0 ) //narazila na hornu stenu
-				{
-					std::cout << "IV bok" << std::endl;
-				//	std::cout << "uch! bocna stena" << std::endl;
-					movement.direction.x *=-1;
-					movement.position_in_map.x += del.x - movement.position_in_map.x ;
-				}
-				else
-				{
-					std::cout << "IV vrch" << std::endl;
-					movement.direction.y *=-1;
-					movement.position_in_map.y = 2*del.y - movement.position_in_map.y;
-				}
-			}
-		}
-//		movement.direction.x = (o->movement.direction.x + movement.direction.x)/2;
-//		movement.direction.y = (o->movement.direction.y + movement.direction.y)/2;
-		std::cout << "id:" << this << ", zmenena pozicia: " << movement.position_in_map << "\t";
-		std::cout << "colid id:" << o << ", pozicia: " << o->get_pos() << std::endl;
-		return true; //mame tu iba obdlzniky a ziadne kruhy, takze kolizny vektor bude v smere utocnika
-
-	}
-	return false;
+	//TODO definovat u podriadenych
 }
-void Object::collision(Position collidedVector)
+void Object::hit(Object * attacked)
 {
-	movement.direction.x = 0;
-	movement.direction.y = 0;
-;}
+	attacked->hitted (this, movement.direction, attack);
+	int minX;
+	Rectangle r1 = collisionSize();
+	r1.x += movement.position_in_map.x;
+	r1.y += movement.position_in_map.y;
+
+	Rectangle r2 = attacked->collisionSize();
+	r2.x += attacked->movement.position_in_map.x;
+	r2.y += attacked->movement.position_in_map.y;
+
+	Position p(1,1);
+	//zavisi od direction, v akom sa pohyboval
+	//zisti najmensi prienik
+	if (movement.direction.x > 0) //hybe sa smerom doprava
+	{
+		minX = r1.x + r1.width - r2.x;
+		p.x = -1;
+	}
+	else 
+		minX = r2.x + r2.width - r1.x;
+	if (minX < 0)
+		minX = MY_INFINITY;
+	int minY;
+	if ( movement.direction.y > 0) //hybe sa smerom dolu
+	{
+		minY = r1.y + r1.height - r2.y;
+		p.y=-1;
+	}
+	else 
+		minY = r2.y +r2.height - r1.y;
+	if (minY < 0)
+		minY = MY_INFINITY;
+
+	int minum =(minY < minX)? minY:minX;
+	if ((minY == minum)&&(minY != MY_INFINITY))
+	{
+		std::cout << minY;getc(stdin);
+		movement.direction.y *=-1;
+		movement.position_in_map.y += minY * p.y;
+	}
+	if ((minX=minum)&&(minX != MY_INFINITY))
+	{
+		movement.direction.x *=-1;
+		movement.position_in_map.x += minX * p.x;
+	}
+}
 bool Object::isMoving(){
 	return movement.steps;
 }
