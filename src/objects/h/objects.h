@@ -19,7 +19,6 @@ struct Type_missille
 {
 	int attack, hitpoints; //a tak podobne, TODO!
 };
-
 struct ObjectMovement
 {
 	/* real x coord*/
@@ -52,9 +51,17 @@ struct ObjectMovement
 
 class Object
 {
+
 private:
 	Object * last_attack;
+
 protected:
+	enum Substantial
+	{
+		Miss = 1,
+		Solid = 3, //solid + miss = solid
+		BodyIntract = !0
+	};
 	/* name of the object, for debugging purposes */
 	std::string name;
 
@@ -62,8 +69,8 @@ protected:
 	ImageSkinWork * skinWork;
 
 public:
-	/* substance */
-	int substance;
+	/* substance *///TODO privat a vlastna funkcia
+	Substantial substance;
 
 	/* object properties */
 	int defense, attack, hitpoints;
@@ -93,7 +100,7 @@ public:
 	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
-	virtual void move();
+	virtual void move();//TODO musi byt virtual? nedaju sa misiles obis inak?
 
 	/* turn sin desired position */
 	int turn(int angle);
@@ -125,7 +132,7 @@ public:
 	/*resolves item behaviour if it is hit */
 	virtual void hit(Object *o);
 
-	void hitted(Object * o, Position direction, int attack);
+	virtual void hitted(Object * o, Position direction, int attack);
 	/* checks if ther is a collision */
 
 
