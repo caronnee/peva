@@ -3,40 +3,75 @@
 
 #include <vector>
 #include "../../add-ons/h/position.h"
+#include "../../objects/h/objects.h"
 
+/* Abstract class for creating constraints for victory */
 class Target
 {
-	protected:
+protected:
+	/* whether the constraint was fulfilled */
 	bool ok;
 public:
-		Target();
-		virtual bool fullfilled();
-		virtual ~Target();
+	/* Constructor */
+	Target();
+
+	/* tell me your ID */
+	virtual size_t tellId() = 0;
+
+	/* Tell me what you need */
+	virtual Position tellPosition() = 0;
+	
+	/* Init */
+	virtual bool initPosition(Position p) = 0;
+
+	/* condition is fullfilled */
+	virtual void setOk() = 0;
+
+	/* set target to unfullfilled again */
+	virtual void reset();
+
+	/* ask, if the condition was fulfilled */
+	bool fullfilled();
+
+	/* Destructor */
+	virtual ~Target();
 };
 
-class TargetVisit : public Target //skontroluje sa po kazdej move action, po kazdej fps
+/* Contraint for visiting place */
+class TargetVisit : public Target 
 {
-	Position positionToVisit;
+protected:
+	/* id of the object */
+	size_t targetId;
+	Position position;
 public:
-	virtual bool visited(Rectangle r);
-	TargetVisit();
-	TargetVisit(Position p);
+	TargetVisit(size_t id);
+	size_t tellId();
+	bool initPosition(Position position);
+	void setOk();
+	Position tellPosition();
 	virtual ~TargetVisit();
 };
 
-class TargetVisitSequence : public TargetVisit
+class TargetVisitSequence : public Target
 {
-	std::vector<Position> positions;
+	std::vector<TargetVisit> places;
+	size_t iter;
 public:
-	virtual bool visited(Rectangle r);
 	TargetVisitSequence();
 	TargetVisitSequence(std::vector<Position> p);
+	TargetVisitSequence(std::vector<TargetVisit> p);
+	size_t tellId();
+	bool initPosition(Position p);
+	Position tellPosition();
+	void setOk();
+	void reset();
 	virtual ~TargetVisitSequence();
 };
 
-class TargetKillNumber//v okamihu, ked sa mu vrati strela
+class TargetKillNumber
 {
-	protected:
+protected:
 	int constraint;
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost

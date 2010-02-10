@@ -30,11 +30,16 @@ struct Box
 };
 
 /* class resolving movement */
-
+struct Place
+{
+	size_t id;
+	Position p;
+};
 struct Map
 {
 	/* strucutre holdin images of wall */
 	std::vector<WallSkin *> wskins;
+	std::vector<Place> places;
 
 	/* how many column boxes */
 	float boxesInColumn;

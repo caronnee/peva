@@ -7,7 +7,7 @@
 Object::Object(Skin * s)
 {
 	last_attack = NULL;
-	substance = 1;
+	substance = Solid;
 	owner = NULL;
 	assistance = this;
 	item = new Item(this);
@@ -144,6 +144,7 @@ Rectangle Object::collisionSize() const
 }
 void Object::hitted(Object * o, Position p, int attack)
 {
+	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionHit);
 	//TODO definovat u podriadenych
 }
 void Object::hit(Object * attacked)

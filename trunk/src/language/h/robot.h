@@ -78,7 +78,7 @@ public:
 	std::string nested;
 	std::string name;
 	
-	std::list<TargetVisit *> targets;
+	std::vector<Target *> targets;
 	TargetKillNumber * toKill;
 	std::vector<size_t> killTarget;
 
@@ -108,6 +108,7 @@ public:
 	virtual void action();
 	void addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
+	void addVisit(std::vector<size_t> pos);
 	void addVisitSeq(std::vector<Position> pos);
 	//TODO zmenit na hlasky, co budu statcike a nie dynamicke
 	void error(unsigned int line, ErrorCode c,std::string message="Unrecognized");

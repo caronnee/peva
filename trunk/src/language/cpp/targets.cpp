@@ -3,10 +3,15 @@
 Target::Target()
 {
 	ok = false; //este nesplnena podmienka
+	//TODO objects features
 }
 bool Target::fullfilled()
 {
 	return ok;
+}
+void Target::reset()
+{
+	ok = false;
 }
 Target::~Target() 
 {
@@ -14,61 +19,84 @@ Target::~Target()
 	   Nothing so far, nothing to destroy
 	*/
 }
-TargetVisit::TargetVisit(Position p)
+TargetVisit::TargetVisit(size_t Id):Target()
 {
-	positionToVisit = p;
+	targetId = Id;
 }
-TargetVisit::TargetVisit()
+void TargetVisit::setOk()
 {
-	positionToVisit.x = -1;
-	positionToVisit.y = -1;
+	ok = true;
 }
-
-bool TargetVisit::visited(Rectangle r)
+size_t TargetVisit::tellId()
 {
-	//TODO zlepsit, co ak sa to odrazi alebo tak nejak
-	//ak je bod vnutri, potom OK
-	if ((positionToVisit.x < r.x + r.width)
-	&& (positionToVisit.x > r.x)
-	&& (positionToVisit.y < r.y + r.height)
-	&& (positionToVisit.y > r.y ))
-		ok = true;
-	return ok;
+	return targetId;
 }
-
+bool TargetVisit::initPosition(Position p)
+{
+	position = p;
+	return true;
+}
+Position TargetVisit::tellPosition()
+{
+	return position;
+}
 TargetVisit::~TargetVisit()
 {
 	/*
 	   Nothing to destroy yet
 	*/
 }
-
 TargetVisitSequence::TargetVisitSequence()
 {
-	positions.clear();
+	places.clear();
+	iter = 0;
 }
 
+TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit> p)
+{
+	places = p;
+}
 TargetVisitSequence::TargetVisitSequence(std::vector<Position> p)
 {
-	positions = p;
+	for (size_t i = 0; i< p.size(); i++)
+	{
+		TargetVisit t(0);
+		t.initPosition(p[i]);
+		places.push_back(t);
+	}
 }
-
-//TODO spravit rectangle IsInside
-bool TargetVisitSequence::visited(Rectangle r)
+size_t TargetVisitSequence::tellId()
 {
-	if (positions.empty())
-		return true; //splnene
-	Position p = positions.back();
-	if ((p.x < r.x + r.width)
-	&& (p.x > r.x)
-	&& (p.y < r.y + r.height)
-	&& (p.y > r.y ))
-		positions.pop_back();
-	if (positions.empty())
-		ok = true; //splnene
-	return ok;
+	return places[iter].tellId();
 }
-
+bool TargetVisitSequence::initPosition(Position p)
+{
+	places[iter].initPosition(p);
+	iter++;
+	if (iter >= places.size())
+	{
+		iter = 0;
+		return true;
+	}
+	return false;
+}
+Position TargetVisitSequence::tellPosition()
+{
+	return places[iter].tellPosition();
+}
+void TargetVisitSequence::setOk()
+{
+	places[iter].setOk();
+	iter++;
+	if (iter < places.size())
+		return;
+	ok = true;
+}
+void TargetVisitSequence::reset()
+{
+	Target::reset();
+	iter = 0;
+}
 TargetVisitSequence::~TargetVisitSequence()
 {
 	/*

@@ -398,7 +398,12 @@ void Robot::addVisit(std::vector<Position> positions)
 {
 	for(size_t i =0; i< positions.size(); i++)
 	{
-		targets.push_back(new TargetVisit(positions[i]));
+		targets.push_back(new TargetVisit(0));
+	}
+	for(size_t i = targets.size() - positions.size(); i< positions.size(); i++)
+	{
+		//nezalezi na poradi
+		targets[i]->initPosition(positions[i]);
 	}
 }
 
@@ -535,7 +540,7 @@ Robot::~Robot()
 	delete nullable;
 	delete defined_types;
 
-	for (std::list<TargetVisit *>::iterator i = targets.begin(); 
+	for (std::vector<Target *>::iterator i = targets.begin(); 
 		i!= targets.end(); i++)
 	{
 		delete (*i);
