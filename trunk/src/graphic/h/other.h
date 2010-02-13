@@ -53,6 +53,7 @@ class Play:public Menu
 {
 	Map * m;
 	Window * w;
+	bool done;
 	Position p;
 	Robots robots;
 	Position begin; //where to begin draw gameboard

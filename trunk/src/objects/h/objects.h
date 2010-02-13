@@ -68,6 +68,7 @@ protected:
 	/* Worker with the inages representing states of object */
 	ImageSkinWork * skinWork;
 
+	size_t numberOfKilled;
 public:
 	/* substance *///TODO privat a vlastna funkcia
 	Substantial substance;
@@ -128,6 +129,9 @@ public:
 
 	/* returns rectagle of image with collision */
 	Rectangle collisionSize() const;
+
+	/* sets object ast he oe responsible for object death */
+	virtual void killed();
 
 	/*resolves item behaviour if it is hit */
 	virtual void hit(Object *o);

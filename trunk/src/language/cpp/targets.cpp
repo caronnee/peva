@@ -23,9 +23,10 @@ TargetVisit::TargetVisit(size_t Id):Target()
 {
 	targetId = Id;
 }
-void TargetVisit::setOk()
+bool TargetVisit::setOk()
 {
 	ok = true;
+	return ok;
 }
 size_t TargetVisit::tellId()
 {
@@ -33,12 +34,15 @@ size_t TargetVisit::tellId()
 }
 bool TargetVisit::initPosition(Position p)
 {
-	position = p;
+	boundingBox.x = p.x;
+	boundingBox.y = p.y;
+	boundingBox.width = 10;//TODO makra
+	boundingBox.height = 10;
 	return true;
 }
-Position TargetVisit::tellPosition()
+Rectangle TargetVisit::tellPosition()
 {
-	return position;
+	return boundingBox;
 }
 TargetVisit::~TargetVisit()
 {
@@ -52,7 +56,7 @@ TargetVisitSequence::TargetVisitSequence()
 	iter = 0;
 }
 
-TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit> p)
+TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit *> p)
 {
 	places = p;
 }
@@ -60,18 +64,18 @@ TargetVisitSequence::TargetVisitSequence(std::vector<Position> p)
 {
 	for (size_t i = 0; i< p.size(); i++)
 	{
-		TargetVisit t(0);
-		t.initPosition(p[i]);
+		TargetVisit* t =new TargetVisit(0);
+		t->initPosition(p[i]);
 		places.push_back(t);
 	}
 }
 size_t TargetVisitSequence::tellId()
 {
-	return places[iter].tellId();
+	return places[iter]->tellId();
 }
 bool TargetVisitSequence::initPosition(Position p)
 {
-	places[iter].initPosition(p);
+	places[iter]->initPosition(p);
 	iter++;
 	if (iter >= places.size())
 	{
@@ -80,17 +84,18 @@ bool TargetVisitSequence::initPosition(Position p)
 	}
 	return false;
 }
-Position TargetVisitSequence::tellPosition()
+Rectangle TargetVisitSequence::tellPosition()
 {
-	return places[iter].tellPosition();
+	return places[iter]->tellPosition();
 }
-void TargetVisitSequence::setOk()
+bool TargetVisitSequence::setOk()
 {
-	places[iter].setOk();
+	places[iter]->setOk();
 	iter++;
 	if (iter < places.size())
-		return;
+		return false;
 	ok = true;
+	return true;
 }
 void TargetVisitSequence::reset()
 {

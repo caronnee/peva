@@ -19,13 +19,13 @@ public:
 	virtual size_t tellId() = 0;
 
 	/* Tell me what you need */
-	virtual Position tellPosition() = 0;
+	virtual Rectangle tellPosition() = 0;
 	
 	/* Init */
 	virtual bool initPosition(Position p) = 0;
 
 	/* condition is fullfilled */
-	virtual void setOk() = 0;
+	virtual bool setOk() = 0;
 
 	/* set target to unfullfilled again */
 	virtual void reset();
@@ -43,28 +43,28 @@ class TargetVisit : public Target
 protected:
 	/* id of the object */
 	size_t targetId;
-	Position position;
+	Rectangle boundingBox;
 public:
 	TargetVisit(size_t id);
 	size_t tellId();
 	bool initPosition(Position position);
-	void setOk();
-	Position tellPosition();
+	bool setOk();
+	Rectangle tellPosition();
 	virtual ~TargetVisit();
 };
 
 class TargetVisitSequence : public Target
 {
-	std::vector<TargetVisit> places;
+	std::vector<TargetVisit *> places;
 	size_t iter;
 public:
 	TargetVisitSequence();
 	TargetVisitSequence(std::vector<Position> p);
-	TargetVisitSequence(std::vector<TargetVisit> p);
+	TargetVisitSequence(std::vector<TargetVisit*> p);
 	size_t tellId();
 	bool initPosition(Position p);
-	Position tellPosition();
-	void setOk();
+	Rectangle tellPosition();
+	bool setOk();
 	void reset();
 	virtual ~TargetVisitSequence();
 };

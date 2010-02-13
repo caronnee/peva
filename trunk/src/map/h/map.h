@@ -88,7 +88,7 @@ public:
 	void move(Object * o); 
 
 	/* events in map */
-	void performe();
+	bool performe();
 
 	/* destructor destorying allocated space, no need to be virtual so far */
 	~Map();

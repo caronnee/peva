@@ -27,6 +27,7 @@ struct Rectangle
 	Rectangle(Position begin, Position dimension);
 	Rectangle(int x_,int y_,int width_,int heigth_);
 	Rectangle();
+	bool overlaps(Rectangle & rectangle) const;
 };
 
 #endif
