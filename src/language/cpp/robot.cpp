@@ -24,7 +24,6 @@ Robot::Robot(std::string s, GamePoints p)
 	errors = false;
 	defined_types = new TypeContainer();
 	core = new Core( defined_types);
-	toKill = NULL;
 	nullable = new Object(NULL);
 	
 	defined_types->add(new Create_type(TypeUndefined));
@@ -271,28 +270,27 @@ void Robot::save_to_xml()
 	xmlCleanupParser();
 }
 
-void Robot::add_kill(size_t id)
-{
-	killTarget.push_back(id);
-}
+
 void Robot::execute()
 {
+	bool done;
 	while(core->PC < instructions.size())
 	{
-		action();
+		action(done);
 	}
 }
-void Robot::action()
+bool Robot::action(bool & conditions)
 {
 	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
 	if (core->body->isMoving())
-		return;
+		return core->body->alive();
 	while (scheduller->ready())
 	{
 		instructions[core->PC]->execute(core);
 		scheduller->penalize(instructions[core->PC]);
 		core->PC++;
 	}
+	return core->body->alive();
 }
 Robots::Robots(GamePoints g_)
 {
@@ -364,53 +362,6 @@ void Robots::set(Options o, size_t value)
 	}
 }
 
-void Robot::addKilled(unsigned i,Operation op, size_t number)
-{
-	if (toKill !=NULL)
-	{
-		error(i,WarningKillAlreadyDefined);
-		return;
-	}
-	switch (op)
-	{
-		case OperationNotEqual:
-			toKill = new TargetKillNumberNot(number);
-			break;
-		case OperationLess:
-			toKill = new TargetKillNumberLess(number);
-			break;
-		case OperationLessEqual:
-			toKill = new TargetKillNumberLessThen(number);
-			break;
-		case OperationGreater:
-			toKill = new TargetKillNumberMore(number);
-			break;
-		case OperationGreaterEqual:
-			toKill = new TargetKillNumberMoreThen(number);
-			break;
-		default:
-			toKill = new TargetKillNumber(number);
-			break;	
-	}
-}
-
-void Robot::addVisit(std::vector<Position> positions)
-{
-	for(size_t i =0; i< positions.size(); i++)
-	{
-		targets.push_back(new TargetVisit(0));
-	}
-	for(size_t i = targets.size() - positions.size(); i< positions.size(); i++)
-	{
-		//nezalezi na poradi
-		targets[i]->initPosition(positions[i]);
-	}
-}
-
-void Robot::addVisitSeq(std::vector<Position> positions)
-{
-	targets.push_back(new TargetVisitSequence(positions));
-}
 void Robot::error(unsigned line, ErrorCode e, std::string m)
 {
 	switch (e)
@@ -536,16 +487,9 @@ Robot::~Robot()
 	delete scheduller;
 	delete core;
 	delete dev_null;
-	delete toKill;
 	delete nullable;
 	delete defined_types;
 
-	for (std::vector<Target *>::iterator i = targets.begin(); 
-		i!= targets.end(); i++)
-	{
-		delete (*i);
-	}
-	targets.clear();
 
 	//delete instructions
 

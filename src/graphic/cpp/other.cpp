@@ -6,6 +6,8 @@
 #include "../../language/h/bison.h"
 #include "../../language/h/robot.h"
 
+#define LAST -1
+// pre debug ucelu = 0, inak = 1
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 extern void my_destroy();
 extern int yyparse(Robots *);
@@ -95,6 +97,7 @@ Host::~Host()throw(){};
 Play::Play(Window *w_)
 {
 	srand(time(NULL));
+	done = false;
 	name = "Play";
 	w = w_;
 	rect.x = 0;
@@ -168,9 +171,6 @@ void Play::clear()
 	begin.x = 0;
 	begin.y = 0;
 	delete m;
-//	for (std::list<Object *>::iterator iter = objects.begin(); iter!=objects.end(); iter++)
-//		delete (*iter); //mazeme zatial iba missile, pozor na boxy, mazat to v mape
-
 }
 void Play::init()
 {
@@ -178,11 +178,22 @@ void Play::init()
 }
 void Play::process()
 {
+	size_t aliveRobots = robots.robots.size();//TODO vlastna funckia
+	bool t = false;
 	for (size_t i = 0; i< robots.robots.size();i++)
 	{	
-		robots.robots[i]->action();
+		if (!robots.robots[i]->action(t))
+			aliveRobots--;
+		done |= t;
 	}
-	m->performe();
+	if (aliveRobots == LAST || done) //ak je posledny robot
+	{
+		w->state.pop();//TODO dorobit vitazne tazenie, ako new win(x)
+		std::cout << "Skoncili sme" << std::endl;
+		getc(stdin);
+		return;
+	}
+	done = m->performe();
 	redraw();
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)

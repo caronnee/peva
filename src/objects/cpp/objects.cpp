@@ -6,6 +6,7 @@
 
 Object::Object(Skin * s)
 {
+	numberOfKilled = 0;
 	last_attack = NULL;
 	substance = Solid;
 	owner = NULL;
@@ -137,6 +138,12 @@ int Object::turn(int angle)
 	movement.direction.x = sin(movement.angle*PI/180)*MAX_PX_PER_SECOND ;
 	movement.direction.y = -cos(movement.angle*PI/180)*MAX_PX_PER_SECOND;
 	return 0;
+}
+void Object::killed()
+{
+	if (owner!=NULL)
+		owner->killed();
+	numberOfKilled++;
 }
 Rectangle Object::collisionSize() const
 {

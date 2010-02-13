@@ -22,10 +22,7 @@ bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne 
 	r2.x += o2->get_pos().x; //TODO vlastna fce overlaps
 	r2.y += o2->get_pos().y;
 
-	return  (!(r1.x >= r2.x + r2.width) //metoda separating axis?
-		&& !(r1.x + r1.width <= r2.x)
-		&& !(r1.y >= r2.y + r2.height)
-		&& !(r1.y + r1.height <= r2.y))	;
+	return  (r1.overlaps(r2));
 }
 Map::Map(Position resol, std::string skinName) 
 {
@@ -146,7 +143,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
 {
 /*	if (o1->attack > o2->defense)
-	{d
+	{
 		o2->damage-=o1->attack;
 	}
 	else
@@ -196,7 +193,7 @@ Object * Map::checkCollision(Object * o)
 	return nearestColObject;
 }
 
-void Map::performe()
+bool Map::performe()
 {
 	for (size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
@@ -226,6 +223,7 @@ void Map::performe()
 		}
 		std::cout <<std::endl;
 	//	sleep(1);
+	return false;
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {

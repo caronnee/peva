@@ -1,13 +1,15 @@
 #include "../h/body.h"
 
-Body::Body(): Object(NULL)
+Body::Body() : Object(NULL)
 {
+	tasks = false;
 	name = "Robot";
 	movement.old_pos.x = 30;
 	movement.old_pos.y = 130;
 	movement.position_in_map = movement.old_pos;
 	movement.speed = 30;
 	movement.angle = 0;
+	toKill = NULL;
 }
 
 void Body::addAmmo( Object * o)
@@ -15,11 +17,90 @@ void Body::addAmmo( Object * o)
 	ammo.add(o->item);
 	o->owner = this;
 }
+bool Body::addKilled(unsigned i,Operation op, size_t number)
+{
+	if (toKill !=NULL)
+	{
+	//	error(i,WarningKillAlreadyDefined);
+		return false;
+	}
+	tasks++;
+	switch (op)
+	{
+		case OperationNotEqual:
+			toKill = new TargetKillNumberNot(number);
+			break;
+		case OperationLess:
+			toKill = new TargetKillNumberLess(number);
+			break;
+		case OperationLessEqual:
+			toKill = new TargetKillNumberLessThen(number);
+			break;
+		case OperationGreater:
+			toKill = new TargetKillNumberMore(number);
+			break;
+		case OperationGreaterEqual:
+			toKill = new TargetKillNumberMoreThen(number);
+			break;
+		default:
+			toKill = new TargetKillNumber(number);
+			break;	
+	}
+	return true;
+}
+void Body::addKill(size_t id)
+{
+	tasks++;
+	killTarget.push_back(id);
+}
+void Body::move()
+{
+	Rectangle col = collisionSize();
+	col.x += movement.position_in_map.x;
+	col.y += movement.position_in_map.y;
+	for(size_t i =0; i<targets.size(); i++)
+	{
+		if (targets[i]->fullfilled())
+			continue;
+		if (targets[i]->tellPosition().overlaps(col)&&
+			targets[i]->setOk())
+			tasks--;
+	}
+	Object::move();
+
+}
+void Body::addVisit(TargetVisit * target)
+{
+	tasks++;
+	targets.push_back(target);
+}
+void Body::addVisitSeq(std::vector<Position> positions)
+{
+	tasks++;
+	targets.push_back(new TargetVisitSequence(positions));
+}
+void Body::addVisitSeq(std::vector<TargetVisit *> ids)
+{
+	tasks++;
+	targets.push_back(new TargetVisitSequence(ids));
+}
 void Body::addAmmo( Item * i)
 {
 	ammo.add(i); //owner jw spravny
 }
-
+void Body::addVisit(std::vector<Position> positions)
+{
+	for(size_t i =0; i< positions.size(); i++)
+	{
+		tasks++;
+		targets.push_back(new TargetVisit(0));
+	}
+	for(size_t i = targets.size() - positions.size(); i< positions.size(); i++)
+	{
+		//nezalezi na poradi
+		targets[i]->initPosition(positions[i]);
+	}
+}
 bool Body::is_blocking()
 {
 	return true;
@@ -102,4 +183,14 @@ int Body::shoot(int angle)
 	std::cout << "shooted!"<<mP<< " "<<ammo.size()<<" "<<o->alive();
 //	getc(stdin);
 	return 0;
+}
+Body::~Body()
+{
+	delete toKill;
+	for (std::vector<Target *>::iterator i = targets.begin(); 
+		i!= targets.end(); i++)
+	{
+		delete (*i);
+	}
+	targets.clear();
 }

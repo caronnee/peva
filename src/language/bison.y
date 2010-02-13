@@ -82,6 +82,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<type> return_type
 
 %type<ranges> ranges
+%type<ranges> integers
 %type<ident> function_header
 
 %type<entries> parameters_empty
@@ -160,9 +161,28 @@ robot:  define_bot TOKEN_BEGIN options targets global_variables declare_function
 	}
 	;
 targets: /* default target */
-	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->actualRobot->addKilled(@2,$3,$4);}
-	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->actualRobot->addVisit($4);}
-	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->addVisitSeq($4);}
+	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->actualRobot->core->body->addKilled(@2,$3,$4);}
+	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->actualRobot->core->body->addVisit($4);}
+	|targets TOKEN_VISIT TOKEN_LPAR integers TOKEN_RPAR 
+	{ 
+		for (size_t i = 0; i< $4.size(); i++)
+		{
+			TargetVisit * t = new TargetVisit($4[i]);
+			program->resolveTargets.push_back(t);
+			program->actualRobot->core->body->addVisit(t);
+		}
+	}
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->core->body->addVisitSeq($4);}
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR integers TOKEN_RPAR 
+	{
+		std::vector<TargetVisit *> t;
+		for (size_t i =0; i<$4.size(); i++)
+		{
+			t.push_back(new TargetVisit($4[i]));
+			program->resolveTargets.push_back(t.back());
+		}
+		program->actualRobot->core->body->addVisitSeq(t);
+	}
 	;
 places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA 
 	{ 
@@ -221,10 +241,9 @@ simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } 
 complex_type: simple_type ranges 
 		{ 
 			Create_type * t = $1; 
-			while(!$2.empty())
+			for(size_t i = 0 ; i< $2.size(); i++)
 			{
-				t = program->actualRobot->find_array_type($2.front(),t);
-				$2.pop_front();
+				t = program->actualRobot->find_array_type($2[i],t);
 			}
 			Create_type y= *t;
 			while (y.data_type!=NULL)
@@ -237,6 +256,9 @@ complex_type: simple_type ranges
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 		|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
 		;
+integers: TOKEN_UINT { $$.clear(); $$.push_back($1); }
+	|integers TOKEN_COMMA TOKEN_UINT {$$.push_back($3); }
+	;	
 names_:	TOKEN_IDENTIFIER 
 		{ 
 			$$.clear();

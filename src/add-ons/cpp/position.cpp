@@ -68,7 +68,13 @@ Rectangle::Rectangle(int x_, int y_, int width_, int height_)
 	width = width_;
 	height = height_;
 }
-
+bool Rectangle::overlaps(Rectangle & rectangle) const
+{
+	return (!(x >= rectangle.x + rectangle.width) //metoda separating axis?
+		&& !(x + width <= rectangle.x)
+		&& !(y >= rectangle.y + rectangle.height)
+		&& !(y + height <= rectangle.y));
+}
 std::ostream& operator<<(std::ostream& o, const Position p)
 {
 	o<<"x:" << p.x <<", "<< "y:" << p.y;

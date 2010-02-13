@@ -78,10 +78,6 @@ public:
 	std::string nested;
 	std::string name;
 	
-	std::vector<Target *> targets;
-	TargetKillNumber * toKill;
-	std::vector<size_t> killTarget;
-
 	TypeContainer * defined_types;
 
 	Tree defined;//root burst stromu
@@ -105,11 +101,7 @@ public:
 	void add_function( Instructions ins);
 	void leave();
 	void execute();
-	virtual void action();
-	void addKilled(unsigned l,Operation op, size_t number);
-	void addVisit(std::vector<Position> pos);
-	void addVisit(std::vector<size_t> pos);
-	void addVisitSeq(std::vector<Position> pos);
+	bool action(bool & areConditionsFulfilled);
 	//TODO zmenit na hlasky, co budu statcike a nie dynamicke
 	void error(unsigned int line, ErrorCode c,std::string message="Unrecognized");
 	void consolidate();
@@ -128,7 +120,6 @@ public:
 	void declare_next();
 	void leave_type();
 	void save_to_xml();
-	void add_kill(size_t id);
 	void setSkin(Skin * a);
 	void setmSkin(Skin * a);
 	bool skined();
@@ -159,6 +150,7 @@ struct ResolveName
 struct Robots
 {	
 	GamePoints g;
+	std::vector<Target *> resolveTargets;
 	Robot * actualRobot;
 	std::vector<Robot *> robots;
 	std::vector<ResolveName> resolveName;

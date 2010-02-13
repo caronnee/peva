@@ -4,10 +4,17 @@
 #include "../../objects/h/objects.h"
 #include "../../add-ons/h/position.h"
 #include "../../map/h/map.h"
+#include "../../language/h/targets.h"
+#include "../../language/h/enums.h"
 
 class Body : public Object
 {
+	size_t tasks;
 	int default_steps; //settings?
+
+	std::vector<Target *> targets;
+	TargetKillNumber * toKill;
+	std::vector<size_t> killTarget;
 
 	/* in which map is an object located */
 	Map * map;
@@ -17,6 +24,14 @@ public:
 public:
 	/* Constructor */
 	Body();
+
+	bool addKilled(unsigned l,Operation op, size_t number);
+	void addVisit(std::vector<Position> pos);
+	void addVisit(TargetVisit * pos);
+	void addVisitSeq(std::vector<TargetVisit *> ids);
+	void addVisitSeq(std::vector<Position> pos);
+	void addKill(size_t id);
+	virtual void move();
 
 	/* method to add ammo, ammo can be every object, body including */
 	void addAmmo(Object * o);
@@ -51,5 +66,7 @@ public:
 
 	/* returns true, becuse it is not transparent */
 	virtual bool is_blocking();
+
+	virtual ~Body();
 };
 #endif
