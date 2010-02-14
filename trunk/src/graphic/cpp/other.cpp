@@ -103,8 +103,6 @@ Play::Play(Window *w_)
 	rect.x = 0;
 	rect.y = 0;
 	iter = iter_beg = letts.begin();
-	begin.x = 0;
-	begin.y = 0; //TODO  vystredit
 	for (int i = 0; i< 256; i++)
 	{
 		letters[i].heigth = TTF_FontLineSkip(w->g->g_font);
@@ -151,25 +149,24 @@ Play::~Play()throw(){} //uz predtym sa zavola clear, takze to netreba
 
 void Play::redraw()
 {
-	m->redraw(w, begin);
+	m->redraw(w); 
 	SDL_Flip(w->g->screen);
 }
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
-	m->redraw(w, begin);
+	m->redraw(w );
 	SDL_Flip(w->g->screen);
 }
 
 void Play::init(int x, int y)
 {
 	m = new Map(Position (x,y), "grass");
+	m->setBoundary(w->g->screen->w, w->g->screen->h);
 }
 
 void Play::clear()
 {
-	begin.x = 0;
-	begin.y = 0;
 	delete m;
 }
 void Play::init()

@@ -24,8 +24,17 @@ bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne 
 
 	return  (r1.overlaps(r2));
 }
+void Map::setBoundary(size_t x, size_t y)
+{
+	boundaries.width = x;
+	boundaries.height = y;
+}
 Map::Map(Position resol, std::string skinName) 
 {
+	boundaries.x = 0;
+	boundaries.y = 0;
+	boundaries.width = 0;
+	boundaries.height = 0;
 	wskins.clear();
 	skin = new Skin(skinName, Skin::MapSkin);
 	for (size_t i = 0; i< NumberObjectsImages; i++)
@@ -85,24 +94,25 @@ Map::Map(Position resol, std::string skinName)
 	}
 }
 
-void Map::redraw(Window * w, Position begin_draw_at) 
+void Map::redraw(Window * w ) 
 {
 	std::cout << "begin redrawing...";
 	usleep(100);
 	SDL_Rect r;
 	r.x = 0;
 	r.y = 0;
-	Position pos(begin_draw_at);
+	Position pos;
+	pos.x = boundaries.x/BOX_WIDTH;
+	pos.y = boundaries.y/BOX_HEIGHT;
 	SDL_Rect clip;
 	clip.x = 0;
 	clip.y = 0;
 	clip.w = resolution.x; 
 	clip.h = resolution.y;
-//	getc(stdin);
 	SDL_SetClipRect(w->g->screen, &clip);
-	for (int i =0; i< w->g->screen->w; i+=skin->get_size().x) // pre tapety
+	for (int i =0; i< boundaries.width; i+=skin->get_size().x) // pre tapety
 	{
-		for(int j =0; j< w->g->screen->h; j+=skin->get_size().y)
+		for(int j =0; j< boundaries.height; j+=skin->get_size().y)
 		{
 			SDL_Rect sr = skinWork->get_rect();
 			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
@@ -111,11 +121,10 @@ void Map::redraw(Window * w, Position begin_draw_at)
 		r.y = 0;
 		r.x+=skin->get_size().x;
 	}
-	Position resoldraw(min(w->g->screen->w,resolution.x),min(w->g->screen->h, resolution.y)); //TODO predsa to nebudem pocitat kazdy krat!
 	int a = 0;
-	for (int i =0; i< resoldraw.x; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
+	for (int i =0; i< boundaries.width; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
-		for(int j =0; j< resoldraw.y; j+= BOX_HEIGHT)
+		for(int j =0; j< boundaries.height; j+= BOX_HEIGHT)
 		{
 			map[pos.x][pos.y].objects.reset();
 			Object * o = map[pos.x][pos.y].objects.read();
@@ -123,8 +132,8 @@ void Map::redraw(Window * w, Position begin_draw_at)
 			{
 				a++;
 				SDL_Rect rects;
-				rects.x = o->get_pos().x - begin_draw_at.x;
-				rects.y = o->get_pos().y - begin_draw_at.y;
+				rects.x = o->get_pos().x - boundaries.x;
+				rects.y = o->get_pos().y - boundaries.y;
 				SDL_Rect r = o->get_rect();
 			//	std::cout << rects.x << " " << rects.y << rects.w << " " << rects.h << std::endl;
 				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
@@ -133,7 +142,7 @@ void Map::redraw(Window * w, Position begin_draw_at)
 			pos.y++;
 		}
 		r.y = 0;
-		pos.y = begin_draw_at.y;
+		pos.y = boundaries.y/BOX_HEIGHT;
 		pos.x++;
 	}
 	SDL_SetClipRect(w->g->screen, NULL);
