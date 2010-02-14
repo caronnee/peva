@@ -67,7 +67,9 @@ struct Map
 
 	/* resolves move actions, check collision etc.*/
 	void resolveMove(Object * o);
-
+	
+	/* drwing boundaries */
+	Rectangle boundaries;
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);
@@ -93,8 +95,9 @@ public:
 	/* destructor destorying allocated space, no need to be virtual so far */
 	~Map();
 
+	void setBoundary(size_t w, size_t h);
 	/* draws all visible place */
-	void redraw(Window * , Position begin_draw_at); //ked ma vykreslit vsetko
+	void redraw(Window * window); //ked ma vykreslit vsetko
 
 	/* add an object to the map, not walls */
 	void add(Object * o); 

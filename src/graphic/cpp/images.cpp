@@ -13,7 +13,7 @@ std::string toLoadBot[] = { "default.png", "sleep.png", "walk.png", "attack.png"
 std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
-std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "selected.png" };
+std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "selected.png", "Target.png" };
 
 Skin::Skin()
 {
@@ -65,7 +65,6 @@ Skin::Skin(std::string name, Skin::Type t)
 	{
 		images[i] = NULL;
 	}
-	
 	if (!bf::exists(directory + name))
 	{
 		std::cerr << "Error! Directory " <<directory + name<< " not found!"<< std::endl; //TODO exception

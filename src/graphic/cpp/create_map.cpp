@@ -16,7 +16,10 @@ Create_map::Create_map(Window *w_)
 	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);//resize 2.krat
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
 	if (text == NULL)  
+	{
 		std::cout << "Ajta krajta, nevytvoril sa text!";
+		getc(stdin);
+	}
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
 	for (int i =0; i< NUMCHARS; i++)
 	{
@@ -71,7 +74,7 @@ Create_map::Create_map(Window *w_)
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	reset();
 }
-void Create_map::init() {} //zatial nic, pozdejc sa to bude odstrranovat
+void Create_map::init() {} //zatial nic, pozdejc sa to bude odstranovat
 
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 {
@@ -270,7 +273,7 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 	bool found = false;
 	xmlNodePtr tile = NULL;
 	xmlNodePtr line = NULL;
-	std::string walls[] = {"WallFree","Solid Wall","Pushable Wall","Trap Wall"};//TODO dat to do statit niekam medzi walls
+	std::string walls[] = {"WallFree","Solid Wall","Pushable Wall","Trap Wall", "Target"};//TODO dat to do statit niekam medzi walls
 	int from;
 	for (int i = 1; i< NumberObjectsImages; i++)
 	{
@@ -285,7 +288,7 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 					from = x;
 					found = true;
 				}
-				if ((!(map[x][y]&wall)) && (found))
+				if ((!(map[x][y] & wall)) && (found))
 				{
 					if (line == NULL) //ak sme este nic nenasli, privesim line
 					{

@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "../../editor/h/snake.h"
 #include "../../graphic/h/images.h"
+#include "../../map/h/map.h"
 
 class Create_map:public Menu
 {
