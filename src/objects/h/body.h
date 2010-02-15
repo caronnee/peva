@@ -9,7 +9,6 @@
 
 class Body : public Object
 {
-	size_t tasks;
 	int default_steps; //settings?
 
 	std::vector<Target *> targets;
@@ -21,6 +20,7 @@ class Body : public Object
 public:
 	/* ammo, that can be shot */
 	List ammo;
+	size_t tasks;
 public:
 	/* Constructor */
 	Body();
@@ -32,6 +32,7 @@ public:
 	void addVisitSeq(std::vector<Position> pos);
 	void addKill(size_t id);
 	virtual void move();
+//	virtual void hitted(Object * attacker, Position p, int attack);
 
 	/* method to add ammo, ammo can be every object, body including */
 	void addAmmo(Object * o);

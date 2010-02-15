@@ -10,26 +10,26 @@ class Wall:public Object //nic specialneho, proste sten a s nejkou odolnostou
 {
 public:
 	Wall();
-	Wall(Position mapPosition, WallSkin * skin);
+	Wall(Skin * skin);
 	//virtual void damage(Object * sender); 
 };
 
 class BreakableWall:public Object //da sa nou pohnut
 {
 public:
-//	BreakableWall();
+	BreakableWall(Skin * skin);
 //	virtual void damage(Object * sender);
 };
 class PushableWall:public Object //da sa nou pohnut
 {
 public:
-//	PushableWall();
+	PushableWall(Skin * skin);
 //	virtual void damage(Object * sender);
 };
 class TrapWall:public Object // opstey na zemi sa vystrkujuce:)
 {
 public:
-//	TrapWall();
+	TrapWall(Skin * skin);
 //	virtual void damage(Object * sender);
 };
 #endif

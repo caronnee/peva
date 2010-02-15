@@ -111,7 +111,7 @@ Play::Play(Window *w_)
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
 
 	}
-	init (400,200);//TODO zmenit na mapy, ktore uzivatel zada
+	init( 400, 200 );//TODO zmenit na mapy, ktore uzivatel zada
 	//mapa o velkosti 10x10
 /*	for(int i = 0; i<8; i++)
 	{
@@ -162,7 +162,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 void Play::init(int x, int y)
 {
 	m = new Map(Position (x,y), "grass");
-	m->setBoundary(w->g->screen->w, w->g->screen->h);
+	m->setBoundary(min (w->g->screen->w, x), min (w->g->screen->h,y));
 }
 
 void Play::clear()
@@ -216,7 +216,7 @@ void Play::process()
 					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
-							robots.robots[i]->getBody()->place(m,Position (90,40));
+							robots.robots[i]->getBody()->place(m,Position (20+i*150,40));
 							robots.robots[i]->save_to_xml();
 							m->add(robots.robots[i]->getBody());
 						}

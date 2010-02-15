@@ -2,7 +2,7 @@
 
 Body::Body() : Object(NULL)
 {
-	tasks = false;
+	tasks = 0;
 	name = "Robot";
 	movement.old_pos.x = 30;
 	movement.old_pos.y = 130;
@@ -58,16 +58,28 @@ void Body::move()
 	Rectangle col = collisionSize();
 	col.x += movement.position_in_map.x;
 	col.y += movement.position_in_map.y;
+	std::cout << "cols" <<col.x << " " <<col.y << std::endl;
+	std::cout << "size:" << skinWork->get_size().x
+	<< " " << skinWork->get_size().y<< std::endl;
 	for(size_t i =0; i<targets.size(); i++)
 	{
 		if (targets[i]->fullfilled())
 			continue;
-		if (targets[i]->tellPosition().overlaps(col)&&
-			targets[i]->setOk())
-			tasks--;
+		std::cout << "tgr:" <<targets[i]->tellPosition().x
+			<< " " <<targets[i]->tellPosition().y<< std::endl;
+		if (targets[i]->tellPosition().overlaps(col))
+		{
+			std::cout << "overlapped";
+			if (targets[i]->setOk())
+			{
+				std::cout << "overlape2";
+				tasks--;
+			}
+		}
 	}
 	Object::move();
-
+	std::cout << "targets" << tasks;
+	getc(stdin);
 }
 void Body::addVisit(TargetVisit * target)
 {
@@ -95,10 +107,11 @@ void Body::addVisit(std::vector<Position> positions)
 		tasks++;
 		targets.push_back(new TargetVisit(0));
 	}
-	for(size_t i = targets.size() - positions.size(); i< positions.size(); i++)
+	for(size_t i = targets.size()-1;  !positions.empty(); i--)
 	{
 		//nezalezi na poradi
-		targets[i]->initPosition(positions[i]);
+		targets[i]->initPosition(positions.back());
+		positions.pop_back();
 	}
 }
 bool Body::is_blocking()
@@ -134,13 +147,13 @@ int Body::step()
 }
 int Body::turnL()
 {
-	turn(90);
+	turn(-90);
 	return 0;
 }
 int Body::turnR()
 {
 	std::cout << "Turning right";
-	turn(-90);
+	turn(90);
 	return 0;
 }
 int Body::wait(int x)
@@ -172,18 +185,21 @@ int Body::shoot(int angle)
 	ammo.data->value->movement.angle = movement.angle;
 	ammo.data->value->hitpoints = 50;
 	ammo.data->value->movement.direction = movement.direction;
-	std::cout << "PRED:" << ammo.data->value->movement.direction<< " ";
 	ammo.data->value->movement.speed = 50;
 	ammo.data->value->movement.position_in_map = mP;
 	ammo.data->value->movement.realX = 0;
 	ammo.data->value->movement.realY = 0;
 	o->turn(angle);
-	std::cout << "PO:" << ammo.data->value->movement.direction<< " ";
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
-	std::cout << "shooted!"<<mP<< " "<<ammo.size()<<" "<<o->alive();
 //	getc(stdin);
 	return 0;
 }
+/*void Body::hitted()
+{
+	std::cout << "body hitted";
+	getc(stdin);
+	Object::hitted(attacker,o,attack);
+}*/
 Body::~Body()
 {
 	delete toKill;

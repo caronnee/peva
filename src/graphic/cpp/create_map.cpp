@@ -9,7 +9,9 @@
 Create_map::Create_map(Window *w_)
 {
 	name = "Create map";
-	skin = new Skin("grass", Skin::MapSkin);//TODO nacitaj zo suboru, co ma vytvorit
+	//skin = new Skin("grass", Skin::MapSkin);//TODO nacitaj zo suboru, co ma vytvorit
+	for (size_t i = 0; i< NumberObjectsImages; i++)
+		skins.push_back(new WallSkin("grass",i));
 	w = w_;
 	map= NULL;
 	std::string txt = "Write map resolution:";
@@ -39,7 +41,7 @@ Create_map::Create_map(Window *w_)
 
 	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
-	rects[CHOOSE].w = 2*skin->get_size().x; 
+	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->screen->w /3;
 
@@ -63,14 +65,15 @@ Create_map::Create_map(Window *w_)
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
 	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
 
-	int pom = rects[CHOOSE].y + skin->get_size().y/2;
-	std::cout << skin->get_size().x << "...." << skin->get_size().y;
+	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
+
 	for (int i =1; i< NumberObjectsImages; i++)
 	{
-		tile_rect[i].x = rects[CHOOSE].x+ skin->get_size().x/2;
+		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
 		tile_rect[i].y = pom;
-		pom+=3*skin->get_size().y/2; //TODO konstanta
+		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
 	}
+
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	reset();
 }
@@ -87,9 +90,7 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 				&& (y < r[i].y + r[i].h))
 			return i;
 	}
-	std::cout <<x << " medzi " << rects[UP].x << " " <<rects[UP].x + rects[UP].w << " " << std::endl;
-	std::cout <<y << " medzi " << rects[UP].y << " " <<rects[UP].y + rects[UP].h << " " << std::endl;
-	return i;
+	return -1;
 }
 void Create_map::reset()
 {
@@ -102,9 +103,7 @@ void Create_map::reset()
 	written_y = "";
 	if (map!=NULL)
 	{
-		for (int i =0; i< resolX; i++)
-			delete map[i];
-		delete[] map; //TODO ocheckovat!
+		delete map; 
 	}
 	map = NULL;
 	begin_x = 0;
@@ -144,49 +143,23 @@ void Create_map::draw()
 		//TODO vysvietit tu, o sa ma zmazat/ zmaze sa to procese klikom lavym tlacitkom
 		//nakresli pole
 		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
-		int max_width = rects[MAP].x + min(rects[MAP].w,skin->get_size().x*resolX);
-		int max_heigth = rects[MAP].y + min(rects[MAP].h, skin->get_size().y*resolY);
+		
+		//int max_width = rects[MAP].x + min(rects[MAP].w,skins[0]->get_size().x*resolX);
+		//int max_heigth = rects[MAP].y + min(rects[MAP].h, skins[0]->get_size().y*resolY);
 		SDL_SetClipRect(w->g->screen,&rects[MAP]);
-		SDL_Rect rect;//TODO dokreslit sipky
-		rect.x = window_begin_x;
-		rect.y = window_begin_y; //od jakeho pixelu mame zacinat
-		int tile_x = begin_x; //jake x-ove sa vykresli
-		int tile_y = begin_y;
-		while (rect.y < max_heigth)
-		{
-			while (rect.x < max_width)
-			{
-				if (map[tile_x][tile_y]!=WallFree)
-				{
-					for (int i = 0; i < SelectedID; i++)
-					{
-						if (map[tile_x][tile_y] & (1<<i))
-							SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen, &rect); //mutacie vidielny len ten prvy povrch
-					}
-				}
-				else SDL_BlitSurface(skin->get_surface(WallFree),NULL,w->g->screen,&rect);
-				rect.x+=skin->get_size().x;
-				tile_x++;
-				if (tile_x == resolX)
-					break;
-			}
-			rect.x = window_begin_x;
-			rect.y += skin->get_size().y;
-			tile_y++;
-			if (tile_y == resolY)
-				break;
-			tile_x = begin_x;
-		}
+		//SDL_Rect rect;//TODO dovkreslit sipky
+
+		map->redraw(w);
+
 		//dokreslime panel
 		SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< SelectedID; i++) //bez grass
 		{
-			//std::cout << "huuu" << i <<std::endl;
-			SDL_BlitSurface(skin->get_surface(i),NULL,w->g->screen,&tile_rect[i]);
+			SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&tile_rect[i]);
 		}
 		if (select < SelectedID)
 		{
-			SDL_BlitSurface(skin->get_surface(SelectedID),NULL,w->g->screen,&tile_rect[select]);
+			SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 		}
 	}
 	SDL_Flip(w->g->screen);
@@ -226,13 +199,9 @@ void Create_map::process_resolution()
 							state = DRAW;
 							resolX = convert<int>(written_x);
 							resolY = convert<int>(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
-							map = new unsigned int*[resolX];
-							for (int i =0; i< resolX; i++)
-							{
-								map[i] = new unsigned int[resolY];//TODO checking memory
-								for (int j = 0; j < resolY; j++)
-									map[i][j] = 0;//nic tam zatial nie je
-							} //TODO cetrovanie
+							Position p(resolX,resolY);
+							map = new Map(p,"grass");
+							map->setBoundary(p.x,p.y); //kolko moze do sirky
 							break; 
 						}
 					case SDLK_RIGHT:
@@ -270,7 +239,7 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 
 	//int x = 0, y = 0;
 	//int write_x, write_y;
-	bool found = false;
+	/*bool found = false;
 	xmlNodePtr tile = NULL;
 	xmlNodePtr line = NULL;
 	std::string walls[] = {"WallFree","Solid Wall","Pushable Wall","Trap Wall", "Target"};//TODO dat to do statit niekam medzi walls
@@ -279,32 +248,8 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 	{
 		int wall = 1 << i;
 		tile = xmlNewChild(root_node,NULL,BAD_CAST walls[i].c_str(),NULL);
-		for (int y = 0; y < resolY; y++)
-		{
-			for (x = 0; x < resolX; x++)
-			{
-				if ((map[x][y] & wall)&&(!found)) //prva najdena
-				{
-					from = x;
-					found = true;
-				}
-				if ((!(map[x][y] & wall)) && (found))
-				{
-					if (line == NULL) //ak sme este nic nenasli, privesim line
-					{
-						std::string l= "line" + deconvert<int>(y);
-						line = xmlNewChild(tile,NULL,BAD_CAST l.c_str(),NULL);
-					}
-					xmlNodePtr n;
-					std::string range = deconvert<int>(from) + "-"+ deconvert<int>(x);
-					n = xmlNewChild(line,NULL,BAD_CAST "range",BAD_CAST range.c_str());
-					found = false;
-				}
-			}
-			line = NULL;
-		}
-	}
-
+		//TODO map
+	}*/
 
 	xmlSaveFormatFileEnc(file_name.c_str(),doc, "UTF-8",1);
 
@@ -315,18 +260,15 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 void Create_map::generuj(Position resolution)
 {
 	//zaplnime to solidnymi stenami vsetko
-	for (int i = 0; i < resolX; i++)
+	//TODO najskor to spravit nenaecisto iba s krizikmi a pod
+/*	for (int i = 0; i < resolX; i++)
 		for (int j = 0; j < resolY; j++)
 			map[i][j] = 2;
 	Snake snake(resolution);
 	Position actual;
 	while (!snake.move())
 	{
-//		std::cout << snake.alive() << "\t";
-//		std::cout << "zastavka, .." << snake.get_fat();
 		actual = snake.get_pos();
-//		std::cout << actual.x << ":" <<actual.y << std::endl;
-//		getc(stdin);
 		map[actual.y][actual.x] = WallFree;
 		//druha strana
 		for(int i=0;i<snake.get_fat();i++)
@@ -339,7 +281,7 @@ void Create_map::generuj(Position resolution)
 			  ||(actual.y>=resolY)) 
 			{
 				std::cout << "breakujem" << actual.x << " : " << actual.y << std::endl;
-				getc(stdin);
+		//		getc(stdin);
 				break;
 			}
 //			std::cout << actual.x << "__" << actual.y << std::endl;
@@ -374,7 +316,7 @@ void Create_map::generuj(Position resolution)
 			f << map[i][j];
 		}
 		f << "\n";
-	}
+	}*/
 }
 void Create_map::saving()
 {
@@ -396,7 +338,7 @@ void Create_map::saving()
 						{
 							if (!save())
 								do 
-									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis!
+									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
 								while (w->g->event.type != SDL_KEYDOWN);
 							reset();
 							w->state.pop();
@@ -414,12 +356,14 @@ void Create_map::saving()
 
 							SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
 							if (s == NULL)
+							{
 								std::cout << "something's reeealy realy wrong" <<std::endl;
+								getc(stdin);
+							}
 							SDL_Rect r = file_r;
 							r.y+=TTF_FontLineSkip(w->g->g_font);
 							SDL_BlitSurface(s, NULL, w->g->screen, &r);
 							SDL_Flip(w->g->screen);
-							std::cout << "blitted" <<std::endl;
 							SDL_FreeSurface(s);
 							break;
 						}
@@ -473,10 +417,38 @@ void Create_map::process_map()
 											  int x, y;
 											  x = w->g->event.button.x - rects[MAP].x;
 											  y = w->g->event.button.y - rects[MAP].y;
-											  if((begin_x + x/skin->get_size().x >= resolX)|| (begin_y + y/skin->get_size().y >= resolY))
+											  if((begin_x + x/skins[0]->get_size().x >= resolX)|| (begin_y + y/skins[0]->get_size().y >= resolY))
 												  return;
-											  map[begin_x + x/skin->get_size().x][begin_y + y/skin->get_size().y] = (1 << select);
-											  draw();
+											  Object * wall = NULL;
+											  switch (select)
+											  {
+												case TargetPlace:
+												  	map->addTarget(x,y);
+													break;
+												case WallSolidId:
+													wall = new Wall(skins[WallSolidId]);
+													break;
+												case WallPushId:
+													wall = new PushableWall(skins[WallPushId]);
+													break;
+												case WallTrapId:
+													wall = new TrapWall(skins[WallTrapId]);
+													break;
+												case WallExitId:
+													map->starts.push_back(Position(x,y));
+													break;
+												default:
+													std::cerr<<"E!" << select;
+													getc(stdin);
+											  }
+											  if (wall)
+											  {
+												  Position p(x,y);
+												  wall->setPosition(p,0);
+												  map->add(wall);
+											  }
+											  map->redraw(w);
+											  SDL_Flip(w->g->screen);
 										  }
 										  break;
 									  }
@@ -525,12 +497,12 @@ void Create_map::process_map()
 										 draw();
 										 break;}
 								case  DOWN:{begin_y++;
-										   if (begin_y + rects[MAP].h/skin->get_size().y > resolY )
+										   if (begin_y + rects[MAP].h/skins[0]->get_size().y > resolY )
 											   begin_y--;
 										   draw();
 										   break;}
 								case  RIGHT:{begin_x++;
-										    if (begin_x > resolX - rects[MAP].w/skin->get_size().x)
+										    if (begin_x > resolX - rects[MAP].w/skins[0]->get_size().x)
 											    begin_x--;
 										    draw();
 										    break;}
@@ -556,7 +528,7 @@ void Create_map::process_map()
 
 void Create_map::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}//movement!
+	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
 	if (state == DRAW) {
 		process_map();
 		return;

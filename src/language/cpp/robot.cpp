@@ -282,6 +282,10 @@ void Robot::execute()
 bool Robot::action(bool & conditions)
 {
 	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
+
+	conditions = core->body->tasks == 0;
+	std::cout << "cond" <<conditions << " " << core->body->tasks;
+	getc(stdin);
 	if (core->body->isMoving())
 		return core->body->alive();
 	while (scheduller->ready())
