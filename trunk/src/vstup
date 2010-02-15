@@ -9,30 +9,18 @@ ROBOT qqq
         DEFENSE	= 22		
 	MATTACK = 50	
 	MHEALTH	= 20	
-        ID = 5			
+        ID = 5	
 
-	KILLED < 5
-	VISIT_SEQ( START[3], START[2], [13,18])
-	VISIT( [100,200])
+//	KILLED < 5
+//	VISIT_SEQ( START[3], START[2])
+	VISIT_SEQ( [250,60], [200,60])
+	VISIT( [200,60])
 
 //	integer i;
 
 	main() // komentar
 	{
-		turnL();
-		while(true)
-		{
-			integer i = 0;
-			while (i<1)
-			{
-				i++;
-				shoot(0);
-			}
-			break;
-		}
-		while (true)
-		{
-			integer i;
-		}
+		turnR();
+		step(100);
 	}
 }

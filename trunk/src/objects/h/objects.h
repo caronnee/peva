@@ -55,7 +55,7 @@ class Object
 private:
 	Object * last_attack;
 
-protected:
+public:
 	enum Substantial
 	{
 		Miss = 1,
@@ -172,6 +172,7 @@ public:
 
 	/* return SDL rectangle information about image to be blit */
 	SDL_Rect get_rect();
+
 };
 
 #endif

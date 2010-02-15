@@ -58,10 +58,12 @@ TargetVisitSequence::TargetVisitSequence()
 
 TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit *> p)
 {
+	iter = 0;
 	places = p;
 }
 TargetVisitSequence::TargetVisitSequence(std::vector<Position> p)
 {
+	iter = 0;
 	for (size_t i = 0; i< p.size(); i++)
 	{
 		TargetVisit* t =new TargetVisit(0);

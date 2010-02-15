@@ -26,8 +26,8 @@ bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne 
 }
 void Map::setBoundary(size_t x, size_t y)
 {
-	boundaries.width = x;
-	boundaries.height = y;
+	boundaries.width = x + wskins[1]->get_size().x;
+	boundaries.height = y+ wskins[1]->get_size().y;;
 }
 Map::Map(Position resol, std::string skinName) 
 {
@@ -69,36 +69,56 @@ Map::Map(Position resol, std::string skinName)
 	movement.angle = 0;
 	movement.old_pos = movement.position_in_map = p;
 	int a = 0;
-	while (p.x < resolution.x - wskins[1]->get_size().x)
+	//X-ova os
+	for (p.x = skin->get_size().x; p.x < resolution.x; p.x += wskins[1]->get_size().x)
 	{
 		a++;
 		p.y = 0;
-		Wall * w1 = new Wall(p, wskins[1]);
+		Wall * w1 = new Wall(wskins[1]);
+		w1->setPosition(p,0);
+
 		p.y = resol.y + wskins[1]->get_size().y; //povodne resol;
-		Wall * w2 = new Wall(p, wskins[1]);
+		Wall * w2 = new Wall(wskins[1]);
+		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
-		p.x += skin->get_size().x;
 	}	
-	int tmp = p.x;
+	a = 0;
 	p.y = 0;
-	while (p.y < resolution.y)
+	for (p.y = 0; p.y < resolution.y; p.y += wskins[1]->get_size().y)
 	{
+		a++;
 		p.x = 0;
-		Wall * w1 = new Wall(p, wskins[1]);
-		p.x = tmp;
-		Wall * w2 = new Wall(p, wskins[1]);
-		p.y += skin->get_size().y;
+		std::cout << p <<std::endl;
+		Wall * w1 = new Wall(wskins[1]);
+		w1->setPosition(p,0);
+		p.x = resolution.x-wskins[1]->get_size().x;
+		Wall * w2 = new Wall(wskins[1]);
+		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
+		std::cout << p <<std::endl;
 	}
 }
 
+void Map::shift(int shiftLeft, int shiftUp)
+{
+	boundaries.x +=shiftLeft;
+	boundaries.y += shiftUp;
+}
+void Map::addTarget(size_t x, size_t y)
+{
+	Position p(x,y);
+	size_t id = places.size();
+	Place pl;
+	pl.id = id; 
+	pl.p = p;
+}
 void Map::redraw(Window * w ) 
 {
 	std::cout << "begin redrawing...";
 	usleep(100);
-	SDL_Rect r;
+	SDL_Rect r; //TODO nie takto natvrdlo
 	r.x = 0;
 	r.y = 0;
 	Position pos;
@@ -146,7 +166,6 @@ void Map::redraw(Window * w )
 		pos.x++;
 	}
 	SDL_SetClipRect(w->g->screen, NULL);
-	std::cout << "end"<<std::endl;
 }
 
 void Map::collision(Object* o1, Object *o2) //utocnik, obranca
@@ -198,7 +217,6 @@ Object * Map::checkCollision(Object * o)
 		}
 	}	
 	std::cout << "end checkCol"<<std::endl;
-//	sleep(1);
 	return nearestColObject;
 }
 
@@ -231,7 +249,6 @@ bool Map::performe()
 			}
 		}
 		std::cout <<std::endl;
-	//	sleep(1);
 	return false;
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
@@ -292,11 +309,14 @@ void Map::add(Object * o)
 	{
 		std::cout << "Error! null object!"; 
 		getc(stdin); 
+		return;
 	}
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.add(o->item);
+	std::cout << "added";
+	usleep(10);
 }
 Map::~Map() 
 {

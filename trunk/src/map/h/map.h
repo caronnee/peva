@@ -4,10 +4,13 @@
 #include <SDL/SDL.h>
 #include <vector>
 #include <list>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include "../../graphic/h/graphic.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
 #include "../../objects/h/list.h"
+#include "../../language/h/targets.h"
 
 //width of box in pixels
 #define BOX_WIDTH 100
@@ -15,7 +18,7 @@
 #define BOX_HEIGHT 100
 
 
-/* structure hold object in area */
+/* structure for objects in area */
 
 struct Box
 {
@@ -40,9 +43,13 @@ struct Map
 	/* strucutre holdin images of wall */
 	std::vector<WallSkin *> wskins;
 	std::vector<Place> places;
+	std::vector<Position> starts;
 
 	/* how many column boxes */
 	float boxesInColumn;
+
+	/* adding target places */
+	void addTarget(size_t x, size_t y);
 
 	/* how many row boxes */
 	float boxesInRow;
@@ -73,6 +80,8 @@ struct Map
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);
+
+	void shift(int shiftLeft, int shiftUp);
 
 	/* constructor from config file */
 	Map(std::string file, std::string skinName);

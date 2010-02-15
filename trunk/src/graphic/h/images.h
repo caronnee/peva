@@ -17,8 +17,8 @@ enum WallImageObjects
 	WallPushId,
 	WallTrapId,
 	WallExitId,
-	SelectedID,
 	TargetPlace,
+	SelectedID,
 	NumberObjectsImages
 };
 
@@ -39,7 +39,7 @@ enum Actions
 
 class Skin
 {
-protected:
+public:
 	/* number of files a skin have to load */
 	size_t size;
 
@@ -103,7 +103,7 @@ public:
 		NumberOfStates
 	};
 
-private:
+public:
 	/* miliseconds grom the last blit */
 	Uint32 lastUpdate;
 	size_t count;
@@ -149,7 +149,7 @@ public:
 	/* return beginning of the picture */
 	Position get_begin()const;
 
-protected:
+public:
 
 	Skin * s;
 	Actions states[NumberOfStates];
