@@ -1,6 +1,7 @@
 #include <math.h>
 #include "../h/map.h"
 #include "../../add-ons/h/help_functions.h"
+#include "../../add-ons/h/macros.h"
 
 //TODO externe si pamatat steny pre bezpecne odmonotvanie
 Box::Box()
@@ -256,32 +257,28 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 	//TODO vobec by nmalo nastavat
 	if (o->movement.position_in_map.x <0)
 	{
-		std::cout << 1;
-		getc(stdin);
+		TEST("Pozicia objektu je mensia ako 0");
 	//	o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = -1; //odrazene
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-(int)o->width())
 	{
-		std::cout << 1;
-		getc(stdin);
+		TEST("Pozicia objektu je viac ako maximum");
 	//	o->movement.direction.x *= -1;
 //		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
 		o->movement.position_in_map.x = resolution.x - o->width(); //odrazene
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
-		std::cout << 1;
-		getc(stdin);
+		TEST("Pozicia je y mensia ako 0");
 	//	o->movement.direction.y *= -1;
 //		o->movement.position_in_map.y *= -1;
 		o->movement.position_in_map.y = 0; //odrazene
 	}
 	else if(o->movement.position_in_map.y > resolution.y-(int)o->height())
 	{
-		std::cout << 1;
-		getc(stdin);
+		TEST("pozicia y vacsia ako max");
 	//	o->movement.direction.y *= -1;
 	//	o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
 		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
@@ -307,16 +304,13 @@ void Map::add(Object * o)
 {
 	if (o == NULL)
 	{
-		std::cout << "Error! null object!"; 
-		getc(stdin); 
+		TEST("Error! null object!"); 
 		return;
 	}
 	Position pos= o->get_pos();
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.add(o->item);
-	std::cout << "added";
-	usleep(10);
 }
 Map::~Map() 
 {

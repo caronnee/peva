@@ -1,4 +1,5 @@
 #include "../h/targets.h"
+#include "../../add-ons/h/macros.h"
 
 Target::Target()
 {

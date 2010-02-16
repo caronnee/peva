@@ -2,6 +2,7 @@
 #include <time.h>
 #include "../h/other.h"
 #include "../../add-ons/h/position.h"
+#include "../../add-ons/h/macros.h"
 #include "../../objects/h/missille.h"
 #include "../../language/h/bison.h"
 #include "../../language/h/robot.h"
@@ -183,11 +184,10 @@ void Play::process()
 			aliveRobots--;
 		done |= t;
 	}
-	if (aliveRobots == LAST || done) //ak je posledny robot
+	if (/*aliveRobots == LAST ||*/ done) //ak je posledny robot
 	{
 		w->state.pop();//TODO dorobit vitazne tazenie, ako new win(x)
-		std::cout << "Skoncili sme" << std::endl;
-		getc(stdin);
+		TEST("Skoncili sme")
 		return;
 	}
 	done = m->performe();
@@ -216,7 +216,7 @@ void Play::process()
 					robots.checkSkins();
 					for ( size_t i =0; i< robots.robots.size(); i++)
 						{
-							robots.robots[i]->getBody()->place(m,Position (20+i*150,40));
+							robots.robots[i]->getBody()->place(m,Position (50+i*150,40));
 							robots.robots[i]->save_to_xml();
 							m->add(robots.robots[i]->getBody());
 						}

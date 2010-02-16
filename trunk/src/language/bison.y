@@ -8,6 +8,7 @@
 #include "../h/robot.h"
 #include "../h/parser_functions.h"
 #include "../h/hflex.h"
+#include "../../add-ons/h/macros.h"
 
 #define YYSTYPE Lval 
 #define YYLTYPE unsigned
@@ -313,7 +314,7 @@ values:		expression {
 			}
 			if ($1.output.back()!=*program->actualRobot->active_type.top())
 			{
-				std::cout <<"nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type; getc(stdin);
+				TEST("nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
 			else
@@ -618,7 +619,7 @@ assign: variable TOKEN_ASSIGN expression
 		}
 		else if ($1.output.back()!=$3.output.back())
 		{
-			std::cout << "grrr" ; getc(stdin);
+			TEST("grrr") 
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
 		}
 		$$ = join_instructions($1.ins, $3.ins); 

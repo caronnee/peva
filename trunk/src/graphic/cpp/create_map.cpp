@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "../../add-ons/h/help_functions.h"
+#include "../../add-ons/h/macros.h"
 #include "../h/create_map.h"
 
 Create_map::Create_map(Window *w_)
@@ -19,8 +20,7 @@ Create_map::Create_map(Window *w_)
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
 	if (text == NULL)  
 	{
-		std::cout << "Ajta krajta, nevytvoril sa text!";
-		getc(stdin);
+		TEST("Ajta krajta, nevytvoril sa text!");
 	}
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
 	for (int i =0; i< NUMCHARS; i++)
@@ -280,12 +280,9 @@ void Create_map::generuj(Position resolution)
 			  ||(actual.x>=resolX)
 			  ||(actual.y>=resolY)) 
 			{
-				std::cout << "breakujem" << actual.x << " : " << actual.y << std::endl;
-		//		getc(stdin);
+				TEST("breakujem" << actual.x << " : " << actual.y)
 				break;
 			}
-//			std::cout << actual.x << "__" << actual.y << std::endl;
-//			getc(stdin);
 			map[actual.y][actual.x] = WallFree;
 		}
 		for(int i=0;i<snake.get_fat();i++)
@@ -297,12 +294,9 @@ void Create_map::generuj(Position resolution)
 					||(actual.x>=resolX)
 					||(actual.y>=resolY)) 
 			{
-//				std::cout << "breakujem" << actual.x << " : " << actual.y << std::endl;
-//				getc(stdin);
+//				TEST("breakujem" << actual.x << " : " << actual.y)
 				break;
 			}
-//			std::cout << actual.x << "__" << actual.y << std::endl;
-//			getc(stdin);
 			map[actual.y][actual.x] = WallFree;
 		}
 	}
@@ -357,8 +351,7 @@ void Create_map::saving()
 							SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
 							if (s == NULL)
 							{
-								std::cout << "something's reeealy realy wrong" <<std::endl;
-								getc(stdin);
+								TEST("something's reeealy realy wrong")
 							}
 							SDL_Rect r = file_r;
 							r.y+=TTF_FontLineSkip(w->g->g_font);
@@ -438,8 +431,7 @@ void Create_map::process_map()
 													map->starts.push_back(Position(x,y));
 													break;
 												default:
-													std::cerr<<"E!" << select;
-													getc(stdin);
+													TEST("Eeek!" << select);
 											  }
 											  if (wall)
 											  {

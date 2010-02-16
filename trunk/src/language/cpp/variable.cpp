@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "../h/variable.h"
+#include "../../add-ons/h/macros.h"
 
 Variable::Variable(size_t i)
 {
@@ -27,14 +28,12 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 	//A musia byt rovnakehotypu, co sa arrayov tyka
 	if (v == NULL )
 	{
-		std::cout << "Error  - Copying NULL variable";
-		getc(stdin);
+		TEST("Error  - Copying NULL variable");
 		return;
 	}
 	if (array.elements.size() != v->array.elements.size() )
 	{
-		std::cout << "Error : variable " << v << "tries to copy to " << this;getc(stdin);
-		std::cout << "Error, arrays not same range, " << array.elements.size() << ":" << v->array.elements.size(); getc(stdin);
+		TEST("Error : variable " << v << "tries to copy to " << this << "Not same range")
 		return;
 	}
 	std::cout << "Integer value change from: " << integerValue << "(id = " << ID << ") to " << v->integerValue << "(id ="<< v->ID <<")" << std::endl;

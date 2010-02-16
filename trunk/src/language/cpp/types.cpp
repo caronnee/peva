@@ -16,7 +16,6 @@ Create_type * Create_type::next()
 		iterator++;
 		return nested_vars[iterator-1].type;
 	}
-	std::cout <<"Next nepresiel!Je to asi jednoduchy typ"<<iterator;getc(stdin);
 	return NULL;
 }
 //reset sa d apouzit jedine v pripade, ze sa neopakuju typy a to je nemozne -> cyklus
@@ -56,7 +55,6 @@ Create_type::Create_type(const Create_type & t)
 	range = t.range;
 	data_type = NULL;
 	
-//	std::cout << "Tu sa este dostanem -CREATE_T"<<t.nested_vars.size(); getc(stdin);
 	for(size_t i = 0; i<t.nested_vars.size(); i++)
 	{
 		Record r;
@@ -64,7 +62,6 @@ Create_type::Create_type(const Create_type & t)
 		r.type = t.nested_vars[i].type;
 		nested_vars.push_back(r);
 	}
-//	std::cout << "ENDTu sa este dostanem -CREATE_T"; getc(stdin);
 	data_type = t.data_type;
 	type = t.type;
 }

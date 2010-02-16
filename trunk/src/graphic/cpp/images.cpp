@@ -1,5 +1,6 @@
 #include "../h/images.h"
 #include "../../add-ons/h/help_functions.h"
+#include "../../add-ons/h/macros.h"
 #include "boost/filesystem.hpp"
 #include <iostream>
 #include <fstream>
@@ -67,8 +68,7 @@ Skin::Skin(std::string name, Skin::Type t)
 	}
 	if (!bf::exists(directory + name))
 	{
-		std::cerr << "Error! Directory " <<directory + name<< " not found!"<< std::endl; //TODO exception
-		getc(stdin);
+		TEST("Error! Directory " <<directory + name<< " not found!"); //TODO exception
 		return;
 	}
 	directory = directory+name + '/';
@@ -144,8 +144,7 @@ WallSkin::WallSkin(std::string name, size_t wall)
 	std::string directory = "./mapSkins/" + name + "/";
 	if (!bf::exists(directory))
 	{
-		std::cout << "Nonexistent maps!";//TODO vynimka
-		getc(stdin);
+		TEST("Nonexistent maps!");//TODO vynimka
 		return;
 	}
 	size = NumberOfActions;

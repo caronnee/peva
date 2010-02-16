@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../h/memory.h"
+#include "../../add-ons/h/macros.h"
 #include "../h/types.h"
 
 Variable * Memory::next_id(size_t ID)
@@ -27,7 +28,7 @@ Variable * Memory::next_id(size_t ID)
 	{
 		std::cout << memory[i]->ID<< " ";
 	}*/
-	std::cout << "Assignujem nahodne" << id << std::endl;getc(stdin);
+	TEST("Assignujem nahodne" << id);
 	return memory[id];
 }
 
@@ -98,8 +99,7 @@ void Memory::free_tmp()
 	}
 	else
 	{
-		std::cout <<"Error! Trying to free a nonempty temp" << std::endl;
-		getc(stdin);
+		TEST("Error! Trying to free a nonempty temp");
 	}
 }
 void Memory::fill(Variable * &v, 
@@ -156,11 +156,9 @@ void Memory::free(size_t depth)
 	{
 		Memory_record r = assigned.back();
 		assigned.pop_back();
-//		std::cout << "Node" << r.node->name;getc(stdin);
 		set_free(r.variable); //TODO pre velke arrays a pod. to nejak penalizovat?
 		r.node->var.pop_back();
 	}
-	std::cout << "Memory freed"<< std::endl;
 }
 
 void Memory::realloc(int size)
