@@ -2,6 +2,7 @@
 //TODO return value by sa mala vytvorit az v okamziku RETURN u
 #include <iostream>
 #include "../h/instructions.h"
+#include "../../add-ons/h/macros.h"
 
 //FIXME premenovat floatfrom an real, aby to olo konzistentne
 //TODO zmenit na list
@@ -83,8 +84,7 @@ int InstructionLoadLocal::execute(Core * c)
 	std::cout << ", value =  " << node->var.back()->integerValue << "..." ;
 	if (node->var.size() == 0)
 	{
-		std::cout <<"Error, prazdna premenna";
-		getc(stdin);
+		TEST("Error, prazdna premenna")
 	}
 	c->values.push_back(node->var.back());
 	std::cout << "OK" << std::endl;

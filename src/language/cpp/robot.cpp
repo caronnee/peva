@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../h/robot.h"
+#include "../../add-ons/h/macros.h"
 
 FirstSection::FirstSection()
 {
@@ -92,7 +93,7 @@ void Robot::leave_type()
 {
 	if (active_type.empty())
 	{ 
-		std::cout << "Ech? Active prazdna"; getc(stdin);
+		TEST("Ech? Active prazdna")
 		return;
 	}
 	active_type.top()->reset(); // prejde, pretoze hierarchicka struktura(nemoze zas ebou rovnake triedy, takze vzdy ked resetujeme, bude to potom mio stacku)
@@ -103,7 +104,7 @@ void Robot::declare_next()
 	Create_type * t = active_type.top()->next();
 	if (NULL)
 	{
-		std::cout << "Error:No NEXT"; getc(stdin);
+		TEST("Error:No NEXT") 
 		error(-1, Robot::ErrorOutOfRange);
 		return;
 	}
@@ -284,8 +285,6 @@ bool Robot::action(bool & conditions)
 	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
 
 	conditions = core->body->tasks == 0;
-	std::cout << "cond" <<conditions << " " << core->body->tasks;
-	getc(stdin);
 	if (core->body->isMoving())
 		return core->body->alive();
 	while (scheduller->ready())
@@ -433,7 +432,7 @@ void Robot::consolidate()
 	{
 		if (instructions[i] == NULL)
 		{
-			std::cout << "Null instruction, something forgotten?";getc(stdin);
+			TEST("Null instruction, something forgotten?")
 			continue;
 		}
 		std::cout << i << instructions[i]->name()<<",..\t";
@@ -502,7 +501,7 @@ Robot::~Robot()
 	{
 		if (instructions[i] == NULL)
 		{
-			std::cout << "Eeeeek!"; getc(stdin);
+			TEST("Eeeeek!") 
 		}
 		delete instructions[i];
 	}

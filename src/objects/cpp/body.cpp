@@ -1,4 +1,5 @@
 #include "../h/body.h"
+#include "../../add-ons/h/macros.h"
 
 Body::Body() : Object(NULL)
 {
@@ -59,8 +60,7 @@ void Body::move()
 	col.x += movement.position_in_map.x;
 	col.y += movement.position_in_map.y;
 	std::cout << "cols" <<col.x << " " <<col.y << std::endl;
-	std::cout << "size:" << skinWork->get_size().x
-	<< " " << skinWork->get_size().y<< std::endl;
+	std::cout << "size:" << skinWork->get_size().x << " " << skinWork->get_size().y<< std::endl;
 	for(size_t i =0; i<targets.size(); i++)
 	{
 		if (targets[i]->fullfilled())
@@ -78,8 +78,6 @@ void Body::move()
 		}
 	}
 	Object::move();
-	std::cout << "targets" << tasks;
-	getc(stdin);
 }
 void Body::addVisit(TargetVisit * target)
 {
@@ -164,11 +162,9 @@ int Body::wait(int x)
 int Body::shoot(int angle)
 {
 	std::cout << "Shooting at angle [ " << angle <<std::endl;
-//	getc(stdin);
 	if (ammo.empty())
 	{
-		std::cout << "Prazdne ammo!";
-		getc(stdin);
+		TEST("Prazdne ammo!")
 		return 0;
 	}
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionAttack);
@@ -191,13 +187,11 @@ int Body::shoot(int angle)
 	ammo.data->value->movement.realY = 0;
 	o->turn(angle);
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
-//	getc(stdin);
 	return 0;
 }
 /*void Body::hitted()
 {
 	std::cout << "body hitted";
-	getc(stdin);
 	Object::hitted(attacker,o,attack);
 }*/
 Body::~Body()

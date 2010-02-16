@@ -1,4 +1,5 @@
 #include "../h/objects.h"
+#include "../../add-ons/h/macros.h"
 #include <cmath>
 
 #define MAX_PX_PER_SECOND 300
@@ -72,17 +73,10 @@ void Object::move()
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
-/*	if (name == "Missille")
-	{
-		std::cout <<movement.direction<<std::endl;
-		std::cout << "passed:"<<passed<< " "<<movement.fps;
-		getc(stdin);
-	}*/
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
 	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
 	{
-		std::cout << "removing state after finishong movement";
-	//	getc(stdin);
+		//std::cout << "removing state after finishong movement";
 		skinWork->removeState();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
@@ -157,7 +151,6 @@ void Object::hitted(Object * o, Position p, int attack)
 void Object::hit(Object * attacked)
 {
 	attacked->hitted (this, movement.direction, attack);
-	int minX;
 	Rectangle r1 = collisionSize();
 	r1.x += movement.position_in_map.x;
 	r1.y += movement.position_in_map.y;
@@ -169,6 +162,7 @@ void Object::hit(Object * attacked)
 	Position p(1,1);
 	//zavisi od direction, v akom sa pohyboval
 	//zisti najmensi prienik
+	int minX;
 	if (movement.direction.x > 0) //hybe sa smerom doprava
 	{
 		minX = r1.x + r1.width - r2.x;
@@ -192,12 +186,13 @@ void Object::hit(Object * attacked)
 	int minum =(minY < minX)? minY:minX;
 	if ((minY == minum)&&(minY != MY_INFINITY))
 	{
-		std::cout << minY;getc(stdin);
+		TEST( "hitted minimum" << minY);
 		movement.direction.y *=-1;
 		movement.position_in_map.y += minY * p.y;
 	}
 	if ((minX=minum)&&(minX != MY_INFINITY))
 	{
+		TEST( "hitted minX" << minY);
 		movement.direction.x *=-1;
 		movement.position_in_map.x += minX * p.x;
 	}

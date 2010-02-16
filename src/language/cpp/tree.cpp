@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include "../h/tree.h"
+#include "../../add-ons/h/macros.h"
 
 void Tree::reset()
 {
@@ -29,7 +30,6 @@ void Tree::leave_block()
 {
 	while(!block_of_nodes.empty() && (block_of_nodes.back()!=NULL))
 	{
-//		std::cout << "hushushus";getc(stdin);
 		block_of_nodes.back()->active = false;
 		block_of_nodes.pop_back();
 	}
@@ -125,8 +125,7 @@ Node * Tree::add(std::string s, Create_type * type)
 		{
 			if ((*iter)->active)
 			{
-				std::cout << " Taka aktivna premenna uz existuje "<< s <<std::endl;
-				getc(stdin);
+				TEST("Taka aktivna premenna uz existuje " <<s)
 			}
 			return *iter;
 		}//kontrola, co tam nieco take uz nie je
@@ -135,7 +134,6 @@ Node * Tree::add(std::string s, Create_type * type)
 
 	number_of_nodes++;
 	Node * nod = new Node(s, type, number_of_nodes);
-//	std::cout << "node" << nod; getc(stdin);
 	if (s.find(DELIMINER_CHAR) == std::string::npos)
 	{
 		nod->nested = Global;
@@ -157,13 +155,11 @@ Node * Tree::add(std::string s, Create_type * type)
 	//TODO else warning o preskakovani alebo prepisana hodnota alebo cos
 	while(t->items.size()> MaxItems ) //pre opakovane stiepenie
 	{
-		std::cout << "BURSTING!";getc(stdin);
 		t->inner_node = true;
 		int splitted = -1,split = 0;
 		std::list<Node *> n;
 		while (!(t->items.empty()))
 		{
-			//std::cout <<t->items.size() <<" : "<< t->items.front()->name<< std::endl;
 			if (t->items.front()->name.length() == t->depth) //ak sa neda dalej
 			{
 				split++;//TODO ocheckovat
