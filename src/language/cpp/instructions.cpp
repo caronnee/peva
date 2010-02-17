@@ -1251,6 +1251,22 @@ InstructionEye::~InstructionEye()
 {
 	node = NULL;
 }
+InstructionFetchState::InstructionFetchState()
+{
+	name_ = "InstructionFetchState";
+	group = IGroup_step;
+}
+int InstructionFetchState::execute(Core *c) //prave jeden parameter
+{
+	std::cout << "Fetching state ...";
+	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->values.back()->integerValue = c->body->state();
+	std::cout << "OK" << std::endl;
+	return 0;
+}
+InstructionFetchState::~InstructionFetchState()
+{}
+
 InstructionStep::InstructionStep()
 {
 	name_ = "InstructionStep";
@@ -1260,8 +1276,7 @@ int InstructionStep::execute(Core *c) //prave jeden parameter
 {
 	std::cout << "Stepping ...";
 	int steps = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->step(steps);
+	c->body->step(steps);
 	std::cout << "OK" << std::endl;
 	return 0;
 }

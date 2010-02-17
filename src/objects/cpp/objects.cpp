@@ -74,10 +74,9 @@ void Object::move()
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
-	if (stepsPass >= movement.steps) //ak skonci, potom zrus chodiaci imidz
+	if ( stepsPass >= movement.steps ) //ak skonci, potom zrus chodiaci imidz
 	{
-		//std::cout << "removing state after finishong movement";
-		skinWork->removeState();
+		endMove();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
 		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
@@ -86,7 +85,10 @@ void Object::move()
 	movement.position_in_map.x += passed.x;
 	movement.position_in_map.y += passed.y;
 }
-
+void Object::endMove()
+{
+	skinWork->removeState();
+}
 bool Object::is_blocking()
 {
 	return false;
@@ -145,11 +147,14 @@ Rectangle Object::collisionSize() const
 }
 void Object::hitted(Object * o, Position p, int attack)
 {
+	TEST("HITTED")
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionHit);
+	movement.steps=0;
 	//TODO definovat u podriadenych
 }
 void Object::hit(Object * attacked)
 {
+	TEST("HIT")
 	attacked->hitted (this, movement.direction, attack);
 	Rectangle r1 = collisionSize();
 	r1.x += movement.position_in_map.x;

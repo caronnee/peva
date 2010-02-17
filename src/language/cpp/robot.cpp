@@ -283,14 +283,13 @@ void Robot::execute()
 bool Robot::action(bool & conditions)
 {
 	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
-
 	conditions = core->body->tasks == 0;
 	if (core->body->isMoving())
 		return core->body->alive();
 	while (scheduller->ready())
 	{
+		scheduller->penalize(instructions[core->PC]); //kvoli zmena PC
 		instructions[core->PC]->execute(core);
-		scheduller->penalize(instructions[core->PC]);
 		core->PC++;
 	}
 	return core->body->alive();
@@ -484,6 +483,7 @@ void Robot::consolidate()
 			continue;
 		}
 	}
+	instructions.push_back(new InstructionMustJump(-instructions.size()+find_f("main")->begin -1));
 }
 Robot::~Robot()
 {

@@ -3,6 +3,7 @@
 
 Body::Body() : Object(NULL)
 {
+	state_ = 0;
 	tasks = 0;
 	name = "Robot";
 	movement.old_pos.x = 30;
@@ -17,6 +18,10 @@ void Body::addAmmo( Object * o)
 {
 	ammo.add(o->item);
 	o->owner = this;
+}
+int Body::state() const
+{
+	return state_;
 }
 bool Body::addKilled(unsigned i,Operation op, size_t number)
 {
@@ -65,20 +70,15 @@ void Body::move()
 	{
 		if (targets[i]->fullfilled())
 			continue;
-		std::cout << "tgr:" <<targets[i]->tellPosition().x
-			<< " " <<targets[i]->tellPosition().y<< std::endl;
-		if (targets[i]->tellPosition().overlaps(col))
-		{
-			std::cout << "overlapped";
-			if (targets[i]->setOk())
+		if (targets[i]->tellPosition().overlaps(col) //spolieham sa na skratene vyhodnocovanie
+			&& targets[i]->setOk())
 			{
-				std::cout << "overlape2";
 				tasks--;
 			}
-		}
 	}
 	Object::move();
 }
+
 void Body::addVisit(TargetVisit * target)
 {
 	tasks++;
@@ -112,6 +112,9 @@ void Body::addVisit(std::vector<Position> positions)
 		positions.pop_back();
 	}
 }
+
+//TODO is blocking cez premennu aby som nemusela pretazovat funkciu
+
 bool Body::is_blocking()
 {
 	return true;
@@ -133,9 +136,10 @@ void Body::place (Map * m, Position p, int angle)
 }
 int Body::step(int steps)
 {
-	//TODO presunut to do movmentu
+	//TODO presunut to do movementu
 	movement.steps = steps * movement.speed;
-	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionHit);
+	state_ = 0;
+	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionWalk);
 	return 0;
 }
 int Body::step()
@@ -189,11 +193,16 @@ int Body::shoot(int angle)
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 	return 0;
 }
-/*void Body::hitted()
+void Body::hitted(Object * attacker, Position p, int attack)
 {
 	std::cout << "body hitted";
-	Object::hitted(attacker,o,attack);
-}*/
+	state_ = movement.steps;
+	Object::hitted(attacker,p,attack);
+}
+void Body::hit(Object * o)
+{
+	Object::hit(o);
+}
 Body::~Body()
 {
 	delete toKill;

@@ -392,6 +392,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				if(e.output.size() == 0)
 				{
 					ee.ins.push_back(new InstructionStepDefault());
+					ee.ins.push_back(new InstructionFetchState());
 					break;
 				}
 				if (e.output.size() == 1)
@@ -405,6 +406,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 					if (e.output.back() == *r->find_type(TypeInteger))
 					{
 						ee.ins.push_back(new InstructionStep());
+						ee.ins.push_back(new InstructionFetchState());
 						break;
 					}
 					r->error(line, Robot::ErrorOperationNotSupported);

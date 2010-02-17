@@ -68,6 +68,7 @@ enum Instr
 	IGroup_endblock ,
 	IGroup_see ,
 	IGroup_eye ,
+	IGroup_fetchstate ,
 	IGroup_step ,
 	IGroup_stepdefault ,
 	IGroup_wait ,
@@ -549,6 +550,13 @@ class InstructionEye : public Instruction
 		InstructionEye();
 		virtual int execute(Core * c);
 		virtual ~InstructionEye();
+};
+class InstructionFetchState : public Instruction
+{
+	public:
+		InstructionFetchState();
+		virtual int execute(Core * c);
+		virtual ~InstructionFetchState();
 };
 class InstructionStep : public Instruction
 {
