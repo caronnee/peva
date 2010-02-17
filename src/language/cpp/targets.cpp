@@ -126,7 +126,7 @@ int TargetKillNumber::fullfilled()
 	constraint--;
 	if (constraint == 0)
 		return 1;
-	if (constraint <0)
+	if (constraint == -1) //stalo sa nesplnitelnym
 		return -1;
 	return 0;
 }
@@ -145,15 +145,21 @@ TargetKillNumberLess::TargetKillNumberLess()
 
 TargetKillNumberLess::TargetKillNumberLess(int i)
 {
+	first = 2;
 	constraint = i;
 }
 
 int TargetKillNumberLess::fullfilled()
 {
 	constraint--;
-	if (constraint >0)
-		return 1;
-	return -1;
+	if (constraint == 0)
+		return first-1;
+	if (first)
+	{
+		first = 0;
+		return 1; //bude stale splnene, az kym sa to neprehupne na druhu stranu
+	}
+	return 0;
 }
 
 TargetKillNumberLess::~TargetKillNumberLess()
@@ -170,15 +176,21 @@ TargetKillNumberLessThen::TargetKillNumberLessThen()
 
 TargetKillNumberLessThen::TargetKillNumberLessThen(int i)
 {
+	first = 2;
 	constraint = i;
 }
 
 int TargetKillNumberLessThen::fullfilled()
 {
 	constraint--;
-	if (constraint >= 0 )
-		return 1;
-	return -1;
+	if (constraint == -1 )
+		return first-1;
+	if (first)
+	{
+		first = 0;
+		return 1; //prave sa splnilo, prave jeden krat
+	}
+	return 0;
 }
 
 TargetKillNumberLessThen::~TargetKillNumberLessThen()
@@ -198,9 +210,9 @@ TargetKillNumberMore::TargetKillNumberMore(int i)
 int TargetKillNumberMore::fullfilled()
 {
 	constraint--;
-	if (constraint >=0)
-		return 0;
-	return 1;
+	if (constraint ==-1)
+		return 1; //nemoze sa to pokazit, nevraciame -1
+	return 0;
 }
 TargetKillNumberMore::~TargetKillNumberMore()
 {
@@ -219,9 +231,9 @@ TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i)
 int TargetKillNumberMoreThen::fullfilled()
 {
 	constraint--;
-	if (constraint >0)
-		return 0;
-	return 1;
+	if (constraint == 0)
+		return 1;
+	return 0;
 }
 TargetKillNumberMoreThen::~TargetKillNumberMoreThen()
 {
@@ -235,14 +247,25 @@ TargetKillNumberNot::TargetKillNumberNot()
 }
 TargetKillNumberNot::TargetKillNumberNot(int i)
 {
+	first = 1;
+	firstAfterZero =false;
 	constraint = i;
 }
 int TargetKillNumberNot::fullfilled()
 {
 	constraint--;
 	if (constraint == 0)
-		return 0;
-	return 1;
+	{
+		firstAfterZero = true;
+		return first-1; //ak si po prvy krat, vrat nulu, aby sa to neodcitalo, bo sa splnenie a nesplnenie rusi
+	}
+	if (firstAfterZero||first) //prvy krat od predchadzajuceho returnu
+	{
+		first = 0;
+		firstAfterZero =false;
+		return -1;
+	}
+	return 0;
 }
 TargetKillNumberNot::~TargetKillNumberNot()
 {

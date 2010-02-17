@@ -206,7 +206,13 @@ places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA
 		$$.push_back(Position(-1,$5)); 
 	}
 	;
-options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
+options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */	
+	{
+		if (program->actualRobot->dev_null == NULL)
+		{
+			program->actualRobot->variables();
+		}
+	}
 	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT 
 	{ 
 		program->set($2,$4); 

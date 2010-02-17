@@ -2,6 +2,8 @@
 #include "../h/robot.h"
 #include "../../add-ons/h/macros.h"
 
+#define MAX_EYE_ANGLE 90
+
 FirstSection::FirstSection()
 {
 	hitpoints = 100;
@@ -39,9 +41,13 @@ Robot::Robot(std::string s, GamePoints p)
 	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
 	c->composite(defined_types->find_type(TypeObject));
 	defined_types->add(c);
+	dev_null = NULL;
+}
 
+//TODO uistit sa, ze je ti nenaalokovane
+void Robot::variables()
+{
 	/*	Pridavanie defaultnych premennych	*/
-
 	dev_null = new Node("dev/null", defined_types->find_type(TypeUndefined), -1);
 
 	Node * n = defined.add("true",defined_types->find_type(TypeInteger));
@@ -65,12 +71,8 @@ Robot::Robot(std::string s, GamePoints p)
 	n->nested = Global;
 	core->memory.assign(n,0);
 	n->var[0]->objectValue = core->body;
-	
-	//pridana premenna pre viditelnost
-	n = defined.add("seen",c);
-	n->nested = Global;
-
 }
+
 Create_type * Robot::find_type(Type t)
 {
 	last_type = defined_types->find_type(t);	
@@ -331,36 +333,39 @@ void Robots::set(Options o, size_t value)
 {
 	switch(o) //TODO po zlinkovani
 	{
-		case OptionId:
-			std::cout << "setting id to" << value << std::endl;
-			break;
 		case OptionHealth:
 			std::cout << "setting health to:" << value << std::endl; 
-			break;
-		case OptionSeeX:	       
-			std::cout << "setting SEE x to:" << value << std::endl; 
-			break;
-		case OptionSeeY:
-			std::cout << "setting SEE y to:" << value << std::endl; 
+			actualRobot->core->body->hitpoints = value;
 			break;
 		case OptionSee:
-			std::cout << "setting SEE to:" << value << std::endl; 
+			std::cout << "setting eyes angle to:" << value << std::endl; 
+			actualRobot->core->body->eyeAngle = value % MAX_EYE_ANGLE;
 			break;
 		case OptionMemory: //NEFUNGUJE kvoli tomu, ze uz su pridane hodnoty ako NULL
 			actualRobot->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
+			actualRobot->variables();
 			break;
 		case OptionAttack:
 			std::cout << "setting Attack x to:" << value << std::endl; 
+			actualRobot->core->body->attack_ = value;
 			break;
 		case OptionDefense:
 			std::cout << "setting defense to " << value << std::endl; 
+			actualRobot->core->body->defense = value;
 			break;
 		case OptionMisilleAttack:
 			std::cout << "setting Missille attack to " << value << std::endl; 
+			actualRobot->mAttack = value;
 			break;
 		case OptionMisilleHealth:
 			std::cout << "setting Missille health to:" << value << std::endl; 
+			actualRobot->mHealth = value;
 			break;
+		case OptionStep:
+			std::cout << "setting step to:" << value << std::endl; 
+			actualRobot->core->body->default_steps = value;
+			break;
+
 	}
 }
 
@@ -523,7 +528,12 @@ Skin * Robots::addmSkin( std::string name)
 void Robot::setmSkin(Skin* mSkin)
 {
 	for(size_t i=0; i<missilles; i++)
-		core->body->addAmmo(new Missille(mSkin, core->body));
+	{
+		Missille *m = new Missille(mSkin, core->body);
+		m->attack_ = mAttack;
+		m->hitpoints = mHealth;
+		core->body->addAmmo(m);
+	}
 }
 
 void Robots::checkSkins()

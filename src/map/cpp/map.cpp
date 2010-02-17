@@ -24,11 +24,11 @@ bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne 
 	r2.y += o2->get_pos().y;
 
 	bool a =r1.overlaps(r2);
-	if (a)
-	{
-		std::cout <<" overlaplo!"<< std::endl;
-		TEST(r1.x << ":" << r2.x << std::endl << r1.width << ":" <<r2.width)
-	}
+//	if (a)
+//	{
+//		std::cout <<" overlaplo!"<< std::endl;
+//		TEST(r1.x << ":" << r2.x << std::endl << r1.width << ":" <<r2.width)
+//	}
 	return  (a);
 }
 void Map::setBoundary(size_t x, size_t y)
@@ -229,7 +229,7 @@ bool Map::performe()
 			map[i][j].objects.reset();
 
 	/* resolving he move action that happened */
-	for (size_t i = 0; i< boxesInRow; i++ )
+	for ( size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
 			Box &b = map[i][j];

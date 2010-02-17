@@ -74,6 +74,7 @@ class TargetKillNumber
 protected:
 	int constraint;
 public:
+	/* 0 = not chaged, 1 = cheche & fulfilled, -1 = begin to b unfuillfilled */
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	TargetKillNumber();
 	TargetKillNumber(int i);
@@ -82,7 +83,8 @@ public:
 
 class TargetKillNumberLess : public TargetKillNumber
 {
-	protected:
+protected:
+	int first;
 	int constraint;
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
@@ -91,7 +93,7 @@ public:
 	virtual ~TargetKillNumberLess();
 };
 
-class TargetKillNumberLessThen : public TargetKillNumber
+class TargetKillNumberLessThen : public TargetKillNumberLess
 {
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
@@ -115,8 +117,10 @@ public:
 	TargetKillNumberMoreThen(int i);
 	virtual ~TargetKillNumberMoreThen();
 };
-class TargetKillNumberNot : public TargetKillNumber
+class TargetKillNumberNot : public TargetKillNumberLess
 {
+protected:
+	bool firstAfterZero;
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	TargetKillNumberNot();

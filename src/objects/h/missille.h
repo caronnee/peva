@@ -11,8 +11,6 @@ public:
 	
 	Body * owner;
 	virtual bool is_blocking();
-	virtual void damage(Object* sender);
-	virtual void defense();
 	virtual void move();
 	virtual void dead();
 	Missille(Skin * s, Body *);

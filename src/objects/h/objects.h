@@ -55,6 +55,8 @@ class Object
 private:
 	Object * last_attack;
 
+protected:
+	bool intersection(Object *o, Position &p1, Position& coords);
 public:
 	enum Substantial
 	{
@@ -74,7 +76,7 @@ public:
 	Substantial substance;
 
 	/* object properties */
-	int defense, attack, hitpoints;
+	int defense, attack_, hitpoints;
 
 	/* item containing this object */
 	Item * item;
@@ -101,7 +103,7 @@ public:
 	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
-	virtual void move();//TODO musi byt virtual? nedaju sa misiles obis inak?
+	virtual void move();
 
 	/* what happens after finishing movement, should be virtual? *///FIXME
 	void endMove();
@@ -134,7 +136,7 @@ public:
 	Rectangle collisionSize() const;
 
 	/* sets object ast he oe responsible for object death */
-	virtual void killed();
+	virtual void killed(Object * o);
 
 	/*resolves item behaviour if it is hit */
 	virtual void hit(Object * o);

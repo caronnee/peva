@@ -10,11 +10,10 @@
 class Body : public Object
 {
 	int state_;
-	int default_steps; //settings?
 
 	std::vector<Target *> targets;
 	TargetKillNumber * toKill;
-	std::vector<size_t> killTarget;
+	std::vector<Object *> killTarget;
 
 	/* in which map is an object located */
 	Map * map;
@@ -22,17 +21,20 @@ public:
 	/* ammo, that can be shot */
 	List ammo;
 	size_t tasks;
+	size_t eyeAngle;
 public:
 	/* Constructor */
 	Body();
+	int default_steps; 
 
+	void killed(Object *o);
 	int state() const;
 	bool addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
 	void addVisit(TargetVisit * pos);
 	void addVisitSeq(std::vector<TargetVisit *> ids);
 	void addVisitSeq(std::vector<Position> pos);
-	void addKill(size_t id);
+	void addKill(Object * object);
 	virtual void move();
 	virtual void hitted(Object * attacker, Position p, int attack);
 	virtual void hit(Object * o);
