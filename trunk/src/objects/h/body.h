@@ -9,6 +9,7 @@
 
 class Body : public Object
 {
+	int state_;
 	int default_steps; //settings?
 
 	std::vector<Target *> targets;
@@ -25,6 +26,7 @@ public:
 	/* Constructor */
 	Body();
 
+	int state() const;
 	bool addKilled(unsigned l,Operation op, size_t number);
 	void addVisit(std::vector<Position> pos);
 	void addVisit(TargetVisit * pos);
@@ -32,7 +34,8 @@ public:
 	void addVisitSeq(std::vector<Position> pos);
 	void addKill(size_t id);
 	virtual void move();
-//	virtual void hitted(Object * attacker, Position p, int attack);
+	virtual void hitted(Object * attacker, Position p, int attack);
+	virtual void hit(Object * o);
 
 	/* method to add ammo, ammo can be every object, body including */
 	void addAmmo(Object * o);

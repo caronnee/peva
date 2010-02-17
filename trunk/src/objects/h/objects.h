@@ -103,6 +103,9 @@ public:
 	/* moves in the desired direction, not mentioning obstacles */
 	virtual void move();//TODO musi byt virtual? nedaju sa misiles obis inak?
 
+	/* what happens after finishing movement, should be virtual? *///FIXME
+	void endMove();
+
 	/* turn sin desired position */
 	int turn(int angle);
 
@@ -134,7 +137,7 @@ public:
 	virtual void killed();
 
 	/*resolves item behaviour if it is hit */
-	virtual void hit(Object *o);
+	virtual void hit(Object * o);
 
 	virtual void hitted(Object * o, Position direction, int attack);
 	/* checks if ther is a collision */

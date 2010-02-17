@@ -11,16 +11,16 @@ ROBOT qqq
 	MHEALTH	= 20	
         ID = 5	
 
-//	KILLED < 5
+	KILLED < 5
 //	VISIT_SEQ( START[3], START[2])
-	VISIT_SEQ( [300,60], [200,60])
-	VISIT( [200,60])
+//	VISIT_SEQ( [300,60], [200,60])
+//	VISIT( [200,60])
 
 //	integer i;
 
 	main() // komentar
 	{
 		turnR();
-		step(100);
+		step(3);
 	}
 }

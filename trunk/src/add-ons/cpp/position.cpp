@@ -1,4 +1,5 @@
 #include  "../h/position.h"
+#include  "../h/macros.h"
 
 Position::Position()
 {
@@ -70,10 +71,11 @@ Rectangle::Rectangle(int x_, int y_, int width_, int height_)
 }
 bool Rectangle::overlaps(Rectangle & rectangle) const
 {
-	return (!(x >= rectangle.x + rectangle.width) //metoda separating axis?
-		&& !(x + width <= rectangle.x)
-		&& !(y >= rectangle.y + rectangle.height)
-		&& !(y + height <= rectangle.y));
+	bool a =  (!(x >= rectangle.x + rectangle.width) && !(x + width <= rectangle.x) && !(y >= rectangle.y + rectangle.height) && !(y + height <= rectangle.y));
+	if (a)
+		return true;
+	return false;
+
 }
 std::ostream& operator<<(std::ostream& o, const Position p)
 {

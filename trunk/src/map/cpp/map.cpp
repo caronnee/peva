@@ -20,10 +20,16 @@ bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne 
 	r1.y += o1->movement.position_in_map.y;
 
 	Rectangle r2 = o2->collisionSize();
-	r2.x += o2->get_pos().x; //TODO vlastna fce overlaps
+	r2.x += o2->get_pos().x; 
 	r2.y += o2->get_pos().y;
 
-	return  (r1.overlaps(r2));
+	bool a =r1.overlaps(r2);
+	if (a)
+	{
+		std::cout <<" overlaplo!"<< std::endl;
+		TEST(r1.x << ":" << r2.x << std::endl << r1.width << ":" <<r2.width)
+	}
+	return  (a);
 }
 void Map::setBoundary(size_t x, size_t y)
 {
@@ -90,7 +96,6 @@ Map::Map(Position resol, std::string skinName)
 	{
 		a++;
 		p.x = 0;
-		std::cout << p <<std::endl;
 		Wall * w1 = new Wall(wskins[1]);
 		w1->setPosition(p,0);
 		p.x = resolution.x-wskins[1]->get_size().x;
@@ -98,7 +103,6 @@ Map::Map(Position resol, std::string skinName)
 		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
-		std::cout << p <<std::endl;
 	}
 }
 
@@ -117,8 +121,6 @@ void Map::addTarget(size_t x, size_t y)
 }
 void Map::redraw(Window * w ) 
 {
-	std::cout << "begin redrawing...";
-	usleep(100);
 	SDL_Rect r; //TODO nie takto natvrdlo
 	r.x = 0;
 	r.y = 0;
@@ -156,7 +158,6 @@ void Map::redraw(Window * w )
 				rects.x = o->get_pos().x - boundaries.x;
 				rects.y = o->get_pos().y - boundaries.y;
 				SDL_Rect r = o->get_rect();
-			//	std::cout << rects.x << " " << rects.y << rects.w << " " << rects.h << std::endl;
 				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
 				o = map[pos.x][pos.y].objects.read();
 			}
@@ -188,14 +189,15 @@ Object * Map::checkCollision(Object * o)
 	//TODO spravt nearest
 	Object * nearestColObject = NULL;
 	size_t nearest = MY_INFINITY;
+
 	//budem pocitat zatial s tym, ze rychlosti nebudu moc velike a nebude moc telies tan
-	for (int x = min(oldBox.x,newBox.x)-1; x<=max(newBox.x,oldBox.x); x++) //staci -1, bo ideme od minima
+	for (int x = min(oldBox.x,newBox.x)-1; x<=max(newBox.x,oldBox.x)+1; x++) //staci -1, bo ideme od minima
 	{
-		if (x == -1)
+		if ((x == -1)||(x>boxesInRow))
 			continue;
-		for (int y =min(oldBox.y,newBox.y)-1; y <= max(newBox.y,oldBox.y); y++)
+		for (int y =min(oldBox.y,newBox.y)-1; y <= max(newBox.y,oldBox.y)+1; y++)
 		{
-			if (y == -1)
+			if ((y == -1)||(y > boxesInColumn))
 				continue;
 			Box & b = map[x][y];
 			/* no need to reset */
@@ -217,7 +219,6 @@ Object * Map::checkCollision(Object * o)
 			}
 		}
 	}	
-	std::cout << "end checkCol"<<std::endl;
 	return nearestColObject;
 }
 
@@ -249,7 +250,6 @@ bool Map::performe()
 				usleep(50);
 			}
 		}
-		std::cout <<std::endl;
 	return false;
 }
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
@@ -284,6 +284,7 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
 	}
 }
+/* Only for moving object */
 void Map::resolveMove(Object * o)
 {
 	if (o->blocksMove()) 
