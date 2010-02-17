@@ -18,18 +18,24 @@ class BreakableWall:public Object //da sa nou pohnut
 {
 public:
 	BreakableWall(Skin * skin);
-//	virtual void damage(Object * sender);
+	void hit(Object * o);
+	void hitted(Object * o, Position p, int attack);
 };
 class PushableWall:public Object //da sa nou pohnut
 {
+	size_t defaultStep;
 public:
 	PushableWall(Skin * skin);
-//	virtual void damage(Object * sender);
+	void hit(Object *o);
+	void hitted(Object *o, Position o, int attack);
 };
-class TrapWall:public Object // opstey na zemi sa vystrkujuce:)
+class TrapWall:public Object // ostepy na zemi sa vystrkujuce:)
 {
+	bool invisible;
 public:
 	TrapWall(Skin * skin);
-//	virtual void damage(Object * sender);
+	bool is_blocking();
+	void hit(Object *o);
+	void hitted(Object *o, Position p, int attack);
 };
 #endif

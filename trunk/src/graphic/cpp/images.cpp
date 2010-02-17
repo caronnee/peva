@@ -72,7 +72,7 @@ Skin::Skin(std::string name, Skin::Type t)
 		return;
 	}
 	directory = directory+name + '/';
-	for (size_t i = 0; i<sizeLoaded; i++ )
+	for (int i = 0; i<sizeLoaded; i++ )
 	{
 		images[i] = IMG_Load((directory + load[i]).c_str());
 	}
@@ -153,7 +153,7 @@ WallSkin::WallSkin(std::string name, size_t wall)
 	for (size_t i =0; i< size; i++)
 	{
 		images[i] = IMG_Load((directory +toLoadMap[wall]).c_str());
-	}
+	}//TODO skonsolidovat
 	begin_in_picture.x = 0;
 	begin_in_picture.y = 0;
 	shift.x = images[0]->h;

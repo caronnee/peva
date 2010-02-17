@@ -28,16 +28,6 @@ bool Missille::is_blocking()
 {
 	return false;
 }
-void Missille::damage(Object * sender)
-{
-//	Position p = sender->position_in_map;
-//	this->hitpoints -= sender->attack;
-}
-void Missille::defense() //zkladne sa a odide, odkial prisla
-{
-	movement.direction.x *=-1;
-	movement.direction.y *=-1; //TODO to sa vrati odkial prisla
-}
 
 void Missille::dead()
 {

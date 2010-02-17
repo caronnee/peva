@@ -30,10 +30,8 @@ ATTACK						{*l = line; lv->op = OptionAttack; return TOKEN_OPTION; }
 DEFENSE						{*l = line; lv->op = OptionDefense;return TOKEN_OPTION; }
 MATTACK 					{*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
 MHEALTH						{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
-SEE_WIDTH					{*l = line; lv->op = OptionSeeX;return TOKEN_OPTION; }
-SEE_HEIGHT					{*l = line; lv->op = OptionSeeY;return TOKEN_OPTION; }
 SEE						{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
-ID						{*l = line; lv->op = OptionId; return TOKEN_OPTION;}
+STEP						{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
 
 VISIT						{*l = line; return TOKEN_VISIT; }
 VISIT_SEQ					{*l = line; return TOKEN_VISIT_SEQUENCE; }

@@ -123,22 +123,23 @@ public:
 	void setSkin(Skin * a);
 	void setmSkin(Skin * a);
 	bool skined();
+
+	void variables();
 	Body * getBody();
+	size_t mAttack,mHealth;
 	~Robot();
 };
 
 enum Options
 {
 	OptionHealth,
-	OptionSeeX,
-	OptionSeeY,
 	OptionSee,
 	OptionMemory,
 	OptionAttack,
+	OptionStep,
 	OptionDefense,
 	OptionMisilleAttack,
 	OptionMisilleHealth,
-	OptionId
 };
 
 struct ResolveName

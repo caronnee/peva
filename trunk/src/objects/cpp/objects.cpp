@@ -88,6 +88,7 @@ void Object::move()
 void Object::endMove()
 {
 	skinWork->removeState();
+	owner = this;
 }
 bool Object::is_blocking()
 {
@@ -135,10 +136,10 @@ int Object::turn(int angle)
 	movement.direction.y = -cos(movement.angle*PI/180)*MAX_PX_PER_SECOND;
 	return 0;
 }
-void Object::killed()
+void Object::killed(Object * o)
 {
-	if (owner!=NULL)
-		owner->killed();
+	if (owner!=this)
+		owner->killed(o);
 	numberOfKilled++;
 }
 Rectangle Object::collisionSize() const
@@ -149,13 +150,33 @@ void Object::hitted(Object * o, Position p, int attack)
 {
 	TEST("HITTED")
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionHit);
-	movement.steps=0;
+	owner = o;
 	//TODO definovat u podriadenych
 }
 void Object::hit(Object * attacked)
 {
 	TEST("HIT")
-	attacked->hitted (this, movement.direction, attack);
+	attacked->hitted (this, movement.direction, attack_);
+	Position p(1,1);
+	Position xy;
+	//zavisi od direction, v akom sa pohyboval
+	//zisti najmensi prienik
+	intersection(attacked, p, xy);
+	int minum =(xy.y < xy.x)? xy.y:xy.x;
+	if ((xy.y == minum)&&(xy.y != MY_INFINITY))
+	{
+		movement.direction.y *=-1;
+		movement.position_in_map.y += xy.y * p.y;
+	}
+	if ((xy.x=minum)&&(xy.x != MY_INFINITY))
+	{
+		movement.direction.x *=-1;
+		movement.position_in_map.x += xy.x * p.x;
+	}
+}
+
+bool Object::intersection(Object * attacked,Position &p, Position &coords)
+{
 	Rectangle r1 = collisionSize();
 	r1.x += movement.position_in_map.x;
 	r1.y += movement.position_in_map.y;
@@ -164,44 +185,27 @@ void Object::hit(Object * attacked)
 	r2.x += attacked->movement.position_in_map.x;
 	r2.y += attacked->movement.position_in_map.y;
 
-	Position p(1,1);
-	//zavisi od direction, v akom sa pohyboval
-	//zisti najmensi prienik
-	int minX;
 	if (movement.direction.x > 0) //hybe sa smerom doprava
 	{
-		minX = r1.x + r1.width - r2.x;
+		coords.x = r1.x + r1.width - r2.x;
 		p.x = -1;
 	}
 	else 
-		minX = r2.x + r2.width - r1.x;
-	if (minX < 0)
-		minX = MY_INFINITY;
-	int minY;
+		coords.x = r2.x + r2.width - r1.x;
+	if (coords.x < 0)
+		coords.x = MY_INFINITY;
 	if ( movement.direction.y > 0) //hybe sa smerom dolu
 	{
-		minY = r1.y + r1.height - r2.y;
+		coords.y = r1.y + r1.height - r2.y;
 		p.y=-1;
 	}
 	else 
-		minY = r2.y +r2.height - r1.y;
-	if (minY < 0)
-		minY = MY_INFINITY;
-
-	int minum =(minY < minX)? minY:minX;
-	if ((minY == minum)&&(minY != MY_INFINITY))
-	{
-		TEST( "hitted minimum" << minY);
-		movement.direction.y *=-1;
-		movement.position_in_map.y += minY * p.y;
-	}
-	if ((minX=minum)&&(minX != MY_INFINITY))
-	{
-		TEST( "hitted minX" << minY);
-		movement.direction.x *=-1;
-		movement.position_in_map.x += minX * p.x;
-	}
+		coords.y = r2.y +r2.height - r1.y;
+	if (coords.y < 0)
+		coords.y = MY_INFINITY;
+	return true; //FIXME
 }
+
 bool Object::isMoving(){
 	return movement.steps;
 }

@@ -54,7 +54,7 @@ bool Body::addKilled(unsigned i,Operation op, size_t number)
 	}
 	return true;
 }
-void Body::addKill(size_t id)
+void Body::addKill(Object * id)
 {
 	tasks++;
 	killTarget.push_back(id);
@@ -193,11 +193,29 @@ int Body::shoot(int angle)
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 	return 0;
 }
+void Body::killed(Object * o)
+{
+	for (size_t i = 0; i< killTarget.size(); i++)
+	{
+		if (killTarget[i] == o)
+		{
+			killTarget[i] = killTarget.back();
+			killTarget.pop_back();
+			break;
+		}
+	}
+	if (toKill!=NULL)
+		tasks -= toKill->fullfilled();
+}
 void Body::hitted(Object * attacker, Position p, int attack)
 {
 	std::cout << "body hitted";
-	state_ = movement.steps;
+	state_ = movement.steps; //kolko mu este chybalo spravit
 	Object::hitted(attacker,p,attack);
+	int hpLost = (attack > defense) ? attack-defense:1;
+	hitpoints -= hpLost;
+	if (hitpoints <= 0)
+		attacker->killed(this);
 }
 void Body::hit(Object * o)
 {

@@ -112,7 +112,7 @@ Play::Play(Window *w_)
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
 
 	}
-	init( 400, 200 );//TODO zmenit na mapy, ktore uzivatel zada
+	init( 500, 500 );//TODO zmenit na mapy, ktore uzivatel zada
 	//mapa o velkosti 10x10
 /*	for(int i = 0; i<8; i++)
 	{
@@ -213,16 +213,32 @@ void Play::process()
 						break;
 					}
 					int err = yyparse(&robots);
+					
 					robots.checkSkins();
+					bool bad = false;
 					for ( size_t i =0; i< robots.robots.size(); i++)
+					{
+						if (robots.robots[i]->errors)
 						{
-							robots.robots[i]->getBody()->place(m,Position (350,100));
-							robots.robots[i]->save_to_xml();
-							m->add(robots.robots[i]->getBody());
+							bad = true;
+							break;
 						}
+					}
+					if(bad)
+					{
+						TEST("spatny vstup!")
+						fclose(yyin);	
+						my_destroy();
+						break;
+					}
+					for ( size_t i =0; i< robots.robots.size(); i++)
+					{
+						robots.robots[i]->getBody()->place(m,Position (350,100));
+						robots.robots[i]->save_to_xml();
+						m->add(robots.robots[i]->getBody());
+					}
 					fclose(yyin);	
 					my_destroy();
-					std::cout << robots.robots[0]->core->body->show();
 					break;
 				}
 				case SDLK_ESCAPE:
