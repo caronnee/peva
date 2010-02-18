@@ -11,7 +11,7 @@ class Wall:public Object //nic specialneho, proste sten a s nejkou odolnostou
 public:
 	Wall();
 	Wall(Skin * skin);
-	//virtual void damage(Object * sender); 
+	void hitted(Object * attacker, Position p, int attack); 
 };
 
 class BreakableWall:public Object //da sa nou pohnut

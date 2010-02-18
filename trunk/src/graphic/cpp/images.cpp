@@ -10,7 +10,7 @@
 
 namespace bf = boost::filesystem;
 
-std::string toLoadBot[] = { "default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png" };
+std::string toLoadBot[] = { "default.png", "sleep.png", "walk.png", "attack.png", "hit.png", "dead.png", "deadBody.png" };
 std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
@@ -220,7 +220,8 @@ void ImageSkinWork::switch_state(States index, Actions action)
 		state.push(index);
 		index = s;
 	}
-	state.push(index);
+	if (state.top()!=index)
+		state.push(index); //neocitnu sa dve stavy vedla seba, ani perman.
 }
 bool ImageSkinWork::processing()
 {

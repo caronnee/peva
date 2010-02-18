@@ -112,39 +112,7 @@ Play::Play(Window *w_)
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
 
 	}
-	init( 500, 500 );//TODO zmenit na mapy, ktore uzivatel zada
-	//mapa o velkosti 10x10
-/*	for(int i = 0; i<8; i++)
-	{
-		switch (rand()%3)
-		{
-			case 0:
-				objects.push_back(new SolidWall(&t));
-				break;
-			case 1:
-				objects.push_back(new TrapWall(&t));
-				break;
-			case 2:
-				objects.push_back(new PushableWall(&t));
-				break;
-	//		case 3:
-	//			objects.push_back(new Missille(Position(rand()%5, rand()%8)));
-				break;
-		}
-	}
-	//pozicia v pixeloch
-	for ( int i = 0; i< objects.size(); i++)
-	{
-		objects[i]->position_in_map.x = rand()%600;
-		objects[i]->position_in_map.y = rand()%480;
-	}
-	//detect collisions
-	for (int i =0; i< objects.size(); i++)
-		for (int j = i + i; j< objects.size(); j++)
-		{
-			if (object[i].x)
-		}
-		*/
+	init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada
 }
 Play::~Play()throw(){} //uz predtym sa zavola clear, takze to netreba
 
@@ -190,8 +158,10 @@ void Play::process()
 		TEST("Skoncili sme")
 		return;
 	}
+	//TEST("OK!")
 	done = m->performe();
 	redraw();
+	//TEST("OK!2")
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
 	{
@@ -213,27 +183,32 @@ void Play::process()
 						break;
 					}
 					int err = yyparse(&robots);
-					
 					robots.checkSkins();
 					bool bad = false;
 					for ( size_t i =0; i< robots.robots.size(); i++)
 					{
+
 						if (robots.robots[i]->errors)
 						{
 							bad = true;
 							break;
 						}
 					}
-					if(bad)
+					if(bad|err)
 					{
-						TEST("spatny vstup!")
 						fclose(yyin);	
 						my_destroy();
+						TEST("spatny vstup!")
+						while(!robots.robots.empty())
+						{
+							delete robots.robots.back();
+							robots.robots.pop_back();
+						}
 						break;
 					}
 					for ( size_t i =0; i< robots.robots.size(); i++)
 					{
-						robots.robots[i]->getBody()->place(m,Position (350,100));
+						robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
 						robots.robots[i]->save_to_xml();
 						m->add(robots.robots[i]->getBody());
 					}

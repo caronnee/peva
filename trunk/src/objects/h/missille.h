@@ -7,12 +7,16 @@
 class Missille : public Object
 {
 	Uint32 milisec;
+	bool nowhereToRun;
 public:
 	
 	Body * owner;
 	virtual bool is_blocking();
 	virtual void move();
 	virtual void dead();
+	virtual void bounce(Object * o);
+	virtual void hitted(Object *o, Position dir, int attack);
+	virtual void hit(Object *o);
 	Missille(Skin * s, Body *);
 	Missille(Position p, Position dir, Skin*s);
 	~Missille();

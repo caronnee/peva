@@ -112,6 +112,16 @@ TargetVisitSequence::~TargetVisitSequence()
 	*/
 }
 
+TargetKill::TargetKill()
+{}
+
+int TargetKill::done()
+{
+	if (constraint == 0)
+		return 0;//uz splnene
+	return 1;
+}
+
 TargetKillNumber::TargetKillNumber()
 {
 	constraint = 0;
@@ -148,7 +158,12 @@ TargetKillNumberLess::TargetKillNumberLess(int i)
 	first = 2;
 	constraint = i;
 }
-
+int TargetKillNumberLess::done()
+{
+	if (constraint > 0)
+		return 0;
+	return 1;
+}
 int TargetKillNumberLess::fullfilled()
 {
 	constraint--;
@@ -180,6 +195,12 @@ TargetKillNumberLessThen::TargetKillNumberLessThen(int i)
 	constraint = i;
 }
 
+int TargetKillNumberLessThen::done()
+{
+	if (constraint >=0)
+		return 0;
+	return 1;
+}
 int TargetKillNumberLessThen::fullfilled()
 {
 	constraint--;
@@ -207,6 +228,12 @@ TargetKillNumberMore::TargetKillNumberMore(int i)
 {
 	constraint = i;
 }
+int TargetKillNumberMore::done()
+{
+	if (constraint < 0)
+		return 0;
+	return 1;
+}
 int TargetKillNumberMore::fullfilled()
 {
 	constraint--;
@@ -214,6 +241,7 @@ int TargetKillNumberMore::fullfilled()
 		return 1; //nemoze sa to pokazit, nevraciame -1
 	return 0;
 }
+
 TargetKillNumberMore::~TargetKillNumberMore()
 {
 	/*
@@ -227,6 +255,12 @@ TargetKillNumberMoreThen::TargetKillNumberMoreThen()
 TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i)
 {
 	constraint = i;
+}
+int TargetKillNumberMoreThen::done()
+{
+	if (constraint <= 0)
+		return 0;
+	return 1;
 }
 int TargetKillNumberMoreThen::fullfilled()
 {
@@ -250,6 +284,12 @@ TargetKillNumberNot::TargetKillNumberNot(int i)
 	first = 1;
 	firstAfterZero =false;
 	constraint = i;
+}
+int TargetKillNumberNot::done()
+{
+	if (constraint == 0)
+		return 1;
+	return 0;
 }
 int TargetKillNumberNot::fullfilled()
 {

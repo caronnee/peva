@@ -11,7 +11,6 @@ Object::Object(Skin * s)
 	last_attack = NULL;
 	substance = Solid;
 	owner = NULL;
-	assistance = this;
 	item = new Item(this);
 	hitpoints = 100; //TODO zmenit podla requestov
 	/* item containing this object */
@@ -57,9 +56,9 @@ bool Object::alive()
 }
 void Object::dead()
 {
-	/* set skin to die
-	skinWork->removeState();
-	*/
+	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionDeadStill);
+	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionDead);
+	movement.steps = 0;
 }
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie?
@@ -151,16 +150,11 @@ void Object::hitted(Object * o, Position p, int attack)
 	TEST("HITTED")
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionHit);
 	owner = o;
-	//TODO definovat u podriadenych
 }
-void Object::hit(Object * attacked)
+void Object::bounce(Object * attacked) //od koho s ma odrazit
 {
-	TEST("HIT")
-	attacked->hitted (this, movement.direction, attack_);
 	Position p(1,1);
 	Position xy;
-	//zavisi od direction, v akom sa pohyboval
-	//zisti najmensi prienik
 	intersection(attacked, p, xy);
 	int minum =(xy.y < xy.x)? xy.y:xy.x;
 	if ((xy.y == minum)&&(xy.y != MY_INFINITY))
@@ -173,6 +167,11 @@ void Object::hit(Object * attacked)
 		movement.direction.x *=-1;
 		movement.position_in_map.x += xy.x * p.x;
 	}
+}
+void Object::hit(Object * attacked)
+{
+	TEST("HIT")
+	attacked->hitted (this, movement.direction, attack_);
 }
 
 bool Object::intersection(Object * attacked,Position &p, Position &coords)

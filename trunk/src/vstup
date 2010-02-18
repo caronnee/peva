@@ -1,23 +1,36 @@
-//blbne to pri unknown identifir
 ROBOT qqq
 {
 	HEALTH = 100
-	ATTACK = 33			
+	ATTACK = 7			
 	SEE = 56
         DEFENSE	= 22		
 	MATTACK = 50	
 	MHEALTH	= 20	
 
-	KILLED < 5
+	KILLED == 5
 //	VISIT_SEQ( START[3], START[2])
 //	VISIT_SEQ( [300,60], [200,60])
-//	VISIT( [200,60])
+//	VISIT( [0,0])
 
 //	integer i;
 
-	main() // komentar
+	main()
+	{
+		while(shoot(20))
+		{
+			turnR();
+		}
+		turn(15);
+		step(10);
+	}
+}
+ROBOT a
+{
+	HEALTH = 4
+	MATTACK = 10
+	VISIT( [0,0] )
+	main() 
 	{
 		turnR();
-		step(3);
 	}
 }

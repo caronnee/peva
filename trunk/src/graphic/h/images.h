@@ -32,6 +32,7 @@ enum Actions
 	ActionAttack,
 	ActionHit,
 	ActionDead,
+	ActionDeadStill,
 	NumberOfActions
 };
 

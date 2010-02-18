@@ -141,13 +141,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %%
 
 program: program robot 
-	{ 
-		program->robots.push_back(program->actualRobot); 
-	}
 	|robot 
-	{ 
-		program->robots.push_back(program->actualRobot);
-	}
 	;
 define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER 
 	{ 	

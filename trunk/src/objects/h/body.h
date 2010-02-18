@@ -27,6 +27,8 @@ public:
 	Body();
 	int default_steps; 
 
+	void dead();
+	void bounce(Object *o);
 	void killed(Object *o);
 	int state() const;
 	bool addKilled(unsigned l,Operation op, size_t number);

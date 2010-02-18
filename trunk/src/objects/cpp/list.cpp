@@ -48,11 +48,13 @@ void List::clear()
 	data->previous = data;
 	size_ = 1;
 }
-void List::remove(Item * item)
+void List::remove(Item * item)// REMOVE HEAD!
 {
+	if (!item->next || !item->previous)
+		return; //neni z coho odoberat
 	item->next->previous = 	item->previous;
 	item->previous->next = item->next;
-	data = item->next;
+	data = item->next;//jo, je to tu dolezite:) Pouzivam to v mape
 	size_--;
 }
 bool List::remove(Object * o)

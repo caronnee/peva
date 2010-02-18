@@ -205,7 +205,7 @@ Object * Map::checkCollision(Object * o)
 			{
 				//TODO dat to do samostatnej funkcie
 				Object * objectInBox = b.objects.read();			
-				if (( objectInBox == NULL ) || ( o == objectInBox ))
+				if (( objectInBox == NULL ) || ( o == objectInBox )|| (!objectInBox->alive()))
 					continue;
 				if (!((o->substance + objectInBox->substance) 
 					&& (collideWith(o, objectInBox))))
@@ -271,7 +271,7 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
-		TEST("Pozicia je y mensia ako 0");
+		TEST("Pozicia je y mensia ako 0" << o->movement.position_in_map);
 	//	o->movement.direction.y *= -1;
 //		o->movement.position_in_map.y *= -1;
 		o->movement.position_in_map.y = 0; //odrazene
