@@ -13,7 +13,10 @@ Body::Body() : Object(NULL)
 	movement.angle = 0;
 	toKill = NULL;
 }
-
+void Body::bounce(Object * from)
+{
+	//no bouncing
+}
 void Body::addAmmo( Object * o)
 {
 	ammo.add(o->item);
@@ -30,7 +33,6 @@ bool Body::addKilled(unsigned i,Operation op, size_t number)
 	//	error(i,WarningKillAlreadyDefined);
 		return false;
 	}
-	tasks++;
 	switch (op)
 	{
 		case OperationNotEqual:
@@ -52,6 +54,7 @@ bool Body::addKilled(unsigned i,Operation op, size_t number)
 			toKill = new TargetKillNumber(number);
 			break;	
 	}
+	tasks += toKill->done();
 	return true;
 }
 void Body::addKill(Object * id)
@@ -96,7 +99,7 @@ void Body::addVisitSeq(std::vector<TargetVisit *> ids)
 }
 void Body::addAmmo( Item * i)
 {
-	ammo.add(i); //owner jw spravny
+	ammo.add(i); //owner je spravny
 }
 void Body::addVisit(std::vector<Position> positions)
 {
@@ -189,9 +192,10 @@ int Body::shoot(int angle)
 	ammo.data->value->movement.position_in_map = mP;
 	ammo.data->value->movement.realX = 0;
 	ammo.data->value->movement.realY = 0;
+	ammo.data->value->owner = this;
 	o->turn(angle);
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
-	return 0;
+	return 1;
 }
 void Body::killed(Object * o)
 {
@@ -209,17 +213,36 @@ void Body::killed(Object * o)
 }
 void Body::hitted(Object * attacker, Position p, int attack)
 {
-	std::cout << "body hitted";
 	state_ = movement.steps; //kolko mu este chybalo spravit
 	Object::hitted(attacker,p,attack);
 	int hpLost = (attack > defense) ? attack-defense:1;
 	hitpoints -= hpLost;
 	if (hitpoints <= 0)
+	{
 		attacker->killed(this);
+		Object::dead();// prasaaaaaarna
+		substance = Miss;
+	}
+	TEST("Aktualne hitpoints" << hitpoints)
+}
+void Body::dead()
+{
+	map->add(this);
 }
 void Body::hit(Object * o)
 {
 	Object::hit(o);
+	Position p(1,1), xy;
+	intersection(o, p, xy);
+	int minum =(xy.y < xy.x)? xy.y:xy.x;
+	if ((xy.y == minum)&&(xy.y != MY_INFINITY))
+	{
+		movement.position_in_map.y += xy.y * p.y;
+	}
+	if ((xy.x=minum)&&(xy.x != MY_INFINITY))
+	{
+		movement.position_in_map.x += xy.x * p.x;
+	}
 }
 Body::~Body()
 {

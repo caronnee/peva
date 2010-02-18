@@ -1,4 +1,5 @@
 #include "../h/missille.h"
+#include "../../add-ons/h/macros.h"
 
 Missille::Missille(Skin*s, Body * body):Object(s)
 {
@@ -12,6 +13,7 @@ Missille::Missille(Skin*s, Body * body):Object(s)
 }
 Missille::Missille(Position P, Position dir, Skin* s):Object(s)
 {
+	nowhereToRun = false;
 	substance = Miss;
 	owner = NULL;
 	movement.direction = dir;
@@ -24,6 +26,11 @@ Missille::Missille(Position P, Position dir, Skin* s):Object(s)
 	name = "Missille";
 	skinWork = new ImageSkinWork(s);
 }
+void Missille::bounce(Object * o)
+{
+	Object::bounce(o);
+	nowhereToRun = false;
+}
 bool Missille::is_blocking()
 {
 	return false;
@@ -32,6 +39,21 @@ bool Missille::is_blocking()
 void Missille::dead()
 {
 	owner->addAmmo(this->item);
+}
+void Missille::hit(Object * o)
+{
+	nowhereToRun = true; //ak sa nezavola bounce, tato hodnota
+	o->hitted(this, movement.direction, attack_);
+	if (nowhereToRun)
+	{
+		hitpoints =0;
+		movement.steps = 0; //zabili sme, mapa to ostravi a priradi ownerovi
+	}
+}
+void Missille::hitted(Object * o, Position d, int attack)
+{
+	TEST("zasiahnuta strela")
+	Object::hitted(o,d,attack);
 }
 void Missille::move()
 {

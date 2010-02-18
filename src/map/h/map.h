@@ -108,7 +108,7 @@ public:
 	/* draws all visible place */
 	void redraw(Window * window); //ked ma vykreslit vsetko
 
-	/* add an object to the map, not walls */
+	/* add an object to the map */
 	void add(Object * o); 
 };
 #endif

@@ -11,6 +11,12 @@ Wall::Wall(Skin * s):Object(s)
 	movement.steps = 0;
 	skinWork =  new ImageSkinWork(s);
 }
+void Wall::hitted(Object * attacker, Position p, int attack)
+{
+	attacker->bounce(this);
+	Object::hitted(attacker,p, attack);
+} //
+
 BreakableWall::BreakableWall( Skin * s):Object(s)
 {
 	hitpoints = 50;

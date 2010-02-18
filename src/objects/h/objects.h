@@ -15,10 +15,6 @@ struct Type_bot
 	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
 };
 
-struct Type_missille
-{
-	int attack, hitpoints; //a tak podobne, TODO!
-};
 struct ObjectMovement
 {
 	/* real x coord*/
@@ -60,9 +56,8 @@ protected:
 public:
 	enum Substantial
 	{
-		Miss = 1,
-		Solid = 3, //solid + miss = solid
-		BodyIntract = !0
+		Miss = 0,
+		Solid = 1 //solid + miss = solid
 	};
 	/* name of the object, for debugging purposes */
 	std::string name;
@@ -78,11 +73,11 @@ public:
 	/* object properties */
 	int defense, attack_, hitpoints;
 
+	/* from which object should attacker bounce */
+	virtual void bounce(Object * from);
+
 	/* item containing this object */
 	Item * item;
-
-	/* who cause the object to live, animate etc. */
-	Object * assistance;
 
 	/* who cause the object to live, animate etc. */
 	Object * owner;

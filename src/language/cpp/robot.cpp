@@ -20,7 +20,7 @@ SecondSection::SecondSection()
 
 Robot::Robot(std::string s, GamePoints p)
 {
-	missilles = 10;
+	missilles = 3;
 	/* robot data */
 	name = s;
 	nested = "";
@@ -284,10 +284,11 @@ void Robot::execute()
 }
 bool Robot::action(bool & conditions)
 {
-	std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
+	//std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
 	conditions = core->body->tasks == 0;
-	if (core->body->isMoving())
-		return core->body->alive();
+	bool b = core->body->alive();
+	if (core->body->isMoving()||!b)
+		return b;
 	while (scheduller->ready())
 	{
 		scheduller->penalize(instructions[core->PC]); //kvoli zmena PC
@@ -538,6 +539,9 @@ void Robot::setmSkin(Skin* mSkin)
 
 void Robots::checkSkins()
 {
+	if ((actualRobot!=NULL)&&
+		((robots.empty())||(actualRobot!= robots.back())))
+		robots.push_back(actualRobot);
 	for (size_t i =0; i< robots.size(); i++)
 	{
 		if (!robots[i]->skined())
@@ -576,6 +580,6 @@ Robots::~Robots()
 Robot::Robot()
 {
 	name = "Robot";
-	missilles = 10; //TODO konfigrovatelne
+	missilles = 3; //TODO konfigrovatelne
 }
 
