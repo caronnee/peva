@@ -4,10 +4,11 @@
 %{
 #include <iostream>
 #include <queue>
-#include "lval.h"
-#include "robot.h"
-#include "parser_functions.h"
-#include "hflex.h"
+#include "../h/lval.h"
+#include "../h/robot.h"
+#include "../h/parser_functions.h"
+#include "../h/hflex.h"
+#include "../../add-ons/h/macros.h"
 
 #define YYSTYPE Lval 
 #define YYLTYPE unsigned
@@ -61,6 +62,8 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_VISIT
 %token TOKEN_VISIT_SEQUENCE
 %token TOKEN_KILLED
+%token TOKEN_SKIN
+%token TOKEN_KILL
 %token TOKEN_START
 
 /* group tokens */
@@ -80,6 +83,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<type> return_type
 
 %type<ranges> ranges
+%type<ranges> integers
 %type<ident> function_header
 
 %type<entries> parameters_empty
@@ -137,13 +141,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %%
 
 program: program robot 
-	{ 
-		program->robots.push_back(program->actualRobot); 
-	}
 	|robot 
-	{ 
-		program->robots.push_back(program->actualRobot);
-	}
 	;
 define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER 
 	{ 	
@@ -158,9 +156,28 @@ robot:  define_bot TOKEN_BEGIN options targets global_variables declare_function
 	}
 	;
 targets: /* default target */
-	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->actualRobot->addKilled(@2,$3,$4);}
-	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->actualRobot->addVisit($4);}
-	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->addVisitSeq($4);}
+	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->actualRobot->core->body->addKilled(@2,$3,$4);}
+	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->actualRobot->core->body->addVisit($4);}
+	|targets TOKEN_VISIT TOKEN_LPAR integers TOKEN_RPAR 
+	{ 
+		for (size_t i = 0; i< $4.size(); i++)
+		{
+			TargetVisit * t = new TargetVisit($4[i]);
+			program->resolveTargets.push_back(t);
+			program->actualRobot->core->body->addVisit(t);
+		}
+	}
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->actualRobot->core->body->addVisitSeq($4);}
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR integers TOKEN_RPAR 
+	{
+		std::vector<TargetVisit *> t;
+		for (size_t i =0; i<$4.size(); i++)
+		{
+			t.push_back(new TargetVisit($4[i]));
+			program->resolveTargets.push_back(t.back());
+		}
+		program->actualRobot->core->body->addVisitSeq(t);
+	}
 	;
 places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA 
 	{ 
@@ -183,10 +200,25 @@ places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA
 		$$.push_back(Position(-1,$5)); 
 	}
 	;
-options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
+options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */	
+	{
+		if (program->actualRobot->dev_null == NULL)
+		{
+			program->actualRobot->variables();
+		}
+	}
 	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT 
 	{ 
 		program->set($2,$4); 
+	}
+	| options TOKEN_KILL TOKEN_IDENTIFIER { 
+		ResolveName n;n.robot = program->actualRobot;
+		n.name = $3;
+		program->resolveName.push_back(n);}
+	| options TOKEN_SKIN TOKEN_IDENTIFIER 
+	{	
+		program->actualRobot->setSkin(program->addSkin($3)); 
+		program->actualRobot->setSkin(program->addmSkin($3));
 	}
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
@@ -210,10 +242,9 @@ simple_type: TOKEN_VAR_REAL { $$ = program->actualRobot->find_type(TypeReal); } 
 complex_type: simple_type ranges 
 		{ 
 			Create_type * t = $1; 
-			while(!$2.empty())
+			for(size_t i = 0 ; i< $2.size(); i++)
 			{
-				t = program->actualRobot->find_array_type($2.front(),t);
-				$2.pop_front();
+				t = program->actualRobot->find_array_type($2[i],t);
 			}
 			Create_type y= *t;
 			while (y.data_type!=NULL)
@@ -226,6 +257,9 @@ complex_type: simple_type ranges
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 		|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
 		;
+integers: TOKEN_UINT { $$.clear(); $$.push_back($1); }
+	|integers TOKEN_COMMA TOKEN_UINT {$$.push_back($3); }
+	;	
 names_:	TOKEN_IDENTIFIER 
 		{ 
 			$$.clear();
@@ -253,7 +287,7 @@ names_:	TOKEN_IDENTIFIER
 			Node *n = program->actualRobot->add($1);
 			$$.push_back(new InstructionCreate(n));
 			$$.push_back(new InstructionLoadLocal(n));
-			for (size_t i =1; i < $4.level; i++)
+			for (int i =1; i < $4.level; i++)
 			{
 				$$.push_back(new InstructionDuplicate());
 			}
@@ -280,7 +314,7 @@ values:		expression {
 			}
 			if ($1.output.back()!=*program->actualRobot->active_type.top())
 			{
-				std::cout <<"nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type; getc(stdin);
+				TEST("nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type);
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
 			else
@@ -314,7 +348,7 @@ values:		expression {
 			$$.ins.clear();	
 			$$.ins.push_back(new InstructionLoad(0)); //todo do actual type pridat, ze sme o type dalej, array dalej atd
 			$$.ins.push_back(new InstructionLoad());
-			for (size_t i = 1; i < $2.level; i++)
+			for (int i = 1; i < $2.level; i++)
 			{
 				$$.ins.push_back(new InstructionDuplicate());
 			}
@@ -327,7 +361,7 @@ values:		expression {
 			$$ = $1; 
 			$$.ins.push_back(new InstructionLoad($1.level));
 			$$.ins.push_back(new InstructionLoad());
-			for (size_t i = 1; i < $4.level; i++)
+			for (int i = 1; i < $4.level; i++)
 			{
 				$$.ins.push_back(new InstructionDuplicate());
 			}
@@ -585,7 +619,7 @@ assign: variable TOKEN_ASSIGN expression
 		}
 		else if ($1.output.back()!=$3.output.back())
 		{
-			std::cout << "grrr" ; getc(stdin);
+			TEST("grrr") 
 			program->actualRobot->error(@2, Robot::ErrorConversionImpossible);
 		}
 		$$ = join_instructions($1.ins, $3.ins); 
@@ -742,7 +776,7 @@ call_parameters: expression
 			$3.ins.push_back(NULL); //zalozka, po kolkatich instrukciach mi konci output, TODO zmenit
 			$$.ins = join_instructions($1.ins,$3.ins);
 			$$.output = $1.output;
-			for (int i =0; i< $3.output.size();i++) 
+			for (size_t i =0; i< $3.output.size();i++) 
 			{
 				$$.output.push_back($3.output[i]);
 				$$.temp.push_back($3.temp[i]);
@@ -824,17 +858,18 @@ variable: TOKEN_IDENTIFIER
 			$$ = ident_load(@1,program->actualRobot, $1);
 			$$.temp.push_back(false);
 		}
-		|call_fce { $$ = $1;} //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		|call_fce { $$ = $1; //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		}
 		|variable TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			
-			for ( int i =0; i<$$.output.back().nested_vars.size(); i++)
+			for ( size_t i =0; i<$$.output.back().nested_vars.size(); i++)
 				if ($$.output.back().nested_vars[i].name == $3)
 				{ 
 					Create_type t = *$$.output.back().nested_vars[i].type; 
 					$$.output.pop_back();
 					$$.output.push_back(t);
-					$$.ins.push_back(new InstructionLoad(i));
+					$$.ins.push_back(new InstructionLoad((int)i));
 					$$.ins.push_back(new InstructionLoad());
 					break;
 				}
@@ -884,7 +919,7 @@ exps: expression {$$ = $1;$$.ins.push_back(NULL);} //Hack
 			$1.ins.push_back(NULL);
 			$$.ins = join_instructions($1.ins, $3.ins);
 			$$.output = $1.output;
-			for (int i =0; i<$1.output.size(); i++)
+			for (size_t i =0; i<$1.output.size(); i++)
 				$$.output.push_back($1.output[i]); //aj tak tu bude len jeden output, TODO
 		}
 		;

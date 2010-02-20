@@ -1,6 +1,0 @@
-rm -f  *toc
-rm -f *aux
-cslatex ./bakalarka.tex
-cslatex ./bakalarka.tex
-dvips bakalarka.dvi
-evince bakalarka.ps &

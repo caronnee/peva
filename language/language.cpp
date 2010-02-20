@@ -1,6 +1,6 @@
 #include <iostream>
-#include "robot.h"
-#include "bison.hpp"
+#include "../h/robot.h"
+#include "../h/bison.h"
 
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 extern void my_destroy();
