@@ -1,0 +1,34 @@
+ROBOT qqq
+{
+	HEALTH = 100
+	ATTACK = 7			
+	SEE = 56
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
+
+	KILLED == 5
+//	VISIT_SEQ( START[3], START[2])
+//	VISIT_SEQ( [300,60], [200,60])
+//	VISIT( [0,0])
+
+//	integer i;
+
+	main()
+	{
+		//turn(45);
+		step(18);
+		turn(180);
+		step(18);
+	}
+}
+ROBOT a
+{
+	HEALTH = 4
+	MATTACK = 10
+	VISIT( [0,0] )
+	main() 
+	{
+		turnR();
+	}
+}

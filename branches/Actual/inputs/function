@@ -1,0 +1,32 @@
+ROBOT qqq
+{
+	HEALTH = 100
+	ATTACK = 33			
+	SEE_WIDTH = 8
+	SEE_HEIGHT = 4
+	SEE = 56
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
+        ID = 5			
+
+	KILLED < 5
+	VISIT_SEQ( START[3], START[2], [13,18])
+	VISIT( [100,200])
+
+	integer i = 6;
+	integer [7] a = {1,2,3,4,5,5,6};
+
+	real function f()
+	{
+		return 5;
+	}
+
+	main() // komentar
+	{
+		location l = {100,200};
+		i = 6;
+		a[5] = 3;
+	}
+}
+
