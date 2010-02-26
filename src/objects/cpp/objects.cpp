@@ -73,7 +73,7 @@ void Object::move()
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
-	if ( stepsPass >= movement.steps ) //ak skonci, potom zrus chodiaci imidz
+	if ( stepsPass >= movement.steps )
 	{
 		endMove();
 		stepsPass = movement.steps;
@@ -155,17 +155,16 @@ void Object::bounce(Object * attacked) //od koho s ma odrazit
 {
 	Position p(1,1);
 	Position xy;
-	intersection(attacked, p, xy);
-	int minum =(xy.y < xy.x)? xy.y:xy.x;
-	if ((xy.y == minum)&&(xy.y != MY_INFINITY))
+	intersection(attacked, xy, p);
+	if (xy.y < xy.x)
 	{
 		movement.direction.y *=-1;
-		movement.position_in_map.y += xy.y * p.y;
+		movement.position_in_map.y -= p.y*xy.y * 2;
 	}
-	if ((xy.x=minum)&&(xy.x != MY_INFINITY))
+	else 
 	{
 		movement.direction.x *=-1;
-		movement.position_in_map.x += xy.x * p.x;
+		movement.position_in_map.x -= p.y*xy.x * 2;
 	}
 }
 void Object::hit(Object * attacked)
@@ -174,34 +173,49 @@ void Object::hit(Object * attacked)
 	attacked->hitted (this, movement.direction, attack_);
 }
 
-bool Object::intersection(Object * attacked,Position &p, Position &coords)
+bool Object::intersection(Object * attacked, Position &distances, Position& p)
 {
+
 	Rectangle r1 = collisionSize();
 	r1.x += movement.position_in_map.x;
 	r1.y += movement.position_in_map.y;
 
+	distances.x = r1.width * r1.width;
+	distances.y = r1.height * r1.height;
+
 	Rectangle r2 = attacked->collisionSize();
 	r2.x += attacked->movement.position_in_map.x;
 	r2.y += attacked->movement.position_in_map.y;
-
-	if (movement.direction.x > 0) //hybe sa smerom doprava
+	
+	if (movement.direction.y > 0) // checkneme, ci sme narazili na nieco dole
 	{
-		coords.x = r1.x + r1.width - r2.x;
+		p.y =1;
+		int yAxis = r1.y + r1.height; //ta os, ktora nas zaujima, musi byt medzi
+		if (( r2.y < yAxis ) && ( yAxis < r2.x + r2.height ))
+			distances.y = yAxis - r2.y;
+	}
+	else //smerujeme dole alebo stojime
+	{
+		p.y = -1;
+		int yAxis = r1.y; //ta os, ktora nas zaujima, musi byt medzi
+		if ( ( r2.y < yAxis ) && (yAxis  < r2.y + r2.height ) )
+			distances.y = r2.y + r2.height - yAxis;
+	}
+	if (movement.direction.x > 0) // doprava
+	{
+		p.x =1;
+		int xAxis = r1.x + r1.width; //ta os, ktora nas zaujima, musi byt medzi
+		if ((r2.x < xAxis)&&(xAxis < r2.x + r2.width))
+			distances.x = xAxis - r2.x;
+	}
+	else
+	{
 		p.x = -1;
+		int xAxis = r1.x; //ta os, ktora nas zaujima, musi byt medzi
+		if ((r2.x < xAxis)&&(xAxis < r2.x + r2.width))
+			distances.x = r2.x + r2.width - xAxis;
 	}
-	else 
-		coords.x = r2.x + r2.width - r1.x;
-	if (coords.x < 0)
-		coords.x = MY_INFINITY;
-	if ( movement.direction.y > 0) //hybe sa smerom dolu
-	{
-		coords.y = r1.y + r1.height - r2.y;
-		p.y=-1;
-	}
-	else 
-		coords.y = r2.y +r2.height - r1.y;
-	if (coords.y < 0)
-		coords.y = MY_INFINITY;
+	TEST("distances:" << distances)
 	return true; //FIXME
 }
 

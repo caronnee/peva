@@ -4,7 +4,13 @@
 #include <string>
 #include <sstream>
 
-int min(int x, int y);
+template <class T>
+T min(T x, T y)
+{
+	if ( x>y)
+		return y;
+	return x;
+}
 
 template <class T>
 T max(T a, T b)

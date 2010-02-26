@@ -13,23 +13,18 @@ Map::Map(std::string configFile, std::string name)
 {
 }
 
-bool Map::collideWith( Object * o1, Object* o2 ) // pouzitelne iba pre vzajomne walls, zatial
+bool Map::collideWith( Object * o1, Object* o2 )
 {
 	Rectangle r1 = o1->collisionSize();
-	r1.x += o1->movement.position_in_map.x;
-	r1.y += o1->movement.position_in_map.y;
+	r1.x += o1->get_pos().x;
+	r1.y += o1->get_pos().y;
 
 	Rectangle r2 = o2->collisionSize();
 	r2.x += o2->get_pos().x; 
 	r2.y += o2->get_pos().y;
 
-	bool a =r1.overlaps(r2);
-//	if (a)
-//	{
-//		std::cout <<" overlaplo!"<< std::endl;
-//		TEST(r1.x << ":" << r2.x << std::endl << r1.width << ":" <<r2.width)
-//	}
-	return  (a);
+	bool a = r1.overlaps(r2);
+	return a;
 }
 void Map::setBoundary(size_t x, size_t y)
 {
@@ -170,23 +165,10 @@ void Map::redraw(Window * w )
 	SDL_SetClipRect(w->g->screen, NULL);
 }
 
-void Map::collision(Object* o1, Object *o2) //utocnik, obranca
-{
-/*	if (o1->attack > o2->defense)
-	{
-		o2->damage-=o1->attack;
-	}
-	else
-	{
-		o1->defense;
-	}
-	*/
-}
 Object * Map::checkCollision(Object * o)
 {	
 	Position oldBox(o->movement.old_pos.x/BOX_WIDTH,o->movement.old_pos.y/BOX_HEIGHT);
 	Position newBox(o->movement.position_in_map.x/BOX_WIDTH,o->movement.position_in_map.y/BOX_HEIGHT);
-	//TODO spravt nearest
 	Object * nearestColObject = NULL;
 	size_t nearest = MY_INFINITY;
 
@@ -247,7 +229,6 @@ bool Map::performe()
 				Position p = o->get_pos();
 				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
 				o = b.objects.data->value;
-				usleep(50);
 			}
 		}
 	return false;
@@ -295,9 +276,11 @@ void Map::resolveMove(Object * o)
 	o->move();
 	resolveBorders(o);
 	Object * collidedWith= checkCollision(o);
-	if (collidedWith!=NULL)
+	while (collidedWith!=NULL)
 	{
 		o->hit(collidedWith);
+		collidedWith= checkCollision(o);
+		TEST("Pozicia po kolidovani:" << o->get_pos())
 	}
 }
 
