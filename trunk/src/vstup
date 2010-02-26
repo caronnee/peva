@@ -16,21 +16,12 @@ ROBOT qqq
 
 	main()
 	{
-		while(shoot(20))
+		turn(45);
+		step(18);
+		while (true)
 		{
-			turnR();
+			turn(45);
+			step(80);
 		}
-		turn(15);
-		step(10);
-	}
-}
-ROBOT a
-{
-	HEALTH = 4
-	MATTACK = 10
-	VISIT( [0,0] )
-	main() 
-	{
-		turnR();
 	}
 }

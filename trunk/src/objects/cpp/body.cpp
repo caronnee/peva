@@ -1,4 +1,5 @@
 #include "../h/body.h"
+#include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
 Body::Body() : Object(NULL)
@@ -67,8 +68,6 @@ void Body::move()
 	Rectangle col = collisionSize();
 	col.x += movement.position_in_map.x;
 	col.y += movement.position_in_map.y;
-	std::cout << "cols" <<col.x << " " <<col.y << std::endl;
-	std::cout << "size:" << skinWork->get_size().x << " " << skinWork->get_size().y<< std::endl;
 	for(size_t i =0; i<targets.size(); i++)
 	{
 		if (targets[i]->fullfilled())
@@ -184,7 +183,7 @@ int Body::shoot(int angle)
 	mP.y += p.y;
 
 	Object * o= ammo.data->value;
-	ammo.data->value->movement.steps = 1500;
+	ammo.data->value->movement.steps = 150;
 	ammo.data->value->movement.angle = movement.angle;
 	ammo.data->value->hitpoints = 50;
 	ammo.data->value->movement.direction = movement.direction;
@@ -194,6 +193,11 @@ int Body::shoot(int angle)
 	ammo.data->value->movement.realY = 0;
 	ammo.data->value->owner = this;
 	o->turn(angle);
+	if (map->checkCollision(ammo.data->value))
+	{
+		TEST("moc blizko steny!")
+		return 0; //ak to mieni kychnut na stenu
+	}
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 	return 1;
 }
@@ -213,6 +217,7 @@ void Body::killed(Object * o)
 }
 void Body::hitted(Object * attacker, Position p, int attack)
 {
+	TEST("zasiahnuty!")
 	state_ = movement.steps; //kolko mu este chybalo spravit
 	Object::hitted(attacker,p,attack);
 	int hpLost = (attack > defense) ? attack-defense:1;
@@ -221,7 +226,6 @@ void Body::hitted(Object * attacker, Position p, int attack)
 	{
 		attacker->killed(this);
 		Object::dead();// prasaaaaaarna
-		substance = Miss;
 	}
 	TEST("Aktualne hitpoints" << hitpoints)
 }
@@ -231,17 +235,21 @@ void Body::dead()
 }
 void Body::hit(Object * o)
 {
-	Object::hit(o);
-	Position p(1,1), xy;
-	intersection(o, p, xy);
-	int minum =(xy.y < xy.x)? xy.y:xy.x;
-	if ((xy.y == minum)&&(xy.y != MY_INFINITY))
+//	Object::hit(o);
+	Position p,t;
+	intersection(o,p,t);
+
+	if (p.x < p.y)
 	{
-		movement.position_in_map.y += xy.y * p.y;
+		movement.position_in_map.x -= p.x*t.x;
 	}
-	if ((xy.x=minum)&&(xy.x != MY_INFINITY))
+	else
+		movement.position_in_map.y -= p.y*t.y;
+	if (map->collideWith(this,o))
 	{
-		movement.position_in_map.x += xy.x * p.x;
+		TEST("Stale to koliduje podla mna")
+		TEST(movement.position_in_map << " " )
+		exit(3);
 	}
 }
 Body::~Body()

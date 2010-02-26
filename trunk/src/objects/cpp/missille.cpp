@@ -52,8 +52,7 @@ void Missille::hit(Object * o)
 }
 void Missille::hitted(Object * o, Position d, int attack)
 {
-	TEST("zasiahnuta strela")
-	Object::hitted(o,d,attack);
+	hit(o);
 }
 void Missille::move()
 {
