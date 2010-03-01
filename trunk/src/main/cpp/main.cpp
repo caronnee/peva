@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
+	std::cout << "dd";
 	while (!w.state.empty())
 	{
 		w.state.top()->process();

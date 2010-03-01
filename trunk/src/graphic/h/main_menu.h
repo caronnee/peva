@@ -4,15 +4,17 @@
 #include "menu.h"
 #include "graphic.h"
 
-class Main:public Menu
+class Main: public Menu
 {
 	Window * w;
 	Menu * menus[NUMBEROFMENUS]; 
+	int iterator;
 public:
 	Main(Window * w_);
-	virtual void process(void);
-	virtual void draw();
-	virtual void init();
-	virtual ~Main()throw();
+	void process(void);
+	void draw();
+	void init();
+	void clean();
+	virtual ~Main();
 };
 #endif

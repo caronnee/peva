@@ -1,17 +1,15 @@
 #include "../h/main_menu.h"
 #include "../h/create_map.h"
 #include "../h/other.h"
+#include "../../add-ons/h/macros.h"
 
 Main::Main(Window * w_)
 {
-	iterator = 0;
-	w = w_; //akonahle sa vytvori, tak sa vykresli to, co sa ma
-	menus[0] = new Play(w_); //TODO zmenit na add a tak podobne, aby to bolo dynamicke
-	menus[1] = new Host(w_); //TODO mozno nechat bez iterator a menit to rovno switch( state)?
-	menus[2] = new Join(w_);
-	menus[3] = new Settings(w_);
-	menus[4] = new Create_map(w_);
-	}
+	w = w_; 
+	for (int i =0; i< NUMBEROFMENUS; i++)
+		menus[i] = NULL;
+	init();
+}
 void Main::process()
 {
 	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
@@ -36,15 +34,18 @@ void Main::process()
 					case SDLK_UP:
 						{
 							iterator--;
-							if (iterator<0) iterator = NUMBEROFMENUS -1;
+							if (iterator<0) 
+								iterator = NUMBEROFMENUS -1;
 							break;
 						}
 					case SDLK_DOWN:
 						{
 							iterator++;
 							iterator%=NUMBEROFMENUS;
+							break;
 						}
 					default:
+						//throw exception
 						break;
 				}
 				break;
@@ -52,6 +53,16 @@ void Main::process()
 	}
 	draw();
 }
+void Main::clean()
+{
+	for (int i =0; i < NUMBEROFMENUS; i++)
+	{
+		if (menus[i])
+			delete menus[i];
+		menus[i] = NULL;
+	}
+}
+
 void Main::draw()
 {
 	SDL_Rect rect;
@@ -68,14 +79,14 @@ void Main::draw()
 	rect.y = (w->g->screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
 	for (int i =0; i< NUMBEROFMENUS; i++)
 	{
-		TTF_SizeText(w->g->g_font, menus[i]->name.c_str(),&width, NULL);
+		TTF_SizeText(w->g->g_font, menus[i]->get_name().c_str(),&width, NULL);
 		if (i==iterator)
 		{
-			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->name.c_str(), w->g->light );
+			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->get_name().c_str(), w->g->light );
 		}
 		else
 		{
-			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->name.c_str(), w->g->normal );
+			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->get_name().c_str(), w->g->normal );
 		}	
 		if (text ==NULL) std::cout << " Error rendering text " << TTF_GetError() <<std::endl; //podla mna tu tato podmienka nemusi byt
 		rect.x = (w->g->screen->w >> 1) - (width >> 1);
@@ -86,11 +97,17 @@ void Main::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
-void Main::init(){} //TODO nieco sa tu bude initovat
-Main::~Main()throw ()
+void Main::init()
 {
-	for (int i =0; i < NUMBEROFMENUS; i++)
-	{
-		delete menus[i];
-	}
+	iterator = 0;
+	menus[0] = new Play(w); 
+	menus[1] = new Host(w); 
+	menus[2] = new Join(w);
+	menus[3] = new Settings(w);
+	menus[4] = new Create_map(w);
+} 
+
+Main::~Main()
+{
+	clean();
 }

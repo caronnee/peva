@@ -558,6 +558,11 @@ bool Robot::skined()
 }
 Robots::~Robots()
 {
+	clean();
+}
+
+void Robots::clean()
+{
 	//deleting skins
 	while(!skins.empty())
 	{

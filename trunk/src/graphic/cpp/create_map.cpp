@@ -11,10 +11,28 @@ Create_map::Create_map(Window *w_)
 {
 	name = "Create map";
 	//skin = new Skin("grass", Skin::MapSkin);//TODO nacitaj zo suboru, co ma vytvorit
-	for (size_t i = 0; i< NumberObjectsImages; i++)
-		skins.push_back(new WallSkin("grass",i));
 	w = w_;
 	map= NULL;
+	skins.clear();
+	text = NULL;
+	selected = NULL;
+	info_o = NULL;
+	for (size_t i =0; i< NUMCHARS; i++)
+		resol[i] = NULL;
+	clean();
+}
+void Create_map::init()
+{
+	for (size_t i = 0; i< NumberObjectsImages; i++)
+		skins.push_back(new WallSkin("grass",i)); //TODO zo subora
+	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
+
+	for (int i =1; i< NumberObjectsImages; i++)
+	{
+		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
+		tile_rect[i].y = pom;
+		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
+	}
 	std::string txt = "Write map resolution:";
 	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);//resize 2.krat
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
@@ -65,19 +83,10 @@ Create_map::Create_map(Window *w_)
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
 	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
 
-	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
-
-	for (int i =1; i< NumberObjectsImages; i++)
-	{
-		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
-		tile_rect[i].y = pom;
-		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
-	}
-
+	
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
-	reset();
+	
 }
-void Create_map::init() {} //zatial nic, pozdejc sa to bude odstranovat
 
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 {
@@ -92,25 +101,7 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 	}
 	return -1;
 }
-void Create_map::reset()
-{
-	state = RESOLUTION;
-	file_name = "";
-	x = false;
-	select = NumberObjectsImages;
-	mouse_down = false;
-	written_x = "";
-	written_y = "";
-	if (map!=NULL)
-	{
-		delete map; 
-	}
-	map = NULL;
-	begin_x = 0;
-	begin_y = 0;
-	window_begin_x = rects[MAP].x;
-	window_begin_y = rects[MAP].y;
-}
+
 void Create_map::draw_resol()
 {
 	SDL_Rect r;
@@ -210,7 +201,7 @@ void Create_map::process_resolution()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						       {
-							       reset();
+							       clean();
 							       w->state.pop();
 							       break;
 						       }
@@ -324,7 +315,7 @@ void Create_map::saving()
 				{
 					case SDLK_ESCAPE:
 						{
-							reset();
+							clean();
 							w->state.pop();
 							break;
 						}
@@ -334,7 +325,7 @@ void Create_map::saving()
 								do 
 									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
 								while (w->g->event.type != SDL_KEYDOWN);
-							reset();
+							clean();
 							w->state.pop();
 							break;
 						}
@@ -383,7 +374,7 @@ void Create_map::process_map()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
-							reset();
+							clean();
 							w->state.pop();
 							break;
 						}
@@ -537,7 +528,48 @@ void Create_map::process()
 		saving();
 	}
 }
+void Create_map::clean()
+{
+	state = RESOLUTION;
+	file_name = "";
+	x = false;
+	mouse_down = false;
+	select = NumberObjectsImages;
+	written_x = "";
+	written_y = "";
+	map = NULL;
+	begin_x = 0;
+	begin_y = 0;
+	window_begin_x = rects[MAP].x;
+	window_begin_y = rects[MAP].y;
+	if (text)
+		SDL_FreeSurface(text);
+	text = NULL;
+	if (selected)
+		SDL_FreeSurface(selected);
+	selected = NULL;
+	select = 0;
+	if (info_o)
+		SDL_FreeSurface(info_o);
+	info_o = NULL;
+	for (int i =0; i< NUMCHARS; i++)
+	{
+		if (resol[i])
+			SDL_FreeSurface(resol[i]);
+		resol[i] = NULL;
+	}
+	while (!skins.empty())
+	{
+		if (skins.back())
+			delete skins.back();
+		skins.pop_back();
+	}
+	if (map)
+		delete map;
+	map = NULL;
+}
 
 Create_map::~Create_map()throw()
 {
-} //TODO uvolnovanie premennych
+	clean();
+} 

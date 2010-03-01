@@ -2,6 +2,7 @@
 #include "../h/graphic.h"
 #include "../h/main_menu.h"
 #include "../../add-ons/h/help_functions.h"
+#include "../../add-ons/h/macros.h"
 
 Graphic::Graphic()
 {
@@ -14,6 +15,9 @@ Graphic::Graphic()
 	normal =s;
 	SDL_Color t = {255,0,0,0};	
 	light =t; 
+
+	g_font = NULL;
+	screen = NULL;
 }
 bool Graphic::Init()
 {
@@ -97,6 +101,8 @@ Window:: Window(Graphic * g_)
 	back = DEFAULT_BACKGROUND;
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	g = g_;
+	main_menu =NULL;
+	background = NULL;
 }
 
 bool Window::Init()
@@ -104,8 +110,12 @@ bool Window::Init()
 	// Inicializace SDL
 	bool b = g->Init();
 	background = IMG_Load(back.c_str());
-	if (background == NULL) std::cout << "Backgound image not found!" <<std::endl;
-	main_menu = new Main(this); //TODO  nieco ako set_main
+	if (background == NULL) 
+	{
+		TEST("Background image not found!")
+	}
+	main_menu = new Main(this);
+	main_menu->init();
 	state.push(main_menu); 
 	return b;
 }
@@ -113,7 +123,11 @@ bool Window::Init()
 void Window::tapestry()
 {
 	SDL_Rect rect;
-	if (background == NULL) {std::cout << "kvjfjbnskb"<<std::endl;return;}
+	if (background == NULL) 
+		{
+			TEST("Background image not loaded !");
+			return;
+		}
 	int i;
 	for (i = 0; i < g->screen->h; i+=background->h) //tapetujeme pozadie, TODO zmenit na iba raz
 	{
@@ -139,9 +153,9 @@ int Window::toggle_screen()
 		std::cout<<"Nepodarilo zmenit rozlisenie!"<<std::endl;
 		SDL_FreeSurface(g->screen);
 		return Init();
-		}
+	}
 	return true;
-}; //TODO! zatial nepouzite, jelikoz musim este checkovat, ci sa mi to nahodou nezblazni
+}; //TODO! zatial nepouzite, jelikoz musim este checkovat, ci sa mi to nahodou nezblaznimain_menu = NULL;
 
 
 void Window::set_background(std::string res)
@@ -152,5 +166,10 @@ void Window::set_background(std::string res)
 
 void Window::Destroy()
 {
+	if (main_menu)
 		delete main_menu;
+	main_menu = NULL;
+	if (background)
+		SDL_FreeSurface(background);
+	background = NULL;
 }

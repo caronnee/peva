@@ -5,12 +5,22 @@
 
 class Menu
 {
-	public:
-		int iterator;//kolko sme toho naalokovali
+	protected:
 		std::string name;
-		std::string get_name();
+	public:
+		/* returns name of the menu */
+		std::string get_name()const;
+
+		/* resolves events */
 		virtual void process(void) = 0;
+
+		/* drwas actual state */
 		virtual void draw()=0; 
+
+		/* fill data */
 		virtual void init()=0; 
+
+		/* clean data */
+		virtual void clean() = 0;
 };
 #endif
