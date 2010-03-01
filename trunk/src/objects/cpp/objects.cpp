@@ -5,6 +5,16 @@
 #define MAX_PX_PER_SECOND 300
 #define PI 3.14159265
 
+void ObjectMovement::clean()
+{
+	realX = 0;
+	realY = 0;
+	speed = 30;
+	old_pos = position_in_map = direction = Position (0,0);
+	angle = 0;
+	fps = 200;
+	steps = 0;
+}
 Object::Object(Skin * s)
 {
 	numberOfKilled = 0;
@@ -16,15 +26,7 @@ Object::Object(Skin * s)
 	/* item containing this object */
 	name =" Object";
 
-	movement.position_in_map.x = 0;
-	movement.position_in_map.y = 0;
-	movement.old_pos = movement.position_in_map = Position (0,0);
-	movement.direction.x = 0;
-	movement.direction.y = 0;
-	movement.angle = 0;
-	movement.speed = 30;
-	movement.fps = 200;
-	movement.steps = 0;
+	movement.clean();
 
 	if (s == NULL)
 		skinWork = NULL;
@@ -72,6 +74,7 @@ void Object::move()
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
+	TEST(" ......." << passed)
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
 	if ( stepsPass >= movement.steps )
 	{
