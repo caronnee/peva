@@ -12,7 +12,7 @@ Main::Main(Window * w_)
 }
 void Main::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
+	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -22,12 +22,12 @@ void Main::process()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
-							w->state.pop();
-							break;
+							w->pop();
+							return;
 						}
 					case SDLK_RETURN:
 						{
-							w->state.push(menus[iterator]);
+							w->add(menus[iterator]);
 							menus[iterator]->init();
 							break;
 						}

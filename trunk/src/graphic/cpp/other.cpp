@@ -27,13 +27,13 @@ void Join::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-	SDL_BlitSurface(w->background,NULL,w->g->screen,&r);
+	w->tapestry();
 	SDL_Flip(w->g->screen);
 }
 
 void Join::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
+	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -43,8 +43,8 @@ void Join::process()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
-							w->state.pop();
-							break;
+							w->pop();
+							return;
 						}
 					default:
 						std::cout << "nezname tlacitko u JOINU" << std::endl;
@@ -72,13 +72,13 @@ void Host::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-	SDL_BlitSurface(w->background,NULL,w->g->screen,&r);
+	w->tapestry();
 	SDL_Flip(w->g->screen);
 }
 
 void Host::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
+	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -88,7 +88,7 @@ void Host::process()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
-							w->state.pop();
+							w->pop();
 							break;
 						}
 					default:
@@ -162,19 +162,16 @@ void Play::process()
 	{	
 		if (!robots.robots[i]->action(t))
 			aliveRobots--;
-		Body * b =robots.robots[i]->getBody();
 		done |= t;
 	}
 	if (/*aliveRobots == LAST ||*/ done) //ak je posledny robot
 	{
-		w->state.pop();//TODO dorobit vitazne tazenie, ako new win(x)
+		w->pop();//TODO dorobit vitazne tazenie, ako new win(x)
 		TEST("Skoncili sme")
 		return;
 	}
-	//TEST("OK!")
 	done = m->performe();
 	draw(); //TODO performe bude mat OK, ci sa to ma prekreslit, kvoli sleepom
-	//TEST("OK!2")
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
 	{
@@ -221,7 +218,6 @@ void Play::process()
 					}
 					for ( size_t i =0; i< robots.robots.size(); i++)
 					{
-						TEST("Placing")
 						robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
 						robots.robots[i]->save_to_xml();
 						m->add(robots.robots[i]->getBody());
@@ -232,9 +228,8 @@ void Play::process()
 				}
 				case SDLK_ESCAPE:
 				{
-					clean();
-					w->state.pop();
-					break;
+					w->pop();
+					return;
 				}
 				default:
 					break;
@@ -254,7 +249,7 @@ void Settings::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-	SDL_BlitSurface(w->background,NULL,w->g->screen,&r);
+	w->tapestry();
 	SDL_Flip(w->g->screen);
 }
 void Settings::clean()
@@ -265,7 +260,7 @@ void Settings::process()
 {
 	if (SDL_WaitEvent(&w->g->event) == 0)
 	{
-		w->state.pop();
+		w->pop();
 		return;
 	}
 	switch (w->g->event.type)
@@ -277,7 +272,7 @@ void Settings::process()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
-							w->state.pop();
+							w->pop();
 							break;
 						}
 					default:

@@ -6,6 +6,7 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 #include "../h/create_map.h"
+#include "../../objects/h/wall.h"
 
 Create_map::Create_map(Window *w_)
 {
@@ -201,9 +202,8 @@ void Create_map::process_resolution()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						       {
-							       clean();
-							       w->state.pop();
-							       break;
+							       w->pop();
+							       return;
 						       }
 					default:
 						       std::cout << "Unknown command (Create map)" << std::endl;
@@ -315,9 +315,8 @@ void Create_map::saving()
 				{
 					case SDLK_ESCAPE:
 						{
-							clean();
-							w->state.pop();
-							break;
+							w->pop();
+							return;
 						}
 					case SDLK_RETURN:
 						{
@@ -325,9 +324,8 @@ void Create_map::saving()
 								do 
 									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
 								while (w->g->event.type != SDL_KEYDOWN);
-							clean();
-							w->state.pop();
-							break;
+							w->pop();
+							return;
 						}
 					default:
 						{
@@ -356,8 +354,7 @@ void Create_map::saving()
 			}
 		case SDL_QUIT:
 			{
-				while(!w->state.empty())
-					w->state.pop();
+				w->Destroy();
 			}
 	}
 }
@@ -374,9 +371,8 @@ void Create_map::process_map()
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						{
-							clean();
-							w->state.pop();
-							break;
+							w->pop();
+							return;
 						}
 					default:
 						std::cout << "Unknown command (Create map)" << std::endl;
@@ -511,7 +507,7 @@ void Create_map::process_map()
 
 void Create_map::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->state.pop();return;}
+	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	if (state == DRAW) {
 		process_map();
 		return;

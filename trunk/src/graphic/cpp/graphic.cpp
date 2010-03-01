@@ -95,7 +95,8 @@ void Graphic::set_font_size(std::string s)
 	font_size = convert<int>(s);
 }
 
-//------------------------------------------------WINDOW-----------------------------------------------------
+//------------------------------------------------WINDOW--------------------------------------
+
 Window:: Window(Graphic * g_)
 {
 	back = DEFAULT_BACKGROUND;
@@ -172,4 +173,34 @@ void Window::Destroy()
 	if (background)
 		SDL_FreeSurface(background);
 	background = NULL;
+	g = NULL;
+	while (!state.empty())
+	{
+		state.pop();
+	}
+	//vsetko ostatne sa nam zdeletovalo pri delete main_menu
+}
+void Window::add(Menu * menu)
+{
+	state.push(menu);
+}
+void Window::pop()
+{
+	if ( !state.empty() )
+	{
+		state.top()->clean();
+		state.pop();
+	}
+}
+Menu * Window::top()const
+{
+	return state.top();
+}
+void Window::process()
+{
+	state.top()->process();
+}
+bool Window::empty()
+{
+	return state.empty();
 }
