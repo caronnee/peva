@@ -11,7 +11,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-#include "../../objects/h/wall.h"
 #include "menu.h"
 
 #define SDL_SUBSYSTEMS SDL_INIT_VIDEO
@@ -56,20 +55,25 @@ public:
 };
 //-------------------- Draw variables-----------
 
-class Window
+class Window 
 {
+private:
+	SDL_Surface * background; //background pre hlavne okno 
 	Menu * main_menu;
+	std::stack<Menu *> state;
 	std::string back;
 public:
 	Graphic * g;
-	SDL_Surface * background; //background pre hlavne okno 
 	Window(Graphic * g_);
 	void tapestry();
 	int toggle_screen(); //change from full screen to window screen and vice-versa
 	void add(Menu * m);
 	bool Init();
 	void Destroy();
+	Menu * top()const;
+	void process();
+	bool empty();
+	void pop();	
 	void set_background(std::string res);
-	std::stack<Menu *> state;
 };
 #endif

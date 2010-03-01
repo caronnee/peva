@@ -55,10 +55,9 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
-	std::cout << "dd";
-	while (!w.state.empty())
+	while (!w.empty())
 	{
-		w.state.top()->process();
+		w.top()->process();
 	}
 	g.Destroy();
 	w.Destroy(); //odalokovavanie premennych a podobne

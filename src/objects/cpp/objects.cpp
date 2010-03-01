@@ -74,7 +74,6 @@ void Object::move()
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
-	TEST(" ......." << passed)
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
 	if ( stepsPass >= movement.steps )
 	{
@@ -218,7 +217,6 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 		if ((r2.x < xAxis)&&(xAxis < r2.x + r2.width))
 			distances.x = r2.x + r2.width - xAxis;
 	}
-	TEST("distances:" << distances)
 	return true; //FIXME
 }
 

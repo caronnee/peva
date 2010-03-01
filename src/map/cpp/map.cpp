@@ -2,6 +2,7 @@
 #include "../h/map.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
+#include "../../objects/h/wall.h"
 
 //TODO externe si pamatat steny pre bezpecne odmonotvanie
 Box::Box()
