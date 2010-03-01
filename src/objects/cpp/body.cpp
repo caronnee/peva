@@ -78,7 +78,9 @@ void Body::move()
 				tasks--;
 			}
 	}
+	TEST("pred" << movement.position_in_map)
 	Object::move();
+	TEST("po" << movement.position_in_map)
 }
 
 void Body::addVisit(TargetVisit * target)

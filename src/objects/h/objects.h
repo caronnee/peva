@@ -26,11 +26,11 @@ struct ObjectMovement
 	/* object speed, pixels per turn */
 	size_t speed;
 
-	/* used when moving for determinig old position, not necessary */
-	Position old_pos;
-
 	/* actual position in map */
 	Position position_in_map;
+
+	/* used when moving for determinig old position, not necessary */
+	Position old_pos;
 
 	/* direction */
 	Position direction;
@@ -43,6 +43,9 @@ struct ObjectMovement
 	
 	/* actual angle of robot */
 	int angle;
+
+	/* sets to default value */
+	void clean();
 };
 
 class Object

@@ -162,6 +162,7 @@ void Play::process()
 	{	
 		if (!robots.robots[i]->action(t))
 			aliveRobots--;
+		Body * b =robots.robots[i]->getBody();
 		done |= t;
 	}
 	if (/*aliveRobots == LAST ||*/ done) //ak je posledny robot
