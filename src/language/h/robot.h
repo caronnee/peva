@@ -151,6 +151,7 @@ struct ResolveName
 struct Robots
 {	
 	GamePoints g;
+	void clean();
 	std::vector<Target *> resolveTargets;
 	Robot * actualRobot;
 	std::vector<Robot *> robots;

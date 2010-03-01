@@ -29,8 +29,8 @@ class Create_map:public Menu
 		DRAW,
 		SAVING
 	};
+	
 	Window * w;
-//	Skin* skin;
 	std::vector<Skin*> skins;
 	Win_type state;
 	bool x; //x = oddelovac u resolution
@@ -69,12 +69,12 @@ class Create_map:public Menu
 	void draw_resol();
 	void saving();
 	bool save();
-	void reset();
 public:
 	Create_map(Window * w_);
-	virtual void init();
-	virtual void process(void);
-	virtual void draw();
+	void init();
+	void process(void);
+	void draw();
+	void clean();
 	virtual ~Create_map()throw();
 	void generuj(Position res);
 };

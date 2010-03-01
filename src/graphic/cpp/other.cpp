@@ -18,6 +18,10 @@ Join::Join(Window *w_)
 	w = w_;
 	name = "Join";
 }
+void Join::clean()
+{
+	//TODO
+}
 void Join::draw()
 {
 	SDL_Rect r;
@@ -52,12 +56,16 @@ void Join::process()
 }
 void Join::init(){}
 
-Join::~Join()throw(){};
+Join::~Join(){};
 
 Host::Host(Window *w_)
 {
 	name = "Host";
 	w = w_;
+}
+void Host::clean()
+{
+	//TODO
 }
 void Host::draw()
 {
@@ -93,34 +101,27 @@ void Host::process()
 }
 void Host::init(){}
 
-Host::~Host()throw(){};
+Host::~Host(){};
 
 Play::Play(Window *w_)
 {
+	/* init, not repeatable */
 	srand(time(NULL));
-	done = false;
-	name = "Play";
+	name = "Play Game";
 	w = w_;
-	rect.x = 0;
-	rect.y = 0;
-	iter = iter_beg = letts.begin();
+	m = NULL;
 	for (int i = 0; i< 256; i++)
 	{
 		letters[i].heigth = TTF_FontLineSkip(w->g->g_font);
 		letters[i].ch = i;
 		TTF_SizeText(w->g->g_font,letters[i].ch.c_str(), &letters[i].size,NULL); 
 		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
-
 	}
-	init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada
-}
-Play::~Play()throw(){} //uz predtym sa zavola clear, takze to netreba
 
-void Play::redraw()
-{
-	m->redraw(w); 
-	SDL_Flip(w->g->screen);
+	/* cleaning up any mess */
+	clean();
 }
+Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
@@ -134,13 +135,24 @@ void Play::init(int x, int y)
 	m->setBoundary(min (w->g->screen->w, x), min (w->g->screen->h,y));
 }
 
-void Play::clear()
+void Play::clean()
 {
-	delete m;
+	done = false;
+	rect.x = 0;
+	rect.y = 0;
+	iter = iter_beg = letts.begin();
+
+	if (m!=NULL)
+		delete m;
+
+	m = NULL;
+	done = false;
+	robots.clean();
 }
+
 void Play::init()
 {
-	//este sa nic neinituje
+	init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada, zo struktury alebo suboru
 }
 void Play::process()
 {
@@ -160,7 +172,7 @@ void Play::process()
 	}
 	//TEST("OK!")
 	done = m->performe();
-	redraw();
+	draw(); //TODO performe bude mat OK, ci sa to ma prekreslit, kvoli sleepom
 	//TEST("OK!2")
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
@@ -208,6 +220,7 @@ void Play::process()
 					}
 					for ( size_t i =0; i< robots.robots.size(); i++)
 					{
+						TEST("Placing")
 						robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
 						robots.robots[i]->save_to_xml();
 						m->add(robots.robots[i]->getBody());
@@ -218,7 +231,7 @@ void Play::process()
 				}
 				case SDLK_ESCAPE:
 				{
-					clear();
+					clean();
 					w->state.pop();
 					break;
 				}
@@ -243,7 +256,10 @@ void Settings::draw()
 	SDL_BlitSurface(w->background,NULL,w->g->screen,&r);
 	SDL_Flip(w->g->screen);
 }
-
+void Settings::clean()
+{
+	//TODO
+}
 void Settings::process()
 {
 	if (SDL_WaitEvent(&w->g->event) == 0)
@@ -274,4 +290,4 @@ void Settings::process()
 
 void Settings::init() {}
 
-Settings::~Settings()throw(){}
+Settings::~Settings(){}

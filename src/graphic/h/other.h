@@ -15,10 +15,11 @@ class Settings:public Menu
 	std::string names[3]; //nastavit timeouti, resolution, background. TODO!
 public:
 	Settings(Window * w_);
-	virtual void process(void);
-	virtual void draw();
-	virtual void init();
-	virtual ~Settings()throw();
+	void process(void);
+	void draw();
+	void init();
+	void clean();
+	virtual ~Settings();
 };
 
 class Host:public Menu
@@ -26,20 +27,22 @@ class Host:public Menu
 	Window * w;
 public:
 	Host(Window * w_);
-	virtual void process(void);
-	virtual void draw();
-	virtual void init();
-	virtual ~Host()throw();
+	void process(void);
+	void draw();
+	void init();
+	void clean();
+	virtual ~Host();
 };
 class Join:public Menu
 {
 	Window * w;
 public:
 	Join(Window * w_);
-	virtual void process(void);
-	virtual void draw();
-	virtual void init();
-	virtual ~Join()throw();
+	void process(void);
+	void draw();
+	void init();
+	void clean();
+	virtual ~Join();
 };
 
 struct Letter
@@ -54,20 +57,18 @@ class Play:public Menu
 	Map * m;
 	Window * w;
 	bool done;
-	Position p;
 	Robots robots;
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
-	void redraw();
 	void init(int, int);
-	void clear();
-	virtual void init();
 public:
 	Play(Window * w_);
-	virtual void process(void);
-	virtual void draw();
-	virtual ~Play()throw();
+	void process(void);
+	void init();
+	void draw();
+	void clean();
+	virtual ~Play();
 };
 #endif
