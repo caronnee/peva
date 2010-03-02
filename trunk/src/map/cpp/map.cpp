@@ -1,4 +1,3 @@
-#include <math.h>
 #include "../h/map.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"

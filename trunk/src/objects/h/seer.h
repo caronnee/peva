@@ -2,34 +2,26 @@
 #define ___SEER____
 
 #include <iostream>
-#include <vector>
-#include "../../add-ons/h/position.h"
+#include <list> //kvoli efektivnemu odoberaniu
 
-struct Mask
-{
-	uint32_t ID;
-	uint32_t mask;
-	Object * object;
-	Object * object_l;
-};
+#include "../../add-ons/h/position.h"
+#include "objects.h"
+
 class Seer
 {
-	public:
-	enum Direction
-	{
-		UP,
-		LEFT,
-		RIGTH,
-		DOWN
-	};
-	std::vector<Position> positions;
-	Position resolution;
-	Mask ** masks;
-	Seer(Position eyeDimension);
-	void set_masks();
-	void see(Map * m);
-	std::vector<Object *> objects;
+	Position eyeDimension;
+	std::list<Object *> visibleObjects;
+	int aLeft,bLeft,cLeft;
+	int aRight,bRight,cRight;
+public:
+	Seer(int angle, int defaultVisibility);
+	Seer(Position eyeDimension_);
+	void reset();
+	bool isVisible(Object *o, Position position, int visibleAngle);
+	Object * getObject(size_t index);
 	void output();
+	void checkVisible(Object * o, Position position, int angle);
+
 };
 
 #endif

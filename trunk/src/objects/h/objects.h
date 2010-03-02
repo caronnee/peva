@@ -56,11 +56,20 @@ private:
 
 protected:
 	bool intersection(Object *o, Position &p1, Position& coords);
+	size_t type;
+
 public:
 	enum Substantial
 	{
 		Miss = 0,
 		Solid = 1 //solid + miss = solid
+	};
+	enum Objects
+	{
+		Nothing = 0,
+		Player = 1,
+		Wall_ = 2,
+		Missille = 4 
 	};
 	/* name of the object, for debugging purposes */
 	std::string name;
@@ -165,13 +174,7 @@ public:
 	bool isMoving();
 
 	/* for robot questioning state of object */
-	int isWall();
-
-	/* for robot questioning state of object */
-	int isPlayer();
-
-	/* for robot questioning state of object */
-	int isMissille();
+	int typeObject()const;
 
 	/* return SDL rectangle information about image to be blit */
 	SDL_Rect get_rect();

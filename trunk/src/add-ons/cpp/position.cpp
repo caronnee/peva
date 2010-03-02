@@ -1,5 +1,8 @@
+#include <cmath>
 #include  "../h/position.h"
 #include  "../h/macros.h"
+
+#define PI 3.14159265
 
 Position::Position()
 {
@@ -48,6 +51,16 @@ Position& Position::substractVector( Position p2 )
 	x-=p2.x;
 	y-=p2.y;
 	return (*this);
+}
+Position& Position::turn(int degree)
+{
+	return turn(degree, sqrt(x*x + y*y));
+}
+Position& Position::turn(int degree, int size)
+{
+	x = sin (degree * PI/180) * size;
+	y = -cos (degree * PI/180) * size;
+	return *this;
 }
 
 Rectangle::Rectangle()

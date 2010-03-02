@@ -19,6 +19,8 @@ public:
 	bool operator!=(Position &p);
 	friend std::ostream& operator<<(std::ostream & o, const Position p);
 	size_t getDistance(Position p);
+	Position & turn(int degree, int size);
+	Position & turn(int degree);
 };
 
 struct Rectangle

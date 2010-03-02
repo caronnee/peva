@@ -27,7 +27,7 @@ class PushableWall:public Object //da sa nou pohnut
 public:
 	PushableWall(Skin * skin);
 	void hit(Object *o);
-	void hitted(Object *o, Position o, int attack);
+	void hitted(Object *o, Position p, int attack);
 };
 class TrapWall:public Object // ostepy na zemi sa vystrkujuce:)
 {
