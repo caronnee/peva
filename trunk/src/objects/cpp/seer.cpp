@@ -28,9 +28,13 @@ void Seer::checkVisible(Object * o, Position position, int angle)
 	Position objectPosition = o->get_pos();
 	objectPosition.substractVector(position);
 	objectPosition.turn(-angle); //zpat do pozicie 0
-	if(aLeft * objectPosition.x + bLeft * objectPosition.y > 0)
-		return;
 	if(aRight * objectPosition.x + bLeft * objectPosition.y < 0)
-		return;
+		return; //mimo  oblast
+	objectPosition.x +=o->collisionSize().width;
+	if(aLeft * objectPosition.x + bLeft * objectPosition.y > 0)
+		return; //mimo oblast
+	//zpat do povodneho stavu
+	objectPosition.x -=o->collisionSize().width;
 	//zorad do pola zotriedene podla x-ovej osy
+	
 }
