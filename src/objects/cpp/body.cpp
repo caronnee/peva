@@ -4,6 +4,7 @@
 
 Body::Body() : Object(NULL)
 {
+	type = Player;
 	state_ = 0;
 	tasks = 0;
 	name = "Robot";

@@ -1,6 +1,5 @@
 #include "../h/objects.h"
 #include "../../add-ons/h/macros.h"
-#include <cmath>
 
 #define MAX_PX_PER_SECOND 300
 #define PI 3.14159265
@@ -21,6 +20,7 @@ Object::Object(Skin * s)
 	last_attack = NULL;
 	substance = Solid;
 	owner = NULL;
+	type = Nothing;
 	item = new Item(this);
 	hitpoints = 100; //TODO zmenit podla requestov
 	/* item containing this object */
@@ -62,8 +62,10 @@ void Object::dead()
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionDead);
 	movement.steps = 0;
 }
+
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie?
+
 void Object::move()
 {
 	movement.old_pos = movement.position_in_map;
@@ -133,8 +135,7 @@ int Object::turn(int angle)
 	while (movement.angle > 360)
 		movement.angle-=360;
 	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
-	movement.direction.x = sin(movement.angle*PI/180)*MAX_PX_PER_SECOND ;
-	movement.direction.y = -cos(movement.angle*PI/180)*MAX_PX_PER_SECOND;
+	movement.direction.turn(movement.angle,MAX_PX_PER_SECOND);
 	return 0;
 }
 void Object::killed(Object * o)
@@ -223,23 +224,15 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 bool Object::isMoving(){
 	return movement.steps;
 }
-int Object::isWall()
+int Object::typeObject()const
 {
-	return 0;
-}
-int Object::isPlayer()
-{ 
-	return 0;
+	return type;
 }
 bool Object::blocksMove()
 {
 	return !isMoving() || skinWork->processing();
 }
 
-int Object::isMissille()
-{
-	return 0;
-}
 Position Object::Locate() //TODO bude vraciac position
 {
 	return get_pos();
