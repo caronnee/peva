@@ -1,7 +1,8 @@
 #ifndef ___BODY_INTERFACE____
 #define ___BODY_INTERFACE____
 
-#include "../../objects/h/objects.h"
+#include "objects.h"
+#include "seer.h"
 #include "../../add-ons/h/position.h"
 #include "../../map/h/map.h"
 #include "../../language/h/targets.h"
@@ -19,6 +20,7 @@ class Body : public Object
 	Map * map;
 public:
 	/* ammo, that can be shot */
+	Seer seer;
 	List ammo;
 	size_t tasks;
 	size_t eyeAngle;

@@ -124,13 +124,48 @@ bool Body::is_blocking()
 }
 int Body::see()
 {
+	//robime to drsne, ziadna heuristika
+	//TODO zamysliet sa nad tm, ci je to vhodne upravit
+	
 	std::cout << "Filling in object see area";
-	return 0;
+	Position up = get_pos();
+	Position down = seer.eyeDimension;
+	up += seer.eyeDimension;
+	down = get_pos().substractVector(seer.eyeDimension);
+
+	up.x/=BOX_WIDTH;
+	up.y/=BOX_HEIGHT;
+	down.x/=BOX_WIDTH;
+	down.y/=BOX_HEIGHT;
+	
+	if(up.x > map->boxesInRow)
+		up.x = map->boxesInRow;
+	if(up.y > map->boxesInColumn)
+		up.y = map->boxesInColumn;
+	if (down.x <0)
+		down.x = 0;
+	if (down.y < 0)
+		down.y = 0;
+	for (int i = down.x; i<=up.x; i++)
+		for (int j = down.y; j < up.y; j++)
+		{
+			map->map[i][j].objects.reset();
+			Object * o =map->map[i][j].objects.read();
+			while (o!=NULL)
+			{
+				seer.fill(o, get_pos());
+				o = map->map[i][j].objects.read();
+			}
+		}
+	return seer.checkVisibility();
 }
 Object * Body::eye(int index)
 {
 	std::cout << "Getting object from fills";
-	return this;
+	Object * o = seer.getObject(index);
+	if (!o)
+		return this; //TODO dummy object
+	return o;
 }
 void Body::place (Map * m, Position p, int angle)
 {
