@@ -114,7 +114,7 @@ void Map::addTarget(size_t x, size_t y)
 	pl.id = id; 
 	pl.p = p;
 }
-void Map::redraw(Window * w ) 
+void Map::redraw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
 {
 	SDL_Rect r; //TODO nie takto natvrdlo
 	r.x = 0;
@@ -140,13 +140,14 @@ void Map::redraw(Window * w )
 		r.x+=skin->get_size().x;
 	}
 	int a = 0;
-	for (int i =0; i< boundaries.width; i+=BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
+
+	for (int i =0; i< boundaries.width; i += BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
-		for(int j =0; j< boundaries.height; j+= BOX_HEIGHT)
+		for(int j =0; j< boundaries.height; j += BOX_HEIGHT)
 		{
 			map[pos.x][pos.y].objects.reset();
 			Object * o = map[pos.x][pos.y].objects.read();
-			while(o!=NULL)
+			while( o != NULL )
 			{
 				a++;
 				SDL_Rect rects;

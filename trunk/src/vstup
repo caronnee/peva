@@ -16,12 +16,12 @@ ROBOT qqq
 
 	main()
 	{
-		turn(45);
-		step(18);
+//		turn(45);
+		step(1);
 		while (true)
 		{
 			turn(45);
-			step(80);
+			step(1);
 		}
 	}
 }

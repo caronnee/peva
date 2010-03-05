@@ -17,7 +17,9 @@ LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 .PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph test bparser codewars
 
 
-all: dep bparser codewars test
+all: dep bparser codewars test debugSee
+
+debugSee: $(lOBJECTS) o/debugSee.o
 
 test:	o/list.o o/test.o o/objects.o o/position.o o/images.o
 	@echo ""

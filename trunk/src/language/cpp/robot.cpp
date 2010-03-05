@@ -428,6 +428,7 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 
 void Robot::consolidate()
 {
+	getBody()->seer.setEyes(getBody()->eyeAngle,150); //TODO opravit, celkost ma urcovat mapa
 	scheduller = new SchedulleRound(); //TPDP konfigurovatelne
 	std::vector<InstructionBreak *> breaks;
 	std::vector<InstructionBegin *> begins;
