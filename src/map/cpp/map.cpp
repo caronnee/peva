@@ -9,6 +9,7 @@ Box::Box()
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
 	objects.clear();
 }
+
 Map::Map(std::string configFile, std::string name)
 {
 }
@@ -221,7 +222,7 @@ bool Map::performe()
 			{
 				if (!o->alive())
 				{
-					b.objects.remove(b.objects.data);
+					b.objects.remove();
 					o->dead();
 					o = b.objects.data->value;
 					continue;
@@ -234,6 +235,24 @@ bool Map::performe()
 		}
 	return false;
 }
+void Map::remove(Object * o)
+{
+	Position pos = o->get_pos();
+	pos.x/=BOX_WIDTH;
+	pos.y/=BOX_HEIGHT;
+	map[pos.x][pos.y].objects.reset();
+	Object *object = map[pos.x][pos.y].objects.read();
+	while (object!=NULL)
+	{
+		if (object == o)
+		{
+			map[pos.x][pos.y].objects.remove();
+			break;
+		}
+		object = map[pos.x][pos.y].objects.read();
+	}
+}
+
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
 {
 	//TODO vobec by nmalo nastavat

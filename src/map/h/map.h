@@ -104,7 +104,12 @@ public:
 	/* destructor destorying allocated space, no need to be virtual so far */
 	~Map();
 
+	/* removes from map an object, but dp not destroys it */
+	void remove(Object * o);
+
+	/* sets beoundaries of map according to size of solid wall*/	
 	void setBoundary(size_t w, size_t h);
+
 	/* draws all visible place */
 	void redraw(Window * window); //ked ma vykreslit vsetko
 
