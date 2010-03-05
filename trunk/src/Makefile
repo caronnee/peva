@@ -20,6 +20,11 @@ LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 all: dep bparser codewars test debugSee
 
 debugSee: $(lOBJECTS) o/debugSee.o
+	@echo ""
+	@echo "..........................................."
+	@echo "Creating visibility issue...:"
+	g++ $(LDFLAGS) -o $@ $^
+	@echo "..........................................."
 
 test:	o/list.o o/test.o o/objects.o o/position.o o/images.o
 	@echo ""
@@ -79,6 +84,10 @@ rerun:
 	make distclean
 	make
 	./codewars
+
+see:
+	make
+	./debugSee
 
 debugMemory:
 	make

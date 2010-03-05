@@ -27,8 +27,8 @@ public:
 	void next();
 	void clear();
 	void reset();
-	bool remove(Object * data);
-	void remove(Item * data);
+	bool remove(Object * o);
+	void remove();
 	bool empty();
 	Object * read();
 	~List();

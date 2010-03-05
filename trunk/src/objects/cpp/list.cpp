@@ -48,8 +48,9 @@ void List::clear()
 	data->previous = data;
 	size_ = 1;
 }
-void List::remove(Item * item)// REMOVE HEAD!
+void List::remove()// REMOVE HEAD!
 {
+	Item * item = data;
 	if (!item->next || !item->previous)
 		return; //neni z coho odoberat
 	item->next->previous = 	item->previous;
