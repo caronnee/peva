@@ -324,7 +324,7 @@ Skin * Robots::addSkin(std::string name)
 void Robots::createNew(std::string name)
 {
 	std::cout << "Creating new robot" << std::endl; 
-	if (actualRobot!=NULL)
+	if ((actualRobot!=NULL) && ( actualRobot!=robots.back() ))
 		robots.push_back(actualRobot);
 	actualRobot = new Robot(name, g);
 	std::cout << "New robot created" << std::endl; 	

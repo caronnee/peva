@@ -3,8 +3,13 @@
 #include "../h/other.h"
 #include "../../add-ons/h/macros.h"
 
-Main::Main(Window * w_)
+Main::Main(Window * w_, int argc, char * argv[])
 {
+	for (int i = 1; i< argc; i++)
+	{
+		std::string s(argv[i]);
+		files.push_back(s);
+	}
 	w = w_; 
 	for (int i =0; i< NUMBEROFMENUS; i++)
 		menus[i] = NULL;
@@ -61,6 +66,7 @@ void Main::clean()
 			delete menus[i];
 		menus[i] = NULL;
 	}
+	files.clear();
 }
 
 void Main::draw()
@@ -100,7 +106,7 @@ void Main::draw()
 void Main::init()
 {
 	iterator = 0;
-	menus[0] = new Play(w); 
+	menus[0] = new Play(w,files); 
 	menus[1] = new Host(w); 
 	menus[2] = new Join(w);
 	menus[3] = new Settings(w);
