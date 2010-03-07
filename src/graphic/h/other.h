@@ -54,6 +54,7 @@ struct Letter
 
 class Play:public Menu
 {
+	std::vector<std::string> files;
 	Map * m;
 	Window * w;
 	bool done;
@@ -64,7 +65,7 @@ class Play:public Menu
 	Letter letters[256];
 	void init(int, int);
 public:
-	Play(Window * w_);
+	Play(Window * w_, std::vector<std::string> files);
 	void process(void);
 	void init();
 	void draw();

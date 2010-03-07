@@ -103,9 +103,10 @@ void Host::init(){}
 
 Host::~Host(){};
 
-Play::Play(Window *w_)
+Play::Play(Window *w_, std::vector<std::string> fls)
 {
 	/* init, not repeatable */
+	files = fls;
 	srand(time(NULL));
 	name = "Play Game";
 	w = w_;
@@ -179,20 +180,18 @@ void Play::process()
 		{
 			switch(w->g->event.key.keysym.sym)
 			{
-			/*	case SDLK_a:
-				{
-					Object * o = new Missille(Position(15,20), Position(-50,-60),new Skin("dragon",Skin::MissilleSkin));
-					m->add(o);
-					break;
-				}*/
 				case SDLK_r:
 				{	
-					if((yyin=fopen("vstup", "r"))==0)
+					int err = 0;
+					for (size_t i =0; i< files.size(); i++)
 					{
-						puts("Unable to open input\n");
-						break;
+						if((yyin=fopen(files[i].c_str(), "r"))==0)
+						{
+							std::cout<< "Unable to open input " << files[i] << std::endl;
+							break;
+						}
+						err += yyparse(&robots);
 					}
-					int err = yyparse(&robots);
 					robots.checkSkins();
 					bool bad = false;
 					for ( size_t i =0; i< robots.robots.size(); i++)

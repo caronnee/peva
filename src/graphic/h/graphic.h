@@ -68,7 +68,7 @@ public:
 	void tapestry();
 	int toggle_screen(); //change from full screen to window screen and vice-versa
 	void add(Menu * m);
-	bool Init();
+	bool Init(int argc, char * argv[]);
 	void Destroy();
 	Menu * top()const;
 	void process();

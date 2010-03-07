@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 		}
 		config.close();
 	}
-	if(!w.Init())
+	if(!w.Init(argc, argv))
 	{
 		w.Destroy(); 
 		return 1;

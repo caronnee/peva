@@ -106,16 +106,18 @@ Window:: Window(Graphic * g_)
 	background = NULL;
 }
 
-bool Window::Init()
+bool Window::Init(int argc, char * argv[] )
 {
 	// Inicializace SDL
 	bool b = g->Init();
+	if(main_menu)
+		return b;
 	background = IMG_Load(back.c_str());
 	if (background == NULL) 
 	{
 		TEST("Background image not found!")
 	}
-	main_menu = new Main(this);
+	main_menu = new Main(this, argc, argv);
 	main_menu->init();
 	state.push(main_menu); 
 	return b;
@@ -144,16 +146,17 @@ void Window::tapestry()
 
 int Window::toggle_screen()
 {
-	if (WIN_FLAGS && SDL_FULLSCREEN) //z fullscreenu do okna
+	/*if (WIN_FLAGS && SDL_FULLSCREEN) //z fullscreenu do okna
 	{
-//		WIN_FLAGS &= !SDL_FULLSCREEN;
+		WIN_FLAGS &= !SDL_FULLSCREEN;
 	} 
-//	else WIN_FLAGS |= SDL_FULLSCREEN; //opacne
+	else WIN_FLAGS |= SDL_FULLSCREEN; //opacne
+	*///zatial nepotrebujeme
 	if( SDL_WM_ToggleFullScreen(g->screen) ==0) //nepodarilo sa to cez funkciu
 	{
 		std::cout<<"Nepodarilo zmenit rozlisenie!"<<std::endl;
 		SDL_FreeSurface(g->screen);
-		return Init();
+		return Init(0,NULL); //FIXME inituje sa iba grafika
 	}
 	return true;
 }; //TODO! zatial nepouzite, jelikoz musim este checkovat, ci sa mi to nahodou nezblaznimain_menu = NULL;

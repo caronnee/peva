@@ -79,7 +79,7 @@ brun:
 	./bparser vstup
 run:
 	make codewars
-	./codewars
+	./codewars vstup
 rerun:
 	make distclean
 	make
