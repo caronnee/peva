@@ -387,7 +387,6 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 			Variable * vvv = c->values.back();
 			function->parameters[i].node->var.back()->copyValue(vvv);
 			c->values.pop_back();
-			std::cout << "end storin";//etc(stdin);
 		}
 	}
 	Variable * v;

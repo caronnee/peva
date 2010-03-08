@@ -7,7 +7,7 @@
 #include "../../language/h/bison.h"
 #include "../../language/h/robot.h"
 
-#define LAST -1
+#define LAST 1
 // pre debug ucelu = 0, inak = 1
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 extern void my_destroy();
@@ -154,6 +154,49 @@ void Play::clean()
 void Play::init()
 {
 	init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada, zo struktury alebo suboru
+	int err = 0;
+	for (size_t i =0; i< files.size(); i++)
+	{
+		if((yyin=fopen(files[i].c_str(), "r"))==0)
+		{
+			std::cout<< "Unable to open input " << files[i] << std::endl;
+			continue;
+		}
+		err += yyparse(&robots);
+		fclose(yyin);	
+	}
+	robots.checkSkins();
+	bool bad = false;
+	for ( size_t i =0; i< robots.robots.size(); i++)
+	{
+
+		if (robots.robots[i]->errors)
+		{
+			bad = true;
+			break;
+		}
+	}
+	if(bad|err)
+	{
+		fclose(yyin);	
+		my_destroy();
+		TEST("spatny vstup!")
+		while(!robots.robots.empty())
+		{
+			delete robots.robots.back();
+			robots.robots.pop_back();
+		}
+		w->pop();
+		return;
+	}
+	for ( size_t i =0; i< robots.robots.size(); i++)
+	{
+		robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
+		robots.robots[i]->save_to_xml();
+		m->add(robots.robots[i]->getBody());
+	}
+	my_destroy();
+
 }
 void Play::process()
 {
@@ -165,10 +208,35 @@ void Play::process()
 			aliveRobots--;
 		done |= t;
 	}
-	if (/*aliveRobots == LAST ||*/ done) //ak je posledny robot
+	if ((aliveRobots == LAST) || done) //ak je posledny robot
 	{
-		w->pop();//TODO dorobit vitazne tazenie, ako new win(x)
+		std::string endText = " Vitazi su: \r";
+		std::string doneBots = "";
+		std::string lastBots = "";
+		for (size_t i = 0; i< robots.robots.size(); i++)
+		{
+			if(!robots.robots[i]->getBody()->alive())
+				continue;
+			if (!robots.robots[i]->getBody()->tasks)
+				doneBots +=robots.robots[i]->getName();
+			lastBots +=robots.robots[i]->getName();
+		}
+		SDL_Surface * end;
+		if (doneBots != "")
+			end = TTF_RenderText_Solid(w->g->g_font,(endText+doneBots).c_str(), w->g->normal);
+		else
+			end = TTF_RenderText_Solid(w->g->g_font,(endText+lastBots).c_str(), w->g->normal);
+		TEST("___"<<m)
+		SDL_Rect rect;
+		rect.x = (m->resolution.x) >> 1;
+		rect.y = (m->resolution.y) >> 1;
+		TEST("Skoncili sme poprve")
+		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
+		SDL_Flip(w->g->screen);
+		SDL_WaitEvent(&w->g->event);
+		SDL_FreeSurface(end);
 		TEST("Skoncili sme")
+		w->pop();
 		return;
 	}
 	done = m->performe();
@@ -182,48 +250,7 @@ void Play::process()
 			{
 				case SDLK_r:
 				{	
-					int err = 0;
-					for (size_t i =0; i< files.size(); i++)
-					{
-						if((yyin=fopen(files[i].c_str(), "r"))==0)
-						{
-							std::cout<< "Unable to open input " << files[i] << std::endl;
-							break;
-						}
-						err += yyparse(&robots);
-					}
-					robots.checkSkins();
-					bool bad = false;
-					for ( size_t i =0; i< robots.robots.size(); i++)
-					{
-
-						if (robots.robots[i]->errors)
-						{
-							bad = true;
-							break;
-						}
-					}
-					if(bad|err)
-					{
-						fclose(yyin);	
-						my_destroy();
-						TEST("spatny vstup!")
-						while(!robots.robots.empty())
-						{
-							delete robots.robots.back();
-							robots.robots.pop_back();
-						}
-						break;
-					}
-					for ( size_t i =0; i< robots.robots.size(); i++)
-					{
-						robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
-						robots.robots[i]->save_to_xml();
-						m->add(robots.robots[i]->getBody());
-					}
-					fclose(yyin);	
-					my_destroy();
-					break;
+									break;
 				}
 				case SDLK_ESCAPE:
 				{
