@@ -50,6 +50,7 @@ struct MyXmlData
 class Robot
 {
 	size_t missilles;
+	std::string name;
 public:
 	enum ErrorCode
 	{
@@ -69,6 +70,7 @@ public:
 		ErrorOutOfRange
 	};
 
+	std::string getName()const;
 	Node * dev_null;
 	Object * nullable;
 	bool errors;
@@ -76,7 +78,6 @@ public:
 	std::string errorList;
 	std::string warningList;
 	std::string nested;
-	std::string name;
 	
 	TypeContainer * defined_types;
 

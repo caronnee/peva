@@ -44,6 +44,10 @@ Robot::Robot(std::string s, GamePoints p)
 	dev_null = NULL;
 }
 
+std::string Robot::getName()const
+{
+	return name;
+}
 //TODO uistit sa, ze je ti nenaalokovane
 void Robot::variables()
 {
@@ -78,7 +82,7 @@ Create_type * Robot::find_type(Type t)
 	last_type = defined_types->find_type(t);	
 	return last_type;
 }
-Body * Robot::getBody ()
+Body * Robot::getBody()
 {
 	return core->body;
 }
@@ -342,7 +346,9 @@ void Robots::set(Options o, size_t value)
 			std::cout << "setting eyes angle to:" << value << std::endl; 
 			actualRobot->core->body->eyeAngle = value % MAX_EYE_ANGLE;
 			break;
-		case OptionMemory: //NEFUNGUJE kvoli tomu, ze uz su pridane hodnoty ako NULL
+		case OptionMemory: 
+			if (actualRobot->dev_null)
+				break; //TODO warning
 			actualRobot->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
 			actualRobot->variables();
 			break;

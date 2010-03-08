@@ -32,6 +32,7 @@ MATTACK 					{*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
 MHEALTH						{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
 SEE						{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
 STEP						{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
+MEMORY						{*l = line; lv->op = OptionMemory; return TOKEN_OPTION;}
 
 VISIT						{*l = line; return TOKEN_VISIT; }
 VISIT_SEQ					{*l = line; return TOKEN_VISIT_SEQUENCE; }
