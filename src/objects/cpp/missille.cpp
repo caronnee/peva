@@ -11,21 +11,6 @@ Missille::Missille(Skin*s, Body * body):Object(s)
 	name = "Missille";
 //	skinWork = new ImageSkinWork(s);
 }
-Missille::Missille(Position P, Position dir, Skin* s):Object(s)
-{
-	nowhereToRun = false;
-	substance = Miss;
-	owner = NULL;
-	movement.direction = dir;
-	movement.position_in_map = P;
-	movement.old_pos = P;
-	milisec = 0;
-	movement.angle = 50;
-	movement.steps = 0;
-	movement.speed = 100;
-	name = "Missille";
-	skinWork = new ImageSkinWork(s);
-}
 void Missille::bounce(Object * o)
 {
 	Object::bounce(o);

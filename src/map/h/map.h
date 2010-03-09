@@ -45,6 +45,9 @@ struct Map
 	std::vector<Place> places;
 	std::vector<Position> starts;
 
+	/* removes object at position p*/
+	Object * removeAt(Position position);
+
 	/* how many column boxes */
 	float boxesInColumn;
 
@@ -75,7 +78,7 @@ struct Map
 	/* resolves move actions, check collision etc.*/
 	void resolveMove(Object * o);
 	
-	/* drwing boundaries */
+	/* drawing boundaries */
 	Rectangle boundaries;
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
@@ -104,7 +107,7 @@ public:
 	/* destructor destorying allocated space, no need to be virtual so far */
 	~Map();
 
-	/* removes from map an object, but dp not destroys it */
+	/* removes from map an object, but do not destroys it */
 	void remove(Object * o);
 
 	/* sets beoundaries of map according to size of solid wall*/	

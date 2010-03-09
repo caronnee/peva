@@ -18,7 +18,6 @@ public:
 	virtual void hitted(Object *o, Position dir, int attack);
 	virtual void hit(Object *o);
 	Missille(Skin * s, Body *);
-	Missille(Position p, Position dir, Skin*s);
 	~Missille();
 };
 

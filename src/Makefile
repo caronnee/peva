@@ -86,7 +86,7 @@ rerun:
 	./codewars
 
 see:
-	make
+	make debugSee
 	./debugSee
 
 debugMemory:
