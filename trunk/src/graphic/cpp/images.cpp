@@ -19,13 +19,13 @@ std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "Trap
 Skin::Skin()
 {
 	images = NULL;
+	directory = "./";
 }
 Skin::Skin(std::string name, Skin::Type t)
 {
 	nameOfSet = name;
 	std::string * load;
-	std::string directory = "./"; 
-	int sizeLoaded;
+	directory = "./"; 
 	switch (t)
 	{
 		case MapSkin:
@@ -33,17 +33,7 @@ Skin::Skin(std::string name, Skin::Type t)
 			directory = "./mapSkins/";
 			load = toLoadMap;
 			size = NumberObjectsImages;
-			sizeLoaded = size;
 			images = new SDL_Surface *[size];
-			break;
-		}
-		case MissilleSkin:
-		{
-			directory = "./botSkins/";
-			load = toLoadMissille;
-			size = NumberOfActions;
-			sizeLoaded = 1;
-			images = new SDL_Surface *[NumberOfActions];
 			break;
 		}
 		case BotSkin:
@@ -51,7 +41,6 @@ Skin::Skin(std::string name, Skin::Type t)
 			directory = "./botSkins/";
 			load = toLoadBot;
 			size = NumberOfActions;
-			sizeLoaded = NumberOfActions;
 			images = new SDL_Surface *[size];
 			break;
 		}
@@ -62,6 +51,10 @@ Skin::Skin(std::string name, Skin::Type t)
 			load = NULL;
 		}
 	}
+	create(load, name, size);	
+}
+void Skin::create(std::string * load, std::string name, int sizeLoaded)
+{
 	for (size_t i =0; i< size; i++)
 	{
 		images[i] = NULL;
@@ -69,7 +62,7 @@ Skin::Skin(std::string name, Skin::Type t)
 	if (!bf::exists(directory + name))
 	{
 		TEST("Error! Directory " <<directory + name<< " not found!"); //TODO exception
-		return;
+		return;//TODO throw new exception
 	}
 	directory = directory+name + '/';
 	for (int i = 0; i<sizeLoaded; i++ )
@@ -81,15 +74,6 @@ Skin::Skin(std::string name, Skin::Type t)
 	{
 		if (images[i]==NULL)
 			images[i] = IMG_Load((directory + load[0]).c_str()); //aby sa dalo pouzit free
-	}
-	if (t == MissilleSkin)
-	{
-		begin_in_picture.x = 0;
-		begin_in_picture.y = 0;
-		shift.x = images[0]->h;
-		shift.y = images[0]->h;
-		imageSize.x = imageSize.y = images[0]->h; //strely su stvorcove
-		return;
 	}
 	if (!bf::exists(directory + "config"))
 	{
@@ -137,11 +121,26 @@ Skin::~Skin()
 	}
 	delete[] images;
 }
+MissilleSkin::MissilleSkin(std::string name)
+{
+	std::string * load;
+	directory = "./botSkins/";
+	load = toLoadMissille;
+	size = NumberOfActions;
+	images = new SDL_Surface *[NumberOfActions];
 
+	create(load, name,1);
+
+	begin_in_picture.x = 0;
+	begin_in_picture.y = 0;
+	shift.x = images[0]->h;
+	shift.y = images[0]->h;
+	imageSize.x = imageSize.y = images[0]->h; //strely su stvorcove
+}
 WallSkin::WallSkin(std::string name, size_t wall)
 {
 	nameOfSet = name;
-	std::string directory = "./mapSkins/" + name + "/";
+	directory = "./mapSkins/" + name + "/";
 	if (!bf::exists(directory))
 	{
 		TEST("Nonexistent maps!");//TODO vynimka

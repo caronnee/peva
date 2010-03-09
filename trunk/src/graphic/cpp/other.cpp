@@ -7,7 +7,8 @@
 #include "../../language/h/bison.h"
 #include "../../language/h/robot.h"
 
-#define LAST 1
+#define LAST 1000
+
 // pre debug ucelu = 0, inak = 1
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 extern void my_destroy();

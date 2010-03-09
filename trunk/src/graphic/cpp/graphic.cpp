@@ -27,6 +27,7 @@ bool Graphic::Init()
 		std::cerr << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
 		return false;
 	}
+	atexit(SDL_Quit);
 	SDL_Surface* icon=IMG_Load(ICON);
 	if (icon!=NULL)
 	{

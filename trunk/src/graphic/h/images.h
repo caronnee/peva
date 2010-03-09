@@ -40,6 +40,9 @@ enum Actions
 
 class Skin
 {
+protected:
+	std::string directory;
+
 public:
 	/* number of files a skin have to load */
 	size_t size;
@@ -64,12 +67,13 @@ public:
 	/* types of skins, could be solved by inheritance*/
 	enum Type
 	{
-		MapSkin,
-		BotSkin,
-		MissilleSkin
+		MapSkin, //TODO znicit
+		BotSkin
 	};
 	/* constructor for skin */
 	Skin(std::string name, Skin::Type t);
+	/* common method for loading images */
+	void create(std::string * loadImages, std::string name, int sizeToLoad);
 
 	/* returns image corresponding to index */
 	SDL_Surface * get_surface(size_t index);
@@ -86,9 +90,20 @@ public:
 	/* destructor */
 	virtual ~Skin();
 };
-class WallSkin:public Skin
+
+/* class for creating missille skins */
+
+class MissilleSkin : public Skin
 {
-	public:
+public:
+	MissilleSkin( std::string name );
+};
+
+/* class for creating wall skins */
+
+class WallSkin : public Skin
+{
+public:
 	WallSkin(std::string name, size_t wall); //ktory wall ma naloadovat
 };
 /* class for handling the skin */

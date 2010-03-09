@@ -82,6 +82,10 @@ Rectangle::Rectangle(int x_, int y_, int width_, int height_)
 	width = width_;
 	height = height_;
 }
+bool Rectangle::overlaps(Position & p)const
+{
+	return ((x < p.x) && (p.x < x + width) && (y < p.y) && (p.y < y+height));
+}
 bool Rectangle::overlaps(Rectangle & rectangle) const
 {
 	bool a =  (!(x >= rectangle.x + rectangle.width) && !(x + width <= rectangle.x) && !(y >= rectangle.y + rectangle.height) && !(y + height <= rectangle.y));

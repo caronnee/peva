@@ -25,6 +25,7 @@ bool Map::collideWith( Object * o1, Object* o2 )
 	r2.y += o2->get_pos().y;
 
 	bool a = r1.overlaps(r2);
+
 	return a;
 }
 void Map::setBoundary(size_t x, size_t y)
@@ -315,6 +316,35 @@ void Map::add(Object * o)
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.add(o->item);
+}
+Object * Map::removeAt(Position position)
+{
+	TEST("Removing pozicia:" << position)
+	Position removePos(position);
+	removePos.x += boundaries.x;
+	removePos.y += boundaries.y;
+	Position boxP(removePos.x / BOX_WIDTH, removePos.y / BOX_HEIGHT);
+	map[boxP.x][boxP.y].objects.reset();
+	Object * o = map[boxP.x][boxP.y].objects.read();
+	while( o!=NULL )
+	{
+		Rectangle r = o->collisionSize();
+		TEST("velkosti: " <<r.x << " "<<r.y << " "<<r.width << " "<<r.height)
+		r.height += r.y;
+		r.width += r.x;
+		r.x = o->get_pos().x;
+		r.y = o->get_pos().y;
+		TEST("inbox pozicia:" << o->get_pos())
+		if (r.overlaps(position))
+		{
+			map[boxP.x][boxP.y].objects.remove();
+			map[boxP.x][boxP.y].objects.reset();
+			return o;
+		}
+		o = map[boxP.x][boxP.y].objects.read();
+	}
+	TEST("Object not found!")
+	return NULL;
 }
 Map::~Map() 
 {
