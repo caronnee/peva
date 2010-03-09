@@ -127,8 +127,14 @@ int Body::see()
 	//robime to drsne, ziadna heuristika
 	//TODO zamysliet sa nad tm, ci je to vhodne upravit
 	
-	std::cout << "Filling in object see area";
-	Position up = get_pos();
+	TEST("Filling in object see area" << seer.eyeDimension);
+	//hodime do stredu
+	Position up;
+	//suradnice hlavy
+	up = get_pos();
+	up += skinWork->head();
+	up.y += collisionSize().y;
+
 	Position down = seer.eyeDimension;
 	up += seer.eyeDimension;
 	down = get_pos().substractVector(seer.eyeDimension);
@@ -146,6 +152,7 @@ int Body::see()
 		down.x = 0;
 	if (down.y < 0)
 		down.y = 0;
+	TEST("up & down " << up << " " << down)
 	for (int i = down.x; i<=up.x; i++)
 		for (int j = down.y; j < up.y; j++)
 		{
