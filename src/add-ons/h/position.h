@@ -5,6 +5,8 @@
 #include <cstdlib> 
 #include <iostream>
 
+#define PI 3.14159265
+
 class Position
 {	
 public:

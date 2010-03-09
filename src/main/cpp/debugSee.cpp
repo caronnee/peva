@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include "../../add-ons/h/macros.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../graphic/h/graphic.h"
@@ -25,7 +26,7 @@ void addToMap(Map * map, Object * object)
 	SDL_GetMouseState(&p.x, &p.y);
 	object->setPosition(p);
 	map->add(object);
-	TEST("Na pozicii" << p)
+	//TEST("Na pozicii" << p)
 	redraw(map);
 }
 
@@ -83,7 +84,36 @@ int main()
 							redraw(map);
 							break;
 						}
-						case SDLK_b://move bodov
+						case SDLK_f: //ako follow sipku
+						{
+							Position p;
+							SDL_GetMouseState(&p.x, &p.y);
+							p.substractVector(body->get_pos());
+							p.x -= body->collisionSize().x + body->collisionSize().width/2;
+							p.y -= body->collisionSize().y + body->collisionSize().height/2;
+							//FIXME
+							//zistime kvadrant, 0,1,2,3
+							int angle= 90;
+							int kvadr = 0;
+							int test = 0;
+							if (p.y*p.x > 0)
+								kvadr = 1;
+							if (p.x < 0)
+								kvadr |= 2;
+							if (p.y >= 0)
+								test = 180;
+							if (p.y != 0)
+								angle =atan((float)p.x/p.y)*180/PI;
+							else angle = 90 - 90*(kvadr&2);
+							angle*=-1;
+							angle = test + angle;
+						//	std::cout <<"angle:" << angle ;
+							std::cout <<"   angle" << angle << " referi:" <<p << " kvadr" << kvadr <<std::endl;
+							body->absoluteTurn(angle);
+							redraw(map);
+							break;
+						}
+						case SDLK_b://move body
 						{
 							map->remove(body);
 							addToMap(map, body);
