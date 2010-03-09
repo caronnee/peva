@@ -79,6 +79,9 @@ public:
 
 	size_t numberOfKilled;
 public:
+	/* for debugging purposes, return information about the object */
+	std::string info()const;
+
 	/* substance *///TODO privat a vlastna funkcia
 	Substantial substance;
 

@@ -1,3 +1,4 @@
+#include "../../add-ons/h/macros.h"
 #include "../h/seer.h"
 
 Seer::Seer ()
@@ -13,6 +14,11 @@ void Seer::setEyes(int angle, int defaultVisibility)
 void Seer::setEyes(Position eyeDimension_)
 {
 	eyeDimension = eyeDimension_;
+	//we need to have negative numbers, because we simulate left eye and that is left -> lesser x
+	if (eyeDimension.x > 0)
+		eyeDimension.x*=-1;
+	if (eyeDimension.y >0)
+		eyeDimension.y *=-1;
 	reset();
 }
 void Seer::reset()
@@ -27,8 +33,18 @@ void Seer::reset()
 	bRight = xn;
 	cRight = 0;
 }
+void Seer::output()
+{
+	std::cout << "Vidim "<< visibleObjects.size() << "objektov: " <<std::endl;
+	for (std::list<ObjectRelation>::iterator i = visibleObjects.begin(); i!= visibleObjects.end(); i++)
+	{
+		std::cout << i->object->info();
+	}
+}
+
 void Seer::fill(Object * o, Position position)
 {
+	TEST("dosla som sem")
 	Position objectPosition = o->get_pos();
 	objectPosition.substractVector(position);
 	objectPosition.x -= o->collisionSize().x;

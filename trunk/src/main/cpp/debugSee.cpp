@@ -11,6 +11,8 @@
 
 #define BIGX 400
 #define BIGY 400
+#define ANGLE 30
+#define DISTANCE 50
 
 Graphic g;
 Window w(&g);
@@ -41,6 +43,7 @@ int main()
 	Map * map = new Map(Position (BIGX,BIGY), "grass");
 	map->setBoundary(min (w.g->screen->w, BIGX), min (w.g->screen->h,BIGY));
 	Body * body = new Body();
+	body->seer.setEyes(ANGLE,DISTANCE);
 	body->setSkin(new Skin("dragon",Skin::BotSkin));
 	body->place(map, Position (100,100));
 	map->add(body);
@@ -107,10 +110,14 @@ int main()
 							else angle = 90 - 90*(kvadr&2);
 							angle*=-1;
 							angle = test + angle;
-						//	std::cout <<"angle:" << angle ;
-							std::cout <<"   angle" << angle << " referi:" <<p << " kvadr" << kvadr <<std::endl;
 							body->absoluteTurn(angle);
 							redraw(map);
+							break;
+						}
+						case SDLK_s:
+						{
+							body->see();
+							body->seer.output();
 							break;
 						}
 						case SDLK_b://move body

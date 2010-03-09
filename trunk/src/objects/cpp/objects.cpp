@@ -63,6 +63,10 @@ void Object::dead()
 	movement.steps = 0;
 }
 
+std::string Object::info() const
+{
+	return name;
+}
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie?
 
