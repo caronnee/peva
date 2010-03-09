@@ -127,15 +127,21 @@ size_t Object::height()
 {
 	return skinWork->height();
 }
-int Object::turn(int angle)
+int Object::absoluteTurn(int angle)
 {
-	movement.angle+=angle;
+	movement.angle = angle;
 	while (movement.angle < 0)
 		movement.angle+=360;
 	while (movement.angle > 360)
 		movement.angle-=360;
 	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
 	movement.direction.turn(movement.angle,MAX_PX_PER_SECOND);
+	return 0;
+}
+int Object::turn(int angle)
+{
+	movement.angle+=angle;
+	absoluteTurn(movement.angle);
 	return 0;
 }
 void Object::killed(Object * o)

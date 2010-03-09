@@ -260,8 +260,10 @@ float ImageSkinWork::turn(int degree)//nastavi uhol na degree
 	count = 0;
 	states[StateDefault]=ActionDefault;
 	size_t directions = get_image()->h / s->get_shift().y;
+	//how much of angle can one image represent
 	float dirShift = 360 / directions;
-	int sh = degree / dirShift;
+	//which image should we use
+	int sh = (degree + dirShift/2) / dirShift;
 	rect.y = sh*s->get_shift().y;
 	rect.y %= get_image()->h;
 	return dirShift;

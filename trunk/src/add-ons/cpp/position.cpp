@@ -2,7 +2,6 @@
 #include  "../h/position.h"
 #include  "../h/macros.h"
 
-#define PI 3.14159265
 
 Position::Position()
 {

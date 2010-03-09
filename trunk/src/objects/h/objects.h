@@ -115,8 +115,11 @@ public:
 	/* what happens after finishing movement, should be virtual? *///FIXME
 	void endMove();
 
-	/* turn sin desired position */
+	/* turn to desired position according to direction*/
 	int turn(int angle);
+
+	/* turn to desired position */
+	int absoluteTurn(int angle);
 
 	/* for visibility, it is good to know whether object is transparent */
 	virtual bool is_blocking();
@@ -124,7 +127,7 @@ public:
 	/* data considering move action, public because of map correction */
 	ObjectMovement movement; 
 
-	/* return acual position from movement, just user friendly function */
+	/* return actual position from movement, just user friendly function */
 	Position get_pos() const;
 
 	/* return acual position from movement, just user friendly function */
