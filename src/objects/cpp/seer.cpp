@@ -14,10 +14,10 @@ void Seer::setEyes(int angle, int defaultVisibility)
 void Seer::setEyes(Position eyeDimension_)
 {
 	eyeDimension = eyeDimension_;
-	//we need to have negative numbers, because we simulate left eye and that is left -> lesser x
-	if (eyeDimension.x > 0)
+	//we need to have positive numbers
+	if (eyeDimension.x < 0)
 		eyeDimension.x*=-1;
-	if (eyeDimension.y >0)
+	if (eyeDimension.y <0)
 		eyeDimension.y *=-1;
 	reset();
 }
@@ -44,7 +44,6 @@ void Seer::output()
 
 void Seer::fill(Object * o, Position position)
 {
-	TEST("dosla som sem")
 	Position objectPosition = o->get_pos();
 	objectPosition.substractVector(position);
 	objectPosition.x -= o->collisionSize().x;
