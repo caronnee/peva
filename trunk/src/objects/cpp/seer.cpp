@@ -36,7 +36,9 @@ void Seer::reset()
 void Seer::output()
 {
 	std::cout << "Vidim "<< visibleObjects.size() << "objektov: " <<std::endl;
-	for (std::list<ObjectRelation>::iterator i = visibleObjects.begin(); i!= visibleObjects.end(); i++)
+	for (std::list<ObjectRelation>::iterator i = visibleObjects.begin();
+		 i!= visibleObjects.end();
+		 i++)
 	{
 		std::cout << i->object->info();
 	}
@@ -85,6 +87,7 @@ void Seer::fill(Object * o, Position position)
 }
 int Seer::checkVisibility()
 {
+	return 3;
 //mame vsetky objekty zoradene podla Y osy
 	std::list<ObjectRelation>::iterator iter = visibleObjects.begin();
 	//vyhodime vsetky, co su neviditelne

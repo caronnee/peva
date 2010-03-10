@@ -1,3 +1,4 @@
+#include <cmath>
 #include "../h/body.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
@@ -129,13 +130,14 @@ int Body::see()
 	
 	TEST("Filling in object see area:" << seer.eyeDimension);
 	//hodime do stredu
-	int maxim = max(seer.eyeDimension.x, seer.eyeDimension.y);
+	int maxim = sqrt(seer.eyeDimension.x * seer.eyeDimension.x 
+		+ seer.eyeDimension.y * seer.eyeDimension.y );
+
 	Position diff(maxim, maxim);
 	Position up = get_pos();
 	up+= diff;
 
-	Position down = get_pos();
-	down.substractVector(diff);
+	Position down = get_pos().substractVector(diff);
 
 	up.x/=BOX_WIDTH;
 	up.y/=BOX_HEIGHT;
@@ -150,6 +152,7 @@ int Body::see()
 		down.x = 0;
 	if (down.y < 0)
 		down.y = 0;
+
 	TEST("up & down " << up << " " << down)
 	for (int i = down.x; i<=up.x; i++)
 		for (int j = down.y; j < up.y; j++)

@@ -72,7 +72,7 @@ o/%.o: */cpp/%.cpp
 
 distclean:
 	rm -rf o/* bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp \
-	language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h test
+	language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h test debugSee
 
 brun:
 	make
