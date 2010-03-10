@@ -127,17 +127,15 @@ int Body::see()
 	//robime to drsne, ziadna heuristika
 	//TODO zamysliet sa nad tm, ci je to vhodne upravit
 	
-	TEST("Filling in object see area" << seer.eyeDimension);
+	TEST("Filling in object see area:" << seer.eyeDimension);
 	//hodime do stredu
-	Position up;
-	//suradnice hlavy
-	up = get_pos();
-	up += skinWork->head();
-	up.y += collisionSize().y;
+	int maxim = max(seer.eyeDimension.x, seer.eyeDimension.y);
+	Position diff(maxim, maxim);
+	Position up = get_pos();
+	up+= diff;
 
-	Position down = seer.eyeDimension;
-	up += seer.eyeDimension;
-	down = get_pos().substractVector(seer.eyeDimension);
+	Position down = get_pos();
+	down.substractVector(diff);
 
 	up.x/=BOX_WIDTH;
 	up.y/=BOX_HEIGHT;
