@@ -1,9 +1,6 @@
 #include "../h/list.h"
-////////////////
-//DEBUG
 #include <cstdio>
 #include <iostream>
-//////////
 
 Item::Item(Object * o)
 {

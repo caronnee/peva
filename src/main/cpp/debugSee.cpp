@@ -82,6 +82,7 @@ int main()
 							Position p;
 							SDL_GetMouseState(&p.x, &p.y);
 							Object * o = map->removeAt(p);
+							TEST("vysledok = " << o )
 							if ((o!=NULL) && (o!=body))
 								delete o;
 							redraw(map);

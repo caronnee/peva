@@ -193,7 +193,7 @@ Object * Map::checkCollision(Object * o)
 				if (( objectInBox == NULL ) || ( o == objectInBox )|| (!objectInBox->alive()))
 					continue;
 				if (!((o->substance + objectInBox->substance) 
-					&& (collideWith(o, objectInBox))))
+							&& (collideWith(o, objectInBox))))
 					continue;
 				size_t dist = o->get_old_pos().getDistance(objectInBox->get_pos());
 				if (dist < nearest)	
@@ -260,29 +260,29 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 	if (o->movement.position_in_map.x <0)
 	{
 		TEST("Pozicia objektu je mensia ako 0");
-	//	o->movement.direction.x *= -1;
+		//	o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = -1; //odrazene
 		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-(int)o->width())
 	{
 		TEST("Pozicia objektu je viac ako maximum");
-	//	o->movement.direction.x *= -1;
-//		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
+		//	o->movement.direction.x *= -1;
+		//		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
 		o->movement.position_in_map.x = resolution.x - o->width(); //odrazene
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
 		TEST("Pozicia je y mensia ako 0" << o->movement.position_in_map);
-	//	o->movement.direction.y *= -1;
-//		o->movement.position_in_map.y *= -1;
+		//	o->movement.direction.y *= -1;
+		//		o->movement.position_in_map.y *= -1;
 		o->movement.position_in_map.y = 0; //odrazene
 	}
 	else if(o->movement.position_in_map.y > resolution.y-(int)o->height())
 	{
 		TEST("pozicia y vacsia ako max");
-	//	o->movement.direction.y *= -1;
-	//	o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
+		//	o->movement.direction.y *= -1;
+		//	o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
 		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
 	}
 }
@@ -319,36 +319,47 @@ void Map::add(Object * o)
 }
 Object * Map::removeAt(Position position)
 {
-	TEST("Removing pozicia:" << position)
 	Position removePos(position);
+
+	//posunutie oproti vyhladu
 	removePos.x += boundaries.x;
 	removePos.y += boundaries.y;
-	Position boxP(removePos.x / BOX_WIDTH, removePos.y / BOX_HEIGHT);
-	map[boxP.x][boxP.y].objects.reset();
-	Object * o = map[boxP.x][boxP.y].objects.read();
-	while( o!=NULL )
+
+	Position boxP(removePos.x / BOX_WIDTH -1, removePos.y / BOX_HEIGHT -1);
+	for (int i = 0; i <2; i++,boxP.x++)
 	{
-		Rectangle r = o->collisionSize();
-		TEST("velkosti: " <<r.x << " "<<r.y << " "<<r.width << " "<<r.height)
-		r.height += r.y;
-		r.width += r.x;
-		r.x = o->get_pos().x;
-		r.y = o->get_pos().y;
-		TEST("inbox pozicia:" << o->get_pos())
-		if (r.overlaps(position))
+		boxP.y = removePos.y / BOX_HEIGHT -1;
+		for (int j = 0; j <2; j++, boxP.y++)
 		{
-			map[boxP.x][boxP.y].objects.remove();
+			//staci kontrolovat na box predtym, FIXME objekty vacsia ako box
+			if ((boxP.y < 0)||(boxP.y > boxesInColumn)||(boxP.x < 0)|| (boxP.x>boxesInRow ))
+				continue;
+
 			map[boxP.x][boxP.y].objects.reset();
-			return o;
+			Object * o = map[boxP.x][boxP.y].objects.read();
+			while( o!=NULL )
+			{
+				Rectangle r = o->collisionSize();
+				r.height += r.y;
+				r.width += r.x;
+				r.x = o->get_pos().x;
+				r.y = o->get_pos().y;
+				if (r.overlaps(position))
+				{
+					map[boxP.x][boxP.y].objects.remove();
+					map[boxP.x][boxP.y].objects.reset();
+					return o;
+				}
+				o = map[boxP.x][boxP.y].objects.read();
+			}
 		}
-		o = map[boxP.x][boxP.y].objects.read();
 	}
-	TEST("Object not found!")
-	return NULL;
+	TEST("Object not found!"<<std::endl)
+		return NULL;
 }
 Map::~Map() 
 {
-	
+
 	float boxesInRow = (float)resolution.x/ BOX_WIDTH; 
 	for(int i = 0; i< boxesInRow; i++)
 	{
