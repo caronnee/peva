@@ -9,6 +9,7 @@ Seer::Seer ()
 void Seer::setEyes(int angle, int defaultVisibility)
 {
 	eyeDimension.turn(angle,defaultVisibility);
+	eyeDimension.absolute();
 	reset();
 }
 void Seer::setEyes(Position eyeDimension_)
@@ -19,6 +20,7 @@ void Seer::setEyes(Position eyeDimension_)
 		eyeDimension.x*=-1;
 	if (eyeDimension.y <0)
 		eyeDimension.y *=-1;
+	TEST("dimenzia:" << eyeDimension)
 	reset();
 }
 void Seer::reset()
@@ -51,6 +53,7 @@ void Seer::fill(Object * o, Position position)
 	objectPosition.x -= o->collisionSize().x;
 	objectPosition.y -= o->collisionSize().y;
 
+	TEST("pozicia:" << objectPosition << std::endl)
 	objectPosition.turn(180); 
 	if (objectPosition.y > eyeDimension.y)
 		return;

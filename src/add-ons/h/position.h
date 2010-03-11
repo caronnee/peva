@@ -13,6 +13,7 @@ public:
 	int x,y;
 	Position();
 	Position(int x_,int y_);
+	void absolute();
 	Position& operator=(const Position &a);
 	Position& operator+=(const Position &a);
 	Position& substractVector(Position p1);

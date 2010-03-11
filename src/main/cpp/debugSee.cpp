@@ -11,8 +11,8 @@
 
 #define BIGX 400
 #define BIGY 400
-#define ANGLE 30
-#define DISTANCE 50
+#define ANGLE 45
+#define DISTANCE 100
 
 Graphic g;
 Window w(&g);

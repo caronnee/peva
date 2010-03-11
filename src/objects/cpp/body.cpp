@@ -161,6 +161,7 @@ int Body::see()
 			Object * o =map->map[i][j].objects.read();
 			while (o!=NULL)
 			{
+				TEST("check this" << o <<std::endl)
 				seer.fill(o, get_pos());
 				o = map->map[i][j].objects.read();
 			}
