@@ -2,7 +2,6 @@
 #include  "../h/position.h"
 #include  "../h/macros.h"
 
-
 Position::Position()
 {
 	x=rand();
@@ -13,6 +12,15 @@ Position::Position(int x_,int y_)
 	x=x_;
 	y=y_;
 }
+
+void Position::absolute()
+{
+	if (x < 0)
+		x*=-1;
+	if (y < 0)
+		y*=-1;
+}
+
 Position& Position::operator=(const Position &a)
 {
 	this->x=a.x;

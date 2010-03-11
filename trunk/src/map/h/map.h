@@ -13,9 +13,9 @@
 #include "../../language/h/targets.h"
 
 //width of box in pixels
-#define BOX_WIDTH 100
+#define BOX_WIDTH 400
 //height of box in pixels
-#define BOX_HEIGHT 100
+#define BOX_HEIGHT 400
 
 
 /* structure for objects in area */
