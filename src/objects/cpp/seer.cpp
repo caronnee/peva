@@ -7,24 +7,26 @@ Seer::Seer()
 	setEyes(0,0); //slepy :)
 }
 
-void Seer::setEyes(int angle, int defaultVisibility)
+void Seer::setEyes(int angle, int visibility)
 {
-	eyeDimension.turn(angle,defaultVisibility);
-	eyeDimension.absolute();
-	size = defaultVisibility;
-	angle_ = angle;
-	reset();
+	//prevedieme do radianu
+	while (angle < 0)
+		angle +=90;
+	angle %= 90;
+	angleLeft = ( 90 - angle )*PI/180;
+	angleRight = ( 90 + angle )*PI/180;
+	size = visibility;
 }
-void Seer::setEyes(Position eyeDimension_)
+void Seer::setEyes(Position eyeDimension)
 {
-	eyeDimension = eyeDimension_;
-	//we need to have positive numbers
 	if (eyeDimension.x < 0)
 		eyeDimension.x*=-1;
 	if (eyeDimension.y <0)
 		eyeDimension.y *=-1;
 	size = sqrt(eyeDimension.x*eyeDimension.x+eyeDimension.y+eyeDimension.y);
-	angle_ = asin(eyeDimension.y/eyeDimension.y)*PI/180; //TODO check
+	float a = tan(eyeDimension.y / eyeDimension.x);
+	angleLeft = PI/2 - a;
+	angleRight = PI/2 + a;
 	reset();
 }
 void Seer::reset() 
@@ -65,9 +67,12 @@ void Seer::fill(Object * o, Position position)
 {
 	Position objectPosition = o->get_pos();
 	objectPosition.substractVector(position); //hodime to do osy s pociatkom (0,0)
-	if (sqrt(objectPosition.x*objectPosition.x
-		+ objectPosition.y * objectPosition.y)
-		> size)
+	objectPosition.x -= o->collisionSize().x + o->collisionSize().width >>1;
+	objectPosition.y -= o->collisionSize().y + o->collisionSize().height >>1;
+
+	if (objectPosition.x*objectPosition.x
+		+ objectPosition.y * objectPosition.y
+		> size*size)
 		return; //nie je v kruhu
 
 	ObjectRelation relation;
@@ -83,15 +88,14 @@ void Seer::fill(Object * o, Position position)
 	{
 		for (int j =0; j<2; j++)
 		{
-			//because of SDL, turning to 180 degrees
-			Position p = objectPosition.turn(180,size); //malo by byt jedno size a bez size, overit!
-			float a = 90;
+			float a = 0;//sin()
+			Position p;
 			if (p.x !=0)
-				a = asin(p.y/p.x) * PI /180 ;
+				a = atan(p.y/p.x) * PI /180 ;
 
-			if ( (a > (90-angle_))&&(a < (90+angle_)))
+			if ( (a > (90-angleLeft))&&(a < (90+angleRight)))
 			{
-				//je vnutru vysecu
+				//je vnutru vysece
 				addToVisible(relation);
 				return;
 			}
@@ -104,7 +108,7 @@ void Seer::fill(Object * o, Position position)
 int Seer::checkVisibility()
 {
 	return 3;
-//mame vsetky objekty zoradene podla Y osy
+	//mame vsetky objekty zoradene podla Y osy
 	std::list<ObjectRelation>::iterator iter = visibleObjects.begin();
 	//vyhodime vsetky, co su neviditelne
 	while(iter!=visibleObjects.end())
