@@ -1,15 +1,18 @@
+#include <cmath>
 #include "../../add-ons/h/macros.h"
 #include "../h/seer.h"
 
-Seer::Seer ()
+Seer::Seer()
 {
-	setEyes(0,0);//slepy :)
+	setEyes(0,0); //slepy :)
 }
 
 void Seer::setEyes(int angle, int defaultVisibility)
 {
 	eyeDimension.turn(angle,defaultVisibility);
 	eyeDimension.absolute();
+	size = defaultVisibility;
+	angle_ = angle;
 	reset();
 }
 void Seer::setEyes(Position eyeDimension_)
@@ -20,21 +23,15 @@ void Seer::setEyes(Position eyeDimension_)
 		eyeDimension.x*=-1;
 	if (eyeDimension.y <0)
 		eyeDimension.y *=-1;
-	TEST("dimenzia:" << eyeDimension)
+	size = sqrt(eyeDimension.x*eyeDimension.x+eyeDimension.y+eyeDimension.y);
+	angle_ = asin(eyeDimension.y/eyeDimension.y)*PI/180; //TODO check
 	reset();
 }
-void Seer::reset()
+void Seer::reset() 
 {
 	visibleObjects.clear();
-	//rovnica, v tvare 0 = Ax + By + C pre jednu aj pre druhu stranu
-	int xn = eyeDimension.x, yn = eyeDimension.y;
-	aLeft = yn; 
-	bLeft = xn;
-	cLeft = 0;
-	aRight = -yn;
-	bRight = xn;
-	cRight = 0;
 }
+
 void Seer::output()
 {
 	std::cout << "Vidim "<< visibleObjects.size() << "objektov: " <<std::endl;
@@ -46,34 +43,8 @@ void Seer::output()
 	}
 }
 
-void Seer::fill(Object * o, Position position)
+void Seer::addToVisible(ObjectRelation& relation)
 {
-	Position objectPosition = o->get_pos();
-	objectPosition.substractVector(position);
-	objectPosition.x -= o->collisionSize().x;
-	objectPosition.y -= o->collisionSize().y;
-
-	TEST("pozicia:" << objectPosition << std::endl)
-	objectPosition.turn(180); 
-	if (objectPosition.y > eyeDimension.y)
-		return;
-	if(aRight * objectPosition.x + bLeft * objectPosition.y < 0)
-		return; //mimo  oblast
-	objectPosition.x +=o->collisionSize().width;
-	if(aLeft * objectPosition.x + bLeft * objectPosition.y > 0)
-		return; //mimo oblast
-
-	//zpat do povodneho stavu
-	objectPosition.x -=o->collisionSize().width;
-	ObjectRelation relation;
-	relation.object = o;
-	relation.dirty = 0;
-	relation.rect.x = objectPosition.x;
-	relation.rect.y = objectPosition.y;
-	relation.rect.width = o->collisionSize().width;
-	relation.rect.height = o->collisionSize().height;
-
-	//zorad do pola zotriedene podla y-ovej osy
 	std::list<ObjectRelation>::iterator iter = visibleObjects.begin();
 	while (iter!=visibleObjects.end())	
 	{
@@ -87,6 +58,48 @@ void Seer::fill(Object * o, Position position)
 	}
 	if (iter == visibleObjects.end())
 		visibleObjects.push_back(relation);
+
+}
+
+void Seer::fill(Object * o, Position position)
+{
+	Position objectPosition = o->get_pos();
+	objectPosition.substractVector(position); //hodime to do osy s pociatkom (0,0)
+	if (sqrt(objectPosition.x*objectPosition.x
+		+ objectPosition.y * objectPosition.y)
+		> size)
+		return; //nie je v kruhu
+
+	ObjectRelation relation;
+	relation.object = o;
+	relation.dirty = 0;
+	relation.rect.x = objectPosition.x;
+	relation.rect.y = objectPosition.y;
+	relation.rect.width = o->collisionSize().width;
+	relation.rect.height = o->collisionSize().height;
+	
+	//check angles through all corners
+	for (int i =0; i<2; i++)
+	{
+		for (int j =0; j<2; j++)
+		{
+			//because of SDL, turning to 180 degrees
+			Position p = objectPosition.turn(180,size); //malo by byt jedno size a bez size, overit!
+			float a = 90;
+			if (p.x !=0)
+				a = asin(p.y/p.x) * PI /180 ;
+
+			if ( (a > (90-angle_))&&(a < (90+angle_)))
+			{
+				//je vnutru vysecu
+				addToVisible(relation);
+				return;
+			}
+			objectPosition.y += relation.rect.height;
+		}
+		objectPosition.x += relation.rect.width;
+		objectPosition.y = relation.rect.y;
+	}
 }
 int Seer::checkVisibility()
 {
@@ -97,16 +110,17 @@ int Seer::checkVisibility()
 	while(iter!=visibleObjects.end())
 	{
 		Rectangle oRelPos = (*iter).rect;
-		if (!(*iter).object->is_blocking())
-		{
-			iter ++;
-			continue;
-		}
 		if ((*iter).dirty&3)
 		{
 			iter = visibleObjects.erase(iter);
 			continue;
 		}
+		if (!(*iter).object->is_blocking())
+		{
+			iter ++;
+			continue;
+		}
+
 		//checkni uhol
 
 		double tgLeft = oRelPos.x/(oRelPos.y + oRelPos.height);

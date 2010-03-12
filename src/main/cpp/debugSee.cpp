@@ -40,7 +40,8 @@ int main()
 		g.Destroy();
 		return 1;
 	}
-	Map * map = new Map(Position (BIGX,BIGY), "grass");
+	Map * map = new Map(Position (BIGX,BIGY), "grass"); //TODO konfigurovat
+	map->clean();
 	map->setBoundary(min (w.g->screen->w, BIGX), min (w.g->screen->h,BIGY));
 	Body * body = new Body();
 	body->seer.setEyes(ANGLE,DISTANCE);
@@ -82,7 +83,6 @@ int main()
 							Position p;
 							SDL_GetMouseState(&p.x, &p.y);
 							Object * o = map->removeAt(p);
-							TEST("vysledok = " << o )
 							if ((o!=NULL) && (o!=body))
 								delete o;
 							redraw(map);

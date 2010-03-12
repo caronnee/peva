@@ -110,6 +110,9 @@ public:
 	/* removes from map an object, but do not destroys it */
 	void remove(Object * o);
 
+	/* removes all object from map and destroys them*/
+	void clean();
+
 	/* sets beoundaries of map according to size of solid wall*/	
 	void setBoundary(size_t w, size_t h);
 
