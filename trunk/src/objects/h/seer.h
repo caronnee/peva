@@ -18,12 +18,19 @@ struct ObjectRelation
 
 class Seer
 {
+	/* object seen */
 	std::list<ObjectRelation> visibleObjects;
-	size_t size, angle_;
+
+	/* maximum  sight */
+	size_t size;
+
+	/* angle to first border of circular sector, angle of right, in radians */
+	float angleLeft, angleRight;
+
+	/* marking object as visible */
 	void addToVisible(ObjectRelation& rel);
 
 public:
-	Position eyeDimension;
 	Seer();
 	void setEyes(int angle, int defaultVisibility);
 	void setEyes(Position eyeDimension_);
