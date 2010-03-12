@@ -1,7 +1,6 @@
 #include "../h/objects.h"
 #include "../../add-ons/h/macros.h"
 
-#define MAX_PX_PER_SECOND 300
 #define PI 3.14159265
 
 void ObjectMovement::clean()
@@ -131,7 +130,7 @@ size_t Object::height()
 {
 	return skinWork->height();
 }
-int Object::absoluteTurn(int angle)
+int Object::absoluteTurn(int angle, size_t size)
 {
 	movement.angle = angle;
 	while (movement.angle < 0)
@@ -139,7 +138,7 @@ int Object::absoluteTurn(int angle)
 	while (movement.angle > 360)
 		movement.angle-=360;
 	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
-	movement.direction.turn(movement.angle,MAX_PX_PER_SECOND);
+	movement.direction.turn(movement.angle, size);
 	return 0;
 }
 int Object::turn(int angle)

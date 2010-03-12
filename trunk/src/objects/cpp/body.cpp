@@ -128,7 +128,7 @@ int Body::see()
 	//robime to drsne, ziadna heuristika
 	//TODO zamysliet sa nad tm, ci je to vhodne upravit
 	
-	TEST("Filling in object see area:" << seer.eyeDimension);
+	seer.reset();
 	//hodime do stredu
 	int maxim = sqrt(seer.eyeDimension.x * seer.eyeDimension.x 
 		+ seer.eyeDimension.y * seer.eyeDimension.y );
@@ -153,19 +153,23 @@ int Body::see()
 	if (down.y < 0)
 		down.y = 0;
 
-	TEST("up & down " << up << " " << down)
 	for (int i = down.x; i<=up.x; i++)
-		for (int j = down.y; j < up.y; j++)
+		for (int j = down.y; j <= up.y; j++)
 		{
 			map->map[i][j].objects.reset();
 			Object * o =map->map[i][j].objects.read();
 			while (o!=NULL)
 			{
-				TEST("check this" << o <<std::endl)
+				if ( o == this )
+				{
+					o = map->map[i][j].objects.read();
+					continue;
+				}
 				seer.fill(o, get_pos());
 				o = map->map[i][j].objects.read();
 			}
 		}
+
 	return seer.checkVisibility();
 }
 Object * Body::eye(int index)

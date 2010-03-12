@@ -357,6 +357,21 @@ Object * Map::removeAt(Position position)
 	TEST("Object not found!"<<std::endl)
 		return NULL;
 }
+void Map::clean()
+{
+	for (size_t i =0; i< boxesInRow; i++)
+		for(size_t j = 0; j< boxesInColumn; j++)
+		{
+			map[i][j].objects.reset();
+			Object * o = map[i][j].objects.read();
+			while (o!=NULL)
+			{
+				remove(o);
+				delete o;
+				o = map[i][j].objects.data->value;
+			}
+		}
+}
 Map::~Map() 
 {
 
