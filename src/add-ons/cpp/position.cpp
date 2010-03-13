@@ -65,8 +65,8 @@ Position& Position::turn(int degree)
 }
 Position& Position::turn(int degree, int size)
 {
-	x = sin (degree * PI/180) * size;
-	y = -cos (degree * PI/180) * size;
+	x = cos (degree * PI/180) * size;
+	y = sin (degree * PI/180) * size;
 	return *this;
 }
 
