@@ -60,97 +60,115 @@ int main()
 
 	while (!end)
 	{
-		if (SDL_WaitEvent(&g.event) == 0){w.pop(); break;}
-		switch (w.g->event.type)
+		if (body->isMoving())
 		{
-			case SDL_QUIT:
+			body->step(1000);
+			body->move();
+			redraw(map);
+		}
+		while (SDL_PollEvent(&g.event)){
+			switch (w.g->event.type)
 			{
-				end = true;
-				break;
-			}
-			case SDL_KEYDOWN:
-				{
-					switch(w.g->event.key.keysym.sym)
+				case SDL_QUIT:
 					{
-						case SDLK_q:
-						case SDLK_ESCAPE:
-						{
-							end = true;
-							break;
-						}
-						case SDLK_x://remove object
-						{
-							Position p;
-							SDL_GetMouseState(&p.x, &p.y);
-							Object * o = map->removeAt(p);
-							if ((o!=NULL) && (o!=body))
-								delete o;
-							redraw(map);
-							break;
-						}
-						case SDLK_f: //ako follow sipku
-						{
-							Position p;
-							SDL_GetMouseState(&p.x, &p.y);
-							p.substractVector(body->get_pos());
-							p.x -= body->collisionSize().x + body->collisionSize().width/2;
-							p.y -= body->collisionSize().y + body->collisionSize().height/2;
-							//FIXME
-							//zistime kvadrant, 0,1,2,3, vzhladom na suradnice
-							int angle= 0;
-							int kvadr = 0;
-							if (p.y * p.x < 0)
-								kvadr = 1;
-							if (p.y < 0)
-								kvadr |= 2;
-							if (p.y != 0)
-								angle =atan((float)p.y/p.x)*180/PI;
-							if (kvadr &1)
-								angle+=90;
-							angle += 90*kvadr;
-							body->absoluteTurn(angle);
-							redraw(map);
-							break;
-						}
-						case SDLK_s:
-						{
-							body->see();
-							body->seer.output();
-							break;
-						}
-						case SDLK_b://move body
-						{
-							map->remove(body);
-							addToMap(map, body);
-							redraw(map);
-							break;
-						}
-						case SDLK_w://wall
-						{
-							addToMap(map,new Wall(wSkins[WallSolidId]));
-							break;
-						}
-						case SDLK_p://pushwall
-						{
-							addToMap(map,new PushableWall(wSkins[WallPushId]));
-							break;
-						}
-						case SDLK_t://trapwall
-						{
-							addToMap(map,new TrapWall(wSkins[WallTrapId]));
-							break;
-						}
-						case SDLK_m: //missille
-						{
-							addToMap(map,new Missille(wSkins.back(),NULL));
-							break;
-						}
-						default:
-							std::cout << "Button not recognized" << std::endl;
-							break;
+						end = true;
+						break;
 					}
-					break;
-				}
+				case SDL_KEYDOWN:
+					{
+						switch(w.g->event.key.keysym.sym)
+						{
+							case SDLK_q:
+							case SDLK_ESCAPE:
+								{
+									end = true;
+									break;
+								}
+							case SDLK_x://remove object
+								{
+									Position p;
+									SDL_GetMouseState(&p.x, &p.y);
+									Object * o = map->removeAt(p);
+									if ((o!=NULL) && (o!=body))
+										delete o;
+									redraw(map);
+									break;
+								}
+							case SDLK_f: //ako follow sipku
+								{
+									Position p;
+									SDL_GetMouseState(&p.x, &p.y);
+									p.substractVector(body->get_pos());
+									p.x -= body->collisionSize().x + body->collisionSize().width/2;
+									p.y -= body->collisionSize().y + body->collisionSize().height/2;
+									//FIXME
+									//zistime kvadrant, 0,1,2,3, vzhladom na suradnice
+									int angle= 0;
+									int kvadr = 0;
+									if (p.y * p.x < 0)
+										kvadr = 1;
+									if (p.y < 0)
+										kvadr |= 2;
+									if (p.y != 0)
+										angle =atan((float)p.y/p.x)*180/PI;
+									if (kvadr &1)
+										angle+=90;
+									angle += 90*kvadr;
+									body->absoluteTurn(angle);
+									redraw(map);
+									break;
+								}
+							case SDLK_s:
+								{
+									body->see();
+									body->seer.output();
+									break;
+								}
+
+							case SDLK_SPACE:
+								{
+									if (body->isMoving())
+										body->step(0);
+									else
+										body->step(10);
+									map->remove(body);
+									map->add(body);
+									break;
+								} 
+							case SDLK_b://move body
+								{
+									map->remove(body);
+									addToMap(map, body);
+									redraw(map);
+									break;
+								}
+							case SDLK_w://wall
+								{
+									addToMap(map,new Wall(wSkins[WallSolidId]));
+									break;
+								}
+							case SDLK_p://pushwall
+								{
+									addToMap(map,new PushableWall(wSkins[WallPushId]));
+									break;
+								}
+							case SDLK_t://trapwall
+								{
+									addToMap(map,new TrapWall(wSkins[WallTrapId]));
+									break;
+								}
+							case SDLK_m: //missille
+								{
+									addToMap(map,new Missille(wSkins.back(),NULL));
+									break;
+								}
+							default:
+								std::cout << "Button not recognized" << std::endl;
+								break;
+						}
+						break;
+					}
+			}
 		}
 	}
 	delete map;

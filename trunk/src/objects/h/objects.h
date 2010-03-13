@@ -9,7 +9,7 @@
 
 #define PROBABILITY 10
 #define MY_INFINITY ~0
-#define MAX_PX_PER_SECOND 300
+#define MAX_PX_PER_SECOND 100
 
 struct Type_bot
 {
