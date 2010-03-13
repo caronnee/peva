@@ -7,6 +7,7 @@
 #include <stack>
 
 #include "../../add-ons/h/position.h"
+#define SHIFT 2
 
 /* types of walls we have */
 
@@ -58,6 +59,7 @@ public:
 
 	/* how many pixels in the begining is 'empty' */
 	Position begin_in_picture; //kolko toho ma urezat zo zaciatku
+
 public:
 	Skin();
 
@@ -156,8 +158,8 @@ public:
 	/* returns the size of visible rectangle in picture */
 	Position get_size();
 
-	/* changes the direction of object */
-	float turn(int degree);
+	/* changes the direction of object , shift removeswring image direction at beginning */
+	float turn(int degree, int shift = SHIFT);
 
 	/* returns position od supposed head character according size */
 	Position head();

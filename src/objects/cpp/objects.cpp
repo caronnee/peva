@@ -137,7 +137,7 @@ int Object::absoluteTurn(int angle, size_t size)
 		movement.angle+=360;
 	while (movement.angle > 360)
 		movement.angle-=360;
-	skinWork->turn(movement.angle);  //potom skontrolovat, keby to blo pocat chodenia
+	skinWork->turn(movement.angle);  //TODO potom skontrolovat, keby to bolo pocaa chodenia
 	movement.direction.turn(movement.angle, size);
 	return 0;
 }

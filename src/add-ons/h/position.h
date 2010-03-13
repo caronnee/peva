@@ -24,6 +24,8 @@ public:
 	size_t getDistance(Position p);
 	Position & turn(int degree, int size);
 	Position & turn(int degree);
+//	Position & turn(float degree, int size);
+//	Position & turn(float degree);
 };
 
 struct Rectangle
