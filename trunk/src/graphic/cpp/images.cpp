@@ -55,7 +55,7 @@ Skin::Skin(std::string name, Skin::Type t)
 }
 void Skin::create(std::string * load, std::string name, int sizeLoaded)
 {
-	for (size_t i =0; i< size; i++)
+	for (size_t i  = 0; i< size; i++)
 	{
 		images[i] = NULL;
 	}
@@ -70,9 +70,9 @@ void Skin::create(std::string * load, std::string name, int sizeLoaded)
 		images[i] = IMG_Load((directory + load[i]).c_str());
 	}
 
-	for (size_t i =1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
+	for (size_t i  = 1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
 	{
-		if (images[i]==NULL)
+		if (images[i] == NULL)
 			images[i] = IMG_Load((directory + load[0]).c_str()); //aby sa dalo pouzit free
 	}
 	if (!bf::exists(directory + "config"))
@@ -149,7 +149,7 @@ WallSkin::WallSkin(std::string name, size_t wall)
 	size = NumberOfActions;
 	images = new SDL_Surface *[size];
 	//TODO zatial, pridat sleep veci a pod.
-	for (size_t i =0; i< size; i++)
+	for (size_t i  = 0; i< size; i++)
 	{
 		images[i] = IMG_Load((directory +toLoadMap[wall]).c_str());
 	}//TODO skonsolidovat
@@ -186,17 +186,16 @@ SDL_Surface * ImageSkinWork::get_image()
 }
 SDL_Rect ImageSkinWork::get_rect()
 {
-	Uint32 t =SDL_GetTicks();
+	Uint32 t  = SDL_GetTicks();
 	if (t - lastUpdate > TICKS)
 		{
-			rect.x += s->get_shift().x;
+			rect.x +=  s->get_shift().x;
 			lastUpdate = SDL_GetTicks();
 		}
-	usleep(50);
-	if (rect.x >= s->get_surface(states[state.top()])->w)
+	if (rect.x >=  s->get_surface(states[state.top()])->w)
 	{
 		rect.x = 0;
-		if (state.top() == StateTemporarily)
+		if (state.top()  ==  StateTemporarily)
 		{
 			removeState();
 		}
@@ -219,7 +218,7 @@ void ImageSkinWork::switch_state(States index, Actions action)
 		state.push(index);
 		index = s;
 	}
-	if (state.top()!=index)
+	if (state.top() != index)
 		state.push(index); //neocitnu sa dve stavy vedla seba, ani perman.
 }
 bool ImageSkinWork::processing()
@@ -255,17 +254,17 @@ Position ImageSkinWork::get_size()
 	return s->get_size();
 }
 
-float ImageSkinWork::turn(int degree)//nastavi uhol na degree
+float ImageSkinWork::turn(int degree, int shift)//nastavi uhol na degree, ak je nula, tak na lezato
 {
 	count = 0;
-	states[StateDefault]=ActionDefault;
+	states[StateDefault] = ActionDefault;
 	size_t directions = get_image()->h / s->get_shift().y;
 	//how much of angle can one image represent
 	float dirShift = 360 / directions;
 	//which image should we use
-	int sh = (degree + dirShift/2) / dirShift;
+	int sh = (degree + dirShift/2) / dirShift + shift;
 	rect.y = sh*s->get_shift().y;
-	rect.y %= get_image()->h;
+	rect.y %=  get_image()->h;
 	return dirShift;
 }
 Position ImageSkinWork::head()
@@ -281,24 +280,24 @@ Position ImageSkinWork::head()
 	{
 		case 0:
 		{
-			p.x += (dir%oneSide)*add*s->get_shift().x;
+			p.x +=  (dir%oneSide)*add*s->get_shift().x;
 			break;
 		}
 		case 1:
 		{
-			p.x += s->get_shift().x;
-			p.y += (dir%oneSide)*add*s->get_shift().y;
+			p.x +=  s->get_shift().x;
+			p.y +=  (dir%oneSide)*add*s->get_shift().y;
 			break;
 		}
 		case 2:
 		{
-			p.x += ( oneSide - dir % oneSide )*add*s->get_shift().x;
-			p.y += s->get_shift().y;
+			p.x +=  ( oneSide - dir % oneSide )*add*s->get_shift().x;
+			p.y +=  s->get_shift().y;
 			break;
 		}
 		case 3:
 		{
-			p.y += (oneSide - dir % oneSide )* add * s->get_shift().y;
+			p.y +=  (oneSide - dir % oneSide )* add * s->get_shift().y;
 			break;
 		}
 	}

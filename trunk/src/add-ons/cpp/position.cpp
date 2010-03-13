@@ -70,6 +70,19 @@ Position& Position::turn(int degree, int size)
 	return *this;
 }
 
+/*Position& Position::turn(float degree)
+{
+	return turn(degree, sqrt(x*x + y*y));
+}
+
+Position& Position::turn(float degree, int size)
+{
+	x = cos(degree) * size;
+	y = sin (degree) * size;
+	return *this;
+}*/
+
+
 Rectangle::Rectangle()
 {
 	x = y = width = height = -1;

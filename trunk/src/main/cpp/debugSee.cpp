@@ -96,21 +96,18 @@ int main()
 							p.x -= body->collisionSize().x + body->collisionSize().width/2;
 							p.y -= body->collisionSize().y + body->collisionSize().height/2;
 							//FIXME
-							//zistime kvadrant, 0,1,2,3
-							int angle= 90;
+							//zistime kvadrant, 0,1,2,3, vzhladom na suradnice
+							int angle= 0;
 							int kvadr = 0;
-							int test = 0;
-							if (p.y*p.x > 0)
+							if (p.y * p.x < 0)
 								kvadr = 1;
-							if (p.x < 0)
+							if (p.y < 0)
 								kvadr |= 2;
-							if (p.y >= 0)
-								test = 180;
 							if (p.y != 0)
-								angle =atan((float)p.x/p.y)*180/PI;
-							else angle = 90 - 90*(kvadr&2);
-							angle*=-1;
-							angle = test + angle;
+								angle =atan((float)p.y/p.x)*180/PI;
+							if (kvadr &1)
+								angle+=90;
+							angle += 90*kvadr;
 							body->absoluteTurn(angle);
 							redraw(map);
 							break;
