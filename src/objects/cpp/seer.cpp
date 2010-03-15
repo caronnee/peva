@@ -39,8 +39,8 @@ void Seer::setEyes(int angle, int visibility)
 	while (angle < 0)
 		angle +=90;
 	angle %= 90;
-	angleBegin_ = toRadians ( 90 - angle );
-	angleEnd_ = toRadians ( 90 + angle );
+	angleBegin_ = toRadians ( -angle );
+	angleEnd_ = toRadians ( angle );
 	size = visibility;
 }
 void Seer::setEyes(Position eyeDimension)
@@ -59,6 +59,10 @@ void Seer::reset(float angle)
 {
 	angleBegin = angle + angleBegin_;
 	angleEnd = angle + angleEnd_;	
+	while (angleBegin > 2*PI)
+		angleBegin -= 2*PI;
+	while (angleEnd > 2*PI)
+		angleEnd -= 2*PI;
 	visibleObjects.clear();
 }
 
@@ -125,13 +129,13 @@ void Seer::fill(Object * o, Object * center) //position = centre
 	relation.rect.width = o->collisionSize().width;
 	relation.rect.height = o->collisionSize().height;
 
-	float a1 = relation.angleEnd,a2 = relation.angleBegin;
+	float a1 = 100.0 , a2 = -100.0; ///vhodne nekonecno
 	objectPosition.x = relation.rect.x;
 	objectPosition.y = relation.rect.y;
 	//check angles through all corners
 	for (int i =0; i<2; i++)
 	{
-		for (int j =0; j<2; j++)
+		for (int j = 0; j<2; j++)
 		{
 			float a = getRadian(center, objectPosition);
 			int u = toDegree(a);
@@ -142,11 +146,23 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		objectPosition.x += relation.rect.width;
 		objectPosition.y = relation.rect.y;
 	}
-	relation.angleBegin = max<float> (relation.angleBegin, a1);
-	relation.angleEnd = min<float> (relation.angleEnd, a2);
-	if ((relation.angleBegin >= angleBegin)
-		&& (relation.angleEnd <= angleEnd))
+	if (a2 -a1 >PI) //staci nam PI,  ze to presiahlo 90*
+	{
+		float hlp = a2;
+		a2=a1;
+		a1=hlp;
+		a1 -= 2*PI; //dame do zaporu
+	}
+	if (((angleBegin <= a1)
+		 && (angleEnd >= a1))
+	||((angleBegin <= a2) 
+		&& (angleEnd >= a2 ))) //FIXME fo funkcie
+	{
+		relation.angleBegin = max<float> (relation.angleBegin, a1);
+		relation.angleEnd = min<float> (relation.angleEnd, a2);
+
 		visibleObjects.push_back(relation);
+	}
 }
 int Seer::checkVisibility()
 {
