@@ -1,8 +1,6 @@
 #include "../h/objects.h"
 #include "../../add-ons/h/macros.h"
 
-#define PI 3.14159265
-
 void ObjectMovement::clean()
 {
 	realX = 0;

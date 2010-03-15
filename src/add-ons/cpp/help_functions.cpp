@@ -3,8 +3,12 @@
 #include <string>
 #include "../h/help_functions.h"
 
-int min(int x, int y)
+int toDegree( float angle )
 {
-	if (x < y) return x;
-	return y;
+	return angle * 180 / PI;
+}
+
+float toRadians( int angle )
+{
+	return (float)angle * PI /180;
 }

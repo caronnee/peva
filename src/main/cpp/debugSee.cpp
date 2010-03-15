@@ -12,7 +12,7 @@
 #define BIGX 400
 #define BIGY 400
 #define ANGLE 45
-#define DISTANCE 100
+#define DISTANCE 300
 
 Graphic g;
 Window w(&g);
@@ -98,12 +98,12 @@ int main()
 								{
 									Position p;
 									SDL_GetMouseState(&p.x, &p.y);
+									int angle= Seer::getDegree(body, p);
 									p.substractVector(body->get_pos());
 									p.x -= body->collisionSize().x + body->collisionSize().width/2;
 									p.y -= body->collisionSize().y + body->collisionSize().height/2;
 									//FIXME
 									//zistime kvadrant, 0,1,2,3, vzhladom na suradnice
-									int angle= 0;
 									int kvadr = 0;
 									if (p.y * p.x < 0)
 										kvadr = 1;

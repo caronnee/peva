@@ -1,6 +1,7 @@
 #include <cmath>
 #include  "../h/position.h"
 #include  "../h/macros.h"
+#include  "../h/help_functions.h"
 
 Position::Position()
 {
@@ -65,8 +66,8 @@ Position& Position::turn(int degree)
 }
 Position& Position::turn(int degree, int size)
 {
-	x = cos (degree * PI/180) * size;
-	y = sin (degree * PI/180) * size;
+	x = cos( toRadians(degree) ) * size;
+	y = sin( toRadians(degree) ) * size;
 	return *this;
 }
 

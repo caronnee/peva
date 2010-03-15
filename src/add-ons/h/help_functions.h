@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 
+#define PI 3.14159265
+
 template <class T>
 T min(T x, T y)
 {
@@ -35,4 +37,7 @@ std::string deconvert(T i)
 	convertor << i;
 	return convertor.str();
 };
+int toDegree(float angle);
+float toRadians(int angle);
+
 #endif

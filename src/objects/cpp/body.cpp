@@ -128,12 +128,9 @@ int Body::see()
 	//robime to drsne, ziadna heuristika
 	//TODO zamysliet sa nad tm, ci je to vhodne upravit
 	
-	seer.reset();
-	//hodime do stredu
-	int maxim = sqrt(seer.eyeDimension.x * seer.eyeDimension.x 
-		+ seer.eyeDimension.y * seer.eyeDimension.y );
-
-	Position diff(maxim, maxim);
+	seer.reset( toRadians( movement.angle ) );
+	 
+	Position diff(seer.size, seer.size);
 	Position up = get_pos();
 	up+= diff;
 
@@ -165,7 +162,7 @@ int Body::see()
 					o = map->map[i][j].objects.read();
 					continue;
 				}
-				seer.fill(o, get_pos());
+				seer.fill(o, this);
 				o = map->map[i][j].objects.read();
 			}
 		}
