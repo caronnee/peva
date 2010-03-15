@@ -26,7 +26,7 @@ debugSee: $(lOBJECTS) o/debugSee.o
 	g++ $(LDFLAGS) -o $@ $^
 	@echo "..........................................."
 
-test:	o/list.o o/test.o o/objects.o o/position.o o/images.o
+test:	o/list.o o/test.o o/objects.o o/position.o o/images.o o/help_functions.o
 	@echo ""
 	@echo "..........................................."
 	@echo "Creating test for testing list...:"

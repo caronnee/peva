@@ -1,4 +1,5 @@
 #include <cmath>
+#include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 #include "../h/seer.h"
 
@@ -7,14 +8,39 @@ Seer::Seer()
 	setEyes(0,0); //slepy :)
 }
 
+int Seer::getDegree(Object * o, Position point)
+{
+	float a = getRadian(o, point);
+	return a*180/PI;
+}
+float Seer::getRadian(Object * o, Position point)
+{
+	float angle = 0.0;
+	point.substractVector(o->get_pos());
+	point.x -= o->collisionSize().x + o->collisionSize().width/2;
+	point.y -= o->collisionSize().y + o->collisionSize().height/2;
+	//FIXME
+	//zistime kvadrant, 0,1,2,3, vzhladom na suradnice
+	int kvadr = 0;
+	if (point.y * point.x < 0)
+		kvadr = 1;
+	if (point.y < 0)
+		kvadr |= 2;
+	if (point.y != 0)
+		angle =atan((float)point.y/point.x);
+	if (kvadr &1)
+		angle+=PI/2;
+	angle += kvadr*PI/2;
+	return angle;
+}
 void Seer::setEyes(int angle, int visibility)
 {
 	//prevedieme do radianu
 	while (angle < 0)
 		angle +=90;
 	angle %= 90;
-	angleLeft = ( 90 - angle )*PI/180;
-	angleRight = ( 90 + angle )*PI/180;
+	angleBegin_ = toRadians ( 90 - angle );
+	angleEnd_ = toRadians ( 90 + angle );
 	size = visibility;
 }
 void Seer::setEyes(Position eyeDimension)
@@ -25,12 +51,14 @@ void Seer::setEyes(Position eyeDimension)
 		eyeDimension.y *=-1;
 	size = sqrt(eyeDimension.x*eyeDimension.x+eyeDimension.y+eyeDimension.y);
 	float a = tan(eyeDimension.y / eyeDimension.x);
-	angleLeft = PI/2 - a;
-	angleRight = PI/2 + a;
-	reset();
+	angleBegin_ = PI/2 - a;
+	angleEnd_ = PI/2 + a;
+	reset(0.0);
 }
-void Seer::reset() 
+void Seer::reset(float angle) 
 {
+	angleBegin = angle + angleBegin_;
+	angleEnd = angle + angleEnd_;	
 	visibleObjects.clear();
 }
 
@@ -60,50 +88,65 @@ void Seer::addToVisible(ObjectRelation& relation)
 	}
 	if (iter == visibleObjects.end())
 		visibleObjects.push_back(relation);
-
 }
 
-void Seer::fill(Object * o, Position position)
+void Seer::fill(Object * o, Object * center) //position = centre
 {
-	Position objectPosition = o->get_pos();
-	objectPosition.substractVector(position); //hodime to do osy s pociatkom (0,0)
-	objectPosition.x -= o->collisionSize().x + o->collisionSize().width >>1;
-	objectPosition.y -= o->collisionSize().y + o->collisionSize().height >>1;
+	Position position = center->get_pos();
+	position.x += center->collisionSize().x + center->collisionSize().width >> 1;
+	position.y += center->collisionSize().y + center->collisionSize().height >> 1;
 
-	if (objectPosition.x*objectPosition.x
+	Position objectPosition = o->get_pos();
+
+	objectPosition.x += o->collisionSize().x 
+		+ o->collisionSize().width >>1;
+	objectPosition.y += o->collisionSize().y 
+		+ o->collisionSize().height >>1;
+
+	objectPosition.substractVector(position); //hodime to do osy s pociatkom (0,0)
+	if (objectPosition.x * objectPosition.x
 		+ objectPosition.y * objectPosition.y
 		> size*size)
 		return; //nie je v kruhu
 
 	ObjectRelation relation;
 	relation.object = o;
-	relation.dirty = 0;
-	relation.rect.x = objectPosition.x;
-	relation.rect.y = objectPosition.y;
+	relation.invisible = 0;
+//	relation.rect.x = objectPosition.x;
+//	relation.rect.y = objectPosition.y;
+//	relation.rect.widto;
+	relation.invisible = 0;
+//	relation.rect.x = h = o->collisionSize().width;
+//	relation.rect.height = o->collisionSize().height;
+	relation.angleBegin = angleBegin;
+	relation.angleEnd = angleEnd;
+	relation.rect.x = o->get_pos().x + o->collisionSize().x;
+	relation.rect.y = o->get_pos().y + o->collisionSize().y;
 	relation.rect.width = o->collisionSize().width;
 	relation.rect.height = o->collisionSize().height;
-	
+
+	float a1 = relation.angleEnd,a2 = relation.angleBegin;
+	objectPosition.x = relation.rect.x;
+	objectPosition.y = relation.rect.y;
 	//check angles through all corners
 	for (int i =0; i<2; i++)
 	{
 		for (int j =0; j<2; j++)
 		{
-			float a = 0;//sin()
-			Position p;
-			if (p.x !=0)
-				a = atan(p.y/p.x) * PI /180 ;
-
-			if ( (a > (90-angleLeft))&&(a < (90+angleRight)))
-			{
-				//je vnutru vysece
-				addToVisible(relation);
-				return;
-			}
+			float a = getRadian(center, objectPosition);
+			int u = toDegree(a);
+			a1 = min<float> (a1,a);
+			a2 = max<float> (a,a2);
 			objectPosition.y += relation.rect.height;
 		}
 		objectPosition.x += relation.rect.width;
 		objectPosition.y = relation.rect.y;
 	}
+	relation.angleBegin = max<float> (relation.angleBegin, a1);
+	relation.angleEnd = min<float> (relation.angleEnd, a2);
+	if ((relation.angleBegin >= angleBegin)
+		&& (relation.angleEnd <= angleEnd))
+		visibleObjects.push_back(relation);
 }
 int Seer::checkVisibility()
 {
@@ -114,7 +157,7 @@ int Seer::checkVisibility()
 	while(iter!=visibleObjects.end())
 	{
 		Rectangle oRelPos = (*iter).rect;
-		if ((*iter).dirty&3)
+		if ((*iter).invisible&3)
 		{
 			iter = visibleObjects.erase(iter);
 			continue;
@@ -137,9 +180,9 @@ int Seer::checkVisibility()
 			double oTgLeft = r.x/(r.y +r.height);
 			double oTgRight = (r.x + r.width)/r.y; //r.y nebude niky nulove
 			if ((tgLeft < oTgLeft) && (oTgLeft < tgRight))
-				(*i).dirty|=1;
+				(*i).invisible|=1;
 			if ((tgLeft < oTgRight) && (oTgRight < tgRight))
-				(*i).dirty|=2;
+				(*i).invisible|=2;
 			i++;
 		}
 	}

@@ -3,41 +3,67 @@
 
 #include <iostream>
 #include <list> //kvoli efektivnemu odoberaniu
-
-
 #include "../../add-ons/h/position.h"
 #include "objects.h"
 #include "seer.h"
 
 struct ObjectRelation
 {
+	/* object of interest */
 	Object * object;
+
+	/* relative rectangle to seer center*/
 	Rectangle rect;
-	int dirty;
+
+	/* visibility flag */
+	int invisible;
+
+	/* circular sector bordered by two angles */
+	float angleBegin, angleEnd;
 };
 
+/* class representing eyes of robot */
 class Seer
 {
 	/* object seen */
 	std::list<ObjectRelation> visibleObjects;
 
-	/* maximum  sight */
-	size_t size;
-
 	/* angle to first border of circular sector, angle of right, in radians */
-	float angleLeft, angleRight;
+	float angleBegin_, angleEnd_, angleBegin, angleEnd;
 
 	/* marking object as visible */
 	void addToVisible(ObjectRelation& rel);
 
 public:
+	/* constructor, set class to be blind */
 	Seer();
+
+	/* setting eye constraint with given angle and size */
 	void setEyes(int angle, int defaultVisibility);
+
+	/* maximum  sight */
+	size_t size;
+
+	/* return angle cco*/
+	static int getDegree(Object *o, Position point );
+	static float getRadian(Object *o, Position point );
+
+	/* setting eye with given triagle (0,0),(0,x),(0,y)*/
 	void setEyes(Position eyeDimension_);
-	void reset( );
+
+	/* reseting to default state */
+	void reset( float angle );
+
+	/* returns object, that is viible at position index */
 	Object * getObject(size_t index);
+
+	/* prints to default output information about visible objects */
 	void output();
-	void fill(Object * o, Position position);
+
+	/* determies, wheather an object is in seeable angle */
+	void fill(Object * o1, Object * o2);
+
+	/* removing objects that are covered by another objects */
 	int checkVisibility();
 };
 
