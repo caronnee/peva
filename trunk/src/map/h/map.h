@@ -45,6 +45,9 @@ struct Map
 	std::vector<Place> places;
 	std::vector<Position> starts;
 
+	/* draw map including non-participating objects */
+	void drawAll(Window * w);
+
 	/* removes object at position p*/
 	Object * removeAt(Position position);
 
@@ -78,7 +81,7 @@ struct Map
 	/* resolves move actions, check collision etc.*/
 	void resolveMove(Object * o);
 	
-	/* drawing boundaries */
+	/* drawing boundaries, rectangel, where its safe to draw */
 	Rectangle boundaries;
 public:
 	/* constructor defining map resolution in pixels and name of skin*/

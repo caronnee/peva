@@ -14,7 +14,7 @@ std::string toLoadBot[] = { "default.png", "sleep.png", "walk.png", "attack.png"
 std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
-std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","ExitWall.png", "Target.png", "selected.png",  };
+std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","StartWall.png", "Target.png", "selected.png",  };
 
 Skin::Skin()
 {
