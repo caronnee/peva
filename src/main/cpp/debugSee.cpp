@@ -13,6 +13,16 @@
 #define BIGY 400
 #define ANGLE 45
 #define DISTANCE 300
+#define X 100
+#define Y 100
+
+enum Params
+{
+	ParamX =0,
+	ParamY,
+	ParamAngle,
+	ParamDistance
+};
 
 Graphic g;
 Window w(&g);
@@ -28,25 +38,29 @@ void addToMap(Map * map, Object * object)
 	SDL_GetMouseState(&p.x, &p.y);
 	object->setPosition(p);
 	map->add(object);
-	//TEST("Na pozicii" << p)
 	redraw(map);
 }
 
-int main()
+int main(int argc, char ** args)
 {
 	bool end = false;
+	int params[] = { X, Y, ANGLE, DISTANCE };
+	for (int i =1; i< argc; i++)
+	{
+		params[i-1] = convert<int>(args[i]);
+	}
 	if (!g.Init())
 	{
 		g.Destroy();
 		return 1;
 	}
-	Map * map = new Map(Position (BIGX,BIGY), "grass"); //TODO konfigurovat
+	Map * map = new Map(Position (BIGX, BIGY), "grass"); //TODO konfigurovat
 	map->clean();
 	map->setBoundary(min (w.g->screen->w, BIGX), min (w.g->screen->h,BIGY));
 	Body * body = new Body();
-	body->seer.setEyes(ANGLE,DISTANCE);
+	body->seer.setEyes(params[ParamAngle], params[ParamDistance]);
 	body->setSkin(new Skin("dragon",Skin::BotSkin));
-	body->place(map, Position (100,100));
+	body->place(map, Position (params[ParamX],params[ParamY]));
 	map->add(body);
 
 	redraw(map);

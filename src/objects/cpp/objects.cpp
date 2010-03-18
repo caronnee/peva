@@ -96,7 +96,7 @@ void Object::endMove()
 }
 bool Object::is_blocking()
 {
-	return false;
+	return true;
 }
 
 SDL_Rect Object::get_rect()

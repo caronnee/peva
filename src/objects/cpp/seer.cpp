@@ -41,6 +41,10 @@ void Seer::setEyes(int angle, int visibility)
 	angle %= 90;
 	angleBegin_ = toRadians ( -angle );
 	angleEnd_ = toRadians ( angle );
+	if (angleBegin_ > angleEnd )
+	{
+		angleBegin_ -=2*PI;
+	}
 	size = visibility;
 }
 void Seer::setEyes(Position eyeDimension)
@@ -63,6 +67,8 @@ void Seer::reset(float angle)
 		angleBegin -= 2*PI;
 	while (angleEnd > 2*PI)
 		angleEnd -= 2*PI;
+	if(angleBegin > angleEnd)
+		angleBegin -= 2*PI;
 	visibleObjects.clear();
 }
 
@@ -108,20 +114,13 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		+ o->collisionSize().height >>1;
 
 	objectPosition.substractVector(position); //hodime to do osy s pociatkom (0,0)
-	if (objectPosition.x * objectPosition.x
-		+ objectPosition.y * objectPosition.y
-		> size*size)
+	size_t dist = (size_t) objectPosition.x * objectPosition.x
+		+ objectPosition.y * objectPosition.y;
+	if ( dist > size*size)
 		return; //nie je v kruhu
 
 	ObjectRelation relation;
 	relation.object = o;
-	relation.invisible = 0;
-//	relation.rect.x = objectPosition.x;
-//	relation.rect.y = objectPosition.y;
-//	relation.rect.widto;
-	relation.invisible = 0;
-//	relation.rect.x = h = o->collisionSize().width;
-//	relation.rect.height = o->collisionSize().height;
 	relation.angleBegin = angleBegin;
 	relation.angleEnd = angleEnd;
 	relation.rect.x = o->get_pos().x + o->collisionSize().x;
@@ -138,7 +137,7 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		for (int j = 0; j<2; j++)
 		{
 			float a = getRadian(center, objectPosition);
-			int u = toDegree(a);
+			//int u = toDegree(a);
 			a1 = min<float> (a1,a);
 			a2 = max<float> (a,a2);
 			objectPosition.y += relation.rect.height;
@@ -146,35 +145,52 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		objectPosition.x += relation.rect.width;
 		objectPosition.y = relation.rect.y;
 	}
-	if (a2 -a1 >PI) //staci nam PI,  ze to presiahlo 90*
+	if ((a2 - angleBegin >PI)) //staci nam PI,  ze to presiahlo 90*
 	{
-		float hlp = a2;
-		a2=a1;
-		a1=hlp;
+		a2 -= 2*PI; //dame do zaporu
+	}
+	if ( a1 - angleBegin > PI)
+	{
 		a1 -= 2*PI; //dame do zaporu
 	}
+	float aa1 = a1, aa2=a2;
+	a1=min<float>(aa1,aa2);
+	a2=max<float>(aa1,aa2);
+
 	if (((angleBegin <= a1)
 		 && (angleEnd >= a1))
 	||((angleBegin <= a2) 
-		&& (angleEnd >= a2 ))) //FIXME fo funkcie
+		&& (angleEnd >= a2 ))
+	|| ((a1 <= angleBegin)
+		&& (angleBegin <= a2))) //FIXME fo funkcie
 	{
 		relation.angleBegin = max<float> (relation.angleBegin, a1);
 		relation.angleEnd = min<float> (relation.angleEnd, a2);
-
-		visibleObjects.push_back(relation);
+		relation.distance = dist;
+		std::list<ObjectRelation>::iterator ins = visibleObjects.begin();
+		while (ins!=visibleObjects.end())
+		{
+			if((*ins).distance > dist )
+				break;
+			ins++;
+		}
+		visibleObjects.insert(ins, relation);
+		for (ins = visibleObjects.begin(); ins!=visibleObjects.end(); ins++)
+			std::cout << " " << (*ins).distance;
+			std::cout << std::endl;
 	}
 }
 int Seer::checkVisibility()
 {
-	return 3;
 	//mame vsetky objekty zoradene podla Y osy
 	std::list<ObjectRelation>::iterator iter = visibleObjects.begin();
 	//vyhodime vsetky, co su neviditelne
+	TEST(visibleObjects.size())
 	while(iter!=visibleObjects.end())
 	{
-		Rectangle oRelPos = (*iter).rect;
-		if ((*iter).invisible&3)
+		if ((*iter).angleBegin > (*iter).angleEnd)
 		{
+			TEST("mazem")
 			iter = visibleObjects.erase(iter);
 			continue;
 		}
@@ -184,26 +200,24 @@ int Seer::checkVisibility()
 			continue;
 		}
 
-		//checkni uhol
-
-		double tgLeft = oRelPos.x/(oRelPos.y + oRelPos.height);
-		double tgRight = (oRelPos.x + oRelPos.width)/oRelPos.y;
+		//checkni, comu vsetkemu brani
 		std::list<ObjectRelation>::iterator i = iter;
 		i++;
+		float beg = (*iter).angleBegin;
+		float end = (*iter).angleEnd;
 		while (i!=visibleObjects.end())
 		{
-			Rectangle r = (*i).rect;
-			double oTgLeft = r.x/(r.y +r.height);
-			double oTgRight = (r.x + r.width)/r.y; //r.y nebude niky nulove
-			if ((tgLeft < oTgLeft) && (oTgLeft < tgRight))
-				(*i).invisible|=1;
-			if ((tgLeft < oTgRight) && (oTgRight < tgRight))
-				(*i).invisible|=2;
+			if ( ( beg < (*i).angleBegin ) && ( (*i).angleBegin < end ) )
+				(*i).angleBegin = end;
+			if ( ( beg < (*i).angleEnd ) && ( (*i).angleEnd < end ) )
+				(*i).angleEnd = beg;
 			i++;
 		}
+		iter++;
 	}
 	return visibleObjects.size();
 }
+
 Object * Seer::getObject(size_t index)
 {
 	if (index >= visibleObjects.size())

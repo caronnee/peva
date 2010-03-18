@@ -15,11 +15,11 @@ struct ObjectRelation
 	/* relative rectangle to seer center*/
 	Rectangle rect;
 
-	/* visibility flag */
-	int invisible;
-
 	/* circular sector bordered by two angles */
 	float angleBegin, angleEnd;
+
+	/* distance from center */
+	size_t distance;
 };
 
 /* class representing eyes of robot */
