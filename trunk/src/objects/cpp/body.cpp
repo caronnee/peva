@@ -125,6 +125,7 @@ bool Body::is_blocking()
 }
 int Body::see()
 {
+#ifndef _LANGUAGE_
 	//robime to drsne, ziadna heuristika
 	//TODO zamysliet sa nad tm, ci je to vhodne upravit
 	
@@ -167,6 +168,7 @@ int Body::see()
 			}
 		}
 
+#endif
 	return seer.checkVisibility();
 }
 Object * Body::eye(int index)
@@ -213,6 +215,7 @@ int Body::wait(int x)
 }
 int Body::shoot(int angle)
 {
+#ifndef _LANGUAGE_
 	std::cout << "Shooting at angle [ " << angle <<std::endl;
 	if (ammo.empty())
 	{
@@ -239,6 +242,7 @@ int Body::shoot(int angle)
 	ammo.data->value->movement.realY = 0;
 	ammo.data->value->owner = this;
 	o->turn(angle);
+
 	if (map->checkCollision(ammo.data->value))
 	{
 		TEST("moc blizko steny!")
@@ -246,6 +250,7 @@ int Body::shoot(int angle)
 	}
 	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
 	return 1;
+#endif
 }
 void Body::killed(Object * o)
 {
@@ -277,10 +282,13 @@ void Body::hitted(Object * attacker, Position p, int attack)
 }
 void Body::dead()
 {
+#ifndef _LANGUAGE_
 	map->add(this);
+#endif
 }
 void Body::hit(Object * o)
 {
+#ifndef _LANGUAGE_
 //	Object::hit(o);
 	Position p,t;
 	intersection(o,p,t);
@@ -297,6 +305,7 @@ void Body::hit(Object * o)
 		TEST(movement.position_in_map << " " )
 		exit(3);
 	}
+#endif
 }
 Body::~Body()
 {
