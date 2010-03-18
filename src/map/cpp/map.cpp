@@ -116,6 +116,20 @@ void Map::addTarget(size_t x, size_t y)
 	pl.id = id; 
 	pl.p = p;
 }
+void Map::drawAll(Window * w)
+{
+	for (size_t i =0 ; i < starts.size(); i++)
+	{
+		if (boundaries.overlaps(starts[i]))
+		{
+			SDL_Rect r;
+			r.x =starts[i].x - boundaries.x;
+			r.y = starts[i].y - boundaries.y;
+			SDL_BlitSurface(wskins[WallStartId]->get_surface(1), NULL, w->g->screen, &r);
+		}
+	}
+	redraw(w);
+}
 void Map::redraw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
 {
 	SDL_Rect r; //TODO nie takto natvrdlo

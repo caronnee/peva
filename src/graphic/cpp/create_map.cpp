@@ -1,12 +1,12 @@
-//TPDP ma,iesto makier pouzit nieco schopnejsie
+//TODO ma,iesto makier pouzit nieco schopnejsie
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <fstream>
 #include <iostream>
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
-#include "../h/create_map.h"
 #include "../../objects/h/wall.h"
+#include "../h/create_map.h"
 
 Create_map::Create_map(Window *w_)
 {
@@ -148,7 +148,6 @@ void Create_map::draw()
 		{
 			SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&tile_rect[i]);
 		}
-		TEST("..."<<select<<std::endl)
 		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 	}
 	SDL_Flip(w->g->screen);
@@ -209,27 +208,6 @@ void Create_map::process_resolution()
 				break;
 			}
 	}
-}
-bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
-{
-	//TODO uistit sa, ze to podpurujeme, ak nie, iny format (napriklad cisto textovy, fuj!:)
-	xmlDocPtr doc = NULL;
-	xmlNodePtr root_node = NULL;
-
-	LIBXML_TEST_VERSION;
-
-	doc = xmlNewDoc (BAD_CAST "1.0");
-	root_node = xmlNewNode(NULL,BAD_CAST "map");
-	xmlDocSetRootElement(doc, root_node);
-
-	xmlNewProp(root_node, BAD_CAST "width", BAD_CAST written_x.c_str());
-	xmlNewProp(root_node, BAD_CAST "heigth", BAD_CAST written_y.c_str());
-
-	xmlSaveFormatFileEnc(file_name.c_str(),doc, "UTF-8",1);
-
-	xmlFreeDoc(doc);
-	xmlCleanupParser();
-	return true; //TODO checkovanie, ci sa to podarilo
 }
 void Create_map::generuj(Position resolution)
 {
@@ -303,7 +281,7 @@ void Create_map::saving()
 						}
 					case SDLK_RETURN:
 						{
-							if (!save())
+						//	if (!map->saveToFile(filename))
 								do 
 									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
 								while (w->g->event.type != SDL_KEYDOWN);
@@ -396,7 +374,7 @@ void Create_map::process_map()
 										case WallTrapId:
 											wall = new TrapWall(skins[WallTrapId]);
 											break;
-										case WallExitId:
+										case WallStartId:
 											map->starts.push_back(Position(x,y));
 											break;
 										default:
@@ -408,7 +386,7 @@ void Create_map::process_map()
 										wall->setPosition(p,0);
 										map->add(wall);
 									}
-									map->redraw(w);
+									map->drawAll(w);
 									SDL_Flip(w->g->screen);
 									break;
 								}
@@ -491,7 +469,7 @@ void Create_map::process()
 	}
 	if (state == SAVING)
 	{
-		std::cout << "start saving function" << std::endl;
+		TEST("start saving function")
 		saving();
 	}
 }
