@@ -3,6 +3,7 @@
 #include "../../add-ons/h/macros.h"
 #include "../h/seer.h"
 
+#define FLOAT_COMP_ZERO -0.1
 Seer::Seer()
 {
 	setEyes(0,0); //slepy :)
@@ -188,7 +189,7 @@ int Seer::checkVisibility()
 	TEST(visibleObjects.size())
 	while(iter!=visibleObjects.end())
 	{
-		if ((*iter).angleBegin - (*iter).angleEnd > 0.001) //kvoli nepresnosto floatov
+		if ((*iter).angleBegin - (*iter).angleEnd > FLOAT_COMP_ZERO) //kvoli nepresnosto floatov
 		{
 			TEST("mazem")
 			iter = visibleObjects.erase(iter);
