@@ -249,10 +249,6 @@ void Play::process()
 		{
 			switch(w->g->event.key.keysym.sym)
 			{
-				case SDLK_r:
-				{	
-									break;
-				}
 				case SDLK_ESCAPE:
 				{
 					w->pop();

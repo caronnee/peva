@@ -1,13 +1,14 @@
-#define _LANGUAGE_
+#define _NO_IMAGES_
 #include <iostream>
 #include "../h/robot.h"
 #include "../h/bison.h"
+#include "../../add-ons/h/macros.h"
 
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 extern void my_destroy();
 extern int yyparse(Robots *);
 
-//TUTO NEISIM SKINY!
+//TUTO NEISIM SKINY! A staci mi len jeden vstup, ten, ktory budem 'testovat'
 
 int main(int argc, char ** argv)
 {
@@ -26,7 +27,6 @@ int main(int argc, char ** argv)
 	int err = yyparse(&q);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
 		q.actualRobot->output(&q.actualRobot->defined);
-		getc(stdin);
 		/*for (int i =0; i<q.actualRobot->instructions.size(); i++)
 		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
 		q.actualRobot->save_to_xml();

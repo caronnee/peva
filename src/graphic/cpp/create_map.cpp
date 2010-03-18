@@ -17,6 +17,7 @@ Create_map::Create_map(Window *w_)
 	skins.clear();
 	text = NULL;
 	selected = NULL;
+	select = 1;
 	info_o = NULL;
 	for (size_t i =0; i< NUMCHARS; i++)
 		resol[i] = NULL;
@@ -26,14 +27,7 @@ void Create_map::init()
 {
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 		skins.push_back(new WallSkin("grass",i)); //TODO zo subora
-	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
-
-	for (int i =1; i< NumberObjectsImages; i++)
-	{
-		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
-		tile_rect[i].y = pom;
-		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
-	}
+	
 	std::string txt = "Write map resolution:";
 	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);//resize 2.krat
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
@@ -83,10 +77,15 @@ void Create_map::init()
 	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
 	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
-
-	
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
-	
+	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
+
+	for (int i =1; i< NumberObjectsImages; i++)
+	{
+		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
+		tile_rect[i].y = pom;
+		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
+	}
 }
 
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
@@ -149,10 +148,8 @@ void Create_map::draw()
 		{
 			SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&tile_rect[i]);
 		}
-		if (select < SelectedID)
-		{
-			SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
-		}
+		TEST("..."<<select<<std::endl)
+		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 	}
 	SDL_Flip(w->g->screen);
 }
@@ -227,20 +224,6 @@ bool Create_map::save() // vracia ci sa podarilo zapamatat do suboru alebo nie
 
 	xmlNewProp(root_node, BAD_CAST "width", BAD_CAST written_x.c_str());
 	xmlNewProp(root_node, BAD_CAST "heigth", BAD_CAST written_y.c_str());
-
-	//int x = 0, y = 0;
-	//int write_x, write_y;
-	/*bool found = false;
-	xmlNodePtr tile = NULL;
-	xmlNodePtr line = NULL;
-	std::string walls[] = {"WallFree","Solid Wall","Pushable Wall","Trap Wall", "Target"};//TODO dat to do statit niekam medzi walls
-	int from;
-	for (int i = 1; i< NumberObjectsImages; i++)
-	{
-		int wall = 1 << i;
-		tile = xmlNewChild(root_node,NULL,BAD_CAST walls[i].c_str(),NULL);
-		//TODO map
-	}*/
 
 	xmlSaveFormatFileEnc(file_name.c_str(),doc, "UTF-8",1);
 
@@ -391,46 +374,44 @@ void Create_map::process_map()
 							int number = get_rect(w->g->event.button.x, w->g->event.button.y,rects,NumberOfMapDivision);
 							switch (number)
 							{
-								case  MAP:{
-										  if (select < SelectedID) //mame nieco vyebrane
-										  {
-											  int x, y;
-											  x = w->g->event.button.x - rects[MAP].x;
-											  y = w->g->event.button.y - rects[MAP].y;
-											  if((begin_x + x/skins[0]->get_size().x >= resolX)|| (begin_y + y/skins[0]->get_size().y >= resolY))
-												  return;
-											  Object * wall = NULL;
-											  switch (select)
-											  {
-												case TargetPlace:
-												  	map->addTarget(x,y);
-													break;
-												case WallSolidId:
-													wall = new Wall(skins[WallSolidId]);
-													break;
-												case WallPushId:
-													wall = new PushableWall(skins[WallPushId]);
-													break;
-												case WallTrapId:
-													wall = new TrapWall(skins[WallTrapId]);
-													break;
-												case WallExitId:
-													map->starts.push_back(Position(x,y));
-													break;
-												default:
-													TEST("Eeek!" << select);
-											  }
-											  if (wall)
-											  {
-												  Position p(x,y);
-												  wall->setPosition(p,0);
-												  map->add(wall);
-											  }
-											  map->redraw(w);
-											  SDL_Flip(w->g->screen);
-										  }
-										  break;
-									  }
+								case  MAP:
+								{
+									int x, y;
+									x = w->g->event.button.x - rects[MAP].x;
+									y = w->g->event.button.y - rects[MAP].y;
+									if((begin_x + x/skins[0]->get_size().x >= resolX)|| (begin_y + y/skins[0]->get_size().y >= resolY))
+										return;
+									Object * wall = NULL;
+									switch (select)
+									{
+										case TargetPlace:
+											map->addTarget(x,y);
+											break;
+										case WallSolidId:
+											wall = new Wall(skins[WallSolidId]);
+											break;
+										case WallPushId:
+											wall = new PushableWall(skins[WallPushId]);
+											break;
+										case WallTrapId:
+											wall = new TrapWall(skins[WallTrapId]);
+											break;
+										case WallExitId:
+											map->starts.push_back(Position(x,y));
+											break;
+										default:
+											TEST("Eeek!" << select);
+									}
+									if (wall)
+									{
+										Position p(x,y);
+										wall->setPosition(p,0);
+										map->add(wall);
+									}
+									map->redraw(w);
+									SDL_Flip(w->g->screen);
+									break;
+								}
 								case  SAVE:{std::cout << "save" <<std::endl;
 										   SDL_Rect r = file_r;
 										   SDL_FillRect(w->g->screen, &r,0);
@@ -450,19 +431,9 @@ void Create_map::process_map()
 										   break;}
 								case  CHOOSE:{std::cout << "choose" <<std::endl;
 										     int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
-										     switch (wall)
+										     if (wall!=-1)
 										     {
-											     case WallSolidId:
-												     std::cout << "S";
-												     break;
-											     case WallPushId: std::cout << "pushable";
-														 break;
-											     case WallTrapId: std::cout <<"T";
-													     break;
-											     default: std::cout << "ble!";
-										     }
-										     if (wall < NumberObjectsImages)
-										     {
+											     TEST("ok " << wall)
 											     select = wall;
 										     }
 										     draw();
@@ -530,7 +501,7 @@ void Create_map::clean()
 	file_name = "";
 	x = false;
 	mouse_down = false;
-	select = NumberObjectsImages;
+	select = 1;
 	written_x = "";
 	written_y = "";
 	map = NULL;
@@ -544,7 +515,6 @@ void Create_map::clean()
 	if (selected)
 		SDL_FreeSurface(selected);
 	selected = NULL;
-	select = 0;
 	if (info_o)
 		SDL_FreeSurface(info_o);
 	info_o = NULL;

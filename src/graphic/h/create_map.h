@@ -29,7 +29,6 @@ class Create_map:public Menu
 		DRAW,
 		SAVING
 	};
-	
 	Window * w;
 	std::vector<Skin*> skins;
 	Win_type state;
