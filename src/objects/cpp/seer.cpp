@@ -188,7 +188,7 @@ int Seer::checkVisibility()
 	TEST(visibleObjects.size())
 	while(iter!=visibleObjects.end())
 	{
-		if ((*iter).angleBegin > (*iter).angleEnd)
+		if ((*iter).angleBegin - (*iter).angleEnd > 0.001) //kvoli nepresnosto floatov
 		{
 			TEST("mazem")
 			iter = visibleObjects.erase(iter);

@@ -1,3 +1,4 @@
+#define _LANGUAGE_
 #include <iostream>
 #include "../h/robot.h"
 #include "../h/bison.h"
@@ -5,7 +6,9 @@
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
 extern void my_destroy();
 extern int yyparse(Robots *);
+
 //TUTO NEISIM SKINY!
+
 int main(int argc, char ** argv)
 {
 	if(argc<2)
