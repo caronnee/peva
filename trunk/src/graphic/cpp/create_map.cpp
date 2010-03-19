@@ -152,61 +152,75 @@ void Create_map::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
+
+void Create_map::key(SDLKey c)
+{
+	if (!x) 
+		written_x+=w->g->event.key.keysym.sym; 
+	else 
+		written_y+=w->g->event.key.keysym.sym;
+}
+void Create_map::backspace()
+{
+	if ((!x)&&(written_x.length())) 
+		written_x.erase(written_x.length()-1,1);
+	if (x && (written_y.length())) 
+		written_y.erase(written_y.length()-1,1);
+
+}
+void Create_map::drawInit()
+{
+	state = DRAW;
+	resolX = convert<int>(written_x);
+	resolY = convert<int>(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
+	Position p(resolX,resolY);
+	map = new Map(p,"grass");
+	map->setBoundary(p.x,p.y); //kolko moze do sirky
+}
+
+void Create_map::keyDown(SDLKey c)
+{
+	switch (c)
+	{
+		case SDLK_0: case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: 
+		case SDLK_5: case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
+		{
+			key(c);
+			break;
+		}
+		case SDLK_BACKSPACE:
+		{
+			backspace();
+			break;
+		}
+		case SDLK_RETURN: 
+		{ 
+			drawInit();
+			break;
+		}
+		case SDLK_RIGHT:
+		case SDLK_x: { x = true; break;}
+		case SDLK_LEFT:{x = false;break;}
+		case SDLK_q:
+		case SDLK_ESCAPE:
+			       {
+				       w->pop();
+				       return;
+			       }
+		default:
+			       std::cout << "Unknown command (Create map)" << std::endl;
+			       break;
+	}
+}
 void Create_map::process_resolution()
 {
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
-			{
-				switch(w->g->event.key.keysym.sym)
-				{
-					case SDLK_0: 
-					case SDLK_1: 
-					case SDLK_2: 
-					case SDLK_3: 
-					case SDLK_4: 
-					case SDLK_5: 
-					case SDLK_6: 
-					case SDLK_7: 
-					case SDLK_8: 
-					case SDLK_9: 
-						{
-							if (!x) written_x+=w->g->event.key.keysym.sym; 
-							else written_y+=w->g->event.key.keysym.sym;
-							break;
-						}
-					case SDLK_BACKSPACE:
-						{
-							if ((!x)&&(written_x.length())) written_x.erase(written_x.length()-1,1);
-							if (x && (written_y.length())) written_y.erase(written_y.length()-1,1);
-
-							break;
-						}
-					case SDLK_RETURN: 
-						{ 
-							state = DRAW;
-							resolX = convert<int>(written_x);
-							resolY = convert<int>(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
-							Position p(resolX,resolY);
-							map = new Map(p,"grass");
-							map->setBoundary(p.x,p.y); //kolko moze do sirky
-							break; 
-						}
-					case SDLK_RIGHT:
-					case SDLK_x: { x = true; break;}
-					case SDLK_LEFT:{x = false;break;}
-					case SDLK_q:
-					case SDLK_ESCAPE:
-						       {
-							       w->pop();
-							       return;
-						       }
-					default:
-						       std::cout << "Unknown command (Create map)" << std::endl;
-						       break;
-				}
-				break;
-			}
+		{
+			keyDown(w->g->event.key.keysym.sym);
+			break;
+		}
 	}
 }
 void Create_map::generuj(Position resolution)
@@ -438,6 +452,18 @@ void Create_map::process_map()
 							}
 							break;
 						}
+					case SDL_BUTTON_RIGHT: //zmazeme object, ak sme v mape
+					{
+						Position p;
+						SDL_GetMouseState(&p.x, &p.y);
+						Object * o = map->removeAt(p);
+						if (o!=NULL)
+						{
+							delete o;
+						}
+						map->drawAll(w);
+						SDL_Flip(w->g->screen);
+					}
 					default:
 						break;
 				}

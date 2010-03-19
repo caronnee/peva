@@ -31,6 +31,10 @@ class Create_map:public Menu
 	};
 	Window * w;
 	std::vector<Skin*> skins;
+	void key(SDLKey c);
+	void backspace();
+	void drawInit();
+	void keyDown(SDLKey c);
 	Win_type state;
 	bool x; //x = oddelovac u resolution
 	bool mouse_down; //bola vybrana/ uklada sa tile
