@@ -127,7 +127,7 @@ public:
 	void clean();
 
 	/* sets beoundaries of map according to size of solid wall*/	
-	void setBoundary(size_t w, size_t h);
+	void setBoundary(int w, int h);
 
 	/* draws all visible place */
 	void redraw(Window * window); //ked ma vykreslit vsetko

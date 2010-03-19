@@ -134,7 +134,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 void Play::init(int x, int y)
 {
 	m = new Map(Position (x,y), "grass");
-	m->setBoundary(min (w->g->screen->w, x), min (w->g->screen->h,y));
+	m->setBoundary(min<int> (w->g->screen->w, x), min<int>(w->g->screen->h,y));
 }
 
 void Play::clean()

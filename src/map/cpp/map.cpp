@@ -28,10 +28,10 @@ bool Map::collideWith( Object * o1, Object* o2 )
 
 	return a;
 }
-void Map::setBoundary(size_t x, size_t y)
+void Map::setBoundary(int x, int y)
 {
-	boundaries.width = x + wskins[1]->get_size().x;
-	boundaries.height = y+ wskins[1]->get_size().y;;
+	boundaries.width = min<int>(resolution.x,x);
+	boundaries.height = min<int>(resolution.y,y);
 }
 Map::Map(Position resol, std::string skinName) 
 {
@@ -40,13 +40,13 @@ Map::Map(Position resol, std::string skinName)
 	boundaries.width = 0;
 	boundaries.height = 0;
 	wskins.clear();
+	resolution = resol;
 	skin = new Skin(skinName, Skin::MapSkin);
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 	{
 		wskins.push_back( new WallSkin(skinName, i));
 	}
 	skinWork = new ImageSkinWork(skin);
-	resolution = resol; 
 	resolution.x +=  2*skin->get_shift().x;
 	resolution.y +=  2*skin->get_shift().y;
 	boxesInRow = (float)resolution.x/ BOX_WIDTH; 
@@ -74,24 +74,22 @@ Map::Map(Position resol, std::string skinName)
 	movement.old_pos = movement.position_in_map = p;
 	int a = 0;
 	//X-ova os
-	for (p.x = skin->get_size().x; p.x < resolution.x; p.x += wskins[1]->get_size().x)
+/*	for (p.x = 0; p.x < resolution.x; p.x += wskins[1]->get_size().x)
 	{
 		a++;
 		p.y = 0;
 		Wall * w1 = new Wall(wskins[1]);
 		w1->setPosition(p,0);
 
-		p.y = resol.y + wskins[1]->get_size().y; //povodne resol;
+		p.y = resolution.y - wskins[1]->get_size().y; 
 		Wall * w2 = new Wall(wskins[1]);
 		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
 	}	
-	a = 0;
-	p.y = 0;
+/*	p.y = 0;
 	for (p.y = 0; p.y < resolution.y; p.y += wskins[1]->get_size().y)
 	{
-		a++;
 		p.x = 0;
 		Wall * w1 = new Wall(wskins[1]);
 		w1->setPosition(p,0);
@@ -100,7 +98,7 @@ Map::Map(Position resol, std::string skinName)
 		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
-	}
+	}*/
 }
 
 void Map::shift(int shiftLeft, int shiftUp)
@@ -153,6 +151,7 @@ void Map::drawAll(Window * w)
 		}
 	}
 	draw(w);
+	SDL_SetClipRect(w->g->screen, NULL);
 }
 void Map::redraw(Window*w)
 {
@@ -161,17 +160,11 @@ void Map::redraw(Window*w)
 }
 void Map::background(Window * w)
 {
+
 	SDL_Rect r; //TODO nie takto natvrdlo
 	r.x = 0;
 	r.y = 0;
 
-	SDL_Rect clip;
-	clip.x = 0;
-	clip.y = 0;
-	clip.w = resolution.x; 
-	clip.h = resolution.y;
-
-	SDL_SetClipRect(w->g->screen, &clip);
 	for (int i =0; i< boundaries.width; i+=skin->get_size().x) // pre tapety
 	{
 		for(int j =0; j< boundaries.height; j+=skin->get_size().y)
@@ -192,24 +185,18 @@ void Map::draw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
 	Position pos;
 	pos.x = boundaries.x/BOX_WIDTH;
 	pos.y = boundaries.y/BOX_HEIGHT;
-	SDL_Rect clip;
-	clip.x = 0;
-	clip.y = 0;
-	clip.w = resolution.x; 
-	clip.h = resolution.y;
-	
-	int a = 0;
-
-	SDL_SetClipRect(w->g->screen, &clip);
 	for (int i =0; i< boundaries.width; i += BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
+		if (pos.x > boxesInRow)
+			break;
 		for(int j =0; j< boundaries.height; j += BOX_HEIGHT)
 		{
+			if (pos.y > boxesInColumn)
+				break;
 			map[pos.x][pos.y].objects.reset();
 			Object * o = map[pos.x][pos.y].objects.read();
 			while( o != NULL )
 			{
-				a++;
 				SDL_Rect rects;
 				rects.x = o->get_pos().x - boundaries.x;
 				rects.y = o->get_pos().y - boundaries.y;
