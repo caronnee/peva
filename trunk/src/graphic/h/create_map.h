@@ -112,12 +112,25 @@ private:
 	/* window to save map */
 	void saving();
 public:
+	/* Constructor */
 	Create_map(Window * w_);
+	
+	/* init creates instances of elements immediately needed, in passive state (not running), it is needed only name for drawing */
 	void init();
+
+	/* reaction to events and drawing */
 	void process(void);
+
+	/* draws the screen again, if needed */
 	void draw();
+
+	/* goiing to passive state and cleaning variables */
 	void clean();
+	
+	/* destructor, calling function clean()*/
 	virtual ~Create_map()throw();
+
+	/*function to fill created map */
 	void generuj(Position res);
 };
 #endif
