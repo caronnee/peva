@@ -28,7 +28,7 @@ void Create_map::init()
 		skins.push_back(new WallSkin("grass",i)); //TODO zo subora
 	
 	std::string txt = "Write map resolution:";
-	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);//resize 2.krat
+	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);// na resize 2.krat
 	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
 	if (text == NULL)  
 	{
@@ -134,13 +134,17 @@ void Create_map::draw()
 		//nakresli pole
 		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
 		
-		SDL_SetClipRect(w->g->screen,&rects[MAP]);
-		//SDL_Rect rect;//TODO dovkreslit sipky
+		SDL_Rect r;
+		r.x = 10;
+		r.y = 10;
+		r.w = 100;
+		r.h = 100;
+		SDL_SetClipRect(w->g->screen, &r);
 
 		map->drawAll(w);
 
 		//dokreslime panel
-		SDL_SetClipRect(w->g->screen, NULL);
+	//	SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< SelectedID; i++) //bez grass
 		{
 			SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&tile_rect[i]);
@@ -170,7 +174,8 @@ void Create_map::drawInit()
 	state = DRAW;
 	Position p(convert<int>(written_x),convert<int>(written_y));
 	map = new Map(p,"grass");
-	map->setBoundary(p.x,p.y); //kolko moze do sirky
+	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
+//	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 }
 
 void Create_map::keyDown(SDLKey c)
@@ -393,8 +398,7 @@ void Create_map::process_map()
 										wall->setPosition(p,0);
 										map->add(wall);
 									}
-									map->drawAll(w);
-									SDL_Flip(w->g->screen);
+									draw();
 									break;
 								}
 								case  SAVE:{std::cout << "save" <<std::endl;
@@ -414,24 +418,29 @@ void Create_map::process_map()
 									   }
 								case  EXIT:{std::cout << "exit" <<std::endl;
 										   break;}
-								case  CHOOSE:{std::cout << "choose" <<std::endl;
-										     int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
-										     if (wall!=-1)
-										     {
-											     TEST("ok " << wall)
-											     select = wall;
-										     }
-										     draw();
-										     break;}
-								case  LEFT:
-								{ 										   draw();
-										   break;
+								case  CHOOSE:
+								{
+									std::cout << "choose" <<std::endl;
+									int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
+									if (wall != -1)
+									{
+										TEST("ok " << wall)
+										select = wall;
+									}
+									draw();
+									break;
 								}
-								case  UP:{ 
-										 break;}
+								case  LEFT:
+								{
+								        break;
+								}
+								case  UP:
+								{ 
+									break;
+								}
 								case  DOWN:
 								{
-										   break;
+									break;
 								}
 								case  RIGHT:
 								{
@@ -454,7 +463,7 @@ void Create_map::process_map()
 						{
 							delete o;
 						}
-						map->drawAll(w);
+						draw();
 						SDL_Flip(w->g->screen);
 					}
 					default:
