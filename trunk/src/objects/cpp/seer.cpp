@@ -104,15 +104,15 @@ void Seer::addToVisible(ObjectRelation& relation)
 void Seer::fill(Object * o, Object * center) //position = centre
 {
 	Position position = center->get_pos();
-	position.x += center->collisionSize().x + center->collisionSize().width >> 1;
-	position.y += center->collisionSize().y + center->collisionSize().height >> 1;
+	position.x += center->collisionSize().x + (center->collisionSize().width >> 1);
+	position.y += center->collisionSize().y + (center->collisionSize().height >> 1);
 
 	Position objectPosition = o->get_pos();
 
 	objectPosition.x += o->collisionSize().x 
-		+ o->collisionSize().width >>1;
+		+ (o->collisionSize().width >>1);
 	objectPosition.y += o->collisionSize().y 
-		+ o->collisionSize().height >>1;
+		+ (o->collisionSize().height >>1);
 
 	objectPosition.substractVector(position); //hodime to do osy s pociatkom (0,0)
 	size_t dist = (size_t) objectPosition.x * objectPosition.x

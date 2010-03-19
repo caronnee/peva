@@ -36,14 +36,21 @@ struct Box
 struct Place
 {
 	size_t id;
+	SDL_Surface * img;
 	Position p;
 };
 struct Map
 {
-	/* strucutre holdin images of wall */
+	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
-	std::vector<Place> places;
+	std::list<Place> places;
 	std::vector<Position> starts;
+
+	/* draws background*/
+	void background(Window *w);
+
+	/* draws onnly visible objects*/
+	void draw(Window *w);
 
 	/* draw map including non-participating objects */
 	void drawAll(Window * w);
@@ -55,7 +62,7 @@ struct Map
 	float boxesInColumn;
 
 	/* adding target places */
-	void addTarget(size_t x, size_t y);
+	void addTarget(Window* w, size_t x, size_t y);
 
 	/* how many row boxes */
 	float boxesInRow;

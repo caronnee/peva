@@ -140,7 +140,7 @@ void Create_map::draw()
 		SDL_SetClipRect(w->g->screen,&rects[MAP]);
 		//SDL_Rect rect;//TODO dovkreslit sipky
 
-		map->redraw(w);
+		map->drawAll(w);
 
 		//dokreslime panel
 		SDL_SetClipRect(w->g->screen, NULL);
@@ -363,7 +363,7 @@ void Create_map::process_map()
 									switch (select)
 									{
 										case TargetPlace:
-											map->addTarget(x,y);
+											map->addTarget(w, x,y);
 											break;
 										case WallSolidId:
 											wall = new Wall(skins[WallSolidId]);

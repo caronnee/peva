@@ -108,16 +108,24 @@ void Map::shift(int shiftLeft, int shiftUp)
 	boundaries.x +=shiftLeft;
 	boundaries.y += shiftUp;
 }
-void Map::addTarget(size_t x, size_t y)
+void Map::addTarget(Window * w,size_t x, size_t y)
 {
 	Position p(x,y);
-	size_t id = places.size();
+	size_t i = 0;
+	std::list<Place>::iterator iter = places.begin();
+	for (;iter!=places.end(); i++,iter++) //prve nezadane
+		if (iter->id!=i)
+			break;
+	size_t id = i;
 	Place pl;
 	pl.id = id; 
 	pl.p = p;
+	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(id).c_str(), w->g->normal);
+	places.insert(iter,pl);
 }
 void Map::drawAll(Window * w)
 {
+	background(w);
 	for (size_t i =0 ; i < starts.size(); i++)
 	{
 		if (boundaries.overlaps(starts[i]))
@@ -125,24 +133,39 @@ void Map::drawAll(Window * w)
 			SDL_Rect r;
 			r.x =starts[i].x - boundaries.x;
 			r.y = starts[i].y - boundaries.y;
-			SDL_BlitSurface(wskins[WallStartId]->get_surface(1), NULL, w->g->screen, &r);
+			SDL_BlitSurface(wskins[WallStartId]->get_surface(0), NULL, w->g->screen, &r);
 		}
 	}
-	redraw(w);
+	for (std::list<Place>::iterator iter = places.begin(); iter!= places.end(); iter++)
+	{
+		if (boundaries.overlaps(iter->p))
+		{
+			SDL_Rect r;
+			r.x = iter->p.x - boundaries.x;
+			r.y = iter->p.y - boundaries.y;
+			SDL_BlitSurface(wskins[TargetPlace]->get_surface(0), NULL, w->g->screen, &r);
+			SDL_BlitSurface(iter->img, NULL, w->g->screen, &r);
+		}
+	}
+	draw(w);
 }
-void Map::redraw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
+void Map::redraw(Window*w)
+{
+	background(w);
+	draw(w);
+}
+void Map::background(Window * w)
 {
 	SDL_Rect r; //TODO nie takto natvrdlo
 	r.x = 0;
 	r.y = 0;
-	Position pos;
-	pos.x = boundaries.x/BOX_WIDTH;
-	pos.y = boundaries.y/BOX_HEIGHT;
+
 	SDL_Rect clip;
 	clip.x = 0;
 	clip.y = 0;
 	clip.w = resolution.x; 
 	clip.h = resolution.y;
+
 	SDL_SetClipRect(w->g->screen, &clip);
 	for (int i =0; i< boundaries.width; i+=skin->get_size().x) // pre tapety
 	{
@@ -155,8 +178,24 @@ void Map::redraw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
 		r.y = 0;
 		r.x+=skin->get_size().x;
 	}
+}
+void Map::draw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
+{
+	SDL_Rect r; //TODO nie takto natvrdlo
+	r.x = 0;
+	r.y = 0;
+	Position pos;
+	pos.x = boundaries.x/BOX_WIDTH;
+	pos.y = boundaries.y/BOX_HEIGHT;
+	SDL_Rect clip;
+	clip.x = 0;
+	clip.y = 0;
+	clip.w = resolution.x; 
+	clip.h = resolution.y;
+	
 	int a = 0;
 
+	SDL_SetClipRect(w->g->screen, &clip);
 	for (int i =0; i< boundaries.width; i += BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		for(int j =0; j< boundaries.height; j += BOX_HEIGHT)
