@@ -120,22 +120,23 @@ void Map::addTarget(Window * w,size_t x, size_t y)
 	Place pl;
 	pl.id = id; 
 	pl.p = p;
-	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(id).c_str(), w->g->normal);
+	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(id).c_str(), w->g->light);
 	places.insert(iter,pl);
 }
 void Map::drawAll(Window * w)
 {
 	background(w);
-	for (size_t i =0 ; i < starts.size(); i++)
+	for (std::list<Position>::iterator i = starts.begin() ; i != starts.end(); i++)
 	{
-		if (boundaries.overlaps(starts[i]))
+		if (boundaries.overlaps(*i))
 		{
 			SDL_Rect r;
-			r.x =starts[i].x - boundaries.x;
-			r.y = starts[i].y - boundaries.y;
+			r.x =i->x - boundaries.x;
+			r.y = i->y - boundaries.y;
 			SDL_BlitSurface(wskins[WallStartId]->get_surface(0), NULL, w->g->screen, &r);
 		}
 	}
+
 	for (std::list<Place>::iterator iter = places.begin(); iter!= places.end(); iter++)
 	{
 		if (boundaries.overlaps(iter->p))
@@ -408,7 +409,32 @@ Object * Map::removeAt(Position position)
 		}
 	}
 	TEST("Object not found!"<<std::endl)
-		return NULL;
+	//ci to nie je place alebo startPosition, popripade obe
+	//FIXME
+	Rectangle r;
+	r.width = 50;
+	r.height = 50; //start area moze byt mala a ja si ju just budem fixovat:)
+	for (std::list<Position>::iterator i = starts.begin(); i!=starts.end(); i++)
+	{
+		r.x = i->x;
+		r.y = i->y;
+		if (r.overlaps(position))
+		{
+			starts.erase(i);
+			break;
+		}
+	}
+	for (std::list<Place>::iterator i = places.begin(); i!=places.end(); i++)
+	{
+		r.x = i->p.x;
+		r.y = i->p.y;
+		if (r.overlaps(position))
+		{
+			places.erase(i);
+			break;
+		}
+	}
+	return NULL;
 }
 void Map::clean()
 {

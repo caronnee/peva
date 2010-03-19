@@ -44,7 +44,7 @@ struct Map
 	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
 	std::list<Place> places;
-	std::vector<Position> starts;
+	std::list<Position> starts;
 
 	/* draws background*/
 	void background(Window *w);
