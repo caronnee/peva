@@ -123,6 +123,10 @@ void Map::addTarget(Window * w,size_t x, size_t y)
 	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(id).c_str(), w->g->light);
 	places.insert(iter,pl);
 }
+Position Map::size()const
+{
+	return resolution;
+}
 void Map::drawAll(Window * w)
 {
 	background(w);
