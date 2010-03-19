@@ -9,6 +9,8 @@
 
 class Create_map:public Menu
 {
+private:
+	/* division of screen, should be recomputed when fullscreened */
 	enum Map_divide
 	{
 		MAP = 0,
@@ -23,55 +25,92 @@ class Create_map:public Menu
 		NumberOfMapDivision
 	};
 
+	/* switch states */ //TODO zmenit na vlastne menu
 	enum Win_type
 	{
 		RESOLUTION = 0,
 		DRAW,
 		SAVING
 	};
-	Window * w;
-	std::vector<Skin*> skins;
-	void key(SDLKey c);
-	void backspace();
-	void drawInit();
-	void keyDown(SDLKey c);
-	Win_type state;
-	bool x; //x = oddelovac u resolution
-	bool mouse_down; //bola vybrana/ uklada sa tile
 
-	int begin_x, begin_y;
-	int window_begin_x, window_begin_y; //centrovanie do stredu
 
-	SDL_Surface * text;
-	SDL_Surface * selected;
-	int text_width;
-	int select;
-	int get_rect(int x, int y, SDL_Rect * r,int max);
+	/* precomputes allowed chars in resolution mode */
+	SDL_Surface * resol[NUMCHARS]; //0-9+x
 
+	/* precomputed info about what is ecpected on this screen */
+	SDL_Surface * info_o;
+
+	/* where to blit choosable object */
 	SDL_Rect tile_rect[NumberObjectsImages];
+
+	/* where to blit areas */
 	SDL_Rect rects[NumberOfMapDivision];
 
-	SDL_Surface * info_o;
-	std::string info;
-	int info_width;
+	/* which state is this menu*/
+	Win_type state;
+
+	/* resolution deliminer flag*/
+	bool x;
+
+	/* flag if the mouse left button is pressed*/
+	bool mouse_down; //bola vybrana/ uklada sa tile
+
+	/* image og text to be shown in resolution screen */
+	SDL_Surface * text;
+
+	/* flag determining which object was selected to be blit on map*/
+	int select;
+
+	/* graphic information  about the screen */
+	Window * w;
+
+	/* skins of the object that can be set to map*/
+	std::vector<Skin*> skins;
+
+	/* in resolution key handling*/
+	void handleKey(SDLKey c);
+
+	/* handling backspece in resolution state */
+	void backspace();
+
+	/* setting state to draw, if resolution correct */
+	void drawInit();
+
+	/* handling the key in resolution, checkging type */
+	void keyDown(SDLKey c);
+
+	/* width of the text shown in resolution processing */
+	int text_width;
+
+	/* returns index of area in position x, y */ //TODO position namiesto x, y
+	int get_rect(int x, int y, SDL_Rect * r,int max);
+
+	/* storing typed filename so far */
 	std::string file_name;
+
+	/* center of the screen */ //TODO naprosto nepotrebne, upravit
 	SDL_Rect file_r;
 
-/*	SDL_Rect ** map_rects;
-	int map_rects_number;
-	int offset_x, offset_y;*/
-
+	/* map being drawn */
 	Map * map;
 
-	SDL_Surface * resol[NUMCHARS]; //0-9+x
+	/* width for every char in allowed char */ //TODO vlastna klasa?
 	int resol_width[NUMCHARS];
-	int resolX,resolY, number_written; //max 5x5 cifier? TODO prepisat na position
+
+	/* map resolution as typed */ //TODO netrebalo by
 	std::string written_x, written_y;
+
+	/* in drawing state process events */
 	void process_map();
+
+	/* in resolution state, process event */
 	void process_resolution();
+
+	/* drawing the resolution window, asking for typing resolution */
 	void draw_resol();
+
+	/* window to save map */
 	void saving();
-	bool save();
 public:
 	Create_map(Window * w_);
 	void init();

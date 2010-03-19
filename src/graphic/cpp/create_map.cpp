@@ -16,7 +16,6 @@ Create_map::Create_map(Window *w_)
 	map= NULL;
 	skins.clear();
 	text = NULL;
-	selected = NULL;
 	select = 1;
 	info_o = NULL;
 	for (size_t i =0; i< NUMCHARS; i++)
@@ -42,7 +41,7 @@ void Create_map::init()
 		TTF_SizeText(w->g->g_font,s[i].c_str(),&resol_width[i],NULL);
 	}//TODO! po esc spat na resolution a resize
 
-	info = "Zadajte meno suboru";
+	std::string info = "Zadajte meno suboru";
 	int info_width;
 	TTF_SizeText(w->g->g_font,info.c_str(),&info_width,NULL); 
 	info_o = TTF_RenderText_Solid(w->g->g_font,info.c_str(), w->g->normal);//TODO prehodit do kontruktora
@@ -102,7 +101,7 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 	return -1;
 }
 
-void Create_map::draw_resol()
+void Create_map::draw_resol() //TODO tu staci len raz vykreslit a potom sa pozriet na zmeny
 {
 	SDL_Rect r;
 	r.x = (w->g->screen->w >> 1) - (text_width >> 1);
@@ -135,8 +134,6 @@ void Create_map::draw()
 		//nakresli pole
 		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
 		
-		//int max_width = rects[MAP].x + min(rects[MAP].w,skins[0]->get_size().x*resolX);
-		//int max_heigth = rects[MAP].y + min(rects[MAP].h, skins[0]->get_size().y*resolY);
 		SDL_SetClipRect(w->g->screen,&rects[MAP]);
 		//SDL_Rect rect;//TODO dovkreslit sipky
 
@@ -153,7 +150,7 @@ void Create_map::draw()
 	SDL_Flip(w->g->screen);
 }
 
-void Create_map::key(SDLKey c)
+void Create_map::handleKey(SDLKey c)
 {
 	if (!x) 
 		written_x+=w->g->event.key.keysym.sym; 
@@ -171,9 +168,7 @@ void Create_map::backspace()
 void Create_map::drawInit()
 {
 	state = DRAW;
-	resolX = convert<int>(written_x);
-	resolY = convert<int>(written_y);//TODO skontrolovat rozmedzie, 10 <MUST_BE < 100000, prazdne riadku checkovat
-	Position p(resolX,resolY);
+	Position p(convert<int>(written_x),convert<int>(written_y));
 	map = new Map(p,"grass");
 	map->setBoundary(p.x,p.y); //kolko moze do sirky
 }
@@ -185,7 +180,7 @@ void Create_map::keyDown(SDLKey c)
 		case SDLK_0: case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: 
 		case SDLK_5: case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
 		{
-			key(c);
+			handleKey(c);
 			break;
 		}
 		case SDLK_BACKSPACE:
@@ -371,8 +366,6 @@ void Create_map::process_map()
 									int x, y;
 									x = w->g->event.button.x - rects[MAP].x;
 									y = w->g->event.button.y - rects[MAP].y;
-									if((begin_x + x/skins[0]->get_size().x >= resolX)|| (begin_y + y/skins[0]->get_size().y >= resolY))
-										return;
 									Object * wall = NULL;
 									switch (select)
 									{
@@ -416,7 +409,7 @@ void Create_map::process_map()
 								case  GENERATE:
 									   {
 										       std::cout << "generate" <<std::endl;
-										       generuj(Position(resolX, resolY));
+										     //  generuj(Position(resolX, resolY));//TODO vlastnost mapy
 										       break;
 									   }
 								case  EXIT:{std::cout << "exit" <<std::endl;
@@ -430,25 +423,25 @@ void Create_map::process_map()
 										     }
 										     draw();
 										     break;}
-								case  LEFT:{ begin_x--; 
-										   if (begin_x < 0) begin_x = 0;
-										   draw();
-										   break;}
-								case  UP:{ begin_y--;
-										 if (begin_y < 0) begin_y = 0;
-										 draw();
+								case  LEFT:
+								{ 										   draw();
+										   break;
+								}
+								case  UP:{ 
 										 break;}
-								case  DOWN:{begin_y++;
-										   if (begin_y + rects[MAP].h/skins[0]->get_size().y > resolY )
-											   begin_y--;
-										   draw();
-										   break;}
-								case  RIGHT:{begin_x++;
-										    if (begin_x > resolX - rects[MAP].w/skins[0]->get_size().x)
-											    begin_x--;
-										    draw();
-										    break;}
-								default: std::cout  << "HE?" << std::endl;
+								case  DOWN:
+								{
+										   break;
+								}
+								case  RIGHT:
+								{
+									break;
+								}
+								default: 
+								{
+									std::cout  << " Area unrecognized " << std::endl;
+									break;
+								}
 							}
 							break;
 						}
@@ -509,16 +502,11 @@ void Create_map::clean()
 	written_x = "";
 	written_y = "";
 	map = NULL;
-	begin_x = 0;
-	begin_y = 0;
-	window_begin_x = rects[MAP].x;
-	window_begin_y = rects[MAP].y;
+	//window_begin_x = rects[MAP].x;
+	//window_begin_y = rects[MAP].y;
 	if (text)
 		SDL_FreeSurface(text);
 	text = NULL;
-	if (selected)
-		SDL_FreeSurface(selected);
-	selected = NULL;
 	if (info_o)
 		SDL_FreeSurface(info_o);
 	info_o = NULL;

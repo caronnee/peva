@@ -96,6 +96,9 @@ public:
 
 	void shift(int shiftLeft, int shiftUp);
 
+	/* returns size of map */
+	Position size()const;
+
 	/* constructor from config file */
 	Map(std::string file, std::string skinName);
 
