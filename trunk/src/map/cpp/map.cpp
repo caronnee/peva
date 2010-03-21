@@ -80,8 +80,6 @@ Map::Map(Position resol, std::string skinName)
 		w1->setPosition(p,0);
 
 		p.y = resolution.y - skin->get_shift().x;
-		TEST(p << "$")
-		//p.y = resolution.y;
 		Wall * w2 = new Wall(wskins[1]);
 		w2->setPosition(p,0);
 		add(w1);
@@ -159,13 +157,14 @@ void Map::redraw(Window*w)
 }
 void Map::background(Window * w)
 {	
-	for (int x =0; x<boundaries.width; x+=skinWork->width()) // pre tapety
+	
+	for (int x = 15; x < boundaries.width; x+=skinWork->width()) // pre tapety
 	{
-		for(int y =0; y< boundaries.height; y+=skinWork->height())
+		for(int y = 15; y< boundaries.height; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
 		{
 			SDL_Rect r; //TODO nie takto natvrdlo
-			r.x = x - boundaries.x;
-			r.y = y - boundaries.y;
+			r.x = x;
+			r.y = y;
 
 			SDL_Rect sr = skinWork->get_rect();
 			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
@@ -348,10 +347,10 @@ void Map::add(Object * o)
 		return;
 	}
 	Position pos= o->get_pos();
+	if ((pos.x > resolution.x) || (pos.y > resolution.y) ||(pos.x < 0) || (pos.y < 0))
+		return;
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
-	if ((pos.x > boxesInRow) || (pos.y > boxesInRow) ||(pos.x < 0) || (pos.y < 0))
-		return;
 	map[pos.x][pos.y].objects.add(o->item);
 }
 Object * Map::removeAt(Position position)

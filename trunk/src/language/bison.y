@@ -314,7 +314,7 @@ values:		expression {
 			}
 			if ($1.output.back()!=*program->actualRobot->active_type.top())
 			{
-				TEST("nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type);
+				TEST("nnnnnn?"<<@1 << " " << program->actualRobot->active_type.top()->type)
 				program->actualRobot->error(@1, Robot::ErrorConversionImpossible);
 			}
 			else
