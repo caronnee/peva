@@ -10,6 +10,7 @@
 
 Create_map::Create_map(Window *w_)
 {
+	lastPut = NULL;
 	name = "Create map";
 	//skin = new Skin("grass", Skin::MapSkin);//TODO nacitaj zo suboru, co ma vytvorit
 	w = w_;
@@ -336,6 +337,24 @@ void Create_map::saving()
 		}
 	}
 }
+Position Create_map::closest(Position position, Object * o) //TODO dat toobjektu tu sa to asi nehodi
+{
+	//zistime, ci sa da tom mame upravit v -ovej alebo y-ovej osy
+
+	Position result = position;
+	if ( o == NULL )
+		return result;
+	Rectangle p = o->collisionSize(); //tu by malo byt normalne size, ale toto nevadi
+	if ((p.x < position.x) && (position.x < p.x + p.width))
+	{
+		result.y = p.y;
+	}
+	if ((p.y < position.y) && (position.y < p.y + p.height))
+	{
+		result.x  = p.x;
+	}
+	return result;
+}
 void Create_map::buttonDown(int number, int atX, int atY)
 {
 	switch (number)
@@ -369,74 +388,87 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				if (wall)
 				{
 					Position p(x,y);
+					p = closest(p, lastPut);
 					wall->setPosition(p,0);
-					map->add(wall);
+					Object * collide = map->checkCollision(wall);
+					if (collide == NULL)
+					{
+						map->add(wall);
+						lastPut = wall;
+						break;
+					}
+					lastPut = collide;
+					TEST("Collision!")
+					delete wall;
+					break;
 				}
 				break;
 			}
-		case SAVE:{std::cout << "save" <<std::endl;
-				  SDL_Rect r = file_r;
-				  SDL_FillRect(w->g->screen, &r,0);
-				  r.x+=10;
-				  SDL_BlitSurface(info_o,NULL,w->g->screen,&r);
-				  SDL_Flip(w->g->screen);
-				  state = SAVING;
-				  break;
-			  }
+		case SAVE:
+		{
+			std::cout << "save" <<std::endl;
+			SDL_Rect r = file_r;
+			SDL_FillRect(w->g->screen, &r,0);
+			r.x+=10;
+			SDL_BlitSurface(info_o,NULL,w->g->screen,&r);
+			SDL_Flip(w->g->screen);
+			state = SAVING;
+			mouse_down = false;
+			break;
+		}
 		case GENERATE:
-			  {
-				  std::cout << "generate" <<std::endl;
-				  //  generuj(Position(resolX, resolY));//TODO vlastnost mapy
-				  break;
-			  }
+		{
+			std::cout << "generate" <<std::endl;
+			mouse_down = false;
+			//  generuj(Position(resolX, resolY));//TODO vlastnost mapy
+			break;
+		}
 		case EXIT:
-			  {
-				  std::cout << "exit" <<std::endl;
-				  break;
-			  }
+		{
+			TEST("exit" << std::endl)
+			w->pop();
+			break;
+		}
 		case CHOOSE:
-			  {
-				  std::cout << "choose" <<std::endl;
-				  int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
-				  if (wall != -1)
-				  {
-					  select = wall;
-				  }
-				  draw();
-				  break;
-			  }
+		{
+			std::cout << "choose" <<std::endl;
+			int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
+			if (wall != -1)
+			{
+				select = wall;
+			}
+			draw();
+			break;
+		}
 		case LEFT:
-			  {
-				  if (map->boundaries.x > -rects[MAP].x)
-					  map->shift(-2,0);
-				  break;
-			  }
+		{
+			if (map->boundaries.x > -rects[MAP].x)
+				map->shift(-2,0);
+			break;
+		}
 		case RIGHT:
-			  {
-				  if (map->boundaries.x < map->size().x - rects[RIGHT].x)
-					  map->shift(2,0);
-				  break;
-			  }
+		{
+			if (map->boundaries.x < map->size().x - rects[RIGHT].x)
+				map->shift(2,0);
+			break;
+		}
 		case UP:
-			  { 
-				  TEST("up")
-					  if (map->boundaries.y > -rects[MAP].y)
-						  map->shift(0,-2);
-				  break;
-			  }
+		{ 
+			if (map->boundaries.y > -rects[MAP].y)
+				map->shift(0,-2);
+			break;
+		}
 		case DOWN:
-			  {
-				  TEST("down")
-					  if (map->boundaries.y < map->size().y -rects[DOWN].y)
-						  map->shift(0, 2);
-				  break;
-			  }
-
+		{
+			if (map->boundaries.y < map->size().y -rects[DOWN].y)
+					map->shift(0, 2);
+			break;
+		}
 		default: 
-			  {
-				  std::cout  << " Area unrecognized " << std::endl;
-				  break;
-			  }
+		{
+			std::cout  << " Area unrecognized " << std::endl;
+			break;
+		}
 	}
 }
 //BIG TODO zmenit na citatelnejsie
@@ -447,84 +479,89 @@ void Create_map::process_map()
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
+		{
+			switch(w->g->event.key.keysym.sym)
 			{
-				switch(w->g->event.key.keysym.sym)
+				case SDLK_q:
+				case SDLK_ESCAPE:
 				{
-					case SDLK_q:
-					case SDLK_ESCAPE:
-						{
-							w->pop();
-							return;
-						}
-					default:
-						std::cout << "Unknown command (Create map)" << std::endl;
-						break;
+					w->pop();
+					return;
+				}
+				default:
+					std::cout << "Unknown command (Create map)" << std::endl;
+					break;
 
-				}
-				break;
 			}
+			break;
+		}
 		case SDL_MOUSEBUTTONDOWN:
+		{
+			switch (w->g->event.button.button)
 			{
-				switch (w->g->event.button.button)
+				case SDL_BUTTON_LEFT:
 				{
-					case SDL_BUTTON_LEFT:
-						{
-							mouse_down = true;
-							int x = w->g->event.button.x,y = w->g->event.button.y;
-							buttonDown (get_rect(x, y,rects,NumberOfMapDivision),x,y);
-							draw();
-							break;
-						}
-					case SDL_BUTTON_RIGHT: //zmazeme object, ak sme v mape
+					mouse_down = true;
+					addObj();
+					break;
+				}
+				case SDL_BUTTON_RIGHT: //zmazeme object, ak sme v mape
+				{
+					Position p;
+					SDL_GetMouseState(&p.x, &p.y);
+					p.x += map->boundaries.x;
+					p.y += map->boundaries.y;
+					Object * o = map->removeAt(p);
+					if (o!=NULL)
 					{
-						Position p;
-						SDL_GetMouseState(&p.x, &p.y);
-						p.x += map->boundaries.x;
-						p.y += map->boundaries.y;
-						Object * o = map->removeAt(p);
-						if (o!=NULL)
-						{
-							delete o;
-						}
-						draw();
+						delete o;
 					}
-					default:
-						break;
+					draw();
 				}
 			}
+			break;
+		}
 		case SDL_MOUSEBUTTONUP:
+		{
+			mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
+			lastPut = NULL;
+			break;
+		}
+		case SDL_MOUSEMOTION:
+		{
+			if (mouse_down)
 			{
-				mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
+				TEST( "iiiiiii" << std::endl)
+				addObj();
 			}
-		case SDL_MOUSEMOTION: //ina ak je stale pressed
-			{
-				//stejna fcia
-				break;
-			}
+			break;
+		}
 	}
+}
+
+void Create_map::addObj()
+{	
+	Position p;
+	SDL_GetMouseState(&p.x, &p.y);
+	buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
+	draw();
 }
 
 void Create_map::process()
 {
-	if (state == DRAW) {
-		while (SDL_PollEvent(&w->g->event) == 0)
-		{
-			process_map();
-			return;
-		}
-		if (mouse_down)
-		{
-			int x, y;
-			SDL_GetMouseState(&x, &y);
-			buttonDown (get_rect(x, y,rects,NumberOfMapDivision),x,y);
-			draw();	
-			return;
-		}
+	if (SDL_WaitEvent(&w->g->event) == 0)
+	{
+		w->pop();
+		return;
+	}
+	if (state == DRAW) 
+	{
+		process_map();
+		
 		return;
 	}
 	if (state == RESOLUTION)
 	{
-		if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 		process_resolution();
 		draw();//TODO opravit iba tu cast screenu, co sa pokazila
 		return;
@@ -536,7 +573,8 @@ void Create_map::process()
 	}
 }
 void Create_map::clean()
-{
+{	
+	lastPut = NULL;
 	state = RESOLUTION;
 	file_name = "";
 	x = false;
