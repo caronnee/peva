@@ -133,18 +133,15 @@ void Create_map::draw()
 		//TODO vysvietit tu, o sa ma zmazat/ zmaze sa to procese klikom lavym tlacitkom
 		//nakresli pole
 		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
-		
-		SDL_Rect r;
-		r.x = 10;
-		r.y = 10;
-		r.w = 100;
-		r.h = 100;
+		SDL_Rect r = rects[MAP];
+		r.w = map->boundaries.width;
+		r.h = map->boundaries.height;
 		SDL_SetClipRect(w->g->screen, &r);
-
+	
 		map->drawAll(w);
 
 		//dokreslime panel
-	//	SDL_SetClipRect(w->g->screen, NULL);
+		SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< SelectedID; i++) //bez grass
 		{
 			SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&tile_rect[i]);
@@ -152,6 +149,7 @@ void Create_map::draw()
 		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 	}
 	SDL_Flip(w->g->screen);
+	SDL_SetClipRect(w->g->screen, NULL);
 }
 
 void Create_map::handleKey(SDLKey c)
@@ -174,7 +172,8 @@ void Create_map::drawInit()
 	state = DRAW;
 	Position p(convert<int>(written_x),convert<int>(written_y));
 	map = new Map(p,"grass");
-	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
+	map->setBoundary(rects[MAP].w+rects[MAP].x,rects[MAP].h+rects[MAP].y); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
+	map->shift(-rects[MAP].x, -rects[MAP].y);
 //	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 }
 
@@ -369,8 +368,8 @@ void Create_map::process_map()
 								case  MAP:
 								{
 									int x, y;
-									x = w->g->event.button.x - rects[MAP].x;
-									y = w->g->event.button.y - rects[MAP].y;
+									x = w->g->event.button.x;
+									y = w->g->event.button.y;
 									Object * wall = NULL;
 									switch (select)
 									{
