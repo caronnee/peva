@@ -58,11 +58,17 @@ private:
 	/* image og text to be shown in resolution screen */
 	SDL_Surface * text;
 
+	/* adds object to map */
+	void addObj();
+
 	/* flag determining which object was selected to be blit on map*/
 	int select;
 
 	/* graphic information  about the screen */
 	Window * w;
+
+	/* return position closest to the object */
+	Position closest(Position point, Object * toClose);
 
 	/* skins of the object that can be set to map*/
 	std::vector<Skin*> skins;
@@ -111,6 +117,8 @@ private:
 
 	/* window to save map */
 	void saving();
+
+	Object * lastPut;
 public:
 	/* Constructor */
 	Create_map(Window * w_);

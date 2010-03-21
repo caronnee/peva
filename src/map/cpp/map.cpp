@@ -73,7 +73,7 @@ Map::Map(Position resol, std::string skinName)
 	movement.angle = 0;
 	movement.old_pos = movement.position_in_map = p;
 	//X-ova os
-	for (p.x = 0; p.x < resolution.x; p.x += 2*wskins[1]->get_size().x)
+	for (p.x = 0; p.x < resolution.x; p.x += wskins[1]->get_size().x)
 	{
 		p.y = 0;
 		Wall * w1 = new Wall(wskins[1]);
