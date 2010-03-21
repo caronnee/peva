@@ -51,18 +51,21 @@ void Create_map::init()
 	file_r.w = info_width+20;
 	file_r.h = 3*TTF_FontLineSkip(w->g->g_font);
 
+	/*setting widths*/
 	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
-	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
+	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->screen->w /3;
 
+	/*setting heights*/
 	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;
 	rects[CHOOSE].h = w->g->screen->h - rects[EXIT].h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
 	rects[MAP].h = w->g->screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
 
+	/* setting x positions */
 	rects[LEFT].x = rects[SAVE].x = 0;
 	rects[UP].x = rects[DOWN].x = rects[LEFT].w;
 	rects[MAP].x = rects[LEFT].x + rects[LEFT].w;
@@ -71,6 +74,7 @@ void Create_map::init()
 	rects[GENERATE].x = rects[SAVE].x + rects[SAVE].w; //na jednej urovni
 	rects[EXIT].x = rects[GENERATE].x + rects[GENERATE].w;
 
+	/* setting y positions */
 	rects[UP].y = 0;
 	rects[CHOOSE].y = 0; 
 	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
@@ -172,7 +176,7 @@ void Create_map::drawInit()
 	state = DRAW;
 	Position p(convert<int>(written_x),convert<int>(written_y));
 	map = new Map(p,"grass");
-	map->setBoundary(rects[MAP].w+rects[MAP].x,rects[MAP].h+rects[MAP].y); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
+	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 	map->shift(-rects[MAP].x, -rects[MAP].y);
 //	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 }
@@ -283,59 +287,163 @@ void Create_map::saving()
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
+		{
+			Uint16 znak = w->g->event.key.keysym.unicode;
+			switch(znak)
 			{
-				Uint16 znak = w->g->event.key.keysym.unicode;
-				switch(znak)
+				case SDLK_ESCAPE:
 				{
-					case SDLK_ESCAPE:
-						{
-							w->pop();
-							return;
-						}
-					case SDLK_RETURN:
-						{
-						//	if (!map->saveToFile(filename))
-								do 
-									SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
-								while (w->g->event.type != SDL_KEYDOWN);
-							w->pop();
-							return;
-						}
-					default:
-						{
-							std::string temp;
-							if (znak!=0)
-								file_name+=(char) w->g->event.key.keysym.unicode; //TODO zistit ako funuje unicode
-							if (temp==file_name)
-							{
-								break;
-							}
+					w->pop();
+					return;
+				}
+				case SDLK_RETURN:
+				{
+					//	if (!map->saveToFile(filename))
+					do 
+						SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
+					while (w->g->event.type != SDL_KEYDOWN);
+					w->pop();
+					return;
+				}
+				default:
+				{
+					std::string temp;
+					if (znak!=0)
+						file_name+=(char) w->g->event.key.keysym.unicode; //TODO zistit ako funuje unicode
+					if (temp==file_name)
+					{
+						break;
+					}
 
-							SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
-							if (s == NULL)
-							{
-								TEST("something's reeealy realy wrong")
-							}
-							SDL_Rect r = file_r;
-							r.y+=TTF_FontLineSkip(w->g->g_font);
-							SDL_BlitSurface(s, NULL, w->g->screen, &r);
-							SDL_Flip(w->g->screen);
-							SDL_FreeSurface(s);
-							break;
-						}
+					SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
+					if (s == NULL)
+					{
+						TEST("something's reeealy realy wrong")
+					}
+					SDL_Rect r = file_r;
+					r.y += TTF_FontLineSkip(w->g->g_font);
+					SDL_BlitSurface(s, NULL, w->g->screen, &r);
+					SDL_Flip(w->g->screen);
+					SDL_FreeSurface(s);
+					break;
+				}
+			}
+			break;
+		}
+		case SDL_QUIT:
+		{
+			w->Destroy();
+		}
+	}
+}
+void Create_map::buttonDown(int number, int atX, int atY)
+{
+	switch (number)
+	{
+		case MAP:
+			{
+				int x, y;
+				x = atX + map->boundaries.x;
+				y = atY + map->boundaries.y;
+				Object * wall = NULL;
+				switch (select)
+				{
+					case TargetPlace:
+						map->addTarget(w, x,y);
+						break;
+					case WallSolidId:
+						wall = new Wall(skins[WallSolidId]);
+						break;
+					case WallPushId:
+						wall = new PushableWall(skins[WallPushId]);
+						break;
+					case WallTrapId:
+						wall = new TrapWall(skins[WallTrapId]);
+						break;
+					case WallStartId:
+						map->starts.push_back(Position(x,y));
+						break;
+					default:
+						TEST("Eeek!" << select);
+				}
+				if (wall)
+				{
+					Position p(x,y);
+					wall->setPosition(p,0);
+					map->add(wall);
 				}
 				break;
 			}
-		case SDL_QUIT:
-			{
-				w->Destroy();
-			}
+		case SAVE:{std::cout << "save" <<std::endl;
+				  SDL_Rect r = file_r;
+				  SDL_FillRect(w->g->screen, &r,0);
+				  r.x+=10;
+				  SDL_BlitSurface(info_o,NULL,w->g->screen,&r);
+				  SDL_Flip(w->g->screen);
+				  state = SAVING;
+				  break;
+			  }
+		case GENERATE:
+			  {
+				  std::cout << "generate" <<std::endl;
+				  //  generuj(Position(resolX, resolY));//TODO vlastnost mapy
+				  break;
+			  }
+		case EXIT:
+			  {
+				  std::cout << "exit" <<std::endl;
+				  break;
+			  }
+		case CHOOSE:
+			  {
+				  std::cout << "choose" <<std::endl;
+				  int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
+				  if (wall != -1)
+				  {
+					  select = wall;
+				  }
+				  draw();
+				  break;
+			  }
+		case LEFT:
+			  {
+				  if (map->boundaries.x > -rects[MAP].x)
+					  map->shift(-2,0);
+				  break;
+			  }
+		case RIGHT:
+			  {
+				  if (map->boundaries.x < map->size().x - rects[RIGHT].x)
+					  map->shift(2,0);
+				  break;
+			  }
+		case UP:
+			  { 
+				  TEST("up")
+					  if (map->boundaries.y > -rects[MAP].y)
+						  map->shift(0,-2);
+				  break;
+			  }
+		case DOWN:
+			  {
+				  TEST("down")
+					  if (map->boundaries.y < map->size().y -rects[DOWN].y)
+						  map->shift(0, 2);
+				  break;
+			  }
+
+		default: 
+			  {
+				  std::cout  << " Area unrecognized " << std::endl;
+				  break;
+			  }
 	}
 }
 //BIG TODO zmenit na citatelnejsie
 void Create_map::process_map()
 {
 	//TODO if SLD_KEY PRESSED, do last action
+	
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -362,108 +470,23 @@ void Create_map::process_map()
 					case SDL_BUTTON_LEFT:
 						{
 							mouse_down = true;
-							int number = get_rect(w->g->event.button.x, w->g->event.button.y,rects,NumberOfMapDivision);
-							switch (number)
-							{
-								case  MAP:
-								{
-									int x, y;
-									x = w->g->event.button.x;
-									y = w->g->event.button.y;
-									Object * wall = NULL;
-									switch (select)
-									{
-										case TargetPlace:
-											map->addTarget(w, x,y);
-											break;
-										case WallSolidId:
-											wall = new Wall(skins[WallSolidId]);
-											break;
-										case WallPushId:
-											wall = new PushableWall(skins[WallPushId]);
-											break;
-										case WallTrapId:
-											wall = new TrapWall(skins[WallTrapId]);
-											break;
-										case WallStartId:
-											map->starts.push_back(Position(x,y));
-											break;
-										default:
-											TEST("Eeek!" << select);
-									}
-									if (wall)
-									{
-										Position p(x,y);
-										wall->setPosition(p,0);
-										map->add(wall);
-									}
-									draw();
-									break;
-								}
-								case  SAVE:{std::cout << "save" <<std::endl;
-										   SDL_Rect r = file_r;
-										   SDL_FillRect(w->g->screen, &r,0);
-										   r.x+=10;
-										   SDL_BlitSurface(info_o,NULL,w->g->screen,&r);
-										   SDL_Flip(w->g->screen);
-										   state = SAVING;
-										   break;
-									   }
-								case  GENERATE:
-									   {
-										       std::cout << "generate" <<std::endl;
-										     //  generuj(Position(resolX, resolY));//TODO vlastnost mapy
-										       break;
-									   }
-								case  EXIT:{std::cout << "exit" <<std::endl;
-										   break;}
-								case  CHOOSE:
-								{
-									std::cout << "choose" <<std::endl;
-									int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
-									if (wall != -1)
-									{
-										TEST("ok " << wall)
-										select = wall;
-									}
-									draw();
-									break;
-								}
-								case  LEFT:
-								{
-								        break;
-								}
-								case  UP:
-								{ 
-									break;
-								}
-								case  DOWN:
-								{
-									break;
-								}
-								case  RIGHT:
-								{
-									break;
-								}
-								default: 
-								{
-									std::cout  << " Area unrecognized " << std::endl;
-									break;
-								}
-							}
+							int x = w->g->event.button.x,y = w->g->event.button.y;
+							buttonDown (get_rect(x, y,rects,NumberOfMapDivision),x,y);
+							draw();
 							break;
 						}
 					case SDL_BUTTON_RIGHT: //zmazeme object, ak sme v mape
 					{
 						Position p;
 						SDL_GetMouseState(&p.x, &p.y);
+						p.x += map->boundaries.x;
+						p.y += map->boundaries.y;
 						Object * o = map->removeAt(p);
 						if (o!=NULL)
 						{
 							delete o;
 						}
 						draw();
-						SDL_Flip(w->g->screen);
 					}
 					default:
 						break;
@@ -483,13 +506,25 @@ void Create_map::process_map()
 
 void Create_map::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	if (state == DRAW) {
-		process_map();
+		while (SDL_PollEvent(&w->g->event) == 0)
+		{
+			process_map();
+			return;
+		}
+		if (mouse_down)
+		{
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			buttonDown (get_rect(x, y,rects,NumberOfMapDivision),x,y);
+			draw();	
+			return;
+		}
 		return;
 	}
 	if (state == RESOLUTION)
 	{
+		if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 		process_resolution();
 		draw();//TODO opravit iba tu cast screenu, co sa pokazila
 		return;
