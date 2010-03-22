@@ -157,14 +157,18 @@ void Map::redraw(Window*w)
 }
 void Map::background(Window * w)
 {	
-	
-	for (int x = 15; x < boundaries.width; x+=skinWork->width()) // pre tapety
+	Position start(boundaries.x, boundaries.y);	
+	if (start.x < 0)
+		start.x = 0;
+	if (start.y < 0)
+		start.y = 0;
+	for (int x = 0; x < boundaries.width; x+=skinWork->width()) // pre tapety
 	{
-		for(int y = 15; y< boundaries.height; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
+		for(int y = 0; y< boundaries.height; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
 		{
 			SDL_Rect r; //TODO nie takto natvrdlo
-			r.x = x;
-			r.y = y;
+			r.x = x + start.x;
+			r.y = y + start.y;
 
 			SDL_Rect sr = skinWork->get_rect();
 			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
@@ -353,7 +357,27 @@ void Map::add(Object * o)
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.add(o->item);
 }
-Object * Map::removeAt(Position position)
+Object * Map::removeShow(Position position, bool all, Window*w)
+{
+	SDL_Rect r;
+	Object * o = removeAt(position, r);
+	Rectangle oldBounds = boundaries;
+	boundaries.x += r.x;
+	boundaries.y += r.y;
+	boundaries.width = r.w;
+	boundaries.height = r.h;
+	if (all)
+	{
+		background(w);
+		draw(w);
+	}
+	else
+		drawAll(w);
+	SDL_UpdateRect(w->g->screen,boundaries.x,boundaries.y,boundaries.width,boundaries.height);
+	boundaries = oldBounds;
+	return o;
+}
+Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 {
 	Position removePos(position);
 
@@ -384,13 +408,16 @@ Object * Map::removeAt(Position position)
 				{
 					map[boxP.x][boxP.y].objects.remove();
 					map[boxP.x][boxP.y].objects.reset();
+					toBlit = o->get_rect();
+					toBlit.x = r.x;
+					toBlit.y = r.y;
 					return o;
 				}
 				o = map[boxP.x][boxP.y].objects.read();
 			}
 		}
 	}
-	TEST("Object not found!"<<std::endl)
+	//TEST("Object not found!"<<std::endl)
 	//ci to nie je place alebo startPosition, popripade obe
 	//FIXME
 	Rectangle r;
@@ -402,8 +429,12 @@ Object * Map::removeAt(Position position)
 		r.y = i->y;
 		if (r.overlaps(position))
 		{
+			toBlit.x = r.x;
+			toBlit.y = r.y;
+			toBlit.w = r.width;
+			toBlit.h = r.height;
 			starts.erase(i);
-			break;
+			return NULL;
 		}
 	}
 	for (std::list<Place>::iterator i = places.begin(); i!=places.end(); i++)
@@ -412,8 +443,12 @@ Object * Map::removeAt(Position position)
 		r.y = i->p.y;
 		if (r.overlaps(position))
 		{
+			toBlit.x = r.x;
+			toBlit.y = r.y;
+			toBlit.w = r.width;
+			toBlit.h = r.height;
 			places.erase(i);
-			break;
+			return NULL;
 		}
 	}
 	return NULL;

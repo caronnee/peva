@@ -154,7 +154,6 @@ void Create_map::draw()
 		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 	}
 	SDL_Flip(w->g->screen);
-	SDL_SetClipRect(w->g->screen, NULL);
 }
 
 void Create_map::handleKey(SDLKey c)
@@ -319,7 +318,7 @@ void Create_map::saving()
 					SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
 					if (s == NULL)
 					{
-						TEST("something's reeealy realy wrong")
+						TEST("something's reeeally really wrong")
 					}
 					SDL_Rect r = file_r;
 					r.y += TTF_FontLineSkip(w->g->g_font);
@@ -383,11 +382,11 @@ void Create_map::buttonDown(int number, int atX, int atY)
 						map->starts.push_back(Position(x,y));
 						break;
 					default:
-						TEST("Eeek!" << select);
+						TEST("Object not recognized" << select);
 				}
 				if (wall)
 				{
-					Position p(x,y);
+					Position p(x,y); //x,y = aktual position
 					p = closest(p, lastPut);
 					wall->setPosition(p,0);
 					Object * collide = map->checkCollision(wall);
@@ -435,9 +434,12 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
 			if (wall != -1)
 			{
+				SDL_BlitSurface(skins[select]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
+				SDL_UpdateRect(w->g->screen,tile_rect[select].x,tile_rect[select].y,tile_rect[select].w,tile_rect[select].h);
 				select = wall;
+				SDL_BlitSurface(skins[select]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
+				SDL_UpdateRect(w->g->screen,tile_rect[select].x,tile_rect[select].y,tile_rect[select].w,tile_rect[select].h);
 			}
-			draw();
 			break;
 		}
 		case LEFT:
@@ -472,10 +474,9 @@ void Create_map::buttonDown(int number, int atX, int atY)
 	}
 }
 //BIG TODO zmenit na citatelnejsie
+
 void Create_map::process_map()
 {
-	//TODO if SLD_KEY PRESSED, do last action
-	
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -497,11 +498,12 @@ void Create_map::process_map()
 		}
 		case SDL_MOUSEBUTTONDOWN:
 		{
+			mouse_down = true;
+			TEST("SET")
 			switch (w->g->event.button.button)
 			{
 				case SDL_BUTTON_LEFT:
 				{
-					mouse_down = true;
 					addObj();
 					break;
 				}
@@ -511,18 +513,19 @@ void Create_map::process_map()
 					SDL_GetMouseState(&p.x, &p.y);
 					p.x += map->boundaries.x;
 					p.y += map->boundaries.y;
-					Object * o = map->removeAt(p);
+					Object * o = map->removeShow(p,true,w);
 					if (o!=NULL)
 					{
 						delete o;
 					}
-					draw();
+					break;
 				}
 			}
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
 		{
+			TEST("calling UP")
 			mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
 			lastPut = NULL;
 			break;
@@ -531,7 +534,7 @@ void Create_map::process_map()
 		{
 			if (mouse_down)
 			{
-				TEST( "iiiiiii" << std::endl)
+			//	TEST( "Moving!" << std::endl)
 				addObj();
 			}
 			break;
@@ -541,7 +544,7 @@ void Create_map::process_map()
 
 void Create_map::addObj()
 {	
-	Position p;
+	Position p(0,0);
 	SDL_GetMouseState(&p.x, &p.y);
 	buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
 	draw();
@@ -579,12 +582,10 @@ void Create_map::clean()
 	file_name = "";
 	x = false;
 	mouse_down = false;
-	select = 1;
+	select = 4;
 	written_x = "";
 	written_y = "";
 	map = NULL;
-	//window_begin_x = rects[MAP].x;
-	//window_begin_y = rects[MAP].y;
 	if (text)
 		SDL_FreeSurface(text);
 	text = NULL;
