@@ -102,10 +102,9 @@ int main(int argc, char ** args)
 								{
 									Position p;
 									SDL_GetMouseState(&p.x, &p.y);
-									Object * o = map->removeAt(p);
+									Object * o = map->removeShow(p,false, &w);
 									if ((o!=NULL) && (o!=body))
 										delete o;
-									redraw(map);
 									break;
 								}
 							case SDLK_f: //ako follow sipku

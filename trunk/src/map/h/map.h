@@ -55,8 +55,11 @@ struct Map
 	/* draw map including non-participating objects */
 	void drawAll(Window * w);
 
+	/* removes object at position p and udate the screen */
+	Object * removeShow(Position position, bool all, Window*w);
+
 	/* removes object at position p*/
-	Object * removeAt(Position position);
+	Object * removeAt(Position position, SDL_Rect & r);
 
 	/* how many column boxes */
 	float boxesInColumn;
