@@ -28,7 +28,7 @@ void Join::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-	w->tapestry();
+//	w->tapestry();
 	SDL_Flip(w->g->screen);
 }
 
@@ -73,7 +73,7 @@ void Host::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-	w->tapestry();
+//	w->tapestry();
 	SDL_Flip(w->g->screen);
 }
 
@@ -272,7 +272,7 @@ void Settings::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-	w->tapestry();
+//	w->tapestry();
 	SDL_Flip(w->g->screen);
 }
 void Settings::clean()

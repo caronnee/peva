@@ -71,11 +71,12 @@ void Main::clean()
 
 void Main::draw()
 {
-	SDL_Rect rect;
-
-	w->tapestry();
+	SDL_Rect pom;
+	SDL_GetClipRect(w->g->screen, &pom);
+	w->tapestry(pom);
 	
 	int offset_up = 10;
+	SDL_Rect rect;
 	rect.y = (w->g->screen->h + (w->g->font_size+offset_up)*4)/2;
 	rect.x = (w->g->screen->w)/2 - 15;// TODO zmenit na lepsie
 	SDL_Surface* text;

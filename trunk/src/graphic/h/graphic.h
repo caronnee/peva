@@ -65,7 +65,7 @@ private:
 public:
 	Graphic * g;
 	Window(Graphic * g_);
-	void tapestry();
+	void tapestry(SDL_Rect rect);
 	int toggle_screen(); //change from full screen to window screen and vice-versa
 	void add(Menu * m);
 	bool Init(int argc, char * argv[]);

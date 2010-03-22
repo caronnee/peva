@@ -49,6 +49,9 @@ private:
 	/* which state is this menu*/
 	Win_type state;
 
+	/* mthod to draw i-th panel to screen*/
+	void drawPanel(int i, Window * w);
+
 	/* resolution deliminer flag*/
 	bool x;
 

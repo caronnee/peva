@@ -358,27 +358,32 @@ Object * Map::removeShow(Position position, bool all, Window*w)
 {
 	SDL_Rect r;
 	Object * o = removeAt(position, r);
+	Rectangle upd = boundaries;
+	upd.x += r.x;
+	upd.y += r.y;
+	upd.width = r.w;
+	upd.height = r.h;
+	update (upd, all, w);
+	return o;
+}
+void Map::update(Rectangle newBound, bool all, Window*w)
+{
 	Rectangle oldBounds = boundaries;
-	boundaries.x += r.x;
-	boundaries.y += r.y;
-	boundaries.width = r.w;
-	boundaries.height = r.h;
-	
-	SDL_Rect clip = r;
-	r.x = boundaries.x;
-	r.y = boundaries.y;
+	boundaries = newBound;	
+
+	SDL_Rect clip;
+	clip.x = boundaries.x;
+	clip.y = boundaries.y;
+	clip.h = boundaries.height;
+	clip.w = boundaries.width;
 	SDL_SetClipRect(w->g->screen, &clip);
 	if (all)
-	{
-		background(w);
-		draw(w);
-	}
-	else
 		drawAll(w);
+	else
+		redraw(w);
+	SDL_UpdateRect(w->g->screen,clip.x,clip.y,clip.w,clip.h);
 	SDL_SetClipRect(w->g->screen, NULL);
-	SDL_UpdateRect(w->g->screen,boundaries.x,boundaries.y,boundaries.width,boundaries.height);
 	boundaries = oldBounds;
-	return o;
 }
 Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 {
