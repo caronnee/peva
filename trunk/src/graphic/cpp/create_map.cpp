@@ -374,7 +374,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 {
 	switch (number)
 	{
-		/*
 		case MAP:
 			{
 				int x, y;
@@ -382,8 +381,8 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				y = atY + map->boundaries.y;
 				Object * wall = NULL;
 				Rectangle update;
-				update.x =x;
-				update.y =y;
+				update.x =atX;
+				update.y =atY;
 				update.width = update.height = 50; //default, FIXME
 				switch (select)
 				{
@@ -417,6 +416,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 						lastPut = wall;
 						update.width = wall->width();
 						update.height = wall->height(); //TODO check, netreba shift?
+						map->update(update,true, w);
 						break;
 					}
 					update.width=-1;
@@ -453,7 +453,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			TEST("exit" << std::endl)
 			w->pop();
 			break;
-		}*/
+		}
 		case CHOOSE:
 		{
 			std::cout << "choose" <<std::endl;
@@ -557,10 +557,7 @@ void Create_map::process_map()
 		case SDL_MOUSEMOTION:
 		{
 			if (mouse_down)
-			{
-			//	TEST( "Moving!" << std::endl)
 				addObj();
-			}
 			break;
 		}
 	}
