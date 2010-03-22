@@ -76,7 +76,7 @@ struct Map
 	/* size of map in pixels */
 	Position resolution; 
 
-	void update(Rectangle rect, bool all , Window * w);
+	void update(SDL_Rect rect, bool all , Window * w);
 	/* map skin *///TODO je ho vlastne potreba?
 	Skin * skin;
 

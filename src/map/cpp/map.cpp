@@ -358,25 +358,15 @@ Object * Map::removeShow(Position position, bool all, Window*w)
 {
 	SDL_Rect r;
 	Object * o = removeAt(position, r);
-	Rectangle upd = boundaries;
-	upd.x += r.x;
-	upd.y += r.y;
-	upd.width = r.w;
-	upd.height = r.h;
-	update (upd, all, w);
+	update(r,true,w);
 	return o;
 }
-void Map::update(Rectangle newBound, bool all, Window * w)
+void Map::update(SDL_Rect newBound, bool all, Window * w)
 {
-	Rectangle oldBounds;
+	SDL_Rect clip = newBound;
 
-	SDL_Rect clip;
-	clip.x = newBound.x;
-	clip.y = newBound.y;
-	clip.h = newBound.height;
 	if (clip.h+clip.y > boundaries.height + 15)
 		clip.h -= clip.h + clip.y - boundaries.height - 15;
-	clip.w = newBound.width;
 	if (clip.w+clip.x > boundaries.width + 15)
 		clip.w -= clip.w + clip.x - boundaries.width - 15;
 
@@ -410,9 +400,9 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 			Object * o = map[boxP.x][boxP.y].objects.read();
 			while( o!=NULL )
 			{
-				Rectangle r = o->collisionSize();
-				r.height += r.y;
-				r.width += r.x;
+				Rectangle r;
+				r.width = o->get_rect().w; //to co blitujem
+				r.height = o->get_rect().h;
 				r.x = o->get_pos().x;
 				r.y = o->get_pos().y;
 				if (r.overlaps(position))
@@ -420,8 +410,8 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 					map[boxP.x][boxP.y].objects.remove();
 					map[boxP.x][boxP.y].objects.reset();
 					toBlit = o->get_rect();
-					toBlit.x = r.x;
-					toBlit.y = r.y;
+					toBlit.x = r.x - boundaries.x;
+					toBlit.y = r.y - boundaries.y;
 					return o;
 				}
 				o = map[boxP.x][boxP.y].objects.read();
@@ -440,8 +430,8 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 		r.y = i->y;
 		if (r.overlaps(position))
 		{
-			toBlit.x = r.x;
-			toBlit.y = r.y;
+			toBlit.x = r.x - boundaries.x;
+			toBlit.y = r.y - boundaries.y;
 			toBlit.w = r.width;
 			toBlit.h = r.height;
 			starts.erase(i);

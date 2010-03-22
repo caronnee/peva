@@ -380,10 +380,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				x = atX + map->boundaries.x;
 				y = atY + map->boundaries.y;
 				Object * wall = NULL;
-				Rectangle update;
-				update.x =atX;
-				update.y =atY;
-				update.width = update.height = 50; //default, FIXME
 				switch (select)
 				{
 					case TargetPlace:
@@ -404,6 +400,11 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					default:
 						TEST("Object not recognized" << select);
 				}
+				SDL_Rect update;
+				update.x =atX;
+				update.y =atY;
+				update.w = update.h = 50; //default, FIXME
+
 				if (wall)
 				{
 					Position p(x,y); //x,y = aktual position
@@ -414,13 +415,13 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					{
 						map->add(wall);
 						lastPut = wall;
-						update.width = wall->width();
-						update.height = wall->height(); //TODO check, netreba shift?
+						update.w = wall->width();
+						update.h = wall->height(); //TODO check, netreba shift?
 						map->update(update,true, w);
 						break;
 					}
-					update.width=-1;
-					update.height = -1;
+					update.w = -1;
+					update.h = -1;
 					lastPut = collide;
 					TEST("Collision!")
 					delete wall;
@@ -470,26 +471,32 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case LEFT:
 		{
+			TEST("___LEFT___")
 			if (map->boundaries.x > -rects[MAP].x)
 				map->shift(-2,0);
+			map->update(rects[MAP], true, w);
 			break;
 		}
 		case RIGHT:
 		{
+			TEST("___RIGHT___")
 			if (map->boundaries.x < map->size().x - rects[RIGHT].x)
 				map->shift(2,0);
+			map->update(rects[MAP], true, w);
 			break;
 		}
 		case UP:
 		{ 
 			if (map->boundaries.y > -rects[MAP].y)
 				map->shift(0,-2);
+			map->update(rects[MAP], true, w);
 			break;
 		}
 		case DOWN:
 		{
 			if (map->boundaries.y < map->size().y -rects[DOWN].y)
-					map->shift(0, 2);
+				map->shift(0, 2);
+			map->update(rects[MAP], true, w);
 			break;
 		}
 		default: 
@@ -525,7 +532,6 @@ void Create_map::process_map()
 		case SDL_MOUSEBUTTONDOWN:
 		{
 			mouse_down = true;
-			TEST("SET")
 			switch (w->g->event.button.button)
 			{
 				case SDL_BUTTON_LEFT:
@@ -540,7 +546,7 @@ void Create_map::process_map()
 					p.x += map->boundaries.x;
 					p.y += map->boundaries.y;
 					Object * o = map->removeShow(p,true,w);
-					if (o!=NULL)
+					if ( o != NULL)
 						delete o;
 					break;
 				}
@@ -549,7 +555,6 @@ void Create_map::process_map()
 		}
 		case SDL_MOUSEBUTTONUP:
 		{
-			TEST("calling UP")
 			mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
 			lastPut = NULL;
 			break;
