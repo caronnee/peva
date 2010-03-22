@@ -124,21 +124,21 @@ bool Window::Init(int argc, char * argv[] )
 	return b;
 }
 
-void Window::tapestry()
+void Window::tapestry(SDL_Rect r)
 {
-	SDL_Rect rect;
+	int startx = r.x - r.x%background->w;
+	int starty = r.y - r.y%background->h;
 	if (background == NULL) 
-		{
-			TEST("Background image not loaded !");
-			return;
-		}
-	int i;
-	for (i = 0; i < g->screen->h; i+=background->h) //tapetujeme pozadie, TODO zmenit na iba raz
 	{
-		rect.y=i;
-		int j;
-		for (j =0; j < g->screen->w; j+=background->w)
+		TEST("Background image not loaded !");
+		return;
+	}
+	for (int i = starty; i < r.y+ r.h; i+=background->h) //tapetujeme pozadie, TODO zmenit na iba raz
+	{
+		for (int j = startx; j <r.x+ r.w; j+=background->w)
 		{
+			SDL_Rect rect;
+			rect.y=i;
 			rect.x=j;
 			SDL_BlitSurface(background,NULL,g->screen, &rect);
 		}

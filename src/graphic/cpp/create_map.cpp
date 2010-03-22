@@ -88,6 +88,8 @@ void Create_map::init()
 	{
 		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
 		tile_rect[i].y = pom;
+		tile_rect[i].w = skins[0]->get_size().x;
+		tile_rect[i].h = skins[0]->get_size().y;
 		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
 	}
 }
@@ -128,7 +130,9 @@ void Create_map::draw_resol() //TODO tu staci len raz vykreslit a potom sa pozri
 }
 void Create_map::draw()
 {
-	w->tapestry(); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
+	SDL_Rect clip;
+	SDL_GetClipRect(w->g->screen, &clip); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
+	w->tapestry(clip);
 	if (state == RESOLUTION)
 	{
 		draw_resol();
@@ -149,11 +153,23 @@ void Create_map::draw()
 		SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< SelectedID; i++) //bez grass
 		{
-			SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&tile_rect[i]);
+			drawPanel(i,w);
 		}
 		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 	}
 	SDL_Flip(w->g->screen);
+}
+void Create_map::drawPanel(int i, Window * w)
+{
+	SDL_Rect sh = tile_rect[i];
+	SDL_Rect clip = sh;
+	SDL_SetClipRect(w->g->screen, &clip);
+	w->tapestry(sh);
+	sh.x += (tile_rect[i].w - skins[i]->get_size().x) >>1;
+	sh.y += (tile_rect[i].h - skins[i]->get_size().y) >>1;
+	SDL_BlitSurface(skins[i]->get_surface(0),NULL,w->g->screen,&sh);
+	SDL_UpdateRect(w->g->screen,tile_rect[select].x,tile_rect[select].y,tile_rect[select].w,tile_rect[select].h);
+	SDL_SetClipRect(w->g->screen, NULL);
 }
 
 void Create_map::handleKey(SDLKey c)
@@ -358,12 +374,17 @@ void Create_map::buttonDown(int number, int atX, int atY)
 {
 	switch (number)
 	{
+		/*
 		case MAP:
 			{
 				int x, y;
 				x = atX + map->boundaries.x;
 				y = atY + map->boundaries.y;
 				Object * wall = NULL;
+				Rectangle update;
+				update.x =x;
+				update.y =y;
+				update.width = update.height = 50; //default, FIXME
 				switch (select)
 				{
 					case TargetPlace:
@@ -394,13 +415,18 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					{
 						map->add(wall);
 						lastPut = wall;
+						update.width = wall->width();
+						update.height = wall->height(); //TODO check, netreba shift?
 						break;
 					}
+					update.width=-1;
+					update.height = -1;
 					lastPut = collide;
 					TEST("Collision!")
 					delete wall;
 					break;
 				}
+				map->update(update,true, w);
 				break;
 			}
 		case SAVE:
@@ -427,17 +453,17 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			TEST("exit" << std::endl)
 			w->pop();
 			break;
-		}
+		}*/
 		case CHOOSE:
 		{
 			std::cout << "choose" <<std::endl;
 			int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
 			if (wall != -1)
 			{
-				SDL_BlitSurface(skins[select]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
+				drawPanel(select,w);
 				SDL_UpdateRect(w->g->screen,tile_rect[select].x,tile_rect[select].y,tile_rect[select].w,tile_rect[select].h);
 				select = wall;
-				SDL_BlitSurface(skins[select]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
+				SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
 				SDL_UpdateRect(w->g->screen,tile_rect[select].x,tile_rect[select].y,tile_rect[select].w,tile_rect[select].h);
 			}
 			break;
@@ -515,9 +541,7 @@ void Create_map::process_map()
 					p.y += map->boundaries.y;
 					Object * o = map->removeShow(p,true,w);
 					if (o!=NULL)
-					{
 						delete o;
-					}
 					break;
 				}
 			}
@@ -547,7 +571,6 @@ void Create_map::addObj()
 	Position p(0,0);
 	SDL_GetMouseState(&p.x, &p.y);
 	buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
-	draw();
 }
 
 void Create_map::process()
@@ -582,7 +605,7 @@ void Create_map::clean()
 	file_name = "";
 	x = false;
 	mouse_down = false;
-	select = 4;
+	select = 1;
 	written_x = "";
 	written_y = "";
 	map = NULL;
