@@ -157,18 +157,15 @@ void Map::redraw(Window*w)
 }
 void Map::background(Window * w)
 {	
-	Position start(boundaries.x, boundaries.y);	
-	if (start.x < 0)
-		start.x = 0;
-	if (start.y < 0)
-		start.y = 0;
+	SDL_Rect clip;
+	SDL_GetClipRect(w->g->screen, &clip);
 	for (int x = 0; x < boundaries.width; x+=skinWork->width()) // pre tapety
 	{
 		for(int y = 0; y< boundaries.height; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
 		{
 			SDL_Rect r; //TODO nie takto natvrdlo
-			r.x = x + start.x;
-			r.y = y + start.y;
+			r.x = x +clip.x;
+			r.y = y +clip.y;
 
 			SDL_Rect sr = skinWork->get_rect();
 			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
@@ -366,6 +363,11 @@ Object * Map::removeShow(Position position, bool all, Window*w)
 	boundaries.y += r.y;
 	boundaries.width = r.w;
 	boundaries.height = r.h;
+	
+	SDL_Rect clip = r;
+	r.x = boundaries.x;
+	r.y = boundaries.y;
+	SDL_SetClipRect(w->g->screen, &clip);
 	if (all)
 	{
 		background(w);
@@ -373,6 +375,7 @@ Object * Map::removeShow(Position position, bool all, Window*w)
 	}
 	else
 		drawAll(w);
+	SDL_SetClipRect(w->g->screen, NULL);
 	SDL_UpdateRect(w->g->screen,boundaries.x,boundaries.y,boundaries.width,boundaries.height);
 	boundaries = oldBounds;
 	return o;
