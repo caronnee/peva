@@ -39,12 +39,13 @@ struct Place
 	SDL_Surface * img;
 	Position p;
 };
+
 struct Map
 {
 	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
 	std::list<Place> places;
-	std::list<Position> starts;
+	std::list<Rectangle> starts;
 
 	/* draws background*/
 	void background(Window *w);
