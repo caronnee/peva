@@ -3,6 +3,9 @@
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/wall.h"
 
+#define MaxTG 100
+#define TG_CONST 20
+
 //TODO externe si pamatat steny pre bezpecne odmonotvanie
 Box::Box()
 {
@@ -108,7 +111,23 @@ void Map::addTarget(Window * w,size_t x, size_t y)
 {
 	Position p(x,y);
 	size_t i = 0;
-	std::list<Place>::iterator iter = places.begin();
+	std::list<Place>::iterator iter;
+	Rectangle r;
+	r.x = x;
+	r.y = y;
+	r.width = TG_CONST;
+	r.height = TG_CONST;
+	for (iter = places.begin();iter!=places.end(); iter++)
+	{
+		Rectangle r2(iter->p.x,iter->p.y,TG_CONST, TG_CONST);
+		if (r.overlaps(r2))
+		{
+			TEST("position already set")
+			return;
+		}
+	}
+
+	iter = places.begin();
 	for (;iter!=places.end(); i++,iter++) //prve nezadane
 		if (iter->id!=i)
 			break;
@@ -125,8 +144,8 @@ Position Map::size()const
 }
 void Map::drawAll(Window * w)
 {
-	background(w);
-	for (std::list<Position>::iterator i = starts.begin() ; i != starts.end(); i++)
+//	background(w);
+	for (std::list<Rectangle>::iterator i = starts.begin() ; i != starts.end(); i++)
 	{
 		if (boundaries.overlaps(*i))
 		{
@@ -144,7 +163,7 @@ void Map::drawAll(Window * w)
 			SDL_Rect r;
 			r.x = iter->p.x - boundaries.x;
 			r.y = iter->p.y - boundaries.y;
-			SDL_BlitSurface(wskins[TargetPlace]->get_surface(0), NULL, w->g->screen, &r);
+//			SDL_BlitSurface(wskins[TargetPlace]->get_surface(0), NULL, w->g->screen, &r);
 			SDL_BlitSurface(iter->img, NULL, w->g->screen, &r);
 		}
 	}
@@ -424,7 +443,7 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 	Rectangle r;
 	r.width = 50;
 	r.height = 50; //start area moze byt mala a ja si ju just budem fixovat:)
-	for (std::list<Position>::iterator i = starts.begin(); i!=starts.end(); i++)
+	for (std::list<Rectangle>::iterator i = starts.begin(); i!=starts.end(); i++)
 	{
 		r.x = i->x;
 		r.y = i->y;

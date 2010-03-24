@@ -395,7 +395,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 						wall = new TrapWall(skins[WallTrapId]);
 						break;
 					case WallStartId:
-						map->starts.push_back(Position(x,y));
+						map->starts.push_back(Rectangle(x,y,50,50));
 						break;
 					default:
 						TEST("Object not recognized" << select);
@@ -423,7 +423,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					update.w = -1;
 					update.h = -1;
 					lastPut = collide;
-					TEST("Collision!")
 					delete wall;
 					break;
 				}
