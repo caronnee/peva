@@ -408,7 +408,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				if (wall)
 				{
 					Position p(x,y); //x,y = aktual position
-					p = closest(p, lastPut);
 					wall->setPosition(p,0);
 					Object * collide = map->checkCollision(wall);
 					if (collide == NULL)
@@ -470,7 +469,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case LEFT:
 		{
-			TEST("___LEFT___")
 			if (map->boundaries.x > -rects[MAP].x)
 				map->shift(-2,0);
 			map->update(rects[MAP], true, w);
@@ -478,7 +476,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case RIGHT:
 		{
-			TEST("___RIGHT___")
 			if (map->boundaries.x < map->size().x - rects[RIGHT].x)
 				map->shift(2,0);
 			map->update(rects[MAP], true, w);

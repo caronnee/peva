@@ -41,7 +41,7 @@ codewars:$(lOBJECTS) o/main.o
 
 bparser: $(LANGUAGE_OBJECTS)
 	@echo "..........................................."
-	@echo "Creatinf file for testing language:"
+	@echo "Creating file for testing language:"
 	$(CXX) $(LDFLAGS) $(LANGUAGE_OBJECTS) -o bparser
 	@echo "..........................................."
 
@@ -108,10 +108,12 @@ debugGGraph:
 dep:
 	touch Makefile.dep
 	@if [ ! -d o ]; then echo "Creating compile objects directory"; mkdir o; fi
-	find . -name "*.cpp" |xargs  makedepend -Y -f Makefile.dep  2> /dev/null	
-	rm -f Makefile.dep.bak
+	find . -name "*.cpp" |xargs  makedepend -f Makefile.dep 2> /dev/null	
+	sed "s/\([^/:]*\/\)*\([^/]*\.o:\)/\.\/o\/\2/g" Makefile.dep > Makefile.temp
+	mv -f Makefile.temp Makefile.dep
 
 remake:
 	make distclean
 	make
 
+-include Makefile.dep

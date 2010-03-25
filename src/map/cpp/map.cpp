@@ -441,8 +441,8 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 	//ci to nie je place alebo startPosition, popripade obe
 	//FIXME
 	Rectangle r;
-	r.width = 50;
-	r.height = 50; //start area moze byt mala a ja si ju just budem fixovat:)
+	r.width = wskins[WallStartId]->get_shift().x;
+	r.height = wskins[WallStartId]->get_shift().y; //start area moze byt mala a ja si ju just budem fixovat:)
 	for (std::list<Rectangle>::iterator i = starts.begin(); i!=starts.end(); i++)
 	{
 		r.x = i->x;
@@ -457,6 +457,8 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 			return NULL;
 		}
 	}
+	r.width = wskins[TargetPlace]->get_shift().x;
+	r.height = wskins[TargetPlace]->get_shift().y; //start area moze byt mala a ja si ju just budem fixovat:)
 	for (std::list<Place>::iterator i = places.begin(); i!=places.end(); i++)
 	{
 		r.x = i->p.x;

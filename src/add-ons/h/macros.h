@@ -1,5 +1,5 @@
-#ifndef ___MACROS___
-#define ___MACROS___
+#ifndef __MACROS___
+#define __MACROS___
 #ifdef DEBUG
 #define TEST(x) std::cout << x ; getc(stdin);
 #else 
