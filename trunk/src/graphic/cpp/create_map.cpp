@@ -1,18 +1,17 @@
-//TODO ma,iesto makier pouzit nieco schopnejsie
+//TODO namiesto makier pouzit nieco schopnejsie
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <fstream>
 #include <iostream>
+#include "../h/create_map.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/wall.h"
-#include "../h/create_map.h"
 
 Create_map::Create_map(Window *w_)
 {
 	lastPut = NULL;
 	name = "Create map";
-	//skin = new Skin("grass", Skin::MapSkin);//TODO nacitaj zo suboru, co ma vytvorit
 	w = w_;
 	map= NULL;
 	skins.clear();
@@ -194,7 +193,6 @@ void Create_map::drawInit()
 	map = new Map(p,"grass");
 	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 	map->shift(-rects[MAP].x, -rects[MAP].y);
-//	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 }
 
 void Create_map::keyDown(SDLKey c)
@@ -222,13 +220,13 @@ void Create_map::keyDown(SDLKey c)
 		case SDLK_LEFT:{x = false;break;}
 		case SDLK_q:
 		case SDLK_ESCAPE:
-			       {
-				       w->pop();
-				       return;
-			       }
+		{
+			w->pop();
+			return;
+		}
 		default:
-			       std::cout << "Unknown command (Create map)" << std::endl;
-			       break;
+			std::cout << "Unknown command (Create map)" << std::endl;
+			break;
 	}
 }
 void Create_map::process_resolution()
@@ -395,7 +393,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 						wall = new TrapWall(skins[WallTrapId]);
 						break;
 					case WallStartId:
-						map->starts.push_back(Rectangle(x,y,50,50));
+						map->addStart(w, x, y);
 						break;
 					default:
 						TEST("Object not recognized" << select);
@@ -513,6 +511,10 @@ void Create_map::process_map()
 			switch(w->g->event.key.keysym.sym)
 			{
 				case SDLK_q:
+				case SDLK_SPACE:
+					draw();
+					SDL_Flip(w->g->screen);
+					break;
 				case SDLK_ESCAPE:
 				{
 					w->pop();

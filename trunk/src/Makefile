@@ -108,9 +108,12 @@ debugGGraph:
 dep:
 	touch Makefile.dep
 	@if [ ! -d o ]; then echo "Creating compile objects directory"; mkdir o; fi
-	find . -name "*.cpp" |xargs  makedepend -f Makefile.dep 2> /dev/null	
-	sed "s/\([^/:]*\/\)*\([^/]*\.o:\)/\.\/o\/\2/g" Makefile.dep > Makefile.temp
-	mv -f Makefile.temp Makefile.dep
+	@find . -name "*.cpp" |xargs  makedepend -Y -f Makefile.dep 2> /dev/null	
+	@sed "s/\([^/:]*\/\)*\([^/]*\.o:\)/\.\/o\/\2/g" Makefile.dep > Makefile.temp
+	@mv -f Makefile.temp Makefile.dep
+	@echo ""
+	@echo "Begin compilation"
+	@echo ""
 
 remake:
 	make distclean

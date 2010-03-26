@@ -29,28 +29,28 @@ struct Box
 	Rectangle bounds; 
 
 	/* Objects in area */
-	List objects; //objects in area
+	List objects; 
 };
 
 /* class resolving movement */
 struct Place
 {
 	size_t id;
+	size_t numberImage;
 	SDL_Surface * img;
-	Position p;
+	Rectangle r;
 };
 
 struct Map
 {
 	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
-	std::list<Place> places;
-	std::list<Rectangle> starts;
+	std::list<Place> places; //starts and targets
 
 	/* draws background*/
 	void background(Window *w);
 
-	/* draws onnly visible objects*/
+	/* draws only visible objects*/
 	void draw(Window *w);
 
 	/* draw map including non-participating objects */
@@ -65,8 +65,11 @@ struct Map
 	/* how many column boxes */
 	float boxesInColumn;
 
+	/* adding special place to map */
+	void addPlace(Window* w, Place p);
 	/* adding target places */
 	void addTarget(Window* w, size_t x, size_t y);
+	void addStart(Window* w, size_t x, size_t y);
 
 	/* how many row boxes */
 	float boxesInRow;

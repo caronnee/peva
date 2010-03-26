@@ -107,36 +107,66 @@ void Map::shift(int shiftLeft, int shiftUp)
 	boundaries.x += shiftLeft;
 	boundaries.y += shiftUp;
 }
+
+void Map::addStart(Window * w,size_t x, size_t y)
+{
+	Rectangle r(x,y,wskins[WallStartId]->get_shift().x,
+		wskins[WallStartId]->get_shift().y);
+	std::list<Place>::reverse_iterator iter = places.rbegin();
+	size_t i = -1;
+	for (iter--; iter!=places.rend(); iter--) //prve nezadane
+	{
+		if (iter->id >=0)
+			continue;
+		if (iter->id!=i)
+			break;
+		i--;
+	}
+	Place pl;
+	pl.id = i;//zaporne cislo
+	pl.r = r;
+	pl.img = NULL;
+	pl.numberImage = WallStartId;
+	addPlace(w,pl);
+}
 void Map::addTarget(Window * w,size_t x, size_t y)
 {
-	Position p(x,y);
-	size_t i = 0;
+
+	Rectangle r(x,y,wskins[TargetPlace]->get_shift().x,
+		wskins[TargetPlace]->get_shift().y);
+
 	std::list<Place>::iterator iter;
-	Rectangle r;
-	r.x = x;
-	r.y = y;
-	r.width = TG_CONST;
-	r.height = TG_CONST;
+	size_t i = 0;
+	for (iter = places.begin();iter!=places.end(); iter++) //prve nezadane
+	{
+		if (iter->id <0)
+			continue;
+		if (iter->id!=i)
+			break;
+		i++;
+	}
+
+	Place pl;
+	pl.r = r;
+	pl.numberImage = TargetPlace;
+	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(i).c_str(), w->g->light);
+	pl.id = i;
+	addPlace(w,pl);
+}
+void Map::addPlace(Window * w, Place p)
+{
+	std::list<Place>::iterator iter;
+	
 	for (iter = places.begin();iter!=places.end(); iter++)
 	{
-		Rectangle r2(iter->p.x,iter->p.y,TG_CONST, TG_CONST);
-		if (r.overlaps(r2))
+		if (p.r.overlaps(iter->r))
 		{
 			TEST("position already set")
 			return;
 		}
 	}
 
-	iter = places.begin();
-	for (;iter!=places.end(); i++,iter++) //prve nezadane
-		if (iter->id!=i)
-			break;
-	size_t id = i;
-	Place pl;
-	pl.id = id; 
-	pl.p = p;
-	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(id).c_str(), w->g->light);
-	places.insert(iter,pl);
+	places.insert(iter,p);
 }
 Position Map::size()const
 {
@@ -144,27 +174,26 @@ Position Map::size()const
 }
 void Map::drawAll(Window * w)
 {
-//	background(w);
-	for (std::list<Rectangle>::iterator i = starts.begin() ; i != starts.end(); i++)
-	{
-		if (boundaries.overlaps(*i))
-		{
-			SDL_Rect r;
-			r.x = i->x - boundaries.x;
-			r.y = i->y - boundaries.y;
-			SDL_BlitSurface(wskins[WallStartId]->get_surface(0), NULL, w->g->screen, &r);
-		}
-	}
+	background(w);
 
-	for (std::list<Place>::iterator iter = places.begin(); iter!= places.end(); iter++)
+	SDL_Rect clip;
+	SDL_GetClipRect(w->g->screen, &clip);
+	Rectangle bounds(clip.x - boundaries.x,
+		clip.y - boundaries.y,
+		clip.w,
+		clip.h);
+	for (std::list<Place>::iterator iter = places.begin(); 
+		iter!= places.end(); 
+		iter++)
 	{
-		if (boundaries.overlaps(iter->p))
+		if (bounds.overlaps(iter->r))
 		{
 			SDL_Rect r;
-			r.x = iter->p.x - boundaries.x;
-			r.y = iter->p.y - boundaries.y;
-//			SDL_BlitSurface(wskins[TargetPlace]->get_surface(0), NULL, w->g->screen, &r);
-			SDL_BlitSurface(iter->img, NULL, w->g->screen, &r);
+			r.x = iter->r.x - boundaries.x;
+			r.y = iter->r.y - boundaries.y;
+			SDL_BlitSurface(wskins[iter->numberImage]->get_surface(0), NULL, w->g->screen, &r);
+			if (iter->img) //odstranit? FIXME
+				SDL_BlitSurface(iter->img, NULL, w->g->screen, &r);
 		}
 	}
 	draw(w);
@@ -440,35 +469,14 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 	//TEST("Object not found!"<<std::endl)
 	//ci to nie je place alebo startPosition, popripade obe
 	//FIXME
-	Rectangle r;
-	r.width = wskins[WallStartId]->get_shift().x;
-	r.height = wskins[WallStartId]->get_shift().y; //start area moze byt mala a ja si ju just budem fixovat:)
-	for (std::list<Rectangle>::iterator i = starts.begin(); i!=starts.end(); i++)
-	{
-		r.x = i->x;
-		r.y = i->y;
-		if (r.overlaps(position))
-		{
-			toBlit.x = r.x - boundaries.x;
-			toBlit.y = r.y - boundaries.y;
-			toBlit.w = r.width;
-			toBlit.h = r.height;
-			starts.erase(i);
-			return NULL;
-		}
-	}
-	r.width = wskins[TargetPlace]->get_shift().x;
-	r.height = wskins[TargetPlace]->get_shift().y; //start area moze byt mala a ja si ju just budem fixovat:)
 	for (std::list<Place>::iterator i = places.begin(); i!=places.end(); i++)
 	{
-		r.x = i->p.x;
-		r.y = i->p.y;
-		if (r.overlaps(position))
+		if (i->r.overlaps(position))
 		{
-			toBlit.x = r.x;
-			toBlit.y = r.y;
-			toBlit.w = r.width;
-			toBlit.h = r.height;
+			toBlit.x = i->r.x;
+			toBlit.y = i->r.y;
+			toBlit.w = i->r.width;
+			toBlit.h = i->r.height;
 			places.erase(i);
 			return NULL;
 		}
