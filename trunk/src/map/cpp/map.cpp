@@ -165,6 +165,9 @@ void Map::addPlace(Window * w, Place p)
 			return;
 		}
 	}
+	for (iter = places.begin();iter!=places.end(); iter++)
+		if(iter->id > p.id)
+			break;
 
 	places.insert(iter,p);
 }
@@ -178,8 +181,8 @@ void Map::drawAll(Window * w)
 
 	SDL_Rect clip;
 	SDL_GetClipRect(w->g->screen, &clip);
-	Rectangle bounds(clip.x - boundaries.x,
-		clip.y - boundaries.y,
+	Rectangle bounds(clip.x + boundaries.x,
+		clip.y + boundaries.y,
 		clip.w,
 		clip.h);
 	for (std::list<Place>::iterator iter = places.begin(); 
@@ -188,12 +191,13 @@ void Map::drawAll(Window * w)
 	{
 		if (bounds.overlaps(iter->r))
 		{
-			SDL_Rect r;
+			SDL_Rect r,r2;
 			r.x = iter->r.x - boundaries.x;
 			r.y = iter->r.y - boundaries.y;
+			r2 = r;
 			SDL_BlitSurface(wskins[iter->numberImage]->get_surface(0), NULL, w->g->screen, &r);
 			if (iter->img) //odstranit? FIXME
-				SDL_BlitSurface(iter->img, NULL, w->g->screen, &r);
+				SDL_BlitSurface(iter->img, NULL, w->g->screen, &r2);
 		}
 	}
 	draw(w);
@@ -473,8 +477,8 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 	{
 		if (i->r.overlaps(position))
 		{
-			toBlit.x = i->r.x;
-			toBlit.y = i->r.y;
+			toBlit.x = i->r.x - boundaries.x;
+			toBlit.y = i->r.y - boundaries.y;
 			toBlit.w = i->r.width;
 			toBlit.h = i->r.height;
 			places.erase(i);
