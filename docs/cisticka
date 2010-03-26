@@ -1,6 +1,7 @@
-rm -f  *toc
-rm -f *aux
-cslatex ./bakalarka.tex
-cslatex ./bakalarka.tex
-dvips bakalarka.dvi
-evince bakalarka.ps &
+rm -rf temp
+mkdir temp
+cp *.tex temp
+cd temp; cslatex ./bakalarka.tex
+cd temp; cslatex ./bakalarka.tex
+cd temp; dvipdf bakalarka.dvi
+evince bakalarka.pdf &
