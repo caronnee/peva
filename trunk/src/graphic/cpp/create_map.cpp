@@ -313,10 +313,19 @@ void Create_map::saving()
 				case SDLK_RETURN:
 				{
 					//	if (!map->saveToFile(filename))
+					state = DRAW;
+					draw();
+					SDL_Surface *srf = TTF_RenderText_Solid(w->g->g_font,"ok, press Ebetr to continue",w->g->normal);
+					SDL_Rect rcr = file_r;
+					rcr.y += TTF_FontLineSkip(w->g->g_font)>>4;
+					SDL_BlitSurface(srf, NULL, w->g->screen, &rcr);
+					SDL_Flip(w->g->screen);
+					SDL_FreeSurface(srf);
 					do 
 						SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
 					while (w->g->event.type != SDL_KEYDOWN);
-					w->pop();
+					draw();
+				//	w->pop();
 					return;
 				}
 				default:
