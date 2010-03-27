@@ -242,59 +242,14 @@ void Create_map::process_resolution()
 }
 void Create_map::generuj(Position resolution)
 {
-	Snakes(map->resolution/60); //FIXME nie konstanta ale vlastnost mapy
-	//zaplnime to solidnymi stenami vsetko
-	//TODO najskor to spravit nenaecisto iba s krizikmi a pod
-/*	for (int i = 0; i < resolX; i++)
-		for (int j = 0; j < resolY; j++)
-			map[i][j] = 2;
-	Snake snake(resolution);
-	Position actual;
-	while (!snake.move())
-	{
-		actual = snake.get_pos();
-		map[actual.y][actual.x] = WallFree;
-		//druha strana
-		for(int i=0;i<snake.get_fat();i++)
+	Position snakeRes = map->resolution/(2*60);
+	//FIXME zabezpecit, aby sa to generovalo len na povolenej ploche
+	Snakes snake(snakeRes); //FIXME nie konstanta ale vlastnost mapy
+	snake.create();
+	for (int i =0; i< snakeRes.x; i++)
+		for (int j =0; j< snakeRes.y; j++)
 		{
-			actual.x+=snake.get_dir().y;
-			actual.y-=snake.get_dir().x;
-			if ((actual.x<0)
-			  ||(actual.y<0)
-			  ||(actual.x>=resolX)
-			  ||(actual.y>=resolY)) 
-			{
-				TEST("breakujem" << actual.x << " : " << actual.y)
-				break;
-			}
-			map[actual.y][actual.x] = WallFree;
 		}
-		for(int i=0;i<snake.get_fat();i++)
-		{
-			actual.x-=snake.get_dir().y;
-			actual.y+=snake.get_dir().x;
-			if ((actual.x<0)
-					||(actual.y<0)
-					||(actual.x>=resolX)
-					||(actual.y>=resolY)) 
-			{
-//				TEST("breakujem" << actual.x << " : " << actual.y)
-				break;
-			}
-			map[actual.y][actual.x] = WallFree;
-		}
-	}
-	draw();
-	std::ofstream f;
-	f.open("checkfile");
-	for(int i =0; i< resolX; i++)
-	{
-		for (int j =0; j< resolY; j++)
-		{
-			f << map[i][j];
-		}
-		f << "\n";
-	}*/
 }
 void Create_map::saving()
 {

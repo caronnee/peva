@@ -17,6 +17,7 @@ public:
 	Position operator/(const int &a);
 	Position& substractVector(Position p1);
 	bool operator>=(Position &a);
+	bool operator>(Position &a);
 	bool operator==(Position &p);
 	bool operator!=(Position &p);
 	friend std::ostream& operator<<(std::ostream & o, const Position p);
