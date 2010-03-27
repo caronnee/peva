@@ -11,7 +11,7 @@ Snake::Snake(Position resolution_)	//zvovku dopocitane
 	max_interval = resolution.x + resolution.y - 2;		
 	position.x = rand()%resolution.x;
 	position.y = rand()%resolution.y;
-	TEST(" generated position " << position)
+	//TEST(" generated position " << position)
 	health=resolution.x*resolution.y + resolution.x + resolution.y; //TODO?
 	Init();		
 }
@@ -22,7 +22,7 @@ Snake::Snake(const Snake& a)
 	this->resolution=a.resolution;
 	this->health=a.health/2+1;
 	this->position=a.position;	
-	TEST(" generated position " << position)
+	//TEST(" generated position " << position)
 	Init();
 	for (int i=0;i<4;i++)
 		this->visited[i]=a.visited[i];
@@ -55,7 +55,7 @@ void Snake::setMovement()
 
 	/* sorting accoring to 'addiction' slope */
 	/* bubble sorting */
-	int i = 0;
+	int i = 1;
 	while (i < MOVEMENTS-1)
 	{
 		if (movements[i].addiction > movements[i - 1].addiction) 
@@ -115,6 +115,10 @@ bool Snake::move()
 	{
 		if (position == visited[i])
 		{
+			direction.x = movements[MOVEMENTS - 1].x;
+			direction.x = movements[MOVEMENTS - 1].y;
+			position = visited[LAST_VISITED];
+			position += direction;
 		}
 	}
 	indexLast++;
@@ -137,7 +141,7 @@ bool Snake::move()
 		fatness = 0;
 	if (fatness > 4) 
 		fatness = 4;
-	TEST("@" << position << " ")
+//	TEST("@" << position << " ")
 	return true;
 }
 
@@ -172,7 +176,7 @@ Snakes::Snakes(Position resolution_)
 	}
 }
 
-bool Snakes::atIndexWall(Position position, Position size)
+bool Snakes::isWallAt(Position position, Position size)
 {
 	bool result = false;
 	for (int i = position.x; i<position.x+size.x; i++)		
@@ -205,17 +209,17 @@ void Snakes::create()
 		actual.y -=snakes.back().get_fat()*snakes.back().get_dir().y;
 		for(int i=-snakes.back().get_fat();i<=snakes.back().get_fat();i++)
 		{
-			actual.x+=snakes.back().get_dir().y;
-			actual.y+=snakes.back().get_dir().x;
 			if ((actual.x < 0) 
 				|| (actual.y < 0) 
 				|| (actual.x >= resolution.x) 
 				|| (actual.y >= resolution.y))
 				continue;
 			map[actual.x][actual.y] = true;
+			actual.x+=snakes.back().get_dir().y;
+			actual.y+=snakes.back().get_dir().x;
 		}
-//		if (snakes.back().ready)
-//			snakes.push_back(Snake(snakes.back()));
+		if (snakes.back().ready)
+			snakes.push_back(Snake(snakes.back()));
 	}
 }
 void Snakes::saveToFile(std::string filename)

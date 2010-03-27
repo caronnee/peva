@@ -82,7 +82,7 @@ public:
 	Snakes(Position resolution);
 
 	/* returns if a wall fits real map according to created snake map */
-	bool atIndexWall(Position position, Position size);
+	bool isWallAt(Position position, Position size);
 
 	/* creates map */
 	void create();	
