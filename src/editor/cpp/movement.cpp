@@ -18,7 +18,10 @@ Movement::Movement(const Movement& a)
 void Movement::swap(Movement &a)
 {
 	Movement pom(*this);
-	*this=a;
+	this->addiction = a.addiction;
+	this->x = a.x;
+	this->y = a.y;
+	this->interval = a.interval; //FIXME light, spravit cez metody SET
 	a=pom;
 }
 Movement& Movement::operator=(const Movement& a) 
