@@ -9,30 +9,81 @@
 
 class Snake
 {
-	void Init();	
-	int fatness;
-	int health;
-	int * visited; //zapamataj si predposledne 4 policka
-
-	Position position;
-	Position resolution;
-	Position direction;
 public:
-	Snake(const Snake& a);
+	/* constructor */
 	Snake(Position resolution_);
+	
+	/* clone onstructor */
+	Snake(const Snake& a);
 
+	/* if the snak is ready to be split */
+	bool ready;
+private:
+
+	/* inits our class, it is called in every constructor */
+	void Init();	
+
+	/* number of tile to left and rigt, symmetrically */
+	int fatness;
+	
+	/* how many tile forward is snake able to do */
+	int health;
+
+	/* few last visited tiles for debugging */
+	int * visited; 
+
+	/* actual position in our map */
+	Position position;
+
+	/* resolution of map */
+	Position resolution;
+
+	/* actual snake direction */
+	Position direction;
+
+	/* maximum interva that snad can go */
 	int max_interval;
 
+	/* direction and affitity to direction */
+	Movement movements[MOVEMENTS];
 
-	Movement movements[MOVEMENTS]; //zoradenie zmeny oproti resolution		
+public:
+	/* changes position */
 	bool move();
 
-	int get_x();
-	int get_y();
+	/* return, how much is actual snake fatter than usual */
 	int get_fat();
+
+	/* returns number of snake hitpoints */
 	int alive();
+
+	/* returns snake direction */
 	Position get_dir();
+
+	/* retur actual position in snake map */;
 	Position get_pos();
 };
 
+class Snakes
+{
+
+private:
+	/* resolution of the snake map */
+	Position resolution;
+
+	/* structure representing snake map */
+	bool ** map;
+public:
+	/* Constructor */
+	Snakes(Position resolution);
+
+	/* returns if a wall fits real map according to created snake map */
+	bool atIndexWall(Position position, Position size);
+
+	/* creates map */
+	void create();	
+
+	/* destructor */
+	~Snakes();
+};
 #endif

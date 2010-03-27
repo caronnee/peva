@@ -9,6 +9,8 @@
 
 class Create_map:public Menu
 {
+
+
 private:
 	/* division of screen, should be recomputed when fullscreened */
 	enum Map_divide

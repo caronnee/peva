@@ -22,6 +22,13 @@ void Position::absolute()
 		y*=-1;
 }
 
+Position Position::operator/(const int &a)
+{
+	Position p = *this;
+	p.x/=a;
+	p.y/=a;
+	return p;
+}
 Position& Position::operator=(const Position &a)
 {
 	this->x=a.x;

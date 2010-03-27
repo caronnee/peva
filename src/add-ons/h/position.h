@@ -14,6 +14,7 @@ public:
 	void absolute();
 	Position& operator=(const Position &a);
 	Position& operator+=(const Position &a);
+	Position operator/(const int &a);
 	Position& substractVector(Position p1);
 	bool operator>=(Position &a);
 	bool operator==(Position &p);

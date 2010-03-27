@@ -71,8 +71,9 @@ o/%.o: */cpp/%.cpp
 	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
 distclean:
-	rm -rf o/* bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp \
-	language/$(SRC)bison.cpp language/$(HEADER_DIR)bison.h test debugSee
+	rm -rf o bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp \
+	language/$(SRC)bison.* language/$(HEADER_DIR)bison.* test debugSee Makefile.dep* \
+	lex.backup *.xml *.config
 
 brun:
 	make
