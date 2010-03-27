@@ -11,7 +11,7 @@ int main(int args, char ** argv)
 	if (args >2)
 		p.x = convert <int>(argv[2]);
 	if (args >3)
-		p.x = convert <int>(argv[3]);
+		p.y = convert <int>(argv[3]);
 	Snakes snakes(p);
 	snakes.create();
 	snakes.saveToFile(filename);

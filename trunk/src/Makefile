@@ -79,12 +79,12 @@ o/%.o: */cpp/%.cpp
 distclean:
 	rm -rf o bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp \
 	language/$(SRC)bison.* language/$(HEADER_DIR)bison.* test debugSee Makefile.dep* \
-	lex.backup *.xml *.config
+	lex.backup *.xml *.config snake*
 
 dungeon:
 	make dep snakeTest
 	./snakeTest
-#	cat output
+	cat output
 	
 brun:
 	make

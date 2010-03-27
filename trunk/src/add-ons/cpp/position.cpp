@@ -39,6 +39,10 @@ bool Position::operator>=(Position &a)
 {
 	return ((this->x>=a.x)||(this->y>=a.y));
 }
+bool Position::operator>(Position &a)
+{
+	return ((this->x>a.x)||(this->y>a.y));
+}
 Position& Position::operator+=(const Position &p)
 {
 	x +=p.x;

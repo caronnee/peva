@@ -11,6 +11,7 @@ Snake::Snake(Position resolution_)	//zvovku dopocitane
 	max_interval = resolution.x + resolution.y - 2;		
 	position.x = rand()%resolution.x;
 	position.y = rand()%resolution.y;
+	TEST(" generated position " << position)
 	health=resolution.x*resolution.y + resolution.x + resolution.y; //TODO?
 	Init();		
 }
@@ -21,6 +22,7 @@ Snake::Snake(const Snake& a)
 	this->resolution=a.resolution;
 	this->health=a.health/2+1;
 	this->position=a.position;	
+	TEST(" generated position " << position)
 	Init();
 	for (int i=0;i<4;i++)
 		this->visited[i]=a.visited[i];
@@ -46,8 +48,8 @@ void Snake::Init()
 void Snake::setMovement()
 {
 	/* determining which lines we can go */
-	movements[0]=Movement(resolution.x-position.x-1,1,0);//->
-	movements[1]=Movement(resolution.y-position.y,0,1);//^
+	movements[0]=Movement(resolution.x-position.x+1,1,0);//->
+	movements[1]=Movement(resolution.y-position.y+1,0,1);//^ //aspon nejaka addiction musi byt
 	movements[2]=Movement(position.x,-1,0);//<-
 	movements[3]=Movement(position.y-1,0,-1);//v
 
@@ -95,7 +97,7 @@ bool Snake::move()
 	direction.x = movements[i].x;
 	direction.y = movements[i].y;
 
-	if ((position >= resolution)||(Position(0,0) >= position ))
+	if ((position >= resolution)||(Position(0,0) > position ))
 	{
 		this->position.x -= 2*movements[i].x;
 		this->position.y -= 2*movements[i].y;

@@ -53,6 +53,8 @@ struct Map
 	/* draws only visible objects*/
 	void draw(Window *w);
 
+	Position getChangeableArea();
+
 	/* draw map including non-participating objects */
 	void drawAll(Window * w);
 
