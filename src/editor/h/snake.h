@@ -4,7 +4,7 @@
 #include "movement.h"
 #include "../../add-ons/h/position.h"
 
-#define MOVEMENTS 4
+#define MOVEMENTS 5
 #define LAST_VISITED 4
 
 class Snake
@@ -17,8 +17,11 @@ public:
 	Snake(const Snake& a);
 
 	/* if the snak is ready to be split */
-	bool ready;
+	int ready;
 private:
+
+	/* index of last visited tile */
+	int indexLast;
 
 	/* inits our class, it is called in every constructor */
 	void Init();	
@@ -30,7 +33,7 @@ private:
 	int health;
 
 	/* few last visited tiles for debugging */
-	int * visited; 
+	Position visited[LAST_VISITED]; 
 
 	/* actual position in our map */
 	Position position;
@@ -48,6 +51,7 @@ private:
 	Movement movements[MOVEMENTS];
 
 public:
+	void setMovement();
 	/* changes position */
 	bool move();
 
@@ -83,6 +87,9 @@ public:
 	/* creates map */
 	void create();	
 
+	/* saves map to file */
+	void saveToFile(std::string filename);
+	
 	/* destructor */
 	~Snakes();
 };
