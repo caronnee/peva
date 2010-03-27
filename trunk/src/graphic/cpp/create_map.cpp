@@ -242,6 +242,7 @@ void Create_map::process_resolution()
 }
 void Create_map::generuj(Position resolution)
 {
+	Snakes(map->resolution/60); //FIXME nie konstanta ale vlastnost mapy
 	//zaplnime to solidnymi stenami vsetko
 	//TODO najskor to spravit nenaecisto iba s krizikmi a pod
 /*	for (int i = 0; i < resolX; i++)
@@ -445,12 +446,14 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			SDL_Flip(w->g->screen);
 			state = SAVING;
 			mouse_down = false;
+			TEST("false u savu")
 			break;
 		}
 		case GENERATE:
 		{
 			std::cout << "generate" <<std::endl;
 			mouse_down = false;
+			TEST("false u generate")
 			//  generuj(Position(resolX, resolY));//TODO vlastnost mapy
 			break;
 		}
@@ -462,6 +465,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case CHOOSE:
 		{
+			mouse_down = false;
 			std::cout << "choose" <<std::endl;
 			int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
 			if (wall != -1)
@@ -476,30 +480,60 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case LEFT:
 		{
-			if (map->boundaries.x > -rects[MAP].x)
-				map->shift(-2,0);
-			map->update(rects[MAP], true, w);
+			mouse_down = false;
+			while (true)
+			{
+				if (map->boundaries.x > -rects[MAP].x)
+					map->shift(-2,0);
+				map->update(rects[MAP], true, w);
+				if ((SDL_PollEvent(&w->g->event))
+						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
+					break;
+			}
 			break;
 		}
 		case RIGHT:
 		{
-			if (map->boundaries.x < map->size().x - rects[RIGHT].x)
-				map->shift(2,0);
-			map->update(rects[MAP], true, w);
+			mouse_down = false;
+			while (true)
+			{
+				if (map->boundaries.x < map->size().x - rects[RIGHT].x)
+					map->shift(2,0);
+				map->update(rects[MAP], true, w);
+				if ((SDL_PollEvent(&w->g->event))
+						&&(w->g->event.type == SDL_MOUSEBUTTONUP)){
+					break;
+
+				}
+			}
 			break;
 		}
 		case UP:
 		{ 
+			mouse_down = false;
+			while (true)
+			{
 			if (map->boundaries.y > -rects[MAP].y)
 				map->shift(0,-2);
 			map->update(rects[MAP], true, w);
+				if ((SDL_PollEvent(&w->g->event))
+						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
+					break;
+			}
 			break;
 		}
 		case DOWN:
 		{
-			if (map->boundaries.y < map->size().y -rects[DOWN].y)
-				map->shift(0, 2);
-			map->update(rects[MAP], true, w);
+			mouse_down = false;
+			while (true)
+			{
+				if (map->boundaries.y < map->size().y -rects[DOWN].y)
+					map->shift(0, 2);
+				map->update(rects[MAP], true, w);
+				if ((SDL_PollEvent(&w->g->event))
+						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
+					break;
+			}
 			break;
 		}
 		default: 
@@ -563,6 +597,7 @@ void Create_map::process_map()
 		case SDL_MOUSEBUTTONUP:
 		{
 			mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
+			TEST("false spravny")
 			lastPut = NULL;
 			break;
 		}
@@ -579,6 +614,7 @@ void Create_map::addObj()
 {	
 	Position p(0,0);
 	SDL_GetMouseState(&p.x, &p.y);
+	TEST("zmacknute button"<<std::endl)
 	buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
 }
 
