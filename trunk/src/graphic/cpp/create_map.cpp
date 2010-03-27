@@ -249,6 +249,16 @@ void Create_map::generuj(Position resolution)
 	for (int i =0; i< snakeRes.x; i++)
 		for (int j =0; j< snakeRes.y; j++)
 		{
+			if (snake.isWallAt(Position(i,j),Position(1,1)))
+			{
+				for (int a =0; a<2; a++)
+					for (int b = 0; b < 2; b++)
+					{
+						Wall* w = new Wall(skins[WallSolidId]);
+						w->setPosition(Position((i+a)*w->get_size().x,(j+b)*w->get_size().y),0);
+						map->add(w);
+					}
+			}
 		}
 }
 void Create_map::saving()
