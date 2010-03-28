@@ -4,6 +4,14 @@
 #include "../h/snake.h"
 #include "../../add-ons/h/macros.h"
 
+Snake::Snake()
+{
+	ready = 0;
+	indexLast = 0;
+	health = 0;
+	position = resolution = direction = Position(-1,-1);
+	max_interval = 1;
+}
 Snake::Snake(Position resolution_)	//zvovku dopocitane
 {
 	srand( time(NULL) );
@@ -16,22 +24,23 @@ Snake::Snake(Position resolution_)	//zvovku dopocitane
 	Init();		
 }
 
-Snake::Snake(const Snake& a)
+Snake Snake::clone()
 {		
-	max_interval=a.max_interval;
-	this->resolution=a.resolution;
-	this->health=a.health/2+1;
-	this->position=a.position;	
-	//TEST(" generated position " << position)
-	Init();
+	Snake s;
+	s.resolution = resolution;
+	s.ready = 0;
+	s.health = health/2+1;
+	s.position= position;	
+	s.Init();
 	for (int i=0;i<4;i++)
-		this->visited[i]=a.visited[i];
+		s.visited[i]=visited[i];
+	return s;
 }
 
 void Snake::Init()
 {
 	indexLast = 0;
-	ready = rand() % health; //cca v polke zivota by sa mohol chciet okotit
+	ready = 0; //cca v polke zivota by sa mohol chciet okotit
 	//potom vytvorit na to nejaky algoritm	TODO
 
 	for (int i =0; i < LAST_VISITED; i++)
@@ -56,7 +65,7 @@ void Snake::setMovement()
 	/* sorting accoring to 'addiction' slope */
 	/* bubble sorting */
 	int i = 1;
-	while (i < MOVEMENTS-1)
+	while (i < MOVEMENTS)
 	{
 		if (movements[i].addiction > movements[i - 1].addiction) 
 		{
@@ -73,12 +82,11 @@ void Snake::setMovement()
 		movements[i].interval = 
 			movements[i].addiction + movements[i-1].interval;
 	}
-	max_interval = movements[MOVEMENTS-1].interval + movements[MOVEMENTS-1].addiction;
+	max_interval = movements[MOVEMENTS-1].interval;
 }
 bool Snake::move()
 {
-	if (rand()%100 == 0)
-		ready = this->health >>1;
+	ready = rand()%10000 == 0;
 
 	this->health--;
 
@@ -219,7 +227,7 @@ void Snakes::create()
 			actual.y+=snakes.back().get_dir().x;
 		}
 		if (snakes.back().ready)
-			snakes.push_back(Snake(snakes.back()));
+			snakes.push_back(Snake(snakes.back().clone()));
 	}
 }
 void Snakes::saveToFile(std::string filename)

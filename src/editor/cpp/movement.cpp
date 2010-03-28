@@ -9,12 +9,13 @@ Movement::Movement(int v,int x,int y)
 	this->x=x;
 	this->y=y;
 }
-Movement::Movement(const Movement& a)
+/*Movement::Movement(const Movement& a)
 {
 	addiction=a.addiction;
 	x=a.x;
 	y=a.y;
-}
+	interval = a.interval;
+}*///staci nam defaultny
 void Movement::swap(Movement &a)
 {
 	Movement pom(*this);
