@@ -16,6 +16,7 @@ private:
 	enum Map_divide
 	{
 		MAP = 0,
+		CLEAN,
 		SAVE,
 		GENERATE,
 		EXIT,
@@ -144,7 +145,7 @@ public:
 	virtual ~Create_map()throw();
 
 	/*function to fill created map */
-	void generuj(Position res);
+	void generuj();
 
 	/* function to handle mouse strokes */
 	void buttonDown(int rentangleId, int atX, int atY);
