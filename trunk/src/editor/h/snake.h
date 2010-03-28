@@ -4,20 +4,23 @@
 #include "movement.h"
 #include "../../add-ons/h/position.h"
 
-#define MOVEMENTS 5
+#define MOVEMENTS 4
 #define LAST_VISITED 4
 
 class Snake
 {
 public:
+	/*  */
+	Snake();
+
 	/* constructor */
 	Snake(Position resolution_);
 	
 	/* clone onstructor */
-	Snake(const Snake& a);
+	Snake clone();
 
 	/* if the snak is ready to be split */
-	int ready;
+	bool ready;
 private:
 
 	/* index of last visited tile */

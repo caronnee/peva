@@ -7,7 +7,7 @@ public:
 	int addiction, x, y, interval;	
 	Movement();
 	Movement(int v,int x,int y);
-	Movement(const Movement& a);
+//	Movement(const Movement& a);
 	void swap(Movement &a);
 	Movement& operator=(const Movement& a);
 };
