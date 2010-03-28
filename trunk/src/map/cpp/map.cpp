@@ -75,6 +75,12 @@ Map::Map(Position resol, std::string skinName)
 	movement.direction = Position(0,0);
 	movement.angle = 0;
 	movement.old_pos = movement.position_in_map = p;
+	addBoundaryWalls();
+}
+
+void Map::addBoundaryWalls()
+{
+	Position p(skin->get_size().x,0);
 	//X-ova os
 	for (p.x = 0; p.x < resolution.x; p.x += wskins[1]->get_size().x)
 	{
@@ -501,6 +507,7 @@ void Map::clean()
 				o = map[i][j].objects.data->value;
 			}
 		}
+	places.clear();
 }
 Map::~Map() 
 {

@@ -56,21 +56,24 @@ void Create_map::init()
 	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
-	rects[SAVE].w = rects[GENERATE].w = rects[EXIT].w = w->g->screen->w /3;
+	rects[SAVE].w = rects[GENERATE].w = 
+	rects[CLEAN].w = rects[EXIT].w = w->g->screen->w / 4;
 
 	/*setting heights*/
-	rects[SAVE].h = rects[EXIT].h = rects[GENERATE].h = 30;
+	rects[SAVE].h = rects[EXIT].h = 
+	rects[CLEAN].h = rects[GENERATE].h = 30;
 	rects[CHOOSE].h = w->g->screen->h - rects[EXIT].h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
 	rects[MAP].h = w->g->screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
 
 	/* setting x positions */
-	rects[LEFT].x = rects[SAVE].x = 0;
+	rects[LEFT].x = rects[CLEAN].x = 0;
 	rects[UP].x = rects[DOWN].x = rects[LEFT].w;
 	rects[MAP].x = rects[LEFT].x + rects[LEFT].w;
 	rects[RIGHT].x = rects[MAP].x + rects[MAP].w;
 	rects[CHOOSE].x = rects[RIGHT].x + rects[RIGHT].w;
+	rects[SAVE].x = rects[CLEAN].x + rects[CLEAN].w; //na jednej urovni
 	rects[GENERATE].x = rects[SAVE].x + rects[SAVE].w; //na jednej urovni
 	rects[EXIT].x = rects[GENERATE].x + rects[GENERATE].w;
 
@@ -79,7 +82,7 @@ void Create_map::init()
 	rects[CHOOSE].y = 0; 
 	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
-	rects[EXIT].y = rects[SAVE].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
+	rects[EXIT].y = rects[SAVE].y  = rects[CLEAN].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
 
@@ -240,26 +243,45 @@ void Create_map::process_resolution()
 		}
 	}
 }
-void Create_map::generuj(Position resolution)
+void Create_map::generuj()
 {
+	map->clean();
 	Position snakeRes = map->resolution/(2*60);
 	//FIXME zabezpecit, aby sa to generovalo len na povolenej ploche
 	Snakes snake(snakeRes); //FIXME nie konstanta ale vlastnost mapy
+	Position diff(map->resolution.x / (2*snakeRes.x), map->resolution.y / (2*snakeRes.y) );
 	snake.create();
+	Position objPosition(0,0);
+	TEST("\n")
 	for (int i =0; i< snakeRes.x; i++)
+	{
 		for (int j =0; j< snakeRes.y; j++)
 		{
-			if (snake.isWallAt(Position(i,j),Position(1,1)))
+			TEST(snake.map[i][j]);
+			if (!snake.isWallAt(Position(i,j),Position(1,1)))
 			{
-				for (int a =0; a<2; a++)
-					for (int b = 0; b < 2; b++)
-					{
-						Wall* w = new Wall(skins[WallSolidId]);
-						w->setPosition(Position((i+a)*w->get_size().x,(j+b)*w->get_size().y),0);
-						map->add(w);
-					}
+				objPosition.y +=2 * diff.y;
+				continue;
+			}
+			int oldX = objPosition.x;
+			for (int a =0; a<2; a++)
+			{
+
+				for (int b = 0; b < 2; b++)
+				{
+					Wall* w = new Wall(skins[WallSolidId]);
+					w->setPosition(objPosition,0);
+					map->add(w);
+					objPosition.x += diff.x;
+				}
+				objPosition.x = oldX;
+				objPosition.y += diff.y;
 			}
 		}
+		TEST("\n")
+		objPosition.y = 0;
+		objPosition.x += 2*diff.y;
+	}
 }
 void Create_map::saving()
 {
@@ -401,6 +423,14 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				map->update(update,true, w);
 				break;
 			}
+		case CLEAN:
+			{
+			std::cout << "clenaning" <<std::endl;
+				map->clean();
+				map->addBoundaryWalls();
+				map->update(rects[MAP], true, w);
+				break;
+			}
 		case SAVE:
 		{
 			std::cout << "save" <<std::endl;
@@ -411,20 +441,18 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			SDL_Flip(w->g->screen);
 			state = SAVING;
 			mouse_down = false;
-			TEST("false u savu")
 			break;
 		}
 		case GENERATE:
 		{
 			std::cout << "generate" <<std::endl;
 			mouse_down = false;
-			TEST("false u generate")
-			//  generuj(Position(resolX, resolY));//TODO vlastnost mapy
+			generuj();//TODO vlastnost mapy
+			map->update(rects[MAP], true, w);
 			break;
 		}
 		case EXIT:
 		{
-			TEST("exit" << std::endl)
 			w->pop();
 			break;
 		}
@@ -562,7 +590,6 @@ void Create_map::process_map()
 		case SDL_MOUSEBUTTONUP:
 		{
 			mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
-			TEST("false spravny")
 			lastPut = NULL;
 			break;
 		}
@@ -579,7 +606,6 @@ void Create_map::addObj()
 {	
 	Position p(0,0);
 	SDL_GetMouseState(&p.x, &p.y);
-	TEST("zmacknute button"<<std::endl)
 	buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
 }
 

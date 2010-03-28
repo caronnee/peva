@@ -21,7 +21,7 @@ public:
 
 	/* if the snak is ready to be split */
 	bool ready;
-private:
+//private:
 
 	/* index of last visited tile */
 	int indexLast;
@@ -75,6 +75,7 @@ class Snakes
 {
 
 private:
+public:
 	/* resolution of the snake map */
 	Position resolution;
 

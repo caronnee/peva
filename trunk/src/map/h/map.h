@@ -69,9 +69,13 @@ struct Map
 
 	/* adding special place to map */
 	void addPlace(Window* w, Place p);
+
 	/* adding target places */
 	void addTarget(Window* w, size_t x, size_t y);
 	void addStart(Window* w, size_t x, size_t y);
+
+	/* adds boundary walls */
+	void addBoundaryWalls();
 
 	/* how many row boxes */
 	float boxesInRow;

@@ -229,6 +229,13 @@ void Snakes::create()
 		if (snakes.back().ready)
 			snakes.push_back(Snake(snakes.back().clone()));
 	}
+	/*for(int i = 0; i < resolution.x;i++)
+	{
+		for(int j = 0; j < resolution.y;j++)
+		{
+			map[i][j] = false;
+		}
+	}*/
 }
 void Snakes::saveToFile(std::string filename)
 {
