@@ -70,6 +70,12 @@ struct Map
 	/* adding special place to map */
 	void addPlace(Window* w, Place p);
 
+	/* loads map from file */
+	bool load(std::string filename);
+
+	/* save map to file */
+	bool saveToFile(std::string filename);
+
 	/* adding target places */
 	void addTarget(Window* w, size_t x, size_t y);
 	void addStart(Window* w, size_t x, size_t y);

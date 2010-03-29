@@ -10,7 +10,7 @@
 class Snake
 {
 public:
-	/*  */
+	/* default constructor */
 	Snake();
 
 	/* constructor */
@@ -21,6 +21,9 @@ public:
 
 	/* if the snak is ready to be split */
 	bool ready;
+
+	/* decreases health of snake */
+	void damage(int damage_);
 //private:
 
 	/* index of last visited tile */

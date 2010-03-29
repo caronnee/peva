@@ -8,6 +8,8 @@
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/wall.h"
 
+#define SPACE_KOEF 2
+
 Create_map::Create_map(Window *w_)
 {
 	lastPut = NULL;
@@ -246,10 +248,10 @@ void Create_map::process_resolution()
 void Create_map::generuj()
 {
 	map->clean();
-	Position snakeRes = map->resolution/(2*60);
+	Position snakeRes = map->resolution/(SPACE_KOEF*60);
 	//FIXME zabezpecit, aby sa to generovalo len na povolenej ploche
 	Snakes snake(snakeRes); //FIXME nie konstanta ale vlastnost mapy
-	Position diff(map->resolution.x / (2*snakeRes.x), map->resolution.y / (2*snakeRes.y) );
+	Position diff(map->resolution.x / (SPACE_KOEF*snakeRes.x), map->resolution.y / (SPACE_KOEF*snakeRes.y) );
 	snake.create();
 	Position objPosition(0,0);
 	TEST("\n")
@@ -260,14 +262,13 @@ void Create_map::generuj()
 			TEST(snake.map[i][j]);
 			if (!snake.isWallAt(Position(i,j),Position(1,1)))
 			{
-				objPosition.y +=2 * diff.y;
+				objPosition.y += SPACE_KOEF * diff.y;
 				continue;
 			}
 			int oldX = objPosition.x;
-			for (int a =0; a<2; a++)
+			for (int a =0; a< SPACE_KOEF; a++)
 			{
-
-				for (int b = 0; b < 2; b++)
+				for (int b = 0; b < SPACE_KOEF; b++)
 				{
 					Wall* w = new Wall(skins[WallSolidId]);
 					w->setPosition(objPosition,0);
@@ -280,7 +281,7 @@ void Create_map::generuj()
 		}
 		TEST("\n")
 		objPosition.y = 0;
-		objPosition.x += 2*diff.y;
+		objPosition.x += SPACE_KOEF*diff.y;
 	}
 }
 void Create_map::saving()
@@ -300,10 +301,14 @@ void Create_map::saving()
 				}
 				case SDLK_RETURN:
 				{
-					//	if (!map->saveToFile(filename))
+					std::string msg = "Ok, press Enter to continue";
+					if (!map->saveToFile(file_name))
+					{
+						msg = "Cannot save to file '"+ file_name +"'";
+					}
 					state = DRAW;
 					draw();
-					SDL_Surface *srf = TTF_RenderText_Solid(w->g->g_font,"ok, press Ebetr to continue",w->g->normal);
+					SDL_Surface *srf = TTF_RenderText_Solid(w->g->g_font,msg.c_str(),w->g->normal);
 					SDL_Rect rcr = file_r;
 					rcr.y += TTF_FontLineSkip(w->g->g_font)>>4;
 					SDL_BlitSurface(srf, NULL, w->g->screen, &rcr);
@@ -414,6 +419,10 @@ void Create_map::buttonDown(int number, int atX, int atY)
 						map->update(update,true, w);
 						break;
 					}
+					else
+					{
+						TEST("Koliduje")
+					}
 					update.w = -1;
 					update.h = -1;
 					lastPut = collide;
@@ -445,8 +454,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case GENERATE:
 		{
-			std::cout << "generate" <<std::endl;
-			mouse_down = false;
 			generuj();//TODO vlastnost mapy
 			map->update(rects[MAP], true, w);
 			break;
