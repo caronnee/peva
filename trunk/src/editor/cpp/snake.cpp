@@ -210,7 +210,7 @@ void Snakes::create()
 	std::vector<Snake> snakes;
 	std::list<Position> todoPosition;
 	snakes.push_back(Snake(resolution));
-	/*while (!snakes.empty())
+	while (!snakes.empty())
 	{
 		if (!snakes.back().move())
 		{
@@ -234,14 +234,14 @@ void Snakes::create()
 		}
 		if (snakes.back().ready)
 			snakes.push_back(Snake(snakes.back().clone()));
-	}*/
-	for(int i = 0; i < resolution.x;i++)
+	}
+	/*for(int i = 0; i < resolution.x;i++)
 	{
 		for(int j = 0; j < resolution.y;j++)
 		{
 			map[i][j] = false;
 		}
-	}
+	}*/
 }
 void Snakes::saveToFile(std::string filename)
 {
