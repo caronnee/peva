@@ -248,14 +248,18 @@ void Map::draw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
 	Position pos;
 	pos.x = boundaries.x/BOX_WIDTH;
 	pos.y = boundaries.y/BOX_HEIGHT;
-	for (int i =0; i< boundaries.width; i += BOX_WIDTH) //prejde tolkokrat, kolko boxov sa zvisle zmesti
+	Rectangle b = map[pos.x][pos.y].bounds;
+	Position max(boundaries.x+boundaries.width, boundaries.y+boundaries.height);
+	while ( b.x< max.x ) //prejde tolkokrat, kolko boxov sa zvisle zmesti
 	{
 		if (pos.x > boxesInRow)
 			break;
-		for(int j =0; j< boundaries.height; j += BOX_HEIGHT)
+		b = map[pos.x][pos.y].bounds; //FIXME tu by to vobec nemuselo byt
+		while ( b.y < max.y )
 		{
 			if (pos.y > boxesInColumn)
 				break;
+			b = map[pos.x][pos.y].bounds;
 			map[pos.x][pos.y].objects.reset();
 			Object * o = map[pos.x][pos.y].objects.read();
 			while( o != NULL )
@@ -428,7 +432,10 @@ void Map::add(Object * o)
 Object * Map::removeShow(Position position, bool all, Window*w)
 {
 	SDL_Rect r;
+	r.x=-1;
 	Object * o = removeAt(position, r);
+	if(r.x <0)
+		return o;
 	update(r,true,w);
 	return o;
 }
@@ -452,7 +459,6 @@ void Map::update(SDL_Rect newBound, bool all, Window * w)
 Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 {
 	Position removePos(position);
-
 	//posunutie oproti vyhladu
 	removePos.x += boundaries.x;
 	removePos.y += boundaries.y;
@@ -476,7 +482,7 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 				r.height = o->get_rect().h;
 				r.x = o->get_pos().x;
 				r.y = o->get_pos().y;
-				if (r.overlaps(position))
+				if (r.overlaps(removePos))
 				{
 					map[boxP.x][boxP.y].objects.remove();
 					map[boxP.x][boxP.y].objects.reset();
