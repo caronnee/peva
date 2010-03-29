@@ -20,8 +20,12 @@ Snake::Snake(Position resolution_)	//zvovku dopocitane
 	position.x = rand()%resolution.x;
 	position.y = rand()%resolution.y;
 	//TEST(" generated position " << position)
-	health=resolution.x*resolution.y + resolution.x + resolution.y; //TODO?
+	health=(resolution.x + resolution.y)*3; //TODO?
 	Init();		
+}
+void Snake::damage(int damage_)
+{
+	health -= damage_;
 }
 
 Snake Snake::clone()
@@ -30,8 +34,9 @@ Snake Snake::clone()
 	s.resolution = resolution;
 	s.ready = 0;
 	s.health = health/2+1;
-	s.position= position;	
+	s.position = position;	
 	s.Init();
+	s.indexLast = indexLast;
 	for (int i=0;i<4;i++)
 		s.visited[i]=visited[i];
 	return s;
@@ -56,9 +61,9 @@ void Snake::Init()
 
 void Snake::setMovement()
 {
-	/* determining which lines we can go */
+	/* determining where we can go */
 	movements[0]=Movement(resolution.x-position.x+1,1,0);//->
-	movements[1]=Movement(resolution.y-position.y+1,0,1);//^ //aspon nejaka addiction musi byt
+	movements[1]=Movement(resolution.y-position.y+1,0,1);//^ 
 	movements[2]=Movement(position.x,-1,0);//<-
 	movements[3]=Movement(position.y-1,0,-1);//v
 
@@ -86,7 +91,7 @@ void Snake::setMovement()
 }
 bool Snake::move()
 {
-	ready = rand()%10000 == 0;
+	ready = rand()%100 == 0;
 
 	this->health--;
 
@@ -113,7 +118,7 @@ bool Snake::move()
 	}
 	int fatter = rand() % 5-2; //-2,2, 2- ztenci sa,2 rozsir, inak zostan
 	
-	Position test = visited[indexLast];
+	Position test = visited[(indexLast-1 + MOVEMENTS)%MOVEMENTS];
 	test.substractVector(position);
 	if (test.x * test.y != 0)
 	{
@@ -129,9 +134,9 @@ bool Snake::move()
 			position += direction;
 		}
 	}
+	visited[indexLast] = position;
 	indexLast++;
 	indexLast %= LAST_VISITED;
-	visited[indexLast] = position;
 	switch(fatter)
 	{
 		case -2: 
@@ -205,7 +210,7 @@ void Snakes::create()
 	std::vector<Snake> snakes;
 	std::list<Position> todoPosition;
 	snakes.push_back(Snake(resolution));
-	while (!snakes.empty())
+	/*while (!snakes.empty())
 	{
 		if (!snakes.back().move())
 		{
@@ -225,17 +230,18 @@ void Snakes::create()
 			map[actual.x][actual.y] = true;
 			actual.x+=snakes.back().get_dir().y;
 			actual.y+=snakes.back().get_dir().x;
+			//TEST(actual << " ")
 		}
 		if (snakes.back().ready)
 			snakes.push_back(Snake(snakes.back().clone()));
-	}
-	/*for(int i = 0; i < resolution.x;i++)
+	}*/
+	for(int i = 0; i < resolution.x;i++)
 	{
 		for(int j = 0; j < resolution.y;j++)
 		{
 			map[i][j] = false;
 		}
-	}*/
+	}
 }
 void Snakes::saveToFile(std::string filename)
 {

@@ -17,6 +17,19 @@ Map::Map(std::string configFile, std::string name)
 {
 }
 
+bool Map::load(std::string filename)
+{
+	return true;
+}
+bool Map::saveToFile(std::string filename)
+{
+	for(int i = 0; i< boxesInRow; i++)
+		for (int j =0; j < boxesInColumn; j++)
+		{
+
+		}
+	return true;
+}
 bool Map::collideWith( Object * o1, Object* o2 )
 {
 	Rectangle r1 = o1->collisionSize();
@@ -476,7 +489,7 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 			}
 		}
 	}
-	//TEST("Object not found!"<<std::endl)
+	TEST("Object not found!"<<std::endl)
 	//ci to nie je place alebo startPosition, popripade obe
 	//FIXME
 	for (std::list<Place>::iterator i = places.begin(); i!=places.end(); i++)
