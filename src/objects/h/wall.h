@@ -9,9 +9,9 @@
 class Wall:public Object //nic specialneho, proste sten a s nejkou odolnostou
 {
 public:
-	Wall();
 	Wall(Skin * skin);
 	void hitted(Object * attacker, Position p, int attack); 
+	std::string saveInfo();
 };
 
 class BreakableWall:public Object //da sa nou pohnut

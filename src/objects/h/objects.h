@@ -11,11 +11,17 @@
 #define MY_INFINITY ~0
 #define MAX_PX_PER_SECOND 100
 
-struct Type_bot
+enum ObjectsToSave
 {
-	int sigth, angle, defense, misille; //kolko toho vidi, aku ma obranu, aku zbran, kde je jeho exit, sila utoku
+	SaveDummy = -1,
+	SaveWall = 0,
+	SaveBreakableWall, 
+	SaveTrapWall,
+	SavePushablewall,
+	SaveStart,
+	SaveTarget,
+	NumberOfObjectToSave
 };
-
 struct ObjectMovement
 {
 	/* real x coord*/
@@ -72,6 +78,11 @@ public:
 		Wall_ = 2,
 		Missille = 4 
 	};
+	ObjectsToSave objectId;
+
+	/* information about object fo later resurrection from file */
+	std::string saveInfo();
+
 	/* name of the object, for debugging purposes */
 	std::string name;
 
