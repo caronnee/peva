@@ -584,8 +584,8 @@ void Create_map::process_map()
 				{
 					Position p;
 					SDL_GetMouseState(&p.x, &p.y);
-					p.x += map->boundaries.x;
-					p.y += map->boundaries.y;
+		//			p.x += map->boundaries.x;
+		//			p.y += map->boundaries.y;
 					Object * o = map->removeShow(p,true,w);
 					if ( o != NULL)
 						delete o;
