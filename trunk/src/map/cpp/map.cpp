@@ -1,3 +1,4 @@
+#include <fstream>
 #include "../h/map.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
@@ -23,11 +24,33 @@ bool Map::load(std::string filename)
 }
 bool Map::saveToFile(std::string filename)
 {
+	std::string saveInfo[NumberOfObjectToSave];
+	std::ofstream output;
+	output.open(filename.c_str(), std::ios::out);
+	if (!output.good())
+		return false;
 	for(int i = 0; i< boxesInRow; i++)
 		for (int j =0; j < boxesInColumn; j++)
 		{
-
+			map[i][j].objects.reset();
+			Object * o = map[i][j].objects.read();
+			while (o!=NULL)
+			{
+				saveInfo[o->objectSaveId]+=deconvert<Position>(o->get_pos()) + "\n";
+				o = map[i][j].objects.read();
+			}
 		}
+	for (std::list<Place>::iterator iter = places.begin();
+		iter!= places.end();
+		iter++)
+	{
+		saveInfo[iter->saveId] += deconvert<Rectangle>(iter->r) + ", img =" + deconvert<size_t>(iter->numberImage) + ", id=" + deconvert<size_t>(iter->id);
+	}
+	for (int i =0; i<NumberOfObjectToSave; i++)
+	{
+		output << i << "##\n" << saveInfo[i]<<std::endl;
+	}
+	output.close();
 	return true;
 }
 bool Map::collideWith( Object * o1, Object* o2 )
@@ -142,6 +165,7 @@ void Map::addStart(Window * w,size_t x, size_t y)
 		i--;
 	}
 	Place pl;
+	pl.saveId = SaveStart;
 	pl.id = i;//zaporne cislo
 	pl.r = r;
 	pl.img = NULL;
@@ -166,6 +190,7 @@ void Map::addTarget(Window * w,size_t x, size_t y)
 	}
 
 	Place pl;
+	pl.saveId = SaveTarget;
 	pl.r = r;
 	pl.numberImage = TargetPlace;
 	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(i).c_str(), w->g->light);

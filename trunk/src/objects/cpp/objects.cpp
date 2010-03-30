@@ -13,7 +13,7 @@ void ObjectMovement::clean()
 }
 Object::Object(Skin * s)
 {
-	objectId = SaveDummy;
+	objectSaveId = SaveDummy;
 	numberOfKilled = 0;
 	last_attack = NULL;
 	substance = Solid;

@@ -35,6 +35,7 @@ struct Box
 /* class resolving movement */
 struct Place
 {
+	ObjectsToSave saveId;
 	size_t id;
 	size_t numberImage;
 	SDL_Surface * img;

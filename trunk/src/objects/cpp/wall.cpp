@@ -4,6 +4,7 @@
 Wall::Wall(Skin * s):Object(s)
 {
 	name = "Wall";
+	objectSaveId = SaveWall;
 	type = Wall_;
 	movement.angle = 0;
 	movement.direction = Position (0,0);
@@ -20,6 +21,7 @@ void Wall::hitted(Object * attacker, Position p, int attack)
 
 BreakableWall::BreakableWall( Skin * s):Object(s)
 {
+	objectSaveId = SaveBreakableWall;
 	type = Wall_;
 	hitpoints = 50;
 	attack_ = 0;
@@ -38,6 +40,7 @@ void BreakableWall::hitted(Object * o, Position p, int attack)
 
 PushableWall::PushableWall( Skin * s):Object(s)
 {
+	objectSaveId = SavePushableWall;
 	type = Wall_;
 	defaultStep = 10;
 	name = "Wall";
@@ -70,6 +73,7 @@ void PushableWall::hitted(Object * o, Position dir, int attack)
 }
 TrapWall::TrapWall(Skin * s):Object(s)
 {
+	objectSaveId = SaveTrapWall;
 	type = Wall_;
 	defense = 0;
 	attack_ = 10;
