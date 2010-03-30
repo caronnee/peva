@@ -131,3 +131,8 @@ std::ostream& operator<<(std::ostream& o, const Position p)
 	o<<"x:" << p.x <<", "<< "y:" << p.y;
 	return o;
 }
+std::ostream& operator<<(std::ostream& o, const Rectangle p)
+{
+	o << "x:" << p.x << ", y:" <<p.y << ", width:" << p.width << ", heigth" <<p.height;
+	return o;
+}

@@ -17,7 +17,7 @@ enum ObjectsToSave
 	SaveWall = 0,
 	SaveBreakableWall, 
 	SaveTrapWall,
-	SavePushablewall,
+	SavePushableWall,
 	SaveStart,
 	SaveTarget,
 	NumberOfObjectToSave
@@ -78,7 +78,7 @@ public:
 		Wall_ = 2,
 		Missille = 4 
 	};
-	ObjectsToSave objectId;
+	ObjectsToSave objectSaveId;
 
 	/* information about object fo later resurrection from file */
 	std::string saveInfo();
