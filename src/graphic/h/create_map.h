@@ -37,6 +37,7 @@ private:
 		DRAW,
 		SAVING
 	};
+	Menu * nextMenu;
 
 	SDL_Surface * buttonsImages [BUTTONS];
 

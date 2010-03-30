@@ -7,11 +7,13 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/wall.h"
+#include "../../graphic/h/loadMapMenu.h"
 
 #define SPACE_KOEF 2
 
 Create_map::Create_map(Window *w_)
-{
+{ 
+	nextMenu = NULL;
 	lastPut = NULL;
 	name = "Create map";
 	w = w_;
@@ -465,6 +467,14 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			SDL_Flip(w->g->screen);
 			state = SAVING;
 			mouse_down = false;
+			break;
+		}
+		case LOAD:
+		{
+			TEST("Loading map")
+			if (nextMenu)
+				delete nextMenu;
+			w->add( new LoadMapMenu(w, map));
 			break;
 		}
 		case GENERATE:
