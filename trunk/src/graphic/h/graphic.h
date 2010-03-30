@@ -61,6 +61,7 @@ private:
 	SDL_Surface * background; //background pre hlavne okno 
 	Menu * main_menu;
 	std::stack<Menu *> state;
+	std::string hlp;
 	std::string back;
 public:
 	Graphic * g;
