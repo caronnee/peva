@@ -7,6 +7,8 @@
 #include "../../graphic/h/images.h"
 #include "../../map/h/map.h"
 
+#define BUTTONS 5
+
 class Create_map:public Menu
 {
 
@@ -18,6 +20,7 @@ private:
 		MAP = 0,
 		CLEAN,
 		SAVE,
+		LOAD,
 		GENERATE,
 		EXIT,
 		CHOOSE,
@@ -27,7 +30,6 @@ private:
 		DOWN,
 		NumberOfMapDivision
 	};
-
 	/* switch states */ //TODO zmenit na vlastne menu
 	enum Win_type
 	{
@@ -36,6 +38,7 @@ private:
 		SAVING
 	};
 
+	SDL_Surface * buttonsImages [BUTTONS];
 
 	/* precomputes allowed chars in resolution mode */
 	SDL_Surface * resol[NUMCHARS]; //0-9+x
@@ -125,6 +128,8 @@ private:
 	void saving();
 
 	Object * lastPut;
+	void removeFromMap(Position p);
+
 public:
 	/* Constructor */
 	Create_map(Window * w_);

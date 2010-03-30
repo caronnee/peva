@@ -58,12 +58,12 @@ void Create_map::init()
 	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
-	rects[SAVE].w = rects[GENERATE].w = 
-	rects[CLEAN].w = rects[EXIT].w = w->g->screen->w / 4;
+	rects[SAVE].w = rects[GENERATE].w =  rects[LOAD].w =
+		rects[CLEAN].w = rects[EXIT].w = w->g->screen->w / BUTTONS;
 
 	/*setting heights*/
-	rects[SAVE].h = rects[EXIT].h = 
-	rects[CLEAN].h = rects[GENERATE].h = 30;
+	rects[SAVE].h = rects[EXIT].h = rects[LOAD].h =
+		rects[CLEAN].h = rects[GENERATE].h = 30;
 	rects[CHOOSE].h = w->g->screen->h - rects[EXIT].h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
@@ -75,26 +75,35 @@ void Create_map::init()
 	rects[MAP].x = rects[LEFT].x + rects[LEFT].w;
 	rects[RIGHT].x = rects[MAP].x + rects[MAP].w;
 	rects[CHOOSE].x = rects[RIGHT].x + rects[RIGHT].w;
-	rects[SAVE].x = rects[CLEAN].x + rects[CLEAN].w; //na jednej urovni
+	rects[LOAD].x = rects[CLEAN].x + rects[CLEAN].w; //na jednej urovni
+	rects[SAVE].x = rects[LOAD].x + rects[LOAD].w; //na jednej urovni
 	rects[GENERATE].x = rects[SAVE].x + rects[SAVE].w; //na jednej urovni
 	rects[EXIT].x = rects[GENERATE].x + rects[GENERATE].w;
 
 	/* setting y positions */
 	rects[UP].y = 0;
-	rects[CHOOSE].y = 0; 
+	rects[CHOOSE].y = 0;
 	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
-	rects[EXIT].y = rects[SAVE].y  = rects[CLEAN].y = rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
+	rects[EXIT].y = rects[SAVE].y  = rects[CLEAN].y = rects[LOAD].y =
+	rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
+
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
 
 	for (int i =1; i< NumberObjectsImages; i++)
 	{
-		tile_rect[i].x = rects[CHOOSE].x+ skins[0]->get_size().x/2;
+		tile_rect[i].x = rects[CHOOSE].x + skins[0]->get_size().x/2;
 		tile_rect[i].y = pom;
 		tile_rect[i].w = skins[0]->get_size().x;
 		tile_rect[i].h = skins[0]->get_size().y;
 		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
+	}
+
+	std::string ids[] = {"clean", "save", "load", "generate", "exit" };
+	for (int i =0; i< BUTTONS; i++)
+	{
+		buttonsImages[i] = TTF_RenderText_Solid( w->g->g_font,ids[i].c_str(), w->g->normal);
 	}
 }
 
@@ -159,7 +168,13 @@ void Create_map::draw()
 		{
 			drawPanel(i,w);
 		}
-		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
+		r = tile_rect[select];
+		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&r);
+		for (int i = 0; i < BUTTONS; i++)
+		{
+			r = rects[CLEAN + i];
+			SDL_BlitSurface(buttonsImages[i],NULL, w->g->screen, &r);
+		}
 	}
 	SDL_Flip(w->g->screen);
 }
@@ -573,23 +588,7 @@ void Create_map::process_map()
 		case SDL_MOUSEBUTTONDOWN:
 		{
 			mouse_down = true;
-			switch (w->g->event.button.button)
-			{
-				case SDL_BUTTON_LEFT:
-				{
-					addObj();
-					break;
-				}
-				case SDL_BUTTON_RIGHT: //zmazeme object, ak sme v mape
-				{
-					Position p;
-					SDL_GetMouseState(&p.x, &p.y);
-					Object * o = map->removeShow(p,true,w);
-					if ( o != NULL)
-						delete o;
-					break;
-				}
-			}
+			addObj();
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
@@ -606,12 +605,20 @@ void Create_map::process_map()
 		}
 	}
 }
+void Create_map::removeFromMap(Position p)
+{
+	Object * o = map->removeShow(p,true,w);
+	if ( o != NULL)
+		delete o;
+}
 
 void Create_map::addObj()
 {	
 	Position p(0,0);
-	SDL_GetMouseState(&p.x, &p.y);
-	buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
+	if (SDL_GetMouseState(&p.x, &p.y) & SDL_BUTTON_LEFT)
+		buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
+	else
+		removeFromMap(p);
 }
 
 void Create_map::process()
