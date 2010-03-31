@@ -44,6 +44,9 @@ struct Place
 
 struct Map
 {
+	/* map visibility */
+	int visibility;
+
 	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
 	std::list<Place> places; //starts and targets
