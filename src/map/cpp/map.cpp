@@ -3,9 +3,13 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/wall.h"
+#include "boost/filesystem.cpp"
 
 #define MaxTG 100
 #define TG_CONST 20
+#define DEFAULT_VISIBILITY 150
+
+namespace bf = boost::filesystem;
 
 //TODO externe si pamatat steny pre bezpecne odmonotvanie
 Box::Box()
@@ -20,6 +24,11 @@ Map::Map(std::string configFile, std::string name)
 
 bool Map::load(std::string filename)
 {
+	std::istream input;
+	input.open(filename.c_str(), std::ios::in);
+	if (!input.good())
+		return false;
+	input.close();
 	return true;
 }
 bool Map::saveToFile(std::string filename)
@@ -46,6 +55,7 @@ bool Map::saveToFile(std::string filename)
 	{
 		saveInfo[iter->saveId] += deconvert<Rectangle>(iter->r) + ", img =" + deconvert<size_t>(iter->numberImage) + ", id=" + deconvert<size_t>(iter->id);
 	}
+	output << resolution << " " << visibility;  
 	for (int i =0; i<NumberOfObjectToSave; i++)
 	{
 		output << i << "##\n" << saveInfo[i]<<std::endl;
@@ -74,6 +84,7 @@ void Map::setBoundary(int x, int y)
 }
 Map::Map(Position resol, std::string skinName) 
 {
+	visibility = DEFAULT_VISIBILITY;
 	boundaries.x = 0;
 	boundaries.y = 0;
 	boundaries.width = 0;

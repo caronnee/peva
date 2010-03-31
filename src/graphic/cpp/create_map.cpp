@@ -319,6 +319,7 @@ void Create_map::saving()
 				case SDLK_RETURN:
 				{
 					std::string msg = "Ok, press Enter to continue";
+					file_name += ".map";
 					if (!map->saveToFile(file_name))
 					{
 						msg = "Cannot save to file '"+ file_name +"'";
