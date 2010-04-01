@@ -33,7 +33,6 @@ void Main::process()
 					case SDLK_RETURN:
 						{
 							w->add(menus[iterator]);
-							menus[iterator]->init();
 							break;
 						}
 					case SDLK_UP:

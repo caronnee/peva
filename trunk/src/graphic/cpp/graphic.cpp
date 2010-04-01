@@ -187,6 +187,7 @@ void Window::Destroy()
 void Window::add(Menu * menu)
 {
 	state.push(menu);
+	menu->init();
 }
 void Window::pop()
 {

@@ -114,6 +114,11 @@ Rectangle::Rectangle(int x_, int y_, int width_, int height_)
 	width = width_;
 	height = height_;
 }
+Position Rectangle::getPos()
+{
+	Position p(x,y);
+	return p;
+}
 bool Rectangle::overlaps(Position & p)const
 {
 	return ((x <= p.x) && (p.x <= x + width) && (y <= p.y) && (p.y <= y+height));
