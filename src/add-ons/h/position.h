@@ -35,6 +35,7 @@ struct Rectangle
 	Rectangle(int x_,int y_,int width_,int heigth_);
 	Rectangle();
 	friend std::ostream& operator<<(std::ostream & o, const Rectangle rectangle);
+	Position getPos();
 	bool overlaps(Rectangle & rectangle ) const;
 	bool overlaps(Position & position ) const;
 };

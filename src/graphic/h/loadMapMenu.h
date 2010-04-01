@@ -3,18 +3,27 @@
 
 #include "../../map/h/map.h"
 #include "graphic.h"
+#include <vector>
 
+struct MapRecord
+{
+	SDL_Surface * chosen;
+	SDL_Surface * show;
+	std::string name;
+};
 class LoadMapMenu : public Menu
 {
 	Map * mapToFill;
+	size_t index, begin, end, size, vSkip;
+	std::vector<MapRecord> maps;	
 public:
-	std::string path;
 	LoadMapMenu(Window * window, Map * map);
 	Window * w;
 	void process();
 	void draw();
 	void init();
 	void clean();
+	virtual ~LoadMapMenu();
 };
 
 #endif

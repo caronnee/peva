@@ -3,7 +3,7 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/wall.h"
-#include "boost/filesystem.cpp"
+#include "boost/filesystem.hpp"
 
 #define MaxTG 100
 #define TG_CONST 20
@@ -22,22 +22,21 @@ Map::Map(std::string configFile, std::string name)
 {
 }
 
-bool Map::load(std::string filename)
-{
-	std::istream input;
-	input.open(filename.c_str(), std::ios::in);
-	if (!input.good())
-		return false;
-	input.close();
-	return true;
-}
 bool Map::saveToFile(std::string filename)
 {
 	std::string saveInfo[NumberOfObjectToSave];
 	std::ofstream output;
-	output.open(filename.c_str(), std::ios::out);
+	if (!bf::exists("maps"))
+		bf::create_directory("maps");
+	std::string fln = "maps/" + filename;
+	output.open(fln.c_str(), std::ios::out);
 	if (!output.good())
+	{
+		TEST("cannot create file ")
 		return false;
+	}
+		//resolution + visibility
+	output << resolution << " " << visibility << "\n";
 	for(int i = 0; i< boxesInRow; i++)
 		for (int j =0; j < boxesInColumn; j++)
 		{
@@ -53,12 +52,11 @@ bool Map::saveToFile(std::string filename)
 		iter!= places.end();
 		iter++)
 	{
-		saveInfo[iter->saveId] += deconvert<Rectangle>(iter->r) + ", img =" + deconvert<size_t>(iter->numberImage) + ", id=" + deconvert<size_t>(iter->id);
+		saveInfo[iter->saveId] += deconvert<Position>(iter->r.getPos()) + ", img :" + deconvert<size_t>(iter->numberImage) + ", id:" + deconvert<int>(iter->id);
 	}
-	output << resolution << " " << visibility;  
 	for (int i =0; i<NumberOfObjectToSave; i++)
 	{
-		output << i << "##\n" << saveInfo[i]<<std::endl;
+		output << "#:-\n" <<i<< " " << saveInfo[i]<<std::endl;
 	}
 	output.close();
 	return true;
@@ -82,23 +80,83 @@ void Map::setBoundary(int x, int y)
 	boundaries.width = min<int>(resolution.x,x);
 	boundaries.height = min<int>(resolution.y,y);
 }
-Map::Map(Position resol, std::string skinName) 
+bool Map::load(Window* w, std::string filename)
 {
-	visibility = DEFAULT_VISIBILITY;
+	clean();
+
+	std::ifstream input;
+	input.open(filename.c_str(), std::ios::in);
+	if (!input.good())
+		return false;
+	//resolution change
+	for (int i =0 ; i< boxesInRow; i++)
+	{
+		for (int j =0; j< boxesInColumn; j++)
+			delete[] map[i];
+		delete[] map;
+	}
+	//skin netreba mazat, bo to mame ztial uplne stejne
+	input.ignore(256,':');
+	input >> resolution.x;
+	input.ignore(256,':');
+	input >> resolution.y;
+	input >> visibility; //bez dvojbodky;
+	Position objectPosition;
+	input.ignore(256,':');
+	input >> objectPosition.x; //prve zaporne
+	int iter = 0;
+	
+	while (!input.eof())
+	{
+		input.ignore(256,':');
+		input >> objectPosition.x;
+		if (objectPosition.x < 0)
+			iter++;
+		input.ignore(256,':');
+		input >> objectPosition.y;
+		input.ignore(256,':');
+		Object * o = NULL;
+		switch (iter)
+		{
+			case SaveWall:
+				o = new Wall(skin);
+				break;
+			case SavePushableWall:
+				o = new PushableWall(skin);
+				break;
+			case SaveTrapWall:
+				o = new TrapWall(skin);
+				break;
+			case SaveBreakableWall:
+				o = new BreakableWall(skin);
+				break;
+			case SaveStart:
+				addStart(w,objectPosition.x,objectPosition.y);
+				break;
+			case SaveTarget:
+				addTarget(w, objectPosition.x, objectPosition.y);
+			default:
+				TEST("Not implemented")
+		}
+		if (o!=NULL)
+		{
+			o->setPosition(objectPosition);
+			add(o);
+		}
+	}
+	//suppose the right structure
+		
+	input.close();
+	return true;
+}
+
+void Map::create()
+{
 	boundaries.x = 0;
 	boundaries.y = 0;
 	boundaries.width = 0;
 	boundaries.height = 0;
-	wskins.clear();
-	resolution = resol;
-	skin = new Skin(skinName, Skin::MapSkin);
-	for (size_t i = 0; i< NumberObjectsImages; i++)
-	{
-		wskins.push_back( new WallSkin(skinName, i));
-	}
-	skinWork = new ImageSkinWork(skin);
-	resolution.x +=  2*skin->get_shift().x;
-	resolution.y +=  2*skin->get_shift().y;
+
 	boxesInRow = (float)resolution.x/ BOX_WIDTH; 
 	boxesInColumn = (float)resolution.y/ BOX_HEIGHT; 
 	Rectangle begin(0,0,BOX_WIDTH,BOX_HEIGHT);
@@ -115,6 +173,22 @@ Map::Map(Position resol, std::string skinName)
 		begin.x+=BOX_HEIGHT;
 		begin.y = 0;
 	}
+}
+Map::Map(Position resol, std::string skinName) 
+{
+	visibility = DEFAULT_VISIBILITY;
+	wskins.clear();
+	resolution = resol;
+	skin = new Skin(skinName, Skin::MapSkin);
+	for (size_t i = 0; i< NumberObjectsImages; i++)
+	{
+		wskins.push_back( new WallSkin(skinName, i));
+	}
+	skinWork = new ImageSkinWork(skin);
+	resolution.x +=  2*skin->get_shift().x;
+	resolution.y +=  2*skin->get_shift().y;
+
+	create();
 	/* adding solid walls to ends */
 	Position p(skin->get_size().x,0);
 	ObjectMovement movement;
@@ -166,7 +240,7 @@ void Map::addStart(Window * w,size_t x, size_t y)
 	Rectangle r(x,y,wskins[WallStartId]->get_shift().x,
 		wskins[WallStartId]->get_shift().y);
 	std::list<Place>::reverse_iterator iter = places.rbegin();
-	size_t i = -1;
+	int i = -1;
 	for (iter--; iter!=places.rend(); iter--) //prve nezadane
 	{
 		if (iter->id >=0)
@@ -190,7 +264,7 @@ void Map::addTarget(Window * w,size_t x, size_t y)
 		wskins[TargetPlace]->get_shift().y);
 
 	std::list<Place>::iterator iter;
-	size_t i = 0;
+	int i = 0;
 	for (iter = places.begin();iter!=places.end(); iter++) //prve nezadane
 	{
 		if (iter->id <0)

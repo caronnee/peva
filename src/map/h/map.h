@@ -36,7 +36,7 @@ struct Box
 struct Place
 {
 	ObjectsToSave saveId;
-	size_t id;
+	int id;
 	size_t numberImage;
 	SDL_Surface * img;
 	Rectangle r;
@@ -44,6 +44,9 @@ struct Place
 
 struct Map
 {
+	/* creates map according to resolution */
+	void create();
+
 	/* map visibility */
 	int visibility;
 
@@ -75,7 +78,7 @@ struct Map
 	void addPlace(Window* w, Place p);
 
 	/* loads map from file */
-	bool load(std::string filename);
+	bool load(Window * w, std::string filename);
 
 	/* save map to file */
 	bool saveToFile(std::string filename);
