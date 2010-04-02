@@ -22,6 +22,8 @@ public:
 	void process();
 	void draw();
 	void init();
+	void choose(int index);
+	void unchoose(int index);
 	void clean();
 	virtual ~LoadMapMenu();
 };

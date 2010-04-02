@@ -14,48 +14,46 @@ namespace bf = boost::filesystem;
 LoadMapMenu::LoadMapMenu(Window * window, Map * map)
 {
 	index = 0;
-	map->clean();
+	mapToFill = map;
 	w = window;
 }
 void LoadMapMenu::process()
 {
-	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
-	switch (w->g->event.type)
+	while (SDL_PollEvent(&w->g->event))
 	{
-		case SDL_KEYDOWN:
+		switch (w->g->event.type)
+		{
+			case SDL_KEYDOWN:
 			{
 				switch(w->g->event.key.keysym.sym)
 				{
 					case SDLK_q:
 					case SDLK_ESCAPE:
-						{
-							w->pop();
-							return;
-						}
+					{
+						w->pop();
+						return;
+					}
 					case SDLK_DOWN:
-						SDL_Rect r;
-						r.x = BEGIN_X;
-						r.y = BEGIN_Y + index * vSkip;
-						SDL_BlitSurface(maps[index].show, NULL, w->g->screen, &r);
-						SDL_UpdateRect(w->g->screen, r.x, r.y, w->g->screen->w - 2*BEGIN_X, w->g->screen->h- 2* BEGIN_Y);
-						index ++;
+					{
+						unchoose(index);
+						index++;
 						if (index == maps.size())
 							index--;
-						if (index > end)
+						else if (index >= end)
 						{
-							begin = end - size;	
-							end=index;
+							begin++;
+							end++;
 							draw();
 							return;
 						}
-						SDL_BlitSurface(maps[index].chosen, NULL, w->g->screen, &r);
-						SDL_UpdateRect(w->g->screen, r.x, r.y, w->g->screen->w - 2*BEGIN_X, w->g->screen->h - 2* BEGIN_Y);
+						choose(index);
 						break;
+					}
 					case SDLK_UP:
-						SDL_BlitSurface(maps[index].show, NULL, w->g->screen, &r);
-						SDL_UpdateRect(w->g->screen, r.x, r.y, w->g->screen->w - 2*BEGIN_X, w->g->screen->h - 2* BEGIN_Y);
+					{
+						unchoose(index);
 						index--;
-						if (index < 0)
+						if (index > maps.size())
 							index = 0;
 						if (index < begin)
 						{
@@ -64,32 +62,61 @@ void LoadMapMenu::process()
 							draw();
 							return;
 						}
-						SDL_BlitSurface(maps[index].chosen, NULL, w->g->screen, &r);
-						SDL_UpdateRect(w->g->screen, r.x, r.y, w->g->screen->w - 2*BEGIN_X, w->g->screen->h - 2* BEGIN_Y);
+						choose(index);
 						break;
+					}
 					case SDLK_RETURN:
+					{
+						mapToFill->clean();
 						mapToFill->load(w, maps[index].name);
 						w->pop();
 						return;
+					}
 					default:
 						TEST("Unhandled button")
 						break;
-				}
+					}
 				break;
 			}
-	}	
+		}	
+	}
 }
+
+void LoadMapMenu::choose(int index)
+{
+	SDL_Rect r2;
+	r2.x = BEGIN_X;
+	r2.y = BEGIN_Y + (index - begin) * vSkip;
+	SDL_BlitSurface(maps[index].chosen, NULL, w->g->screen, &r2);
+	SDL_UpdateRect(w->g->screen, BEGIN_X , r2.y, 
+		w->g->screen->w - BEGIN_X , w->g->screen->h - r2.y );
+}
+void LoadMapMenu::unchoose(int index)
+{
+	SDL_Rect r;
+	r.x = BEGIN_X;
+	r.y = BEGIN_Y + ( index - begin ) * vSkip;
+	SDL_BlitSurface(maps[index].show, NULL, w->g->screen, &r);
+	SDL_UpdateRect(w->g->screen, r.x, r.y, 
+			w->g->screen->w - BEGIN_X, w->g->screen->h - r.y);
+}
+
 void LoadMapMenu::draw()
 {
+	SDL_Rect rct;
+	rct.x = 0;
+	rct.y = 0;
+	rct.h = w->g->screen->h;
+	rct.w = w->g->screen->w;
+
+	TEST("--")
+	w->tapestry(rct);
+
 	for (size_t i = 0; i< size; i++)
 	{
-		SDL_Rect r;
-		r.x = BEGIN_X;
-		r.y = BEGIN_Y + i*vSkip;
+		unchoose(begin + i);
 		if (i+begin == index)
-			SDL_BlitSurface(maps[begin + i].chosen, NULL, w->g->screen, &r);
-		else
-			SDL_BlitSurface(maps[begin + i].show, NULL, w->g->screen, &r);
+			choose(begin + i);
 	}
 	SDL_Flip(w->g->screen);
 }

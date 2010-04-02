@@ -10,7 +10,8 @@ lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/par
 	 o/targets.o o/core.o o/position.o o/parser_classes.o o/typeContainer.o \
 	 o/body.o o/objects.o o/missille.o o/scheduller.o o/list.o o/map.o \
 	 o/movement.o o/snake.o o/create_map.o o/graphic.o o/main_menu.o \
-	 o/other.o o/menu.o o/wall.o o/images.o o/seer.o o/loadMapMenu.o
+	 o/other.o o/menu.o o/wall.o o/images.o o/seer.o o/loadMapMenu.o \
+	 o/window.o
 	
 LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 
@@ -32,7 +33,7 @@ debugSee: $(lOBJECTS) o/debugSee.o
 	g++ $(LDFLAGS) -o $@ $^
 	@echo "..........................................."
 
-test:	o/list.o o/test.o o/objects.o o/position.o o/images.o o/help_functions.o
+test:	o/list.o o/test.o o/objects.o o/position.o o/images.o o/help_functions.o o/wall.o
 	@echo ""
 	@echo "..........................................."
 	@echo "Creating test for testing list...:"

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "menu.h"
-#include "graphic.h"
+#include "window.h"
 
 class Main: public Menu
 {
@@ -13,7 +13,8 @@ class Main: public Menu
 	int iterator;
 public:
 	Main(Window * w_, int argn, char* args[]);
-	void process(void);
+	void process();
+	void update();
 	void draw();
 	void init();
 	void clean();

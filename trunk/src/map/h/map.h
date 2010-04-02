@@ -6,7 +6,7 @@
 #include <list>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include "../../graphic/h/graphic.h"
+#include "../../graphic/h/window.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
 #include "../../objects/h/list.h"
