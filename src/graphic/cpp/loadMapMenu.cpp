@@ -3,6 +3,7 @@
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem.hpp"
 #include "../../add-ons/h/macros.h"
+#include "../../add-ons/h/position.h"
 #include "../h/loadMapMenu.h"
 
 #define BEGIN_X 20
@@ -80,6 +81,17 @@ void LoadMapMenu::process()
 }
 void LoadMapMenu::draw()
 {
+	for (size_t i = 0; i< size; i++)
+	{
+		SDL_Rect r;
+		r.x = BEGIN_X;
+		r.y = BEGIN_Y + i*vSkip;
+		if (i+begin == index)
+			SDL_BlitSurface(maps[begin + i].chosen, NULL, w->g->screen, &r);
+		else
+			SDL_BlitSurface(maps[begin + i].show, NULL, w->g->screen, &r);
+	}
+	SDL_Flip(w->g->screen);
 }
 void LoadMapMenu::init()
 {
@@ -101,6 +113,7 @@ void LoadMapMenu::init()
 		maps.push_back(record);
 	}
 	size = min<int>(maps.size(), (w->g->screen->h - BEGIN_Y) / vSkip );
+	begin =0;end = size;
 }
 void LoadMapMenu:: clean()
 {
