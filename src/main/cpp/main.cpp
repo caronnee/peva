@@ -1,8 +1,9 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "../../graphic/h/graphic.h"
+#include "../../graphic/h/window.h"
 #include "../../graphic/h/images.h"
+#include "../../add-ons/h/macros.h"
 
 //config file
 #define CONFIG "./codewars.config"

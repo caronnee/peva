@@ -15,8 +15,8 @@ Create_map::Create_map(Window *w_)
 { 
 	nextMenu = NULL;
 	lastPut = NULL;
-	name = "Create map";
 	w = w_;
+	name(w->g, "Create map");
 	map= NULL;
 	skins.clear();
 	text = NULL;
@@ -145,6 +145,7 @@ void Create_map::draw_resol() //TODO tu staci len raz vykreslit a potom sa pozri
 }
 void Create_map::draw()
 {
+	TEST("Vykreslujem")
 	SDL_Rect clip;
 	SDL_GetClipRect(w->g->screen, &clip); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
 	w->tapestry(clip);
@@ -393,66 +394,66 @@ void Create_map::buttonDown(int number, int atX, int atY)
 	switch (number)
 	{
 		case MAP:
+		{
+			int x, y;
+			x = atX + map->boundaries.x;
+			y = atY + map->boundaries.y;
+			Object * wall = NULL;
+			switch (select)
 			{
-				int x, y;
-				x = atX + map->boundaries.x;
-				y = atY + map->boundaries.y;
-				Object * wall = NULL;
-				switch (select)
-				{
-					case TargetPlace:
-						map->addTarget(w, x,y);
-						break;
-					case WallSolidId:
-						wall = new Wall(skins[WallSolidId]);
-						break;
-					case WallPushId:
-						wall = new PushableWall(skins[WallPushId]);
-						break;
-					case WallTrapId:
-						wall = new TrapWall(skins[WallTrapId]);
-						break;
-					case WallStartId:
-						map->addStart(w, x, y);
-						break;
-					default:
-						TEST("Object not recognized" << select);
-				}
-				SDL_Rect update;
-				update.x =atX;
-				update.y =atY;
-				update.w = update.h = 50; //default, FIXME
+				case TargetPlace:
+					map->addTarget(w, x, y);
+					break;
+				case WallSolidId:
+					wall = new Wall(skins[WallSolidId]);
+					break;
+				case WallPushId:
+					wall = new PushableWall(skins[WallPushId]);
+					break;
+				case WallTrapId:
+					wall = new TrapWall(skins[WallTrapId]);
+					break;
+				case WallStartId:
+					map->addStart(w, x, y);
+					break;
+				default:
+					TEST("Object not recognized" << select);
+			}
+			SDL_Rect update;
+			update.x =atX;
+			update.y =atY;
+			update.w = update.h = 50; //default, FIXME
 
-				if (wall)
+			if (wall)
+			{
+				Position p(x,y); //x,y = aktual position
+				wall->setPosition(p,0);
+				Object * collide = map->checkCollision(wall);
+				if (collide == NULL)
 				{
-					Position p(x,y); //x,y = aktual position
-					wall->setPosition(p,0);
-					Object * collide = map->checkCollision(wall);
-					if (collide == NULL)
-					{
-						map->add(wall);
-						lastPut = wall;
-						update.w = wall->width();
-						update.h = wall->height(); //TODO check, netreba shift?
-						map->update(update,true, w);
-						break;
-					}
-					else
-					{
-						TEST("Koliduje")
-					}
-					update.w = -1;
-					update.h = -1;
-					lastPut = collide;
-					delete wall;
+					map->add(wall);
+					lastPut = wall;
+					update.w = wall->width();
+					update.h = wall->height(); //TODO check, netreba shift?
+					map->update(update,true, w);
 					break;
 				}
-				map->update(update,true, w);
+				else
+				{
+					TEST("Koliduje"<<std::endl)
+				}
+				update.w = -1;
+				update.h = -1;
+				lastPut = collide;
+				delete wall;
 				break;
 			}
+			map->update(update,true, w);
+			break;
+		}
 		case CLEAN:
 			{
-			std::cout << "clenaning" <<std::endl;
+				std::cout << "cleaning" <<std::endl;
 				map->clean();
 				map->addBoundaryWalls();
 				map->update(rects[MAP], true, w);
@@ -626,10 +627,17 @@ void Create_map::removeFromMap(Position p)
 void Create_map::addObj()
 {	
 	Position p(0,0);
-	if (SDL_GetMouseState(&p.x, &p.y) & SDL_BUTTON_LEFT)
+	Uint8 state = SDL_GetMouseState(&p.x, &p.y);
+	if ( state & SDL_BUTTON(1))
+	{
 		buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
-	else
+		return;
+	}
+	if ( state & SDL_BUTTON_RIGHT)
+	{
 		removeFromMap(p);
+		return;
+	}
 }
 
 void Create_map::process()
@@ -639,6 +647,7 @@ void Create_map::process()
 		w->pop();
 		return;
 	}
+	TEST("preslo")
 	if (state == DRAW) 
 	{
 		process_map();
@@ -648,7 +657,7 @@ void Create_map::process()
 	if (state == RESOLUTION)
 	{
 		process_resolution();
-		draw();//TODO opravit iba tu cast screenu, co sa pokazila
+		//draw();//TODO opravit iba tu cast screenu, co sa pokazila
 		return;
 	}
 	if (state == SAVING)

@@ -13,7 +13,6 @@ Main::Main(Window * w_, int argc, char * argv[])
 	w = w_; 
 	for (int i =0; i< NUMBEROFMENUS; i++)
 		menus[i] = NULL;
-	init();
 }
 void Main::process()
 {
@@ -37,15 +36,19 @@ void Main::process()
 						}
 					case SDLK_UP:
 						{
+							menus[iterator]->unset();
 							iterator--;
 							if (iterator<0) 
 								iterator = NUMBEROFMENUS -1;
+							menus[iterator]->set();
 							break;
 						}
 					case SDLK_DOWN:
 						{
+							menus[iterator]->unset();
 							iterator++;
 							iterator%=NUMBEROFMENUS;
+							menus[iterator]->set();
 							break;
 						}
 					default:
@@ -55,7 +58,6 @@ void Main::process()
 				break;
 			}
 	}
-	draw();
 }
 void Main::clean()
 {
@@ -74,34 +76,22 @@ void Main::draw()
 	SDL_GetClipRect(w->g->screen, &pom);
 	w->tapestry(pom);
 	
-	int offset_up = 10;
-	SDL_Rect rect;
-	rect.y = (w->g->screen->h + (w->g->font_size+offset_up)*4)/2;
-	rect.x = (w->g->screen->w)/2 - 15;// TODO zmenit na lepsie
-	SDL_Surface* text;
 	TTF_SetFontStyle(w->g->g_font, TTF_STYLE_NORMAL);
-	int width;
-	
-	rect.y = (w->g->screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
+	SDL_Flip(w->g->screen);
+	update();
+}
+void Main::update()
+{
+	SDL_Rect rect;
+	rect.x = (w->g->screen->w)/2 - 15;// TODO zmenit na lepsie
 	for (int i =0; i< NUMBEROFMENUS; i++)
 	{
-		TTF_SizeText(w->g->g_font, menus[i]->get_name().c_str(),&width, NULL);
-		if (i==iterator)
-		{
-			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->get_name().c_str(), w->g->light );
-		}
-		else
-		{
-			text = TTF_RenderText_Solid(w->g->g_font,menus[i]->get_name().c_str(), w->g->normal );
-		}	
-		if (text ==NULL) std::cout << " Error rendering text " << TTF_GetError() <<std::endl; //podla mna tu tato podmienka nemusi byt
-		rect.x = (w->g->screen->w >> 1) - (width >> 1);
-		if (text ==NULL) std::cout << "IEuhfzeuh:"<<TTF_GetError() <<std::endl;
-		SDL_BlitSurface(text, NULL, w->g->screen, &rect);
-		SDL_FreeSurface(text);
-		rect.y+=30;
+		rect.x = (w->g->screen->w >> 1) - (menus[i]->get_name()->w >> 1);
+		rect.h = w->g->font_size;
+		SDL_BlitSurface(menus[i]->get_name(), NULL, w->g->screen, &rect);
+		rect.y += w->g->font_size << 1;
+		SDL_UpdateRect(w->g->screen, rect.x, rect.y, rect.w, rect.h);
 	}
-	SDL_Flip(w->g->screen);
 }
 void Main::init()
 {
@@ -111,6 +101,7 @@ void Main::init()
 	menus[2] = new Join(w);
 	menus[3] = new Settings(w);
 	menus[4] = new Create_map(w);
+	menus[0]->set();
 } 
 
 Main::~Main()

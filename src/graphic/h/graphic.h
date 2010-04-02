@@ -11,7 +11,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-#include "menu.h"
 
 #define SDL_SUBSYSTEMS SDL_INIT_VIDEO
 #define WIN_FLAGS SDL_HWSURFACE|SDL_RESIZABLE //TODO! on resizeable
@@ -52,29 +51,5 @@ public:
 	void set_font(std::string res);
 	void set_font_size(std::string res);
 	//TODO take veci ako napriklad vykreslovanie
-};
-//-------------------- Draw variables-----------
-
-class Window 
-{
-private:
-	SDL_Surface * background; //background pre hlavne okno 
-	Menu * main_menu;
-	std::stack<Menu *> state;
-	std::string hlp;
-	std::string back;
-public:
-	Graphic * g;
-	Window(Graphic * g_);
-	void tapestry(SDL_Rect rect);
-	int toggle_screen(); //change from full screen to window screen and vice-versa
-	void add(Menu * m);
-	bool Init(int argc, char * argv[]);
-	void Destroy();
-	Menu * top()const;
-	void process();
-	bool empty();
-	void pop();	
-	void set_background(std::string res);
 };
 #endif

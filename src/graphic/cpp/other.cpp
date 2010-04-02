@@ -17,7 +17,7 @@ extern int yyparse(Robots *);
 Join::Join(Window *w_)
 {
 	w = w_;
-	name = "Join";
+	name (w->g, "Join" );
 }
 void Join::clean()
 {
@@ -28,8 +28,6 @@ void Join::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-//	w->tapestry();
-	SDL_Flip(w->g->screen);
 }
 
 void Join::process()
@@ -61,8 +59,8 @@ Join::~Join(){};
 
 Host::Host(Window *w_)
 {
-	name = "Host";
 	w = w_;
+	name(w->g, "Host");
 }
 void Host::clean()
 {
@@ -73,8 +71,6 @@ void Host::draw()
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-//	w->tapestry();
-	SDL_Flip(w->g->screen);
 }
 
 void Host::process()
@@ -109,8 +105,8 @@ Play::Play(Window *w_, std::vector<std::string> fls)
 	/* init, not repeatable */
 	files = fls;
 	srand(time(NULL));
-	name = "Play Game";
 	w = w_;
+	name(w->g, "Play Game");
 	m = NULL;
 	for (int i = 0; i< 256; i++)
 	{
@@ -265,15 +261,13 @@ void Play::process()
 Settings::Settings(Window *w_)
 {
 	w = w_;
-	name = "Settings";
+	name(w->g,"Settings");
 }
 void Settings::draw()
 {
 	SDL_Rect r;
 	r.x = 10;
 	r.y = 10;
-//	w->tapestry();
-	SDL_Flip(w->g->screen);
 }
 void Settings::clean()
 {
