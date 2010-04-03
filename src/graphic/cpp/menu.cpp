@@ -19,22 +19,23 @@ void Menu::name(Graphic * g, std::string s)
 	nameNormal = TTF_RenderText_Solid(g->g_font,s.c_str(), g->normal);
 	show = nameNormal;
 }
-void Menu::update(Menu ** menus, int iterator, Graphic * g)
+void Menu::update(Menu ** menus, int size, int iterator, Graphic * g)
 {
 	SDL_Rect rect;
 	rect.x = (g->screen->w >> 1) - 
 		(menus[iterator]->get_name()->w >> 1);
-	rect.y = (g->screen->h)/2 - iterator * (g->font_size)/2;
+	rect.y = (g->screen->h)/2 - size * (g->font_size) + (iterator* g->font_size << 1);
+
 	rect.h = g->font_size;
 	SDL_BlitSurface(menus[iterator]->get_name(), NULL, g->screen, &rect);
 	SDL_UpdateRect(g->screen, rect.x, rect.y, menus[iterator]->get_name()->w, rect.h );
 		
 }
-void Menu::drawMenu(Menu ** menus, int iterator, Graphic * g)
+void Menu::drawMenu(Menu ** menus, int size, Graphic * g)
 {
 	SDL_Rect rect;
-	rect.y = (g->screen->h)/2 - NUMBEROFMENUS * (g->font_size);// TODO zmenit na lepsie
-	for (int i =0; i< NUMBEROFMENUS; i++)
+	rect.y = (g->screen->h)/2 - size * (g->font_size);// TODO zmenit na lepsie
+	for (int i =0; i< size; i++)
 	{
 		rect.x = (g->screen->w >> 1) - (menus[i]->get_name()->w >> 1);
 		rect.h = g->font_size;

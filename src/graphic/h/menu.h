@@ -18,7 +18,7 @@ class Menu
 		void drawMenu(Menu ** menus, int size, Graphic * g);
 
 		/* updates drawing menu */
-		void update(Menu ** menus, int iterator, Graphic * g);
+		void update(Menu ** menus, int size, int iterator, Graphic * g);
 
 		/* returns name of the menu */
 		SDL_Surface * get_name()const;

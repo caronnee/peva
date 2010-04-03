@@ -146,7 +146,7 @@ void Create_map::draw_resol() //TODO tu staci len raz vykreslit a potom sa pozri
 void Create_map::draw()
 {
 	SDL_Rect clip;
-	SDL_GetClipRect(w->g->screen, &clip); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
+	SDL_GetClipRect(w->g->screen, &clip); 
 	w->tapestry(clip);
 	if (state == RESOLUTION)
 	{
@@ -154,9 +154,7 @@ void Create_map::draw()
 	}
 	else
 	{
-		//TODO vysvietit tu, o sa ma zmazat/ zmaze sa to procese klikom lavym tlacitkom
 		//nakresli pole
-		//TODO ukazat uzivatelovi, ze je uz na hranici a nikam dalej to nepojde
 		SDL_Rect r = rects[MAP];
 		r.w = map->boundaries.width;
 		r.h = map->boundaries.height;

@@ -41,20 +41,22 @@ void Main::process()
 					case SDLK_UP:
 						{
 							menus[iterator]->unset();
+							update(menus, NUMBEROFMENUS, iterator, w->g);
 							iterator--;
 							if (iterator<0) 
 								iterator = NUMBEROFMENUS -1;
 							menus[iterator]->set();
-							update(menus, iterator, w->g);
+							update(menus, NUMBEROFMENUS, iterator, w->g);
 							break;
 						}
 					case SDLK_DOWN:
 						{
 							menus[iterator]->unset();
+							update(menus, NUMBEROFMENUS, iterator, w->g);
 							iterator++;
 							iterator%=NUMBEROFMENUS;
 							menus[iterator]->set();
-							update(menus, iterator, w->g);
+							update(menus, NUMBEROFMENUS, iterator, w->g);
 							break;
 						}
 					default:
