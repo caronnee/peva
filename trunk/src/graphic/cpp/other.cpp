@@ -265,8 +265,14 @@ Settings::Settings(Window *w_)
 {
 	w = w_;
 	name(w->g,"Settings");
+	names[0] = new Host(w);
+	names[1] = new Host(w);
+	names[2] = new Join(w);
 }
-void Settings::resume(){}
+void Settings::resume()
+{
+	drawMenu(names, 3, w->g);
+}
 void Settings::draw()
 {
 	SDL_Rect r;
