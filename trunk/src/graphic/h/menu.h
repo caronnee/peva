@@ -14,6 +14,12 @@ class Menu
 		/* constuctor */
 		Menu();
 
+		/* draws menu in the middle of the screen and updates it */
+		void drawMenu(Menu ** menus, int size, Graphic * g);
+
+		/* updates drawing menu */
+		void update(Menu ** menus, int iterator, Graphic * g);
+
 		/* returns name of the menu */
 		SDL_Surface * get_name()const;
 

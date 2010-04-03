@@ -297,7 +297,7 @@ void Settings::process()
 							break;
 						}
 					default:
-						std::cout << "nezname tlacitko XXX" << std::endl;
+						std::cout << "Unhandled button" << std::endl;
 						break;
 				}
 				break;

@@ -45,7 +45,7 @@ void Main::process()
 							if (iterator<0) 
 								iterator = NUMBEROFMENUS -1;
 							menus[iterator]->set();
-							update(); //TODO len ten iterator
+							update(menus, iterator, w->g);
 							break;
 						}
 					case SDLK_DOWN:
@@ -54,7 +54,7 @@ void Main::process()
 							iterator++;
 							iterator%=NUMBEROFMENUS;
 							menus[iterator]->set();
-							update(); //TODO len ten iterator
+							update(menus, iterator, w->g);
 							break;
 						}
 					default:
@@ -84,21 +84,9 @@ void Main::draw()
 	
 	TTF_SetFontStyle(w->g->g_font, TTF_STYLE_NORMAL);
 	SDL_Flip(w->g->screen);
-	update();
+	drawMenu(menus, NUMBEROFMENUS, w->g );
 }
-void Main::update()
-{
-	SDL_Rect rect;
-	rect.y = (w->g->screen->h)/2 - NUMBEROFMENUS * (w->g->font_size);// TODO zmenit na lepsie
-	for (int i =0; i< NUMBEROFMENUS; i++)
-	{
-		rect.x = (w->g->screen->w >> 1) - (menus[i]->get_name()->w >> 1);
-		rect.h = w->g->font_size;
-		SDL_BlitSurface(menus[i]->get_name(), NULL, w->g->screen, &rect);
-		SDL_UpdateRect(w->g->screen, rect.x, rect.y, menus[i]->get_name()->w, rect.h );
-		rect.y += w->g->font_size << 1;
-	}
-}
+
 void Main::init()
 {
 	iterator = 0;
