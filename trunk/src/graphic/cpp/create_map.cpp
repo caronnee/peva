@@ -13,10 +13,10 @@
 
 Create_map::Create_map(Window *w_)
 { 
-	nextMenu = NULL;
-	lastPut = NULL;
 	w = w_;
 	name(w->g, "Create map");
+	nextMenu = NULL;
+	lastPut = NULL;
 	map= NULL;
 	skins.clear();
 	text = NULL;
@@ -145,7 +145,6 @@ void Create_map::draw_resol() //TODO tu staci len raz vykreslit a potom sa pozri
 }
 void Create_map::draw()
 {
-	TEST("Vykreslujem")
 	SDL_Rect clip;
 	SDL_GetClipRect(w->g->screen, &clip); //TODO zmenit tapestry tak, aby sa to v jednom kuse neprekreslovalo
 	w->tapestry(clip);
@@ -570,8 +569,14 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 	}
 }
-//BIG TODO zmenit na citatelnejsie
+void Create_map::resume()
+{
+	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
+	map->shift(-rects[MAP].x, -rects[MAP].y);
+	draw();
+}
 
+//BIG TODO zmenit na citatelnejsie
 void Create_map::process_map()
 {
 	switch (w->g->event.type)
@@ -628,12 +633,13 @@ void Create_map::addObj()
 {	
 	Position p(0,0);
 	Uint8 state = SDL_GetMouseState(&p.x, &p.y);
+	TEST(state)
 	if ( state & SDL_BUTTON(1))
 	{
 		buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
 		return;
 	}
-	if ( state & SDL_BUTTON_RIGHT)
+	if ( state & SDL_BUTTON(2))
 	{
 		removeFromMap(p);
 		return;
@@ -647,7 +653,6 @@ void Create_map::process()
 		w->pop();
 		return;
 	}
-	TEST("preslo")
 	if (state == DRAW) 
 	{
 		process_map();
@@ -657,12 +662,11 @@ void Create_map::process()
 	if (state == RESOLUTION)
 	{
 		process_resolution();
-		//draw();//TODO opravit iba tu cast screenu, co sa pokazila
+		draw();//TODO opravit iba tu cast screenu, co sa pokazila
 		return;
 	}
 	if (state == SAVING)
 	{
-		TEST("start saving function")
 		saving();
 	}
 }

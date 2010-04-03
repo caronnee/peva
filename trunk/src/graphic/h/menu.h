@@ -17,6 +17,9 @@ class Menu
 		/* returns name of the menu */
 		SDL_Surface * get_name()const;
 
+		/* resumes window */
+		virtual void resume() = 0;
+
 		/* resolves events */
 		virtual void process(void) = 0;
 

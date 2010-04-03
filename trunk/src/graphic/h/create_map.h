@@ -134,6 +134,9 @@ private:
 public:
 	/* Constructor */
 	Create_map(Window * w_);
+
+	/* resumes window */
+	void resume();
 	
 	/* init creates instances of elements immediately needed, in passive state (not running), it is needed only name for drawing */
 	void init();

@@ -19,6 +19,7 @@ Join::Join(Window *w_)
 	w = w_;
 	name (w->g, "Join" );
 }
+void Join::resume(){}
 void Join::clean()
 {
 	//TODO
@@ -66,6 +67,7 @@ void Host::clean()
 {
 	//TODO
 }
+void Host::resume(){}
 void Host::draw()
 {
 	SDL_Rect r;
@@ -121,6 +123,7 @@ Play::Play(Window *w_, std::vector<std::string> fls)
 }
 Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 
+void Play::resume(){}
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
 	m->redraw(w );
@@ -263,6 +266,7 @@ Settings::Settings(Window *w_)
 	w = w_;
 	name(w->g,"Settings");
 }
+void Settings::resume(){}
 void Settings::draw()
 {
 	SDL_Rect r;

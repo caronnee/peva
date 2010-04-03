@@ -20,6 +20,7 @@ public:
 	LoadMapMenu(Window * window, Map * map);
 	Window * w;
 	void process();
+	void resume();
 	void draw();
 	void init();
 	void choose(int index);

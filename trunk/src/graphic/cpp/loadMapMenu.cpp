@@ -17,6 +17,10 @@ LoadMapMenu::LoadMapMenu(Window * window, Map * map)
 	mapToFill = map;
 	w = window;
 }
+void LoadMapMenu::resume()
+{
+	draw();
+}
 void LoadMapMenu::process()
 {
 	while (SDL_PollEvent(&w->g->event))
@@ -35,6 +39,8 @@ void LoadMapMenu::process()
 					}
 					case SDLK_DOWN:
 					{
+						if (size == 0)
+							break;
 						unchoose(index);
 						index++;
 						if (index == maps.size())
@@ -51,6 +57,8 @@ void LoadMapMenu::process()
 					}
 					case SDLK_UP:
 					{
+						if (size == 0)
+							break;
 						unchoose(index);
 						index--;
 						if (index > maps.size())
@@ -125,6 +133,8 @@ void LoadMapMenu::init()
 	//zisti vsetky s priponou .map
 	vSkip =  TTF_FontLineSkip(w->g->g_font);
 	bf::directory_iterator end_iter;
+	if (!bf::exists("./maps"))
+		bf::create_directory("maps");
 	for ( bf::directory_iterator dir_itr( "./maps" );
           dir_itr != end_iter;
           ++dir_itr )
@@ -137,6 +147,7 @@ void LoadMapMenu::init()
 		record.name = dir_itr->leaf();
 		record.show = TTF_RenderText_Solid(w->g->g_font, record.name.c_str(), w->g->normal);
 		record.chosen = TTF_RenderText_Solid(w->g->g_font, record.name.c_str(), w->g->light);
+		record.name = dir_itr->path().string();
 		maps.push_back(record);
 	}
 	size = min<int>(maps.size(), (w->g->screen->h - BEGIN_Y) / vSkip );
