@@ -115,25 +115,30 @@ bool Map::load(Window* w, std::string filename)
 	{
 		input.ignore(256,':');
 		input >> objectPosition.x;
-		if (objectPosition.x < 0)
+		while (objectPosition.x < 0)
+		{
+			if (input.eof())
+			{
+				input.close();
+				return true;
+			}
 			iter++;
+			input.ignore(256,':');
+			input >> objectPosition.x;
+		}
 		input.ignore(256,':');
 		input >> objectPosition.y;
-		input.ignore(256,':');
 		Object * o = NULL;
 		switch (iter)
 		{
 			case SaveWall:
-				o = new Wall(skin);
+				o = new Wall(wskins[WallSolidId]);
 				break;
 			case SavePushableWall:
-				o = new PushableWall(skin);
+				o = new PushableWall(wskins[WallPushId]);
 				break;
 			case SaveTrapWall:
-				o = new TrapWall(skin);
-				break;
-			case SaveBreakableWall:
-				o = new BreakableWall(skin);
+				o = new TrapWall(wskins[WallTrapId]);
 				break;
 			case SaveStart:
 				addStart(w,objectPosition.x,objectPosition.y);

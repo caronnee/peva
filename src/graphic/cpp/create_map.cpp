@@ -271,7 +271,7 @@ void Create_map::generuj()
 	Position diff(map->resolution.x / (SPACE_KOEF*snakeRes.x), map->resolution.y / (SPACE_KOEF*snakeRes.y) );
 	snake.create();
 	Position objPosition(0,0);
-	TEST("\n")
+	TEST("..\n")
 	for (int i =0; i< snakeRes.x; i++)
 	{
 		for (int j =0; j< snakeRes.y; j++)
@@ -296,7 +296,7 @@ void Create_map::generuj()
 				objPosition.y += diff.y;
 			}
 		}
-		TEST("\n")
+		TEST("..\n")
 		objPosition.y = 0;
 		objPosition.x += SPACE_KOEF*diff.y;
 	}
@@ -324,6 +324,7 @@ void Create_map::saving()
 					{
 						msg = "Cannot save to file '"+ file_name +"'";
 					}
+					
 					state = DRAW;
 					draw();
 					SDL_Surface *srf = TTF_RenderText_Solid(w->g->g_font,msg.c_str(),w->g->normal);
@@ -332,6 +333,7 @@ void Create_map::saving()
 					SDL_BlitSurface(srf, NULL, w->g->screen, &rcr);
 					SDL_Flip(w->g->screen);
 					SDL_FreeSurface(srf);
+					file_name = "";
 					do 
 						SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
 					while (w->g->event.type != SDL_KEYDOWN);
@@ -476,6 +478,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			if (nextMenu)
 				delete nextMenu;
 			w->add( new LoadMapMenu(w, map));
+			mouse_down = false;
 			break;
 		}
 		case GENERATE:
@@ -633,7 +636,7 @@ void Create_map::addObj()
 {	
 	Position p(0,0);
 	Uint8 state = SDL_GetMouseState(&p.x, &p.y);
-	TEST(state)
+	TEST(state << "@")
 	if ( state & SDL_BUTTON(1))
 	{
 		buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
