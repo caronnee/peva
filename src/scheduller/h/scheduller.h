@@ -17,8 +17,10 @@ class Scheduller
 };
 class SchedulleTime: public Scheduller
 {
+	int roundTime;
+	int time;
 	public:
-	SchedulleTime();
+	SchedulleTime(int roundTime_);
 	virtual bool ready();
 	virtual ~SchedulleTime();
 };

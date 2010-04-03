@@ -15,14 +15,34 @@ void Scheduller::penalize(Instruction * i)
 	quantum=penalties[i->group];
 }
 
-SchedulleTime::SchedulleTime() {}
+Scheduller::~Scheduller()
+{
+	/* nothing */
+}
+
+/*------------SchedulleTime--------*/
+SchedulleTime::SchedulleTime(int rJ)
+{
+	roundTime = rJ;
+}
 
 bool SchedulleTime::ready()
 {
-	size_t ticks = SDL_GetTicks();
-	return quantum - ticks;
+	if (quantum > time)
+	{
+		quantum += roundTime;
+		return false;
+	}
+	time -= quantum;
+	return true;
 }
 
+SchedulleTime::~SchedulleTime()
+{
+	/* nothing */
+}
+
+/*------------SchedulleRound--------*/
 SchedulleRound::SchedulleRound() {}
 
 bool SchedulleRound::ready()
@@ -30,14 +50,7 @@ bool SchedulleRound::ready()
 	quantum--;
 	return quantum < 0;
 }
-Scheduller::~Scheduller()
-{
-	/* nothing */
-}
-SchedulleTime::~SchedulleTime()
-{
-	/* nothing */
-}
+
 SchedulleRound::~SchedulleRound()
 {
 	/* nothing */

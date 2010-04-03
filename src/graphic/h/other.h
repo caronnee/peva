@@ -12,7 +12,7 @@
 class Settings:public Menu
 {
 	Window* w;
-	std::string names[3]; //nastavit timeouti, resolution, background. TODO!
+	Menu * names[3]; //nastavit timeouti, resolution, background. TODO!
 public:
 	Settings(Window * w_);
 	void process(void);
