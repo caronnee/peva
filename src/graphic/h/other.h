@@ -16,6 +16,7 @@ class Settings:public Menu
 public:
 	Settings(Window * w_);
 	void process(void);
+	void resume();
 	void draw();
 	void init();
 	void clean();
@@ -28,6 +29,7 @@ class Host:public Menu
 public:
 	Host(Window * w_);
 	void process(void);
+	void resume();
 	void draw();
 	void init();
 	void clean();
@@ -39,6 +41,7 @@ class Join:public Menu
 public:
 	Join(Window * w_);
 	void process(void);
+	void resume();
 	void draw();
 	void init();
 	void clean();
@@ -68,6 +71,7 @@ public:
 	Play(Window * w_, std::vector<std::string> files);
 	void process(void);
 	void init();
+	void resume();
 	void draw();
 	void clean();
 	virtual ~Play();

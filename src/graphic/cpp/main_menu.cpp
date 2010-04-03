@@ -14,6 +14,10 @@ Main::Main(Window * w_, int argc, char * argv[])
 	for (int i =0; i< NUMBEROFMENUS; i++)
 		menus[i] = NULL;
 }
+void Main::resume()
+{
+	draw();
+}
 void Main::process()
 {
 	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}

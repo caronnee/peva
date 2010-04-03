@@ -104,7 +104,7 @@ void Window::pop()
 		state.pop();
 	}
 	if ( !state.empty() )
-		state.top()->draw();
+		state.top()->resume();
 }
 Menu * Window::top()const
 {

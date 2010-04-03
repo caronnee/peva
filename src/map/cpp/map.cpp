@@ -56,7 +56,7 @@ bool Map::saveToFile(std::string filename)
 	}
 	for (int i =0; i<NumberOfObjectToSave; i++)
 	{
-		output << "#:-\n" <<i<< " " << saveInfo[i]<<std::endl;
+		output << "#:-" <<i<< " " << saveInfo[i]<<std::endl;
 	}
 	output.close();
 	return true;
@@ -87,22 +87,27 @@ bool Map::load(Window* w, std::string filename)
 	std::ifstream input;
 	input.open(filename.c_str(), std::ios::in);
 	if (!input.good())
+	{
+		TEST(filename);
 		return false;
+	}
 	//resolution change
 	for (int i =0 ; i< boxesInRow; i++)
 	{
-		for (int j =0; j< boxesInColumn; j++)
-			delete[] map[i];
-		delete[] map;
+		delete[] map[i];
 	}
+	delete[] map;
 	//skin netreba mazat, bo to mame ztial uplne stejne
 	input.ignore(256,':');
 	input >> resolution.x;
 	input.ignore(256,':');
 	input >> resolution.y;
 	input >> visibility; //bez dvojbodky;
+	create();
 	Position objectPosition;
 	input.ignore(256,':');
+	char a;
+	input >> a;
 	input >> objectPosition.x; //prve zaporne
 	int iter = 0;
 	

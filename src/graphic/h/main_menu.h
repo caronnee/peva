@@ -15,6 +15,7 @@ public:
 	Main(Window * w_, int argn, char* args[]);
 	void process();
 	void update();
+	void resume();
 	void draw();
 	void init();
 	void clean();
