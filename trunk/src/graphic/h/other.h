@@ -9,6 +9,7 @@
 #include "../../language/h/instructions.h"
 #include "graphic.h"
 #include "main_menu.h"
+#include "loadMapMenu.h"
 
 struct Penalize
 {
@@ -51,9 +52,15 @@ public:
 	void clean();
 	
 };
-//class SetMaps : public Load
-//{
-//};
+class SetMaps : public Load
+{
+	std::vector<std::string> * result;
+public:
+	SetMaps(Window * w, std::vector<std::string> * result_ );
+	void enter();
+	void clean();
+	virtual ~SetMaps();
+};
 class Settings:public Main
 {
 	Setting * s;

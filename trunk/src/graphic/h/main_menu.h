@@ -9,7 +9,7 @@ struct Setting
 {
 	std::vector<int> penalizes;
 	int scheduller;
-	std::string maps;
+	std::vector<std::string> maps;
 };
 class Main: public Menu
 {
@@ -23,10 +23,10 @@ protected:
 
 public:
 	Main(Window * w_, int argn, char* args[]);
-	void process();
-	virtual void resume();
-	void draw();
 	virtual void init();
+	virtual void resume();
+	void process();
+	void draw();
 	void clean();
 	virtual ~Main();
 };

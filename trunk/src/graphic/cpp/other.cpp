@@ -334,12 +334,12 @@ void SetPenalize::process()
 }
 void Settings::init()
 {
-	size = 2;
+	size = 3;
 	iterator = 0;
 	menus = new Menu * [size];
 	menus[0] = new SetPenalize(w, &settings->penalizes);
 	menus[1] = new SetScheduller(w, &settings->scheduller);
-//	menus[2] = new SetMaps(w, &settings->maps);
+	menus[2] = new SetMaps(w, &settings->maps);
 	menus[0]->set();
 }
 
@@ -451,6 +451,7 @@ void SetScheduller::process()
 		}	
 	}
 }
+
 void SetScheduller::clean()
 {
 	SDL_FreeSurface(schedullers[0]);
@@ -461,4 +462,32 @@ void SetScheduller::clean()
 void SetScheduller::resume()
 {
 	//nikdy by namlo nastat , zatial
+}
+
+SetMaps::SetMaps(Window * w_, std::vector<std::string> * result_):Load(w_,".map", "./maps")
+{
+	name(w->g, "Choose maps");
+	result = result_;
+}
+void SetMaps::enter()
+{
+	for (size_t i = 0; i< entered.size(); i++)
+		if (entered[i] == maps[index].name)
+			{
+				entered[i] = entered.back();
+				entered.pop_back();
+				return;
+			}
+	entered.push_back(maps[index].name);
+}
+void SetMaps::clean()
+{
+	result->clear();
+	for (size_t i = 0; i< entered.size(); i++)
+		result->push_back(entered[i]);
+	Load::clean();
+}
+SetMaps::~SetMaps()
+{
+	//zatial nic
 }
