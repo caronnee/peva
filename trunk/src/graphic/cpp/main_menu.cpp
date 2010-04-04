@@ -91,14 +91,15 @@ void Main::draw()
 
 void Main::init()
 {
+	//Todo nalodaovat z fajnlu settings;
+	settings = new Setting();
+	settings->penalizes.insert(settings->penalizes.begin(), IGroups, 1);
 	menus = new Menu*[NUMBEROFMENUS];
 	size = NUMBEROFMENUS;
 	iterator = 0;
 	menus[0] = new Play(w,files); 
-	menus[1] = new Host(w); 
-	menus[2] = new Join(w);
-	menus[3] = new Settings(w);
-	menus[4] = new Create_map(w);
+	menus[1] = new Settings(w, settings);
+	menus[2] = new Create_map(w);
 	menus[0]->set();
 } 
 

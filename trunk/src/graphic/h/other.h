@@ -6,41 +6,61 @@
 #include "../../map/h/map.h"
 #include "../../add-ons/h/position.h"
 #include "../../language/h/robot.h"
+#include "../../language/h/instructions.h"
 #include "graphic.h"
 #include "main_menu.h"
 
-
+struct Penalize
+{
+	int penalize;
+	SDL_Surface * penal;
+	SDL_Surface * name;
+	SDL_Surface * nameChosen;
+};
+class SetPenalize : public Menu
+{
+	Window *w;
+	Penalize instructions[IGroups];
+	int begin, size, index, end, vSkip;
+	std::vector<int>* penals;
+public:
+	SetPenalize(Window * w, std::vector<int>* penalize);
+	void init();
+	void resume();
+	void choose(int index);
+	void unchoose(int index);
+	void process();
+	void draw();
+	void clean();
+};
+class SetScheduller : public Menu
+{
+	int iter;
+	Window * w;
+	int * result;
+	SDL_Surface * txt;
+	SDL_Surface * value;
+	SDL_Surface * schedullers[2];
+	std::string valueString;
+public:
+	SetScheduller(Window * w, int *sched);
+	void resume();
+	void init();
+	void draw();
+	void process();
+	void clean();
+	
+};
+//class SetMaps : public Load
+//{
+//};
 class Settings:public Main
 {
+	Setting * s;
 public:
-	Settings(Window * w_);
+	Settings(Window * w_, Setting *s);
 	void init();
 	virtual ~Settings();
-};
-
-class Host:public Menu
-{
-	Window * w;
-public:
-	Host(Window * w_);
-	void process(void);
-	void resume();
-	void draw();
-	void init();
-	void clean();
-	virtual ~Host();
-};
-class Join:public Menu
-{
-	Window * w;
-public:
-	Join(Window * w_);
-	void process(void);
-	void resume();
-	void draw();
-	void init();
-	void clean();
-	virtual ~Join();
 };
 
 struct Letter

@@ -4,6 +4,9 @@
 #include <string>
 #include "graphic.h"
 
+#define BEGIN_X 20
+#define BEGIN_Y 20
+
 class Menu
 {
 	protected:

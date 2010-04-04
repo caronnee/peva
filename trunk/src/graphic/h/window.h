@@ -7,7 +7,7 @@
 #include "graphic.h"
 #include "menu.h"
 
-#define NUMBEROFMENUS 5
+#define NUMBEROFMENUS 3
 #define NUMCHARS 11
 
 class Window 

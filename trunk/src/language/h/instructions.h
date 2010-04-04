@@ -85,6 +85,7 @@ enum Instr
 	IGroup_ismoving,
 	IGroups
 };
+
 class Instruction
 {
 protected:
