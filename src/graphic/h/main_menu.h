@@ -5,11 +5,17 @@
 #include "menu.h"
 #include "window.h"
 
+struct Setting
+{
+	std::vector<int> penalizes;
+	int scheduller;
+	std::string maps;
+};
 class Main: public Menu
 {
 	std::vector<std::string> files;
-
 protected:
+	Setting * settings;
 	Window * w;
 	int iterator;
 	Menu ** menus; 
@@ -18,7 +24,7 @@ protected:
 public:
 	Main(Window * w_, int argn, char* args[]);
 	void process();
-	void resume();
+	virtual void resume();
 	void draw();
 	virtual void init();
 	void clean();

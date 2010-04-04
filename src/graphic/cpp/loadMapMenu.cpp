@@ -6,9 +6,6 @@
 #include "../../add-ons/h/position.h"
 #include "../h/loadMapMenu.h"
 
-#define BEGIN_X 20
-#define BEGIN_Y 20
-
 namespace bf = boost::filesystem;
 
 Load::Load( Window * w_, std::string ext_, std::string adr_)

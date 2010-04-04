@@ -30,8 +30,8 @@
 #define DEFAULT_BACKGROUND "./images/background.png"
 #define DEFAULT_TIMEOUT 100
 
-#define NUMBEROFMENUS 5
 #define NUMCHARS 11
+
 class Graphic
 {
 public:
