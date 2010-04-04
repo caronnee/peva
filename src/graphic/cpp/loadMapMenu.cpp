@@ -75,7 +75,6 @@ void Load::process()
 					case SDLK_RETURN:
 					{
 						enter();
-						w->pop();
 						return;
 					}
 					default:
@@ -98,6 +97,9 @@ void Load::choose(int index)
 }
 void Load::unchoose(int index)
 {
+	for(int i =0; i< entered.size(); i++)
+		if (entered[i] == maps[index].name)
+			return;
 	SDL_Rect r;
 	r.x = BEGIN_X;
 	r.y = BEGIN_Y + ( index - begin ) * vSkip;
@@ -126,6 +128,7 @@ void Load::draw()
 }
 void Load::init()
 {
+	index = 0;
 	//zisti vsetky s priponou .map
 	vSkip =  TTF_FontLineSkip(w->g->g_font);
 	bf::directory_iterator end_iter;
@@ -153,19 +156,20 @@ void Load::init()
 void Load::enter()
 {
 	entered.push_back(maps[index].name);
+	w->pop();
 }
 void Load:: clean()
 {
-	//nothing
-}
-Load::~Load()
-{
+	entered.clear();
 	for ( size_t i =0; i< maps.size(); i++)
 	{
 		SDL_FreeSurface(maps[i].chosen);
 		SDL_FreeSurface(maps[i].show);
 	}
+	maps.clear();
 }
+Load::~Load() {}
+
 
 LoadMapMenu::LoadMapMenu(Window * window, Map * map):Load(window, ".map","./maps")
 {
@@ -178,7 +182,6 @@ void LoadMapMenu::enter()
 {
 	mapToFill->clean();
 	mapToFill->load(w, maps[index].name);
+	w->pop();
 }	
-LoadMapMenu::~LoadMapMenu()
-{
-}
+LoadMapMenu::~LoadMapMenu(){}

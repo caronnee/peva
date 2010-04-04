@@ -15,7 +15,11 @@ void Menu::set()
 }
 void Menu::name(Graphic * g, std::string s)
 {
+	if (nameHighLight)
+		SDL_FreeSurface(nameHighLight);
 	nameHighLight = TTF_RenderText_Solid(g->g_font,s.c_str(), g->light);
+	if (nameNormal)
+		SDL_FreeSurface(nameNormal);
 	nameNormal = TTF_RenderText_Solid(g->g_font,s.c_str(), g->normal);
 	show = nameNormal;
 }

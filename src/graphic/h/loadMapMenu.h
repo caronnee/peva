@@ -27,7 +27,7 @@ public:
 	void init();
 	void choose(int index);
 	void unchoose(int index);
-	void clean();
+	virtual void clean();
 	virtual void enter();
 	virtual ~Load();
 };
