@@ -261,7 +261,10 @@ void SetPenalize::process()
 				{
 					case SDLK_q:
 					case SDLK_ESCAPE:
+					case SDLK_RETURN:
 					{
+						for (int i =0; i< IGroups; i++)
+							(*penals)[i] = instructions[i].penalize;
 						w->pop();
 						return;
 					}
@@ -319,13 +322,7 @@ void SetPenalize::process()
 						choose(index);
 						break;
 					}
-					case SDLK_RETURN:
-					{
-						for (int i =0; i< IGroups; i++)
-							(*penals)[i] = instructions[i].penalize;
-						w->pop();
-						return;
-					}
+					
 					default:
 					TEST("Unhandled button")
 						break;
@@ -361,7 +358,8 @@ void SetScheduller::init()
 	txt = TTF_RenderText_Solid(w->g->g_font, "Aktualne je nastaveny scheduller:", w->g->normal);
 	schedullers[0] = TTF_RenderText_Solid(w->g->g_font, "Pocet kol/instrukciu:", w->g->normal);
 	schedullers[1] = TTF_RenderText_Solid(w->g->g_font, "Pocet instrukcii/kolo za cas:", w->g->normal);
-	valueString = "0";
+	valueString = "1";
+	iter = 0;
 	if (*result)
 	{
 		iter = 1;
@@ -384,7 +382,7 @@ void SetScheduller::draw()
 	rect.y = BEGIN_Y + 3* w->g->font_size;
 	
 	SDL_BlitSurface(schedullers[iter], NULL, w->g->screen, &rect);
-	if (*result != 0)
+	if (iter != 0)
 	{
 		rect.x = (w->g->screen->w - schedullers[iter]->w)/2;
 		rect.y = BEGIN_Y + 6* w->g->font_size;
@@ -404,7 +402,12 @@ void SetScheduller::process()
 					{
 						case SDLK_q:
 						case SDLK_ESCAPE:
+						case SDLK_RETURN:
 							{
+								if (valueString == "")
+									valueString = "1";
+								(*result) = convert<int>(valueString);
+								(*result) *= iter;
 								w->pop();
 								return;
 							}
@@ -423,6 +426,8 @@ void SetScheduller::process()
 						case SDLK_8: case SDLK_9:
 						{
 							SDL_FreeSurface(value);
+							if (valueString.size() > 4 )
+								break;
 							valueString +=w->g->event.key.keysym.sym;
 							value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
 							draw();
