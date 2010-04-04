@@ -8,15 +8,19 @@
 class Main: public Menu
 {
 	std::vector<std::string> files;
+
+protected:
 	Window * w;
-	Menu * menus[NUMBEROFMENUS]; 
 	int iterator;
+	Menu ** menus; 
+	int size;
+
 public:
 	Main(Window * w_, int argn, char* args[]);
 	void process();
 	void resume();
 	void draw();
-	void init();
+	virtual void init();
 	void clean();
 	virtual ~Main();
 };

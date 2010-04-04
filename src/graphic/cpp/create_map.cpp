@@ -634,13 +634,12 @@ void Create_map::addObj()
 {	
 	Position p(0,0);
 	Uint8 state = SDL_GetMouseState(&p.x, &p.y);
-	TEST(state << "@")
-	if ( state & SDL_BUTTON(1))
+	if ( state & SDL_BUTTON_LEFT)
 	{
 		buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
 		return;
 	}
-	if ( state & SDL_BUTTON(2))
+	if ( state & SDL_BUTTON_RIGHT)
 	{
 		removeFromMap(p);
 		return;

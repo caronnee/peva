@@ -11,17 +11,19 @@
 
 namespace bf = boost::filesystem;
 
-LoadMapMenu::LoadMapMenu(Window * window, Map * map)
+Load::Load( Window * w_, std::string ext_, std::string adr_)
 {
-	index = 0;
-	mapToFill = map;
-	w = window;
+	w = w_;
+	ext = ext_;	
+	adr = adr_;
 }
-void LoadMapMenu::resume()
+
+void Load::resume()
 {
 	draw();
 }
-void LoadMapMenu::process()
+
+void Load::process()
 {
 	while (SDL_PollEvent(&w->g->event))
 	{
@@ -75,8 +77,7 @@ void LoadMapMenu::process()
 					}
 					case SDLK_RETURN:
 					{
-						mapToFill->clean();
-						mapToFill->load(w, maps[index].name);
+						enter();
 						w->pop();
 						return;
 					}
@@ -89,8 +90,7 @@ void LoadMapMenu::process()
 		}	
 	}
 }
-
-void LoadMapMenu::choose(int index)
+void Load::choose(int index)
 {
 	SDL_Rect r2;
 	r2.x = BEGIN_X;
@@ -99,7 +99,7 @@ void LoadMapMenu::choose(int index)
 	SDL_UpdateRect(w->g->screen, BEGIN_X , r2.y, 
 		w->g->screen->w - BEGIN_X , w->g->screen->h - r2.y );
 }
-void LoadMapMenu::unchoose(int index)
+void Load::unchoose(int index)
 {
 	SDL_Rect r;
 	r.x = BEGIN_X;
@@ -109,7 +109,7 @@ void LoadMapMenu::unchoose(int index)
 			w->g->screen->w - BEGIN_X, w->g->screen->h - r.y);
 }
 
-void LoadMapMenu::draw()
+void Load::draw()
 {
 	SDL_Rect rct;
 	rct.x = 0;
@@ -117,7 +117,6 @@ void LoadMapMenu::draw()
 	rct.h = w->g->screen->h;
 	rct.w = w->g->screen->w;
 
-	TEST("--")
 	w->tapestry(rct);
 
 	for (size_t i = 0; i< size; i++)
@@ -128,35 +127,61 @@ void LoadMapMenu::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
-void LoadMapMenu::init()
+void Load::init()
 {
 	//zisti vsetky s priponou .map
 	vSkip =  TTF_FontLineSkip(w->g->g_font);
 	bf::directory_iterator end_iter;
-	if (!bf::exists("./maps"))
-		bf::create_directory("maps");
-	for ( bf::directory_iterator dir_itr( "./maps" );
+	if (!bf::exists( adr ))
+		bf::create_directory( adr );
+	for ( bf::directory_iterator dir_itr( adr );
           dir_itr != end_iter;
           ++dir_itr )
 	{
 		if ( !bf::is_regular( dir_itr->status() ) )
 			continue;
-		if ( !(bf::extension( dir_itr->path()) == ".map"))
+		if ( !(bf::extension( dir_itr->path()) == ext ))
 			continue;
 		MapRecord record;
 		record.name = dir_itr->leaf();
 		record.show = TTF_RenderText_Solid(w->g->g_font, record.name.c_str(), w->g->normal);
 		record.chosen = TTF_RenderText_Solid(w->g->g_font, record.name.c_str(), w->g->light);
 		record.name = dir_itr->path().string();
-		maps.push_back(record);
+		maps.push_back( record );
 	}
 	size = min<int>(maps.size(), (w->g->screen->h - BEGIN_Y) / vSkip );
-	begin =0;end = size;
+	begin =0;
+	end = size;
 }
-void LoadMapMenu:: clean()
+void Load::enter()
+{
+	entered.push_back(maps[index].name);
+}
+void Load:: clean()
 {
 	//nothing
 }
+Load::~Load()
+{
+	for ( size_t i =0; i< maps.size(); i++)
+	{
+		SDL_FreeSurface(maps[i].chosen);
+		SDL_FreeSurface(maps[i].show);
+	}
+}
+
+LoadMapMenu::LoadMapMenu(Window * window, Map * map):Load(window, ".map","./maps")
+{
+	index = 0;
+	mapToFill = map;
+	w = window;
+}
+	
+void LoadMapMenu::enter()
+{
+	mapToFill->clean();
+	mapToFill->load(w, maps[index].name);
+}	
 LoadMapMenu::~LoadMapMenu()
 {
 }

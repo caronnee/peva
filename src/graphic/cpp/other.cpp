@@ -261,56 +261,24 @@ void Play::process()
 	}
 }
 
-Settings::Settings(Window *w_)
+Settings::Settings(Window *w_):Main(w_,0,NULL)
 {
 	w = w_;
 	name(w->g,"Settings");
-	names[0] = new Host(w);
-	names[1] = new Host(w);
-	names[2] = new Join(w);
-}
-void Settings::resume()
-{
-	drawMenu(names, 3, w->g);
-}
-void Settings::draw()
-{
-	SDL_Rect r;
-	r.x = 10;
-	r.y = 10;
-}
-void Settings::clean()
-{
-	//TODO
-}
-void Settings::process()
-{
-	if (SDL_WaitEvent(&w->g->event) == 0)
-	{
-		w->pop();
-		return;
-	}
-	switch (w->g->event.type)
-	{
-		case SDL_KEYDOWN:
-			{
-				switch(w->g->event.key.keysym.sym)
-				{
-					case SDLK_q:
-					case SDLK_ESCAPE:
-						{
-							w->pop();
-							break;
-						}
-					default:
-						std::cout << "Unhandled button" << std::endl;
-						break;
-				}
-				break;
-			}
-	}	
 }
 
-void Settings::init() {}
+void Settings::init()
+{
+	size = 3;
+	iterator = 0;
+	menus = new Menu * [size];
+//	menus[0] = new SetPenalize(w);
+//	menus[1] = new SetScheduller(w);
+//	menus[2] = new SetMaps(w);
+//	menus[0]->set();
+}
 
-Settings::~Settings(){}
+Settings::~Settings()
+{
+	// ako predok
+}
