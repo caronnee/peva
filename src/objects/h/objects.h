@@ -78,6 +78,7 @@ public:
 		Wall_ = 2,
 		Missille = 4 
 	};
+	/* for saving purposes, object ID */
 	ObjectsToSave objectSaveId;
 
 	/* information about object fo later resurrection from file */
@@ -89,6 +90,7 @@ public:
 	/* Worker with the inages representing states of object */
 	ImageSkinWork * skinWork;
 
+	/* number of enemies killed by this object */
 	size_t numberOfKilled;
 public:
 	/* for debugging purposes, return information about the object */
@@ -126,6 +128,9 @@ public:
 
 	/* moves in the desired direction, not mentioning obstacles */
 	virtual void move();
+
+	/* returns direction of robot in degrees */
+	int getAngle()const;
 
 	/* what happens after finishing movement, should be virtual? *///FIXME
 	void endMove();

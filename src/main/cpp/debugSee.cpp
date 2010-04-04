@@ -78,7 +78,17 @@ int main(int argc, char ** args)
 		{
 			body->step(1000);
 			body->move();
-			redraw(map);
+			Position p = body->get_pos();
+			if (p.x <0)
+				body->place(map, Position(0,body->get_pos().y), body->getAngle());
+			if (p.y <0)
+				body->place(map, Position(body->get_pos().x,0), body->getAngle());
+			if (p.x > map->resolution.x)
+				body->place(map, Position(map->resolution.x,body->get_pos().y), body->getAngle());
+			if (p.y > map->resolution.y)
+				body->place(map, Position(body->get_pos().x,map->resolution.y), body->getAngle());
+
+			map->update(body, &w); //strati sa neskor
 		}
 		while (SDL_PollEvent(&g.event)){
 			switch (w.g->event.type)

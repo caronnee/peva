@@ -100,6 +100,10 @@ struct Map
 	Position resolution; 
 
 	void update(SDL_Rect rect, bool all , Window * w);
+
+	/* updates area around one object */
+	void update(Object * o, Window * w);
+
 	/* map skin *///TODO je ho vlastne potreba?
 	Skin * skin;
 

@@ -213,6 +213,7 @@ void Create_map::drawInit()
 	map = new Map(p,"grass");
 	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 	map->shift(-rects[MAP].x, -rects[MAP].y);
+	draw();
 }
 
 void Create_map::keyDown(SDLKey c)

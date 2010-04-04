@@ -38,10 +38,13 @@ Play::Play(Window *w_, std::vector<std::string> fls)
 }
 Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 
-void Play::resume(){}
+void Play::resume()
+{
+	draw();
+}
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
-	m->redraw(w );
+	m->redraw( w );
 	SDL_Flip(w->g->screen);
 }
 
@@ -141,16 +144,13 @@ void Play::process()
 			end = TTF_RenderText_Solid(w->g->g_font,(endText+doneBots).c_str(), w->g->normal);
 		else
 			end = TTF_RenderText_Solid(w->g->g_font,(endText+lastBots).c_str(), w->g->normal);
-		TEST("___"<<m)
 		SDL_Rect rect;
 		rect.x = (m->resolution.x) >> 1;
 		rect.y = (m->resolution.y) >> 1;
-		TEST("Skoncili sme poprve")
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
-		SDL_Flip(w->g->screen);
+		SDL_Flip(w->g->screen); //TODO update
 		SDL_WaitEvent(&w->g->event);
 		SDL_FreeSurface(end);
-		TEST("Skoncili sme")
 		w->pop();
 		return;
 	}
@@ -220,6 +220,7 @@ void SetPenalize::init()
 		instructions[i].name = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->normal);
 		instructions[i].nameChosen = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->light);
 		std::string s = deconvert<int>((*penals)[i]);
+		instructions[i].penalize = (*penals)[i];
 		instructions[i].penal = TTF_RenderText_Solid(w->g->g_font, s.c_str(),w->g->normal);
 	}
 }
@@ -322,9 +323,8 @@ void SetPenalize::process()
 						choose(index);
 						break;
 					}
-					
 					default:
-					TEST("Unhandled button")
+						TEST("Unhandled button")
 						break;
 				}
 				break;

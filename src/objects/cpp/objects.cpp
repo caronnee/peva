@@ -11,6 +11,10 @@ void ObjectMovement::clean()
 	fps = 200;
 	steps = 0;
 }
+int Object::getAngle()const
+{
+	return movement.angle;
+}
 Object::Object(Skin * s)
 {
 	objectSaveId = SaveDummy;
@@ -36,8 +40,8 @@ void Object::setPosition(Position p, int angle)
 {
 	movement.position_in_map = p;
 	movement.old_pos = p;
-	movement.angle = 0;
-	turn(angle);
+	movement.angle = angle;
+	absoluteTurn(angle);
 }
 bool Object::hasSkin()
 {

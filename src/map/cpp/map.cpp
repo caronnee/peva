@@ -314,6 +314,22 @@ Position Map::size()const
 {
 	return resolution;
 }
+void Map::update(Object * o, Window * w)
+{
+	Position t =  o->get_old_pos();
+	Position t2 =  o->get_pos();
+	Position diff = o->get_old_pos().substractVector(o->get_pos());
+	if (diff.x < 0)
+		diff.x *=-1;
+	if (diff.y < 0)
+		diff.y *=-1;
+	SDL_Rect r = o->get_rect();
+	r.x = min<int> (o->get_old_pos().x, o->get_pos().x);
+	r.y = min<int> (o->get_old_pos().y, o->get_pos().y);
+	r.w += diff.x;
+	r.h += diff.y;
+	update(r,true, w);
+}
 void Map::drawAll(Window * w)
 {
 	background(w);
@@ -350,13 +366,16 @@ void Map::background(Window * w)
 {	
 	SDL_Rect clip;
 	SDL_GetClipRect(w->g->screen, &clip);
-	for (int x = 0; x < boundaries.width; x+=skinWork->width()) // pre tapety
+	int t = skinWork->width();
+	int startX = - (clip.x%(skinWork->width()));
+	int startY = - (clip.y%(skinWork->height()));
+	for (int x = startX; x < clip.w; x += skinWork->width()) // pre tapety
 	{
-		for(int y = 0; y< boundaries.height; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
+		for(int y = startY; y< clip.h; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
 		{
 			SDL_Rect r; //TODO nie takto natvrdlo
-			r.x = x +clip.x;
-			r.y = y +clip.y;
+			r.x = x + clip.x;
+			r.y = y + clip.y;
 
 			SDL_Rect sr = skinWork->get_rect();
 			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
