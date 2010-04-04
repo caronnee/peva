@@ -94,6 +94,7 @@ void Main::init()
 	//Todo nalodaovat z fajnlu settings;
 	settings = new Setting();
 	settings->penalizes.insert(settings->penalizes.begin(), IGroups, 1);
+	settings->scheduller = 0;
 	menus = new Menu*[NUMBEROFMENUS];
 	size = NUMBEROFMENUS;
 	iterator = 0;

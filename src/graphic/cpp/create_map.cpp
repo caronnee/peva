@@ -223,6 +223,7 @@ void Create_map::keyDown(SDLKey c)
 		case SDLK_5: case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
 		{
 			handleKey(c);
+			draw();
 			break;
 		}
 		case SDLK_BACKSPACE:
@@ -662,7 +663,6 @@ void Create_map::process()
 	if (state == RESOLUTION)
 	{
 		process_resolution();
-		draw();//TODO opravit iba tu cast screenu, co sa pokazila
 		return;
 	}
 	if (state == SAVING)
