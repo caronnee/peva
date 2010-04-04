@@ -5,14 +5,14 @@
 
 Main::Main(Window * w_, int argc, char * argv[])
 {
+	size = 0;	
 	for (int i = 1; i< argc; i++)
 	{
 		std::string s(argv[i]);
 		files.push_back(s);
 	}
 	w = w_; 
-	for (int i =0; i< NUMBEROFMENUS; i++)
-		menus[i] = NULL;
+	menus = NULL;
 }
 void Main::resume()
 {
@@ -41,22 +41,22 @@ void Main::process()
 					case SDLK_UP:
 						{
 							menus[iterator]->unset();
-							update(menus, NUMBEROFMENUS, iterator, w->g);
+							update(menus, size, iterator, w->g);
 							iterator--;
 							if (iterator<0) 
-								iterator = NUMBEROFMENUS -1;
+								iterator = size -1;
 							menus[iterator]->set();
-							update(menus, NUMBEROFMENUS, iterator, w->g);
+							update(menus, size, iterator, w->g);
 							break;
 						}
 					case SDLK_DOWN:
 						{
 							menus[iterator]->unset();
-							update(menus, NUMBEROFMENUS, iterator, w->g);
+							update(menus, size, iterator, w->g);
 							iterator++;
-							iterator%=NUMBEROFMENUS;
+							iterator%=size;
 							menus[iterator]->set();
-							update(menus, NUMBEROFMENUS, iterator, w->g);
+							update(menus, size, iterator, w->g);
 							break;
 						}
 					default:
@@ -69,7 +69,7 @@ void Main::process()
 }
 void Main::clean()
 {
-	for (int i =0; i < NUMBEROFMENUS; i++)
+	for (int i =0; i < size; i++)
 	{
 		if (menus[i])
 			delete menus[i];
@@ -86,11 +86,13 @@ void Main::draw()
 	
 	TTF_SetFontStyle(w->g->g_font, TTF_STYLE_NORMAL);
 	SDL_Flip(w->g->screen);
-	drawMenu(menus, NUMBEROFMENUS, w->g );
+	drawMenu(menus, size, w->g );
 }
 
 void Main::init()
 {
+	menus = new Menu*[NUMBEROFMENUS];
+	size = NUMBEROFMENUS;
 	iterator = 0;
 	menus[0] = new Play(w,files); 
 	menus[1] = new Host(w); 

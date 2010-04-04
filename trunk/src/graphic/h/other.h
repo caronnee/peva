@@ -7,19 +7,14 @@
 #include "../../add-ons/h/position.h"
 #include "../../language/h/robot.h"
 #include "graphic.h"
+#include "main_menu.h"
 
 
-class Settings:public Menu
+class Settings:public Main
 {
-	Window* w;
-	Menu * names[3]; //nastavit timeouti, resolution, background. TODO!
 public:
 	Settings(Window * w_);
-	void process(void);
-	void resume();
-	void draw();
 	void init();
-	void clean();
 	virtual ~Settings();
 };
 

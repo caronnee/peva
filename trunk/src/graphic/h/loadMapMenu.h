@@ -7,18 +7,20 @@
 
 struct MapRecord
 {
+	std::string name;
 	SDL_Surface * chosen;
 	SDL_Surface * show;
-	std::string name;
 };
-class LoadMapMenu : public Menu
+class Load : public Menu
 {
-	Map * mapToFill;
+protected:
 	size_t index, begin, end, size, vSkip;
+	std::string ext, adr;
+	std::vector<std::string> entered;
 	std::vector<MapRecord> maps;	
-public:
-	LoadMapMenu(Window * window, Map * map);
 	Window * w;
+public:
+	Load( Window * w, std::string extension, std::string adr);
 	void process();
 	void resume();
 	void draw();
@@ -26,6 +28,16 @@ public:
 	void choose(int index);
 	void unchoose(int index);
 	void clean();
+	virtual void enter();
+	virtual ~Load();
+};
+
+class LoadMapMenu : public Load
+{
+	Map * mapToFill;
+public:
+	LoadMapMenu(Window * window, Map * map);
+	void enter();
 	virtual ~LoadMapMenu();
 };
 
