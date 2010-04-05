@@ -138,7 +138,7 @@ int main(int argc, char ** args)
 										angle+=90;
 									angle += 90*kvadr;
 									body->absoluteTurn(angle);
-									redraw(map);
+									map->update(body, &w);
 									break;
 								}
 							case SDLK_s:

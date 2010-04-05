@@ -10,6 +10,7 @@ struct Setting
 	std::vector<int> penalizes;
 	int scheduller;
 	std::vector<std::string> maps;
+	std::vector<std::string> inputs;
 };
 class Main: public Menu
 {

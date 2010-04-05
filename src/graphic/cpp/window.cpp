@@ -94,7 +94,8 @@ void Window::add(Menu * menu)
 {
 	state.push(menu);
 	menu->init();
-	menu->draw();
+	if (menu == state.top())
+		menu->draw();
 }
 void Window::pop()
 {

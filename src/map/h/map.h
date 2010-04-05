@@ -130,8 +130,8 @@ public:
 	/* returns size of map */
 	Position size()const;
 
-	/* constructor from config file */
-	Map(std::string file, std::string skinName);
+	/* creates empty map */
+	Map(std::string skinName);
 
 	/* check and collision */
 	Object * checkCollision(Object * o);

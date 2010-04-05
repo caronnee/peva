@@ -97,7 +97,7 @@ void Load::choose(int index)
 }
 void Load::unchoose(int index)
 {
-	for(int i =0; i< entered.size(); i++)
+	for(size_t i =0; i< entered.size(); i++)
 		if (entered[i] == maps[index].name)
 			return;
 	SDL_Rect r;
@@ -152,6 +152,27 @@ void Load::init()
 	size = min<int>(maps.size(), (w->g->screen->h - BEGIN_Y) / vSkip );
 	begin =0;
 	end = size;
+	if (size == 0 )
+	{
+		SDL_Rect clip;
+		SDL_GetClipRect(w->g->screen, &clip);
+		w->tapestry(clip);
+		std::string text = "No *" + ext + " found in " +adr;
+		SDL_Surface* textImage = TTF_RenderText_Solid(w->g->g_font, text.c_str(), w->g->normal);
+		SDL_Rect r;
+		r.x = (w->g->screen->w - textImage->w)/2;
+		r.y = (w->g->screen->h - textImage->h)/2;
+		SDL_BlitSurface(textImage, NULL, w->g->screen, &r);
+		SDL_Flip(w->g->screen);
+		SDL_FreeSurface(textImage);
+		while(true)
+		{
+			if((SDL_WaitEvent(&w->g->event)==0)
+				||(w->g->event.type ==SDL_KEYDOWN))
+				break;
+		}
+		w->pop();
+	}
 }
 void Load::enter()
 {
