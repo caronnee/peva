@@ -24,7 +24,7 @@ Play::Play(Window *w_, Setting * s)
 	srand(time(NULL));
 	w = w_;
 	name(w->g, "Play Game");
-	loadInput = new SetMaps(w, &s->inputs, ".input","input");
+	loadInput = new SetMaps(w, &s->inputs, ".input","inputs");
 	m = NULL;
 	for (int i = 0; i< 256; i++)
 	{
