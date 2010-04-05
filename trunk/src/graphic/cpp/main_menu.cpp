@@ -98,7 +98,7 @@ void Main::init()
 	menus = new Menu*[NUMBEROFMENUS];
 	size = NUMBEROFMENUS;
 	iterator = 0;
-	menus[0] = new Play(w,files); 
+	menus[0] = new Play(w, settings);
 	menus[1] = new Settings(w, settings);
 	menus[2] = new Create_map(w);
 	menus[0]->set();

@@ -17,13 +17,14 @@ extern int yyparse(Robots *);
 
 std::string instructionNames[] ={ "undefined ", "Call", "Create variable ", "loadlocal variable ", "loadglobal variable ", "load element", "conversion to int ", "conversion to real", "duplicate instruction", "store integer ", "store real ", "store object ", "store element", "pop ", "goto instruction ", "jump if true condition", "break ", "continue ", "return ", "restore", "remove temporary", "plusplus integer ", "plusplus real ", "minusminus integer ", "minusminus real ", "plus integer ", "plus real ", "minus integer ", "minus real ", "multiply integer ", "multiply real ", "divide integer ", "divide real ", "modulo ", "binary and ", "logical and ", "binary or ", "or ", "binary not ", "not ", "greater than integer ", " greater than real ", "greater or equal integer ", "greater or equal real ", "equal integer ", "equal real ", "equal object ", "not equal structure", "not equal integer ", "not equal real ", "not equal object ", "less than integer ", "less than real ", "less equal integer ", "less equal real ", "begin block ", "end block ", "see ", "eye ", "fetchstate after action", "step ", "step default number ", "wait ", "shoot at location ", "shoot at angle ", "turn ", "turn right ", "turn left", "is hit question", "is player question", "is wall question", "is missille question ", "locate question", "is moving question"};
 
-Play::Play(Window *w_, std::vector<std::string> fls)
+Play::Play(Window *w_, Setting * s)
 {
 	/* init, not repeatable */
-	files = fls;
+	settings = s;
 	srand(time(NULL));
 	w = w_;
 	name(w->g, "Play Game");
+	loadInput = new SetMaps(w, &s->inputs, ".input","input");
 	m = NULL;
 	for (int i = 0; i< 256; i++)
 	{
@@ -38,10 +39,6 @@ Play::Play(Window *w_, std::vector<std::string> fls)
 }
 Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 
-void Play::resume()
-{
-	draw();
-}
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
 	m->redraw( w );
@@ -49,7 +46,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 }
 
 void Play::init(int x, int y)
-{
+{	
 	m = new Map(Position (x,y), "grass");
 	m->setBoundary(min<int> (w->g->screen->w, x), min<int>(w->g->screen->h,y));
 }
@@ -71,13 +68,30 @@ void Play::clean()
 
 void Play::init()
 {
-	init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada, zo struktury alebo suboru
-	int err = 0;
-	for (size_t i =0; i< files.size(); i++)
+	mapIter = 0;
+	w->add(loadInput);
+}
+
+void Play::resume()
+{
+	if (settings->inputs.empty())
+		w->pop();
+	if (settings->maps.empty())
+		init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada, zo struktury alebo suboru
+	else
 	{
-		if((yyin=fopen(files[i].c_str(), "r"))==0)
+		m = new Map("grass");
+		m->load(w, settings->maps[mapIter]);//fixme kontrola
+		mapIter ++;
+		mapIter%= settings->maps.size();
+		
+	}
+	int err = 0;
+	for (size_t i =0; i< settings->inputs.size(); i++)
+	{
+		if((yyin=fopen(settings->inputs[i].c_str(), "r"))==0)
 		{
-			std::cout<< "Unable to open input " << files[i] << std::endl;
+			std::cout<< "Unable to open input " << settings->inputs[i] << std::endl;
 			continue;
 		}
 		err += yyparse(&robots);
@@ -149,7 +163,12 @@ void Play::process()
 		rect.y = (m->resolution.y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
-		SDL_WaitEvent(&w->g->event);
+		while(true)
+		{
+			if((SDL_WaitEvent(&w->g->event)==0)
+				||(w->g->event.type ==SDL_KEYDOWN))
+				break;
+		}
 		SDL_FreeSurface(end);
 		w->pop();
 		return;
@@ -339,7 +358,7 @@ void Settings::init()
 	menus = new Menu * [size];
 	menus[0] = new SetPenalize(w, &settings->penalizes);
 	menus[1] = new SetScheduller(w, &settings->scheduller);
-	menus[2] = new SetMaps(w, &settings->maps);
+	menus[2] = new SetMaps(w, &settings->maps, ".map", "maps");
 	menus[0]->set();
 }
 
@@ -464,9 +483,9 @@ void SetScheduller::resume()
 	//nikdy by namlo nastat , zatial
 }
 
-SetMaps::SetMaps(Window * w_, std::vector<std::string> * result_):Load(w_,".map", "./maps")
+SetMaps::SetMaps(Window * w_, std::vector<std::string> * result_, std::string ext, std::string addr):Load(w_,ext, addr)
 {
-	name(w->g, "Choose maps");
+	name(w_->g, "Choose " + addr);
 	result = result_;
 }
 void SetMaps::enter()

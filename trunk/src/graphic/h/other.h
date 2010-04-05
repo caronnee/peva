@@ -56,7 +56,7 @@ class SetMaps : public Load
 {
 	std::vector<std::string> * result;
 public:
-	SetMaps(Window * w, std::vector<std::string> * result_ );
+	SetMaps(Window * w, std::vector<std::string> * result_, std::string ext, std::string addr );
 	void enter();
 	void clean();
 	virtual ~SetMaps();
@@ -85,12 +85,15 @@ class Play:public Menu
 	bool done;
 	Robots robots;
 	std::list<Letter *>::iterator iter, iter_beg, iter_end;
+	int mapIter;
 	std::list<Letter *> letts;
 	SDL_Rect rect;
 	Letter letters[256];
 	void init(int, int);
+	Setting * settings;
+	Menu * loadInput;
 public:
-	Play(Window * w_, std::vector<std::string> files);
+	Play(Window * w_, Setting * s);
 	void process(void);
 	void init();
 	void resume();

@@ -18,10 +18,6 @@ Box::Box()
 	objects.clear();
 }
 
-Map::Map(std::string configFile, std::string name)
-{
-}
-
 bool Map::saveToFile(std::string filename)
 {
 	std::string saveInfo[NumberOfObjectToSave];
@@ -184,6 +180,19 @@ void Map::create()
 		begin.y = 0;
 	}
 }
+
+Map::Map(std::string skinName)
+{
+	wskins.clear();
+	skin = new Skin(skinName, Skin::MapSkin);
+	for (size_t i = 0; i< NumberObjectsImages; i++)
+	{
+		wskins.push_back( new WallSkin(skinName, i));
+	}
+	skinWork = new ImageSkinWork(skin);
+	map = NULL;
+}
+
 Map::Map(Position resol, std::string skinName) 
 {
 	visibility = DEFAULT_VISIBILITY;
@@ -200,12 +209,6 @@ Map::Map(Position resol, std::string skinName)
 
 	create();
 	/* adding solid walls to ends */
-	Position p(skin->get_size().x,0);
-	ObjectMovement movement;
-	movement.speed = 0;
-	movement.direction = Position(0,0);
-	movement.angle = 0;
-	movement.old_pos = movement.position_in_map = p;
 	addBoundaryWalls();
 }
 
@@ -366,7 +369,6 @@ void Map::background(Window * w)
 {	
 	SDL_Rect clip;
 	SDL_GetClipRect(w->g->screen, &clip);
-	int t = skinWork->width();
 	int startX = - (clip.x%(skinWork->width()));
 	int startY = - (clip.y%(skinWork->height()));
 	for (int x = startX; x < clip.w; x += skinWork->width()) // pre tapety
