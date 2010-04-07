@@ -1023,6 +1023,6 @@ expression_bool:	expression_bool_or { $$ = $1;}
 
 static void yyerror(unsigned *line, Robots* ctx, const char *message)
 {
-	printf("Syntax Error %s, line %d\n", message, *line);
+	ctx->parseError("Syntax Error " + deconvert<const char *>(message) +", line " + deconvert<int>(*line) +"\n");
 }
 

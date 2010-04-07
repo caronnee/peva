@@ -1,7 +1,7 @@
 #define _NO_IMAGES_
 #include <iostream>
-#include "../h/robot.h"
-#include "../h/bison.h"
+#include "../../language/h/robot.h"
+#include "../../language/h/bison.h"
 #include "../../add-ons/h/macros.h"
 
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
@@ -22,8 +22,7 @@ int main(int argc, char ** argv)
 		puts("Unable to open input\n");
 		return 16;
 	}
-	GamePoints points;
-	Robots q(points);
+	Robots q();
 	int err = yyparse(&q);
 	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
 		q.actualRobot->output(&q.actualRobot->defined);
