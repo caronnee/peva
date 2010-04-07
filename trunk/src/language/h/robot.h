@@ -78,6 +78,7 @@ public:
 	std::string errorList;
 	std::string warningList;
 	std::string nested;
+	std::string input;
 	
 	TypeContainer * defined_types;
 

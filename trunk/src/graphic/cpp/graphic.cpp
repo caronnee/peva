@@ -4,6 +4,16 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
+void Graphic::waitKeyDown()
+{
+	while(true)
+	{
+		if((SDL_WaitEvent(&event)==0)
+				||(event.type ==SDL_KEYDOWN))
+			break;
+	}
+}
+
 Graphic::Graphic()
 {
 	resolution_width = DEFAULT_WIN_WIDTH;

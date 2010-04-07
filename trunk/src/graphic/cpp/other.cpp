@@ -75,9 +75,57 @@ void Play::init()
 void Play::resume()
 {
 	if (settings->inputs.empty())
+		w->pop();	
+	int err = 0;
+	size_t lastIn = 0;
+	std::string errorInfo;
+	try
+	{
+		for (size_t i =0; i< settings->inputs.size(); i++)
+		{
+			if((yyin = fopen(settings->inputs[i].c_str(), "r"))==0)
+			{
+				std::cout<< "Unable to open input " << settings->inputs[i] << std::endl; //TODO tu by to nikdy nemalo dojst, netreba vypisovat
+				continue;
+			}
+			err += yyparse(&robots);
+			fclose(yyin);	
+			for(;lastIn < robots.robots.size(); lastIn++)
+				robots.robots[lastIn]->input = settings->inputs[lastIn];
+		}
+		robots.checkSkins();
+		bool bad = false;
+		lastIn = 0;
+		for ( ; lastIn< robots.robots.size(); lastIn++)
+			if (robots.robots[lastIn]->errors)
+			{
+				bad = true;
+				break;
+			}
+	}
+	catch (char * str)
+	{
+		std::string s = "Error in input file " + settings->inputs[lastIn];
+		//TODO rozparsovat erorrs, aby sa to voslo na obrazovku
+		SDL_Surface * error = TTF_RenderText_Solid(w->g->g_font,s.c_str(), w->g->normal);
+		SDL_Rect e;
+		e.x = w->g->screen->w/2 - error->w/2;
+		e.y = w->g->screen->h/2 - error->h/2;
+		SDL_BlitSurface(error, NULL, w->g->screen, &e);
+		SDL_Flip(w->g->screen);
+
+		while(!robots.robots.empty())
+		{
+			delete robots.robots.back();
+			robots.robots.pop_back();
+		}
 		w->pop();
+		return;
+
+	}
+	my_destroy();
 	if (settings->maps.empty())
-		init( 500, 400 );//TODO zmenit na mapy, ktore uzivatel zada, zo struktury alebo suboru
+		init( 500, 400 );//TODO makro
 	else
 	{
 		m = new Map("grass");
@@ -86,48 +134,12 @@ void Play::resume()
 		mapIter%= settings->maps.size();
 		
 	}
-	int err = 0;
-	for (size_t i =0; i< settings->inputs.size(); i++)
-	{
-		if((yyin=fopen(settings->inputs[i].c_str(), "r"))==0)
-		{
-			std::cout<< "Unable to open input " << settings->inputs[i] << std::endl;
-			continue;
-		}
-		err += yyparse(&robots);
-		fclose(yyin);	
-	}
-	robots.checkSkins();
-	bool bad = false;
-	for ( size_t i =0; i< robots.robots.size(); i++)
-	{
-
-		if (robots.robots[i]->errors)
-		{
-			bad = true;
-			break;
-		}
-	}
-	if(bad|err)
-	{
-		fclose(yyin);	
-		my_destroy();
-		TEST("spatny vstup!")
-		while(!robots.robots.empty())
-		{
-			delete robots.robots.back();
-			robots.robots.pop_back();
-		}
-		w->pop();
-		return;
-	}
 	for ( size_t i =0; i< robots.robots.size(); i++)
 	{
 		robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
 		robots.robots[i]->save_to_xml();
 		m->add(robots.robots[i]->getBody());
 	}
-	my_destroy();
 
 }
 void Play::process()
@@ -163,12 +175,8 @@ void Play::process()
 		rect.y = (m->resolution.y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
-		while(true)
-		{
-			if((SDL_WaitEvent(&w->g->event)==0)
-				||(w->g->event.type ==SDL_KEYDOWN))
-				break;
-		}
+		w->g->waitKeyDown();
+		
 		SDL_FreeSurface(end);
 		w->pop();
 		return;
