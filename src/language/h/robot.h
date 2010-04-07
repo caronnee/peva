@@ -78,7 +78,6 @@ public:
 	std::string errorList;
 	std::string warningList;
 	std::string nested;
-	std::string input;
 	
 	TypeContainer * defined_types;
 
@@ -114,7 +113,6 @@ public:
 	
 	std::string skinName;
 	Robot(std::string name, GamePoints g);
-	Robot();
 	
 	Create_type * find_type(Type t);
 	Create_type * find_array_type(int range, Create_type * descend);
@@ -152,24 +150,58 @@ struct ResolveName
 
 struct Robots
 {	
-	GamePoints g;
-	void clean();
-	std::vector<Target *> resolveTargets;
-	Robot * actualRobot;
-	std::vector<Robot *> robots;
-	std::vector<ResolveName> resolveName;
-	Robots(GamePoints g);
-	Robots();
+	/* which input is being processed */
+	std::string input;
 
-	std::stack<std::string> resolveKill;
+	/* gamepoints to be rearranged */
+	GamePoints g;
+
+	/* function destroying any mess that could remain */
+	void clean();
+
+	/* targets that are unknown in processing time */
+	std::vector<Target *> resolveTargets;
+
+	/* robot being processed */
+	Robot * actualRobot;
+
+	/* robots already processed */
+	std::vector<Robot *> robots;
+
+	/* target robots names unknoewn in processing time */
+	std::vector<ResolveName> resolveName;
+
+	/* contructor */
+	Robots();
+	
+	/* skins for robot */
 	std::vector<Skin *> skins;
+
+	/*missile sin, actually not used */
 	std::vector<Skin *> mSkins;
 
+	/* creste new empty robot */
 	void createNew(std::string name);
+
+	/* sets robot option*/            //TODO premistnit do robota
 	void set(Options op, size_t value);
+
+	/* checks if visualization is ready */
 	void checkSkins();
+
+	/* add skins to already loaded skins witout duplicities */
 	Skin * addSkin(std::string name);
+
+	/* add missiles skins to already loaded skins witout duplicities */
 	Skin * addmSkin(std::string name);
+
+	/* warns that input fle is not in right format */
+	void parseError(std::string error);
+
+	/* string about parse errors */
+	std::string parseErrorsList;
+
+	/* destructor */
 	~Robots();
 };
 #endif

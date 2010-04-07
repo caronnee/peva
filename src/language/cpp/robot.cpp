@@ -20,6 +20,8 @@ SecondSection::SecondSection()
 
 Robot::Robot(std::string s, GamePoints p)
 {
+	scheduller = NULL;
+
 	missilles = 3;
 	/* robot data */
 	name = s;
@@ -202,17 +204,17 @@ void Robot::add_global(Instructions ins)
 void Robot::output(Tree * t)
 {
 	for (std::list<Node*>::iterator i = t->items.begin();i!=t->items.end(); i++)
-		std::cout << "prvok s menom:" << (*i)->name <<std::endl; 
+		TEST("prvok s menom:" << (*i)->name ); 
 	for (int i = 0; i < 256; i++)
 	{
 		if (t->next[i]!=NULL)
 		{
-			std::cout << "Down:" <<i << std::endl; 
+			TEST("DOWN:" <<i ); 
 			output(t->next[i]);
-			std::cout << "UP!" << std::endl; 
+			TEST("UP!" ); 
 		}
 	}
-	std::cout << "END "<<std::endl; 
+	TEST("END "); 
 }
 void Robot::add(Instructions ins)
 {
@@ -253,10 +255,10 @@ void Robot::save_to_xml()
 	xmlNodePtr parent = data.root_ptr;
 	xmlNodePtr ptr;
 	int fce_num = 0;
-	std::cout<< "Zapamatovane mena:" <<std::endl; 
+	TEST("Zapamatovane mena:" ); 
 	for(size_t i =0; i< core->functions.size(); i++)
 	{
-		std::cout<< core->functions[i]->name<<std::endl; 
+		TEST(core->functions[i]->name); 
 	}
 	for(size_t i =0; i< instructions.size(); i++)
 	{
@@ -288,7 +290,7 @@ void Robot::execute()
 }
 bool Robot::action(bool & conditions)
 {
-	//std::cout << "Number :" << core->PC<< "@"<<instructions[core->PC]->name()<<std::endl;
+	//TEST("Number :" << core->PC<< "@"<<instructions[core->PC]->name());
 	conditions = core->body->tasks == 0;
 	bool b = core->body->alive();
 	if (core->body->isMoving()||!b)
@@ -300,11 +302,6 @@ bool Robot::action(bool & conditions)
 		core->PC++;
 	}
 	return core->body->alive();
-}
-Robots::Robots(GamePoints g_)
-{
-	g = g_;
-	actualRobot = NULL;
 }
 Robots::Robots()
 {
@@ -327,11 +324,11 @@ Skin * Robots::addSkin(std::string name)
 
 void Robots::createNew(std::string name)
 {
-	std::cout << "Creating new robot" << std::endl; 
+	TEST("Creating new robot");
 	if ((actualRobot!=NULL) && ( actualRobot!=robots.back() ))
 		robots.push_back(actualRobot);
 	actualRobot = new Robot(name, g);
-	std::cout << "New robot created" << std::endl; 	
+	actualRobot->errorList = input + ":\n";
 }
 
 void Robots::set(Options o, size_t value)
@@ -339,11 +336,11 @@ void Robots::set(Options o, size_t value)
 	switch(o) //TODO po zlinkovani
 	{
 		case OptionHealth:
-			std::cout << "setting health to:" << value << std::endl; 
+			TEST("setting health to:" << value ); 
 			actualRobot->core->body->hitpoints = value;
 			break;
 		case OptionSee:
-			std::cout << "setting eyes angle to:" << value << std::endl; 
+			TEST("setting eyes angle to:" << value ); 
 			actualRobot->core->body->eyeAngle = value % MAX_EYE_ANGLE;
 			break;
 		case OptionMemory: 
@@ -353,23 +350,23 @@ void Robots::set(Options o, size_t value)
 			actualRobot->variables();
 			break;
 		case OptionAttack:
-			std::cout << "setting Attack x to:" << value << std::endl; 
+			TEST("setting Attack x to:" << value ); 
 			actualRobot->core->body->attack_ = value;
 			break;
 		case OptionDefense:
-			std::cout << "setting defense to " << value << std::endl; 
+			TEST("setting defense to " << value ); 
 			actualRobot->core->body->defense = value;
 			break;
 		case OptionMisilleAttack:
-			std::cout << "setting Missille attack to " << value << std::endl; 
+			TEST("setting Missille attack to " << value ); 
 			actualRobot->mAttack = value;
 			break;
 		case OptionMisilleHealth:
-			std::cout << "setting Missille health to:" << value << std::endl; 
+			TEST("setting Missille health to:" << value ); 
 			actualRobot->mHealth = value;
 			break;
 		case OptionStep:
-			std::cout << "setting step to:" << value << std::endl; 
+			TEST("setting step to:" << value ); 
 			actualRobot->core->body->default_steps = value;
 			break;
 
@@ -500,16 +497,21 @@ void Robot::consolidate()
 }
 Robot::~Robot()
 {
-	delete scheduller;
-	delete core;
-	delete dev_null;
-	delete nullable;
-	delete defined_types;
+	if (scheduller)
+		delete scheduller;
+	if (core)
+		delete core;
+	if (dev_null)
+		delete dev_null;
+	if (nullable)
+		delete nullable;
+	if (defined_types)
+		delete defined_types;
 
 
 	//delete instructions
 
-	std::cout << "Instuctions size:" << instructions.size() << std::endl;
+	TEST("Instuctions size:" << instructions.size() );
 	for (size_t i = 0; i < instructions.size(); i++)
 	{
 		if (instructions[i] == NULL)
@@ -588,10 +590,8 @@ void Robots::clean()
 	robots.clear();
 	actualRobot = NULL;
 }
-
-Robot::Robot()
+/* error can occur before robot is created */
+void Robots::parseError(std::string error)
 {
-	name = "Robot";
-	missilles = 3; //TODO konfigrovatelne
+	parseErrorsList += input + ":" + error;
 }
-

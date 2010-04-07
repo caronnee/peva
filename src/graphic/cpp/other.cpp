@@ -78,52 +78,43 @@ void Play::resume()
 		w->pop();	
 	int err = 0;
 	size_t lastIn = 0;
-	std::string errorInfo;
-	try
+	for (size_t i = 0; i< settings->inputs.size(); i++)
 	{
-		for (size_t i =0; i< settings->inputs.size(); i++)
+		if((yyin = fopen(settings->inputs[i].c_str(), "r"))==0)
 		{
-			if((yyin = fopen(settings->inputs[i].c_str(), "r"))==0)
-			{
-				std::cout<< "Unable to open input " << settings->inputs[i] << std::endl; //TODO tu by to nikdy nemalo dojst, netreba vypisovat
-				continue;
-			}
-			err += yyparse(&robots);
-			fclose(yyin);	
-			for(;lastIn < robots.robots.size(); lastIn++)
-				robots.robots[lastIn]->input = settings->inputs[lastIn];
+			std::cout<< "Unable to open input " << settings->inputs[i] << std::endl; //TODO tu by to nikdy nemalo dojst, netreba vypisovat
+			continue;
 		}
-		robots.checkSkins();
-		bool bad = false;
-		lastIn = 0;
-		for ( ; lastIn< robots.robots.size(); lastIn++)
-			if (robots.robots[lastIn]->errors)
-			{
-				bad = true;
-				break;
-			}
+		robots.input = settings->inputs[i];
+		err += yyparse(&robots);
+		fclose(yyin);	
 	}
-	catch (char * str)
+	robots.checkSkins();
+	std::string errList = "";
+	lastIn = 0;
+	for ( ; lastIn< robots.robots.size(); lastIn++)
+		if (robots.robots[lastIn]->errors)
+			errList += robots.robots[lastIn]->errorList;
+	my_destroy();
+	if ((errList != "")||err)
 	{
-		std::string s = "Error in input file " + settings->inputs[lastIn];
+		std::string s = "Errors found:" + errList;//TODO pytat sa na continue a stop, resp new MENU_SCROLL
 		//TODO rozparsovat erorrs, aby sa to voslo na obrazovku
 		SDL_Surface * error = TTF_RenderText_Solid(w->g->g_font,s.c_str(), w->g->normal);
 		SDL_Rect e;
-		e.x = w->g->screen->w/2 - error->w/2;
-		e.y = w->g->screen->h/2 - error->h/2;
+		e.x = max<int>(0,w->g->screen->w/2 - error->w/2);
+		e.y = max<int>(0,w->g->screen->h/2 - error->h/2);
 		SDL_BlitSurface(error, NULL, w->g->screen, &e);
-		SDL_Flip(w->g->screen);
-
+		SDL_UpdateRect(w->g->screen, e.x, e.y, e.w, e.h);
 		while(!robots.robots.empty())
 		{
 			delete robots.robots.back();
 			robots.robots.pop_back();
 		}
+		w->g->waitKeyDown();
 		w->pop();
 		return;
-
 	}
-	my_destroy();
 	if (settings->maps.empty())
 		init( 500, 400 );//TODO makro
 	else
