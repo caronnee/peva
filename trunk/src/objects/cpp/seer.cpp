@@ -75,12 +75,12 @@ void Seer::reset(float angle)
 
 void Seer::output()
 {
-	std::cout << "Vidim "<< visibleObjects.size() << "objektov: " <<std::endl;
+	TEST("Vidim "<< visibleObjects.size() << "objektov: ")
 	for (std::list<ObjectRelation>::iterator i = visibleObjects.begin();
 		 i!= visibleObjects.end();
 		 i++)
 	{
-		std::cout << i->object->info();
+		TEST(i->object->info())
 	}
 }
 
@@ -177,8 +177,7 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		}
 		visibleObjects.insert(ins, relation);
 		for (ins = visibleObjects.begin(); ins!=visibleObjects.end(); ins++)
-			std::cout << " " << (*ins).distance;
-			std::cout << std::endl;
+			TEST(" " << (*ins).distance)
 	}
 }
 int Seer::checkVisibility()

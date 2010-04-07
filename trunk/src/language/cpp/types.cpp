@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include "../h/types.h"
+#include "../../add-ons/h/macros.h"
 
 static Type simple[] = { TypeInteger, TypeReal, TypeObject };
 
@@ -85,30 +86,30 @@ bool Create_type::operator==(const Create_type & t)
 {
 	if (t.type!=type)
 	{
-		std::cout << "1";
+		TEST("1")
 		return false;
 	}
 	if (nested_vars.size()!=t.nested_vars.size())
 	{
-		std::cout << "2";
+		TEST("2")
 		return false;
 	}
 	for(size_t i =0; i<nested_vars.size(); i++)
 	{
 		if (nested_vars[i].name!=t.nested_vars[i].name)
 		{
-			std::cout << "3";
+			TEST("3")
 			return false;
 		}
 		if ((nested_vars[i].type) !=(t.nested_vars[i].type))
 			{
-				std::cout << "4";
+				TEST("4")
 				return false;
 			}
 	}
 	if (range!=t.range)
 	{
-		std::cout << "ranges:" << range << " " << t.range;
+		TEST("ranges:" << range << " " << t.range)
 		return false;
 	}
 	

@@ -36,7 +36,7 @@ void Variable::copyValue(Variable *v) //akopiruje aj neinicializovane hodnoty, m
 		TEST("Error : variable " << v << "tries to copy to " << this << "Not same range")
 		return;
 	}
-	std::cout << "Integer value change from: " << integerValue << "(id = " << ID << ") to " << v->integerValue << "(id ="<< v->ID <<")" << std::endl;
+	TEST("Integer value change from: " << integerValue << "(id = " << ID << ") to " << v->integerValue << "(id ="<< v->ID <<")" )
 	integerValue = v->integerValue;
 	realValue = v->realValue;
 	objectValue = v->objectValue;

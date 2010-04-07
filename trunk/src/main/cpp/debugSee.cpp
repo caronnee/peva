@@ -186,7 +186,7 @@ int main(int argc, char ** args)
 									break;
 								}
 							default:
-								std::cout << "Button not recognized" << std::endl;
+								TEST("Button not recognized" )
 								break;
 						}
 						break;

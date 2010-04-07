@@ -23,30 +23,27 @@ int main()
 	l.add(o3);
 	l.add(o4);
 	l.add(o5);
-	std::cout<<std::endl;
 	for (size_t i = 0; i< l.size(); i++)
 	{
 		TEST(i << "_" <<l.data->value << "\t")
 		l.next();
 	}
 	l.clear();
-	std::cout<<std::endl;
 	for (size_t i = 0; i< 6; i++)
 	{
 		TEST(i << "_" <<l.data->value << "\t")
 		l.next();
 	}
-	TEST(std::endl)
 	l.add(o1);
 	l.add(o2);
 //	l.add(o3);
 //	l.add(o4);
 //	l.add(o5);
-	std::cout <<"MOVING 1!:"<<l.size() << ":" << l2.size() ;
+	TEST("MOVING 1!:"<<l.size() << ":" << l2.size() )
 	l.moveHead(l);
 //	l.moveHead(l2);
 //	l.moveHead(l2);
-	std::cout <<"MOVING 2!:"<<l.size() << ":" << l2.size() ;
+	TEST("MOVING 2!:"<<l.size() << ":" << l2.size() )
 	l.reset();
 	l2.reset();
 	for (size_t i = 0; i< 6; i++)

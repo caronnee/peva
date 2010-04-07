@@ -22,19 +22,18 @@ int main(int argc, char ** argv)
 		puts("Unable to open input\n");
 		return 16;
 	}
-	Robots q();
+	Robots q;
 	int err = yyparse(&q);
-	std::cout << "-------------------------------------END---------------------------------------------------------------" << std::endl;
+	TEST("-------------------------------------END---------------------------------------------------------------")
 		q.actualRobot->output(&q.actualRobot->defined);
 		/*for (int i =0; i<q.actualRobot->instructions.size(); i++)
-		std::cout << q.actualRobot->instructions[i]->name_<<std::endl;
+		TEST( q.actualRobot->instructions[i]->name_)
 		q.actualRobot->save_to_xml();
-		std::cout << "haho!" << std::endl;
 		q.actualRobot->execute();
 	 */
-	std::cout << "Zacinam na:"<<q.actualRobot->core->PC <<std::endl;
+	TEST("Zacinam na:"<<q.actualRobot->core->PC)
 	if ((err) || (q.actualRobot->errors))
-		std::cout << q.actualRobot->errorList << std::endl;
+		TEST ( q.actualRobot->errorList )
 	else
 	{
 		q.actualRobot->save_to_xml();

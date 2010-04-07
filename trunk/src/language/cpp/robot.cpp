@@ -186,7 +186,7 @@ Node * Robot::add(std::string name)
 {
 	if (active_type.empty())
 	{
-		std::cout << "empty active type";
+		TEST("empty active type")
 	}
 	return add(name, active_type.top());
 }
@@ -444,7 +444,7 @@ void Robot::consolidate()
 			TEST("Null instruction, something forgotten?")
 			continue;
 		}
-		std::cout << i << instructions[i]->name()<<",..\t";
+		TEST(i << instructions[i]->name()<<",..\t")
 		InstructionContinue *c = dynamic_cast<InstructionContinue *>(instructions[i]);
 		if (c)
 		{

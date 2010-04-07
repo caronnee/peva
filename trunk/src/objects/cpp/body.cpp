@@ -171,7 +171,7 @@ int Body::see()
 }
 Object * Body::eye(int index)
 {
-	std::cout << "Getting object from fills";
+	TEST("Getting object from fills")
 	Object * o = seer.getObject(index);
 	if (!o)
 		return this; //TODO dummy object
@@ -202,18 +202,18 @@ int Body::turnL()
 }
 int Body::turnR()
 {
-	std::cout << "Turning right";
+	TEST("Turning right")
 	turn(90);
 	return 0;
 }
 int Body::wait(int x)
 {
-	std::cout << "Waiting " << x << "times" ;
+	TEST("Waiting " << x << "times" )
 	return 0;
 }
 int Body::shoot(int angle)
 {
-	std::cout << "Shooting at angle [ " << angle <<std::endl;
+	TEST("Shooting at angle [ " << angle)
 	if (ammo.empty())
 	{
 		TEST("Prazdne ammo!")

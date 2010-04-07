@@ -29,13 +29,13 @@ void Core::restore() //+ pushnut vsetky parametre zadanej funkcie o jedno
 	nested_functions.pop_back();
 	PC = PCs.back();
 	PCs.pop_back();
-	std::cout << "Context restored" << PC << std::endl;
+	TEST("Context restored" << PC)
 }
 Variable * Core::getVariableFromStack()
 {
 	if (values.empty())
 	{
-		std::cout << "Error value not loaded!";getc(stdin);
+		TEST("Error value not loaded!";getc(stdin))
 		return memory.random();
 	}
 	Variable * v = values.back();
@@ -54,7 +54,7 @@ void Core::loadElement(int range)
 {
 	if (values.empty())
 	{
-		std::cout << "Error - array not loaded!"; getc(stdin);
+		TEST("Error - array not loaded!"; getc(stdin))
 		values.push_back(memory.random());
 		return;
 	}
@@ -62,7 +62,7 @@ void Core::loadElement(int range)
 	values.pop_back();
 	if (v->array.elements.size() - range <= 0)
 	{
-		std::cout << "Error - array out of range, which is:" << v->array.elements.size(); getc(stdin);
+		TEST("Error - array out of range, which is:" << v->array.elements.size(); getc(stdin))
 		values.push_back(memory.random());
 		return;
 	}

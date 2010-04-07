@@ -62,7 +62,7 @@ int Window::toggle_screen()
 	*///zatial nepotrebujeme
 	if( SDL_WM_ToggleFullScreen(g->screen) ==0) //nepodarilo sa to cez funkciu
 	{
-		std::cout<<"Nepodarilo zmenit rozlisenie!"<<std::endl;
+		TEST("Nepodarilo zmenit rozlisenie!")
 		SDL_FreeSurface(g->screen);
 		return Init(0,NULL); //FIXME inituje sa iba grafika
 	}

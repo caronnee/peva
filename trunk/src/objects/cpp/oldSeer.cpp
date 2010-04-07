@@ -30,10 +30,10 @@ void Seer::set_masks()
 		}
 	}
 	masks[0][0].mask = 1;
-//	std::cout << "PositionSize:" << positions.size() << std::endl;
+//	TEST("PositionSize:" << positions.size() );
 	for (size_t i =0; i< positions.size(); i++)
 	{
-//		std::cout << "x:" << positions[i].x << ", y:" << positions[i].y << " i: "<<i<< std::endl;
+//		TEST("x:" << positions[i].x << ", y:" << positions[i].y << " i: "<<i);
 		yn = positions[i].y;
 		xn = positions[i].x; //mame stredy celociselne
 		A = y0-yn;
@@ -57,7 +57,7 @@ void Seer::set_masks()
 	{
 		positions[i].x = positions[i].x >> 1;
 		positions[i].y = positions[i].y >> 1;
-		std::cout << "ID" << masks[positions[i].x][positions[i].y].ID << ", maska:" <<masks[positions[i].x][positions[i].y].mask << std::endl;
+		TEST("ID" << masks[positions[i].x][positions[i].y].ID << ", maska:" <<masks[positions[i].x][positions[i].y].mask );
 	}
 }
 void Seer::see(Direction d, Map * m, Position pos) 
@@ -100,7 +100,6 @@ void Seer::see(Direction d, Map * m, Position pos)
 						masks[i][j].object_l = m->map[xx][yy];
 					}*/
 				}
-				std::cout << std::endl;
 				break;
 			}
 		case LEFT:
@@ -136,7 +135,6 @@ void Seer::see(Direction d, Map * m, Position pos)
 						*/
 					}
 				}
-				std::cout << std::endl;
 				break;
 			}
 		default:
@@ -158,8 +156,8 @@ void Seer::see(Direction d, Map * m, Position pos)
 			objects.push_back(o2);
 		}
 	}
-	std::cout << mask << std::endl;
-	std::cout << mask2 << std::endl;
+	TEST(mask );
+	TEST(mask2 );
 }
 
 void Seer::output()
@@ -168,23 +166,20 @@ void Seer::output()
 	{
 		for(int j = 0; j < resolution.y; j++)
 		{
-			std::cout << masks[i][j].ID << " ";
+			TEST(masks[i][j].ID << " ")
 		}
-		std::cout << std::endl;
 	}
 	for(int i =0; i< resolution.x; i++)
 	{
 		for(int j = 0; j < resolution.y; j++)
 		{
-			std::cout << "x:" << i << "y" << j << "zavisi na:" << std::endl;
-//			std::cout << "maska:" << masks[i][j].mask << std::endl;
+			TEST("x:" << i << "y" << j << "zavisi na:" );
+//			TEST("maska:" << masks[i][j].mask );
 			for(int k = 0; k< resolution.x * resolution.y; k++)
 			{
 				if (masks[i][j].mask & (1 << k))
-					std::cout << k << " ";
+					TEST(k << " ")
 			}
-			std::cout << std::endl;
-			
 		}
 	}
 }
