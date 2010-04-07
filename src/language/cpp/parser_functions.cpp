@@ -1,6 +1,7 @@
 //TODO dat to do vlastneho namespacu
 #include "../h/parser_functions.h"
 #include <iostream>
+#include "../../add-ons/h/macros.h"
 
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
@@ -22,7 +23,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	Node *n = r->find_var(s, ok); 
 	if (!ok)
 	{
-		std::cout << "Error, variable not found";getc(stdin);
+		TEST("Error, variable not found")
 		r->error(line,Robot::Robot::ErrorVariableNotFound);
 	}
 	if(n->nested == Local)
