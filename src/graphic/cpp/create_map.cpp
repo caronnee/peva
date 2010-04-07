@@ -247,7 +247,7 @@ void Create_map::keyDown(SDLKey c)
 			return;
 		}
 		default:
-			std::cout << "Unknown command (Create map)" << std::endl;
+			TEST("Unknown command (Create map)" )
 			break;
 	}
 }
@@ -441,7 +441,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				}
 				else
 				{
-					TEST("Koliduje"<<std::endl)
+					TEST("Koliduje")
 				}
 				update.w = -1;
 				update.h = -1;
@@ -454,7 +454,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		case CLEAN:
 			{
-				std::cout << "cleaning" <<std::endl;
+				TEST("cleaning" )
 				map->clean();
 				map->addBoundaryWalls();
 				map->update(rects[MAP], true, w);
@@ -462,7 +462,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			}
 		case SAVE:
 		{
-			std::cout << "save" <<std::endl;
+			TEST("save" )
 			SDL_Rect r = file_r;
 			SDL_FillRect(w->g->screen, &r,0);
 			r.x+=10;
@@ -495,7 +495,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		case CHOOSE:
 		{
 			mouse_down = false;
-			std::cout << "choose" <<std::endl;
+			TEST("choose" )
 			int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
 			if (wall != -1)
 			{
@@ -567,7 +567,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		}
 		default: 
 		{
-			std::cout  << " Area unrecognized " << std::endl;
+			TEST(" Area unrecognized " )
 			break;
 		}
 	}
@@ -599,7 +599,7 @@ void Create_map::process_map()
 					return;
 				}
 				default:
-					std::cout << "Unknown command (Create map)" << std::endl;
+					TEST("Unknown command (Create map)" )
 					break;
 
 			}

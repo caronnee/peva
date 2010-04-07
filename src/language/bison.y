@@ -572,7 +572,6 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		
 		|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
-			std::cout << "Adding break to in depth" <<program->actualRobot->core->depth << std::endl;
 			$$.push_back(new InstructionBreak(program->actualRobot->core->depth));
 		}
 		|TOKEN_CONTINUE TOKEN_SEMICOLON  //TODO nobreakable veci?

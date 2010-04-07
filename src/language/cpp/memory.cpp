@@ -10,7 +10,7 @@ Variable * Memory::next_id(size_t ID)
 		if (memory[i]->owner == (size_t)-1 )
 		{
 			memory[i]->owner = ID;
-			std::cout << "Assignujem " <<i<< std::endl;
+			TEST("Assignujem " <<i)
 			return memory[i];
 		}
 	}
@@ -18,7 +18,7 @@ Variable * Memory::next_id(size_t ID)
 	{
 		if (memory[i]->owner == (size_t)-1)
 		{
-			std::cout << "Assignujem " <<i<< std::endl;
+			TEST("Assignujem " <<i)
 			memory[i]->owner = ID;
 			return memory[i];
 		}
@@ -26,7 +26,7 @@ Variable * Memory::next_id(size_t ID)
 	int id = rand()%memory_size;
 /*	for (size_t i =0; i< memory_size; i++)
 	{
-		std::cout << memory[i]->ID<< " ";
+		TEST(memory[i]->ID<< " ")
 	}*/
 	TEST("Assignujem nahodne" << id);
 	return memory[id];
@@ -54,25 +54,25 @@ void Memory::assign(Node * node, size_t depth_)
 
 Variable * Memory::assign_temp(Create_type * t)
 {
-/*	std::cout << "assigning TEMP..."<< std::endl;
-	std::cout << "before:";
+/*	TEST("assigning TEMP...")
+	TEST("before:")
 	for(size_t i = 0; i < temp.size(); i++) 
 	{
-		std::cout << temp[i]->ID << " ";
+		TEST(temp[i]->ID << " ")
 	}*/
 	Variable * v = find_free(t, 0); // 0 ako temprarily, TODO dat to nodes
 	temp.push_back(v);
-/*	std::cout << "AFTER:" << std::endl;
+/*	TEST("AFTER:")
 	for(size_t i = 0; i < temp.size(); i++) 
 	{
-		std::cout << temp[i]->ID << " ";
+		TEST(temp[i]->ID << " ")
 	}
-	std::cout << "Consummatum est" << std::endl;*/
+	TEST("Consummatum est")*/
 	return v;
 }
 void Memory::set_free(Variable * v)
 {
-	std::cout << "SETTING FREE";
+	TEST("SETTING FREE")
 	std::stack<Variable *> vars;
 	vars.push(v);
 	Variable * tmp;
@@ -80,7 +80,7 @@ void Memory::set_free(Variable * v)
 	{
 		tmp = vars.top();
 		tmp->owner = -1;
-		std::cout << "Freeing id: " << tmp->ID << std::endl;
+		TEST("Freeing id: " << tmp->ID)
 		vars.pop();
 		for(size_t i =0; i<tmp->array.elements.size(); i++)		 
 		{
@@ -125,7 +125,7 @@ void Memory::fill(Variable * &v,
 		variables_to_assign.push(tmp);
 		v->array.elements.push_back(tmp);
 	}
-	std::cout << "end of block";
+	TEST("end of block")
 }
 
 Variable * Memory::find_free(Create_type * t, size_t ID)

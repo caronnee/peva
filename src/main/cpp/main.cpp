@@ -21,16 +21,16 @@ int main(int argc, char *argv[])
 	config.open(CONFIG);
 	if(!config.good())
 	{
-		std::cout << "Creating config file" << std::endl;
+		TEST("Creating config file" )
 		//create_default
 		ofstream o;
 		o.open(CONFIG);
 		if(!o.good()) return -1;
-		o << "resolution=" << DEFAULT_WIN_WIDTH << "x" << DEFAULT_WIN_HEIGTH <<std::endl;
-		o << "font=" << DEFAULT_FONT <<std::endl;
-	       	o << "font-size=" << DEFAULT_FONT_SIZE<<std::endl;
-		o << "background=" << DEFAULT_BACKGROUND << std::endl;
-		o << "timeout=" << DEFAULT_TIMEOUT << std::endl;
+		o << "resolution=" << DEFAULT_WIN_WIDTH << "x" << DEFAULT_WIN_HEIGTH ;
+		o << "font=" << DEFAULT_FONT ;
+	       	o << "font-size=" << DEFAULT_FONT_SIZE;
+		o << "background=" << DEFAULT_BACKGROUND ;
+		o << "timeout=" << DEFAULT_TIMEOUT ;
 		o.close();	
 	}
 	else {

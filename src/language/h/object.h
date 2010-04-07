@@ -8,22 +8,22 @@ class Object
 {
 public:
 	virtual int IsMoving(){
-		std::cout << "Object is not moving." << std::endl;
+		TEST("Object is not moving." )
 		return 0;
 	}
 	virtual int IsWall()
 	{
-		std::cout << "Object is not a Wall." << std::endl;
+		TEST("Object is not a Wall." )
 		return 0;
 	}
 	virtual int IsPlayer()
 	{
-		std::cout << "Object is not a Player." << std::endl;
+		TEST("Object is not a Player." )
 		return 0;
 	}
 	virtual int IsMissille()
 	{
-		std::cout << "Object is not a Missille." << std::endl;
+		TEST("Object is not a Missille." )
 		return 0;
 	}
 	virtual Position Locate()
@@ -33,7 +33,7 @@ public:
 	}
 	virtual int Hit()
 	{
-		std::cout << "Object was not hit." << std::endl;
+		TEST("Object was not hit." )
 		return 0;
 	}
 	virtual ~Object()
@@ -43,22 +43,22 @@ class Nullable : public Object
 {
 public:
 	virtual int IsMoving(){
-		std::cout << "Object is NULL" << std::endl;
+		TEST("Object is NULL" )
 		return rand()%2;
 	}
 	virtual int IsWall()
 	{
-		std::cout << "Object is NULL" << std::endl;
+		TEST("Object is NULL" )
 		return rand()%2;
 	}
 	virtual int IsPlayer()
 	{
-		std::cout << "Object is NULL" << std::endl;
+		TEST("Object is NULL" )
 		return rand()%2;
 	}
 	virtual int IsMissille()
 	{
-		std::cout << "Object is NULL" << std::endl;
+		TEST("Object is NULL" )
 		return rand()%2;
 	}
 	virtual Position Locate()
@@ -68,7 +68,7 @@ public:
 	}
 	virtual int Hit()
 	{
-		std::cout << "Object is NULL" << std::endl;
+		TEST("Object is NULL" )
 		return rand()%2;
 	}
 	virtual ~Nullable(){}
@@ -81,42 +81,42 @@ struct Robot_body : public Object
 	}
 	virtual int Step()
 	{
-		std::cout << "Moving by default number" << std::endl;
+		TEST("Moving by default number" )
 		return 0;
 
 	}
 	virtual int Step(int i){
-		std::cout << "Moving "<< i << " positions" << std::endl;
+		TEST("Moving "<< i << " positions" )
 		return 0;
 	}
 	virtual int Shoot(int x =2009, int y=1987)
 	{
-		std::cout <<"Shooting at location [" << x << " ,"<< y  << "]." <<std::endl;
+		TEST("Shooting at location [" << x << " ,"<< y  << "]." )
 		return 0;
 	}
 	virtual int See()
 	{
-		std::cout << "Checking visibility" <<std::endl;
+		TEST("Checking visibility" )
 		return 252;
 	}
 	virtual int Wait(int i)
 	{
-		std::cout << "Waiting " << i << " times." << std::endl;
+		TEST("Waiting " << i << " times." )
 		return 0;
 	}
 	virtual int Turn(int var)
 	{
-		std::cout << "Turning in direction " << var << "." <<std::endl;
+		TEST("Turning in direction " << var << "." )
 		return 0;
 	}
 	virtual int TurnL()
 	{
-		std::cout << "Turning left." <<std::endl;
+		TEST("Turning left." )
 		return 0;
 	}
 	virtual int TurnR()
 	{
-		std::cout << "Turning right." <<std::endl;
+		TEST("Turning right." )
 		return 0;
 	}
 	virtual ~Robot_body(){}

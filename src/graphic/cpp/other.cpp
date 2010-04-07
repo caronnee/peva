@@ -82,7 +82,7 @@ void Play::resume()
 	{
 		if((yyin = fopen(settings->inputs[i].c_str(), "r"))==0)
 		{
-			std::cout<< "Unable to open input " << settings->inputs[i] << std::endl; //TODO tu by to nikdy nemalo dojst, netreba vypisovat
+			TEST("Unable to open input " << settings->inputs[i] ) //TODO tu by to nikdy nemalo dojst, netreba vypisovat
 			continue;
 		}
 		robots.input = settings->inputs[i];

@@ -52,12 +52,12 @@ Tree::Tree(int d)
 
 int Tree::find_index(char a)
 {
-//	std::cout << alphabet <<std::endl;
+//	TEST(alphabet)
 	int max = alphabet.length()-1; //za hranicu uz nesmie skocit
 	int min = 0; //zaciatok
 	int index = (max-min)/2;
-	std::cout << alphabet <<std::endl;
-//	std::cout << min << " " << index <<" " << max <<std::endl;
+	TEST(alphabet)
+//	TEST(min << " " << index <<" " << max)
 	while ((max-min)>1) //ked uz je jedna, presli sme vsetko a nie je tam
 	{
 		if (alphabet[index] == a)
@@ -72,14 +72,14 @@ int Tree::find_index(char a)
 			min = index;
 			index+=(max-min)/2;
 		}
-//		std::cout << alphabet[min] << " " << alphabet[index] <<" " << alphabet[max] <<std::endl;
+//		TEST(alphabet[min] << " " << alphabet[index] <<" " << alphabet[max])
 	}
-//	std::cout << "OUT" << std::endl;
+//	TEST("OUT")
 	if (alphabet[min] == a)
 		return min;
 	if (alphabet[max] == a)
 		return max;
-	std::cout << "ALLERT:not found" <<std::endl;
+	TEST("ALLERT:not found")
 	return -1; //nenasiel sa 
 }
 
@@ -114,7 +114,7 @@ Tree * Tree::find_string(std::string s)
 
 Node * Tree::add(std::string s, Create_type * type)
 {
-	std::cout << "pridavam meno:" << s << " typu "<< type->type<< std::endl;
+	TEST("pridavam meno:" << s << " typu "<< type->type)
 	Tree * t = find_string(s);//pridavame do tohoto kontejnera
 	std::list<Node*>::iterator iter;
 	for (iter = t->items.begin(); 
@@ -138,7 +138,7 @@ Node * Tree::add(std::string s, Create_type * type)
 	{
 		nod->nested = Global;
 	}
-//	std::cout << "adresa" << nod << std::endl;
+//	TEST("adresa" << nod)
 	bool nested = false;
 	for (size_t i =0; i< s.length(); i++)
 	{
@@ -167,10 +167,10 @@ Node * Tree::add(std::string s, Create_type * type)
 				continue;
 			}
 			int pointer = find_index(t->items.front()->name[t->depth]);
-//			std::cout << t->items.front()->name[t->depth] << "$:"<<pointer<<std::endl;
+//			TEST(t->items.front()->name[t->depth] << "$:"<<pointer)
 		 	if (t->next[pointer]==NULL) //
 			{
-			//	std::cout << "splittling" <<std::endl;
+			//	TEST("splittling")
 				split++;
 				splitted = pointer;
 				t->next[pointer] = new Tree(t->depth+1);
@@ -179,17 +179,17 @@ Node * Tree::add(std::string s, Create_type * type)
 			Tree * nxt = t->next[pointer];
 			nxt->items.splice(nxt->items.begin(),t->items,t->items.begin());
 		}
-//		std::cout <<" enddd"<<n.size();
+//		TEST(" enddd"<<n.size())
 		t->items.swap(n);
 		if ( split == 1 )
 		{
-			//std::cout <<"repete! " <<splitted << std::endl;
+			//TEST("repete! " <<splitted)
 			t = t->next[splitted];
 		}
 	}
 	nod->active = true;
 	block_of_nodes.push_back(nod);
-	//std::cout << "adresa return " << nod << std::endl;
+	//TEST("adresa return " << nod)
 	return nod;
 }
 Tree::~Tree()

@@ -34,7 +34,7 @@ bool Graphic::Init()
 	//if inited, return true; TODO
 	if(SDL_Init(SDL_SUBSYSTEMS) == -1)
 	{
-		std::cerr << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
+		std::cerr << "Unable to initialize SDL: " << SDL_GetError() ;
 		return false;
 	}
 	atexit(SDL_Quit);
@@ -48,33 +48,33 @@ bool Graphic::Init()
 	// Inicializace SDL_ttf
 	if(TTF_Init() == -1)
 	{
-		std::cerr << "Unable to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+		std::cerr << "Unable to initialize SDL_ttf: " << TTF_GetError() ;
 		return false;
 	}
 	screen = SDL_SetVideoMode(resolution_width, resolution_heigth, WIN_BPP, WIN_FLAGS);
 
 	if(screen == NULL)
 	{
-		std::cerr << "Unable to set video, resolution: " << resolution_width << resolution_heigth << ", " << SDL_GetError() << std::endl;
+		std::cerr << "Unable to set video, resolution: " << resolution_width << resolution_heigth << ", " << SDL_GetError() ;
 		return false;
 	}
 	SDL_WM_SetCaption(WIN_TITLE, NULL);
 	g_font = TTF_OpenFont(font.c_str(), font_size); 
 	if(!g_font)
 	{
-		std::cout << font << std::endl;
-		std::cerr << "Unable to open font: " << TTF_GetError() << std::endl;
+		TEST(font )
+		std::cerr << "Unable to open font: " << TTF_GetError() ;
 		return false;
 	}	
 	SDL_EnableUNICODE(true);
 	//SDL_Rect ** r = SDL_ListModes(g->screen->format,WIN_FLAGS|SDL_FULLSCREEN);
 	/*int i =0;
-	  if (r == NULL ) { std::cout << "awekfgajesgfbewa" <<std::endl; return false;}
-	  if (r == (SDL_Rect**) -1 ) { std::cout << "mmmmmm" <<std::endl; }
-	  std::cout << "podoprujem mody fullscreenu: " << std::endl;
+	  if (r == NULL ) { TEST("awekfgajesgfbewa" ; return false)}
+	  if (r == (SDL_Rect**) -1 ) { TEST("mmmmmm" ) }
+	  TEST("podoprujem mody fullscreenu: " )
 	  printf("Available Modes\n");
 	  for (i=0; r[i]; ++i)
-	  std::cout << r[i]->w << " " <<  r[i]->h << std::endl;*/
+	  TEST(r[i]->w << " " <<  r[i]->h )*/
 	return true;
 }
 void Graphic::set_resolution(std::string res)
