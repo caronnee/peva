@@ -33,7 +33,11 @@ int main(int argc, char ** argv)
 	 */
 	TEST("Zacinam na:"<<q.actualRobot->core->PC)
 	if ((err) || (q.actualRobot->errors))
+	{
 		TEST ( q.actualRobot->errorList )
+		TEST( std::endl)
+		TEST ( q.parseErrorsList )
+	}
 	else
 	{
 		q.actualRobot->save_to_xml();

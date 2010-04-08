@@ -96,16 +96,23 @@ void Play::resume()
 		if (robots.robots[lastIn]->errors)
 			errList += robots.robots[lastIn]->errorList;
 	my_destroy();
+	if (err)
+		errList += robots.parseErrorsList;
 	if ((errList != "")||err)
 	{
+		SDL_Rect r;
+		SDL_GetClipRect(w->g->screen, &r);
+		w->tapestry(r);
 		std::string s = "Errors found:" + errList;//TODO pytat sa na continue a stop, resp new MENU_SCROLL
 		//TODO rozparsovat erorrs, aby sa to voslo na obrazovku
+		 
 		SDL_Surface * error = TTF_RenderText_Solid(w->g->g_font,s.c_str(), w->g->normal);
 		SDL_Rect e;
 		e.x = max<int>(0,w->g->screen->w/2 - error->w/2);
 		e.y = max<int>(0,w->g->screen->h/2 - error->h/2);
 		SDL_BlitSurface(error, NULL, w->g->screen, &e);
-		SDL_UpdateRect(w->g->screen, e.x, e.y, e.w, e.h);
+		SDL_Flip(w->g->screen);
+		SDL_FreeSurface(error);
 		while(!robots.robots.empty())
 		{
 			delete robots.robots.back();
