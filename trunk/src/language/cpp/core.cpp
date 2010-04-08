@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "../h/core.h"
+#include "../../add-ons/h/macros.h"
 
 Core::Core(TypeContainer * t)
 {
@@ -35,7 +36,7 @@ Variable * Core::getVariableFromStack()
 {
 	if (values.empty())
 	{
-		TEST("Error value not loaded!";getc(stdin))
+		TEST("Error value not loaded!")
 		return memory.random();
 	}
 	Variable * v = values.back();
@@ -54,7 +55,7 @@ void Core::loadElement(int range)
 {
 	if (values.empty())
 	{
-		TEST("Error - array not loaded!"; getc(stdin))
+		TEST("Error - array not loaded!")
 		values.push_back(memory.random());
 		return;
 	}
@@ -62,7 +63,7 @@ void Core::loadElement(int range)
 	values.pop_back();
 	if (v->array.elements.size() - range <= 0)
 	{
-		TEST("Error - array out of range, which is:" << v->array.elements.size(); getc(stdin))
+		TEST("Error - array out of range, which is:" << v->array.elements.size() )
 		values.push_back(memory.random());
 		return;
 	}
