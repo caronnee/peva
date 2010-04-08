@@ -34,6 +34,18 @@ public:
 	void draw();
 	void clean();
 };
+class ShowMenu : public Menu
+{
+	public:
+	ShowMenu(Window * w, std::string str);
+
+	void init();
+	void process();
+	void resume();
+	void draw();
+	void clean();
+};
+
 class SetScheduller : public Menu
 {
 	int iter;

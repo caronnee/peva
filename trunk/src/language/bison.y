@@ -20,114 +20,115 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %}
 
 /* keywords */
-%token TOKEN_MAIN
-%token TOKEN_LOCATION
-%token TOKEN_OBJECT
-%token TOKEN_VAR_REAL
-%token TOKEN_VAR_INT
-%token TOKEN_VOID
-%token TOKEN_FUNCTION
-%token TOKEN_IF
-%token TOKEN_ELSE
-%token TOKEN_WHILE
-%token TOKEN_DO
-%token TOKEN_FOR
-%token TOKEN_RETURN
-%token TOKEN_BREAK
-%token TOKEN_REFERENCE
-%token TOKEN_CONTINUE
-%token TOKEN_ROBOT
-%token<op> TOKEN_OPTION
-%token<of> TOKEN_OBJECT_FEATURE
+%token TOKEN_MAIN "main function"
+%token TOKEN_LOCATION "word location"
+%token TOKEN_OBJECT "keyword object"
+%token TOKEN_VAR_REAL "keyword real"
+%token TOKEN_VAR_INT "keyword integer"
+%token TOKEN_VOID "keyword void"
+%token TOKEN_FUNCTION "keyword function"
+%token TOKEN_IF "keyword if"
+%token TOKEN_ELSE "keyword else"
+%token TOKEN_WHILE "keyword while"
+%token TOKEN_DO "keyword do"
+%token TOKEN_FOR "keyword for"
+%token TOKEN_RETURN "keyword return"
+%token TOKEN_BREAK "keyword break"
+%token TOKEN_REFERENCE "keyword var"
+%token TOKEN_CONTINUE "keyword continue"
+%token TOKEN_ROBOT "keyword robot"
+%token<op> TOKEN_OPTION "robot setings"
+%token<of> TOKEN_OBJECT_FEATURE "function asking about state"
 
 /* delimiters */
-%token TOKEN_SEMICOLON
-%token TOKEN_DOT
-%token TOKEN_COMMA
-%token TOKEN_LPAR
-%token TOKEN_RPAR
-%token TOKEN_LSBRA
-%token TOKEN_RSBRA
-%token TOKEN_ASSIGN
-%token TOKEN_BEGIN
-%token TOKEN_END
+%token TOKEN_SEMICOLON ";"
+%token TOKEN_DOT "."
+%token TOKEN_COMMA ","
+%token TOKEN_LPAR "("
+%token TOKEN_RPAR ")"
+%token TOKEN_LSBRA "["
+%token TOKEN_RSBRA "]"
+%token TOKEN_ASSIGN "="
+%token TOKEN_BEGIN "{"
+%token TOKEN_END "}"
 
 /* literals */
-%token<ident> TOKEN_IDENTIFIER
-%token<number> TOKEN_UINT
-%token<f_number> TOKEN_REAL
-%token TOKEN_SEEN
+%token<ident> TOKEN_IDENTIFIER " name of variable or function"
+%token<number> TOKEN_UINT "integer number"
+%token<f_number> TOKEN_REAL "real number"
+%token TOKEN_SEEN "seen function"
 
 /* target of game*/
-%token TOKEN_VISIT
-%token TOKEN_VISIT_SEQUENCE
-%token TOKEN_KILLED
-%token TOKEN_SKIN
-%token TOKEN_KILL
-%token TOKEN_START
+%token TOKEN_VISIT "keyword VISIT"
+%token TOKEN_VISIT_SEQUENCE "keyword VISIT_SEQ"
+%token TOKEN_KILLED "keyword  KILLED"
+%token TOKEN_SKIN "keyword SKIN"
+%token TOKEN_KILL "keyword KILL"
+%token TOKEN_START "keyword START"
 
 /* group tokens */
-%token<operation> TOKEN_OPER_REL
-%token<operation> TOKEN_OPER_SIGNADD
-%token<operation> TOKEN_OPER_MUL
-%token<operation> TOKEN_PLUSPLUS
-%token<operation> TOKEN_MINUSMINUS
-%token<operation> TOKEN_BOOL_AND
-%token<operation> TOKEN_BOOL_OR
+%token<operation> TOKEN_OPER_REL "<"
+%token<operation> TOKEN_OPER_SIGNADD "+"
+%token<operation> TOKEN_OPER_MUL "*"
+%token<operation> TOKEN_PLUSPLUS "++"
+%token<operation> TOKEN_MINUSMINUS "--"
+%token<operation> TOKEN_BOOL_AND "&&"
+%token<operation> TOKEN_BOOL_OR "||"
 
-%type<ident> function_name
+%type<ident> function_name "function name"
 
-%type<type> simple_type
-%type<type> complex_type
-%type<type> type
-%type<type> return_type
+%type<type> simple_type "simple variable type"
+%type<type> complex_type "complex variable type"
+%type<type> type "variable type"
+%type<type> return_type "return type"
 
-%type<ranges> ranges
-%type<ranges> integers
-%type<ident> function_header
+%type<ranges> ranges "range"
+%type<ranges> integers "integer number(s)"
+%type<ident> function_header "function header"
 
-%type<entries> parameters_empty
-%type<entries> parameters
+%type<entries> parameters_empty "zero or more paramaters"
+%type<entries> parameters "paramaters"
 
-%type<instructions> names
-%type<instructions> names_
-%type<instructions> cycle_for
-%type<instructions> local_variables
-%type<instructions> block_of_instructions 
-%type<instructions> global_variables
-%type<instructions> commands
-%type<instructions> command
-%type<instructions> matched
-%type<instructions> unmatched
-%type<instructions> init
-%type<instructions> assign
-%type<instructions> command_var
-%type<instructions> simple_command
-%type<instructions> commands_and_empty
+%type<instructions> names "inicializations"
+%type<instructions> names_ "inicialization"
+%type<instructions> cycle_for "for cycle"
+%type<instructions> local_variables "local variable(s)"
+%type<instructions> block_of_instructions "block of instructions"
+%type<instructions> global_variables "global variable(s)"
+%type<instructions> commands "block of commands"
+%type<instructions> command "command"
+%type<instructions> matched "if/else block"
+%type<instructions> unmatched "if block"
+%type<instructions> init "create or assign"
+%type<instructions> assign "assign"
+%type<instructions> command_var "command or vvariable declaring"
+%type<instructions> simple_command "simple command"
+%type<instructions> commands_and_empty "nothing or command"
 
-%type<array_access> array_access
+%type<array_access> array_access "[number(,number)*]"
 
-%type<defVal> values
+%type<defVal> values "values expression"
 
-%type<output> array
-%type<output> variable
-%type<output> number
-%type<output> declare_functions
-%type<output> declare_function_
-%type<output> unary_var
-%type<output> expression_bool
-%type<output> expression
-%type<output> exps
-%type<output> expression_base
-%type<output> expression_mul
-%type<output> expression_add
-%type<output> expression_bool_base
-%type<output> expression_bool_or
-%type<output> call_fce
-%type<output> call_parameters
-%type<positions> places
+%type<output> array "array declaring"
+%type<output> variable "variable declaring"
+%type<output> number "number"
+%type<output> declare_functions "declaring function(s)"
+%type<output> declare_function_ "declare function"
+%type<output> unary_var "unary variable"
+%type<output> expression_bool "expression with boolean result"
+%type<output> expression "expression"
+%type<output> exps "expresions"
+%type<output> expression_base "variable or constant"
+%type<output> expression_mul "multiplying expression"
+%type<output> expression_add "plus expression"
+%type<output> expression_bool_base "variable or constant acting as boolean"
+%type<output> expression_bool_or "|| expresion"
+%type<output> call_fce "calling function"
+%type<output> call_parameters "parameters of function being called"
+%type<positions> places "defining taret places"
 
 %start program
+
 %error-verbose
 
 %pure-parser
@@ -1022,6 +1023,6 @@ expression_bool:	expression_bool_or { $$ = $1;}
 
 static void yyerror(unsigned *line, Robots* ctx, const char *message)
 {
-	ctx->parseError("Syntax Error " + deconvert<const char *>(message) +", line " + deconvert<int>(*line) +"\n");
+	ctx->parseError( deconvert<const char *>(message) +" at line " + deconvert<int>(*line) +"\n");
 }
 
