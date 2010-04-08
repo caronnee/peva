@@ -14,7 +14,6 @@ Node::Node(std::string name_, Create_type * t, size_t ID_)
 	type_of_variable = t; //Root nasho kvazi stromu
 	active = false;
 //	TEST("pridavam create_type:" << t.data_type->type)
-//	getc(stdin);
 }
 Node::~Node()
 {
