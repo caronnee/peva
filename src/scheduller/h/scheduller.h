@@ -6,7 +6,7 @@
 class Scheduller
 {
 	protected:
-	size_t penalties[IGroups]; //spravit dynamicky, neviem ,kolko bude instrukcii
+	size_t penalties[IGroups]; //FIXME spravit dynamicky, neviem ,kolko bude instrukcii
 	int quantum;
 	public:
 	Scheduller();

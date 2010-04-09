@@ -19,7 +19,6 @@
 
 
 /* structure for objects in area */
-
 struct Box
 {
 	/* Contructor */
@@ -35,10 +34,19 @@ struct Box
 /* class resolving movement */
 struct Place
 {
+	/* id of group how sholud be saved */
 	ObjectsToSave saveId;
+
+	/* unique id for searching */
 	int id;
+
+	/* integer indentifier of appropriate type */
 	size_t numberImage;
+
+	/* generated image */
 	SDL_Surface * img;
+
+	/* position of place */
 	Rectangle r;
 };
 
@@ -52,6 +60,8 @@ struct Map
 
 	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
+
+	/* significant places*/
 	std::list<Place> places; //starts and targets
 
 	/* draws background*/
@@ -59,8 +69,6 @@ struct Map
 
 	/* draws only visible objects*/
 	void draw(Window *w);
-
-	Position getChangeableArea();
 
 	/* draw map including non-participating objects */
 	void drawAll(Window * w);
@@ -148,7 +156,7 @@ public:
 	/* events in map */
 	bool performe();
 
-	/* destructor destorying allocated space, no need to be virtual so far */
+	/* destructor destroying allocated space, no need to be virtual so far */
 	~Map();
 
 	/* removes from map an object, but do not destroys it */
