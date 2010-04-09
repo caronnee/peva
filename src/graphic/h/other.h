@@ -33,17 +33,24 @@ public:
 	void process();
 	void draw();
 	void clean();
+	virtual ~SetPenalize();
 };
 class ShowMenu : public Menu
 {
-	public:
-	ShowMenu(Window * w, std::string str);
+	Window * w;
+	std::string strToshow;
+	size_t iter;
+	size_t size;
+	std::vector<SDL_Surface *> images;
+public:
 
+	ShowMenu(Window * w, std::string str);
 	void init();
 	void process();
 	void resume();
 	void draw();
 	void clean();
+	virtual ~ShowMenu();
 };
 
 class SetScheduller : public Menu
@@ -62,6 +69,7 @@ public:
 	void draw();
 	void process();
 	void clean();
+	virtual ~SetScheduller();
 	
 };
 class SetMaps : public Load
@@ -91,6 +99,7 @@ struct Letter
 
 class Play:public Menu
 {
+	Menu * show;
 	std::vector<std::string> files;
 	Map * m;
 	Window * w;
