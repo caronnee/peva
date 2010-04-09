@@ -572,6 +572,7 @@ Robots::~Robots()
 
 void Robots::clean()
 {
+	parseErrorsList = "";
 	//deleting skins
 	while(!skins.empty())
 	{

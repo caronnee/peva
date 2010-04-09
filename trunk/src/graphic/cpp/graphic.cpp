@@ -13,6 +13,10 @@ void Graphic::waitKeyDown()
 			break;
 	}
 }
+SDL_Surface * Graphic::render(std::string s)
+{
+	return TTF_RenderText_Solid(g_font, s.c_str(), normal);
+}
 
 Graphic::Graphic()
 {

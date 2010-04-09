@@ -47,12 +47,16 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {	
+	show = NULL;
 	m = new Map(Position (x,y), "grass");
 	m->setBoundary(min<int> (w->g->screen->w, x), min<int>(w->g->screen->h,y));
 }
 
 void Play::clean()
 {
+	if (show)
+		delete show;
+	show = NULL;
 	done = false;
 	rect.x = 0;
 	rect.y = 0;
@@ -74,6 +78,11 @@ void Play::init()
 
 void Play::resume()
 {
+	if (show)
+	{
+		w->pop();
+		return;
+	}
 	if (settings->inputs.empty())
 		w->pop();	
 	int err = 0;
@@ -100,26 +109,15 @@ void Play::resume()
 		errList += robots.parseErrorsList;
 	if ((errList != "")||err)
 	{
-		SDL_Rect r;
-		SDL_GetClipRect(w->g->screen, &r);
-		w->tapestry(r);
 		std::string s = "Errors found:" + errList;//TODO pytat sa na continue a stop, resp new MENU_SCROLL
-		//TODO rozparsovat erorrs, aby sa to voslo na obrazovku
 		 
-		SDL_Surface * error = TTF_RenderText_Solid(w->g->g_font,s.c_str(), w->g->normal);
-		SDL_Rect e;
-		e.x = max<int>(0,w->g->screen->w/2 - error->w/2);
-		e.y = max<int>(0,w->g->screen->h/2 - error->h/2);
-		SDL_BlitSurface(error, NULL, w->g->screen, &e);
-		SDL_Flip(w->g->screen);
-		SDL_FreeSurface(error);
 		while(!robots.robots.empty())
 		{
 			delete robots.robots.back();
 			robots.robots.pop_back();
 		}
-		w->g->waitKeyDown();
-		w->pop();
+		show = new ShowMenu(w,s);	
+		w->add(show);
 		return;
 	}
 	if (settings->maps.empty())
@@ -206,6 +204,10 @@ Settings::Settings(Window *w_, Setting *s):Main(w_,0,NULL)
 	w = w_;
 	settings = s;
 	name(w->g,"Settings");
+}
+SetPenalize::~SetPenalize()
+{
+	//cleaned
 }
 SetPenalize::SetPenalize(Window *win, std::vector<int> * penalize)
 {
@@ -372,6 +374,131 @@ Settings::~Settings()
 {
 	// ako predok
 }
+ShowMenu::~ShowMenu()
+{
+	//already cleaned
+}
+ShowMenu::ShowMenu(Window * w_, std::string strToshow_)
+{
+	w= w_;
+	name(w->g,"Help");
+	strToshow = strToshow_;
+}
+void ShowMenu::init()
+{
+	iter = 1;
+	int borders = 20;
+	size_t position =0;
+	//najdeme header
+	position = strToshow.find(':',0);//predpokladam, ze je dost male
+	std::string show;	
+	if (position == std::string::npos)
+	{
+		position =0;
+		show = "Help";
+	}
+	else 
+		show = strToshow.substr(0,position);
+	size_t maxToHold = w->g->screen->h/w->g->font_size -4;
+	
+	int sizeOfChar = w->g->font_size/2;
+	size_t chars = (w->g->screen->w - 2*borders)/sizeOfChar;
+	images.push_back(w->g->render(show));
+	while(position < strToshow.size())
+	{
+		size_t pos = strToshow.find_first_of("\n\r", position);
+		if (pos == std::string::npos)
+			pos = strToshow.size();
+		if (pos - position > chars)
+			pos = position + chars;
+		std::string srt = strToshow.substr(position, pos - position);
+		if(pos-position == chars)
+		{
+			size_t space = srt.find_last_of(" ");
+			if(space < srt.size()-1)
+			{
+				pos = position +space;
+				srt = srt.substr(0,space);
+			}
+			pos--;
+		}
+		position = pos+1;
+		images.push_back(w->g->render(srt));
+	}
+	size = min<size_t>(images.size(),maxToHold);
+}
+void ShowMenu::resume()
+{ 
+	draw();
+}
+void ShowMenu::draw() 
+{ 
+	int borders = 20;
+	SDL_Rect r;
+	SDL_GetClipRect(w->g->screen, &r);
+	w->tapestry(r);
+	r.x = (w->g->screen->w - images[0]->w) >> 1;
+	r.y = w->g->font_size;
+	SDL_BlitSurface(images[0],NULL, w->g->screen, &r);
+
+	r.x = borders;
+	r.y = w->g->font_size << 2;
+	for (size_t i = iter; i < size; i++)
+	{
+		r.w = images[i]->w;
+		r.h = images[i]->h;
+		SDL_BlitSurface(images[i],NULL, w->g->screen, &r);
+		r.y += w->g->font_size;
+	}
+	SDL_Flip(w->g->screen);
+}
+void ShowMenu::clean()
+{
+	while(!images.empty())
+	{
+		SDL_FreeSurface(images.back());
+		images.pop_back();
+	}
+}
+void ShowMenu::process()
+{
+	while (SDL_WaitEvent(&w->g->event)!=0)
+	{
+		if (w->g->event.type!= SDL_KEYDOWN)
+			continue;
+		switch(w->g->event.key.keysym.sym)
+		{
+			case SDLK_ESCAPE:
+			case SDLK_RETURN:
+				w->pop();
+				return;
+			case SDLK_DOWN:
+				{
+					if(iter == 1)
+						break;
+					iter--;
+					draw();
+					break;
+				}
+			case SDLK_UP:
+				{
+					if (iter == images.size())
+						break;
+					iter++;
+					draw();
+					break;
+				}
+			default:
+				TEST("Unhandled button at drawing help")
+					break;
+		}
+		break;
+	}
+}
+SetScheduller::~SetScheduller()
+{
+	//already cleaned
+}
 SetScheduller::SetScheduller(Window * w_, int * sched)
 {
 	w = w_;
@@ -449,23 +576,23 @@ void SetScheduller::process()
 						case SDLK_4: case SDLK_5:
 						case SDLK_6: case SDLK_7:
 						case SDLK_8: case SDLK_9:
-						{
-							SDL_FreeSurface(value);
-							if (valueString.size() > 4 )
+							{
+								SDL_FreeSurface(value);
+								if (valueString.size() > 4 )
+									break;
+								valueString +=w->g->event.key.keysym.sym;
+								value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
+								draw();
 								break;
-							valueString +=w->g->event.key.keysym.sym;
-							value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
-							draw();
-							break;
-						}
+							}
 						case SDLK_BACKSPACE:
-						{
-							SDL_FreeSurface(value);
-							valueString.erase(valueString.size()-1,1);
-							value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
-							draw();
-							break;
-						}
+							{
+								SDL_FreeSurface(value);
+								valueString.erase(valueString.size()-1,1);
+								value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
+								draw();
+								break;
+							}
 
 						default:
 							TEST("Unhandled button")
