@@ -303,10 +303,8 @@ bool Robot::action(bool & conditions)
 	}
 	return core->body->alive();
 }
-Robots::Robots()
-{
-	actualRobot = NULL;
-}
+Robots::Robots() { }
+
 Skin * Robots::addSkin(std::string name)
 {
 	Skin * s;
@@ -325,49 +323,56 @@ Skin * Robots::addSkin(std::string name)
 void Robots::createNew(std::string name)
 {
 	TEST("Creating new robot");
-	if ((actualRobot!=NULL) && ( actualRobot!=robots.back() ))
-		robots.push_back(actualRobot);
-	actualRobot = new Robot(name, g);
-	actualRobot->errorList = input + ":\n";
+	robots.push_back( new Robot(name, g) );
+	robots.back()->errorList = input + ":\n";
 }
 
+void Robot::setScheduler(int type, const std::vector<int>& penals )
+{
+	if (!type)
+	{
+		scheduller = new SchedulleRound(penals);
+		return;
+	}
+	scheduller = new SchedulleTime(type, penals); 
+}
 void Robots::set(Options o, size_t value)
 {
 	switch(o) //TODO po zlinkovani
 	{
 		case OptionHealth:
 			TEST("setting health to:" << value ); 
-			actualRobot->core->body->hitpoints = value;
+			robots.back()->core->body->hitpoints = value;
 			break;
 		case OptionSee:
 			TEST("setting eyes angle to:" << value ); 
-			actualRobot->core->body->eyeAngle = value % MAX_EYE_ANGLE;
+			robots.back()->core->body->eyeAngle = value % MAX_EYE_ANGLE;
 			break;
 		case OptionMemory: 
-			if (actualRobot->dev_null)
+			if (robots.back()->dev_null)
 				break; //TODO warning
-			actualRobot->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
-			actualRobot->variables();
+			robots.back()->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
+			robots.back()->variables();
 			break;
 		case OptionAttack:
 			TEST("setting Attack x to:" << value ); 
-			actualRobot->core->body->attack_ = value;
+			robots.back()->core->body->attack_ = value;
 			break;
 		case OptionDefense:
 			TEST("setting defense to " << value ); 
-			actualRobot->core->body->defense = value;
+			robots.back()->core->body->defense = value;
 			break;
 		case OptionMisilleAttack:
 			TEST("setting Missille attack to " << value ); 
-			actualRobot->mAttack = value;
+			robots.back()->mAttack = value;
 			break;
 		case OptionMisilleHealth:
 			TEST("setting Missille health to:" << value ); 
-			actualRobot->mHealth = value;
+			robots.back()->mHealth = value;
 			break;
 		case OptionStep:
 			TEST("setting step to:" << value ); 
-			actualRobot->core->body->default_steps = value;
+			robots.back()->core->body->default_steps = value;
 			break;
 
 	}
@@ -379,52 +384,52 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 	{
 		case WarningKillAlreadyDefined:
 			warning = true;
-			warningList += "Line:" + deconvert<int>(line) + "Line"+ deconvert<int>(line) + "Line:" + deconvert<int>(line) + ":Ignoring, kill was already defined\n";
+			warningList += "Line:" + deconvert<int>(line) + ", ignoring, this kill was already defined\n";
 			break;
 		case WarningConversionToInt:
 			warning = true;
-			warningList += "Line:" + deconvert<int>(line) + "Conversion from real to int\n";
+			warningList += "Line:" + deconvert<int>(line) + ", conversion from real to int\n";
 			break;
 		case WarningRedefinedOption:
 			warning = true;
-			warningList += "Line:" + deconvert<int>(line) + "Option already defined, using new value\n";
+			warningList += "Line:" + deconvert<int>(line) + ", option already defined, using new value\n";
 		case ErrorVariableNotFound:
 		case ErrorVariableNotDefined:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Variable" + m + " not defined\n";
+			errorList += "Line:" + deconvert<int>(line) + ", variable " + m + " not defined\n";
 			break;
 		case ErrorToMuchInitializers:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Too much initializers\n";
+			errorList += "Line:" + deconvert<int>(line) + ", too much initializers\n";
 			break;
 		case ErrorTypeNotRecognized:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Type not recognized\n";
+			errorList += "Line:" + deconvert<int>(line) + ", type not recognized\n";
 			break;
 		case ErrorConversionImpossible:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Conversion impossible\n";
+			errorList += "Line:" + deconvert<int>(line) + ", conversion impossible\n";
 			break;
 		case ErrorOperationNotSupported:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Operation is not supported\n";
+			errorList += "Line:" + deconvert<int>(line) + ", operation is not supported\n";
 			break;
 		case ErrorWrongNumberOfParameters:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Wrong number of parameters\n";
+			errorList += "Line:" + deconvert<int>(line) + ", wrong number of parameters\n";
 			break;
 		case ErrorFunctionNotDefined:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Function Not defined\n";
+			errorList += "Line:" + deconvert<int>(line) + ", function Not defined\n";
 			break;
 		case ErrorOutOfRange:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Type out of range\n";
+			errorList += "Line:" + deconvert<int>(line) + ", type out of range\n";
 			break;
 			
 		default:
 			errors = true;
-			errorList += "Line:" + deconvert<int>(line) + "Unrecognized error\n";
+			errorList += "Line:" + deconvert<int>(line) + ", unrecognized error\n";
 			break;
 	}
 }
@@ -432,7 +437,8 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 void Robot::consolidate()
 {
 	getBody()->seer.setEyes(getBody()->eyeAngle,150); //TODO opravit, celkost ma urcovat mapa
-	scheduller = new SchedulleRound(); //TPDP konfigurovatelne
+	if(!scheduller)
+		scheduller = new SchedulleRound(); 
 	std::vector<InstructionBreak *> breaks;
 	std::vector<InstructionBegin *> begins;
 	std::vector<InstructionContinue *> conts;
@@ -548,9 +554,6 @@ void Robot::setmSkin(Skin* mSkin)
 
 void Robots::checkSkins()
 {
-	if ((actualRobot!=NULL)&&
-		((robots.empty())||(actualRobot!= robots.back())))
-		robots.push_back(actualRobot);
 	for (size_t i =0; i< robots.size(); i++)
 	{
 		if (!robots[i]->skined())
@@ -589,7 +592,6 @@ void Robots::clean()
 		delete robots[i];
 	}
 	robots.clear();
-	actualRobot = NULL;
 }
 /* error can occur before robot is created */
 void Robots::parseError(std::string error)

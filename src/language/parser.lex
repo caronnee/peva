@@ -20,6 +20,8 @@ WHITESPACE		[ \r\t\f]
 
 %%
 
+<<EOF>>			{ line = 1;TEST("OK, zmenuila som na 1"); yyterminate(); }
+
 {WHITESPACE}+					;
 
 \/\/						BEGIN(COMMENT_LINE);
@@ -126,4 +128,5 @@ continue					{*l = line;return TOKEN_CONTINUE; }
 void my_destroy()
 { 
 	yylex_destroy ();
+	line = 1;
 }

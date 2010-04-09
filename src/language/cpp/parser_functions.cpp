@@ -23,8 +23,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	Node *n = r->find_var(s, ok); 
 	if (!ok)
 	{
-		TEST("Error, variable not found")
-		r->error(line,Robot::Robot::ErrorVariableNotFound);
+		r->error(line,Robot::Robot::ErrorVariableNotFound, '\''+s+'\'');
 	}
 	if(n->nested == Local)
 		st.ins.push_back(new InstructionLoadLocal(n));

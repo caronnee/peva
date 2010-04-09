@@ -86,6 +86,7 @@ public:
 	Values values;
 	MyXmlData data;
 
+	void setScheduler(int type, const std::vector<int>& penals);
 	Scheduller * scheduller;
 	Core * core;
 	void add_global(Instructions ins);
@@ -161,9 +162,6 @@ struct Robots
 
 	/* targets that are unknown in processing time */
 	std::vector<Target *> resolveTargets;
-
-	/* robot being processed */
-	Robot * actualRobot;
 
 	/* robots already processed */
 	std::vector<Robot *> robots;
