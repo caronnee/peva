@@ -10,6 +10,7 @@
 %{
 	#include "../h/lval.h"
 	#include "../h/bison.h"
+	#include "../../add-ons/h/macros.h"
 
 int line = 1;
 
