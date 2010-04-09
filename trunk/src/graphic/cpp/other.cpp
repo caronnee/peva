@@ -473,24 +473,20 @@ void ShowMenu::process()
 				w->pop();
 				return;
 			case SDLK_DOWN:
-				{
-					if(iter == 1)
-						break;
-					iter--;
-					draw();
+				if(iter == 1)
 					break;
-				}
+				iter--;
+				draw();
+				break;
 			case SDLK_UP:
-				{
-					if (iter == images.size())
-						break;
-					iter++;
-					draw();
+				if (iter >= images.size() - size +1)
 					break;
-				}
+				iter++;
+				draw();
+				break;
 			default:
 				TEST("Unhandled button at drawing help")
-					break;
+				break;
 		}
 		break;
 	}

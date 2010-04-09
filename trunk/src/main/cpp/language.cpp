@@ -25,23 +25,23 @@ int main(int argc, char ** argv)
 	Robots q;
 	int err = yyparse(&q);
 	TEST("-------------------------------------END---------------------------------------------------------------")
-		q.actualRobot->output(&q.actualRobot->defined);
-		/*for (int i =0; i<q.actualRobot->instructions.size(); i++)
-		TEST( q.actualRobot->instructions[i]->name_)
-		q.actualRobot->save_to_xml();
-		q.actualRobot->execute();
+		q.robots.back()->output(&q.robots.back()->defined);
+		/*for (int i =0; i<q.robots.back()->instructions.size(); i++)
+		TEST( q.robots.back()->instructions[i]->name_)
+		q.robots.back()->save_to_xml();
+		q.robots.back()->execute();
 	 */
-	TEST("Zacinam na:"<<q.actualRobot->core->PC)
-	if ((err) || (q.actualRobot->errors))
+	TEST("Zacinam na:"<<q.robots.back()->core->PC)
+	if ((err) || (q.robots.back()->errors))
 	{
-		TEST ( q.actualRobot->errorList )
+		TEST ( q.robots.back()->errorList )
 		TEST( std::endl)
 		TEST ( q.parseErrorsList )
 	}
 	else
 	{
-		q.actualRobot->save_to_xml();
-		q.actualRobot->execute();
+		q.robots.back()->save_to_xml();
+		q.robots.back()->execute();
 	}
 	fclose(yyin);	
 	my_destroy();
