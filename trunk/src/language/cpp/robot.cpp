@@ -336,6 +336,19 @@ void Robot::setScheduler(int type, const std::vector<int>& penals )
 	}
 	scheduller = new SchedulleTime(type, penals); 
 }
+void Robots::finalize()
+{
+	for (size_t i=0; i<robots.size(); i++)
+	{
+		robots[i]->consolidate();
+		if (!robots[i]->skined())
+		{
+			robots[i]->setSkin(addSkin("dragon"));
+		}
+		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
+		robots[i]->core->body->turn(0);
+	}
+}
 void Robots::set(Options o, size_t value)
 {
 	switch(o) //TODO po zlinkovani
@@ -552,18 +565,6 @@ void Robot::setmSkin(Skin* mSkin)
 	}
 }
 
-void Robots::checkSkins()
-{
-	for (size_t i =0; i< robots.size(); i++)
-	{
-		if (!robots[i]->skined())
-		{
-			robots[i]->setSkin(addSkin("dragon"));
-		}
-		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
-		robots[i]->core->body->turn(0);
-	}
-}
 bool Robot::skined()
 {
 	return core->body->hasSkin();

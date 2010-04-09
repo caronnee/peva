@@ -98,7 +98,7 @@ void Play::resume()
 		err += yyparse(&robots);
 		fclose(yyin);	
 	}
-	robots.checkSkins();
+	robots.finalize();
 	std::string errList = "";
 	lastIn = 0;
 	for ( ; lastIn< robots.robots.size(); lastIn++)
@@ -128,7 +128,6 @@ void Play::resume()
 		m->load(w, settings->maps[mapIter]);//fixme kontrola
 		mapIter ++;
 		mapIter%= settings->maps.size();
-		
 	}
 	for ( size_t i =0; i< robots.robots.size(); i++)
 	{

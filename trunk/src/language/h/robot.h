@@ -184,8 +184,8 @@ struct Robots
 	/* sets robot option*/            //TODO premistnit do robota
 	void set(Options op, size_t value);
 
-	/* checks if visualization is ready */
-	void checkSkins();
+	/* sets for function, removes temporarily values etc. */
+	void finalize();
 
 	/* add skins to already loaded skins witout duplicities */
 	Skin * addSkin(std::string name);

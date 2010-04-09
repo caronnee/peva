@@ -20,6 +20,7 @@ public:
 	bool operator>(Position &a);
 	bool operator==(Position &p);
 	bool operator!=(Position &p);
+	Position operator%(Position t);
 	friend std::ostream& operator<<(std::ostream & o, const Position p);
 	size_t getDistance(Position p);
 	Position & turn(int degree, int size);
