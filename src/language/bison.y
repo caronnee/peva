@@ -125,7 +125,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<output> expression_bool_or "|| expresion"
 %type<output> call_fce "calling function"
 %type<output> call_parameters "parameters of function being called"
-%type<positions> places "defining taret places"
+%type<positions> places "defining target places"
 
 %start program
 
