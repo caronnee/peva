@@ -31,6 +31,7 @@ int main(int argc, char ** argv)
 		q.robots.back()->save_to_xml();
 		q.robots.back()->execute();
 	 */
+	q.finalize();
 	TEST("Zacinam na:"<<q.robots.back()->core->PC)
 	if ((err) || (q.robots.back()->errors))
 	{
