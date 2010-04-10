@@ -26,6 +26,6 @@ ROBOT qqq
 	}
 	main() // komentar
 	{
-		step(rekurz(10));
+//		step(rekurz(10));
 	}
 }
