@@ -144,6 +144,9 @@ public:
 	/* creates empty map */
 	Map(std::string skinName);
 
+	/* sets absolute shift */
+	void setShift(int x, int y);
+
 	/* check and collision */
 	Object * checkCollision(Object * o);
 

@@ -71,6 +71,11 @@ bool Map::collideWith( Object * o1, Object* o2 )
 
 	return a;
 }
+void Map::setShift(int x, int y)
+{
+	boundaries.x = x;
+	boundaries.y = y;
+}
 void Map::setBoundary(int x, int y)
 {
 	boundaries.width = min<int>(resolution.x,x);
@@ -594,7 +599,7 @@ void Map::update(SDL_Rect newBound, bool all, Window * w)
 	SDL_Rect clip = newBound;
 
 	if (clip.h+clip.y > boundaries.height + 15)
-		clip.h -= clip.h + clip.y - boundaries.height - 15;
+		clip.h -= clip.h + clip.y - boundaries.height - 15; //TODO zrusit a dat pre pred funkciu v tom, kde to vola, newBound sa proste nebde menit
 	if (clip.w+clip.x > boundaries.width + 15)
 		clip.w -= clip.w + clip.x - boundaries.width - 15;
 
