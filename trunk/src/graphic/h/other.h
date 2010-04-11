@@ -100,6 +100,7 @@ struct Letter
 class Play:public Menu
 {
 	Menu * show;
+	size_t focus;
 	std::vector<std::string> files;
 	Map * m;
 	Window * w;
