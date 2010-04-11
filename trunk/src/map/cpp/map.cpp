@@ -107,20 +107,14 @@ bool Map::load(Window* w, std::string filename)
 	input >> objectPosition.x; //prve zaporne
 	int iter = 0;
 	
-	while (!input.eof())
+	input.ignore(256,':');
+	while (input >> objectPosition.x)
 	{
-		input.ignore(256,':');
-		input >> objectPosition.x;
-		while (objectPosition.x < 0)
+		if (objectPosition.x < 0)
 		{
-			if (input.eof())
-			{
-				input.close();
-				return true;
-			}
 			iter++;
 			input.ignore(256,':');
-			input >> objectPosition.x;
+			continue;
 		}
 		input.ignore(256,':');
 		input >> objectPosition.y;
@@ -150,6 +144,7 @@ bool Map::load(Window* w, std::string filename)
 			o->setPosition(objectPosition);
 			add(o);
 		}
+		input.ignore(256,':');
 	}
 	//suppose the right structure
 		
