@@ -51,6 +51,10 @@ float Core::getFloatFromStack()
 {
 	return getVariableFromStack()->realValue;
 }
+void Core::reset()
+{
+
+}
 void Core::loadElement(int range)
 {
 	if (values.empty())

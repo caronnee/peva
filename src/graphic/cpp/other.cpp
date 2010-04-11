@@ -129,13 +129,30 @@ void Play::resume()
 		mapIter ++;
 		mapIter%= settings->maps.size();
 	}
+	std::list<Rectangle> starts = m->getStarts();
 	for ( size_t i =0; i< robots.robots.size(); i++)
 	{
-		robots.robots[i]->getBody()->place(m,Position (250,i*180+100));
+		Position p;
+		Object *o =robots.robots[i]->getBody();
+		if (i >= starts.size())
+			break;
+	//		p = Position(0,0);// findFree(robots.robots[i]->getBody());
+		else
+		{
+			std::list<Rectangle>::iterator q = starts.begin();
+			size_t t =rand()%starts.size();
+			for(size_t a=0; a<t; a++)//FIXME advance
+				q++;
+				Rectangle b=*q;
+			p.x = q->x -(o->width() - q->width)/2;
+			p.y = q->y -(o->height() - q->height)/2;
+		}
+		robots.robots[i]->getBody()->place(m,p);
 		robots.robots[i]->save_to_xml();
 		m->add(robots.robots[i]->getBody());
+		m->setBoundary(w->g->screen->w, w->g->screen->h);
 	}
-
+	draw();
 }
 void Play::process()
 {
@@ -189,6 +206,38 @@ void Play::process()
 				{
 					w->pop();
 					return;
+				}
+				case SDLK_n:
+				{
+					if (settings->maps.empty())
+						break;
+					m->load(w, settings->maps[mapIter]);//fixme kontrola
+					mapIter ++;
+					mapIter%= settings->maps.size();
+					std::list<Rectangle> starts = m->getStarts();
+					for ( size_t i =0; i< robots.robots.size(); i++)
+					{
+						Position p;
+						Object *o =robots.robots[i]->getBody();
+						if (i >= starts.size())
+							break;
+						//		p = Position(0,0);// findFree(robots.robots[i]->getBody());
+						else
+						{
+							std::list<Rectangle>::iterator q = starts.begin();
+							size_t t =rand()%starts.size();
+							for(size_t a=0; a<t; a++)//FIXME advance
+								q++;
+							Rectangle b=*q;
+							p.x = q->x -(o->width() - q->width)/2;
+							p.y = q->y -(o->height() - q->height)/2;
+						}
+						robots.robots[i]->getBody()->place(m,p);
+						robots.robots[i]->reset();
+						m->add(robots.robots[i]->getBody());
+						m->setBoundary(w->g->screen->w, w->g->screen->h);
+					}
+					break;
 				}
 				default:
 					break;
