@@ -3,9 +3,11 @@
 #include <fstream>
 #include "../h/snake.h"
 #include "../../add-ons/h/macros.h"
+#include "../../add-ons/h/help_functions.h"
 
 Snake::Snake()
 {
+	hungry = 0;
 	ready = 0;
 	indexLast = 0;
 	health = 0;
@@ -15,11 +17,12 @@ Snake::Snake()
 Snake::Snake(Position resolution_)	//zvovku dopocitane
 {
 	srand( time(NULL) );
+	hungry = 0;
 	resolution = resolution_;
 	max_interval = resolution.x + resolution.y - 2;		
 	position.x = rand()%resolution.x;
 	position.y = rand()%resolution.y;
-	//TEST(" generated position " << position)
+//	TEST("\t generated position " << position << std::endl)
 	health=(resolution.x + resolution.y)*3; //TODO?
 	Init();		
 }
@@ -112,11 +115,13 @@ bool Snake::move()
 
 	if ((position >= resolution)||(Position(0,0) > position ))
 	{
+//		TEST("before:" << position << " ")
 		this->position.x -= 2*movements[i].x;
 		this->position.y -= 2*movements[i].y;
+	//	TEST("after:" << position << std::endl)
 		setMovement();
 	}
-	int fatter = rand() % 5-2; //-2,2, 2- ztenci sa,2 rozsir, inak zostan
+	int fatter = rand() % 9; //-2,2, 2- ztenci sa,2 rozsir, inak zostan
 	
 	Position test = visited[(indexLast-1 + MOVEMENTS)%MOVEMENTS];
 	test.substractVector(position);
@@ -125,26 +130,25 @@ bool Snake::move()
 		TEST("??" <<indexLast << " " << visited[indexLast] << ":" << position <<  " "<< test )
 	}
 	for (int i =0; i< LAST_VISITED; i++)
-	{
 		if (position == visited[i])
 		{
-			direction.x = movements[MOVEMENTS - 1].x;
-			direction.x = movements[MOVEMENTS - 1].y;
-			position = visited[LAST_VISITED];
-			position += direction;
+			health++;
+			hungry++;
+			if(hungry == health)
+				health = 0;
+			break;
 		}
-	}
 	visited[indexLast] = position;
 	indexLast++;
 	indexLast %= LAST_VISITED;
 	switch(fatter)
 	{
-		case -2: 
+		case 0: 
 		{
 			fatness--;
 			break;
 		}
-		case 2:
+		case 1:
 		{
 			fatness++;
 			break;
@@ -154,7 +158,8 @@ bool Snake::move()
 		fatness = 0;
 	if (fatness > 4) 
 		fatness = 4;
-//	TEST("@" << position << " ")
+	//TEST(" " << position << " ")
+	hungry = max<int>(hungry-1,0);
 	return true;
 }
 
@@ -220,7 +225,9 @@ void Snakes::create()
 		Position actual = snakes.back().get_pos();
 		actual.x -=snakes.back().get_fat()*snakes.back().get_dir().x;
 		actual.y -=snakes.back().get_fat()*snakes.back().get_dir().y;
-		for(int i=-snakes.back().get_fat();i<=snakes.back().get_fat();i++)
+		for(int i=-snakes.back().get_fat();i<=snakes.back().get_fat();i++,
+			actual.x += snakes.back().get_dir().x, 
+			actual.y += snakes.back().get_dir().y )
 		{
 			if ((actual.x < 0) 
 				|| (actual.y < 0) 
@@ -228,28 +235,19 @@ void Snakes::create()
 				|| (actual.y >= resolution.y))
 				continue;
 			map[actual.x][actual.y] = true;
-			actual.x+=snakes.back().get_dir().y;
-			actual.y+=snakes.back().get_dir().x;
-			//TEST(actual << " ")
 		}
 		if (snakes.back().ready)
 			snakes.push_back(Snake(snakes.back().clone()));
 	}
-	/*for(int i = 0; i < resolution.x;i++)
-	{
-		for(int j = 0; j < resolution.y;j++)
-		{
-			map[i][j] = false;
-		}
-	}*/
 }
+
 void Snakes::saveToFile(std::string filename)
 {
 	std::ofstream file;
 	file.open(filename.c_str(),std::ios::out);
 	if (!file.good())
 	{
-		TEST("Unable to create file " << filename)
+	//	TEST("Unable to create file " << filename)
 		return;
 	}
 	for (int i =0; i< resolution.x;i++)
@@ -257,7 +255,7 @@ void Snakes::saveToFile(std::string filename)
 		for (int j =0; j< resolution.y; j++)
 		{
 			if (map[i][j])
-				file << ' ';
+				file << '.';
 			else
 				file << 'o';
 		}

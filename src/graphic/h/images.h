@@ -74,6 +74,7 @@ public:
 	};
 	/* constructor for skin */
 	Skin(std::string name, Skin::Type t);
+
 	/* common method for loading images */
 	void create(std::string * loadImages, std::string name, int sizeToLoad);
 

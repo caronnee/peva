@@ -35,6 +35,9 @@ public:
 	/* number of tile to left and rigt, symmetrically */
 	int fatness;
 	
+	/* for detection infinite cycle */
+	int hungry;
+
 	/* how many tile forward is snake able to do */
 	int health;
 

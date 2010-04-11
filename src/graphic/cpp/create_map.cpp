@@ -265,13 +265,16 @@ void Create_map::process_resolution()
 void Create_map::generuj()
 {
 	map->clean();
-	Position snakeRes = map->resolution/(SPACE_KOEF*60);
-	//FIXME zabezpecit, aby sa to generovalo len na povolenej ploche
+	Position hlp = map->resolution;
+	hlp.substractVector(Position(2*skins[WallSolidId]->get_shift().x,2*skins[WallSolidId]->get_shift().y));
+	Position snakeRes = hlp/(SPACE_KOEF*60);
+
 	Snakes snake(snakeRes); //FIXME nie konstanta ale vlastnost mapy
-	Position diff(map->resolution.x / (SPACE_KOEF*snakeRes.x), map->resolution.y / (SPACE_KOEF*snakeRes.y) );
+	Position diff(hlp.x / (SPACE_KOEF*snakeRes.x), hlp.y / (SPACE_KOEF*snakeRes.y) );
 	snake.create();
-	Position objPosition(0,0);
-	TEST("..\n")
+
+	Position objPosition(skins[WallSolidId]->get_shift().x,skins[WallSolidId]->get_shift().y);
+	TEST("vypisujem..\n")
 	for (int i =0; i< snakeRes.x; i++)
 	{
 		for (int j =0; j< snakeRes.y; j++)
@@ -297,9 +300,10 @@ void Create_map::generuj()
 			}
 		}
 		TEST("..\n")
-		objPosition.y = 0;
+		objPosition.y = skins[WallSolidId]->get_shift().y;
 		objPosition.x += SPACE_KOEF*diff.y;
 	}
+	map->addBoundaryWalls();
 }
 void Create_map::saving()
 {
@@ -320,10 +324,8 @@ void Create_map::saving()
 				{
 					std::string msg = "Ok, press Enter to continue";
 					file_name += ".map";
-					if (!map->saveToFile(file_name))
-					{
+					if ( (file_name == ".map") || (!map->saveToFile(file_name) ) )
 						msg = "Cannot save to file '"+ file_name +"'";
-					}
 					
 					state = DRAW;
 					draw();
