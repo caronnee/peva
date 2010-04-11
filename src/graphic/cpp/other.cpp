@@ -47,6 +47,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {	
+	focus = 0;
 	show = NULL;
 	m = new Map(Position (x,y), "grass");
 	m->setBoundary(min<int> (w->g->screen->w, x), min<int>(w->g->screen->h,y));
@@ -100,6 +101,7 @@ void Play::resume()
 	}
 	robots.finalize();
 	std::string errList = "";
+	focus = 0;
 	lastIn = 0;
 	for ( ; lastIn< robots.robots.size(); lastIn++)
 		if (robots.robots[lastIn]->errors)
@@ -146,6 +148,7 @@ void Play::resume()
 				Rectangle b=*q;
 			p.x = q->x -(o->width() - q->width)/2;
 			p.y = q->y -(o->height() - q->height)/2;
+			starts.erase(q);
 		}
 		robots.robots[i]->getBody()->place(m,p);
 		robots.robots[i]->save_to_xml();
@@ -207,10 +210,45 @@ void Play::process()
 					w->pop();
 					return;
 				}
-				case SDLK_n:
+				case SDLK_a: //another alive robot, no break, we need to center
+				{
+					for(size_t i =0; i<robots.robots.size(); i++)
+					{
+						focus++;
+						focus %= robots.robots.size();
+						if (robots.robots[focus]->getBody()->alive())
+							break;
+					}
+				}
+				case SDLK_c: //center aktual
+				{
+					if (focus >= robots.robots.size() )
+						break; //should NOT be here, consider exception?
+					Rectangle t = robots.robots[focus]->getBody()->collisionSize();
+					Position p;
+					p.x = t.x + (t.width + w->g->screen->w)/2;
+					p.y = t.x + (t.height + w->g->screen->h)/2;
+					Position lastAcceptable(m->resolution.x - w->g->screen->w,
+						m->resolution.y - w->g->screen->h);
+					if (lastAcceptable.x < 0)
+						lastAcceptable.x = 0;
+					if (lastAcceptable.y < 0)
+						lastAcceptable.y = 0;
+					if (lastAcceptable.x < p.x)
+						p.x = lastAcceptable.x;
+					if (lastAcceptable.y < p.y)
+						p.y = lastAcceptable.y;
+					m->setShift(p.x,p.y);
+					break;
+				}
+				case SDLK_n: //next map
 				{
 					if (settings->maps.empty())
 						break;
+						//removing body objects
+
+					for ( size_t i =0; i< robots.robots.size(); i++)
+						m->remove(robots.robots[i]->getBody());
 					m->load(w, settings->maps[mapIter]);//fixme kontrola
 					mapIter ++;
 					mapIter%= settings->maps.size();
@@ -219,7 +257,7 @@ void Play::process()
 					{
 						Position p;
 						Object *o =robots.robots[i]->getBody();
-						if (i >= starts.size())
+						if (i >= starts.size()) //neumiesnili sa, si mrtvi:)
 							break;
 						//		p = Position(0,0);// findFree(robots.robots[i]->getBody());
 						else
@@ -231,6 +269,7 @@ void Play::process()
 							Rectangle b=*q;
 							p.x = q->x -(o->width() - q->width)/2;
 							p.y = q->y -(o->height() - q->height)/2;
+							starts.erase(q);;
 						}
 						robots.robots[i]->getBody()->place(m,p);
 						robots.robots[i]->reset();
