@@ -61,6 +61,9 @@ struct Map
 	/* structure holdin images of wall */
 	std::vector<WallSkin *> wskins;
 
+	/* returns start positions */
+	std::list<Rectangle> getStarts();
+
 	/* significant places*/
 	std::list<Place> places; //starts and targets
 

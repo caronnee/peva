@@ -196,6 +196,7 @@ Node * Robot::add(std::string name)
 void Robot::add_global(Instructions ins)
 {
 	core->PC = instructions.size();
+	core->PCs.push_back(core->PC);
 	for (size_t i =0; i< ins.size(); i++)
 	{
 		instructions.push_back(ins[i]);	
@@ -563,6 +564,13 @@ void Robot::setmSkin(Skin* mSkin)
 		m->hitpoints = mHealth;
 		core->body->addAmmo(m);
 	}
+}
+
+void Robot::reset()
+{
+	//missiles!
+	core->reset();
+	scheduller->reset();
 }
 
 bool Robot::skined()

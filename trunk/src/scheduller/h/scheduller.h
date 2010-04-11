@@ -10,6 +10,7 @@ class Scheduller
 	int quantum;
 	public:
 	Scheduller();
+	void reset();
 	void penalize(Instruction * i);
 	virtual bool ready() = 0;
 	virtual ~Scheduller();

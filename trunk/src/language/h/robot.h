@@ -86,6 +86,7 @@ public:
 	Values values;
 	MyXmlData data;
 
+	void reset();
 	void setScheduler(int type, const std::vector<int>& penals);
 	Scheduller * scheduller;
 	Core * core;

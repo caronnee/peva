@@ -14,7 +14,10 @@ void Scheduller::penalize(Instruction * i)
 {
 	quantum=penalties[i->group];
 }
-
+void Scheduller::reset()
+{
+	quantum = 0;
+}
 Scheduller::~Scheduller()
 {
 	/* nothing */

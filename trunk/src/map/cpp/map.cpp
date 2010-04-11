@@ -48,7 +48,7 @@ bool Map::saveToFile(std::string filename)
 		iter!= places.end();
 		iter++)
 	{
-		saveInfo[iter->saveId] += deconvert<Position>(iter->r.getPos()) + ", img :" + deconvert<size_t>(iter->numberImage) + ", id:" + deconvert<int>(iter->id);
+		saveInfo[iter->saveId] += deconvert<Position>(iter->r.getPos()) ; //no need for ide, it is sorted
 	}
 	for (int i =0; i<NumberOfObjectToSave; i++)
 	{
@@ -141,8 +141,9 @@ bool Map::load(Window* w, std::string filename)
 				break;
 			case SaveTarget:
 				addTarget(w, objectPosition.x, objectPosition.y);
+				break;
 			default:
-				TEST("Not implemented")
+				TEST("Not implemented"<<iter << std::endl)
 		}
 		if (o!=NULL)
 		{
@@ -191,6 +192,8 @@ Map::Map(std::string skinName)
 	}
 	skinWork = new ImageSkinWork(skin);
 	map = NULL;
+	boxesInRow = 0;
+	boxesInColumn = 0;
 }
 
 Map::Map(Position resol, std::string skinName) 
@@ -269,6 +272,17 @@ void Map::addStart(Window * w,size_t x, size_t y)
 	pl.img = NULL;
 	pl.numberImage = WallStartId;
 	addPlace(w,pl);
+}
+std::list<Rectangle> Map::getStarts()
+{
+	std::list<Place>::iterator iter;
+	std::list<Rectangle> toReturn;
+	for(iter = places.begin(); iter!=places.end(); iter++)
+	{
+		if (iter->id < 0)
+			toReturn.push_back(iter->r);
+	}
+	return toReturn;
 }
 void Map::addTarget(Window * w,size_t x, size_t y)
 {
