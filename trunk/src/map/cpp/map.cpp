@@ -655,7 +655,7 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 	//FIXME
 	for (std::list<Place>::iterator i = places.begin(); i!=places.end(); i++)
 	{
-		if (i->r.overlaps(position))
+		if (i->r.overlaps(removePos))
 		{
 			toBlit.x = i->r.x - boundaries.x;
 			toBlit.y = i->r.y - boundaries.y;

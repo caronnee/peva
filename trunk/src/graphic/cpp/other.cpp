@@ -26,14 +26,6 @@ Play::Play(Window *w_, Setting * s)
 	name(w->g, "Play Game");
 	loadInput = new SetMaps(w, &s->inputs, ".input","inputs");
 	m = NULL;
-	for (int i = 0; i< 256; i++)
-	{
-		letters[i].heigth = TTF_FontLineSkip(w->g->g_font);
-		letters[i].ch = i;
-		TTF_SizeText(w->g->g_font,letters[i].ch.c_str(), &letters[i].size,NULL); 
-		letters[i].s = TTF_RenderText_Solid(w->g->g_font,letters[i].ch.c_str(), w->g->normal);
-	}
-
 	/* cleaning up any mess */
 	clean();
 }
@@ -58,10 +50,8 @@ void Play::clean()
 	if (show)
 		delete show;
 	show = NULL;
-	done = false;
 	rect.x = 0;
 	rect.y = 0;
-	iter = iter_beg = letts.begin();
 
 	if (m!=NULL)
 		delete m;
@@ -85,7 +75,11 @@ void Play::resume()
 		return;
 	}
 	if (settings->inputs.empty())
+	{
 		w->pop();	
+		return;
+	}
+	robots.clean();
 	int err = 0;
 	size_t lastIn = 0;
 	for (size_t i = 0; i< settings->inputs.size(); i++)
@@ -136,8 +130,8 @@ void Play::resume()
 	{
 		Position p;
 		Object *o =robots.robots[i]->getBody();
-		if (i >= starts.size())
-			break;
+		if (starts.empty())
+			break; //TODO zistit volny priestor
 	//		p = Position(0,0);// findFree(robots.robots[i]->getBody());
 		else
 		{
@@ -145,9 +139,10 @@ void Play::resume()
 			size_t t =rand()%starts.size();
 			for(size_t a=0; a<t; a++)//FIXME advance
 				q++;
-				Rectangle b=*q;
-			p.x = q->x -(o->width() - q->width)/2;
-			p.y = q->y -(o->height() - q->height)/2;
+			Rectangle b=*q;
+			Rectangle e = o->collisionSize();
+			p.x = q->x -(e.width - q->width)/2 - e.x;
+			p.y = q->y -(e.height - q->height)/2 - e.y;
 			starts.erase(q);
 		}
 		robots.robots[i]->getBody()->place(m,p);
@@ -246,36 +241,7 @@ void Play::process()
 					if (settings->maps.empty())
 						break;
 						//removing body objects
-
-					for ( size_t i =0; i< robots.robots.size(); i++)
-						m->remove(robots.robots[i]->getBody());
-					m->load(w, settings->maps[mapIter]);//fixme kontrola
-					mapIter ++;
-					mapIter%= settings->maps.size();
-					std::list<Rectangle> starts = m->getStarts();
-					for ( size_t i =0; i< robots.robots.size(); i++)
-					{
-						Position p;
-						Object *o =robots.robots[i]->getBody();
-						if (i >= starts.size()) //neumiesnili sa, si mrtvi:)
-							break;
-						//		p = Position(0,0);// findFree(robots.robots[i]->getBody());
-						else
-						{
-							std::list<Rectangle>::iterator q = starts.begin();
-							size_t t =rand()%starts.size();
-							for(size_t a=0; a<t; a++)//FIXME advance
-								q++;
-							Rectangle b=*q;
-							p.x = q->x -(o->width() - q->width)/2;
-							p.y = q->y -(o->height() - q->height)/2;
-							starts.erase(q);;
-						}
-						robots.robots[i]->getBody()->place(m,p);
-						robots.robots[i]->reset();
-						m->add(robots.robots[i]->getBody());
-						m->setBoundary(w->g->screen->w, w->g->screen->h);
-					}
+					resume();
 					break;
 				}
 				default:
