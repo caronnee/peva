@@ -438,6 +438,11 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					lastPut = wall;
 					update.w = wall->width();
 					update.h = wall->height(); //TODO check, netreba shift?
+					if (update.h+update.y > map->boundaries.height + 15)
+						update.h -= update.h + update.y - map->boundaries.height - 15; //TODO zrusit a dat pre pred funkciu v tom, kde to vola, newBound sa proste nebde menit
+					if (update.w+update.x > map->boundaries.width + 15)
+						update.w -= update.w + update.x - map->boundaries.width - 15;
+
 					map->update(update,true, w);
 					break;
 				}
