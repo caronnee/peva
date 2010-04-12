@@ -220,9 +220,9 @@ void Play::process()
 					if (focus >= robots.robots.size() )
 						break; //should NOT be here, consider exception?
 					Rectangle t = robots.robots[focus]->getBody()->collisionSize();
-					Position p;
-					p.x = t.x + (t.width + w->g->screen->w)/2;
-					p.y = t.x + (t.height + w->g->screen->h)/2;
+					Position p = robots.robots[focus]->getBody()->get_pos();
+					p.x = p.x +(t.width - w->g->screen->w)/2;
+					p.y = p.y + (t.height - w->g->screen->h)/2;
 					Position lastAcceptable(m->resolution.x - w->g->screen->w,
 						m->resolution.y - w->g->screen->h);
 					if (lastAcceptable.x < 0)
@@ -233,6 +233,10 @@ void Play::process()
 						p.x = lastAcceptable.x;
 					if (lastAcceptable.y < p.y)
 						p.y = lastAcceptable.y;
+					if (p.x < 0)
+						p.x = 0;
+					if (p.y < 0)
+						p.y = 0;
 					m->setShift(p.x,p.y);
 					break;
 				}
