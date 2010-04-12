@@ -598,11 +598,6 @@ void Map::update(SDL_Rect newBound, bool all, Window * w)
 {
 	SDL_Rect clip = newBound;
 
-	if (clip.h+clip.y > boundaries.height + 15)
-		clip.h -= clip.h + clip.y - boundaries.height - 15; //TODO zrusit a dat pre pred funkciu v tom, kde to vola, newBound sa proste nebde menit
-	if (clip.w+clip.x > boundaries.width + 15)
-		clip.w -= clip.w + clip.x - boundaries.width - 15;
-
 	SDL_SetClipRect(w->g->screen, &clip);
 	if (all)
 		drawAll(w);

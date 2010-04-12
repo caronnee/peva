@@ -116,6 +116,9 @@ void Play::resume()
 		w->add(show);
 		return;
 	}
+	for(size_t i =0; i< robots.robots.size(); i++)
+		robots.robots[i]->save_to_xml();
+
 	if (settings->maps.empty())
 		init( 500, 400 );//TODO makro
 	else
@@ -128,28 +131,59 @@ void Play::resume()
 	std::list<Rectangle> starts = m->getStarts();
 	for ( size_t i =0; i< robots.robots.size(); i++)
 	{
-		Position p;
-		Object *o =robots.robots[i]->getBody();
-		if (starts.empty())
-			break; //TODO zistit volny priestor
-	//		p = Position(0,0);// findFree(robots.robots[i]->getBody());
-		else
+		Body * body =robots.robots[i]->getBody();
+
+		std::list<Rectangle>::iterator q = starts.begin();
+		size_t t;
+		Rectangle b;
+
+		bool set = false;
+		if (!starts.empty())
 		{
-			std::list<Rectangle>::iterator q = starts.begin();
-			size_t t =rand()%starts.size();
+			t =rand()%starts.size();
 			for(size_t a=0; a<t; a++)//FIXME advance
 				q++;
-			Rectangle b=*q;
-			Rectangle e = o->collisionSize();
+			b=*q;
+		}
+
+		for (size_t j =0; j < starts.size(); j++)
+		{
+			Position p;
+			Rectangle e = body->collisionSize();
 			p.x = q->x -(e.width - q->width)/2 - e.x;
 			p.y = q->y -(e.height - q->height)/2 - e.y;
-			starts.erase(q);
+			robots.robots[i]->getBody()->place(m,p);
+			if (!m->checkCollision(body))
+			{
+				starts.erase(q);
+				set = true;
+				m->add(body);
+				break;
+			}
 		}
-		robots.robots[i]->getBody()->place(m,p);
-		robots.robots[i]->save_to_xml();
-		m->add(robots.robots[i]->getBody());
-		m->setBoundary(w->g->screen->w, w->g->screen->h);
+		if(!set)
+		{
+			TEST("nepodarilo sa najst statovacie pole ")
+			set = false;
+			for (int iter = 0;iter < m->resolution.x +m->resolution.y; iter++) //FIXME other 'random' value
+			{
+				Position t(rand()%m->resolution.x, rand()%m->resolution.y);
+				body->place(m,t);
+				if (!m->checkCollision(body))
+				{
+					set = true;
+					m->add(body);
+					break;
+				}
+			}
+			if (!set)
+			{
+				body->hitted(body, Position(0,0), 100000); //harakiri ;) possible easter egg
+				TEST("I'm not on start, I cannot live anymore!")
+			}
+		}
 	}
+	m->setBoundary(w->g->screen->w, w->g->screen->h);
 	draw();
 }
 void Play::process()
