@@ -43,23 +43,38 @@ class TargetVisit : public Target
 protected:
 	/* id of the object */
 	size_t targetId;
+
+	/* boux about target position */
 	Rectangle boundingBox;
 public:
+	/* Consturctor*/
 	TargetVisit(size_t id);
+
+	/* id of the target, created in contructor, should be unique*/
 	size_t tellId();
+
+	/* change or init position */
 	bool initPosition(Position position);
+
+	/* sets place as visited */
 	bool setOk();
+
+	/* tells information about position */
 	Rectangle tellPosition();
+
+	/* virtual destructor */
 	virtual ~TargetVisit();
 };
 
 class TargetVisitSequence : public Target
 {
+	/* sequence that should be visited */
 	std::vector<TargetVisit *> places;
+
+	/* index of place that should be visited now */
 	size_t iter;
 public:
-	TargetVisitSequence();
-	TargetVisitSequence(std::vector<Position> p);
+	
 	TargetVisitSequence(std::vector<TargetVisit*> p);
 	size_t tellId();
 	bool initPosition(Position p);

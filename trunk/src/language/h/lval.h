@@ -20,6 +20,8 @@ struct DefaultValue
 
 struct Lval {
 	
+	TargetVisit * target;
+
 	int depth;
 
 	Operation operation;
@@ -49,7 +51,7 @@ struct Lval {
 	Options op;
 	
 	Position position;
-	std::vector<Position> positions;
+	std::vector<TargetVisit *> places;
 
 	Element output;
 	

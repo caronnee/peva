@@ -19,22 +19,32 @@ class Body : public Object
 	/* in which map is an object located */
 	Map * map;
 public:
-	/* ammo, that can be shot */
+	/* class handling visibility issue */
 	Seer seer;
+
+	/* ammo, that can be shot */
 	List ammo;
+
+	/* number of tasks to be done in order to win */
 	size_t tasks;
+
+	/* original eye angle */
 	size_t eyeAngle;
+
+	/* number of steps to be done when step() called */
+	int default_steps; 
 public:
 	/* Constructor */
 	Body();
-	int default_steps; 
 
+	/* sets image to be dead*/
 	void dead();
+	
+	/* virtal method, nothing to do actually*/
 	void bounce(Object *o);
 	void killed(Object *o);
 	int state() const;
 	bool addKilled(unsigned l,Operation op, size_t number);
-	void addVisit(std::vector<Position> pos);
 	void addVisit(TargetVisit * pos);
 	void addVisitSeq(std::vector<TargetVisit *> ids);
 	void addVisitSeq(std::vector<Position> pos);

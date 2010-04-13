@@ -103,7 +103,7 @@ void Play::resume()
 	my_destroy();
 	if (err)
 		errList += robots.parseErrorsList;
-	if ((errList != "")||err)
+	if ((errList != "") || err)
 	{
 		std::string s = "Errors found:" + errList;//TODO pytat sa na continue a stop, resp new MENU_SCROLL
 		 
@@ -116,6 +116,7 @@ void Play::resume()
 		w->add(show);
 		return;
 	}
+
 	for(size_t i =0; i< robots.robots.size(); i++)
 		robots.robots[i]->save_to_xml();
 
@@ -128,6 +129,7 @@ void Play::resume()
 		mapIter ++;
 		mapIter%= settings->maps.size();
 	}
+	/* starts handling */
 	std::list<Rectangle> starts = m->getStarts();
 	for ( size_t i =0; i< robots.robots.size(); i++)
 	{
@@ -163,9 +165,9 @@ void Play::resume()
 		}
 		if(!set)
 		{
-			TEST("nepodarilo sa najst statovacie pole ")
+			TEST("No appropriate start place found")
 			set = false;
-			for (int iter = 0;iter < m->resolution.x +m->resolution.y; iter++) //FIXME other 'random' value
+			for (int iter = 0;iter < m->resolution.x + m->resolution.y; iter++) //FIXME other 'random' value
 			{
 				Position t(rand()%m->resolution.x, rand()%m->resolution.y);
 				body->place(m,t);

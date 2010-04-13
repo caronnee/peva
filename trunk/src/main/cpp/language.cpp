@@ -32,7 +32,6 @@ int main(int argc, char ** argv)
 		q.robots.back()->execute();
 	 */
 	q.finalize();
-	TEST("Zacinam na:"<<q.robots.back()->core->PC)
 	if ((err) || (q.robots.back()->errors))
 	{
 		TEST ( q.robots.back()->errorList )
