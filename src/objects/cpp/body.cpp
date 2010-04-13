@@ -88,11 +88,6 @@ void Body::addVisit(TargetVisit * target)
 	tasks++;
 	targets.push_back(target);
 }
-void Body::addVisitSeq(std::vector<Position> positions)
-{
-	tasks++;
-	targets.push_back(new TargetVisitSequence(positions));
-}
 void Body::addVisitSeq(std::vector<TargetVisit *> ids)
 {
 	tasks++;
@@ -101,20 +96,6 @@ void Body::addVisitSeq(std::vector<TargetVisit *> ids)
 void Body::addAmmo( Item * i)
 {
 	ammo.add(i); //owner je spravny
-}
-void Body::addVisit(std::vector<Position> positions)
-{
-	for(size_t i =0; i< positions.size(); i++)
-	{
-		tasks++;
-		targets.push_back(new TargetVisit(0));
-	}
-	for(size_t i = targets.size()-1;  !positions.empty(); i--)
-	{
-		//nezalezi na poradi
-		targets[i]->initPosition(positions.back());
-		positions.pop_back();
-	}
 }
 
 //TODO is blocking cez premennu aby som nemusela pretazovat funkciu

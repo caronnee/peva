@@ -349,6 +349,21 @@ void Robots::finalize()
 		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
 		robots[i]->core->body->turn(0);
 	}
+	for (size_t i =0; i< resolveName.size(); i++)
+		for (size_t j=0; j<robots.size(); j++)
+		{
+			if (robots[i]->getName() == resolveName[i].name)
+			{
+				Body * killer = resolveName[i].robot->getBody();
+				Body * toKill = robots[i]->getBody();
+				killer->addKill(toKill);
+				
+				break;
+			}
+			if (j == robots.size() -1)
+				robots[i]->error
+				(resolveName[i].line, Robot::WarningTargetNotFound);
+		}
 }
 void Robots::set(Options o, size_t value)
 {
@@ -396,6 +411,10 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 {
 	switch (e)
 	{
+		case WarningTargetNotFound:
+			warning = true;
+			warningList += "Line: " + deconvert<size_t>(line) + ", name of robot to kill ( " + m + ") not found\n";
+			break;
 		case WarningKillAlreadyDefined:
 			warning = true;
 			warningList += "Line:" + deconvert<int>(line) + ", ignoring, this kill was already defined\n";
@@ -564,13 +583,6 @@ void Robot::setmSkin(Skin* mSkin)
 		m->hitpoints = mHealth;
 		core->body->addAmmo(m);
 	}
-}
-
-void Robot::reset()
-{
-	//missiles!
-	core->reset();
-	scheduller->reset();
 }
 
 bool Robot::skined()

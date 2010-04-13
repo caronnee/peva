@@ -51,26 +51,11 @@ TargetVisit::~TargetVisit()
 	   Nothing to destroy yet
 	*/
 }
-TargetVisitSequence::TargetVisitSequence()
-{
-	places.clear();
-	iter = 0;
-}
 
 TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit *> p)
 {
 	iter = 0;
 	places = p;
-}
-TargetVisitSequence::TargetVisitSequence(std::vector<Position> p)
-{
-	iter = 0;
-	for (size_t i = 0; i< p.size(); i++)
-	{
-		TargetVisit* t =new TargetVisit(0);
-		t->initPosition(p[i]);
-		places.push_back(t);
-	}
 }
 size_t TargetVisitSequence::tellId()
 {

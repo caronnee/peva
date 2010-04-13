@@ -1,6 +1,6 @@
 //TODO zrusit loadGlobal
 //TODO do funkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
-//TODO pri for-e odtranit vytvorenie premennej, spravit sko  defauult temp
+//TODO pri for-e odtranit vytvorenie premennej, spravit skor  defauult temp
 %{
 #include <iostream>
 #include <queue>
@@ -60,7 +60,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 
 /* target of game*/
 %token TOKEN_VISIT "keyword 'VISIT'"
-%token TOKEN_VISIT_SEQUENCE "keyword 'VISIT'_SEQ"
+%token TOKEN_VISIT_SEQUENCE "keyword 'VISIT_SEQ'"
 %token TOKEN_KILLED "keyword '' KILLED"
 %token TOKEN_SKIN "keyword 'SKIN'"
 %token TOKEN_KILL "keyword 'KILL'"
@@ -83,7 +83,6 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<type> return_type "return type"
 
 %type<ranges> ranges "range"
-%type<ranges> integers "integer number(s)"
 %type<ident> function_header "function header"
 
 %type<entries> parameters_empty "zero or more paramaters"
@@ -125,7 +124,8 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %type<output> expression_bool_or "|| expresion"
 %type<output> call_fce "calling function"
 %type<output> call_parameters "parameters of function being called"
-%type<positions> places "defining target places"
+%type<places> places "defining target places"
+%type<target> place "defining target place"
 
 %start program
 
@@ -157,47 +157,43 @@ robot:  define_bot TOKEN_BEGIN options targets global_variables declare_function
 	;
 targets: /* default target */
 	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->robots.back()->core->body->addKilled(@2,$3,$4);}
-	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR { program->robots.back()->core->body->addVisit($4);}
-	|targets TOKEN_VISIT TOKEN_LPAR integers TOKEN_RPAR 
+	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR 
 	{ 
-		for (size_t i = 0; i< $4.size(); i++)
-		{
-			TargetVisit * t = new TargetVisit($4[i]);
-			program->resolveTargets.push_back(t);
-			program->robots.back()->core->body->addVisit(t);
-		}
+		Body * b = program->robots.back()->getBody();
+		for(size_t i = 0; i< $4.size();i++)
+			b->addVisit($4[i]);
 	}
-	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR {program->robots.back()->core->body->addVisitSeq($4);}
-	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR integers TOKEN_RPAR 
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR 
 	{
-		std::vector<TargetVisit *> t;
-		for (size_t i =0; i<$4.size(); i++)
-		{
-			t.push_back(new TargetVisit($4[i]));
-			program->resolveTargets.push_back(t.back());
-		}
-		program->robots.back()->core->body->addVisitSeq(t);
+		Body *b = program->robots.back()->getBody();
+		b->addVisitSeq($4);
 	}
 	;
-places: TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA 
+place: TOKEN_UINT { $$ = new TargetVisit($1); }
+	|TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA
+	{
+		$$ = new TargetVisit(-1);
+		$$->initPosition(Position($2,$4));
+	}
+	| TOKEN_START TOKEN_LSBRA TOKEN_IDENTIFIER TOKEN_RSBRA 
+	{
+		$$ = new TargetVisit(-1);
+		ResolveStart r;
+		r.name = $3;
+		r.line = @3;
+		r.target = $$;
+		program->resolveStart.push_back(r);
+	}
+	;
+places: place
 	{ 
 		$$.clear(); 
-		$$.push_back(Position($2,$4)); 
+		$$.push_back($1); 
 	}
-	| places TOKEN_COMMA TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA 
+	| places TOKEN_COMMA place
 	{
 		$$ = $1; 
-		$$.push_back(Position($4,$6)); 
-	}
-	| TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA 
-	{ 
-		$$.clear(); 
-		$$.push_back(Position(-1, $3)); 
-	}
-	| places TOKEN_COMMA TOKEN_START TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA  
-	{
-		$$ = $1; 
-		$$.push_back(Position(-1,$5)); 
+		$$.push_back($3); 
 	}
 	;
 options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */	
@@ -214,6 +210,7 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 	| options TOKEN_KILL TOKEN_IDENTIFIER { 
 		ResolveName n;n.robot = program->robots.back();
 		n.name = $3;
+		n.line = @3;
 		program->resolveName.push_back(n);}
 	| options TOKEN_SKIN TOKEN_IDENTIFIER 
 	{	
@@ -257,9 +254,6 @@ complex_type: simple_type ranges
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 		|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
 		;
-integers: TOKEN_UINT { $$.clear(); $$.push_back($1); }
-	|integers TOKEN_COMMA TOKEN_UINT {$$.push_back($3); }
-	;	
 names_:	TOKEN_IDENTIFIER 
 		{ 
 			$$.clear();
