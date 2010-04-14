@@ -16,13 +16,13 @@ public:
 	Target();
 
 	/* tell me your ID */
-	virtual size_t tellId() = 0;
+	virtual int tellId() = 0;
 
 	/* Tell me what you need */
 	virtual Rectangle tellPosition() = 0;
 	
 	/* Init */
-	virtual bool initPosition(Position p) = 0;
+	virtual bool initPosition(Rectangle p) = 0;
 
 	/* condition is fullfilled */
 	virtual bool setOk() = 0;
@@ -31,7 +31,7 @@ public:
 	virtual void reset();
 
 	/* ask, if the condition was fulfilled */
-	bool fullfilled();
+	bool getOk();
 
 	/* Destructor */
 	virtual ~Target();
@@ -51,10 +51,10 @@ public:
 	TargetVisit(size_t id);
 
 	/* id of the target, created in contructor, should be unique*/
-	size_t tellId();
+	int tellId();
 
 	/* change or init position */
-	bool initPosition(Position position);
+	bool initPosition(Rectangle position);
 
 	/* sets place as visited */
 	bool setOk();
@@ -76,8 +76,8 @@ class TargetVisitSequence : public Target
 public:
 	
 	TargetVisitSequence(std::vector<TargetVisit*> p);
-	size_t tellId();
-	bool initPosition(Position p);
+	int tellId();
+	bool initPosition(Rectangle p);
 	Rectangle tellPosition();
 	bool setOk();
 	void reset();

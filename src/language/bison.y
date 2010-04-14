@@ -173,12 +173,13 @@ place: TOKEN_UINT { $$ = new TargetVisit($1); }
 	|TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA
 	{
 		$$ = new TargetVisit(-1);
-		$$->initPosition(Position($2,$4));
+		$$->initPosition(Rectangle($2,$4,15,15)); //TODO makro
 	}
 	| TOKEN_START TOKEN_LSBRA TOKEN_IDENTIFIER TOKEN_RSBRA 
 	{
 		$$ = new TargetVisit(-1);
 		ResolveStart r;
+		r.prefix = program->input;
 		r.name = $3;
 		r.line = @3;
 		r.target = $$;
@@ -207,11 +208,15 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 	{ 
 		program->set($2,$4); 
 	}
-	| options TOKEN_KILL TOKEN_IDENTIFIER { 
-		ResolveName n;n.robot = program->robots.back();
+	| options TOKEN_KILL TOKEN_IDENTIFIER
+	{ 
+		ResolveName n;
+		n.prefix = program->input;
+		n.robot = program->robots.back();
 		n.name = $3;
 		n.line = @3;
-		program->resolveName.push_back(n);}
+		program->resolveName.push_back(n);
+	}
 	| options TOKEN_SKIN TOKEN_IDENTIFIER 
 	{	
 		program->robots.back()->setSkin(program->addSkin($3)); 

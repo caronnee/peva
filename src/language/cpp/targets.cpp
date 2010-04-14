@@ -6,7 +6,7 @@ Target::Target()
 	ok = false; //este nesplnena podmienka
 	//TODO objects features
 }
-bool Target::fullfilled()
+bool Target::getOk()
 {
 	return ok;
 }
@@ -29,16 +29,14 @@ bool TargetVisit::setOk()
 	ok = true;
 	return ok;
 }
-size_t TargetVisit::tellId()
+int TargetVisit::tellId()
 {
 	return targetId;
 }
-bool TargetVisit::initPosition(Position p)
+bool TargetVisit::initPosition(Rectangle p)
 {
-	boundingBox.x = p.x;
-	boundingBox.y = p.y;
-	boundingBox.width = 10;//TODO makra
-	boundingBox.height = 10;
+	boundingBox = p;
+	targetId =-8; //FIXME aby sa to dalo resetovat
 	return true;
 }
 Rectangle TargetVisit::tellPosition()
@@ -57,11 +55,15 @@ TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit *> p)
 	iter = 0;
 	places = p;
 }
-size_t TargetVisitSequence::tellId()
+int TargetVisitSequence::tellId()
 {
+	while ((iter < places.size()) || (places[iter]->tellId() < 0));
+		iter++; //to nearest not set
+	if (iter >= places.size())
+		return -1;
 	return places[iter]->tellId();
 }
-bool TargetVisitSequence::initPosition(Position p)
+bool TargetVisitSequence::initPosition(Rectangle p)
 {
 	places[iter]->initPosition(p);
 	iter++;
@@ -79,7 +81,8 @@ Rectangle TargetVisitSequence::tellPosition()
 bool TargetVisitSequence::setOk()
 {
 	places[iter]->setOk();
-	iter++;
+	while((iter < places.size())&&(places[iter]->getOk()))
+		iter++;
 	if (iter < places.size())
 		return false;
 	ok = true;

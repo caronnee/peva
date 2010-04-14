@@ -18,8 +18,9 @@ SecondSection::SecondSection()
 	attack = 25;
 }
 
-Robot::Robot(std::string s, GamePoints p)
+Robot::Robot(std::string s, std::string space_, GamePoints p)
 {
+	space = space_;
 	scheduller = NULL;
 
 	missilles = 3;
@@ -46,6 +47,10 @@ Robot::Robot(std::string s, GamePoints p)
 	dev_null = NULL;
 }
 
+std::string Robot::getSpace()const
+{
+	return space;
+}
 std::string Robot::getName()const
 {
 	return name;
@@ -324,7 +329,7 @@ Skin * Robots::addSkin(std::string name)
 void Robots::createNew(std::string name)
 {
 	TEST("Creating new robot");
-	robots.push_back( new Robot(name, g) );
+	robots.push_back( new Robot(name, input, g) );
 	robots.back()->errorList = input + ":\n";
 }
 
@@ -349,21 +354,53 @@ void Robots::finalize()
 		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
 		robots[i]->core->body->turn(0);
 	}
+}
+void Robots::resolve()
+{
+	/* show robot, who's the guy that should be killed */
 	for (size_t i =0; i< resolveName.size(); i++)
+	{
+		Body * killer = NULL, * toKill = NULL;
 		for (size_t j=0; j<robots.size(); j++)
 		{
 			if (robots[i]->getName() == resolveName[i].name)
 			{
-				Body * killer = resolveName[i].robot->getBody();
-				Body * toKill = robots[i]->getBody();
-				killer->addKill(toKill);
-				
-				break;
+				killer = resolveName[i].robot->getBody();
+				toKill = robots[j]->getBody();
+				if (robots[j]->getSpace() == resolveName[i].prefix)
+					break;
 			}
-			if (j == robots.size() -1)
-				robots[i]->error
-				(resolveName[i].line, Robot::WarningTargetNotFound);
 		}
+		if (toKill!=NULL)
+			killer->addKill(toKill);
+		else
+			parseWarningList += "Target robot " + resolveName[i].name + " at " + resolveName[i].prefix + 
+				" at line " + deconvert<size_t>(resolveName[i].line) + "not recognized, ignoring." ;
+	}
+
+	/* tell the robot what means that once upon a time he should be found at start position or robot r*/
+	for (size_t i =0; i< resolveStart.size(); i++)
+	{
+		Rectangle t(-1,-1,20,20);
+		for (size_t j=0; j<robots.size(); j++)
+			if (robots[j]->getName() == resolveStart[i].name)
+			{
+				t.x = robots[j]->getBody()->get_pos().x;
+				t.y = robots[j]->getBody()->get_pos().y;
+				if (robots[j]->getSpace() == resolveStart[i].prefix)
+					break;
+			}
+		resolveStart[i].target->initPosition(t);
+		if ( t.x <0 )
+		{
+			resolveStart[i].target->setOk();
+
+			parseWarningList += "Start position of robot " + resolveStart[i].name + " at " + resolveStart[i].prefix + " at line "+ deconvert<size_t>(resolveStart[i].line) + "not found, ignoring." ;
+		}
+	}
+	/* tell robot what means position '0,1,2...' in the map */
+	for (size_t j=0; j<robots.size(); j++)
+		robots[j]->getBody()->initTargetPlaces();
 }
 void Robots::set(Options o, size_t value)
 {
@@ -612,6 +649,8 @@ void Robots::clean()
 	{
 		delete robots[i];
 	}
+	resolveName.clear();
+	resolveStart.clear();
 	robots.clear();
 }
 /* error can occur before robot is created */
