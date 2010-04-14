@@ -40,6 +40,9 @@ public:
 	/* sets image to be dead*/
 	void dead();
 	
+	/* assuming that robot is settled in map */
+	std::string initTargetPlaces();
+
 	/* virtal method, nothing to do actually*/
 	void bounce(Object *o);
 	void killed(Object *o);

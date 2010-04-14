@@ -185,6 +185,8 @@ void Play::resume()
 			}
 		}
 	}
+	//resolving targets
+	robots.resolve();
 	m->setBoundary(w->g->screen->w, w->g->screen->h);
 	draw();
 }

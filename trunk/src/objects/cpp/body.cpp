@@ -72,7 +72,7 @@ void Body::move()
 	col.y += movement.position_in_map.y;
 	for(size_t i =0; i<targets.size(); i++)
 	{
-		if (targets[i]->fullfilled())
+		if (targets[i]->getOk())
 			continue;
 		if (targets[i]->tellPosition().overlaps(col) //spolieham sa na skratene vyhodnocovanie
 			&& targets[i]->setOk())
@@ -162,6 +162,37 @@ void Body::place (Map * m, Position p, int angle)
 {
 	Object::setPosition(p, angle);
 	map = m;
+}
+std::string Body::initTargetPlaces()
+{
+	size_t i = 0;
+	std::string warning;
+	while (i < targets.size())
+	{
+		do
+		{
+			int id = targets[i]->tellId();
+			if (id < 0)
+				break;
+			bool set = false;
+			for ( std::list<Place>::iterator k = map->places.begin(); k != map->places.end(); k++)
+			{
+				if (k->id != id)
+					continue;
+				set = true;
+				targets[i]->initPosition(k->r);
+				break;
+			}
+			if (!set)
+			{
+				targets[i]->setOk(); //TODO check, whether it works!
+				warning += "There is no number " + deconvert<int>(id) + "defined in this map, ignoring";
+			}
+		}
+		while (true);
+		i++;
+	}
+	return warning;
 }
 int Body::step(int steps)
 {

@@ -58,6 +58,9 @@ class Robot
 	/* scheduller to be used */
 	Scheduller * scheduller;
 
+	/* in which input was robot defined, for determningt naspespace when target kill or start place  */
+	std::string space;
+
 public:
 
 	/* logical error codes */
@@ -82,6 +85,9 @@ public:
 
 	/* returns name of robot, should be name */
 	std::string getName()const;
+
+	/* return nam of input where robot was created */
+	std::string getSpace()const;
 
 	/* node accepting every vale for wrong access */
 	Node * dev_null;
@@ -145,6 +151,7 @@ public:
 
 	/* sets robot's state to state in function */
 	void enter(std::string s, std::vector<Parameter_entry> p,Create_type *t);
+
 	/* adds function to robot's function list */
 	void add_function( Instructions ins);
 
@@ -178,7 +185,7 @@ public:
 	std::string skinName;
 
 	/* constructor */
-	Robot(std::string name, GamePoints g);
+	Robot(std::string name, std::string space,  GamePoints g);
 	
 	/* returns simple type form container */
 	Create_type * find_type(Type t);
@@ -232,12 +239,14 @@ enum Options
 struct ResolveName
 {
 	Robot * robot;
+	std::string prefix; //koho ma killnut
 	std::string name; //koho ma killnut
 	size_t line;
 };
 struct ResolveStart
 {
 	TargetVisit * target;
+	std::string prefix; //koho ma killnut
 	std::string name;
 	size_t line;
 };
@@ -247,14 +256,14 @@ struct Robots
 	/* which input is being processed */
 	std::string input;
 
+	/* resolves every not resolved question, like start etc. */
+	void resolve();
+
 	/* gamepoints to be rearranged */
 	GamePoints g;
 
 	/* function destroying any mess that could remain */
 	void clean();
-
-	/* targets that are unknown in processing time */
-	std::vector<Target *> resolveTargets;
 
 	/* robots already processed */
 	std::vector<Robot *> robots;
@@ -271,7 +280,7 @@ struct Robots
 	/* skins for robot */
 	std::vector<Skin *> skins;
 
-	/*missile sin, actually not used */
+	/*missile skin, actually not used */
 	std::vector<Skin *> mSkins;
 
 	/* creste new empty robot */
@@ -295,6 +304,9 @@ struct Robots
 	/* string about parse errors */
 	std::string parseErrorsList;
 
+	/* string about parse warnings */
+	std::string parseWarningList;
+	
 	/* destructor */
 	~Robots();
 };
