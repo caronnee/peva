@@ -9,9 +9,6 @@ ROBOT qqq
 	MHEALTH	= 20	
 
 	KILLED == 5
-//	VISIT_SEQ( START[3], START[2])
-//	VISIT_SEQ( [300,60], [200,60])
-//	VISIT( [0,0])
 
 //	integer i;
 
