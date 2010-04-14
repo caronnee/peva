@@ -230,6 +230,7 @@ void Create_map::keyDown(SDLKey c)
 		case SDLK_BACKSPACE:
 		{
 			backspace();
+			draw();
 			break;
 		}
 		case SDLK_RETURN: 
@@ -491,7 +492,12 @@ void Create_map::buttonDown(int number, int atX, int atY)
 		case GENERATE:
 		{
 			generuj();//TODO vlastnost mapy
-			map->update(rects[MAP], true, w);
+
+			SDL_Rect rect_ = rects[MAP];
+			rect_.w = map->boundaries.width;
+			rect_.h = map->boundaries.height;
+
+			map->update(rect_, true, w);
 			break;
 		}
 		case EXIT:

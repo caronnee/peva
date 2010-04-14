@@ -57,7 +57,7 @@ TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit *> p)
 }
 int TargetVisitSequence::tellId()
 {
-	while ((iter < places.size()) || (places[iter]->tellId() < 0));
+	while ((iter < places.size()) && (places[iter]->tellId() < 0))
 		iter++; //to nearest not set
 	if (iter >= places.size())
 		return -1;

@@ -93,7 +93,6 @@ void Play::resume()
 		err += yyparse(&robots);
 		fclose(yyin);	
 	}
-	robots.finalize();
 	std::string errList = "";
 	focus = 0;
 	lastIn = 0;
@@ -116,7 +115,7 @@ void Play::resume()
 		w->add(show);
 		return;
 	}
-
+	robots.finalize();
 	for(size_t i =0; i< robots.robots.size(); i++)
 		robots.robots[i]->save_to_xml();
 
