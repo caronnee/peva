@@ -17,7 +17,10 @@ Box::Box()
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
 	objects.clear();
 }
-
+void update(Graphic *g)
+{
+	//for()
+}
 bool Map::saveToFile(std::string filename)
 {
 	std::string saveInfo[NumberOfObjectToSave];
@@ -81,7 +84,7 @@ void Map::setBoundary(int x, int y)
 	boundaries.width = min<int>(resolution.x,x);
 	boundaries.height = min<int>(resolution.y,y);
 }
-bool Map::load(Window* w, std::string filename)
+bool Map::load(Graphic * g, std::string filename)
 {
 	clean();
 
@@ -136,10 +139,10 @@ bool Map::load(Window* w, std::string filename)
 				o = new TrapWall(wskins[WallTrapId]);
 				break;
 			case SaveStart:
-				addStart(w,objectPosition.x,objectPosition.y);
+				addStart(g,objectPosition.x,objectPosition.y);
 				break;
 			case SaveTarget:
-				addTarget(w, objectPosition.x, objectPosition.y);
+				addTarget(g, objectPosition.x, objectPosition.y);
 				break;
 			default:
 				TEST("Not implemented"<<iter << std::endl)
@@ -251,7 +254,7 @@ void Map::shift(int shiftLeft, int shiftUp)
 	boundaries.y += shiftUp;
 }
 
-void Map::addStart(Window * w,size_t x, size_t y)
+void Map::addStart(Graphic * g,size_t x, size_t y)
 {
 	Rectangle r(x,y,wskins[WallStartId]->get_shift().x,
 		wskins[WallStartId]->get_shift().y);
@@ -271,7 +274,7 @@ void Map::addStart(Window * w,size_t x, size_t y)
 	pl.r = r;
 	pl.img = NULL;
 	pl.numberImage = WallStartId;
-	addPlace(w,pl);
+	addPlace(g,pl);
 }
 std::list<Rectangle> Map::getStarts()
 {
@@ -284,7 +287,7 @@ std::list<Rectangle> Map::getStarts()
 	}
 	return toReturn;
 }
-void Map::addTarget(Window * w,size_t x, size_t y)
+void Map::addTarget(Graphic * g,size_t x, size_t y)
 {
 
 	Rectangle r(x,y,wskins[TargetPlace]->get_shift().x,
@@ -305,11 +308,11 @@ void Map::addTarget(Window * w,size_t x, size_t y)
 	pl.saveId = SaveTarget;
 	pl.r = r;
 	pl.numberImage = TargetPlace;
-	pl.img = TTF_RenderText_Solid(w->g->g_font,deconvert<size_t>(i).c_str(), w->g->light);
+	pl.img = TTF_RenderText_Solid(g->g_font,deconvert<size_t>(i).c_str(), g->light);
 	pl.id = i;
-	addPlace(w,pl);
+	addPlace(g,pl);
 }
-void Map::addPlace(Window * w, Place p)
+void Map::addPlace(Graphic * g, Place p)
 {
 	std::list<Place>::iterator iter;
 	
@@ -331,7 +334,7 @@ Position Map::size()const
 {
 	return resolution;
 }
-void Map::update(Object * o, Window * w)
+void Map::update(Object * o, Graphic * g)
 {
 	Position t =  o->get_old_pos();
 	Position t2 =  o->get_pos();
@@ -345,14 +348,14 @@ void Map::update(Object * o, Window * w)
 	r.y = min<int> (o->get_old_pos().y, o->get_pos().y);
 	r.w += diff.x;
 	r.h += diff.y;
-	update(r,true, w);
+	update(r,true, g);
 }
-void Map::drawAll(Window * w)
+void Map::drawAll(Graphic * g)
 {
-	background(w);
+	background(g);
 
 	SDL_Rect clip;
-	SDL_GetClipRect(w->g->screen, &clip);
+	SDL_GetClipRect(g->screen, &clip);
 	Rectangle bounds(clip.x + boundaries.x,
 		clip.y + boundaries.y,
 		clip.w,
@@ -367,22 +370,22 @@ void Map::drawAll(Window * w)
 			r.x = iter->r.x - boundaries.x;
 			r.y = iter->r.y - boundaries.y;
 			r2 = r;
-			SDL_BlitSurface(wskins[iter->numberImage]->get_surface(0), NULL, w->g->screen, &r);
+			SDL_BlitSurface(wskins[iter->numberImage]->get_surface(0), NULL, g->screen, &r);
 			if (iter->img) //odstranit? FIXME
-				SDL_BlitSurface(iter->img, NULL, w->g->screen, &r2);
+				SDL_BlitSurface(iter->img, NULL, g->screen, &r2);
 		}
 	}
-	draw(w);
+	draw(g);
 }
-void Map::redraw(Window*w)
+void Map::redraw(Graphic * g)
 {
-	background(w);
-	draw(w);
+	background(g);
+	draw(g);
 }
-void Map::background(Window * w)
+void Map::background(Graphic * g)
 {	
 	SDL_Rect clip;
-	SDL_GetClipRect(w->g->screen, &clip);
+	SDL_GetClipRect(g->screen, &clip);
 	int startX = - (clip.x%(skinWork->width()));
 	int startY = - (clip.y%(skinWork->height()));
 	for (int x = startX; x < clip.w; x += skinWork->width()) // pre tapety
@@ -394,11 +397,11 @@ void Map::background(Window * w)
 			r.y = y + clip.y;
 
 			SDL_Rect sr = skinWork->get_rect();
-			SDL_BlitSurface(skin->get_surface(WallFree),&sr, w->g->screen, &r);
+			SDL_BlitSurface(skin->get_surface(WallFree),&sr, g->screen, &r);
 		}
 	}
 }
-void Map::draw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
+void Map::draw(Graphic * g ) //HA! tu mi uplne staci grafika a nie cele okno
 {
 	Position pos;
 	pos.x = boundaries.x/BOX_WIDTH;
@@ -423,7 +426,7 @@ void Map::draw(Window * w ) //HA! tu mi uplne staci grafika a nie cele okno
 				rects.x = o->get_pos().x - boundaries.x;
 				rects.y = o->get_pos().y - boundaries.y;
 				SDL_Rect r = o->get_rect();
-				SDL_BlitSurface(o->show(),&r,w->g->screen, &rects);
+				SDL_BlitSurface(o->show(),&r,g->screen, &rects);
 				o = map[pos.x][pos.y].objects.read();
 			}
 			pos.y++;
@@ -584,27 +587,27 @@ void Map::add(Object * o)
 	pos.y /= BOX_HEIGHT;
 	map[pos.x][pos.y].objects.add(o->item);
 }
-Object * Map::removeShow(Position position, bool all, Window*w)
+Object * Map::removeShow(Position position, bool all, Graphic * g)
 {
 	SDL_Rect r;
 	r.x=-1;
 	Object * o = removeAt(position, r);
 	if(r.x <0)
 		return o;
-	update(r,true,w);
+	update(r,true,g);
 	return o;
 }
-void Map::update(SDL_Rect newBound, bool all, Window * w)
+void Map::update(SDL_Rect newBound, bool all, Graphic * g)
 {
 	SDL_Rect clip = newBound;
 
-	SDL_SetClipRect(w->g->screen, &clip);
+	SDL_SetClipRect(g->screen, &clip);
 	if (all)
-		drawAll(w);
+		drawAll(g);
 	else
-		redraw(w);
-	SDL_UpdateRect(w->g->screen,clip.x,clip.y,clip.w,clip.h);
-	SDL_SetClipRect(w->g->screen, NULL);
+		redraw(g);
+	SDL_UpdateRect(g->screen,clip.x,clip.y,clip.w,clip.h);
+	SDL_SetClipRect(g->screen, NULL);
 }
 Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 {

@@ -6,7 +6,7 @@
 #include <list>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include "../../graphic/h/window.h"
+#include "../../graphic/h/graphic.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
 #include "../../objects/h/list.h"
@@ -68,16 +68,16 @@ struct Map
 	std::list<Place> places; //starts and targets
 
 	/* draws background*/
-	void background(Window *w);
+	void background(Graphic * g);
 
 	/* draws only visible objects*/
-	void draw(Window *w);
+	void draw(Graphic *w);
 
 	/* draw map including non-participating objects */
-	void drawAll(Window * w);
+	void drawAll(Graphic * w);
 
 	/* removes object at position p and udate the screen */
-	Object * removeShow(Position position, bool all, Window*w);
+	Object * removeShow(Position position, bool all, Graphic*w);
 
 	/* removes object at position p*/
 	Object * removeAt(Position position, SDL_Rect & r);
@@ -86,17 +86,17 @@ struct Map
 	float boxesInColumn;
 
 	/* adding special place to map */
-	void addPlace(Window* w, Place p);
+	void addPlace(Graphic* w, Place p);
 
 	/* loads map from file */
-	bool load(Window * w, std::string filename);
+	bool load(Graphic * w, std::string filename);
 
 	/* save map to file */
 	bool saveToFile(std::string filename);
 
 	/* adding target places */
-	void addTarget(Window* w, size_t x, size_t y);
-	void addStart(Window* w, size_t x, size_t y);
+	void addTarget(Graphic* w, size_t x, size_t y);
+	void addStart(Graphic* w, size_t x, size_t y);
 
 	/* adds boundary walls */
 	void addBoundaryWalls();
@@ -110,10 +110,10 @@ struct Map
 	/* size of map in pixels */
 	Position resolution; 
 
-	void update(SDL_Rect rect, bool all , Window * w);
+	void update(SDL_Rect rect, bool all , Graphic * w);
 
 	/* updates area around one object */
-	void update(Object * o, Window * w);
+	void update(Object * o, Graphic * w);
 
 	/* map skin *///TODO je ho vlastne potreba?
 	Skin * skin;
@@ -165,6 +165,8 @@ public:
 	/* destructor destroying allocated space, no need to be virtual so far */
 	~Map();
 
+	void update(Graphic * g);
+
 	/* removes from map an object, but do not destroys it */
 	void remove(Object * o);
 
@@ -175,7 +177,7 @@ public:
 	void setBoundary(int w, int h);
 
 	/* draws all visible place */
-	void redraw(Window * window); //ked ma vykreslit vsetko
+	void redraw(Graphic * window); //ked ma vykreslit vsetko
 
 	/* add an object to the map */
 	void add(Object * o); 

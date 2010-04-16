@@ -2,7 +2,7 @@
 #define ___MAP_MENU_LOAD___
 
 #include "../../map/h/map.h"
-#include "graphic.h"
+#include "window.h"
 #include <vector>
 
 struct MapRecord

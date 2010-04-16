@@ -160,13 +160,13 @@ void Create_map::draw()
 		r.h = map->boundaries.height;
 		SDL_SetClipRect(w->g->screen, &r);
 	
-		map->drawAll(w);
+		map->drawAll(w->g);
 
 		//dokreslime panel
 		SDL_SetClipRect(w->g->screen, NULL);
 		for (int i =1 ; i< SelectedID; i++) //bez grass
 		{
-			drawPanel(i,w);
+			drawPanel(i);
 		}
 		r = tile_rect[select];
 		SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&r);
@@ -178,7 +178,7 @@ void Create_map::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
-void Create_map::drawPanel(int i, Window * w)
+void Create_map::drawPanel(int i)
 {
 	SDL_Rect sh = tile_rect[i];
 	SDL_Rect clip = sh;
@@ -291,9 +291,9 @@ void Create_map::generuj()
 			{
 				for (int b = 0; b < SPACE_KOEF; b++)
 				{
-					Wall* w = new Wall(skins[WallSolidId]);
-					w->setPosition(objPosition,0);
-					map->add(w);
+					Wall* wall = new Wall(skins[WallSolidId]);
+					wall->setPosition(objPosition,0);
+					map->add(wall);
 					objPosition.x += diff.x;
 				}
 				objPosition.x = oldX;
@@ -406,7 +406,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			switch (select)
 			{
 				case TargetPlace:
-					map->addTarget(w, x, y);
+					map->addTarget(w->g, x, y);
 					break;
 				case WallSolidId:
 					wall = new Wall(skins[WallSolidId]);
@@ -418,7 +418,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					wall = new TrapWall(skins[WallTrapId]);
 					break;
 				case WallStartId:
-					map->addStart(w, x, y);
+					map->addStart(w->g, x, y);
 					break;
 				default:
 					TEST("Object not recognized" << select);
@@ -444,7 +444,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					if (update.w+update.x > map->boundaries.width + 15)
 						update.w -= update.w + update.x - map->boundaries.width - 15;
 
-					map->update(update,true, w);
+					map->update(update,true,w->g);
 					break;
 				}
 				else
@@ -457,7 +457,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				delete wall;
 				break;
 			}
-			map->update(update,true, w);
+			map->update(update,true,w->g);
 			break;
 		}
 		case CLEAN:
@@ -465,7 +465,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				TEST("cleaning" )
 				map->clean();
 				map->addBoundaryWalls();
-				map->update(rects[MAP], true, w);
+				map->update(rects[MAP], true,w->g);
 				break;
 			}
 		case SAVE:
@@ -497,7 +497,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			rect_.w = map->boundaries.width;
 			rect_.h = map->boundaries.height;
 
-			map->update(rect_, true, w);
+			map->update(rect_, true,w->g);
 			break;
 		}
 		case EXIT:
@@ -512,7 +512,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			int wall = get_rect(w->g->event.button.x,w->g->event.button.y, tile_rect, NumberObjectsImages);
 			if (wall != -1)
 			{
-				drawPanel(select,w);
+				drawPanel(select);
 				SDL_UpdateRect(w->g->screen,tile_rect[select].x,tile_rect[select].y,tile_rect[select].w,tile_rect[select].h);
 				select = wall;
 				SDL_BlitSurface(skins[SelectedID]->get_surface(0),NULL,w->g->screen,&tile_rect[select]);
@@ -527,7 +527,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.x > -rects[MAP].x)
 					map->shift(-2,0);
-				map->update(rects[MAP], true, w);
+				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
 					break;
@@ -541,7 +541,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.x < map->size().x - rects[RIGHT].x)
 					map->shift(2,0);
-				map->update(rects[MAP], true, w);
+				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP)){
 					break;
@@ -557,7 +557,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 			if (map->boundaries.y > -rects[MAP].y)
 				map->shift(0,-2);
-			map->update(rects[MAP], true, w);
+			map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
 					break;
@@ -571,7 +571,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.y < map->size().y -rects[DOWN].y)
 					map->shift(0, 2);
-				map->update(rects[MAP], true, w);
+				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
 					break;
@@ -640,7 +640,7 @@ void Create_map::process_map()
 }
 void Create_map::removeFromMap(Position p)
 {
-	Object * o = map->removeShow(p,true,w);
+	Object * o = map->removeShow(p,true,w->g);
 	if ( o != NULL)
 		delete o;
 }

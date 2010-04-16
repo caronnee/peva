@@ -1,10 +1,11 @@
+#include "../h/loadMapMenu.h"
 #include "../../add-ons/h/help_functions.h"
+#include "../../add-ons/h/macros.h"
+#include "../../add-ons/h/position.h"
+
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem.hpp"
-#include "../../add-ons/h/macros.h"
-#include "../../add-ons/h/position.h"
-#include "../h/loadMapMenu.h"
 
 namespace bf = boost::filesystem;
 
@@ -202,7 +203,7 @@ LoadMapMenu::LoadMapMenu(Window * window, Map * map):Load(window, ".map","./maps
 void LoadMapMenu::enter()
 {
 	mapToFill->clean();
-	mapToFill->load(w, maps[index].name);
+	mapToFill->load(w->g, maps[index].name);
 	w->pop();
 }	
 LoadMapMenu::~LoadMapMenu(){}
