@@ -17,9 +17,15 @@ Box::Box()
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
 	objects.clear();
 }
-void update(Graphic *g)
+void Map::update(Graphic *g)
 {
-	//for()
+	SDL_Rect clip;
+	SDL_GetClipRect(g->screen, &clip);
+	Rectangle bounds(clip.x + boundaries.x,
+		clip.y + boundaries.y,
+		clip.w,
+		clip.h);
+//	for()
 }
 bool Map::saveToFile(std::string filename)
 {
@@ -348,6 +354,10 @@ void Map::update(Object * o, Graphic * g)
 	r.y = min<int> (o->get_old_pos().y, o->get_pos().y);
 	r.w += diff.x;
 	r.h += diff.y;
+	if (r.x +r.w > g->screen->w)
+		r.w = g->screen->w - r.x;
+	if (r.y +r.h > g->screen->h)
+		r.h = g->screen->h - r.y;
 	update(r,true, g);
 }
 void Map::drawAll(Graphic * g)

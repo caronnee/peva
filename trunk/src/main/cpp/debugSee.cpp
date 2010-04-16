@@ -9,8 +9,8 @@
 #include "../../objects/h/wall.h"
 #include "../../objects/h/missille.h"
 
-#define BIGX 400
-#define BIGY 400
+#define BIGX g.screen->w
+#define BIGY g.screen->h
 #define ANGLE 45
 #define DISTANCE 300
 #define X 100
@@ -71,7 +71,11 @@ int main(int argc, char ** args)
 		wSkins.push_back(new WallSkin("grass",i));
 	}
 	wSkins.push_back(new MissilleSkin("dragon"));
-
+	Position t;
+	t.x = body->collisionSize().x + body->collisionSize().width;
+	t.y = body->collisionSize().y + body->collisionSize().height;
+	t.x = BIGX - t.x;
+	t.y = BIGY - t.y;
 	while (!end)
 	{
 		if (body->isMoving())
@@ -83,10 +87,10 @@ int main(int argc, char ** args)
 				body->place(map, Position(0,body->get_pos().y), body->getAngle());
 			if (p.y <0)
 				body->place(map, Position(body->get_pos().x,0), body->getAngle());
-			if (p.x > map->resolution.x)
-				body->place(map, Position(map->resolution.x,body->get_pos().y), body->getAngle());
-			if (p.y > map->resolution.y)
-				body->place(map, Position(body->get_pos().x,map->resolution.y), body->getAngle());
+			if (p.x > t.x)
+				body->place(map, Position(t.x,body->get_pos().y), body->getAngle());
+			if (p.y > t.y)
+				body->place(map, Position(body->get_pos().x,t.y), body->getAngle());
 
 			map->update(body, w.g); //strati sa neskor
 		}
