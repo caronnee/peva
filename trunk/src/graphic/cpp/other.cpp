@@ -33,7 +33,7 @@ Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
-	m->redraw( w );
+	m->redraw( w->g );
 	SDL_Flip(w->g->screen);
 }
 
@@ -124,7 +124,7 @@ void Play::resume()
 	else
 	{
 		m = new Map("grass");
-		m->load(w, settings->maps[mapIter]);//fixme kontrola
+		m->load(w->g, settings->maps[mapIter]);//fixme kontrola
 		mapIter ++;
 		mapIter%= settings->maps.size();
 	}

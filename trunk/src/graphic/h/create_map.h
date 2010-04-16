@@ -1,7 +1,7 @@
 #ifndef __CREATE_MAP__
 #define __CREATE_MAP__
 
-#include "graphic.h"
+#include "window.h"
 #include "menu.h"
 #include "../../editor/h/snake.h"
 #include "../../graphic/h/images.h"
@@ -57,7 +57,7 @@ private:
 	Win_type state;
 
 	/* mthod to draw i-th panel to screen*/
-	void drawPanel(int i, Window * w);
+	void drawPanel(int i);
 
 	/* resolution deliminer flag*/
 	bool x;

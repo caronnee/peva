@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include "../../graphic/h/window.h"
 #include "../../add-ons/h/macros.h"
 #include "../../add-ons/h/help_functions.h"
-#include "../../graphic/h/graphic.h"
 #include "../../map/h/map.h"
 #include "../../objects/h/body.h"
 #include "../../objects/h/wall.h"
@@ -29,7 +29,7 @@ Window w(&g);
 
 void redraw(Map * m)
 {
-	m->redraw(&w);
+	m->redraw(w.g);
 	SDL_Flip(g.screen);
 }
 void addToMap(Map * map, Object * object)
@@ -88,7 +88,7 @@ int main(int argc, char ** args)
 			if (p.y > map->resolution.y)
 				body->place(map, Position(body->get_pos().x,map->resolution.y), body->getAngle());
 
-			map->update(body, &w); //strati sa neskor
+			map->update(body, w.g); //strati sa neskor
 		}
 		while (SDL_PollEvent(&g.event)){
 			switch (w.g->event.type)
@@ -112,7 +112,7 @@ int main(int argc, char ** args)
 								{
 									Position p;
 									SDL_GetMouseState(&p.x, &p.y);
-									Object * o = map->removeShow(p,false, &w);
+									Object * o = map->removeShow(p,false, w.g);
 									if ((o!=NULL) && (o!=body))
 										delete o;
 									break;
@@ -138,7 +138,7 @@ int main(int argc, char ** args)
 										angle+=90;
 									angle += 90*kvadr;
 									body->absoluteTurn(angle);
-									map->update(body, &w);
+									map->update(body, w.g);
 									break;
 								}
 							case SDLK_s:
