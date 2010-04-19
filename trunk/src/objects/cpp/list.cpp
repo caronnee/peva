@@ -21,7 +21,7 @@ size_t List::size()
 {
 	return size_;
 }
-void List::add(Object* o)
+/*void List::add(Object* o)
 {
 	Item * i = new Item(o);
 	i->next = data;
@@ -30,7 +30,7 @@ void List::add(Object* o)
 	data->previous = i;
 	size_++;
 	data = i;
-}
+}*/
 void List::clear()
 {
 	for (size_t i = 0;i<size_;i++)
@@ -89,6 +89,7 @@ void List::moveHead(List & dest)
 	dest.add(i);
 	size_--;
 }
+
 void List::next()
 {
 	data = data->next;
@@ -110,6 +111,8 @@ bool List::empty()
 List::~List()
 {
 	tail = NULL;
+	while (data->value !=NULL)
+		next();
 	delete data;
 	size_ = 0;
 }

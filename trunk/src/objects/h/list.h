@@ -1,7 +1,8 @@
 #ifndef __LIST__
 #define __LIST__
-
+//TODO templata
 #include <cstdlib>
+#include <vector>
 
 class Object;
 
@@ -12,6 +13,11 @@ struct Item
 	Item * previous;
 	Item(Object *);
 };
+struct SharedData
+{
+	int pointers;
+	std::vector<Object *> list;
+};
 
 class List
 {
@@ -21,7 +27,7 @@ public:
 	List();
 	Item * data;
 	size_t size();
-	void add(Object * data);
+//	void add(Object * data);
 	void add(Item * data);
 	void moveHead(List & dest);
 	void next();

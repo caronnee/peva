@@ -10,10 +10,16 @@
 
 class Body : public Object
 {
+	/* result of last action taken */
 	int state_;
 
+	/* place targt that need to be fullfilled */
 	std::vector<Target *> targets;
+
+	/* condition according to number of killed robots */
 	TargetKillNumber * toKill;
+
+	/* robots that need to be destroye, recognized by name */
 	std::vector<Object *> killTarget;
 
 	/* in which map is an object located */
@@ -21,6 +27,9 @@ class Body : public Object
 public:
 	/* class handling visibility issue */
 	Seer seer;
+
+	/* determines of object needs to be redrawed */
+	bool changed();
 
 	/* ammo, that can be shot */
 	List ammo;

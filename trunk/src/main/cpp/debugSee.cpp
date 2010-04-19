@@ -78,6 +78,7 @@ int main(int argc, char ** args)
 	t.y = BIGY - t.y;
 	while (!end)
 	{
+		map->updateScreen(w.g);
 		if (body->isMoving())
 		{
 			body->step(1000);
@@ -92,7 +93,7 @@ int main(int argc, char ** args)
 			if (p.y > t.y)
 				body->place(map, Position(body->get_pos().x,t.y), body->getAngle());
 
-			map->update(body, w.g); //strati sa neskor
+//			map->update(body, w.g); //strati sa neskor
 		}
 		while (SDL_PollEvent(&g.event)){
 			switch (w.g->event.type)
@@ -142,7 +143,7 @@ int main(int argc, char ** args)
 										angle+=90;
 									angle += 90*kvadr;
 									body->absoluteTurn(angle);
-									map->update(body, w.g);
+//									map->update(body, w.g);
 									break;
 								}
 							case SDLK_s:
@@ -198,6 +199,7 @@ int main(int argc, char ** args)
 			}
 		}
 	}
+	map->remove(body);
 	delete map;
 	delete body;
 	return 0;

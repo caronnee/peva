@@ -18,11 +18,11 @@ int main()
 	TEST(o5 << "\t")
 	List l;
 	List l2;
-	l.add(o1);
-	l.add(o2);
-	l.add(o3);
-	l.add(o4);
-	l.add(o5);
+	l.add(o1->item);
+	l.add(o2->item);
+	l.add(o3->item);
+	l.add(o4->item);
+	l.add(o5->item);
 	for (size_t i = 0; i< l.size(); i++)
 	{
 		TEST(i << "_" <<l.data->value << "\t")
@@ -34,8 +34,8 @@ int main()
 		TEST(i << "_" <<l.data->value << "\t")
 		l.next();
 	}
-	l.add(o1);
-	l.add(o2);
+	l.add(o1->item);
+	l.add(o2->item);
 //	l.add(o3);
 //	l.add(o4);
 //	l.add(o5);
