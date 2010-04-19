@@ -201,7 +201,7 @@ void Play::process()
 	}
 	if ((aliveRobots == LAST) || done) //ak je posledny robot
 	{
-		std::string endText = " Vitazi su: \r";
+		std::string endText = " Vitazi su:";
 		std::string doneBots = "";
 		std::string lastBots = "";
 		for (size_t i = 0; i< robots.robots.size(); i++)

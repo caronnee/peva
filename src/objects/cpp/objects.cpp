@@ -1,5 +1,6 @@
 #include "../h/objects.h"
 #include "../../add-ons/h/macros.h"
+#include "../../add-ons/h/help_functions.h"
 
 void ObjectMovement::clean()
 {
@@ -15,6 +16,7 @@ int Object::getAngle()const
 {
 	return movement.angle;
 }
+
 Object::Object(Skin * s)
 {
 	objectSaveId = SaveDummy;
@@ -47,7 +49,10 @@ bool Object::hasSkin()
 {
 	return skinWork != NULL;
 }
-
+bool Object::changed()
+{
+	return skinWork->processing();
+}
 void Object::setSkin(Skin * s)
 {
 	if (skinWork)
@@ -233,7 +238,8 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 	return true; //FIXME
 }
 
-bool Object::isMoving(){
+bool Object::isMoving()
+{
 	return movement.steps;
 }
 int Object::typeObject()const

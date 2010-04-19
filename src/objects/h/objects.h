@@ -59,10 +59,14 @@ class Object
 {
 
 private:
+	/* last object that attacked this */
 	Object * last_attack;
 
 protected:
+	/* checks if iobject intersection, if so, returning in p, coords */
 	bool intersection(Object *o, Position &p1, Position& coords);
+
+	/* id of type of object*/
 	size_t type;
 
 public:
@@ -81,6 +85,9 @@ public:
 	/* for saving purposes, object ID */
 	ObjectsToSave objectSaveId;
 
+	/* tells tha graphic if ther i something changed in picture that should be redrawed */
+	virtual bool changed();
+
 	/* information about object fo later resurrection from file */
 	std::string saveInfo();
 
@@ -94,7 +101,7 @@ public:
 	size_t numberOfKilled;
 public:
 	/* for debugging purposes, return information about the object */
-	std::string info()const;
+	std::string info() const;
 
 	/* substance *///TODO privat a vlastna funkcia
 	Substantial substance;

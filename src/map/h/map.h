@@ -52,6 +52,9 @@ struct Place
 
 struct Map
 {
+	/* return maximum bonding rectangl, for drawing purposes */
+	SDL_Rect getBoundingRect(Object * o, Graphic * g);
+
 	/* creates map according to resolution */
 	void create();
 
@@ -165,7 +168,8 @@ public:
 	/* destructor destroying allocated space, no need to be virtual so far */
 	~Map();
 
-	void update(Graphic * g);
+	/* updates all object in area */
+	void updateScreen(Graphic * g);
 
 	/* removes from map an object, but do not destroys it */
 	void remove(Object * o);

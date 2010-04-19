@@ -17,7 +17,7 @@ Box::Box()
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
 	objects.clear();
 }
-void Map::update(Graphic *g)
+void Map::updateScreen( Graphic *g )
 {
 	SDL_Rect clip;
 	SDL_GetClipRect(g->screen, &clip);
@@ -25,7 +25,35 @@ void Map::update(Graphic *g)
 		clip.y + boundaries.y,
 		clip.w,
 		clip.h);
-//	for()
+	Position box;
+	Position maxBox((bounds.x + bounds.width)/BOX_WIDTH,((bounds.y + bounds.height)/BOX_HEIGHT));
+	if (maxBox.x > boxesInRow)
+		maxBox.x = boxesInRow;
+	if (maxBox.y > boxesInColumn)
+		maxBox.y = boxesInColumn;
+	for(box.x = bounds.x/BOX_WIDTH; box.x < maxBox.x; box.x++ )
+	{
+		for(box.y = bounds.y/BOX_HEIGHT; box.y < maxBox.y; box.y++ )
+		{
+			List list = map[box.x][box.y].objects;
+			list.reset();
+			Object * o;
+			while((o = list.read()) != NULL )
+			{
+				if (!o->isMoving() && !o->changed())
+					continue;
+				update(o,g);
+				/*SDL_Rect rects;
+				rects.x = o->get_pos().x - boundaries.x;
+				rects.y = o->get_pos().y - boundaries.y;
+				SDL_Rect r = o->get_rect(); //FOXME mohla by som overlapovat, ale nechce sa mne
+				SDL_BlitSurface(o->show(),&r,g->screen, &rects);
+				SDL_UpdateRect(g->screen,rects.x,rects.y,rects.w,rects.h);
+				o = map[box.x][box.y].objects.read();
+				*/
+			}
+		}
+	}
 }
 bool Map::saveToFile(std::string filename)
 {
@@ -340,10 +368,8 @@ Position Map::size()const
 {
 	return resolution;
 }
-void Map::update(Object * o, Graphic * g)
+SDL_Rect Map::getBoundingRect(Object *o, Graphic*g)
 {
-	Position t =  o->get_old_pos();
-	Position t2 =  o->get_pos();
 	Position diff = o->get_old_pos().substractVector(o->get_pos());
 	if (diff.x < 0)
 		diff.x *=-1;
@@ -358,8 +384,14 @@ void Map::update(Object * o, Graphic * g)
 		r.w = g->screen->w - r.x;
 	if (r.y +r.h > g->screen->h)
 		r.h = g->screen->h - r.y;
+	return r;
+}
+void Map::update(Object * o, Graphic * g)
+{
+	SDL_Rect r = getBoundingRect(o,g);
 	update(r,true, g);
 }
+
 void Map::drawAll(Graphic * g)
 {
 	background(g);
@@ -411,7 +443,7 @@ void Map::background(Graphic * g)
 		}
 	}
 }
-void Map::draw(Graphic * g ) //HA! tu mi uplne staci grafika a nie cele okno
+void Map::draw(Graphic * g ) 
 {
 	Position pos;
 	pos.x = boundaries.x/BOX_WIDTH;

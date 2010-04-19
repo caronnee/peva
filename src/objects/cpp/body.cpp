@@ -5,7 +5,6 @@
 
 Body::Body() : Object(NULL)
 {
-	type = Player;
 	state_ = 0;
 	tasks = 0;
 	name = "Robot";
@@ -15,6 +14,10 @@ Body::Body() : Object(NULL)
 	movement.speed = 30;
 	movement.angle = 0;
 	toKill = NULL;
+}
+bool Body::changed()
+{
+	return true;
 }
 void Body::bounce(Object * from)
 {

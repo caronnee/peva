@@ -81,10 +81,11 @@ int InstructionLoadLocal::execute(Core * c)
 {
 	TEST("Loading local variable " << node->name)
 	//TEST(" id =  " << node->var.back()->ID << "..." )
-	TEST(", value =  " << node->var.back()->integerValue << "..." )
+	//TEST(", value =  " << node->var.back()->integerValue << "..." )
 	if (node->var.size() == 0)
 	{
 		TEST("Error, prazdna premenna")
+		return -1;
 	}
 	c->values.push_back(node->var.back());
 	TEST("OK")
