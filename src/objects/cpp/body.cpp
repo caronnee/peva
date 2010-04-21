@@ -25,7 +25,7 @@ void Body::bounce(Object * from)
 }
 void Body::addAmmo( Object * o)
 {
-	ammo.add(o->item);
+	ammo.push_back(o);
 	o->owner = this;
 }
 int Body::state() const
@@ -96,10 +96,6 @@ void Body::addVisitSeq(std::vector<TargetVisit *> ids)
 	tasks++;
 	targets.push_back(new TargetVisitSequence(ids));
 }
-void Body::addAmmo( Item * i)
-{
-	ammo.add(i); //owner je spravny
-}
 
 //TODO is blocking cez premennu aby som nemusela pretazovat funkciu
 
@@ -133,21 +129,22 @@ int Body::see()
 		down.x = 0;
 	if (down.y < 0)
 		down.y = 0;
-
 	for (int i = down.x; i<=up.x; i++)
 		for (int j = down.y; j <= up.y; j++)
 		{
-			map->map[i][j].objects.reset();
-			Object * o =map->map[i][j].objects.read();
-			while (o!=NULL)
+			for (std::list<Object *>::iterator iter = map->map[i][j].objects[0].begin();
+					iter != map->map[i][j].objects[0].end(); i++)
 			{
-				if ( o == this )
-				{
-					o = map->map[i][j].objects.read();
+				if ( *iter == this )
 					continue;
-				}
-				seer.fill(o, this);
-				o = map->map[i][j].objects.read();
+				seer.fill(*iter, this);
+			}
+			for (std::list<Object *>::iterator iter = map->map[i][j].objects[1].begin();
+					iter != map->map[i][j].objects[1].end(); i++)
+			{
+				if ( *iter == this )
+					continue;
+				seer.fill(*iter, this);
 			}
 		}
 
@@ -238,29 +235,28 @@ int Body::shoot(int angle)
 	Position mP = this->get_pos();
 	
 	Position p = skinWork->head();
-	if (ammo.data->value == NULL)
-		ammo.next();
 	mP.x += p.x;
 	mP.y += p.y;
 
-	Object * o= ammo.data->value;
-	ammo.data->value->movement.steps = 150;
-	ammo.data->value->movement.angle = movement.angle;
-	ammo.data->value->hitpoints = 50;
-	ammo.data->value->movement.direction = movement.direction;
-	ammo.data->value->movement.speed = 50;
-	ammo.data->value->movement.position_in_map = mP;
-	ammo.data->value->movement.realX = 0;
-	ammo.data->value->movement.realY = 0;
-	ammo.data->value->owner = this;
+	Object * o= *ammo.begin();
+	o->movement.steps = 150;
+	o->movement.angle = movement.angle;
+	o->hitpoints = 50;
+	o->movement.direction = movement.direction;
+	o->movement.speed = 50;
+	o->movement.position_in_map = mP;
+	o->movement.realX = 0;
+	o->movement.realY = 0;
+	o->owner = this;
 	o->turn(angle);
 
-	if (map->checkCollision(ammo.data->value))
+	if (map->checkCollision(o))
 	{
 		TEST("moc blizko steny!")
 		return 0; //ak to mieni kychnut na stenu
 	}
-	ammo.moveHead(map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects);
+	map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects[0].splice(
+	map->map[mP.x/BOX_WIDTH][mP.y/BOX_HEIGHT].objects[0].begin(),ammo,ammo.begin());
 	return 1;
 }
 void Body::killed(Object * o)

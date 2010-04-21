@@ -28,7 +28,7 @@ struct Box
 	Rectangle bounds; 
 
 	/* Objects in area */
-	List objects; 
+	std::list<Object *> objects[2]; 
 };
 
 /* class resolving movement */
@@ -52,6 +52,11 @@ struct Place
 
 struct Map
 {
+	/* help fnction to determnije nearest object */
+	void checkNearest(Object * center, Object *objectToCheck, size_t& distanceSoFar, Object * &nearestObjectSoFar );
+	/* iterator describing position where are the object already processed */
+	int processing;
+
 	/* return maximum bonding rectangl, for drawing purposes */
 	SDL_Rect getBoundingRect(Object * o, Graphic * g);
 

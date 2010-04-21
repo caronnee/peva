@@ -156,7 +156,10 @@ int main(int argc, char ** args)
 							case SDLK_SPACE:
 								{
 									if (body->isMoving())
+									{
 										body->step(0);
+										body->move();
+									}
 									else
 										body->step(10);
 									map->remove(body);
