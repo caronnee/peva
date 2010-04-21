@@ -1,6 +1,7 @@
 #ifndef ___BODY_INTERFACE____
 #define ___BODY_INTERFACE____
 
+#include <list>
 #include "objects.h"
 #include "seer.h"
 #include "../../add-ons/h/position.h"
@@ -32,7 +33,7 @@ public:
 	bool changed();
 
 	/* ammo, that can be shot */
-	List ammo;
+	std::list<Object *> ammo;
 
 	/* number of tasks to be done in order to win */
 	size_t tasks;
@@ -67,7 +68,6 @@ public:
 
 	/* method to add ammo, ammo can be every object, body including */
 	void addAmmo(Object * o);
-	void addAmmo(Item * o);
 
 	/* return number of objects, that can robot see */
 	int see();

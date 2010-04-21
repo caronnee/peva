@@ -15,7 +15,8 @@ namespace bf = boost::filesystem;
 Box::Box()
 {
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
-	objects.clear();
+	objects[0].clear();
+	objects[1].clear();
 }
 void Map::updateScreen( Graphic *g )
 {
@@ -26,23 +27,25 @@ void Map::updateScreen( Graphic *g )
 		clip.w,
 		clip.h);
 	Position box;
-	Position maxBox((bounds.x + bounds.width)/BOX_WIDTH,((bounds.y + bounds.height)/BOX_HEIGHT));
+	Position maxBox((bounds.x + bounds.width)/BOX_WIDTH+1,((bounds.y + bounds.height)/BOX_HEIGHT+1));
 	if (maxBox.x > boxesInRow)
-		maxBox.x = boxesInRow;
+		maxBox.x = boxesInRow+1;
 	if (maxBox.y > boxesInColumn)
-		maxBox.y = boxesInColumn;
+		maxBox.y = boxesInColumn+1; //kvoli floatom
 	for(box.x = bounds.x/BOX_WIDTH; box.x < maxBox.x; box.x++ )
 	{
 		for(box.y = bounds.y/BOX_HEIGHT; box.y < maxBox.y; box.y++ )
 		{
-			List list = map[box.x][box.y].objects;
-			list.reset();
-			Object * o;
-			while((o = list.read()) != NULL )
+			std::list<Object *>::iterator iter = map[box.x][box.y].objects[processing].begin();
+			while( iter != map[box.x][box.y].objects[processing].end() )
 			{
-				if (!o->isMoving() && !o->changed())
+				if (!(*iter)->isMoving() && !(*iter)->changed())
+				{
+					iter++;
 					continue;
-				update(o,g);
+				}
+				update(*iter,g);
+				iter++;
 				/*SDL_Rect rects;
 				rects.x = o->get_pos().x - boundaries.x;
 				rects.y = o->get_pos().y - boundaries.y;
@@ -73,12 +76,11 @@ bool Map::saveToFile(std::string filename)
 	for(int i = 0; i< boxesInRow; i++)
 		for (int j =0; j < boxesInColumn; j++)
 		{
-			map[i][j].objects.reset();
-			Object * o = map[i][j].objects.read();
-			while (o!=NULL)
+			std::list<Object *>::iterator iter = map[i][j].objects[processing].begin();
+			while (iter != map[i][j].objects[processing].end() )
 			{
-				saveInfo[o->objectSaveId]+=deconvert<Position>(o->get_pos()) + "\n";
-				o = map[i][j].objects.read();
+				saveInfo[(*iter)->objectSaveId]+=deconvert<Position>((*iter)->get_pos()) + "\n";
+				iter++;
 			}
 		}
 	for (std::list<Place>::iterator iter = places.begin();
@@ -221,6 +223,7 @@ void Map::create()
 
 Map::Map(std::string skinName)
 {
+	processing = 0;
 	wskins.clear();
 	skin = new Skin(skinName, Skin::MapSkin);
 	for (size_t i = 0; i< NumberObjectsImages; i++)
@@ -235,6 +238,7 @@ Map::Map(std::string skinName)
 
 Map::Map(Position resol, std::string skinName) 
 {
+	processing = 0;
 	visibility = DEFAULT_VISIBILITY;
 	wskins.clear();
 	resolution = resol;
@@ -460,16 +464,15 @@ void Map::draw(Graphic * g )
 			if (pos.y > boxesInColumn)
 				break;
 			b = map[pos.x][pos.y].bounds;
-			map[pos.x][pos.y].objects.reset();
-			Object * o = map[pos.x][pos.y].objects.read();
-			while( o != NULL )
+			std::list<Object *>::iterator iter = map[pos.x][pos.y].objects[processing].begin();
+			while( iter != map[pos.x][pos.y].objects[processing].end() )
 			{
 				SDL_Rect rects;
-				rects.x = o->get_pos().x - boundaries.x;
-				rects.y = o->get_pos().y - boundaries.y;
-				SDL_Rect r = o->get_rect();
-				SDL_BlitSurface(o->show(),&r,g->screen, &rects);
-				o = map[pos.x][pos.y].objects.read();
+				rects.x = (*iter)->get_pos().x - boundaries.x;
+				rects.y = (*iter)->get_pos().y - boundaries.y;
+				SDL_Rect r = (*iter)->get_rect();
+				SDL_BlitSurface((*iter)->show(),&r,g->screen, &rects);
+				iter++;
 			}
 			pos.y++;
 		}
@@ -494,56 +497,61 @@ Object * Map::checkCollision(Object * o)
 		{
 			if ((y == -1)||(y > boxesInColumn))
 				continue;
-			Box & b = map[x][y];
-			/* no need to reset */
-			for (size_t i = 0; i<b.objects.size(); i++)
+			std::list<Object *>::iterator iter = map[x][y].objects[processing].begin();
+			while ( iter != map[x][y].objects[processing].end() )
 			{
-				//TODO dat to do samostatnej funkcie
-				Object * objectInBox = b.objects.read();			
-				if (( objectInBox == NULL ) || ( o == objectInBox )|| (!objectInBox->alive()))
-					continue;
-				if (!((o->substance + objectInBox->substance) 
-							&& (collideWith(o, objectInBox))))
-					continue;
-				size_t dist = o->get_old_pos().getDistance(objectInBox->get_pos());
-				if (dist < nearest)	
-				{
-					nearestColObject = objectInBox;
-					nearest = dist;
-				}		
+				checkNearest(o, *iter, nearest, nearestColObject);
+				iter++;
+			}
+			iter = map[x][y].objects[1-processing].begin();
+			while ( iter != map[x][y].objects[1-processing].end() )
+			{
+				checkNearest(o, *iter, nearest, nearestColObject);
+				iter++;
 			}
 		}
 	}	
 	return nearestColObject;
 }
-
+void Map::checkNearest(Object * o, Object * objectInBox, size_t& nearest, Object *& nearestColObject )
+{
+	if (( objectInBox == NULL ) || ( o == objectInBox )|| (!objectInBox->alive()))
+		return;
+	if (!((o->substance + objectInBox->substance) 
+				&& (collideWith(o, objectInBox))))
+		return;
+	size_t dist = o->get_old_pos().getDistance(objectInBox->get_pos());
+	if (dist < nearest)	
+	{
+		nearestColObject = objectInBox;
+		nearest = dist;
+	}
+}
 bool Map::performe()
 {
-	for (size_t i = 0; i< boxesInRow; i++ )
-		for (size_t j = 0; j< boxesInColumn; j++ )
-			map[i][j].objects.reset();
-
 	/* resolving he move action that happened */
+	int processed = 1-processing;
 	for ( size_t i = 0; i< boxesInRow; i++ )
 		for (size_t j = 0; j< boxesInColumn; j++ )
 		{
-			Box &b = map[i][j];
-			Object * o = b.objects.read();
-			while (o!=NULL)
+			while (!map[i][j].objects[processing].empty())
 			{
+				std::list<Object *>::iterator iter = map[i][j].objects[processing].begin();
+				Object * o = *iter;
 				if (!o->alive())
 				{
-					b.objects.remove();
 					o->dead();
-					o = b.objects.data->value;
 					continue;
 				}
 				resolveMove(o);
 				Position p = o->get_pos();
-				b.objects.moveHead(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects);
-				o = b.objects.data->value;
+				map[i][j].objects[processed].splice(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processed].begin(),
+						map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processing], iter);
+				size_t t = map[i][j].objects[processed].size();
+				size_t t2 = map[i][j].objects[processing].size();
 			}
 		}
+	processing = processed;
 	return false;
 }
 void Map::remove(Object * o)
@@ -551,17 +559,8 @@ void Map::remove(Object * o)
 	Position pos = o->get_pos();
 	pos.x/=BOX_WIDTH;
 	pos.y/=BOX_HEIGHT;
-	map[pos.x][pos.y].objects.reset();
-	Object *object = map[pos.x][pos.y].objects.read();
-	while (object!=NULL)
-	{
-		if (object == o)
-		{
-			map[pos.x][pos.y].objects.remove();
-			break;
-		}
-		object = map[pos.x][pos.y].objects.read();
-	}
+	map[pos.x][pos.y].objects[processing].remove(o);
+	map[pos.x][pos.y].objects[1-processing].remove(o);//nevieme, kde to je FIXME
 }
 
 void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
@@ -627,7 +626,7 @@ void Map::add(Object * o)
 		return;
 	pos.x /= BOX_WIDTH;
 	pos.y /= BOX_HEIGHT;
-	map[pos.x][pos.y].objects.add(o->item);
+	map[pos.x][pos.y].objects[processing].push_back(o);
 }
 Object * Map::removeShow(Position position, bool all, Graphic * g)
 {
@@ -668,10 +667,10 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 			if ((boxP.y < 0)||(boxP.y > boxesInColumn)||(boxP.x < 0)|| (boxP.x>boxesInRow ))
 				continue;
 
-			map[boxP.x][boxP.y].objects.reset();
-			Object * o = map[boxP.x][boxP.y].objects.read();
-			while( o!=NULL )
+			std::list<Object *>::iterator iter = map[boxP.x][boxP.y].objects[processing].begin();
+			while( iter != map[boxP.x][boxP.y].objects[processing].end() )
 			{
+				Object * o = * iter;
 				Rectangle r;
 				r.width = o->get_rect().w; //to co blitujem
 				r.height = o->get_rect().h;
@@ -679,14 +678,15 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 				r.y = o->get_pos().y;
 				if (r.overlaps(removePos))
 				{
-					map[boxP.x][boxP.y].objects.remove();
-					map[boxP.x][boxP.y].objects.reset();
+				//	map[boxP.x][boxP.y].objects.remove();
+				//	map[boxP.x][boxP.y].objects.reset();
 					toBlit = o->get_rect();
 					toBlit.x = r.x - boundaries.x;
 					toBlit.y = r.y - boundaries.y;
 					return o;
 				}
-				o = map[boxP.x][boxP.y].objects.read();
+				iter ++;
+				o=*iter;
 			}
 		}
 	}
@@ -712,14 +712,20 @@ void Map::clean()
 	for (size_t i =0; i< boxesInRow; i++)
 		for(size_t j = 0; j< boxesInColumn; j++)
 		{
-			map[i][j].objects.reset();
-			Object * o = map[i][j].objects.read();
-			while (o!=NULL)
+			std::list<Object *>::iterator itr = map[i][j].objects[0].begin();
+			while (itr != map[i][j].objects[0].end())
 			{
-				remove(o);
-				delete o;
-				o = map[i][j].objects.data->value;
+				delete *itr;
+				itr++;
 			}
+			itr = map[i][j].objects[1].begin();
+			while (itr != map[i][j].objects[1].end())
+			{
+				delete *itr;
+				itr++;
+			}
+			map[i][j].objects[0].clear();
+			map[i][j].objects[1].clear();
 		}
 	places.clear();
 }

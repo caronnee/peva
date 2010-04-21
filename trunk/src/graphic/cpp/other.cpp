@@ -229,7 +229,7 @@ void Play::process()
 		return;
 	}
 	done = m->performe();
-	draw(); //TODO performe bude mat OK, ci sa to ma prekreslit, kvoli sleepom
+	m->updateScreen(w->g);
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
 	{

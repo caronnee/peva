@@ -23,7 +23,7 @@ bool Missille::is_blocking()
 
 void Missille::dead()
 {
-	owner->addAmmo(this->item);
+	owner->addAmmo(this);
 }
 void Missille::hit(Object * o)
 {
