@@ -44,8 +44,10 @@ public:
 	/* maximum  sight */
 	size_t size;
 
-	/* return angle cco*/
+	/* return angle with centre in (0,0) and zero degree is horizontal */
 	static int getDegree(Object *o, Position point );
+
+	/* return angle with centre in (0,0) and zero radians is horizontal line */
 	static float getRadian(Object *o, Position point );
 
 	/* setting eye with given triagle (0,0),(0,x),(0,y)*/
@@ -65,6 +67,9 @@ public:
 
 	/* removing objects that are covered by another objects */
 	int checkVisibility();
+
+	/* find if you see an object */
+	bool find(Object * o);
 };
 
 #endif

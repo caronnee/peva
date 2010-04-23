@@ -251,11 +251,7 @@ bool Object::blocksMove()
 	return !isMoving() || skinWork->processing();
 }
 
-Position Object::Locate() //TODO bude vraciac position
-{
-	return get_pos();
-}
 int Object::Hit()
 {
-	return 0;
+	return hitpoints;
 }

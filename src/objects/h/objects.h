@@ -195,9 +195,6 @@ public:
 	size_t height();
 
 	/* for robot questioning state of object */
-	Position Locate();
-
-	/* for robot questioning state of object */
 	int Hit();
 
 	/* check, whether objcet is moving for optimalization and robot instruction purposes */
