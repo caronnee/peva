@@ -115,9 +115,6 @@ void Play::resume()
 		w->add(show);
 		return;
 	}
-	robots.finalize();
-	for(size_t i =0; i< robots.robots.size(); i++)
-		robots.robots[i]->save_to_xml();
 
 	if (settings->maps.empty())
 		init( 500, 400 );//TODO makro
@@ -128,6 +125,10 @@ void Play::resume()
 		mapIter ++;
 		mapIter%= settings->maps.size();
 	}
+	robots.finalize(m->visibility);
+	for(size_t i =0; i< robots.robots.size(); i++)
+		robots.robots[i]->save_to_xml();
+
 	/* starts handling */
 	std::list<Rectangle> starts = m->getStarts();
 	for ( size_t i =0; i< robots.robots.size(); i++)

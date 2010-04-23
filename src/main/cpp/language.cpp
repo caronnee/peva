@@ -31,7 +31,7 @@ int main(int argc, char ** argv)
 		q.robots.back()->save_to_xml();
 		q.robots.back()->execute();
 	 */
-	q.finalize();
+	q.finalize(0);
 	if ((err) || (q.robots.back()->errors))
 	{
 		TEST ( q.robots.back()->errorList )

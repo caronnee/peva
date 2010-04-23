@@ -290,7 +290,7 @@ struct Robots
 	void set(Options op, size_t value);
 
 	/* sets for function, removes temporarily values etc. */
-	void finalize();
+	void finalize(int mapVisbility);
 
 	/* add skins to already loaded skins witout duplicities */
 	Skin * addSkin(std::string name);

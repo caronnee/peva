@@ -342,7 +342,7 @@ void Robot::setScheduler(int type, const std::vector<int>& penals )
 	}
 	scheduller = new SchedulleTime(type, penals); 
 }
-void Robots::finalize()
+void Robots::finalize(int vis)
 {
 	for (size_t i=0; i<robots.size(); i++)
 	{
@@ -353,6 +353,7 @@ void Robots::finalize()
 		}
 		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
 		robots[i]->core->body->turn(0);
+		robots[i]->getBody()->seer.setEyes(robots[i]->getBody()->eyeAngle,vis); //TODO opravit, celkost ma urcovat mapa
 	}
 }
 void Robots::resolve()
@@ -506,7 +507,6 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 
 void Robot::consolidate()
 {
-	getBody()->seer.setEyes(getBody()->eyeAngle,150); //TODO opravit, celkost ma urcovat mapa
 	if(!scheduller)
 		scheduller = new SchedulleRound(); 
 	std::vector<InstructionBreak *> breaks;
