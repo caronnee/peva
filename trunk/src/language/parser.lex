@@ -36,7 +36,6 @@ MHEALTH						{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
 SEE						{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
 STEP						{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
 MEMORY						{*l = line; lv->op = OptionMemory; return TOKEN_OPTION;}
-
 VISIT						{*l = line; return TOKEN_VISIT; }
 VISIT_SEQ					{*l = line; return TOKEN_VISIT_SEQUENCE; }
 KILLED						{*l = line; return TOKEN_KILLED; }
@@ -64,6 +63,7 @@ turnR						{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
 wait						{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
 shoot						{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
 step						{*l = line;lv->of = FeatureStep;return TOKEN_OBJECT_FEATURE;}
+get_target					{*l = line;lv->of = FeatureTarget; return TOKEN_RET_TARGET;}
 
 integer						{*l = line;return TOKEN_VAR_INT; }
 function	 	 	 	 	{*l = line;return TOKEN_FUNCTION; }

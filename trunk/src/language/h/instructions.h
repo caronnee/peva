@@ -660,4 +660,12 @@ class InstructionIsMoving: public Instruction
 		virtual int execute(Core * c);
 		virtual ~InstructionIsMoving();
 };
+class InstructionTarget: public Instruction
+{
+	public:
+		InstructionTarget();
+		virtual int execute(Core * c);
+		virtual ~InstructionTarget();
+};
+
 #endif

@@ -1329,8 +1329,8 @@ int InstructionShootLocation::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionShootLocation::~InstructionShootLocation()
-{}
+InstructionShootLocation::~InstructionShootLocation() {}
+
 InstructionShootAngle::InstructionShootAngle()
 {
 	name_ = "InstructionShootAngle";
@@ -1345,8 +1345,8 @@ int InstructionShootAngle::execute(Core *c) //TODO
 	TEST("OK")
 	return 0;
 }
-InstructionShootAngle::~InstructionShootAngle()
-{}
+InstructionShootAngle::~InstructionShootAngle() {}
+
 InstructionTurn::InstructionTurn()
 {
 	name_ = "InstructionTurn";
@@ -1361,8 +1361,8 @@ int InstructionTurn::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionTurn::~InstructionTurn()
-{}
+InstructionTurn::~InstructionTurn() {}
+
 InstructionTurnR::InstructionTurnR()
 {
 	name_ = "InstructionTurnR";
@@ -1376,8 +1376,8 @@ int InstructionTurnR::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionTurnR::~InstructionTurnR()
-{}
+InstructionTurnR::~InstructionTurnR() {}
+
 InstructionTurnL::InstructionTurnL()
 {
 	name_ = "InstructionTurnL";
@@ -1390,8 +1390,8 @@ int InstructionTurnL::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionTurnL::~InstructionTurnL()
-{}
+InstructionTurnL::~InstructionTurnL() {}
+
 InstructionHit::InstructionHit()
 {
 	name_ = "InstructionHit";
@@ -1406,8 +1406,8 @@ int InstructionHit::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionHit::~InstructionHit()
-{}
+InstructionHit::~InstructionHit() {}
+
 InstructionIsPlayer::InstructionIsPlayer()
 {
 	name_ = "InstructionIsPlayer";
@@ -1422,8 +1422,8 @@ int InstructionIsPlayer::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionIsPlayer::~InstructionIsPlayer()
-{}
+InstructionIsPlayer::~InstructionIsPlayer() {}
+
 InstructionIsWall::InstructionIsWall()
 {
 	name_ = "InstructionIsWall";
@@ -1466,15 +1466,17 @@ int InstructionLocate::execute(Core *c) //TODO location
 {
 	TEST("Getting location of object ...")
 	Object * o = c->getObjectFromStack();
-	Position p = o->Locate();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger))); 
+	Position p( -1, -1 ); //FIXME neaka inteligetnejsia hodnota? Last seen nefunguje, lebo nemam ako povedat, ze to je neplatna hodnota
+	if (c->body->seer.find(o))
+		p = o->get_pos();
+	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation))); 
 	c->values.back()->array.elements[0]->integerValue = p.x;
 	c->values.back()->array.elements[1]->integerValue = p.y;
 	TEST("OK")
 	return 0;
 }
-InstructionLocate::~InstructionLocate()
-{}
+InstructionLocate::~InstructionLocate() {}
+
 InstructionIsMoving::InstructionIsMoving()
 {
 	name_ = "InstructionIsMoving";
@@ -1485,9 +1487,37 @@ int InstructionIsMoving::execute(Core *c)
 	TEST("Checking movement ...")
 	Object * o = c->getObjectFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = o->isMoving();
+	if (c->body->seer.find(o))
+		c->values.back()->integerValue = o->isMoving();
+	else
+		c->values.back()->integerValue = rand()%2;
 	TEST("OK")
 	return 0;
 }
-InstructionIsMoving::~InstructionIsMoving()
-{}
+
+InstructionIsMoving::~InstructionIsMoving() {}
+
+InstructionTarget::InstructionTarget()
+{
+	name_ = "InstructionTarget";
+	group = IGroup_ismoving;
+}
+int InstructionTarget::execute(Core *c)
+{
+	TEST("Returning first unvisited place ...")
+	Position p(-1,-1);
+	for (size_t i =0; i<c->body->targets.size(); i++)
+		if (!c->body->targets[i]->getOk())
+		{
+			Rectangle t = c->body->targets[i]->tellPosition();
+			p.x = t.x + t.width/2;
+			p.y = t.y + t.height/2;
+			break;
+		}
+	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation)));
+	c->values.back()->array.elements[0]->integerValue = p.x;
+	c->values.back()->array.elements[1]->integerValue = p.y;
+	TEST("OK")
+	return 0;
+}
+InstructionTarget::~InstructionTarget() {}

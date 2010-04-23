@@ -4,6 +4,7 @@
 #include "../h/seer.h"
 
 #define FLOAT_COMP_ZERO -0.1
+
 Seer::Seer()
 {
 	setEyes(0,0); //slepy :)
@@ -226,4 +227,13 @@ Object * Seer::getObject(size_t index)
 	for (size_t i = 0; i<index; i++)
 		r++;
 	return (*r).object;
+}
+
+bool Seer::find(Object * o)
+{
+	for(std::list<ObjectRelation>::iterator i = visibleObjects.begin(); 
+		i != visibleObjects.end(); i++)	
+		if (i->object == o)
+			return true;
+	return false;
 }

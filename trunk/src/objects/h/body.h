@@ -14,9 +14,6 @@ class Body : public Object
 	/* result of last action taken */
 	int state_;
 
-	/* place targt that need to be fullfilled */
-	std::vector<Target *> targets;
-
 	/* condition according to number of killed robots */
 	TargetKillNumber * toKill;
 
@@ -28,6 +25,9 @@ class Body : public Object
 public:
 	/* class handling visibility issue */
 	Seer seer;
+
+	/* place targt that need to be fullfilled */
+	std::vector<Target *> targets;
 
 	/* determines of object needs to be redrawed */
 	bool changed();

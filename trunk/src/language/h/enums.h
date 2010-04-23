@@ -39,6 +39,7 @@ enum ObjectFeatures
 	FeatureTurnL,
 	FeatureTurnR,
 	FeatureWait,
+	FeatureTarget,
 	FeatureSee
 };
 

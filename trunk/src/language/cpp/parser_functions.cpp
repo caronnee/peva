@@ -285,6 +285,16 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	}
 	switch(feat)
 	{
+		case FeatureTarget:
+			if ((e.output.size() > 0))
+			{
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+				break;
+			}
+			ee.output.push_back(*r->find_type(TypeLocation));
+			ee.ins.push_back( new InstructionTarget());
+			
+			break;
 		case FeatureIsPlayer:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
 				ee.ins.push_back( new InstructionIsPlayer());
