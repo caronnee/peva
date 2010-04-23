@@ -59,7 +59,7 @@ int main(int argc, char ** args)
 	map->setBoundary(min (w.g->screen->w, BIGX), min (w.g->screen->h,BIGY));
 	Body * body = new Body();
 	body->seer.setEyes(params[ParamAngle], params[ParamDistance]);
-	body->setSkin(new Skin("dragon",Skin::BotSkin));
+	body->setSkin(new BotSkin("dragon"));
 	body->place(map, Position (params[ParamX],params[ParamY]));
 	map->add(body);
 

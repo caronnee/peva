@@ -29,7 +29,7 @@ Create_map::Create_map(Window *w_)
 void Create_map::init()
 {
 	for (size_t i = 0; i< NumberObjectsImages; i++)
-		skins.push_back(new WallSkin("grass",i)); //TODO zo subora
+		skins.push_back(new WallSkin("grass",i)); //TODO zo subora	
 	
 	std::string txt = "Write map resolution:";
 	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);// na resize 2.krat

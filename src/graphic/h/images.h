@@ -17,6 +17,7 @@ enum WallImageObjects
 	WallSolidId,
 	WallPushId,
 	WallTrapId,
+	WallBreakId,
 	WallStartId,
 	TargetPlace,
 	SelectedID,
@@ -66,14 +67,8 @@ public:
 	/* name of set for memory optimalization, no need to be private */
 	std::string nameOfSet;
 
-	/* types of skins, could be solved by inheritance*/
-	enum Type
-	{
-		MapSkin, //TODO znicit
-		BotSkin
-	};
 	/* constructor for skin */
-	Skin(std::string name, Skin::Type t);
+//	Skin(std::string name, Skin::Type t);
 
 	/* common method for loading images */
 	void create(std::string * loadImages, std::string name, int sizeToLoad);
@@ -108,6 +103,11 @@ class WallSkin : public Skin
 {
 public:
 	WallSkin(std::string name, size_t wall); //ktory wall ma naloadovat
+};
+class BotSkin : public Skin
+{
+public:
+	BotSkin(std::string name);
 };
 /* class for handling the skin */
 

@@ -1,1 +1,1 @@
-grep -rI --exclude-dir ".svn" $1 .
+grep -rI --exclude-dir ".svn" "$*" .

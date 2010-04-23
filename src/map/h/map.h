@@ -123,12 +123,6 @@ struct Map
 	/* updates area around one object */
 	void update(Object * o, Graphic * w);
 
-	/* map skin *///TODO je ho vlastne potreba?
-	Skin * skin;
-
-	/* skin worker */
-	ImageSkinWork * skinWork;
-
 	/* map is a join of areas */
 	Box ** map;
 	
