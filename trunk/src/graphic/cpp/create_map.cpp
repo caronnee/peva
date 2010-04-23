@@ -60,13 +60,11 @@ void Create_map::init()
 	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
-	rects[SAVE].w = rects[GENERATE].w =  rects[LOAD].w =
-		rects[CLEAN].w = rects[EXIT].w = w->g->screen->w / BUTTONS;
 
 	/*setting heights*/
 	rects[SAVE].h = rects[EXIT].h = rects[LOAD].h =
 		rects[CLEAN].h = rects[GENERATE].h = 30;
-	rects[CHOOSE].h = w->g->screen->h - rects[EXIT].h;
+	rects[CHOOSE].h = w->g->screen->h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
 	rects[MAP].h = w->g->screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
@@ -76,6 +74,10 @@ void Create_map::init()
 	rects[UP].x = rects[DOWN].x = rects[LEFT].w;
 	rects[MAP].x = rects[LEFT].x + rects[LEFT].w;
 	rects[RIGHT].x = rects[MAP].x + rects[MAP].w;
+
+	rects[SAVE].w = rects[GENERATE].w =  rects[LOAD].w =
+		rects[CLEAN].w = rects[EXIT].w = (rects[RIGHT].x / BUTTONS);
+
 	rects[CHOOSE].x = rects[RIGHT].x + rects[RIGHT].w;
 	rects[LOAD].x = rects[CLEAN].x + rects[CLEAN].w; //na jednej urovni
 	rects[SAVE].x = rects[LOAD].x + rects[LOAD].w; //na jednej urovni
@@ -99,7 +101,7 @@ void Create_map::init()
 		tile_rect[i].y = pom;
 		tile_rect[i].w = skins[0]->get_size().x;
 		tile_rect[i].h = skins[0]->get_size().y;
-		pom += 3*skins[0]->get_size().y/2; //TODO konstanta
+		pom += skins[0]->get_size().y +20; //TODO konstanta
 	}
 
 	std::string ids[] = {"clean", "save", "load", "generate", "exit" };
