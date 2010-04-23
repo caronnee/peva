@@ -22,6 +22,7 @@ public:
 	Graphic * g;
 	Window(Graphic * g_);
 	void tapestry(SDL_Rect rect);
+	void resize();
 	int toggle_screen(); //change from full screen to window screen and vice-versa
 	void add(Menu * m);
 	bool Init(int argc, char * argv[]);

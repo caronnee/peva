@@ -18,6 +18,7 @@ struct Penalize
 	SDL_Surface * name;
 	SDL_Surface * nameChosen;
 };
+
 class SetPenalize : public Menu
 {
 	Window *w;
@@ -25,6 +26,7 @@ class SetPenalize : public Menu
 	int begin, size, index, end, vSkip;
 	std::vector<int>* penals;
 public:
+	void resize();
 	SetPenalize(Window * w, std::vector<int>* penalize);
 	void init();
 	void resume();
@@ -50,6 +52,7 @@ public:
 	void resume();
 	void draw();
 	void clean();
+	void resize();
 	virtual ~ShowMenu();
 };
 
@@ -64,6 +67,7 @@ class SetScheduller : public Menu
 	std::string valueString;
 public:
 	SetScheduller(Window * w, int *sched);
+	void resize();
 	void resume();
 	void init();
 	void draw();
@@ -90,12 +94,6 @@ public:
 	virtual ~Settings();
 };
 
-struct Letter
-{
-	std::string ch;
-	int size,heigth;
-	SDL_Surface * s;
-};
 
 class Play:public Menu
 {
@@ -106,11 +104,8 @@ class Play:public Menu
 	Window * w;
 	bool done;
 	Robots robots;
-	std::list<Letter *>::iterator iter, iter_beg, iter_end;
 	int mapIter;
-	std::list<Letter *> letts;
 	SDL_Rect rect;
-	Letter letters[256];
 	void init(int, int);
 	Setting * settings;
 	Menu * loadInput;
@@ -118,6 +113,7 @@ public:
 	Play(Window * w_, Setting * s);
 	void process(void);
 	void init();
+	void resize();
 	void resume();
 	void draw();
 	void clean();

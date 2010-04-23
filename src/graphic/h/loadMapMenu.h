@@ -23,6 +23,7 @@ public:
 	Load( Window * w, std::string extension, std::string adr);
 	void process();
 	void resume();
+	void resize();
 	void draw();
 	void init();
 	void choose(int index);

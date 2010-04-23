@@ -18,11 +18,20 @@ void Main::resume()
 {
 	draw();
 }
+void Main::resize()
+{
+}
+
 void Main::process()
 {
 	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	switch (w->g->event.type)
 	{
+		case SDL_VIDEORESIZE:
+		{
+			w->resize();
+			break;
+		}
 		case SDL_KEYDOWN:
 			{
 				switch(w->g->event.key.keysym.sym)

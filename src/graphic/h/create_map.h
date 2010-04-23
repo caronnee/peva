@@ -37,8 +37,14 @@ private:
 		DRAW,
 		SAVING
 	};
+
+	/* menu showing saved maps */
 	Menu * nextMenu;
 
+	/* function handling resizing */
+	void resize();
+
+	/* images of buttons */
 	SDL_Surface * buttonsImages [BUTTONS];
 
 	/* precomputes allowed chars in resolution mode */

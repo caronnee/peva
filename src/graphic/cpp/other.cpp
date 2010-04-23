@@ -25,6 +25,7 @@ Play::Play(Window *w_, Setting * s)
 	w = w_;
 	name(w->g, "Play Game");
 	loadInput = new SetMaps(w, &s->inputs, ".input","inputs");
+	show = NULL;
 	m = NULL;
 	/* cleaning up any mess */
 	clean();
@@ -33,6 +34,12 @@ Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
+	SDL_Rect clip;
+	clip.x = 0;
+	clip.y = 0;
+	clip.w = m->boundaries.width;
+	clip.h = m->boundaries.height;
+	SDL_SetClipRect(w->g->screen,& clip);
 	m->redraw( w->g );
 	SDL_Flip(w->g->screen);
 }
@@ -40,7 +47,6 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 void Play::init(int x, int y)
 {	
 	focus = 0;
-	show = NULL;
 	m = new Map(Position (x,y), "grass");
 	m->setBoundary(min<int> (w->g->screen->w, x), min<int>(w->g->screen->h,y));
 }
@@ -187,8 +193,12 @@ void Play::resume()
 	}
 	//resolving targets
 	robots.resolve();
-	m->setBoundary(w->g->screen->w, w->g->screen->h);
+	resize();
 	draw();
+}
+void Play::resize()
+{
+	m->setBoundary(w->g->screen->w, w->g->screen->h);
 }
 void Play::process()
 {
@@ -234,6 +244,9 @@ void Play::process()
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
 	{
+		case SDL_VIDEORESIZE:
+			w->resize();
+			break;
 		case SDL_KEYDOWN:
 		{
 			switch(w->g->event.key.keysym.sym)
@@ -259,7 +272,7 @@ void Play::process()
 						break; //should NOT be here, consider exception?
 					Rectangle t = robots.robots[focus]->getBody()->collisionSize();
 					Position p = robots.robots[focus]->getBody()->get_pos();
-					p.x = p.x +(t.width - w->g->screen->w)/2;
+					p.x = p.x + (t.width - w->g->screen->w)/2;
 					p.y = p.y + (t.height - w->g->screen->h)/2;
 					Position lastAcceptable(m->resolution.x - w->g->screen->w,
 						m->resolution.y - w->g->screen->h);
@@ -310,6 +323,19 @@ SetPenalize::SetPenalize(Window *win, std::vector<int> * penalize)
 	name(w->g, "Set instruction costs ");
 	penals = penalize;
 }
+
+void SetPenalize::init()
+{
+	for (int i = 0; i<IGroups; i++)
+	{
+		instructions[i].name = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->normal);
+		instructions[i].nameChosen = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->light);
+		std::string s = deconvert<int>((*penals)[i]);
+		instructions[i].penalize = (*penals)[i];
+		instructions[i].penal = TTF_RenderText_Solid(w->g->g_font, s.c_str(),w->g->normal);
+	}
+	resize();
+}
 void SetPenalize::draw()
 {
 	SDL_Rect clip;
@@ -331,28 +357,12 @@ void SetPenalize::draw()
 	SDL_BlitSurface(instructions[index].nameChosen, NULL, w->g->screen, &rect);
 	SDL_Flip(w->g->screen);
 }
-void SetPenalize::init()
-{
-	begin = 0;
-	vSkip = w->g->font_size << 1;
-	size = min<int>(w->g->screen->h/vSkip -1, IGroups);
-	end = begin + size;
-	for (int i = 0; i<IGroups; i++)
-	{
-		instructions[i].name = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->normal);
-		instructions[i].nameChosen = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->light);
-		std::string s = deconvert<int>((*penals)[i]);
-		instructions[i].penalize = (*penals)[i];
-		instructions[i].penal = TTF_RenderText_Solid(w->g->g_font, s.c_str(),w->g->normal);
-	}
-}
 void SetPenalize::resume()
 {
 	draw();
 }
-void SetPenalize::clean()
-{
-}
+void SetPenalize::clean() { }
+
 void SetPenalize::choose(int iterator)
 {
 	SDL_Rect r2;
@@ -372,13 +382,25 @@ void SetPenalize::unchoose(int iterator)
 	SDL_UpdateRect(w->g->screen, BEGIN_X , r2.y, 
 		w->g->screen->w - BEGIN_X , w->g->screen->h - r2.y );
 }
+void SetPenalize::resize()
+{
+	begin = 0;
+	vSkip = w->g->font_size << 1;
+	size = min<int>(w->g->screen->h/vSkip -1, IGroups);
+	end = begin + size;
+}
 void SetPenalize::process()
 {
 	while (SDL_PollEvent(&w->g->event))
 	{
 		switch (w->g->event.type)
 		{
-		case SDL_KEYDOWN:
+			case SDL_VIDEORESIZE:
+			{
+				w->resize();
+				break;
+			}
+			case SDL_KEYDOWN:
 			{
 				switch(w->g->event.key.keysym.sym)
 				{
@@ -555,6 +577,12 @@ void ShowMenu::clean()
 		images.pop_back();
 	}
 }
+void ShowMenu::resize()
+{
+	clean();
+	init();
+}
+
 void ShowMenu::process()
 {
 	while (SDL_WaitEvent(&w->g->event)!=0)
@@ -633,12 +661,18 @@ void SetScheduller::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
+void SetScheduller::resize()
+{ }
+
 void SetScheduller::process()
 {
 	while (SDL_PollEvent(&w->g->event))
 	{
 		switch (w->g->event.type)
 		{
+			case SDL_VIDEORESIZE:
+				w->resize();
+				break;
 			case SDL_KEYDOWN:
 				{
 					switch(w->g->event.key.keysym.sym)

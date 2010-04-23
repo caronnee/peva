@@ -26,25 +26,8 @@ Create_map::Create_map(Window *w_)
 		resol[i] = NULL;
 	clean();
 }
-void Create_map::init()
+void Create_map::resize()
 {
-	for (size_t i = 0; i< NumberObjectsImages; i++)
-		skins.push_back(new WallSkin("grass",i)); //TODO zo subora	
-	
-	std::string txt = "Write map resolution:";
-	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);// na resize 2.krat
-	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
-	if (text == NULL)  
-	{
-		TEST("Ajta krajta, nevytvoril sa text!");
-	}
-	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
-	for (int i =0; i< NUMCHARS; i++)
-	{
-		resol[i] = TTF_RenderText_Solid(w->g->g_font,s[i].c_str(),w->g->normal);
-		TTF_SizeText(w->g->g_font,s[i].c_str(),&resol_width[i],NULL);
-	}//TODO! po esc spat na resolution a resize
-
 	std::string info = "Zadajte meno suboru";
 	int info_width;
 	TTF_SizeText(w->g->g_font,info.c_str(),&info_width,NULL); 
@@ -103,12 +86,39 @@ void Create_map::init()
 		tile_rect[i].h = skins[0]->get_size().y;
 		pom += skins[0]->get_size().y +20; //TODO konstanta
 	}
+	if (map)
+	{
+		map->setBoundary(rects[MAP].w,rects[MAP].h); 
+		rects[MAP].w = map->boundaries.width;
+		rects[MAP].h = map->boundaries.height;
+	}
+}
+void Create_map::init()
+{
+	for (size_t i = 0; i< NumberObjectsImages; i++)
+		skins.push_back(new WallSkin("grass",i)); //TODO zo subora	
+	
+	std::string txt = "Write map resolution:";
+	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);// na resize 2.krat
+	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
+	if (text == NULL)  
+	{
+		TEST("Ajta krajta, nevytvoril sa text!");
+	}
+	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
+	for (int i =0; i< NUMCHARS; i++)
+	{
+		resol[i] = TTF_RenderText_Solid(w->g->g_font,s[i].c_str(),w->g->normal);
+		TTF_SizeText(w->g->g_font,s[i].c_str(),&resol_width[i],NULL);
+	}//TODO! po esc spat na resolution a resize
+
 
 	std::string ids[] = {"clean", "save", "load", "generate", "exit" };
 	for (int i =0; i< BUTTONS; i++)
 	{
 		buttonsImages[i] = TTF_RenderText_Solid( w->g->g_font,ids[i].c_str(), w->g->normal);
 	}
+	resize();
 }
 
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
@@ -213,8 +223,8 @@ void Create_map::drawInit()
 	state = DRAW;
 	Position p(convert<int>(written_x),convert<int>(written_y));
 	map = new Map(p,"grass");
-	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 	map->shift(-rects[MAP].x, -rects[MAP].y);
+	resize();
 	draw();
 }
 
@@ -258,6 +268,9 @@ void Create_map::process_resolution()
 {
 	switch (w->g->event.type)
 	{
+		case SDL_VIDEORESIZE:
+			w->resize();
+			break;
 		case SDL_KEYDOWN:
 		{
 			keyDown(w->g->event.key.keysym.sym);
@@ -331,6 +344,7 @@ void Create_map::saving()
 						msg = "Cannot save to file '"+ file_name +"'";
 					
 					state = DRAW;
+					resize();
 					draw();
 					SDL_Surface *srf = TTF_RenderText_Solid(w->g->g_font,msg.c_str(),w->g->normal);
 					SDL_Rect rcr = file_r;
@@ -487,7 +501,8 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			TEST("Loading map")
 			if (nextMenu)
 				delete nextMenu;
-			w->add( new LoadMapMenu(w, map));
+			nextMenu = new LoadMapMenu(w,map);
+			w->add( nextMenu );
 			mouse_down = false;
 			break;
 		}
@@ -529,7 +544,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.x > -rects[MAP].x)
 					map->shift(-2,0);
-				map->update(rects[MAP], true,w->g);
+				map->updateScreen(w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
 					break;
@@ -543,7 +558,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.x < map->size().x - rects[RIGHT].x)
 					map->shift(2,0);
-				map->update(rects[MAP], true,w->g);
+				map->updateScreen(w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP)){
 					break;
@@ -599,6 +614,9 @@ void Create_map::process_map()
 {
 	switch (w->g->event.type)
 	{
+		case SDL_VIDEORESIZE:
+			w->resize();
+			break;
 		case SDL_KEYDOWN:
 		{
 			switch(w->g->event.key.keysym.sym)
