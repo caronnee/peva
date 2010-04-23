@@ -225,12 +225,10 @@ Map::Map(std::string skinName)
 {
 	processing = 0;
 	wskins.clear();
-	skin = new Skin(skinName, Skin::MapSkin);
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 	{
 		wskins.push_back( new WallSkin(skinName, i));
 	}
-	skinWork = new ImageSkinWork(skin);
 	map = NULL;
 	boxesInRow = 0;
 	boxesInColumn = 0;
@@ -242,14 +240,12 @@ Map::Map(Position resol, std::string skinName)
 	visibility = DEFAULT_VISIBILITY;
 	wskins.clear();
 	resolution = resol;
-	skin = new Skin(skinName, Skin::MapSkin);
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 	{
 		wskins.push_back( new WallSkin(skinName, i));
 	}
-	skinWork = new ImageSkinWork(skin);
-	resolution.x +=  2*skin->get_shift().x;
-	resolution.y +=  2*skin->get_shift().y;
+	resolution.x +=  2*wskins[1]->get_shift().x;
+	resolution.y +=  2*wskins[1]->get_shift().y;
 
 	create();
 	/* adding solid walls to ends */
@@ -258,7 +254,7 @@ Map::Map(Position resol, std::string skinName)
 
 void Map::addBoundaryWalls()
 {
-	Position p(skin->get_size().x,0);
+	Position p(wskins[1]->get_size().x,0);
 	//X-ova os
 	for (p.x = 0; p.x < resolution.x; p.x += wskins[1]->get_size().x)
 	{
@@ -266,7 +262,7 @@ void Map::addBoundaryWalls()
 		Wall * w1 = new Wall(wskins[1]);
 		w1->setPosition(p,0);
 
-		p.y = resolution.y - skin->get_shift().x;
+		p.y = resolution.y - wskins[1]->get_shift().x;
 		Wall * w2 = new Wall(wskins[1]);
 		w2->setPosition(p,0);
 		add(w1);
@@ -278,7 +274,7 @@ void Map::addBoundaryWalls()
 		p.x = 0;
 		Wall * w1 = new Wall(wskins[1]);
 		w1->setPosition(p,0);
-		p.x = resolution.x - skin->get_shift().x;
+		p.x = resolution.x - wskins[1]->get_shift().x;
 		Wall * w2 = new Wall(wskins[1]);
 		w2->setPosition(p,0);
 		add(w1);
@@ -432,18 +428,22 @@ void Map::background(Graphic * g)
 {	
 	SDL_Rect clip;
 	SDL_GetClipRect(g->screen, &clip);
-	int startX = - (clip.x%(skinWork->width()));
-	int startY = - (clip.y%(skinWork->height()));
-	for (int x = startX; x < clip.w; x += skinWork->width()) // pre tapety
+	int startX = - (clip.x%(wskins[0]->get_size().x));
+	int startY = - (clip.y%(wskins[0]->get_size().y));
+	for (int x = startX; x < clip.w; x += wskins[1]->get_size().x) // pre tapety
 	{
-		for(int y = startY; y< clip.h; y+=skinWork->height()) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
+		for(int y = startY; y< clip.h; y+= wskins[1]->get_size().y) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
 		{
 			SDL_Rect r; //TODO nie takto natvrdlo
 			r.x = x + clip.x;
 			r.y = y + clip.y;
 
-			SDL_Rect sr = skinWork->get_rect();
-			SDL_BlitSurface(skin->get_surface(WallFree),&sr, g->screen, &r);
+			SDL_Rect sr;
+			sr.x = x;
+			sr.y = y;
+			sr.w = wskins[1]->get_size().x;
+			sr.h = wskins[1]->get_size().y;
+			SDL_BlitSurface(wskins[0]->get_surface(0),&sr, g->screen, &r);
 		}
 	}
 }
@@ -547,8 +547,6 @@ bool Map::performe()
 				Position p = o->get_pos();
 				map[i][j].objects[processed].splice(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processed].begin(),
 						map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processing], iter);
-				size_t t = map[i][j].objects[processed].size();
-				size_t t2 = map[i][j].objects[processing].size();
 			}
 		}
 	processing = processed;

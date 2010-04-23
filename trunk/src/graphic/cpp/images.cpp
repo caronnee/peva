@@ -14,43 +14,22 @@ std::string toLoadBot[] = { "default.png", "sleep.png", "walk.png", "attack.png"
 std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
-std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png","StartWall.png", "Target.png", "selected.png",  };
+std::string toLoadMap[] = {"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png", "BreakableWall.png", "StartWall.png", "Target.png", "selected.png",  };
 
 Skin::Skin()
 {
 	images = NULL;
 	directory = "./";
 }
-Skin::Skin(std::string name, Skin::Type t)
+
+BotSkin::BotSkin(std::string name)
 {
 	nameOfSet = name;
 	std::string * load;
-	directory = "./"; 
-	switch (t)
-	{
-		case MapSkin:
-		{
-			directory = "./mapSkins/";
-			load = toLoadMap;
-			size = NumberObjectsImages;
-			images = new SDL_Surface *[size];
-			break;
-		}
-		case BotSkin:
-		{
-			directory = "./botSkins/";
-			load = toLoadBot;
-			size = NumberOfActions;
-			images = new SDL_Surface *[size];
-			break;
-		}
-		default:
-		{
-			directory = "./";
-			size = -1;
-			load = NULL;
-		}
-	}
+	directory = "./botSkins/";
+	load = toLoadBot;
+	size = NumberOfActions;
+	images = new SDL_Surface *[size];
 	create(load, name, size);	
 }
 void Skin::create(std::string * load, std::string name, int sizeLoaded)
@@ -61,8 +40,7 @@ void Skin::create(std::string * load, std::string name, int sizeLoaded)
 	}
 	if (!bf::exists(directory + name))
 	{
-		TEST("Error! Directory " <<directory + name<< " not found!"); //TODO exception
-		return;//TODO throw new exception
+		throw "Directory " + directory + name + " not found!";
 	}
 	directory = directory+name + '/';
 	for (int i = 0; i<sizeLoaded; i++ )
@@ -75,6 +53,9 @@ void Skin::create(std::string * load, std::string name, int sizeLoaded)
 		if (images[i] == NULL)
 			images[i] = IMG_Load((directory + load[0]).c_str()); //aby sa dalo pouzit free
 	}
+	for(size_t i =0; i<size; i++)
+		if(images[i] == NULL)
+			throw "Images of type " + directory + "not found!";
 	if (!bf::exists(directory + "config"))
 	{
 		begin_in_picture.x = 0;
@@ -153,12 +134,17 @@ WallSkin::WallSkin(std::string name, size_t wall)
 	{
 		images[i] = IMG_Load((directory +toLoadMap[wall]).c_str());
 	}//TODO skonsolidovat
+	for (size_t i  = 0; i< size; i++)
+		if (!images[i])
+			throw "Image " +toLoadMap[wall] + " at " + directory + " not found!" + directory +toLoadMap[wall];
+	
 	begin_in_picture.x = 0;
 	begin_in_picture.y = 0;
 	shift.x = images[0]->h;
 	shift.y = images[0]->w;
 	imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 	imageSize.y = images[0]->h;
+
 }
 
 ImageSkinWork::ImageSkinWork(Skin * skin)

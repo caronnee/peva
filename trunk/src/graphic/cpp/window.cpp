@@ -93,9 +93,17 @@ void Window::Destroy()
 void Window::add(Menu * menu)
 {
 	state.push(menu);
-	menu->init();
-	if (menu == state.top())
+	try
+	{
+		menu->init();
 		menu->draw();
+	}
+	catch (std::string msg)
+	{
+		std::cout << msg << std::endl;
+		state.top()->clean();
+		state.pop();
+	}
 }
 void Window::pop()
 {

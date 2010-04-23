@@ -319,7 +319,7 @@ Skin * Robots::addSkin(std::string name)
 		if (skins[i]->nameOfSet == name)
 			return skins[i];
 	}
-	s = new Skin(name, Skin::BotSkin);
+	s = new BotSkin(name);
 	Skin *ms = new MissilleSkin(name);
 	mSkins.push_back(ms);
 	skins.push_back(s);
