@@ -29,6 +29,13 @@ bool Window::Init(int argc, char * argv[] )
 	return b;
 }
 
+void Window::resize()
+{
+	g->screen = SDL_SetVideoMode(g->event.resize.w, g->event.resize.h, WIN_BPP, WIN_FLAGS);
+	SDL_SetClipRect(g->screen, NULL);
+	state.top()->resize();
+	state.top()->draw();
+}
 void Window::tapestry(SDL_Rect r)
 {
 	SDL_SetClipRect(g->screen, &r);
@@ -96,7 +103,8 @@ void Window::add(Menu * menu)
 	try
 	{
 		menu->init();
-		menu->draw();
+		if(menu == state.top()) //ak som v inite nieco nepridala
+			menu->draw();
 	}
 	catch (std::string msg)
 	{

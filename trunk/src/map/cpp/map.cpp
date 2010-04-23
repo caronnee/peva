@@ -115,10 +115,16 @@ void Map::setShift(int x, int y)
 	boundaries.x = x;
 	boundaries.y = y;
 }
-void Map::setBoundary(int x, int y)
+Position Map::setBoundary(int x, int y)
 {
 	boundaries.width = min<int>(resolution.x,x);
 	boundaries.height = min<int>(resolution.y,y);
+	if (boundaries.x + boundaries.width > resolution.x)
+		boundaries.x = resolution.x - boundaries.width;
+	if (boundaries.y + boundaries.height > resolution.y)
+		boundaries.y = resolution.y - boundaries.height;
+	Position b(boundaries.width, boundaries.height);
+	return b;
 }
 bool Map::load(Graphic * g, std::string filename)
 {
@@ -290,6 +296,8 @@ void Map::shift(int shiftLeft, int shiftUp)
 
 void Map::addStart(Graphic * g,size_t x, size_t y)
 {
+	if ((x > (size_t)resolution.x) || (y >(size_t) resolution.y))
+		return;
 	Rectangle r(x,y,wskins[WallStartId]->get_shift().x,
 		wskins[WallStartId]->get_shift().y);
 	std::list<Place>::reverse_iterator iter = places.rbegin();
@@ -323,7 +331,8 @@ std::list<Rectangle> Map::getStarts()
 }
 void Map::addTarget(Graphic * g,size_t x, size_t y)
 {
-
+	if ((x > (size_t)resolution.x)||(y > (size_t)resolution.y))
+		return;
 	Rectangle r(x,y,wskins[TargetPlace]->get_shift().x,
 		wskins[TargetPlace]->get_shift().y);
 
@@ -428,22 +437,17 @@ void Map::background(Graphic * g)
 {	
 	SDL_Rect clip;
 	SDL_GetClipRect(g->screen, &clip);
-	int startX = - (clip.x%(wskins[0]->get_size().x));
-	int startY = - (clip.y%(wskins[0]->get_size().y));
-	for (int x = startX; x < clip.w; x += wskins[1]->get_size().x) // pre tapety
+	int startX = - (clip.x % (wskins[0]->get_size().x));
+	int startY = - (clip.y % (wskins[0]->get_size().y));
+	for (int x = startX; x < clip.w; x += wskins[0]->get_size().x) // pre tapety
 	{
-		for(int y = startY; y< clip.h; y+= wskins[1]->get_size().y) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
+		for(int y = startY; y< clip.h; y+= wskins[0]->get_size().y) //FIXME kvoli rects, neskor opravti, minoritna vec, indent(x,y)
 		{
-			SDL_Rect r; //TODO nie takto natvrdlo
+			SDL_Rect r;
 			r.x = x + clip.x;
 			r.y = y + clip.y;
 
-			SDL_Rect sr;
-			sr.x = x;
-			sr.y = y;
-			sr.w = wskins[1]->get_size().x;
-			sr.h = wskins[1]->get_size().y;
-			SDL_BlitSurface(wskins[0]->get_surface(0),&sr, g->screen, &r);
+			SDL_BlitSurface(wskins[0]->get_surface(0),NULL, g->screen, &r);
 		}
 	}
 }

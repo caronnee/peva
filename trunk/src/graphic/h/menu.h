@@ -29,6 +29,9 @@ class Menu
 		/* resumes window */
 		virtual void resume() = 0;
 
+		/* function hadling resizing window */
+		virtual void resize() = 0;
+
 		/* resolves events */
 		virtual void process(void) = 0;
 

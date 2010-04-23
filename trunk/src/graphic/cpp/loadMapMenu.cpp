@@ -20,6 +20,13 @@ void Load::resume()
 {
 	draw();
 }
+void Load::resize()
+{
+	vSkip =  TTF_FontLineSkip(w->g->g_font);
+	size = min<int>(maps.size(), (w->g->screen->h - BEGIN_Y) / vSkip );
+	begin =0;
+	end = size;
+}
 
 void Load::process()
 {
@@ -27,6 +34,9 @@ void Load::process()
 	{
 		switch (w->g->event.type)
 		{
+			case SDL_VIDEORESIZE:
+				w->resize();
+				break;
 			case SDL_KEYDOWN:
 			{
 				switch(w->g->event.key.keysym.sym)
@@ -131,7 +141,6 @@ void Load::init()
 {
 	index = 0;
 	//zisti vsetky s priponou .map
-	vSkip =  TTF_FontLineSkip(w->g->g_font);
 	bf::directory_iterator end_iter;
 	if (!bf::exists( adr ))
 		bf::create_directory( adr );
@@ -150,9 +159,7 @@ void Load::init()
 		record.name = dir_itr->path().string();
 		maps.push_back( record );
 	}
-	size = min<int>(maps.size(), (w->g->screen->h - BEGIN_Y) / vSkip );
-	begin =0;
-	end = size;
+	resize();
 	if (size == 0 )
 	{
 		SDL_Rect clip;

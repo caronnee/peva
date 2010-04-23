@@ -26,6 +26,7 @@ public:
 	Main(Window * w_, int argn, char* args[]);
 	virtual void init();
 	virtual void resume();
+	void resize();
 	void process();
 	void draw();
 	void clean();
