@@ -12,7 +12,7 @@ public:
 	
 	Body * owner;
 	virtual bool is_blocking();
-	virtual void move();
+	virtual void move(size_t t);
 	virtual void dead();
 	virtual void bounce(Object * o);
 	virtual void hitted(Object *o, Position dir, int attack);

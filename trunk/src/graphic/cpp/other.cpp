@@ -256,6 +256,17 @@ void Play::process()
 					w->pop();
 					return;
 				}
+				case SDLK_p: //pause
+				{	
+					while(true)
+					{
+						SDL_WaitEvent(&w->g->event);
+						if (w->g->event.type == SDL_KEYDOWN)
+							break;
+					}
+					m->time = SDL_GetTicks();
+					break;
+				}
 				case SDLK_a: //another alive robot, no break, we need to center
 				{
 					for(size_t i =0; i<robots.robots.size(); i++)

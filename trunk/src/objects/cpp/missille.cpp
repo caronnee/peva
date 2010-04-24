@@ -39,9 +39,9 @@ void Missille::hitted(Object * o, Position d, int attack)
 {
 	hit(o);
 }
-void Missille::move()
+void Missille::move(size_t fps)
 {
-	Object::move();
+	Object::move(fps);
 	hitpoints = movement.steps;
 }
 Missille::~Missille() 

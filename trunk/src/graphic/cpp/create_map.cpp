@@ -43,10 +43,13 @@ void Create_map::resize()
 	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
+	rects[SAVE].w = rects[GENERATE].w =  rects[LOAD].w =
+		rects[CLEAN].w = rects[EXIT].w = rects[VISIBILITY].w = 
+		(w->g->screen->w / BUTTONS);
 
 	/*setting heights*/
 	rects[SAVE].h = rects[EXIT].h = rects[LOAD].h =
-		rects[CLEAN].h = rects[GENERATE].h = 30;
+		rects[CLEAN].h = rects[GENERATE].h = rects[VISIBILITY].h = 30;
 	rects[CHOOSE].h = w->g->screen->h;
 	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
@@ -58,14 +61,12 @@ void Create_map::resize()
 	rects[MAP].x = rects[LEFT].x + rects[LEFT].w;
 	rects[RIGHT].x = rects[MAP].x + rects[MAP].w;
 
-	rects[SAVE].w = rects[GENERATE].w =  rects[LOAD].w =
-		rects[CLEAN].w = rects[EXIT].w = (rects[RIGHT].x / BUTTONS);
-
 	rects[CHOOSE].x = rects[RIGHT].x + rects[RIGHT].w;
 	rects[LOAD].x = rects[CLEAN].x + rects[CLEAN].w; //na jednej urovni
 	rects[SAVE].x = rects[LOAD].x + rects[LOAD].w; //na jednej urovni
 	rects[GENERATE].x = rects[SAVE].x + rects[SAVE].w; //na jednej urovni
 	rects[EXIT].x = rects[GENERATE].x + rects[GENERATE].w;
+	rects[VISIBILITY].x = rects[EXIT].x + rects[EXIT].w;
 
 	/* setting y positions */
 	rects[UP].y = 0;
@@ -73,7 +74,7 @@ void Create_map::resize()
 	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
 	rects[EXIT].y = rects[SAVE].y  = rects[CLEAN].y = rects[LOAD].y =
-	rects[GENERATE].y = rects[DOWN].y + rects[DOWN].h;
+	rects[GENERATE].y = rects[VISIBILITY].y = rects[DOWN].y + rects[DOWN].h;
 
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
 	int pom = rects[CHOOSE].y + skins[0]->get_size().y/2;
@@ -114,7 +115,7 @@ void Create_map::init()
 
 
 	std::string ids[] = {"clean", "save", "load", "generate", "exit" };
-	for (int i =0; i< BUTTONS; i++)
+	for (int i =0; i< BUTTONS-1; i++)
 	{
 		buttonsImages[i] = TTF_RenderText_Solid( w->g->g_font,ids[i].c_str(), w->g->normal);
 	}
@@ -223,6 +224,9 @@ void Create_map::drawInit()
 	state = DRAW;
 	Position p(convert<int>(written_x),convert<int>(written_y));
 	map = new Map(p,"grass");
+
+	buttonsImages[BUTTONS-1] = TTF_RenderText_Solid( w->g->g_font, deconvert<size_t>(map->visibility/10).c_str(), w->g->normal);
+
 	map->shift(-rects[MAP].x, -rects[MAP].y);
 	resize();
 	draw();
@@ -621,6 +625,22 @@ void Create_map::process_map()
 		{
 			switch(w->g->event.key.keysym.sym)
 			{
+
+				case SDLK_m:
+					map->visibility-=20; //preteka:)
+				case SDLK_p:
+					{
+						map->visibility +=10;
+						SDL_FreeSurface(buttonsImages[BUTTONS -1]);
+						buttonsImages[BUTTONS -1] = TTF_RenderText_Solid(w->g->g_font, deconvert<size_t>(map->visibility/10).c_str(), w->g->normal);
+						SDL_Rect r = rects[VISIBILITY];
+						r.w = w->g->screen->w - r.x;
+						r.h = w->g->screen->h - r.y;
+						w->tapestry(r);
+						SDL_BlitSurface(buttonsImages[BUTTONS-1],NULL, w->g->screen, &r);
+						SDL_UpdateRect(w->g->screen, rects[VISIBILITY].x, rects[VISIBILITY].y, rects[VISIBILITY].w, rects[VISIBILITY].h);
+						break;
+					}
 				case SDLK_q:
 				case SDLK_SPACE:
 					draw();

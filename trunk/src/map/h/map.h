@@ -52,6 +52,9 @@ struct Place
 
 struct Map
 {
+	size_t ticks;
+	size_t time;
+
 	/* help fnction to determnije nearest object */
 	void checkNearest(Object * center, Object *objectToCheck, size_t& distanceSoFar, Object * &nearestObjectSoFar );
 	/* iterator describing position where are the object already processed */
@@ -184,5 +187,6 @@ public:
 
 	/* add an object to the map */
 	void add(Object * o); 
+
 };
 #endif
