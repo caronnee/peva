@@ -1,28 +1,86 @@
+#include <fstream>
 #include <sstream>
 #include "../h/window.h"
 #include "../h/main_menu.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
+#define RESTORE "last.data"
+
+Setting::Setting()
+{
+	penalizes.insert(penalizes.begin(), IGroups, 1);
+	scheduller = 0;
+	std::ifstream input;
+	input.open(RESTORE);
+	if (!input.good())
+		return;
+		
+	//last inputs, as was when program normally exited
+	while (true)
+	{
+		if (input.eof())
+			return;
+		int i;
+		input >> i;
+		if (i<0)
+			break; //skoncili sme
+		input.ignore(256,':');
+		int val;
+		input >> val;
+		penalizes[i]=val;
+		input.ignore(256,' ');
+	}
+	//scheduller, as was set ..
+	input.ignore(256,' ');
+	input >> scheduller;
+	std::string s;
+	input >> s; //whitespace posriesi cou, cin
+	while (!input.eof())
+	{
+		maps.push_back(s);
+		input >> s; //whitespace posriesi cou, cin
+	};
+}
+
+Setting::~Setting()
+{
+	std::ofstream output(RESTORE);
+	for(size_t i=0; i< penalizes.size(); i++)
+		if(penalizes[i]!=1)
+		{
+			output << i << ":" <<penalizes[i] << " ";
+		}
+	output << -1<<" ";
+	output << scheduller << " ";
+	for (size_t i=0; i< maps.size(); i++)
+	{
+		output << maps[i]<<"\n";
+	}
+}
+
 Window:: Window(Graphic * g_)
 {
-	back = DEFAULT_BACKGROUND;
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	g = g_;
 	main_menu =NULL;
 	background = NULL;
+	settings = NULL;
 }
 
 bool Window::Init(int argc, char * argv[] )
 {
 	// Inicializace SDL
 	bool b = g->Init();
+	settings = new Setting();
+
 	if(main_menu)
 		return b;
-	background = IMG_Load(back.c_str());
+	background = IMG_Load(DEFAULT_BACKGROUND);
 	if (background == NULL) 
 	{
-		TEST("Background image not found!")
+		TEST("Background image  not found!");
+		return false;
 	}
 	main_menu = new Main(this, argc, argv);
 	add(main_menu);
@@ -79,7 +137,9 @@ int Window::toggle_screen()
 
 void Window::set_background(std::string res)
 {
-	back = res;
+	if (background)
+		SDL_FreeSurface(background);
+	background = IMG_Load(res.c_str());
 }
 
 void Window::Destroy()
@@ -127,11 +187,12 @@ Menu * Window::top()const
 {
 	return state.top();
 }
-void Window::process()
-{
-	state.top()->process();
-}
 bool Window::empty()
 {
 	return state.empty();
+}
+Window::~Window()
+{
+	if (settings)
+		delete settings;
 }

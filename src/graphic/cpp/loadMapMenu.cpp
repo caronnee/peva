@@ -97,6 +97,7 @@ void Load::process()
 		}	
 	}
 }
+
 void Load::choose(int index)
 {
 	SDL_Rect r2;
@@ -108,13 +109,17 @@ void Load::choose(int index)
 }
 void Load::unchoose(int index)
 {
+	SDL_Surface * s = maps[index].show;
 	for(size_t i =0; i< entered.size(); i++)
 		if (entered[i] == maps[index].name)
-			return;
+		{
+			s = maps[index].chosen;
+			break;
+		}
 	SDL_Rect r;
 	r.x = BEGIN_X;
 	r.y = BEGIN_Y + ( index - begin ) * vSkip;
-	SDL_BlitSurface(maps[index].show, NULL, w->g->screen, &r);
+	SDL_BlitSurface(s , NULL, w->g->screen, &r);
 	SDL_UpdateRect(w->g->screen, r.x, r.y, 
 			w->g->screen->w - BEGIN_X, w->g->screen->h - r.y);
 }
@@ -122,8 +127,8 @@ void Load::unchoose(int index)
 void Load::draw()
 {
 	SDL_Rect rct;
-	rct.x = 0;
-	rct.y = 0;
+	rct.x = BEGIN_X;
+	rct.y = BEGIN_Y;
 	rct.h = w->g->screen->h;
 	rct.w = w->g->screen->w;
 
@@ -139,6 +144,20 @@ void Load::draw()
 }
 void Load::init()
 {
+	SDL_Surface * n = get_name();
+
+	SDL_Rect rct;
+	rct.x = 0;
+	rct.y = 0;
+	rct.w = w->g->screen->w;
+	rct.h = BEGIN_Y;
+
+	w->tapestry(rct);
+	rct.x = (w->g->screen->w - n->w)/2;
+	rct.y = (BEGIN_Y - n->h)/2;
+	SDL_BlitSurface(n, NULL, w->g->screen, &rct );
+	SDL_UpdateRect(w->g->screen, 0,0,w->g->screen->w, BEGIN_Y);
+
 	index = 0;
 	//zisti vsetky s priponou .map
 	bf::directory_iterator end_iter;

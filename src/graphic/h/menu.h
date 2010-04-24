@@ -4,8 +4,8 @@
 #include <string>
 #include "graphic.h"
 
-#define BEGIN_X 20
-#define BEGIN_Y 20
+#define BEGIN_X 40
+#define BEGIN_Y 40
 
 class Menu
 {

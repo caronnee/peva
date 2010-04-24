@@ -17,14 +17,13 @@ extern int yyparse(Robots *);
 
 std::string instructionNames[] ={ "undefined ", "Call", "Create variable ", "loadlocal variable ", "loadglobal variable ", "load element", "conversion to int ", "conversion to real", "duplicate instruction", "store integer ", "store real ", "store object ", "store element", "pop ", "goto instruction ", "jump if true condition", "break ", "continue ", "return ", "restore", "remove temporary", "plusplus integer ", "plusplus real ", "minusminus integer ", "minusminus real ", "plus integer ", "plus real ", "minus integer ", "minus real ", "multiply integer ", "multiply real ", "divide integer ", "divide real ", "modulo ", "binary and ", "logical and ", "binary or ", "or ", "binary not ", "not ", "greater than integer ", " greater than real ", "greater or equal integer ", "greater or equal real ", "equal integer ", "equal real ", "equal object ", "not equal structure", "not equal integer ", "not equal real ", "not equal object ", "less than integer ", "less than real ", "less equal integer ", "less equal real ", "begin block ", "end block ", "see ", "eye ", "fetchstate after action", "step ", "step default number ", "wait ", "shoot at location ", "shoot at angle ", "turn ", "turn right ", "turn left", "is hit question", "is player question", "is wall question", "is missille question ", "locate question", "is moving question"};
 
-Play::Play(Window *w_, Setting * s)
+Play::Play(Window *w_)
 {
 	/* init, not repeatable */
-	settings = s;
 	srand(time(NULL));
 	w = w_;
 	name(w->g, "Play Game");
-	loadInput = new SetMaps(w, &s->inputs, ".input","inputs");
+	loadInput = new SetMaps(w, &w->settings->inputs, ".input","inputs");
 	show = NULL;
 	m = NULL;
 	/* cleaning up any mess */
@@ -47,7 +46,6 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 void Play::init(int x, int y)
 {	
 	focus = 0;
-	m = new Map(Position (x,y), "grass");
 	m->setBoundary(min<int> (w->g->screen->w, x), min<int>(w->g->screen->h,y));
 }
 
@@ -75,12 +73,13 @@ void Play::init()
 
 void Play::resume()
 {
+	focus = 0;
 	if (show)
 	{
 		w->pop();
 		return;
 	}
-	if (settings->inputs.empty())
+	if (w->settings->inputs.empty())
 	{
 		w->pop();	
 		return;
@@ -88,19 +87,18 @@ void Play::resume()
 	robots.clean();
 	int err = 0;
 	size_t lastIn = 0;
-	for (size_t i = 0; i< settings->inputs.size(); i++)
+	for (size_t i = 0; i< w->settings->inputs.size(); i++)
 	{
-		if((yyin = fopen(settings->inputs[i].c_str(), "r"))==0)
+		if((yyin = fopen(w->settings->inputs[i].c_str(), "r"))==0)
 		{
-			TEST("Unable to open input " << settings->inputs[i] ) //TODO tu by to nikdy nemalo dojst, netreba vypisovat
+			TEST("Unable to open input " << w->settings->inputs[i] ) //TODO tu by to nikdy nemalo dojst, netreba vypisovat
 			continue;
 		}
-		robots.input = settings->inputs[i];
+		robots.input = w->settings->inputs[i];
 		err += yyparse(&robots);
 		fclose(yyin);	
 	}
 	std::string errList = "";
-	focus = 0;
 	lastIn = 0;
 	for ( ; lastIn< robots.robots.size(); lastIn++)
 		if (robots.robots[lastIn]->errors)
@@ -122,14 +120,15 @@ void Play::resume()
 		return;
 	}
 
-	if (settings->maps.empty())
+	if(!m)
+		m = new Map("grass");
+	if (w->settings->maps.empty())
 		init( 500, 400 );//TODO makro
 	else
 	{
-		m = new Map("grass");
-		m->load(w->g, settings->maps[mapIter]);//fixme kontrola
+		m->load(w->g, w->settings->maps[mapIter]);//fixme kontrola
 		mapIter ++;
-		mapIter%= settings->maps.size();
+		mapIter%= w->settings->maps.size();
 	}
 	robots.finalize(m->visibility);
 	for(size_t i =0; i< robots.robots.size(); i++)
@@ -304,9 +303,11 @@ void Play::process()
 				}
 				case SDLK_n: //next map
 				{
-					if (settings->maps.empty())
+					if (w->settings->maps.empty())
 						break;
 						//removing body objects
+					for (size_t i = 0; i < robots.robots.size(); i++)
+						m->remove(robots.robots[i]->getBody());
 					resume();
 					break;
 				}
@@ -318,10 +319,9 @@ void Play::process()
 	}
 }
 
-Settings::Settings(Window *w_, Setting *s):Main(w_,0,NULL)
+Settings::Settings(Window *w_):Main(w_,0,NULL)
 {
 	w = w_;
-	settings = s;
 	name(w->g,"Settings");
 }
 SetPenalize::~SetPenalize()
@@ -337,6 +337,7 @@ SetPenalize::SetPenalize(Window *win, std::vector<int> * penalize)
 
 void SetPenalize::init()
 {
+	index = 0;
 	for (int i = 0; i<IGroups; i++)
 	{
 		instructions[i].name = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->normal);
@@ -397,7 +398,7 @@ void SetPenalize::resize()
 {
 	begin = 0;
 	vSkip = w->g->font_size << 1;
-	size = min<int>(w->g->screen->h/vSkip -1, IGroups);
+	size = min<int>(w->g->screen->h/vSkip -2, IGroups);
 	end = begin + size;
 }
 void SetPenalize::process()
@@ -468,6 +469,8 @@ void SetPenalize::process()
 						index--;
 						if (index > IGroups)
 							index = 0;
+						if(index < 0)
+							index  =0;
 						if (index < begin)
 						{
 							begin = index;
@@ -492,9 +495,9 @@ void Settings::init()
 	size = 3;
 	iterator = 0;
 	menus = new Menu * [size];
-	menus[0] = new SetPenalize(w, &settings->penalizes);
-	menus[1] = new SetScheduller(w, &settings->scheduller);
-	menus[2] = new SetMaps(w, &settings->maps, ".map", "maps");
+	menus[0] = new SetPenalize(w, &w->settings->penalizes);
+	menus[1] = new SetScheduller(w);
+	menus[2] = new SetMaps(w, &w->settings->maps, ".map", "maps");
 	menus[0]->set();
 }
 
@@ -629,11 +632,10 @@ SetScheduller::~SetScheduller()
 {
 	//already cleaned
 }
-SetScheduller::SetScheduller(Window * w_, int * sched)
+SetScheduller::SetScheduller(Window * w_)
 {
 	w = w_;
 	name(w->g, "SetScheduller");
-	result = sched;
 }
 void SetScheduller::init() 
 {
@@ -642,13 +644,14 @@ void SetScheduller::init()
 	schedullers[1] = TTF_RenderText_Solid(w->g->g_font, "Pocet instrukcii/kolo za cas:", w->g->normal);
 	valueString = "1";
 	iter = 0;
-	if (*result)
+	if (w->settings->scheduller)
 	{
 		iter = 1;
-		valueString = deconvert<int>(*result);
+		valueString = deconvert<int>(w->settings->scheduller);
 	}
 	value =TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
 }
+
 void SetScheduller::draw()
 {
 	SDL_Rect rct;
@@ -694,8 +697,8 @@ void SetScheduller::process()
 							{
 								if (valueString == "")
 									valueString = "1";
-								(*result) = convert<int>(valueString);
-								(*result) *= iter;
+								w->settings->scheduller = convert<int>(valueString);
+								w->settings->scheduller *= iter;
 								w->pop();
 								return;
 							}
@@ -756,6 +759,9 @@ SetMaps::SetMaps(Window * w_, std::vector<std::string> * result_, std::string ex
 {
 	name(w_->g, "Choose " + addr);
 	result = result_;
+	entered.clear();
+	for(size_t i=0; i< result->size(); i++)
+		entered.push_back((*result)[i]);
 }
 void SetMaps::enter()
 {

@@ -101,14 +101,11 @@ void Main::draw()
 void Main::init()
 {
 	//Todo nalodaovat z fajnlu settings;
-	settings = new Setting();
-	settings->penalizes.insert(settings->penalizes.begin(), IGroups, 1);
-	settings->scheduller = 0;
 	menus = new Menu*[NUMBEROFMENUS];
 	size = NUMBEROFMENUS;
 	iterator = 0;
-	menus[0] = new Play(w, settings);
-	menus[1] = new Settings(w, settings);
+	menus[0] = new Play(w);
+	menus[1] = new Settings(w);
 	menus[2] = new Create_map(w);
 	menus[0]->set();
 } 
