@@ -42,9 +42,6 @@ struct ObjectMovement
 	/* direction */
 	Position direction;
 
-	/* frame per second */ //TODO global
-	float fps; 
-
 	/* how many steps is object allowed to take */
 	int steps;
 	
@@ -134,7 +131,7 @@ public:
 	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
-	virtual void move();
+	virtual void move(size_t fps);
 
 	/* returns direction of robot in degrees */
 	int getAngle()const;

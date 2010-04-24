@@ -82,7 +82,7 @@ int main(int argc, char ** args)
 		if (body->isMoving())
 		{
 			body->step(1000);
-			body->move();
+			body->move(map->ticks);
 			Position p = body->get_pos();
 			if (p.x <0)
 				body->place(map, Position(0,body->get_pos().y), body->getAngle());
@@ -158,7 +158,7 @@ int main(int argc, char ** args)
 									if (body->isMoving())
 									{
 										body->step(0);
-										body->move();
+										body->move(map->ticks);
 									}
 									else
 										body->step(10);

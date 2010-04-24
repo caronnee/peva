@@ -230,6 +230,8 @@ void Map::create()
 Map::Map(std::string skinName)
 {
 	processing = 0;
+	ticks = 30;
+	time = 1;
 	wskins.clear();
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 	{
@@ -242,9 +244,11 @@ Map::Map(std::string skinName)
 
 Map::Map(Position resol, std::string skinName) 
 {
+	ticks = 30;
 	processing = 0;
 	visibility = DEFAULT_VISIBILITY;
 	wskins.clear();
+	time = 1;
 	resolution = resol;
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 	{
@@ -453,6 +457,8 @@ void Map::background(Graphic * g)
 }
 void Map::draw(Graphic * g ) 
 {
+	ticks = (SDL_GetTicks() - time)%100;
+	time = SDL_GetTicks();
 	Position pos;
 	pos.x = boundaries.x/BOX_WIDTH;
 	pos.y = boundaries.y/BOX_HEIGHT;
@@ -605,7 +611,7 @@ void Map::resolveMove(Object * o)
 		return;
 	}
 	/* move, actually */
-	o->move();
+	o->move(ticks);
 	resolveBorders(o);
 	Object * collidedWith= checkCollision(o);
 	while (collidedWith!=NULL)

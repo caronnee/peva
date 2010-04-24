@@ -7,12 +7,10 @@
 #include "../../graphic/h/images.h"
 #include "../../map/h/map.h"
 
-#define BUTTONS 5
+#define BUTTONS 6
 
 class Create_map:public Menu
 {
-
-
 private:
 	/* division of screen, should be recomputed when fullscreened */
 	enum Map_divide
@@ -23,6 +21,7 @@ private:
 		LOAD,
 		GENERATE,
 		EXIT,
+		VISIBILITY,
 		CHOOSE,
 		LEFT,
 		UP,

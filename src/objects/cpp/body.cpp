@@ -68,7 +68,7 @@ void Body::addKill(Object * id)
 	tasks++;
 	killTarget.push_back(id);
 }
-void Body::move()
+void Body::move(size_t fps)
 {
 	Rectangle col = collisionSize();
 	col.x += movement.position_in_map.x;
@@ -83,7 +83,7 @@ void Body::move()
 				tasks--;
 			}
 	}
-	Object::move();
+	Object::move(fps);
 }
 
 void Body::addVisit(TargetVisit * target)

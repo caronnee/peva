@@ -43,6 +43,7 @@ enum Actions
 class Skin
 {
 protected:
+	/* static directory where are images kept */
 	std::string directory;
 
 public:
@@ -62,6 +63,7 @@ public:
 	Position begin_in_picture; //kolko toho ma urezat zo zaciatku
 
 public:
+	/* constructor */
 	Skin();
 
 	/* name of set for memory optimalization, no need to be private */

@@ -9,7 +9,6 @@ void ObjectMovement::clean()
 	speed = 30;
 	old_pos = position_in_map = direction = Position (0,0);
 	angle = 0;
-	fps = 200;
 	steps = 0;
 }
 int Object::getAngle()const
@@ -77,12 +76,12 @@ std::string Object::info() const
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie?
 
-void Object::move()
+void Object::move(size_t fps)
 {
 	movement.old_pos = movement.position_in_map;
 
-	movement.realX+=movement.direction.x/movement.fps;
-	movement.realY+=movement.direction.y/movement.fps;
+	movement.realX+=movement.direction.x/fps;
+	movement.realY+=movement.direction.y/fps;
 
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;

@@ -62,7 +62,7 @@ public:
 	void addVisitSeq(std::vector<TargetVisit *> ids);
 	void addVisitSeq(std::vector<Position> pos);
 	void addKill(Object * object);
-	virtual void move();
+	void move(size_t fps);
 	virtual void hitted(Object * attacker, Position p, int attack);
 	virtual void hit(Object * o);
 
