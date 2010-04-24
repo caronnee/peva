@@ -11,18 +11,37 @@
 #include "main_menu.h"
 #include "loadMapMenu.h"
 
+/* penalization value to concrete robot 
+ * instruction + images for drawing 
+ * */
 struct Penalize
 {
+	/* value of penalization instruction */
 	int penalize;
+
+	/* value converted to surface */
 	SDL_Surface * penal;
+
+	/* image of name */
 	SDL_Surface * name;
+
+	/* image of name, highlited */
 	SDL_Surface * nameChosen;
 };
 
+/* 
+ * menu drawing penalization instruction 
+ * */
 class SetPenalize : public Menu
 {
+	/* handle to window */
 	Window *w;
+
+	/* value for every instruction denoted by index */
 	Penalize instructions[IGroups];
+
+	/* index of the first instruction to draw,
+	 * size on instruction to */
 	int begin, size, index, end, vSkip;
 	std::vector<int>* penals;
 public:
@@ -66,7 +85,7 @@ class SetScheduller : public Menu
 	SDL_Surface * schedullers[2];
 	std::string valueString;
 public:
-	SetScheduller(Window * w, int *sched);
+	SetScheduller(Window * w);
 	void resize();
 	void resume();
 	void init();
@@ -87,9 +106,8 @@ public:
 };
 class Settings:public Main
 {
-	Setting * s;
 public:
-	Settings(Window * w_, Setting *s);
+	Settings(Window * w_);
 	void init();
 	virtual ~Settings();
 };
@@ -107,10 +125,9 @@ class Play:public Menu
 	int mapIter;
 	SDL_Rect rect;
 	void init(int, int);
-	Setting * settings;
 	Menu * loadInput;
 public:
-	Play(Window * w_, Setting * s);
+	Play(Window * w_);
 	void process(void);
 	void init();
 	void resize();

@@ -25,7 +25,7 @@ public:
 	void resume();
 	void resize();
 	void draw();
-	void init();
+	virtual void init();
 	void choose(int index);
 	void unchoose(int index);
 	virtual void clean();

@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
+
 	while (!w.empty())
 	{
 		w.top()->process();
