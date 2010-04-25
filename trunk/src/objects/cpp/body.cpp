@@ -190,6 +190,7 @@ std::string Body::initTargetPlaces()
 			}
 		}
 		while (true);
+		targets[i]->reset();
 		i++;
 	}
 	return warning;
