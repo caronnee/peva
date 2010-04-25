@@ -110,6 +110,7 @@ void Memory::fill(Variable * &v,
 {
 	if (t->is_simple())
 		return;
+	TEST("begin of block")
 	Variable * tmp = NULL;
 	for(size_t i =0; i<t->range; i++) 
 	{
@@ -117,6 +118,7 @@ void Memory::fill(Variable * &v,
 		types_to_assign.push(t->data_type);
 		variables_to_assign.push(tmp);
 		v->array.elements.push_back(tmp);
+		v->array.range = t->range;
 	}
 	for(size_t i =0; i<t->nested_vars.size(); i++) 
 	{

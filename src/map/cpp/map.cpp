@@ -640,9 +640,19 @@ Object * Map::removeShow(Position position, bool all, Graphic * g)
 {
 	SDL_Rect r;
 	r.x=-1;
+
 	Object * o = removeAt(position, r);
-	if(r.x <0)
-		return o;
+	//osekat precnievajuce casti
+	SDL_Rect clip;
+	SDL_GetClipRect(g->screen, &clip);
+	if (r.x < clip.x)
+		r.x = clip.x;		
+	if (r.y < clip.y )
+		r.y = clip.y;
+	if (r.x + r.w > clip.x + clip.w)
+		r.w = clip.x + clip.w - r.x;
+	if (r.y +r.h > clip.y + clip.h)
+		r.h = clip.y + clip.h - r.h;
 	update(r,true,g);
 	return o;
 }
@@ -686,8 +696,6 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 				r.y = o->get_pos().y;
 				if (r.overlaps(removePos))
 				{
-				//	map[boxP.x][boxP.y].objects.remove();
-				//	map[boxP.x][boxP.y].objects.reset();
 					map[boxP.x][boxP.y].objects[processing].erase(iter);
 					toBlit = o->get_rect();
 					toBlit.x = r.x - boundaries.x;

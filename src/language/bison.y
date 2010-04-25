@@ -245,9 +245,10 @@ simple_type: TOKEN_VAR_REAL { $$ = program->robots.back()->find_type(TypeReal); 
 complex_type: simple_type ranges 
 		{ 
 			Create_type * t = $1; 
-			for(size_t i = 0 ; i< $2.size(); i++)
+			while(!$2.empty())
 			{
-				t = program->robots.back()->find_array_type($2[i],t);
+				t = program->robots.back()->find_array_type($2.back(),t);
+				$2.pop_back();
 			}
 			Create_type y= *t;
 			while (y.data_type!=NULL)
