@@ -82,6 +82,7 @@ void Object::move(size_t fps)
 
 	movement.realX+=movement.direction.x/fps;
 	movement.realY+=movement.direction.y/fps;
+	TEST(fps);
 
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;
