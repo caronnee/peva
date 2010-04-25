@@ -694,7 +694,7 @@ void Create_map::addObj()
 		buttonDown (get_rect(p.x, p.y,rects,NumberOfMapDivision),p.x,p.y);
 		return;
 	}
-	if ( state & SDL_BUTTON_RIGHT)
+	if ( state & 4)
 	{
 		removeFromMap(p);
 		return;
