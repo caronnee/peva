@@ -548,7 +548,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.x > -rects[MAP].x)
 					map->shift(-2,0);
-				map->updateScreen(w->g);
+				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
 					break;
@@ -562,7 +562,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			{
 				if (map->boundaries.x < map->size().x - rects[RIGHT].x)
 					map->shift(2,0);
-				map->updateScreen(w->g);
+				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP)){
 					break;
@@ -576,9 +576,9 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			mouse_down = false;
 			while (true)
 			{
-			if (map->boundaries.y > -rects[MAP].y)
-				map->shift(0,-2);
-			map->update(rects[MAP], true,w->g);
+				if (map->boundaries.y > -rects[MAP].y)
+					map->shift(0,-2);
+				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
 					break;
@@ -680,9 +680,13 @@ void Create_map::process_map()
 }
 void Create_map::removeFromMap(Position p)
 {
+	SDL_Rect r;
+	r = rects[MAP];
+	SDL_SetClipRect(w->g->screen, &r);
 	Object * o = map->removeShow(p,true,w->g);
 	if ( o != NULL)
 		delete o;
+	SDL_SetClipRect( w->g->screen, NULL );
 }
 
 void Create_map::addObj()
