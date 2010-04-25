@@ -457,7 +457,7 @@ void Map::background(Graphic * g)
 }
 void Map::draw(Graphic * g ) 
 {
-	ticks = (SDL_GetTicks() - time)%100;
+	ticks = (SDL_GetTicks() - time)%100 + 30;
 	time = SDL_GetTicks();
 	Position pos;
 	pos.x = boundaries.x/BOX_WIDTH;
