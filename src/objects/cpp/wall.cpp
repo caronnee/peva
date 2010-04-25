@@ -11,7 +11,6 @@ Wall::Wall(Skin * s):Object(s)
 	movement.position_in_map.x = 0;
 	movement.position_in_map.y = 0;
 	movement.steps = 0;
-	skinWork =  new ImageSkinWork(s);
 }
 void Wall::hitted(Object * attacker, Position p, int attack)
 {

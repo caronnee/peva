@@ -688,6 +688,7 @@ Object * Map::removeAt(Position position, SDL_Rect &toBlit)
 				{
 				//	map[boxP.x][boxP.y].objects.remove();
 				//	map[boxP.x][boxP.y].objects.reset();
+					map[boxP.x][boxP.y].objects[processing].erase(iter);
 					toBlit = o->get_rect();
 					toBlit.x = r.x - boundaries.x;
 					toBlit.y = r.y - boundaries.y;
