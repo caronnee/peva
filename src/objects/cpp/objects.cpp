@@ -76,7 +76,7 @@ std::string Object::info() const
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie?
 
-void Object::move(size_t fps)
+void Object::move(int fps)
 {
 	movement.old_pos = movement.position_in_map;
 

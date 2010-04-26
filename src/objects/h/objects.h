@@ -131,7 +131,7 @@ public:
 	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
-	virtual void move(size_t fps);
+	virtual void move(int fps);
 
 	/* returns direction of robot in degrees */
 	int getAngle()const;
