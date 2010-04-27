@@ -548,13 +548,15 @@ bool Map::performe()
 			{
 				std::list<Object *>::iterator iter = map[i][j].objects[processing].begin();
 				Object * o = *iter;
+				Position p = o->get_pos();
 				if (!o->alive())
 				{
 					o->dead();
+					map[i][j].objects[processed].splice(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processed].begin(),
+						map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processing], iter);
 					continue;
 				}
 				resolveMove(o);
-				Position p = o->get_pos();
 				map[i][j].objects[processed].splice(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processed].begin(),
 						map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processing], iter);
 			}

@@ -19,15 +19,15 @@ ROBOT qqq
 		shoot(k);
 		return k;
 	}*/
-	void function f(location[3] x)
+	void function f(location[6] x)
 	{
 		see();
-		for(integer i =0; i<3; i++) 
+		for(integer i =0; i<6; i++) 
 		{
 			x[i].x = 0-i;
 			x[i].y = 0-i;
 		}
-		for(integer i =0; i<3; i++) 
+		for(integer i =0; i<6; i++) 
 		{
 			shoot(x[i]);
 		}
@@ -41,7 +41,7 @@ ROBOT qqq
 		}
 	}
 	main() // komentar
-	{
+	{//
 		integer numb = 0;
 		for(integer i =0; i<6; i++) 
 		{

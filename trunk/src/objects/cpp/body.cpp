@@ -133,14 +133,14 @@ int Body::see()
 		for (int j = down.y; j <= up.y; j++)
 		{
 			for (std::list<Object *>::iterator iter = map->map[i][j].objects[0].begin();
-					iter != map->map[i][j].objects[0].end(); i++)
+					iter != map->map[i][j].objects[0].end(); iter++)
 			{
 				if ( *iter == this )
 					continue;
 				seer.fill(*iter, this);
 			}
 			for (std::list<Object *>::iterator iter = map->map[i][j].objects[1].begin();
-					iter != map->map[i][j].objects[1].end(); i++)
+					iter != map->map[i][j].objects[1].end(); iter++)
 			{
 				if ( *iter == this )
 					continue;
@@ -290,7 +290,7 @@ void Body::hitted(Object * attacker, Position p, int attack)
 }
 void Body::dead()
 {
-	map->add(this);
+	//daj ako spracovane a moc sa tym nezatazuj
 }
 void Body::hit(Object * o)
 {
