@@ -8,7 +8,9 @@ ROBOT robot1
 	{
 		turnL();
 		while(true)
+		{
 			shoot(0);
+		}
 	}
 }
 ROBOT robot2

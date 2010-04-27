@@ -84,8 +84,8 @@ int InstructionLoadLocal::execute(Core * c)
 	//TEST(", value =  " << node->var.back()->integerValue << "..." )
 	if (node->var.size() == 0)
 	{
-		TEST("Error, prazdna premenna")
-		return -1;
+		TEST("Error, prazdna premenna, nikfy by nemalo nastat")
+		throw "somethng baaaaas hapeened";
 	}
 	c->values.push_back(node->var.back());
 	TEST("OK")
@@ -1312,8 +1312,8 @@ int InstructionWait::execute(Core *c) //prave jeden parameter
 	TEST("OK")
 	return 0;
 }
-InstructionWait::~InstructionWait()
-{}
+InstructionWait::~InstructionWait() {}
+
 InstructionShootLocation::InstructionShootLocation()
 {
 	name_ = "InstructionShootLocation";
@@ -1321,11 +1321,13 @@ InstructionShootLocation::InstructionShootLocation()
 }
 int InstructionShootLocation::execute(Core *c)
 {
-	TEST("Shooting at location...")
+	TEST("Shooting at location...") //TODO upravit pamat aby som nemusela ifovat
+	if (c->values.back()->array.elements.size() < 2)
+		return -1;
 	int x = c->values.back()->array.elements[0]->integerValue;
 	c->values.pop_back();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->shoot(x); //TODO vypocitat angle, smer x a smer y
+	c->values.back()->integerValue = c->body->shoot(x); 
 	TEST("OK")
 	return 0;
 }
@@ -1336,7 +1338,7 @@ InstructionShootAngle::InstructionShootAngle()
 	name_ = "InstructionShootAngle";
 	group = IGroup_shootangle;
 }
-int InstructionShootAngle::execute(Core *c) //TODO
+int InstructionShootAngle::execute(Core *c)
 {
 	TEST("Shooting at angle...TODO convert")
 	int an = c->getIntFromStack();
