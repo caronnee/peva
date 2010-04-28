@@ -283,6 +283,7 @@ void Body::hitted(Object * attacker, Position p, int attack)
 	hitpoints -= hpLost;
 	if (hitpoints <= 0)
 	{
+		hitpoints =1;
 		attacker->killed(this);
 		Object::dead();// prasaaaaaarna
 	}

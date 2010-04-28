@@ -540,7 +540,7 @@ void Map::checkNearest(Object * o, Object * objectInBox, size_t& nearest, Object
 		nearest = dist;
 	}
 }
-bool Map::performe()
+bool Map::performe(Graphic * g)
 {
 	/* resolving he move action that happened */
 	int processed = 1-processing;
@@ -554,8 +554,9 @@ bool Map::performe()
 				Position p = o->get_pos();
 				if (!o->alive())
 				{
-					o->dead();
 					map[i][j].objects[processing].erase(iter);
+					update(o,g);
+					o->dead();
 					continue;
 				}
 				resolveMove(o);

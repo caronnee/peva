@@ -242,7 +242,7 @@ void Play::process()
 		w->pop();
 		return;
 	}
-	done = m->performe();
+	done = m->performe(w->g);
 	m->updateScreen(w->g);
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)

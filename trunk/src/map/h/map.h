@@ -182,7 +182,7 @@ public:
 	void move(Object * o); 
 
 	/* events in map */
-	bool performe();
+	bool performe(Graphic * g);
 
 	/* destructor destroying allocated space, no need to be virtual so far */
 	~Map();
