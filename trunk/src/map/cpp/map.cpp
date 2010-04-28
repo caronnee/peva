@@ -172,13 +172,13 @@ bool Map::load(Graphic * g, std::string filename)
 		switch (iter)
 		{
 			case SaveWall:
-				o = new Wall(wskins[WallSolidId]);
+				o = new Wall(wskins[WallSolidId], &abyss);
 				break;
 			case SavePushableWall:
-				o = new PushableWall(wskins[WallPushId]);
+				o = new PushableWall(wskins[WallPushId],&abyss);
 				break;
 			case SaveTrapWall:
-				o = new TrapWall(wskins[WallTrapId]);
+				o = new TrapWall(wskins[WallTrapId],&abyss);
 				break;
 			case SaveStart:
 				addStart(g,objectPosition.x,objectPosition.y);
@@ -229,35 +229,38 @@ void Map::create()
 
 Map::Map(std::string skinName)
 {
+	commonInit(skinName);
+}
+
+void Map::commonInit(std::string skinName)
+{
 	processing = 0;
 	ticks = 30;
 	time = 1;
+	visibility = DEFAULT_VISIBILITY;
+	map = NULL;
+	boxesInRow = 0;
+	boxesInColumn = 0;
+	resolution.x = resolution.y = 0;
+
 	wskins.clear();
+
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 	{
 		wskins.push_back( new WallSkin(skinName, i));
 	}
-	map = NULL;
-	boxesInRow = 0;
-	boxesInColumn = 0;
 }
 
 Map::Map(Position resol, std::string skinName) 
 {
-	ticks = 30;
-	processing = 0;
-	visibility = DEFAULT_VISIBILITY;
-	wskins.clear();
-	time = 1;
+
+	commonInit(skinName);
+
 	resolution = resol;
-	for (size_t i = 0; i< NumberObjectsImages; i++)
-	{
-		wskins.push_back( new WallSkin(skinName, i));
-	}
 	resolution.x +=  2*wskins[1]->get_shift().x;
 	resolution.y +=  2*wskins[1]->get_shift().y;
-
 	create();
+
 	/* adding solid walls to ends */
 	addBoundaryWalls();
 }
@@ -269,11 +272,11 @@ void Map::addBoundaryWalls()
 	for (p.x = 0; p.x < resolution.x; p.x += wskins[1]->get_size().x)
 	{
 		p.y = 0;
-		Wall * w1 = new Wall(wskins[1]);
+		Wall * w1 = new Wall(wskins[1], &abyss);
 		w1->setPosition(p,0);
 
 		p.y = resolution.y - wskins[1]->get_shift().x;
-		Wall * w2 = new Wall(wskins[1]);
+		Wall * w2 = new Wall(wskins[1], &abyss);
 		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
@@ -282,10 +285,10 @@ void Map::addBoundaryWalls()
 	for (p.y = 0; p.y < resolution.y; p.y += wskins[1]->get_size().y)
 	{
 		p.x = 0;
-		Wall * w1 = new Wall(wskins[1]);
+		Wall * w1 = new Wall(wskins[1], &abyss);
 		w1->setPosition(p,0);
 		p.x = resolution.x - wskins[1]->get_shift().x;
-		Wall * w2 = new Wall(wskins[1]);
+		Wall * w2 = new Wall(wskins[1], &abyss);
 		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
@@ -552,8 +555,7 @@ bool Map::performe()
 				if (!o->alive())
 				{
 					o->dead();
-					map[i][j].objects[processed].splice(map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processed].begin(),
-						map[p.x/BOX_WIDTH][p.y/BOX_HEIGHT].objects[processing], iter);
+					map[i][j].objects[processing].erase(iter);
 					continue;
 				}
 				resolveMove(o);
@@ -747,6 +749,11 @@ void Map::clean()
 			map[i][j].objects[1].clear();
 		}
 	places.clear();
+	while(!abyss.empty())
+	{
+		delete *abyss.begin();
+		abyss.erase(abyss.begin());
+	}
 }
 Map::~Map() 
 {

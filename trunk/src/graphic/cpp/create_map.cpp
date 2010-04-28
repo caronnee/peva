@@ -310,7 +310,7 @@ void Create_map::generuj()
 			{
 				for (int b = 0; b < SPACE_KOEF; b++)
 				{
-					Wall* wall = new Wall(skins[WallSolidId]);
+					Wall* wall = new Wall(skins[WallSolidId], NULL);
 					wall->setPosition(objPosition,0);
 					map->add(wall);
 					objPosition.x += diff.x;
@@ -429,13 +429,13 @@ void Create_map::buttonDown(int number, int atX, int atY)
 					map->addTarget(w->g, x, y);
 					break;
 				case WallSolidId:
-					wall = new Wall(skins[WallSolidId]);
+					wall = new Wall(skins[WallSolidId], NULL);
 					break;
 				case WallPushId:
-					wall = new PushableWall(skins[WallPushId]);
+					wall = new PushableWall(skins[WallPushId], NULL);
 					break;
 				case WallTrapId:
-					wall = new TrapWall(skins[WallTrapId]);
+					wall = new TrapWall(skins[WallTrapId], NULL);
 					break;
 				case WallStartId:
 					map->addStart(w->g, x, y);

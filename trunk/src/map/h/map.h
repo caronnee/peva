@@ -9,12 +9,12 @@
 #include "../../graphic/h/graphic.h"
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
-#include "../../objects/h/list.h"
 #include "../../language/h/targets.h"
 
-//width of box in pixels
+/* width of box in pixels */
 #define BOX_WIDTH 400
-//height of box in pixels
+
+/* height of box in pixels */
 #define BOX_HEIGHT 400
 
 
@@ -29,6 +29,9 @@ struct Box
 
 	/* Objects in area */
 	std::list<Object *> objects[2]; 
+
+	/* Objects in area */
+	std::list<Object *> objectStatic; 
 };
 
 /* class resolving movement */
@@ -52,12 +55,22 @@ struct Place
 
 struct Map
 {
+	/* relative time, accordig to it it is map drawed */
 	size_t ticks;
+
+	/* last time the screen was updated */
 	size_t time;
 
+	/* where dead object go */
+	std::list< Object *> abyss;
+
 	/* help fnction to determnije nearest object */
-	void checkNearest(Object * center, Object *objectToCheck, size_t& distanceSoFar, Object * &nearestObjectSoFar );
-	/* iterator describing position where are the object already processed */
+	void checkNearest(Object * center, Object *objectToCheck, 
+		size_t& distanceSoFar, Object * &nearestObjectSoFar );
+
+	/* iterator describing position 
+	 * where are the object already 
+	 * processed */
 	int processing;
 
 	/* return maximum bonding rectangl, for drawing purposes */
@@ -137,6 +150,10 @@ struct Map
 	
 	/* drawing boundaries, rectangel, where its safe to draw */
 	Rectangle boundaries;
+
+	/* initialization common to all constructors */
+	void commonInit(std::string name);
+
 public:
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);

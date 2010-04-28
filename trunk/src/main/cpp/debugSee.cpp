@@ -175,17 +175,17 @@ int main(int argc, char ** args)
 								}
 							case SDLK_w://wall
 								{
-									addToMap(map,new Wall(wSkins[WallSolidId]));
+									addToMap(map,new Wall(wSkins[WallSolidId],NULL));
 									break;
 								}
 							case SDLK_p://pushwall
 								{
-									addToMap(map,new PushableWall(wSkins[WallPushId]));
+									addToMap(map,new PushableWall(wSkins[WallPushId],NULL));
 									break;
 								}
 							case SDLK_t://trapwall
 								{
-									addToMap(map,new TrapWall(wSkins[WallTrapId]));
+									addToMap(map,new TrapWall(wSkins[WallTrapId],NULL));
 									break;
 								}
 							case SDLK_m: //missille
