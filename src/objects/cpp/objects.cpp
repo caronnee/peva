@@ -65,6 +65,7 @@ void Object::dead()
 	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionDeadStill);
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionDead);
 	movement.steps = 0;
+	substance = Miss;
 }
 
 std::string Object::info() const

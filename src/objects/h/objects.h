@@ -71,6 +71,7 @@ public:
 		Miss = 0,
 		Solid = 1 //solid + miss = solid
 	};
+
 	enum Objects
 	{
 		Nothing = 0,
