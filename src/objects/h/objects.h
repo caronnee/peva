@@ -5,7 +5,6 @@
 #include <SDL/SDL_image.h>
 #include "../../add-ons/h/position.h"
 #include "../../graphic/h/images.h"
-#include "list.h"
 
 #define PROBABILITY 10
 #define MY_INFINITY ~0
@@ -108,9 +107,6 @@ public:
 
 	/* from which object should attacker bounce */
 	virtual void bounce(Object * from);
-
-	/* item containing this object */
-	Item * item;
 
 	/* who cause the object to live, animate etc. */
 	Object * owner;

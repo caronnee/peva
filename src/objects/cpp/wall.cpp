@@ -1,8 +1,9 @@
 #include <iostream>
 #include "../h/wall.h"
 
-Wall::Wall(Skin * s):Object(s)
+Wall::Wall(Skin * s, List * abyss):Object(s)
 {
+	abyss_ = abyss;
 	name = "Wall";
 	objectSaveId = SaveWall;
 	type = Wall_;
@@ -12,13 +13,23 @@ Wall::Wall(Skin * s):Object(s)
 	movement.position_in_map.y = 0;
 	movement.steps = 0;
 }
+void Wall::hit(Object * o)
+{
+	Object::hit(o);
+}
 void Wall::hitted(Object * attacker, Position p, int attack)
 {
 	attacker->bounce(this);
 	Object::hitted(attacker,p, attack);
-} //
+} 
+void Wall::dead()
+{
+	abyss_->push_back(this);
+}
 
-BreakableWall::BreakableWall( Skin * s):Object(s)
+Wall::~Wall() { }
+
+BreakableWall::BreakableWall( Skin * s, List * abyss):Wall(s, abyss)
 {
 	objectSaveId = SaveBreakableWall;
 	type = Wall_;
@@ -37,7 +48,9 @@ void BreakableWall::hitted(Object * o, Position p, int attack)
 	hitpoints -= attack;
 }
 
-PushableWall::PushableWall( Skin * s):Object(s)
+BreakableWall::~BreakableWall() { }
+
+PushableWall::PushableWall( Skin * s, List * abyss):Wall(s, abyss)
 {
 	objectSaveId = SavePushableWall;
 	type = Wall_;
@@ -70,7 +83,10 @@ void PushableWall::hitted(Object * o, Position dir, int attack)
 {
 	movement.steps = attack*defaultStep;
 }
-TrapWall::TrapWall(Skin * s):Object(s)
+
+PushableWall::~PushableWall() { }
+
+TrapWall::TrapWall(Skin * s, List * abyss):Wall(s, abyss)
 {
 	objectSaveId = SaveTrapWall;
 	type = Wall_;
@@ -98,3 +114,5 @@ void TrapWall::hitted(Object *o, Position p, int oAttack)
 	o->hitted(this, movement.direction, attack_);
 	hitpoints -= oAttack/2;
 }
+
+TrapWall::~TrapWall() {}

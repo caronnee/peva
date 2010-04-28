@@ -24,9 +24,7 @@ Object::Object(Skin * s)
 	substance = Solid;
 	owner = NULL;
 	type = Nothing;
-	item = new Item(this);
 	hitpoints = 100; //TODO zmenit podla requestov
-	/* item containing this object */
 	name =" Object";
 
 	movement.clean();

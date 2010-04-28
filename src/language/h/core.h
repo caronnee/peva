@@ -18,8 +18,6 @@ struct Core
 	std::vector<Function *> functions;
 	std::vector<Function *> nested_functions;
 	int depth;
-	bool error;
-	void reset();
 	Body * body; //periferie, stav robota, interakcia s mapou
 	Memory memory;
 	Values values;	

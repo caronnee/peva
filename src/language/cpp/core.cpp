@@ -7,7 +7,6 @@ Core::Core(TypeContainer * t)
 	typeContainer = t;
 	PC =0;
 	values.clear();	
-	error = false;
 	depth = 0;
 	body = new Body();
 }
@@ -51,10 +50,6 @@ float Core::getFloatFromStack()
 {
 	return getVariableFromStack()->realValue;
 }
-void Core::reset()
-{
-
-}
 void Core::loadElement(int range)
 {
 	if (values.empty())
@@ -65,7 +60,7 @@ void Core::loadElement(int range)
 	}
 	Variable * v = values.back();
 	values.pop_back();
-	if (v->array.elements.size() <= range)
+	if (v->array.range <= range)
 	{
 		TEST("Error - array out of range, which is:" << v->array.elements.size() << " against " << range )
 		values.push_back(memory.random());
