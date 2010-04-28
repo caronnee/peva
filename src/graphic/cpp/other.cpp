@@ -279,6 +279,7 @@ void Play::process()
 						if (robots.robots[focus]->getBody()->alive())
 							break;
 					}
+					draw();
 				}
 				case SDLK_c: //center aktual
 				{
@@ -303,6 +304,7 @@ void Play::process()
 					if (p.y < 0)
 						p.y = 0;
 					m->setShift(p.x,p.y);
+					draw();
 					break;
 				}
 				case SDLK_n: //next map
