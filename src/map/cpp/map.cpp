@@ -485,6 +485,16 @@ void Map::draw(Graphic * g )
 				SDL_BlitSurface((*iter)->show(),&r,g->screen, &rects);
 				iter++;
 			}
+			iter = map[pos.x][pos.y].objects[1-processing].begin();
+			while( iter != map[pos.x][pos.y].objects[1-processing].end() )
+			{
+				SDL_Rect rects;
+				rects.x = (*iter)->get_pos().x - boundaries.x;
+				rects.y = (*iter)->get_pos().y - boundaries.y;
+				SDL_Rect r = (*iter)->get_rect();
+				SDL_BlitSurface((*iter)->show(),&r,g->screen, &rects);
+				iter++;
+			}
 			pos.y++;
 		}
 		pos.y = boundaries.y/BOX_HEIGHT;
