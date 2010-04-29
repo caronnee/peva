@@ -175,8 +175,6 @@ public:
 	/* last declared type, type of variables following */
 	Create_type * last_type;
 
-	/* misille parameters */
-	size_t mAttack,mHealth;
 public:
 	/* core handling memory, periferies etc. */
 	Core * core;

@@ -5,6 +5,7 @@
 
 Body::Body() : Object(NULL)
 {
+	mHealth = mAttack = 0;
 	state_ = 0;
 	tasks = 0;
 	name = "Robot";
@@ -240,9 +241,8 @@ int Body::shoot(int angle)
 	mP.y += p.y;
 
 	Object * o= *ammo.begin();
-	o->movement.steps = 150;
+	o->hitpoints = o->movement.steps = mHealth;
 	o->movement.angle = movement.angle;
-	o->hitpoints = 50;
 	o->movement.direction = movement.direction;
 	o->movement.speed = 50;
 	o->movement.position_in_map = mP;

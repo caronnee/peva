@@ -5,8 +5,6 @@
 #include "../../objects/h/wall.h"
 #include "boost/filesystem.hpp"
 
-#define MaxTG 100
-#define TG_CONST 20
 #define DEFAULT_VISIBILITY 150
 
 namespace bf = boost::filesystem;

@@ -431,11 +431,11 @@ void Robots::set(Options o, size_t value)
 			break;
 		case OptionMisilleAttack:
 			TEST("setting Missille attack to " << value ); 
-			robots.back()->mAttack = value;
+			robots.back()->getBody()->mAttack = value;
 			break;
 		case OptionMisilleHealth:
 			TEST("setting Missille health to:" << value ); 
-			robots.back()->mHealth = value;
+			robots.back()->getBody()->mHealth = value;
 			break;
 		case OptionStep:
 			TEST("setting step to:" << value ); 
@@ -616,8 +616,6 @@ void Robot::setmSkin(Skin* mSkin)
 	for(size_t i=0; i<missilles; i++)
 	{
 		Missille *m = new Missille(mSkin, core->body);
-		m->attack_ = mAttack;
-		m->hitpoints = mHealth;
 		core->body->addAmmo(m);
 	}
 }
