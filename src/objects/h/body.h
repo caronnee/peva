@@ -23,6 +23,9 @@ class Body : public Object
 	/* in which map is an object located */
 	Map * map;
 public:
+	/* missiles parameters */
+	int mHealth, mAttack;
+
 	/* class handling visibility issue */
 	Seer seer;
 

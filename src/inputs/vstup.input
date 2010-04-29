@@ -3,13 +3,15 @@ ROBOT qqq
 	HEALTH = 10
 	ATTACK = 33			
 
+	MHEALTH = 1000
 	VISIT( [100,200])
 
 	main()
 	{
+		shoot(0);
 		while(true)
 		{
-			shoot(0);
+			integer i;
 		}
 	}
 }

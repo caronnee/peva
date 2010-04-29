@@ -178,12 +178,12 @@ void Object::bounce(Object * attacked) //od koho s ma odrazit
 	if (xy.y < xy.x)
 	{
 		movement.direction.y *=-1;
-		movement.position_in_map.y -= p.y*xy.y * 2;
+		movement.position_in_map.y += p.y*xy.y * 2;
 	}
 	else 
 	{
 		movement.direction.x *=-1;
-		movement.position_in_map.x -= p.y*xy.x * 2;
+		movement.position_in_map.x += p.y*xy.x * 2;
 	}
 }
 void Object::hit(Object * attacked)
