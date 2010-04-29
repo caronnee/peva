@@ -174,12 +174,14 @@ void Play::resume()
 		}
 		if(!set)
 		{
+			Position resol(m->resolution.x - body->collisionSize().x,
+					m->resolution.y - body->collisionSize().y);
 			TEST("No appropriate start place found")
 			set = false;
 			for (int iter = 0;iter < m->resolution.x + m->resolution.y; iter++) //FIXME other 'random' value
 			{
-				Position t(rand()%m->resolution.x, rand()%m->resolution.y);
-				body->place(m,t);
+				Position randomPosition(rand()%resol.x, rand()%resol.y);
+				body->place(m,randomPosition);
 				if (!m->checkCollision(body))
 				{
 					set = true;
@@ -315,6 +317,11 @@ void Play::process()
 					for (size_t i = 0; i < robots.robots.size(); i++)
 						m->remove(robots.robots[i]->getBody());
 					resume();
+					break;
+				}
+				case SDLK_d:
+				{
+					draw();
 					break;
 				}
 				default:
