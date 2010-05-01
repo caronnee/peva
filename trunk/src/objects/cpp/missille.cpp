@@ -1,15 +1,13 @@
 #include "../h/missille.h"
 #include "../../add-ons/h/macros.h"
 
-Missille::Missille(Skin*s, Body * body):Object(s)
+Missille::Missille(Skin*s, List * list):Object(s,list)
 {
 	substance = Miss;
-	owner = body;
 	movement.position_in_map = Position (0,0);
 	movement.speed = 100;
 	milisec = 0;
 	name = "Missille";
-//	skinWork = new ImageSkinWork(s);
 }
 void Missille::bounce(Object * o)
 {
@@ -21,14 +19,10 @@ bool Missille::is_blocking()
 	return false;
 }
 
-void Missille::dead()
-{
-	owner->addAmmo(this);
-}
 void Missille::hit(Object * o)
 {
 	nowhereToRun = true; //ak sa nezavola bounce, tato hodnota
-	o->hitted(this, movement.direction, attack_);
+	o->hitted(this, movement.direction, attack);
 	if (nowhereToRun)
 	{
 		hitpoints =0;

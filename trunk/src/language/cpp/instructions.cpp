@@ -5,7 +5,6 @@
 #include "../../add-ons/h/macros.h"
 
 //FIXME premenovat floatfrom an real, aby to olo konzistentne
-//TODO zmenit na list
 
 Instruction::Instruction()
 {
@@ -1452,7 +1451,7 @@ int InstructionIsMissille::execute(Core *c)
 	TEST("Checking missilism ...") //s jednym parametrom
 	Object * o = c->getObjectFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = o->typeObject() & Object::Missille;
+	c->values.back()->integerValue = o->typeObject() & Object::Missille_;
 	TEST("OK")
 	return 0;
 }

@@ -57,9 +57,16 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	while (!w.empty())
+	try
 	{
-		w.top()->process();
+		while (!w.empty())
+		{
+			w.top()->process();
+		}
+	}
+	catch (std::string msg)
+	{
+		TEST(msg);
 	}
 	g.Destroy();
 	w.Destroy(); //odalokovavanie premennych a podobne

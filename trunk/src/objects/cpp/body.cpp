@@ -1,11 +1,87 @@
 #include <cmath>
 #include "../h/body.h"
+#include "../h/missille.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
-Body::Body() : Object(NULL)
+FirstSection::FirstSection()
 {
-	mHealth = mAttack = 0;
+	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
+	{
+		sections[i] = 0;
+	}
+}
+
+SecondSection::SecondSection()
+{
+	for(size_t i =0; i< SecondSection::NumberOfSections; i++)
+	{
+		sections[i] = 0;
+	}
+}
+
+GamePoints::GamePoints(int total, int total2)
+{
+	total_[0] =  total;
+	total_[1] =  total2;
+}
+
+void GamePoints::check()
+{
+	int todo = total_[0];
+	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
+	{
+		if (firstSection.sections[i]<0)
+			continue;
+		todo-=firstSection.sections[i];
+	}
+	int iter = 0;
+	while(todo < 0 )
+	{
+		if (firstSection.sections[iter] >0)
+		{
+			firstSection.sections[iter]--;
+			todo++;
+		}
+		iter++;
+		iter%=FirstSection::NumberOfSections;
+	}
+	while (todo > 0)
+	{
+		firstSection.sections[iter]++;
+		todo--;
+		iter++;
+		iter%=FirstSection::NumberOfSections;
+	}
+	todo = total_[1];
+	for(size_t i =0; i< SecondSection::NumberOfSections; i++)
+	{
+		if (secondSection.sections[i]<0)
+			continue;
+		todo-=firstSection.sections[i];
+	}
+	iter = 0;
+	while(todo < 0)
+	{
+		if(secondSection.sections[iter]>0)
+		{
+			secondSection.sections[iter]--;
+			todo++;
+		}
+		iter++;
+		iter%=SecondSection::NumberOfSections;
+	}
+	while (todo > 0)
+	{
+		secondSection.sections[iter]++;
+		todo--;
+		iter++;
+		iter%=SecondSection::NumberOfSections;
+	}
+}
+
+Body::Body() : Object(NULL,NULL)
+{
 	state_ = 0;
 	tasks = 0;
 	name = "Robot";
@@ -16,6 +92,25 @@ Body::Body() : Object(NULL)
 	movement.angle = 0;
 	toKill = NULL;
 }
+void Body::init(GamePoints g, int v)
+{
+	points = g;
+	turn(0);
+	/* information from firt section */
+	seer.setEyes(g.firstSection.sections[FirstSection::SectionAngle],v);
+	hitpoints = g.firstSection.sections[FirstSection::SectionHitpoints];
+
+	/* second section information */
+	if(!hasSkin())
+		throw "Robot body is not skined!";
+	if (!ms)
+		ms = new MissilleSkin(skinWork->name());
+	for (int i =0; i< g.secondSection.sections[SecondSection::SectionMissilles]; i++ )
+		addAmmo(new Missille(ms,&ammo));
+	defense = g.secondSection.sections[SecondSection::SectionDefense];
+	attack =g.secondSection.sections[SecondSection::SectionAttack];
+}
+
 bool Body::changed()
 {
 	return true;

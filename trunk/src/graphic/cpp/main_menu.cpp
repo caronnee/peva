@@ -18,9 +18,7 @@ void Main::resume()
 {
 	draw();
 }
-void Main::resize()
-{
-}
+void Main::resize() { }
 
 void Main::process()
 {

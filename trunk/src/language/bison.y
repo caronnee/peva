@@ -199,12 +199,6 @@ places: place
 	}
 	;
 options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */	
-	{
-		if (program->robots.back()->dev_null == NULL)
-		{
-			program->robots.back()->variables();
-		}
-	}
 	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT 
 	{ 
 		program->set($2,$4); 
@@ -221,7 +215,6 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 	| options TOKEN_SKIN TOKEN_IDENTIFIER 
 	{	
 		program->robots.back()->setSkin(program->addSkin($3)); 
-		program->robots.back()->setSkin(program->addmSkin($3));
 	}
 	;
 global_variables:	/*	ziadne parametre	*/ { $$.clear(); }

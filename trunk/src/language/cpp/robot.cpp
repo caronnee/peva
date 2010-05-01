@@ -4,33 +4,20 @@
 
 #define MAX_EYE_ANGLE 90
 
-FirstSection::FirstSection()
+Robot::Robot(std::string s, std::string space_, GamePoints points_)
 {
-	hitpoints = 100;
-	sizeOfMemory = 100;
-	seeX = seeY = 5;
-}
-SecondSection::SecondSection()
-{
-	missileAttack = 25;
-	missileDefense = 25;
-	defense = 25;
-	attack = 25;
-}
+	points = points_;
 
-Robot::Robot(std::string s, std::string space_, GamePoints p)
-{
 	space = space_;
 	scheduller = NULL;
 
-	missilles = 3;
 	/* robot data */
 	name = s;
 	nested = "";
 	errors = false;
 	defined_types = new TypeContainer();
 	core = new Core( defined_types);
-	nullable = new Object(NULL);
+	nullable = new Object(NULL,NULL);
 	
 	defined_types->add(new Create_type(TypeUndefined));
 	defined_types->add(new Create_type(TypeVoid));
@@ -45,6 +32,24 @@ Robot::Robot(std::string s, std::string space_, GamePoints p)
 	c->composite(defined_types->find_type(TypeObject));
 	defined_types->add(c);
 	dev_null = NULL;
+
+	/*	Adding default variables	*/
+	dev_null = new Node("dev/null", defined_types->find_type(TypeUndefined), -1);
+	core->memory.assign(dev_null, 0); //mal by prejst vdy, preto je v memory o jedna viac
+
+	Node * n = defined.add("true",defined_types->find_type(TypeInteger));
+	n->nested = Global;
+
+	n = defined.add("false",defined_types->find_type(TypeInteger));
+	n->nested = Global;
+
+	//pridana premenna pre NULL;
+	n = defined.add("NULL",defined_types->find_type(TypeObject));
+	n->nested = Global;
+	
+	//pridana premenna pre this;
+	n = defined.add("this",defined_types->find_type(TypeObject));
+	n->nested = Global;
 }
 
 std::string Robot::getSpace()const
@@ -55,31 +60,24 @@ std::string Robot::getName()const
 {
 	return name;
 }
-//TODO uistit sa, ze je ti nenaalokovane
+
 void Robot::variables()
 {
-	/*	Pridavanie defaultnych premennych	*/
-	dev_null = new Node("dev/null", defined_types->find_type(TypeUndefined), -1);
-
-	Node * n = defined.add("true",defined_types->find_type(TypeInteger));
-	n->nested = Global;
+	Node * n = defined.find("true");
 	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 1;
 
-	n = defined.add("false",defined_types->find_type(TypeInteger));
-	n->nested = Global;
+	n = defined.find("false");
 	core->memory.assign(n, 0);
 	n->var[0]->integerValue = 0;
 
 	//pridana premenna pre NULL;
-	n = defined.add("NULL",defined_types->find_type(TypeObject));
-	n->nested = Global;
+	n = defined.find("NULL");
 	core->memory.assign(n, 0);
 	n->var[0]->objectValue = nullable;
-	
+
 	//pridana premenna pre this;
-	n = defined.add("this",defined_types->find_type(TypeObject));
-	n->nested = Global;
+	n = defined.find("this");
 	core->memory.assign(n,0);
 	n->var[0]->objectValue = core->body;
 }
@@ -320,8 +318,6 @@ Skin * Robots::addSkin(std::string name)
 			return skins[i];
 	}
 	s = new BotSkin(name);
-	Skin *ms = new MissilleSkin(name);
-	mSkins.push_back(ms);
 	skins.push_back(s);
 	return s;
 }
@@ -329,7 +325,7 @@ Skin * Robots::addSkin(std::string name)
 void Robots::createNew(std::string name)
 {
 	TEST("Creating new robot");
-	robots.push_back( new Robot(name, input, g) );
+	robots.push_back( new Robot(name, input, points) );
 	robots.back()->errorList = input + ":\n";
 }
 
@@ -342,18 +338,24 @@ void Robot::setScheduler(int type, const std::vector<int>& penals )
 	}
 	scheduller = new SchedulleTime(type, penals); 
 }
+void Robot::init(int vis)
+{
+	points.check();
+	consolidate();
+	getBody()->init(points, vis);
+	core->memory.realloc(points.firstSection.sections[FirstSection::SectionMemorySize]);	
+	variables();
+}
+
 void Robots::finalize(int vis)
 {
 	for (size_t i=0; i<robots.size(); i++)
 	{
-		robots[i]->consolidate();
 		if (!robots[i]->skined())
 		{
 			robots[i]->setSkin(addSkin("dragon"));
 		}
-		robots[i]->setmSkin(addmSkin(robots[i]->skinName));
-		robots[i]->core->body->turn(0);
-		robots[i]->getBody()->seer.setEyes(robots[i]->getBody()->eyeAngle,vis); //TODO opravit, celkost ma urcovat mapa
+		robots[i]->init(vis);
 	}
 }
 void Robots::resolve()
@@ -409,37 +411,34 @@ void Robots::set(Options o, size_t value)
 	{
 		case OptionHealth:
 			TEST("setting health to:" << value ); 
-			robots.back()->core->body->hitpoints = value;
+			robots.back()->points.firstSection.sections[FirstSection::SectionHitpoints] = value;
 			break;
 		case OptionSee:
 			TEST("setting eyes angle to:" << value ); 
-			robots.back()->core->body->eyeAngle = value % MAX_EYE_ANGLE;
+			robots.back()->points.firstSection.sections[FirstSection::SectionAngle] = value % MAX_EYE_ANGLE;
 			break;
 		case OptionMemory: 
-			if (robots.back()->dev_null)
-				break; //TODO warning
-			robots.back()->core->memory.realloc(value); //TODO skobtrolovat,ci to nepresvihava celkovy pocet
-			robots.back()->variables();
+			robots.back()->points.firstSection.sections[FirstSection::SectionMemorySize] = value;
 			break;
 		case OptionAttack:
 			TEST("setting Attack x to:" << value ); 
-			robots.back()->core->body->attack_ = value;
+			robots.back()->points.secondSection.sections[SecondSection::SectionAttack] = value;
 			break;
 		case OptionDefense:
 			TEST("setting defense to " << value ); 
-			robots.back()->core->body->defense = value;
+			robots.back()->points.secondSection.sections[SecondSection::SectionDefense] = value;
 			break;
 		case OptionMisilleAttack:
 			TEST("setting Missille attack to " << value ); 
-			robots.back()->getBody()->mAttack = value;
+			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleAttack] = value;
 			break;
 		case OptionMisilleHealth:
 			TEST("setting Missille health to:" << value ); 
-			robots.back()->getBody()->mHealth = value;
+			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleDefense] = value;
 			break;
 		case OptionStep:
 			TEST("setting step to:" << value ); 
-			robots.back()->core->body->default_steps = value;
+			robots.back()->points.secondSection.sections[SecondSection::SectionSteps] = value;
 			break;
 
 	}
@@ -598,31 +597,10 @@ Robot::~Robot()
 	}
 	instructions.clear();
 }
-Skin * Robots::addmSkin( std::string name)
-{
-	for (size_t i = 0; i< mSkins.size(); i++)
-	{
-		if (mSkins[i]->nameOfSet == name)
-			return mSkins[i];
-	}
-	Skin *ms = new MissilleSkin( name );
-	mSkins.push_back(ms);
-	return ms;
-}
-
-//zbytocne!
-void Robot::setmSkin(Skin* mSkin)
-{
-	for(size_t i=0; i<missilles; i++)
-	{
-		Missille *m = new Missille(mSkin, core->body);
-		core->body->addAmmo(m);
-	}
-}
 
 bool Robot::skined()
 {
-	return core->body->hasSkin();
+	return getBody()->hasSkin();
 }
 Robots::~Robots()
 {
@@ -637,11 +615,6 @@ void Robots::clean()
 	{
 		delete(skins.back());
 		skins.pop_back();
-	}
-	while(!mSkins.empty())
-	{
-		delete(mSkins.back());
-		mSkins.pop_back();
 	}
 	for (size_t i = 0; i< robots.size(); i++)
 	{

@@ -1,9 +1,8 @@
 #include <iostream>
 #include "../h/wall.h"
 
-Wall::Wall(Skin * s, List * abyss):Object(s)
+Wall::Wall(Skin * s, List * abyss):Object(s,abyss)
 {
-	abyss_ = abyss;
 	name = "Wall";
 	objectSaveId = SaveWall;
 	type = Wall_;
@@ -22,10 +21,6 @@ void Wall::hitted(Object * attacker, Position p, int attack)
 	attacker->bounce(this);
 	Object::hitted(attacker,p, attack);
 } 
-void Wall::dead()
-{
-	abyss_->push_back(this);
-}
 
 Wall::~Wall() { }
 
@@ -34,7 +29,7 @@ BreakableWall::BreakableWall( Skin * s, List * abyss):Wall(s, abyss)
 	objectSaveId = SaveBreakableWall;
 	type = Wall_;
 	hitpoints = 50;
-	attack_ = 0;
+	attack = 0;
 	name = "Wall";
 	movement.direction.x = 0;
 	movement.direction.y = 0;
@@ -91,7 +86,7 @@ TrapWall::TrapWall(Skin * s, List * abyss):Wall(s, abyss)
 	objectSaveId = SaveTrapWall;
 	type = Wall_;
 	defense = 0;
-	attack_ = 10;
+	attack = 10;
 	hitpoints = 100;
 	invisible = random()%2;
 	name = "TrapWall";	
@@ -111,7 +106,7 @@ void TrapWall::hitted(Object *o, Position p, int oAttack)
 	invisible = random()%3;
 	if (invisible)
 		return;
-	o->hitted(this, movement.direction, attack_);
+	o->hitted(this, movement.direction, attack);
 	hitpoints -= oAttack/2;
 }
 
