@@ -11,9 +11,8 @@ Node::Node(std::string name_, Create_type * t, size_t ID_)
 	nested = Local;
 	name = name_;
 	var.clear();
-	type_of_variable = t; //Root nasho kvazi stromu
+	type_of_variable = t;
 	active = false;
-//	TEST("pridavam create_type:" << t.data_type->type)
 }
 Node::~Node()
 {

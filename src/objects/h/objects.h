@@ -3,7 +3,9 @@
 #define __OBJECTS__
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <list>
 #include "../../add-ons/h/position.h"
+#include "../../add-ons/h/macros.h"
 #include "../../graphic/h/images.h"
 
 #define PROBABILITY 10
@@ -62,6 +64,9 @@ protected:
 	/* checks if iobject intersection, if so, returning in p, coords */
 	bool intersection(Object *o, Position &p1, Position& coords);
 
+	/* where an object should go after dead */
+	List * abyss_;
+
 	/* id of type of object*/
 	size_t type;
 
@@ -77,7 +82,7 @@ public:
 		Nothing = 0,
 		Player = 1,
 		Wall_ = 2,
-		Missille = 4 
+		Missille_ = 4 
 	};
 	/* for saving purposes, object ID */
 	ObjectsToSave objectSaveId;
@@ -104,7 +109,7 @@ public:
 	Substantial substance;
 
 	/* object properties */
-	int defense, attack_, hitpoints;
+	int defense, attack, hitpoints;
 
 	/* from which object should attacker bounce */
 	virtual void bounce(Object * from);
@@ -119,7 +124,7 @@ public:
 	bool alive();
 
 	/* constructor */
-	Object(Skin * s);
+	Object(Skin * s, List * abyss_);
 
 	/* for optimaliozation */
 	bool blocksMove();

@@ -170,9 +170,11 @@ public:
 	/* return beginning of the picture */
 	Position get_begin()const;
 
+	/* skin used */
+	Skin * s;
 public:
 
-	Skin * s;
+	std::string name();
 	Actions states[NumberOfStates];
 	//size_t row; netreba, zostane stale stejna
 	SDL_Rect rect; //kde prave som

@@ -89,6 +89,7 @@ void Play::resume()
 		return;
 	}
 	robots.clean();
+	robots.points = w->settings->gamePoints;
 	int err = 0;
 	size_t lastIn = 0;
 	for (size_t i = 0; i< w->settings->inputs.size(); i++)
@@ -331,6 +332,165 @@ void Play::process()
 		}
 	}
 }
+SetSections::~SetSections()
+{
+	clean();
+}
+SetSections::SetSections(Window * w_, GamePoints * gp_)
+{
+	w = w_;
+	gp = gp_;
+	name(w->g,"Set maximum value of sections");
+	for ( int i =0; i< SECTIONS * 3; i++)
+		sections[i] = NULL;
+}
+void SetSections::resume() { }
+
+void SetSections::resize() { }
+
+void SetSections::draw()
+{
+	SDL_Rect rct;
+	rct.x = BEGIN_X;
+	rct.y = BEGIN_Y;
+	rct.h = w->g->screen->h;
+	rct.w = w->g->screen->w;
+
+	SDL_SetClipRect(w->g->screen, &rct);
+	w->tapestry(rct);
+
+	for (size_t i = 0; i< SECTIONS; i++)
+	{
+		int partSize = w->g->screen->w / SECTIONS;
+		SDL_Rect rect;
+		rect.y = w->g->screen->h/3; //proste niekde
+		rect.x = i*partSize + ( partSize - sections[i]->w )/2;//do stredu
+		if (i == iter)
+		{
+			SDL_BlitSurface(sections[i*2],NULL,w->g->screen,&rect);
+			rect.x = i*partSize + (partSize - sections[i*3]->w )/2;//do stredu
+			rect.y += w->g->font_size*2;
+			SDL_BlitSurface(sections[i*3],NULL,w->g->screen,&rect);
+			continue;
+		}
+		SDL_BlitSurface(sections[i],NULL,w->g->screen,&rect);
+		rect.y += w->g->font_size*2;
+		rect.x = i*partSize + (partSize - sections[i*3]->w )/2;//do stredu
+		SDL_BlitSurface(sections[i*3],NULL,w->g->screen,&rect);
+	}
+	SDL_Flip(w->g->screen);
+	SDL_SetClipRect(w->g->screen, NULL);
+}
+
+void SetSections::init()
+{
+	iter = 0;
+	for (int i = 0; i< SECTIONS; i++)
+	{
+		sections[i] = w->g->render("First Section");
+		sections[i*2] = w->g->renderLight("First Section");
+		sections[i*3] = w->g->render(deconvert<int>(gp->total_[i]));
+	}
+	for ( int i =0; i< SECTIONS * 3; i++)
+		if (sections[i] == NULL)
+			throw "Cannot create image!";	
+	
+	//blit FIXME center
+	SDL_Surface * n = get_name();
+
+	SDL_Rect rct;
+	rct.x = 0;
+	rct.y = 0;
+	rct.w = w->g->screen->w;
+	rct.h = BEGIN_Y;
+
+	w->tapestry(rct);
+	rct.x = (w->g->screen->w - n->w)/2;
+	rct.y = (BEGIN_Y - n->h)/2;
+	SDL_BlitSurface(n, NULL, w->g->screen, &rct );
+	SDL_UpdateRect(w->g->screen, 0,0,w->g->screen->w, BEGIN_Y);
+}
+
+void SetSections::process()
+{
+	while (SDL_PollEvent(&w->g->event))
+	{
+		switch (w->g->event.type)
+		{
+			case SDL_VIDEORESIZE:
+			{
+				w->resize();
+				break;
+			}
+			case SDL_KEYDOWN:
+			{
+				switch(w->g->event.key.keysym.sym)
+				{
+					case SDLK_q:
+					case SDLK_ESCAPE:
+					case SDLK_RETURN:
+					{
+						w->pop();
+						return;
+					}
+					case SDLK_LEFT:
+					{
+						iter++;
+						iter%=SECTIONS;
+						draw();
+						break;
+					}
+					case SDLK_RIGHT:
+					{
+						if (iter <0)
+							iter = SECTIONS-1;
+						else
+							iter--;
+						draw();
+						break;
+					}
+					case SDLK_DOWN:
+					{
+						std::string s;
+						if ( gp->total_[iter] < 50)
+							s = "Do not check";
+						else
+						{
+							gp->total_[iter]--;
+							s = deconvert<int>(gp->total_[iter]);
+						}
+						SDL_FreeSurface(sections[iter *3]);
+						sections[iter * 3] = w->g->render( s );
+						draw();
+						return;
+					}
+					case SDLK_UP:
+					{
+						gp->total_[iter]++;
+						SDL_FreeSurface(sections[iter *3]);
+						sections[iter*3] = w->g->render( deconvert<int>(gp->total_[iter] ));
+
+						draw();
+						return;
+					}
+					default:
+						TEST("Unhandled button")
+						break;
+				}
+				break;
+			}
+		}	
+	}
+}
+
+void SetSections::clean()
+{
+	for ( int i =0; i< SECTIONS * 3; i++)
+	{
+		SDL_FreeSurface(sections[i]);
+		sections[i] = NULL;
+	}
+}
 
 Settings::Settings(Window *w_):Main(w_,0,NULL)
 {
@@ -505,12 +665,13 @@ void SetPenalize::process()
 }
 void Settings::init()
 {
-	size = 3;
+	size = NumberOfMenus;
 	iterator = 0;
-	menus = new Menu * [size];
-	menus[0] = new SetPenalize(w, &w->settings->penalizes);
-	menus[1] = new SetScheduller(w);
-	menus[2] = new SetMaps(w, &w->settings->maps, ".map", "maps");
+	menus = new Menu * [NumberOfMenus];
+	menus[Penalize] = new SetPenalize(w, &w->settings->penalizes);
+	menus[Scheduller] = new SetScheduller(w);
+	menus[Maps] = new SetMaps(w, &w->settings->maps, ".map", "maps");
+	menus[Sections] = new SetSections(w, &w->settings->gamePoints);
 	menus[0]->set();
 }
 
@@ -688,8 +849,7 @@ void SetScheduller::draw()
 	}
 	SDL_Flip(w->g->screen);
 }
-void SetScheduller::resize()
-{ }
+void SetScheduller::resize() { }
 
 void SetScheduller::process()
 {

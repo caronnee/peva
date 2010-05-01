@@ -18,6 +18,7 @@ struct Setting
 	int scheduller;
 	std::vector<std::string> maps;
 	std::vector<std::string> inputs;
+	GamePoints gamePoints;
 	Setting();
 	~Setting();
 };

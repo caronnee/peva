@@ -12,24 +12,43 @@ std::string quicksort(std::string s); // TODO template
 
 struct Tree
 {
-	int number_of_nodes;
 	/* Block of nodes that are active */
 	std::vector<Node *> block_of_nodes;
 	std::string alphabet;
 	bool inner_node;
 	size_t depth;
 	Tree * next[ASCII_NUMBER];//TODO dynamicke linkovanie
-	std::list<Node *> items;//ukazatel z jednoducheho dovodu -> inak je to prasarna, vyparsovavat z listu:)
-	Tree();
-	Tree(int d);
+	std::list<Node *> items;
 	Tree * find_string(std::string a);
 	int find_index(char a);
-	Node * add(std::string s, Create_type* type);
-	void new_block();
-	void leave_block();
+
 private:
+	/* for splitting decisions */
+	int number_of_nodes;
+
+	/* removes nodes and cleas tree */
 	void reset();
+
 public:
+	/* constructor */
+	Tree();
+
+	/* constructor trree in depth @depth */
+	Tree(int depth);
+
+	/* creates a block to to filled with new active nodes */
+	void new_block();
+
+	/* sets a block of recently defined nodes as inactive */
+	void leave_block();
+
+	/* add a record to a tree with create type */
+	Node * add(std::string s, Create_type* type);
+
+	/* finds a node previous defined, null if not defined */
+	Node * find(std::string s);
+
+	/* destructor */
 	~Tree();
 };
 

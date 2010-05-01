@@ -16,8 +16,9 @@ int Object::getAngle()const
 	return movement.angle;
 }
 
-Object::Object(Skin * s)
+Object::Object(Skin * s, List * abyss)
 {
+	abyss_ = abyss;
 	objectSaveId = SaveDummy;
 	numberOfKilled = 0;
 	last_attack = NULL;
@@ -62,6 +63,12 @@ bool Object::alive()
 }
 void Object::dead()
 {
+	if(abyss_ == NULL)
+	{
+		hitpoints=1;
+	}
+	else
+		abyss_->push_back(this);
 	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionDeadStill);
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionDead);
 	movement.steps = 0;
@@ -189,7 +196,7 @@ void Object::bounce(Object * attacked) //od koho s ma odrazit
 void Object::hit(Object * attacked)
 {
 	TEST("HIT")
-	attacked->hitted (this, movement.direction, attack_);
+	attacked->hitted (this, movement.direction, attack);
 }
 
 bool Object::intersection(Object * attacked, Position &distances, Position& p)

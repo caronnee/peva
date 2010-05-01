@@ -45,6 +45,7 @@ public:
 
 	Graphic();
 	SDL_Surface * render(std::string str);
+	SDL_Surface * renderLight(std::string str);
 	bool Init(); //initne screen, nacita background a pod.
 	void Destroy();
 

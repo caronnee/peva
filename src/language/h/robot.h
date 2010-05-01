@@ -16,31 +16,10 @@
 #include "typeContainer.h"
 #include "../../graphic/h/images.h"
 #include "../../objects/h/objects.h"
-#include "../../objects/h/missille.h"
 #include "../../scheduller/h/scheduller.h"
 
 #define DELIMINER_CHAR '#'
 
-struct FirstSection
-{
-	int hitpoints;
-	int sizeOfMemory;
-	int seeX, seeY;
-	FirstSection();
-};
-struct SecondSection
-{
-	int missileAttack;
-	int missileDefense;
-	int defense;
-	int attack;
-	SecondSection();
-};
-struct GamePoints
-{
-	FirstSection firstSection;
-	SecondSection secondSection;
-};
 struct MyXmlData
 {
 	xmlDocPtr doc;
@@ -49,8 +28,6 @@ struct MyXmlData
 };
 class Robot
 {
-	/* number of fll missilles */
-	size_t missilles;
 
 	/* name of the robot */
 	std::string name;
@@ -58,10 +35,13 @@ class Robot
 	/* scheduller to be used */
 	Scheduller * scheduller;
 
-	/* in which input was robot defined, for determningt naspespace when target kill or start place  */
+	/* in which input was robot defined, for determningt 
+	 * namespace when target kill or start place  */
 	std::string space;
 
 public:
+	/* game points */
+	GamePoints points;
 
 	/* logical error codes */
 	enum ErrorCode
@@ -183,15 +163,18 @@ public:
 	std::string skinName;
 
 	/* constructor */
-	Robot(std::string name, std::string space,  GamePoints g);
+	Robot(std::string name, std::string space, GamePoints g);
 	
+	/* sets robot to*/
+	void init(int vis);
+
 	/* returns simple type form container */
 	Create_type * find_type(Type t);
 
 	/* returns complex type form container, if none, creates one */
 	Create_type * find_array_type(int range, Create_type * descend);
 
-	/* remebers actal type as incomplete and for later finishing */
+	/* remembers actal type as incomplete and for later finishing */
 	void declare_type();
 
 	/* same as type, bt for arays */
@@ -205,9 +188,6 @@ public:
 
 	/* sets main skin */
 	void setSkin(Skin * a);
-
-	/* sets missiles skins */
-	void setmSkin(Skin * a);
 
 	/* returns flag if the robot has been assigned a skin */
 	bool skined();
@@ -251,14 +231,14 @@ struct ResolveStart
 
 struct Robots
 {	
+	/* gamepoints global */
+	GamePoints points;
+
 	/* which input is being processed */
 	std::string input;
 
 	/* resolves every not resolved question, like start etc. */
 	void resolve();
-
-	/* gamepoints to be rearranged */
-	GamePoints g;
 
 	/* function destroying any mess that could remain */
 	void clean();
@@ -278,9 +258,6 @@ struct Robots
 	/* skins for robot */
 	std::vector<Skin *> skins;
 
-	/*missile skin, actually not used */
-	std::vector<Skin *> mSkins;
-
 	/* creste new empty robot */
 	void createNew(std::string name);
 
@@ -292,9 +269,6 @@ struct Robots
 
 	/* add skins to already loaded skins witout duplicities */
 	Skin * addSkin(std::string name);
-
-	/* add missiles skins to already loaded skins witout duplicities */
-	Skin * addmSkin(std::string name);
 
 	/* warns that input fle is not in right format */
 	void parseError(std::string error);

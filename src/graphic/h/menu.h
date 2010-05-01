@@ -33,7 +33,7 @@ class Menu
 		virtual void resize() = 0;
 
 		/* resolves events */
-		virtual void process(void) = 0;
+		virtual void process() = 0;
 
 		/* sets name of the menu */
 		void name(Graphic * g, std::string s);

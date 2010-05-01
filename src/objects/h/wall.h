@@ -10,13 +10,10 @@
 
 class Wall:public Object //nic specialneho, proste sten a s nejkou odolnostou
 {
-protected:
-	List * abyss_;
 public:
 	Wall(Skin * skin, List * abyss);
 	virtual void hitted(Object * attacker, Position p, int attack); 
 	virtual void hit(Object * o);
-	void dead();
 	~Wall();
 };
 

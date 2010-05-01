@@ -289,3 +289,7 @@ Position ImageSkinWork::head()
 	}
 	return p;
 }
+std::string ImageSkinWork::name()
+{
+	return s->nameOfSet;
+}

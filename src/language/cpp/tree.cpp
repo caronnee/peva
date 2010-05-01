@@ -22,10 +22,12 @@ void Tree::reset()
 	}
 	block_of_nodes.clear();
 }
+
 void Tree::new_block()
 {
 	block_of_nodes.push_back(NULL);
 }
+
 void Tree::leave_block()
 {
 	while(!block_of_nodes.empty() && (block_of_nodes.back()!=NULL))
@@ -112,6 +114,20 @@ Tree * Tree::find_string(std::string s)
 	return t;
 }
 
+Node * Tree::find(std::string name)
+{
+	Tree * t = find_string(name);
+	std::list<Node*>::iterator iter;
+	for (iter = t->items.begin(); 
+			iter!=t->items.end(); 
+			iter++)
+	{
+		if ((*iter)->name == name)
+			return *iter;
+	}
+	return NULL;
+}
+
 Node * Tree::add(std::string s, Create_type * type)
 {
 	TEST("pridavam meno:" << s << " typu "<< type->type)
@@ -128,7 +144,7 @@ Node * Tree::add(std::string s, Create_type * type)
 				TEST("Taka aktivna premenna uz existuje " <<s)
 			}
 			return *iter;
-		}//kontrola, co tam nieco take uz nie je
+		}
 
 	} //TODO nejaka rozumnejsia metoda
 

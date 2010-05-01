@@ -9,8 +9,51 @@
 #include "../../language/h/targets.h"
 #include "../../language/h/enums.h"
 
+struct FirstSection
+{
+	enum Sections
+	{
+		SectionHitpoints,
+		SectionMemorySize,
+		SectionAngle,
+		NumberOfSections
+	};
+	int sections[FirstSection::NumberOfSections];
+	FirstSection();
+};
+
+struct SecondSection
+{
+	enum Sections
+	{
+		SectionMissilles,
+		SectionMissilleAttack,
+		SectionMissilleDefense,
+		SectionSteps,
+		SectionDefense,
+		SectionAttack,
+		NumberOfSections
+	};
+	SecondSection();
+	int sections[SecondSection::NumberOfSections];
+};
+
+struct GamePoints
+{
+
+	int total_[2];
+	FirstSection firstSection;
+	SecondSection secondSection;
+	GamePoints(int total = 100, int total2 = 100 );
+	void check();
+};
+
 class Body : public Object
 {
+private:
+	/* missiles skin */
+	MissilleSkin * ms;
+
 	/* result of last action taken */
 	int state_;
 
@@ -46,12 +89,18 @@ public:
 
 	/* number of steps to be done when step() called */
 	int default_steps; 
+
+	/* gamepoints holding ini informations */
+	GamePoints points;
 public:
 	/* Constructor */
 	Body();
 
 	/* sets image to be dead*/
 	void dead();
+
+	/* initialize robot according to gamePoints */
+	void init(GamePoints g, int visibility);
 	
 	/* assuming that robot is settled in map */
 	std::string initTargetPlaces();
@@ -102,6 +151,7 @@ public:
 	/* returns true, becuse it is not transparent */
 	virtual bool is_blocking();
 
+	/* destructor */
 	virtual ~Body();
 };
 #endif

@@ -11,6 +11,8 @@
 #include "main_menu.h"
 #include "loadMapMenu.h"
 
+#define SECTIONS 2
+
 /* penalization value to concrete robot 
  * instruction + images for drawing 
  * */
@@ -104,8 +106,34 @@ public:
 	void clean();
 	virtual ~SetMaps();
 };
+class SetSections : public Menu
+{
+	SDL_Surface * sections[SECTIONS * 3];
+	GamePoints * gp;
+	size_t iter;
+	Window * w;
+public:
+	SetSections(Window * w, GamePoints * points);
+	void init();
+	void process();
+	void draw();
+	void clean();
+	virtual ~SetSections();
+
+	void resume();
+	void resize();
+
+};
 class Settings:public Main
 {
+	enum Menus
+	{
+		Penalize,
+		Scheduller,
+		Maps,
+		Sections,
+		NumberOfMenus
+	};
 public:
 	Settings(Window * w_);
 	void init();
@@ -128,7 +156,7 @@ class Play:public Menu
 	Menu * loadInput;
 public:
 	Play(Window * w_);
-	void process(void);
+	void process();
 	void init();
 	void resize();
 	void resume();

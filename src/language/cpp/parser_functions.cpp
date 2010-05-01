@@ -24,6 +24,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	if (!ok)
 	{
 		r->error(line,Robot::Robot::ErrorVariableNotFound, '\''+s+'\'');
+		return st;
 	}
 	if(n->nested == Local)
 		st.ins.push_back(new InstructionLoadLocal(n));

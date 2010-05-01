@@ -10,7 +10,6 @@
 #include "variable.h"
 #include "node.h"
 
-struct Robots;
 struct Memory_record
 {
 	Node * node;
@@ -24,9 +23,6 @@ private:
 	/* position where to begint o check free space */
 	size_t position;
 
-	/* number of units that is possible to allocate */
-	size_t memory_size;
-
 	/* structure to hold assigned variables */
 	std::vector<Memory_record> assigned;
 
@@ -34,7 +30,7 @@ private:
 	std::deque<Variable *> temp;
 
 	/* memory structure */
-	Variable ** memory;
+	std::vector<Variable *> memory;
 
 	/* returns nearest possible free variable */
 	Variable * next_id(size_t ID);
@@ -53,7 +49,7 @@ private:
 		  size_t ID);
 public:
 	/* class constructor */
-	Memory( int size = 50 );
+	Memory( int size = 1 );
 
 	/* returns variable added in depth d */
 	void assign(Node *n ,size_t depth);
@@ -68,7 +64,7 @@ public:
 	void free_tmp();
 
 	/* reallocatin memory to new size */
-	void realloc(int size);
+	void realloc(size_t size);
 
 	/* returns random memory point*/
 	Variable * random();

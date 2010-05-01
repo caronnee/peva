@@ -30,8 +30,6 @@ ROBOT qqq
 	}
 	main() // komentar
 	{
-		integer i = 0;
-		step(rekurz(5));
 		shoot(Locate(this));
 	}
 }

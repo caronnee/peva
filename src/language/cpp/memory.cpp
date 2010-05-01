@@ -3,9 +3,34 @@
 #include "../../add-ons/h/macros.h"
 #include "../h/types.h"
 
+Memory::Memory( int size )
+{
+	position = 0;
+	srand(time(NULL));
+	memory.clear();
+	for(int i =0; i< size; i++)
+		memory.push_back(new Variable(i));
+}
+
+void Memory::realloc(size_t size_) //realokuje len cast, co nie je uz zadana
+{
+	size_t size = size_+1;
+	while (memory.size() > size)
+	{
+		for (size_t i=0; i< assigned.size(); i++)
+			if (assigned[i].variable == memory.back())
+				throw "Canot realloc, memory occupied by variable woth name " + assigned[i].node->name;
+		delete memory.back();
+		memory.pop_back();
+	}
+	while (memory.size() < size)
+		memory.push_back(new Variable());
+}
+
+
 Variable * Memory::next_id(size_t ID)
 {
-	for(size_t i = position; i<memory_size; i++) 
+	for(size_t i = position; i<memory.size(); i++) 
 	{
 		if (memory[i]->owner == (size_t)-1 )
 		{
@@ -23,23 +48,9 @@ Variable * Memory::next_id(size_t ID)
 			return memory[i];
 		}
 	}
-	int id = rand()%memory_size;
-/*	for (size_t i =0; i< memory_size; i++)
-	{
-		TEST(memory[i]->ID<< " ")
-	}*/
+	int id = rand()%memory.size();
 	TEST("Assignujem nahodne" << id);
 	return memory[id];
-}
-
-Memory::Memory( int size )
-{
-	memory_size = size;
-	position = 0;
-	srand(time(NULL));
-	memory = new Variable*[size];
-	for(int i =0; i< size; i++)
-		memory[i] = new Variable(i);
 }
 
 void Memory::assign(Node * node, size_t depth_)
@@ -163,28 +174,18 @@ void Memory::free(size_t depth)
 	}
 }
 
-void Memory::realloc(int size)
-{
-	if (memory)
-		delete memory;
-	delete[] memory;
-	memory_size = size;
-	memory = new Variable*[size];
-	for(int i =0; i< size; i++)
-		memory[i] = new Variable();
-}
-
 Variable * Memory::random()
 {
-	return memory[rand()%memory_size];
+	return memory[rand()%memory.size()];
 }
 Memory::~Memory()
 {
-	for (size_t i =0; i< memory_size; i++)
-		delete memory[i];
-	delete[] memory;
+	for (size_t i =0; i< memory.size(); i++)
+	{
+		delete memory.back();
+		memory.pop_back();
+	}
 	position = 0;
-	memory_size = -1;
 	temp.clear();
 	assigned.clear();
 }
