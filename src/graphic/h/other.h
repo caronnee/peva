@@ -11,7 +11,6 @@
 #include "main_menu.h"
 #include "loadMapMenu.h"
 
-#define SECTIONS 2
 
 /* penalization value to concrete robot 
  * instruction + images for drawing 
@@ -110,7 +109,7 @@ class SetSections : public Menu
 {
 	SDL_Surface * sections[SECTIONS * 3];
 	GamePoints * gp;
-	size_t iter;
+	int iter;
 	Window * w;
 public:
 	SetSections(Window * w, GamePoints * points);

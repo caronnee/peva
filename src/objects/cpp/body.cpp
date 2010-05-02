@@ -35,6 +35,8 @@ void GamePoints::check()
 			continue;
 		todo-=firstSection.sections[i];
 	}
+	if (total_[0] < MININUM_SECTION)
+		todo = 0;
 	int iter = 0;
 	while(todo < 0 )
 	{
@@ -60,6 +62,8 @@ void GamePoints::check()
 			continue;
 		todo-=firstSection.sections[i];
 	}
+	if (total_[1] < MININUM_SECTION)
+		todo = 0;
 	iter = 0;
 	while(todo < 0)
 	{
