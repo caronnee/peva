@@ -87,6 +87,7 @@ void GamePoints::check()
 Body::Body() : Object(NULL,NULL)
 {
 	state_ = 0;
+	ms = NULL;
 	tasks = 0;
 	name = "Robot";
 	movement.old_pos.x = 30;

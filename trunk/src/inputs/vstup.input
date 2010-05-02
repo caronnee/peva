@@ -8,10 +8,7 @@ ROBOT qqq
 
 	main()
 	{
-		shoot(0);
-		while(true)
-		{
-			integer i;
-		}
+		turnR();
+		step(100);
 	}
 }

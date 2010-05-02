@@ -217,10 +217,10 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 	{
 		p.y =1;
 		int yAxis = r1.y + r1.height; //ta os, ktora nas zaujima, musi byt medzi
-		if (( r2.y < yAxis ) && ( yAxis < r2.x + r2.height ))
+		if (( r2.y < yAxis ) && ( yAxis < r2.y + r2.height ))
 			distances.y = yAxis - r2.y;
 	}
-	else //smerujeme dole alebo stojime
+	if (movement.direction.y < 0) //smerujeme dole
 	{
 		p.y = -1;
 		int yAxis = r1.y; //ta os, ktora nas zaujima, musi byt medzi
@@ -234,7 +234,7 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 		if ((r2.x < xAxis)&&(xAxis < r2.x + r2.width))
 			distances.x = xAxis - r2.x;
 	}
-	else
+	if (movement.direction.x <0)
 	{
 		p.x = -1;
 		int xAxis = r1.x; //ta os, ktora nas zaujima, musi byt medzi
