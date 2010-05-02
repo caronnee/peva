@@ -359,24 +359,26 @@ void SetSections::draw()
 	SDL_SetClipRect(w->g->screen, &rct);
 	w->tapestry(rct);
 
-	for (size_t i = 0; i< SECTIONS; i++)
+	for (int a = 0; a< SECTIONS; a++)
 	{
+		int i = a*3;
 		int partSize = w->g->screen->w / SECTIONS;
 		SDL_Rect rect;
 		rect.y = w->g->screen->h/3; //proste niekde
-		rect.x = i*partSize + ( partSize - sections[i]->w )/2;//do stredu
-		if (i == iter)
+		rect.x = a*partSize + ( partSize - sections[i]->w )/2;//do stredu
+		SDL_Rect tb = rect;
+		if (a == iter)
 		{
-			SDL_BlitSurface(sections[i*2],NULL,w->g->screen,&rect);
-			rect.x = i*partSize + (partSize - sections[i*3]->w )/2;//do stredu
-			rect.y += w->g->font_size*2;
-			SDL_BlitSurface(sections[i*3],NULL,w->g->screen,&rect);
+			SDL_BlitSurface(sections[i+1],NULL,w->g->screen,&rect);
+			tb.x = a*partSize + (partSize - sections[i+2]->w )/2;
+			tb.y += w->g->font_size*2;
+			SDL_BlitSurface(sections[i+2],NULL,w->g->screen,&tb);
 			continue;
 		}
 		SDL_BlitSurface(sections[i],NULL,w->g->screen,&rect);
-		rect.y += w->g->font_size*2;
-		rect.x = i*partSize + (partSize - sections[i*3]->w )/2;//do stredu
-		SDL_BlitSurface(sections[i*3],NULL,w->g->screen,&rect);
+		tb.y += w->g->font_size*2;
+		tb.x = a*partSize + (partSize - sections[i+2]->w )/2;//do stredu
+		SDL_BlitSurface(sections[i+2],NULL,w->g->screen,&tb);
 	}
 	SDL_Flip(w->g->screen);
 	SDL_SetClipRect(w->g->screen, NULL);
@@ -385,11 +387,11 @@ void SetSections::draw()
 void SetSections::init()
 {
 	iter = 0;
-	for (int i = 0; i< SECTIONS; i++)
+	for (int i = 0; i< SECTIONS*3; i+=3)
 	{
-		sections[i] = w->g->render("First Section");
-		sections[i*2] = w->g->renderLight("First Section");
-		sections[i*3] = w->g->render(deconvert<int>(gp->total_[i]));
+		sections[i] = w->g->render("Section:"+deconvert<int>(i/3));
+		sections[i+1] = w->g->renderLight("Section:"+deconvert<int>(i/3));
+		sections[i+2] = w->g->render(deconvert<int>(gp->total_[i/3]));
 	}
 	for ( int i =0; i< SECTIONS * 3; i++)
 		if (sections[i] == NULL)
@@ -413,9 +415,21 @@ void SetSections::init()
 
 void SetSections::process()
 {
-	while (SDL_PollEvent(&w->g->event))
+	SDLKey key;
+	Uint8 type;
+	bool d = false;
+	bool down = false;
+	while (true)
 	{
-		switch (w->g->event.type)
+		if (SDL_PollEvent(&w->g->event))
+		{
+			type = w->g->event.type;
+			key =w->g->event.key.keysym.sym;
+			d=true;
+		}
+		if (!down && !d)
+			continue;
+		switch (type)
 		{
 			case SDL_VIDEORESIZE:
 			{
@@ -424,7 +438,8 @@ void SetSections::process()
 			}
 			case SDL_KEYDOWN:
 			{
-				switch(w->g->event.key.keysym.sym)
+				down = true;
+				switch(key)
 				{
 					case SDLK_q:
 					case SDLK_ESCAPE:
@@ -442,7 +457,7 @@ void SetSections::process()
 					}
 					case SDLK_RIGHT:
 					{
-						if (iter <0)
+						if (iter <=0)
 							iter = SECTIONS-1;
 						else
 							iter--;
@@ -452,31 +467,37 @@ void SetSections::process()
 					case SDLK_DOWN:
 					{
 						std::string s;
-						if ( gp->total_[iter] < 50)
+						if ( gp->total_[iter] <= MININUM_SECTION)
 							s = "Do not check";
 						else
 						{
 							gp->total_[iter]--;
 							s = deconvert<int>(gp->total_[iter]);
 						}
-						SDL_FreeSurface(sections[iter *3]);
-						sections[iter * 3] = w->g->render( s );
+						SDL_FreeSurface(sections[iter*3+2]);
+						sections[iter*3 + 2] = w->g->render( s );
 						draw();
-						return;
+						break;
 					}
 					case SDLK_UP:
 					{
 						gp->total_[iter]++;
-						SDL_FreeSurface(sections[iter *3]);
-						sections[iter*3] = w->g->render( deconvert<int>(gp->total_[iter] ));
+						SDL_FreeSurface(sections[iter*3+2]);
+						sections[iter*3+2] = w->g->render( deconvert<int>(gp->total_[iter] ));
 
 						draw();
-						return;
+						break;
 					}
 					default:
 						TEST("Unhandled button")
 						break;
 				}
+				SDL_Delay(100);
+				break;
+			}
+			case SDL_KEYUP:
+			{
+				//down = false;
 				break;
 			}
 		}	

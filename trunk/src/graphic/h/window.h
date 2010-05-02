@@ -11,6 +11,7 @@
 
 #define NUMBEROFMENUS 3
 #define NUMCHARS 11
+#define SECTIONS 2
 
 struct Setting
 {

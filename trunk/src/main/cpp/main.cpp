@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 			w.top()->process();
 		}
 	}
-	catch (std::string msg)
+	catch (char * msg)
 	{
 		TEST(msg);
 	}

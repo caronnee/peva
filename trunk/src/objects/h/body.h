@@ -9,6 +9,8 @@
 #include "../../language/h/targets.h"
 #include "../../language/h/enums.h"
 
+#define MININUM_SECTION 50
+
 struct FirstSection
 {
 	enum Sections

@@ -34,6 +34,11 @@ Setting::Setting()
 	//scheduller, as was set ..
 	input.ignore(256,' ');
 	input >> scheduller;
+	for (int i =0; i< SECTIONS; i++)
+	{
+		input.ignore(256,' ');
+		input >> gamePoints.total_[i];
+	}
 	std::string s;
 	input >> s; //whitespace posriesi cou, cin
 	while (!input.eof())
@@ -53,10 +58,12 @@ Setting::~Setting()
 		}
 	output << -1<<" ";
 	output << scheduller << " ";
+
+	for (size_t i=0; i< SECTIONS; i++)
+		output << gamePoints.total_[i]<<" ";
+
 	for (size_t i=0; i< maps.size(); i++)
-	{
 		output << maps[i]<<"\n";
-	}
 }
 
 Window:: Window(Graphic * g_)
