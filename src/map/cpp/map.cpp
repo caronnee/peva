@@ -394,15 +394,17 @@ SDL_Rect Map::getBoundingRect(Object *o, Graphic*g)
 	r.y = min<int> (o->get_old_pos().y, o->get_pos().y);
 	r.w += diff.x;
 	r.h += diff.y;
-	if (r.x +r.w > g->screen->w)
-		r.w = g->screen->w - r.x;
-	if (r.y +r.h > g->screen->h)
-		r.h = g->screen->h - r.y;
+	if (r.x +r.w > boundaries.x + boundaries.width)
+		r.w = boundaries.x + boundaries.width - r.x;
+	if (r.y +r.h > boundaries.y + boundaries.height)
+		r.h = boundaries.y + boundaries.height - r.y;
 	return r;
 }
 void Map::update(Object * o, Graphic * g)
 {
 	SDL_Rect r = getBoundingRect(o,g);
+	r.x-=boundaries.x;
+	r.y-=boundaries.y;
 	update(r,true, g);
 }
 
