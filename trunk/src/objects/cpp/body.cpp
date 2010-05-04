@@ -404,10 +404,10 @@ void Body::hit(Object * o)
 
 	if (p.x < p.y)
 	{
-		movement.position_in_map.x -= p.x*t.x +1;
+		movement.position_in_map.x -= p.x*t.x;
 	}
 	else
-		movement.position_in_map.y -= p.y*t.y +1;
+		movement.position_in_map.y -= p.y*t.y;
 	if (map->collideWith(this,o))
 	{
 		TEST("Stale to koliduje podla mna")
