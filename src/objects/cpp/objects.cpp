@@ -160,7 +160,7 @@ int Object::turn(int angle)
 }
 void Object::killed(Object * o)
 {
-	if (owner!=this)
+	if (owner && (owner!=this))
 		owner->killed(o);
 	numberOfKilled++;
 }

@@ -391,7 +391,10 @@ void SetSections::init()
 	{
 		sections[i] = w->g->render("Section:"+deconvert<int>(i/3));
 		sections[i+1] = w->g->renderLight("Section:"+deconvert<int>(i/3));
-		sections[i+2] = w->g->render(deconvert<int>(gp->total_[i/3]));
+		std::string s = deconvert<int>(gp->total_[i/3]);
+		if (gp->total_[i/3] < 50)
+			s = "Do not check";
+		sections[i+2] = w->g->render( s );
 	}
 	for ( int i =0; i< SECTIONS * 3; i++)
 		if (sections[i] == NULL)
