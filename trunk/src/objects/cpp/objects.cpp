@@ -11,6 +11,7 @@ void ObjectMovement::clean()
 	angle = 0;
 	steps = 0;
 }
+
 int Object::getAngle()const
 {
 	return movement.angle;
@@ -63,11 +64,7 @@ bool Object::alive()
 }
 void Object::dead()
 {
-	if(abyss_ == NULL)
-	{
-		hitpoints=1;
-	}
-	else
+	if(abyss_ != NULL)
 		abyss_->push_back(this);
 	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionDeadStill);
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionDead);
@@ -185,12 +182,12 @@ void Object::bounce(Object * attacked) //od koho s ma odrazit
 	if (xy.y < xy.x)
 	{
 		movement.direction.y *=-1;
-		movement.position_in_map.y += p.y*xy.y * 2;
+		movement.position_in_map.y -= p.y*xy.y * 2 - 1;
 	}
 	else 
 	{
 		movement.direction.x *=-1;
-		movement.position_in_map.x += p.y*xy.x * 2;
+		movement.position_in_map.x -= p.x*xy.x * 2 - 1;
 	}
 }
 void Object::hit(Object * attacked)
@@ -201,7 +198,6 @@ void Object::hit(Object * attacked)
 
 bool Object::intersection(Object * attacked, Position &distances, Position& p)
 {
-
 	Rectangle r1 = collisionSize();
 	r1.x += movement.position_in_map.x;
 	r1.y += movement.position_in_map.y;

@@ -383,15 +383,19 @@ void Body::hitted(Object * attacker, Position p, int attack)
 	hitpoints -= hpLost;
 	if (hitpoints <= 0)
 	{
-		hitpoints =1;
+		substance = Miss;
 		attacker->killed(this);
-		Object::dead();// prasaaaaaarna
+		Object::dead();
 	}
 	TEST("Aktualne hitpoints" << hitpoints)
 }
 void Body::dead()
 {
 	//daj ako spracovane a moc sa tym nezatazuj
+	Position p = get_pos();
+	p.x /= BOX_WIDTH;
+	p.y /= BOX_HEIGHT;
+	map->map[p.x][p.y].objects[1-map->processing].push_back(this);
 }
 void Body::hit(Object * o)
 {
@@ -400,16 +404,17 @@ void Body::hit(Object * o)
 
 	if (p.x < p.y)
 	{
-		movement.position_in_map.x -= p.x*t.x;
+		movement.position_in_map.x -= p.x*t.x +1;
 	}
 	else
-		movement.position_in_map.y -= p.y*t.y;
+		movement.position_in_map.y -= p.y*t.y +1;
 	if (map->collideWith(this,o))
 	{
 		TEST("Stale to koliduje podla mna")
 		TEST(movement.position_in_map << " " )
 		exit(3);
 	}
+	Object::hit(o);
 }
 Body::~Body()
 {
