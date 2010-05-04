@@ -90,8 +90,6 @@ void Create_map::resize()
 	if (map)
 	{
 		map->setBoundary(rects[MAP].w,rects[MAP].h); 
-		rects[MAP].w = map->boundaries.width;
-		rects[MAP].h = map->boundaries.height;
 	}
 }
 void Create_map::init()
