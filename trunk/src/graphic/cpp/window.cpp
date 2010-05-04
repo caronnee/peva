@@ -11,6 +11,7 @@ Setting::Setting()
 {
 	penalizes.insert(penalizes.begin(), IGroups, 1);
 	scheduller = 0;
+	delay = 0;
 	std::ifstream input;
 	input.open(RESTORE);
 	if (!input.good())
@@ -34,6 +35,8 @@ Setting::Setting()
 	//scheduller, as was set ..
 	input.ignore(256,' ');
 	input >> scheduller;
+	input.ignore(256,' ');
+	input >> delay;
 	for (int i =0; i< SECTIONS; i++)
 	{
 		input.ignore(256,' ');
@@ -43,9 +46,12 @@ Setting::Setting()
 	input >> s; //whitespace posriesi cou, cin
 	while (!input.eof())
 	{
+		if (s=="")
+			break;
 		maps.push_back(s);
 		input >> s; //whitespace posriesi cou, cin
 	};
+	input.close();
 }
 
 Setting::~Setting()
@@ -58,6 +64,7 @@ Setting::~Setting()
 		}
 	output << -1<<" ";
 	output << scheduller << " ";
+	output << delay << " ";
 
 	for (size_t i=0; i< SECTIONS; i++)
 		output << gamePoints.total_[i]<<" ";

@@ -246,6 +246,7 @@ void Play::process()
 		return;
 	}
 	done = m->performe(w->g);
+	SDL_Delay(w->settings->delay);
 	m->updateScreen(w->g);
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
@@ -262,7 +263,7 @@ void Play::process()
 					w->pop();
 					return;
 				}
-				case SDLK_p: //pause
+				case SDLK_SPACE: //pause
 				{	
 					while(true)
 					{
@@ -271,6 +272,17 @@ void Play::process()
 							break;
 					}
 					m->time = SDL_GetTicks();
+					break;
+				}
+				case SDLK_p:
+				{
+					w->settings->delay++;
+					break;
+				}
+				case SDLK_m:
+				{
+					if (w->settings->delay!=0)
+						w->settings->delay--;
 					break;
 				}
 				case SDLK_a: //another alive robot, no break, we need to center
