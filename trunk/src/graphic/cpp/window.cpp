@@ -166,6 +166,7 @@ void Window::Destroy()
 }
 void Window::add(Menu * menu)
 {
+	SDL_SetClipRect(g->screen, NULL);
 	state.push(menu);
 	try
 	{
