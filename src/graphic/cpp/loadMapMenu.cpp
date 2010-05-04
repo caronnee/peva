@@ -150,13 +150,13 @@ void Load::init()
 	rct.x = 0;
 	rct.y = 0;
 	rct.w = w->g->screen->w;
-	rct.h = BEGIN_Y;
+	rct.h = w->g->screen->h;
 
 	w->tapestry(rct);
 	rct.x = (w->g->screen->w - n->w)/2;
 	rct.y = (BEGIN_Y - n->h)/2;
 	SDL_BlitSurface(n, NULL, w->g->screen, &rct );
-	SDL_UpdateRect(w->g->screen, 0,0,w->g->screen->w, BEGIN_Y);
+	SDL_Flip(w->g->screen);
 
 	index = 0;
 	//zisti vsetky s priponou .map
@@ -221,9 +221,10 @@ Load::~Load() {}
 
 LoadMapMenu::LoadMapMenu(Window * window, Map * map):Load(window, ".map","./maps")
 {
+	w = window;
+	name(w->g,"Load Map");
 	index = 0;
 	mapToFill = map;
-	w = window;
 }
 	
 void LoadMapMenu::enter()
