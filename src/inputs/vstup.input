@@ -3,12 +3,12 @@ ROBOT qqq
 	HEALTH = 10
 	ATTACK = 33			
 
-	MHEALTH = 1000
+	MHEALTH = 10
 	VISIT( [100,200])
 
 	main()
 	{
-		turnR();
 		step(100);
+		turnR();
 	}
 }

@@ -565,8 +565,8 @@ bool Map::performe(Graphic * g)
 				if (!o->alive())
 				{
 					map[i][j].objects[processing].erase(iter);
-					update(o,g);
 					o->dead();
+					update(o,g);
 					continue;
 				}
 				resolveMove(o);

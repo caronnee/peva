@@ -468,7 +468,10 @@ void SetSections::process()
 					{
 						std::string s;
 						if ( gp->total_[iter] <= MININUM_SECTION)
+						{
+							gp->total_[iter] = MININUM_SECTION -1;
 							s = "Do not check";
+						}
 						else
 						{
 							gp->total_[iter]--;

@@ -21,7 +21,6 @@ class BreakableWall:public Wall //da sa nou pohnut
 {
 public:
 	BreakableWall(Skin * skin, List * abyss);
-	void hit(Object * o);
 	void hitted(Object * o, Position p, int attack);
 	~BreakableWall();
 };
@@ -40,7 +39,6 @@ class TrapWall:public Wall // ostepy na zemi sa vystrkujuce:)
 public:
 	TrapWall(Skin * skin, List * abyss);
 	bool is_blocking();
-	void hit(Object *o);
 	void hitted(Object *o, Position p, int attack);
 	~TrapWall();
 };

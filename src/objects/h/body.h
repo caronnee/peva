@@ -89,6 +89,9 @@ public:
 	/* original eye angle */
 	size_t eyeAngle;
 
+	/* cleaning when death occured */
+	void dead();
+
 	/* number of steps to be done when step() called */
 	int default_steps; 
 
@@ -97,9 +100,6 @@ public:
 public:
 	/* Constructor */
 	Body();
-
-	/* sets image to be dead*/
-	void dead();
 
 	/* initialize robot according to gamePoints */
 	void init(GamePoints g, int visibility);

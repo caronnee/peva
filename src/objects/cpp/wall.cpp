@@ -14,11 +14,11 @@ Wall::Wall(Skin * s, List * abyss):Object(s,abyss)
 }
 void Wall::hit(Object * o)
 {
-	Object::hit(o);
+	throw "No way! How a static wall can hit something!";
 }
 void Wall::hitted(Object * attacker, Position p, int attack)
 {
-	attacker->bounce(this);
+//	attacker->bounce(this);
 	Object::hitted(attacker,p, attack);
 } 
 
@@ -33,10 +33,6 @@ BreakableWall::BreakableWall( Skin * s, List * abyss):Wall(s, abyss)
 	name = "Wall";
 	movement.direction.x = 0;
 	movement.direction.y = 0;
-}
-void BreakableWall::hit(Object * o)
-{
-	//nemalo by nic hitovat, teda zatial nic
 }
 void BreakableWall::hitted(Object * o, Position p, int attack)
 {
@@ -57,31 +53,19 @@ PushableWall::PushableWall( Skin * s, List * abyss):Wall(s, abyss)
 void PushableWall::hit(Object * attacked)
 {
 	attacked->hitted(this,movement.direction,0);
-	Rectangle r1 = collisionSize();
-	r1.x += movement.position_in_map.x;
-	r1.y += movement.position_in_map.y;
-
-	Rectangle r2 = attacked->collisionSize();
-	r2.x += attacked->movement.position_in_map.x;
-	r2.y += attacked->movement.position_in_map.y;
-
-	//zisti nablizsiu poziciu, kde nekolidoval a tam sa nastav
-	Position xy,p;
-	intersection(attacked, p, xy);
-	int minum =(xy.y < xy.x)? xy.y:xy.x;
-	if ((xy.y == minum)&&(xy.y != MY_INFINITY))
-		movement.position_in_map.y += xy.y * p.y;
-	if ((xy.x=minum)&&(xy.x != MY_INFINITY))
-		movement.position_in_map.x += xy.x * p.x;
+	Object::bounce(attacked);
 }
 void PushableWall::hitted(Object * o, Position dir, int attack)
 {
-	movement.steps = attack*defaultStep;
+	movement.steps = o->attack * defaultStep;
+	movement.direction += dir;
+	movement.direction.x /= 2;
+	movement.direction.y /= 2;
 }
 
 PushableWall::~PushableWall() { }
 
-TrapWall::TrapWall(Skin * s, List * abyss):Wall(s, abyss)
+TrapWall::TrapWall(Skin * s, List * abyss) : Wall(s, abyss)
 {
 	objectSaveId = SaveTrapWall;
 	type = Wall_;
@@ -94,10 +78,6 @@ TrapWall::TrapWall(Skin * s, List * abyss):Wall(s, abyss)
 bool TrapWall::is_blocking()
 {
 	return invisible;
-}
-void TrapWall::hit(Object * o)
-{
-	//Nemoze nic hittovat, takze tu zatial nic nie je
 }
 
 //FIXME nesmu sa prekryvat
