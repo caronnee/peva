@@ -325,7 +325,6 @@ void Create_map::generuj()
 }
 void Create_map::saving()
 {
-	//napis do stredu vyzvus menom, meno nesmie byt viac ako povedzme 8 pismen
 	switch (w->g->event.type)
 	{
 		case SDL_KEYDOWN:
@@ -356,10 +355,9 @@ void Create_map::saving()
 					SDL_FreeSurface(srf);
 					file_name = "";
 					do 
-						SDL_WaitEvent(&w->g->event); //TODO vyhruzny napis! a necakat na pohyb mysou mozno
+						SDL_WaitEvent(&w->g->event);
 					while (w->g->event.type != SDL_KEYDOWN);
 					draw();
-				//	w->pop();
 					return;
 				}
 				default:
@@ -486,7 +484,10 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				TEST("cleaning" )
 				map->clean();
 				map->addBoundaryWalls();
-				map->update(rects[MAP], true,w->g);
+				SDL_Rect updateRect = rects[MAP];
+				updateRect.w = min<int>(rects[MAP].w,map->boundaries.width);
+				updateRect.h = min<int>(rects[MAP].h,map->boundaries.height);
+				map->update(updateRect, true,w->g);
 				break;
 			}
 		case SAVE:
@@ -507,6 +508,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			if (nextMenu)
 				delete nextMenu;
 			nextMenu = new LoadMapMenu(w,map);
+			map->shift(rects[MAP].x, rects[MAP].y);
 			w->add( nextMenu );
 			mouse_down = false;
 			break;
