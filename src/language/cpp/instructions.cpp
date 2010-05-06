@@ -1,6 +1,7 @@
 //TODO namiesto removetemp = operacia +remove temp, aby to bolo atomicke
 //TODO return value by sa mala vytvorit az v okamziku RETURN u
 #include <iostream>
+#include <cmath>
 #include "../h/instructions.h"
 #include "../../add-ons/h/macros.h"
 
@@ -1323,7 +1324,11 @@ int InstructionShootLocation::execute(Core *c)
 	TEST("Shooting at location...") //TODO upravit pamat aby som nemusela ifovat
 	if (c->values.back()->array.elements.size() < 2)
 		return -1;
-	int x = c->values.back()->array.elements[0]->integerValue;
+	float f = (float)
+	(c->values.back()->array.elements[1]->integerValue - c->body->get_pos().y)
+		/
+	(float)(c->values.back()->array.elements[0]->integerValue - c->body->get_pos().x);
+	int x = toDegree(atan(f));
 	c->values.pop_back();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->shoot(x); 

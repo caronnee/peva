@@ -4,6 +4,7 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
+
 FirstSection::FirstSection()
 {
 	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
@@ -86,6 +87,7 @@ void GamePoints::check()
 
 Body::Body() : Object(NULL,NULL)
 {
+	waits = 0;
 	state_ = 0;
 	ms = NULL;
 	tasks = 0;
@@ -323,10 +325,13 @@ int Body::turnR()
 int Body::wait(int x)
 {
 	TEST("Waiting " << x << "times" )
+	waits = x;
 	return 0;
 }
 int Body::shoot(int angle)
 {
+	if (angle > MAX_EYE_ANGLE)
+		return -1; //toto by ale nemalo nastat!
 	TEST("Shooting at angle [ " << angle)
 	if (ammo.empty())
 	{

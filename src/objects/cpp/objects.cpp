@@ -26,7 +26,9 @@ Object::Object(Skin * s, List * abyss)
 	substance = Solid;
 	owner = NULL;
 	type = Nothing;
-	hitpoints = 100; //TODO zmenit podla requestov
+	hitpoints = 100; 
+	defense = 0;
+	attack = 0;
 	name =" Object";
 
 	movement.clean();
@@ -253,7 +255,7 @@ bool Object::blocksMove()
 	return !isMoving() || skinWork->processing();
 }
 
-int Object::Hit()
+int Object::Hit()const
 {
 	return hitpoints;
 }

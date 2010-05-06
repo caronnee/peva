@@ -613,9 +613,16 @@ void Create_map::resume()
 {
 	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
 	map->shift(-rects[MAP].x, -rects[MAP].y);
+	setVisibility();
 	draw();
 }
 
+void Create_map::setVisibility()
+{
+	SDL_FreeSurface(buttonsImages[BUTTONS -1]);
+	buttonsImages[BUTTONS -1] = TTF_RenderText_Solid(w->g->g_font, deconvert<size_t>(map->visibility/10).c_str(), w->g->normal);
+
+}
 //BIG TODO zmenit na citatelnejsie
 void Create_map::process_map()
 {
@@ -630,12 +637,11 @@ void Create_map::process_map()
 			{
 
 				case SDLK_m:
-					map->visibility-=20; //preteka:)
+					map->visibility-=20; //bez breaku, aby som sa nemusela opakovat:)
 				case SDLK_p:
 					{
 						map->visibility +=10;
-						SDL_FreeSurface(buttonsImages[BUTTONS -1]);
-						buttonsImages[BUTTONS -1] = TTF_RenderText_Solid(w->g->g_font, deconvert<size_t>(map->visibility/10).c_str(), w->g->normal);
+						setVisibility();
 						SDL_Rect r = rects[VISIBILITY];
 						r.w = w->g->screen->w - r.x;
 						r.h = w->g->screen->h - r.y;
