@@ -8,8 +8,8 @@ ROBOT qqq
 
 	main()
 	{
-		turn(180);
+		Location l = getTarget();
+		turn(l);
 		step(100);
-		turnR();
 	}
 }

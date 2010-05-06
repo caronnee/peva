@@ -27,55 +27,55 @@ WHITESPACE		[ \r\t\f]
 \/\/						BEGIN(COMMENT_LINE);
 \/\*						BEGIN(COMMENT);
 
-ROBOT						{*l = line; return TOKEN_ROBOT; }
-HEALTH 						{*l = line; lv->op = OptionHealth; return TOKEN_OPTION; }
-ATTACK						{*l = line; lv->op = OptionAttack; return TOKEN_OPTION; }
-DEFENSE						{*l = line; lv->op = OptionDefense;return TOKEN_OPTION; }
-MATTACK 					{*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
-MHEALTH						{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
-SEE						{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
-STEP						{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
-MEMORY						{*l = line; lv->op = OptionMemory; return TOKEN_OPTION;}
-VISIT						{*l = line; return TOKEN_VISIT; }
-VISIT_SEQ					{*l = line; return TOKEN_VISIT_SEQUENCE; }
-KILLED						{*l = line; return TOKEN_KILLED; }
-SKIN						{*l = line; return TOKEN_SKIN;}
-KILL						{*l = line; return TOKEN_KILL;}
-START						{*l = line; return TOKEN_START; }
+[rR][oO][bB][oO][tT]			{*l = line; return TOKEN_ROBOT; }
+[hH][eE][aA][lL][tT][hH] 		{*l = line; lv->op = OptionHealth; return TOKEN_OPTION; }
+[aA][tT][tT][aA][cC][kK]		{*l = line; lv->op = OptionAttack; return TOKEN_OPTION; }
+[dD][eE][fF][eE][nN][sS][eE]		{*l = line; lv->op = OptionDefense;return TOKEN_OPTION; }
+[mM][aA][tT][tT][aA][cC][kK] 		{*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
+[mM][hH][eE][aA][lL][tT][hH]		{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
+[aA][nN][gG][lL][eE]				{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
+[sS][tT][eE][pP]			{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
+[mM][eE][mM][oO][rR][yY]		{*l = line; lv->op = OptionMemory; return TOKEN_OPTION;}
 
-main						{*l = line; return TOKEN_MAIN; }
-var						{*l = line; return TOKEN_REFERENCE;}
-void						{*l = line; return TOKEN_VOID; }
-location					{*l = line;return TOKEN_LOCATION; }
-real 						{*l = line;return TOKEN_VAR_REAL; }
-seen 						{*l = line;return TOKEN_SEEN; }
+[vV][iI][sS][iI][tT]			{*l = line; return TOKEN_VISIT; }
+V[iI][sS][iI][tT]_[sS][eE][qQ]		{*l = line; return TOKEN_VISIT_SEQUENCE; }
+[kK][iI][lL][lL][eE][dD]		{*l = line; return TOKEN_KILLED; }
+[sS][kK][iI][nN]			{*l = line; return TOKEN_SKIN;}
+[kK][iI][lL][lL]			{*l = line; return TOKEN_KILL;}
+[sS][tT][aA][rR][tT]			{*l = line; return TOKEN_START; }
 
-IsPlayer					{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
-IsWall						{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
-IsMissille					{*l = line;lv->of = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
-IsMoving					{*l = line;lv->of = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
-Locate						{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
-see						{*l = line;lv->of = FeatureSee;return TOKEN_OBJECT_FEATURE;}
-hit						{*l = line;lv->of = FeatureHit;return TOKEN_OBJECT_FEATURE;}
-turn						{*l = line;lv->of = FeatureTurn;return TOKEN_OBJECT_FEATURE;}
-turnL						{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
-turnR						{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
-wait						{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
-shoot						{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
-step						{*l = line;lv->of = FeatureStep;return TOKEN_OBJECT_FEATURE;}
-get_target					{*l = line;lv->of = FeatureTarget; return TOKEN_RET_TARGET;}
+[iI][sS][pP][lL][aA][yY][eE][rR]	{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
+[iI][sS][wW][aA][lL][lL]		{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
+[iI][sS][mM][iI][sS][sS][iI][lL][lL][eE]	{*l = line;lv->of = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
+[iI][sS][mM][oO][vV][iI][nN][gG]	{*l = line;lv->of = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
+[lL][oO][cC][aA][tT][eE]		{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
+[sS][eE][eE]				{*l = line;lv->of = FeatureSee;return TOKEN_OBJECT_FEATURE;}
+[hH][iI][tT]				{*l = line;lv->of = FeatureHit;return TOKEN_OBJECT_FEATURE;}
+[tT][uU][rR][nN]			{*l = line;lv->of = FeatureTurn;return TOKEN_OBJECT_FEATURE;}
+[tT][uU][rR][nN]L			{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
+[tT][uU][rR][nN]R			{*l = line;lv->of = FeatureTurnR;return TOKEN_OBJECT_FEATURE;}
+[wW][aA][iI][tT]			{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
+[sS][hH][oO][oO][tT]			{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
+[mM][oO][vV][eE]			{*l = line;lv->of = FeatureStep;return TOKEN_OBJECT_FEATURE;}
+[gG][eE][tT][tT][aA][rR][gG][eE][tT]	{*l = line;lv->of = FeatureTarget; return TOKEN_RET_TARGET;}
 
-integer						{*l = line;return TOKEN_VAR_INT; }
-function	 	 	 	 	{*l = line;return TOKEN_FUNCTION; }
-else 						{*l = line;return TOKEN_ELSE; }
-while 						{*l = line;return TOKEN_WHILE; }
-do						{*l = line;return TOKEN_DO;		/* do */ }
-for 						{*l = line;return TOKEN_FOR; }
-if						{*l = line;return TOKEN_IF;		/* if */ }
-object						{*l = line;return TOKEN_OBJECT; }
-return						{*l = line;return TOKEN_RETURN; }
-break						{*l = line;return TOKEN_BREAK; }
-continue					{*l = line;return TOKEN_CONTINUE; }
+[mM][aA][iI][nN]			{*l = line; return TOKEN_MAIN; }
+[vV][aA][rR]				{*l = line; return TOKEN_REFERENCE;}
+[vV][oO][iI][dD]			{*l = line; return TOKEN_VOID; }
+[lL][oO][cC][aA][tT][iI][oO][nN]	{*l = line;return TOKEN_LOCATION; }
+[rR][eE][aA][lL] 			{*l = line;return TOKEN_VAR_REAL; }
+[sS][eE][eE][nN] 			{*l = line;return TOKEN_SEEN; }
+[iI][nN][tT][eE][gG][eE][rR]		{*l = line;return TOKEN_VAR_INT; }
+[fF][uU][nN][cC][tT][iI][oO][nN]	{*l = line;return TOKEN_FUNCTION; }
+[eE][lL][sS][eE] 			{*l = line;return TOKEN_ELSE; }
+[wW][hH][iI][lL][eE] 			{*l = line;return TOKEN_WHILE; }
+[dD][oO]				{*l = line;return TOKEN_DO;		/* do */ }
+[fF][oO][rR] 				{*l = line;return TOKEN_FOR; }
+[iI][fF]				{*l = line;return TOKEN_IF;		/* if */ }
+[oO][bB][jJ][eE][cC][tT]		{*l = line;return TOKEN_OBJECT; }
+[rR][eE][tT][uU][rR][nN]		{*l = line;return TOKEN_RETURN; }
+[bB][rR][eE][aA][kK]			{*l = line;return TOKEN_BREAK; }
+[cC][oO][nN][tT][iI][nN][uU][eE]	{*l = line;return TOKEN_CONTINUE; }
 \; 						{*l = line;return TOKEN_SEMICOLON; }
 \, 						{*l = line;return TOKEN_COMMA; }
 \.						{*l = line;return TOKEN_DOT; }
@@ -124,7 +124,6 @@ continue					{*l = line;return TOKEN_CONTINUE; }
 \n	line++;
 .	printf("Unrecognized token!Ignoring.Line %d, %s\n", line, yytext);
 %%
-
 void my_destroy()
 { 
 	yylex_destroy ();

@@ -36,6 +36,8 @@ private:
 		DRAW,
 		SAVING
 	};
+	/* sets button fo visibility to actual visibility of load map */
+	void setVisibility();
 
 	/* menu showing saved maps */
 	Menu * nextMenu;

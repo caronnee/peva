@@ -46,6 +46,7 @@ PushableWall::PushableWall( Skin * s, List * abyss):Wall(s, abyss)
 	objectSaveId = SavePushableWall;
 	type = Wall_;
 	defaultStep = 10;
+	attack = 10;
 	name = "Wall";
 	movement.direction.x = 0;
 	movement.direction.y = 0;

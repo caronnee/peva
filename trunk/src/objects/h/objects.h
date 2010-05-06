@@ -87,7 +87,8 @@ public:
 	/* for saving purposes, object ID */
 	ObjectsToSave objectSaveId;
 
-	/* tells tha graphic if ther i something changed in picture that should be redrawed */
+	/* tells tha graphic if there is
+	 * something changed in picture that should be redrawed */
 	virtual bool changed();
 
 	/* information about object fo later resurrection from file */
@@ -194,7 +195,7 @@ public:
 	size_t height();
 
 	/* for robot questioning state of object */
-	int Hit();
+	int Hit()const;
 
 	/* check, whether objcet is moving for optimalization and robot instruction purposes */
 	bool isMoving();

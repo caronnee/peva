@@ -10,6 +10,7 @@
 #include "../../language/h/enums.h"
 
 #define MININUM_SECTION 50
+#define MAX_EYE_ANGLE 90
 
 struct FirstSection
 {
@@ -150,6 +151,8 @@ public:
 	/* turns right*/
 	int turnR();
 
+	/* how manu rounds robot have to wait */
+	int waits;
 	/* returns true, becuse it is not transparent */
 	virtual bool is_blocking();
 

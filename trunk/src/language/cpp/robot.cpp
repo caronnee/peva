@@ -2,8 +2,6 @@
 #include "../h/robot.h"
 #include "../../add-ons/h/macros.h"
 
-#define MAX_EYE_ANGLE 90
-
 Robot::Robot(std::string s, std::string space_, GamePoints points_)
 {
 	points = points_;
@@ -299,6 +297,11 @@ bool Robot::action(bool & conditions)
 	bool b = core->body->alive();
 	if (core->body->isMoving()||!b)
 		return b;
+	if (core->body->waits)
+	{
+		core->body->waits--;
+		return b;
+	}
 	while (scheduller->ready())
 	{
 		scheduller->penalize(instructions[core->PC]); //kvoli zmena PC
@@ -413,13 +416,6 @@ void Robots::set(Options o, size_t value)
 			TEST("setting health to:" << value ); 
 			robots.back()->points.firstSection.sections[FirstSection::SectionHitpoints] = value;
 			break;
-		case OptionSee:
-			TEST("setting eyes angle to:" << value ); 
-			robots.back()->points.firstSection.sections[FirstSection::SectionAngle] = value % MAX_EYE_ANGLE;
-			break;
-		case OptionMemory: 
-			robots.back()->points.firstSection.sections[FirstSection::SectionMemorySize] = value;
-			break;
 		case OptionAttack:
 			TEST("setting Attack x to:" << value ); 
 			robots.back()->points.secondSection.sections[SecondSection::SectionAttack] = value;
@@ -436,9 +432,16 @@ void Robots::set(Options o, size_t value)
 			TEST("setting Missille health to:" << value ); 
 			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleDefense] = value;
 			break;
+		case OptionSee:
+			TEST("setting eyes angle to:" << value ); 
+			robots.back()->points.firstSection.sections[FirstSection::SectionAngle] = value % MAX_EYE_ANGLE;
+			break;
 		case OptionStep:
 			TEST("setting step to:" << value ); 
 			robots.back()->points.secondSection.sections[SecondSection::SectionSteps] = value;
+			break;
+		case OptionMemory: 
+			robots.back()->points.firstSection.sections[FirstSection::SectionMemorySize] = value;
 			break;
 
 	}
