@@ -29,12 +29,8 @@ Robot::Robot(std::string s, std::string space_, GamePoints points_)
 	Create_type * c = new Create_type(TypeArray, 0); //pre SEE
 	c->composite(defined_types->find_type(TypeObject));
 	defined_types->add(c);
-	dev_null = NULL;
 
 	/*	Adding default variables	*/
-	dev_null = new Node("dev/null", defined_types->find_type(TypeUndefined), -1);
-	core->memory.assign(dev_null, 0); //mal by prejst vdy, preto je v memory o jedna viac
-
 	Node * n = defined.add("true",defined_types->find_type(TypeInteger));
 	n->nested = Global;
 
@@ -170,17 +166,13 @@ Node * Robot::find_var(std::string var_name, bool & b)
 		}
 	}
 	b = false;
-	return dev_null;
+	return NULL;
 }
 
 Node * Robot::add(std::string name, Create_type * type)
 {
 	std::string name_ = nested + name;
-	Node * n = defined.add(name_, type);
-	if (n == NULL)
-		return dev_null;
-	return n;
-
+	return defined.add(name_, type);
 }
 
 Node * Robot::add(std::string name)
@@ -579,8 +571,6 @@ Robot::~Robot()
 		delete scheduller;
 	if (core)
 		delete core;
-	if (dev_null)
-		delete dev_null;
 	if (nullable)
 		delete nullable;
 	if (defined_types)

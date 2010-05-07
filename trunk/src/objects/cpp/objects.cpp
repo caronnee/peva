@@ -260,3 +260,23 @@ int Object::Hit()const
 {
 	return hitpoints;
 }
+
+Dummy::Dummy() : Object(NULL, NULL)
+{
+	type =~0;
+}
+
+int Dummy::Hit() const
+{
+	return random()%100;
+}
+
+bool Dummy::isMoving()
+{
+	return random()%2;
+}
+
+Position Dummy::get_pos() const
+{
+	return Position (random(),random());
+}

@@ -12,6 +12,10 @@ Memory::Memory( int size )
 		memory.push_back(new Variable(i));
 }
 
+Variable * Memory::dev_null()
+{
+	return memory[0];
+}
 void Memory::realloc(size_t size_) //realokuje len cast, co nie je uz zadana
 {
 	size_t size = size_+1;
@@ -19,7 +23,7 @@ void Memory::realloc(size_t size_) //realokuje len cast, co nie je uz zadana
 	{
 		for (size_t i=0; i< assigned.size(); i++)
 			if (assigned[i].variable == memory.back())
-				throw "Canot realloc, memory occupied by variable woth name " + assigned[i].node->name;
+				throw "Canot realloc, memory occupied by variable with name " + assigned[i].node->name;
 		delete memory.back();
 		memory.pop_back();
 	}

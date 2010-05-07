@@ -35,6 +35,8 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_RETURN "keyword 'return'"
 %token TOKEN_BREAK "keyword 'break'"
 %token TOKEN_REFERENCE "keyword 'var'"
+%token TOKEN_NULL "keyword 'null'"
+%token TOKEN_THIS "keyword 'this'"
 %token TOKEN_CONTINUE "keyword 'continue'"
 %token TOKEN_ROBOT "keyword 'robot'"
 %token TOKEN_RET_TARGET "function 'get_target'"
@@ -111,6 +113,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 
 %type<output> array "array declaring"
 %type<output> variable "variable declaring"
+%type<output> variable_left "variable on left side"
 %type<output> number "number"
 %type<output> declare_functions "declaring function(s)"
 %type<output> declare_function_ "declare function"
@@ -590,7 +593,7 @@ simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 		} //Plus Plus Plus neee:)
 		;
 //pozor na to, co sa assignuje. TODO array/struct, ako by to vyzeralo/struct, ako by to vyzeralo->FIXME
-assign: variable TOKEN_ASSIGN expression 
+assign: variable_left TOKEN_ASSIGN expression 
 	{
 		if (($1.output.back().type == TypeInteger)&&($3.output.back().type == TypeReal))
 		{
@@ -846,14 +849,12 @@ unary_var: variable {$$ = $1;}
 			$$.temp.push_back($1.temp.back());
 		}
 		;
-variable: TOKEN_IDENTIFIER 
+variable_left:TOKEN_IDENTIFIER 
 		{
 			$$ = ident_load(@1,program->robots.back(), $1);
 			$$.temp.push_back(false);
 		}
-		|call_fce { $$ = $1; //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
-		}
-		|variable TOKEN_DOT TOKEN_IDENTIFIER 
+		|variable_left TOKEN_DOT TOKEN_IDENTIFIER 
 		{ 
 			
 			for ( size_t i =0; i<$$.output.back().nested_vars.size(); i++)
@@ -868,7 +869,21 @@ variable: TOKEN_IDENTIFIER
 				}
 			$$.temp.push_back($1.temp.back());
 		}
-		|array
+		|array { $$ = $1; }
+		;
+variable: 	TOKEN_THIS 
+		{
+			$$ = ident_load(@1,program->robots.back(), "this");
+			$$.temp.push_back(false);
+		}
+		| TOKEN_NULL
+		{
+			$$ = ident_load(@1,program->robots.back(), "null");
+			$$.temp.push_back(false);
+		}
+		|call_fce { $$ = $1; //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)
+		}	
+		|variable_left { $$ = $1; }
 		;
 		
 array_access: TOKEN_LSBRA exps TOKEN_RSBRA 

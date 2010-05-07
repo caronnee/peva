@@ -9,11 +9,11 @@ Core::Core(TypeContainer * t)
 	values.clear();	
 	depth = 0;
 	body = new Body();
+	savedVar = memory.dev_null();
 }
 
 void Core::save(int j)
-{
-	
+{	
 	PCs.push_back(PC);
 	PC = j-1;
 }
@@ -36,7 +36,7 @@ Variable * Core::getVariableFromStack()
 	if (values.empty())
 	{
 		TEST("Error value not loaded!")
-		return memory.random();
+		return memory.dev_null();
 	}
 	Variable * v = values.back();
 	values.pop_back();
@@ -55,7 +55,7 @@ void Core::loadElement(int range)
 	if (values.empty())
 	{
 		TEST("Error - array not loaded!")
-		values.push_back(memory.random());
+		values.push_back(memory.dev_null());
 		return;
 	}
 	Variable * v = values.back();

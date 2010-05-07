@@ -51,6 +51,9 @@ public:
 	/* class constructor */
 	Memory( int size = 1 );
 
+	/* defailt variable */
+	Variable * dev_null();
+
 	/* returns variable added in depth d */
 	void assign(Node *n ,size_t depth);
 

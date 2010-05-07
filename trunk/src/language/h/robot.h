@@ -69,9 +69,6 @@ public:
 	/* return nam of input where robot was created */
 	std::string getSpace()const;
 
-	/* node accepting every vale for wrong access */
-	Node * dev_null;
-
 	/* acces for NULL */
 	Object * nullable;
 
