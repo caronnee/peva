@@ -667,5 +667,19 @@ class InstructionTarget: public Instruction
 		virtual int execute(Core * c);
 		virtual ~InstructionTarget();
 };
+class InstructionSaveVariable
+{
+	public:
+		InstructionTarget();
+		virtual int execute(Core * c);
+		virtual ~InstructionTarget();
+};
 
+class InstructionLoadVariable
+{
+	public:
+		InstructionTarget();
+		virtual int execute(Core * c);
+		virtual ~InstructionTarget();
+};
 #endif

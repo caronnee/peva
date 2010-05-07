@@ -155,8 +155,8 @@ public:
 	/* data considering move action, public because of map correction */
 	ObjectMovement movement; 
 
-	/* return actual position from movement, just user friendly function */
-	Position get_pos() const;
+	/* return actual position from movement */
+	virtual Position get_pos() const;
 
 	/* return acual position from movement, just user friendly function */
 	Position get_old_pos() const;
@@ -196,10 +196,10 @@ public:
 	size_t height();
 
 	/* for robot questioning state of object */
-	int Hit()const;
+	virtual int Hit()const;
 
 	/* check, whether objcet is moving for optimalization and robot instruction purposes */
-	bool isMoving();
+	virtual bool isMoving();
 
 	/* for robot questioning state of object */
 	int typeObject()const;
@@ -208,4 +208,19 @@ public:
 	SDL_Rect get_rect();
 };
 
+class Dummy : public Object
+{
+public: 
+	/* constructor */
+	Dummy();
+
+	/* return rndom value up to 100 */
+	int Hit()const;
+
+	/* returns radom bool */
+	bool isMoving();
+
+	/* returns random position, no need to be valid */
+	Position get_pos()const;
+};
 #endif
