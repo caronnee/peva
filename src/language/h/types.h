@@ -25,7 +25,13 @@ enum NestedType
 	Local
 };
 
-struct Record;
+struct Create_type;
+
+struct Record
+{
+	std::string name;
+	Create_type * type;
+};
 
 struct Create_type
 {
@@ -47,9 +53,4 @@ public:
 	bool is_simple();
 };
 
-struct Record
-{
-	std::string name;
-	Create_type * type;
-};
 #endif

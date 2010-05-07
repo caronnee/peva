@@ -70,6 +70,18 @@ protected:
 	/* id of type of object*/
 	size_t type;
 
+	/* name of the object, for debugging purposes */
+	std::string name;
+
+	/* Worker with the inages representing states of object */
+	ImageSkinWork * skinWork;
+
+private:
+	/* information about object fo later resurrection from file */
+	std::string saveInfo();
+
+	/* number of enemies killed by this object */
+	size_t numberOfKilled;
 public:
 	enum Substantial
 	{
@@ -84,27 +96,16 @@ public:
 		Wall_ = 2,
 		Missille_ = 4 
 	};
+
 	/* for saving purposes, object ID */
 	ObjectsToSave objectSaveId;
+
+	/* for debugging purposes, return information about the object */
+	std::string info() const;
 
 	/* tells tha graphic if there is
 	 * something changed in picture that should be redrawed */
 	virtual bool changed();
-
-	/* information about object fo later resurrection from file */
-	std::string saveInfo();
-
-	/* name of the object, for debugging purposes */
-	std::string name;
-
-	/* Worker with the inages representing states of object */
-	ImageSkinWork * skinWork;
-
-	/* number of enemies killed by this object */
-	size_t numberOfKilled;
-public:
-	/* for debugging purposes, return information about the object */
-	std::string info() const;
 
 	/* substance *///TODO privat a vlastna funkcia
 	Substantial substance;
@@ -205,7 +206,6 @@ public:
 
 	/* return SDL rectangle information about image to be blit */
 	SDL_Rect get_rect();
-
 };
 
 #endif

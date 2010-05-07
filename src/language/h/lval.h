@@ -61,7 +61,7 @@ struct Lval {
 };
 
 // lex interface
-#define YY_DECL	    int yylex(Lval *lv, unsigned *l, Robots *c)
+#define YY_DECL	    int yylex(Lval *lv, unsigned * l, Robots * robots)
 YY_DECL;
 
 // parser interface

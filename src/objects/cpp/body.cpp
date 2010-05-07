@@ -288,7 +288,8 @@ std::string Body::initTargetPlaces()
 			}
 			if (!set)
 			{
-				targets[i]->setOk(); //TODO check, whether it works!
+				if(targets[i]->setOk()) //TODO check, whether it works!
+					tasks--;
 				warning += "There is no number " + deconvert<int>(id) + "defined in this map, ignoring";
 			}
 		}
