@@ -152,7 +152,7 @@ void Play::resume()
 		bool set = false;
 		if (!starts.empty())
 		{
-			t =rand()%starts.size();
+			t = rand()%starts.size();
 			for(size_t a=0; a<t; a++)//FIXME advance
 				q++;
 			b=*q;

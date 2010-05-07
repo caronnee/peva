@@ -32,6 +32,7 @@ enum ObjectFeatures
 	FeatureIsMissille,
 	FeatureIsMoving,
 	FeatureLocate,
+	FeatureDirection,
 	FeatureStep,
 	FeatureShoot,
 	FeatureHit,

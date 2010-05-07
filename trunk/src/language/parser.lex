@@ -57,7 +57,8 @@ V[iI][sS][iI][tT]_[sS][eE][qQ]		{*l = line; return TOKEN_VISIT_SEQUENCE; }
 [wW][aA][iI][tT]			{*l = line;lv->of = FeatureWait;return TOKEN_OBJECT_FEATURE;}
 [sS][hH][oO][oO][tT]			{*l = line;lv->of = FeatureShoot;return TOKEN_OBJECT_FEATURE;}
 [mM][oO][vV][eE]			{*l = line;lv->of = FeatureStep;return TOKEN_OBJECT_FEATURE;}
-[gG][eE][tT][tT][aA][rR][gG][eE][tT]	{*l = line;lv->of = FeatureTarget; return TOKEN_RET_TARGET;}
+[gG][eE][tT][tT][aA][rR][gG][eE][tT]	{*l = line;lv->of = FeatureTarget; return TOKEN_OBJECT_FEATURE;}
+[dD][iI][rR][eE][cC][tT][iI][oO][nN]	{*l = line;lv->of = FeatureDirection; return TOKEN_OBJECT_FEATURE;}
 
 [mM][aA][iI][nN]			{*l = line; return TOKEN_MAIN; }
 [vV][aA][rR]				{*l = line; return TOKEN_REFERENCE;}

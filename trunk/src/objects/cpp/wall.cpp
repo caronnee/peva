@@ -6,6 +6,7 @@ Wall::Wall(Skin * s, List * abyss):Object(s,abyss)
 	name = "Wall";
 	objectSaveId = SaveWall;
 	type = Wall_;
+	attack = 10;
 	movement.angle = 0;
 	movement.direction = Position (0,0);
 	movement.position_in_map.x = 0;

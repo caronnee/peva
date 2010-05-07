@@ -19,23 +19,24 @@ int Object::getAngle()const
 
 Object::Object(Skin * s, List * abyss)
 {
+	last_attack = NULL;
 	abyss_ = abyss;
+	type = Nothing;
+	name =" Object";
+	skinWork = NULL;
+
 	objectSaveId = SaveDummy;
 	numberOfKilled = 0;
-	last_attack = NULL;
 	substance = Solid;
 	owner = NULL;
-	type = Nothing;
+
 	hitpoints = 100; 
 	defense = 0;
 	attack = 0;
-	name =" Object";
 
 	movement.clean();
 
-	if (s == NULL)
-		skinWork = NULL;
-	else
+	if (s != NULL)
 		skinWork = new ImageSkinWork(s);
 }
 
