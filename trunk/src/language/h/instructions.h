@@ -11,78 +11,50 @@ enum Instr
 {		
 	IGroup_undefined = 0,
 	IGroup_call,
-	IGroup_create ,
-	IGroup_loadlocal ,
-	IGroup_loadglobal ,
-	IGroup_load ,
-	IGroup_conversiontoint ,
-	IGroup_conversiontoreal,
+	IGroup_create,
+	IGroup_load,
+	IGroup_conversion,
 	IGroup_duplicate,
-	IGroup_storeinteger ,
-	IGroup_storereal ,
-	IGroup_storeobject ,
-	IGroup_store ,
-	IGroup_pop ,
-	IGroup_mustjump ,
-	IGroup_jump ,
-	IGroup_break ,
-	IGroup_continue ,
-	IGroup_return ,
+	IGroup_store,
+	IGroup_pop,
+	IGroup_jump,
+	IGroup_break,
+	IGroup_continue,
+	IGroup_return,
 	IGroup_restore,
 	IGroup_removetemp,
-	IGroup_plusplusinteger ,
-	IGroup_plusplusreal ,
-	IGroup_minusminusinteger ,
-	IGroup_minusminusreal ,
-	IGroup_plusinteger ,
-	IGroup_plusreal ,
-	IGroup_minusinteger ,
-	IGroup_minusreal ,
-	IGroup_multiplyinteger ,
-	IGroup_multiplyreal ,
-	IGroup_divideinteger ,
-	IGroup_dividereal ,
-	IGroup_modulo ,
-	IGroup_binaryand ,
-	IGroup_and ,
-	IGroup_binaryor ,
-	IGroup_or ,
-	IGroup_binarynot ,
-	IGroup_not ,
-	IGroup_gtinteger ,
-	IGroup_gtreal ,
-	IGroup_geinteger ,
-	IGroup_gereal ,
-	IGroup_equalinteger ,
-	IGroup_equalreal ,
-	IGroup_equalobject ,
+	IGroup_plusplus,
+	IGroup_minusminus,
+	IGroup_plus,
+	IGroup_minus,
+	IGroup_multiply,
+	IGroup_divide,
+	IGroup_modulo,
+	IGroup_binaryand,
+	IGroup_and,
+	IGroup_binaryor,
+	IGroup_or,
+	IGroup_binarynot,
+	IGroup_not,
+	IGroup_gt,
+	IGroup_ge,
+	IGroup_equal,
 	IGroup_notequal ,
-	IGroup_notequalinteger ,
-	IGroup_notequalreal ,
-	IGroup_notequalobject ,
-	IGroup_ltinteger ,
-	IGroup_ltreal ,
-	IGroup_leinteger ,
-	IGroup_lereal ,
-	IGroup_begin ,
-	IGroup_endblock ,
-	IGroup_see ,
-	IGroup_eye ,
-	IGroup_fetchstate ,
-	IGroup_step ,
-	IGroup_stepdefault ,
-	IGroup_wait ,
-	IGroup_shootlocation ,
-	IGroup_shootangle ,
-	IGroup_turn ,
-	IGroup_turnr ,
-	IGroup_turnl,
+	IGroup_lt,
+	IGroup_le,
+	IGroup_begin,
+	IGroup_endblock,
+	IGroup_see,
+	IGroup_eye,
+	IGroup_fetchstate,
+	IGroup_step,
+	IGroup_wait,
+	IGroup_shoot,
+	IGroup_turn,
 	IGroup_hit,
-	IGroup_isplayer,
-	IGroup_iswall,
-	IGroup_ismissille,
+	IGroup_check,
 	IGroup_locate,
-	IGroup_ismoving,
+	IGroup_direction,
 	IGroups
 };
 
@@ -667,19 +639,19 @@ class InstructionTarget: public Instruction
 		virtual int execute(Core * c);
 		virtual ~InstructionTarget();
 };
-class InstructionSaveVariable
+class InstructionSaveVariable : public Instruction
 {
 	public:
-		InstructionTarget();
+		InstructionSaveVariable();
 		virtual int execute(Core * c);
-		virtual ~InstructionTarget();
+		virtual ~InstructionSaveVariable();
 };
 
-class InstructionLoadVariable
+class InstructionLoadVariable : public Instruction
 {
 	public:
-		InstructionTarget();
+		InstructionLoadVariable();
 		virtual int execute(Core * c);
-		virtual ~InstructionTarget();
+		virtual ~InstructionLoadVariable();
 };
 #endif
