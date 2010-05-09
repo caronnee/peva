@@ -97,10 +97,7 @@ void Robot::declare_type()
 void Robot::leave_type()
 {
 	if (active_type.empty())
-	{ 
-		TEST("Ech? Active prazdna")
-		return;
-	}
+		throw "No active type to leave";
 	active_type.top()->reset(); // prejde, pretoze hierarchicka struktura(nemoze zas ebou rovnake triedy, takze vzdy ked resetujeme, bude to potom mio stacku)
 	active_type.pop();
 }

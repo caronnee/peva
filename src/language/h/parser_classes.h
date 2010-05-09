@@ -1,10 +1,11 @@
 #ifndef ___PARSER_CLASSES____
 #define ___PARSER_CLASSES____
 #include <vector>
+#include <deque>
 #include "instructions.h"
 #include "parser_classes.h"
 
-typedef std::vector<Instruction *> Instructions;
+typedef std::deque<Instruction *> Instructions;
 typedef std::vector<Variable *> Values;
 typedef std::vector<Create_type> Expressions;
 

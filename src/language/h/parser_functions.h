@@ -19,7 +19,7 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type T2)
 Element feature (int line, Robot * r, ObjectFeatures feat, Element t);
 
 Instruction* possible_conversion(Type to, Type from);
-Instructions join_instructions(Instructions a, Instructions b);
 Instructions load_full(Node * n);
-Instruction * get_store_type (unsigned l, Robot * r, Create_type t);
+Instructions get_load_type (Create_type t);
+Instructions get_store_type (Create_type t);
 #endif

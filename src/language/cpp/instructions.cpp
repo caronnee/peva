@@ -80,13 +80,8 @@ InstructionLoadLocal::InstructionLoadLocal(Node * n)
 int InstructionLoadLocal::execute(Core * c)
 {
 	TEST("Loading local variable " << node->name)
-	//TEST(" id =  " << node->var.back()->ID << "..." )
-	//TEST(", value =  " << node->var.back()->integerValue << "..." )
 	if (node->var.size() == 0)
-	{
-		TEST("Error, prazdna premenna, nikfy by nemalo nastat")
-		throw "somethng baaaaas hapeened";
-	}
+		throw "Trying to load mpty variable";
 	c->values.push_back(node->var.back());
 	TEST("OK")
 	return 0;
@@ -280,6 +275,20 @@ InstructionDuplicate::~InstructionDuplicate()
 	/* Nothing to be done yet*/
 }
 
+InstructionStoreRef::InstructionStoreRef(Node * n)
+{
+	node = n;
+	name_ = "InstructionStoreReference";
+	group = IGroup_store;
+}
+int InstructionStoreRef::execute(Core * c)
+{
+	Variable * var = c->getVariableFromStack();
+	node->var.push_back(var);
+	return 0;
+}
+InstructionStoreRef::~InstructionStoreRef() { }
+
 InstructionStoreInteger::InstructionStoreInteger()
 {
 	name_ = "InstructionStoreInteger";
@@ -329,24 +338,6 @@ int InstructionStoreObject::execute(Core * c)
 	return 0;
 }
 InstructionStoreObject::~InstructionStoreObject()
-{
-	/* Nothing to be done yet */
-}
-InstructionStore::InstructionStore()
-{
-	name_ = "InstructionStore";
-	group = IGroup_store;
-}
-// pouzije sa iba pri returne
-int InstructionStore::execute(Core * c)
-{
-	TEST("Storing complex variable ..." )
-	c->copyVariable();
-	TEST("OK")
-	return 0;
-}
-
-InstructionStore::~InstructionStore()
 {
 	/* Nothing to be done yet */
 }
@@ -1462,9 +1453,8 @@ int InstructionIsMissille::execute(Core *c)
 }
 InstructionIsMissille::~InstructionIsMissille()
 {}
-InstructionLocate::InstructionLocate(Create_type t)
+InstructionLocate::InstructionLocate()
 {
-	type = t;
 	name_ = "InstructionLocate";
 	group = IGroup_locate;
 }

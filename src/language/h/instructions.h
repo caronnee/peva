@@ -132,6 +132,13 @@ class InstructionDuplicate: public Instruction
 		InstructionDuplicate();
 		virtual ~InstructionDuplicate();
 };
+class InstructionStoreRef : public Instruction
+{
+	public:
+		InstructionStoreRef(Node * n);
+		virtual int execute(Core * c);
+		virtual ~InstructionStoreRef();
+};
 class InstructionStoreInteger : public Instruction
 {
 	public:
@@ -154,13 +161,6 @@ class InstructionStoreObject : public Instruction
 		virtual int execute(Core * c);
 		InstructionStoreObject();
 		virtual ~InstructionStoreObject();
-};
-class InstructionStore : public Instruction
-{
-	public:
-		InstructionStore();
-		virtual int execute(Core *c);
-		virtual ~InstructionStore();
 };
 class Call : public Instruction
 {
@@ -621,7 +621,7 @@ class InstructionLocate: public Instruction
 {
 	Create_type type;
 	public:
-		InstructionLocate(Create_type t);
+		InstructionLocate();
 		virtual int execute(Core * c);
 		virtual ~InstructionLocate();
 };

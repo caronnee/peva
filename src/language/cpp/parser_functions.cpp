@@ -41,17 +41,6 @@ Instruction * possible_conversion(Type to, Type from)
 		return new InstructionConversionToReal();
 	return NULL;
 }
-//constr je load vsetkych funkcii
-
-Instructions join_instructions(const Instructions i1, const Instructions i2)
-{
-	Instructions res = i1;
-	for (size_t i =0; i < i2.size(); i++)
-	{
-		res.push_back(i2[i]);
-	}
-	return res;
-}
 
 Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 {
@@ -268,11 +257,12 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 	}
 	e.output.push_back(Create_type(TypeInteger));
 	return e;
-}//TODO rozdelit na tie, co vyzaduju object a tie, co vyzaduju integer
+}//FIXME rozdelit na tie, co vyzaduju object a tie, co vyzaduju integer
+//TODO pre viacere odstrait nully, ale to sa mi teraz nestane, len pre pripad, zby som povoloval aj errorove veci
 Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 {
 	Element ee;
-	ee.ins = e.ins; //FIXME pouzivam parameter funcke
+	ee.ins = e.ins;
 	if ((!ee.ins.empty())&&(ee.ins.back() == NULL)) //aktualne moze mat len jedno output -> FIXME aj pre viacere, maze NULLy
 	{
 		ee.ins.pop_back();
@@ -326,7 +316,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			break;
 		case FeatureLocate: //vracia poziciu objektu, ak ho r vidi, ak nie, vyhodi -1, -1;
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionLocate(*r->find_type(TypeLocation)));
+				ee.ins.push_back( new InstructionLocate());
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeLocation));
@@ -431,18 +421,98 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	}
 	return ee;
 }
-Instruction * get_store_type ( unsigned l, Robot * r, Create_type t)
+Instructions get_load_type ( Create_type t )
 {
-
-	switch ( t.type )
-	{
-		case  TypeReal:
-			return new InstructionStoreReal();
-		case TypeInteger:
-			return new InstructionStoreInteger();
-		case TypeObject:
-			return new InstructionStoreObject();
-		default:
-			return new InstructionStore();
+	Instructions fullAccessBack;
+	if (!t.is_simple())
+		fullAccessBack.push_back(new InstructionSaveVariable());
+	std::vector<int> toLoad;
+	std::vector<Create_type> types;
+	Create_type type = t;
+	while(!types.empty())
+	{	
+		type = types.back();
+		types.pop_back();
+		if (type.is_simple())
+		{
+			for(size_t i =0; i < toLoad.size(); i++)
+			{
+				fullAccessBack.push_back(new InstructionLoad(toLoad[i]));
+				fullAccessBack.push_back(new InstructionLoad());
+			}
+			if (!toLoad.empty())
+				toLoad.back()--;
+			while((!toLoad.empty()) && (toLoad.back() == 1 ))
+			{
+				toLoad.pop_back();
+				if (toLoad.empty())
+					break;
+				toLoad.back()--;
+			}			
+			if (!toLoad.empty())
+				fullAccessBack.push_back(new InstructionLoadVariable());
+			continue;
+		}
+		toLoad.push_back(type.range + type.nested_vars.size());
+		for (size_t i =0; i< type.range; i++)
+			types.push_back(*type.data_type);
+		for (size_t i =0; i< type.nested_vars.size(); i++)
+			types.push_back(*type.nested_vars[i].type);
 	}
+	return fullAccessBack;
+}
+
+Instructions get_store_type( Create_type t )
+{
+	Instructions fullAccessBack;
+	if (!t.is_simple())
+		fullAccessBack.push_back(new InstructionSaveVariable());
+	std::vector<int> toLoad;
+	std::vector<Create_type> types;
+	Create_type type = t;
+	while(!types.empty())
+	{	
+		type = types.back();
+		types.pop_back();
+		if (type.is_simple())
+		{
+			for(size_t i =0; i < toLoad.size(); i++)
+			{
+				fullAccessBack.push_back(new InstructionLoad(toLoad[i]));
+				fullAccessBack.push_back(new InstructionLoad());
+			}
+			switch(type.type)
+			{
+				case TypeInteger:
+					fullAccessBack.push_back(new InstructionStoreInteger());
+					break;
+				case TypeReal:
+					fullAccessBack.push_back(new InstructionStoreReal());
+					break;
+				case TypeObject:
+					fullAccessBack.push_back(new InstructionStoreObject());
+					break;
+				default:
+					throw "No instrucion for saving such a type set";
+			}
+			if (!toLoad.empty())
+				toLoad.back()--;
+			while((!toLoad.empty()) && (toLoad.back() == 1 ))
+			{
+				toLoad.pop_back();
+				if (toLoad.empty())
+					break;
+				toLoad.back()--;
+			}			
+			if (!toLoad.empty())
+				fullAccessBack.push_back(new InstructionLoadVariable());
+			continue;
+		}
+		toLoad.push_back(type.range + type.nested_vars.size());
+		for (size_t i =0; i< type.range; i++)
+			types.push_back(*type.data_type);
+		for (size_t i =0; i< type.nested_vars.size(); i++)
+			types.push_back(*type.nested_vars[i].type);
+	}
+	return fullAccessBack;
 }
