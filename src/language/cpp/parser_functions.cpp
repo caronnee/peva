@@ -443,7 +443,7 @@ Instructions get_load_type ( Create_type t )
 			}
 			if (!toLoad.empty())
 				toLoad.back()--;
-			while((!toLoad.empty()) && (toLoad.back() == 1 ))
+			while((!toLoad.empty()) && (toLoad.back() < 0 ))
 			{
 				toLoad.pop_back();
 				if (toLoad.empty())
@@ -454,7 +454,7 @@ Instructions get_load_type ( Create_type t )
 				fullAccessBack.push_back(new InstructionLoadVariable());
 			continue;
 		}
-		toLoad.push_back(type.range + type.nested_vars.size());
+		toLoad.push_back(type.range + type.nested_vars.size()-1);
 		for (size_t i =0; i< type.range; i++)
 			types.push_back(*type.data_type);
 		for (size_t i =0; i< type.nested_vars.size(); i++)
@@ -468,7 +468,7 @@ Instructions get_store_type( Create_type t )
 	Instructions fullAccessBack;
 	if (!t.is_simple())
 		fullAccessBack.push_back(new InstructionSaveVariable());
-	std::vector<int> toLoad;
+	std::vector<Position> toLoad;
 	std::vector<Create_type> types;
 	Create_type type = t;
 	types.push_back(type);
@@ -480,7 +480,7 @@ Instructions get_store_type( Create_type t )
 		{
 			for(size_t i =0; i < toLoad.size(); i++)
 			{
-				fullAccessBack.push_back(new InstructionLoad(toLoad[i]));
+				fullAccessBack.push_back(new InstructionLoad(toLoad[i].x));
 				fullAccessBack.push_back(new InstructionLoad());
 			}
 			switch(type.type)
@@ -495,22 +495,22 @@ Instructions get_store_type( Create_type t )
 					fullAccessBack.push_back(new InstructionStoreObject());
 					break;
 				default:
-					throw "No instrucion for saving such a type set";
+					throw "No instrucion for saving such a type";
 			}
 			if (!toLoad.empty())
-				toLoad.back()--;
-			while((!toLoad.empty()) && (toLoad.back() == 1 ))
+				toLoad.back().x++;
+			while((!toLoad.empty()) && (toLoad.back().x > toLoad.back().y ))
 			{
 				toLoad.pop_back();
 				if (toLoad.empty())
 					break;
-				toLoad.back()--;
+				toLoad.back().x++;
 			}			
 			if (!toLoad.empty())
 				fullAccessBack.push_back(new InstructionLoadVariable());
 			continue;
 		}
-		toLoad.push_back(type.range + type.nested_vars.size());
+		toLoad.push_back(Position(0, type.range + type.nested_vars.size()-1));
 		for (size_t i =0; i< type.range; i++)
 			types.push_back(*type.data_type);
 		for (size_t i =0; i< type.nested_vars.size(); i++)

@@ -1,8 +1,9 @@
 ROBOT qqq
 {
 	integer[3][2] a = { {500,400}, {300,200}};
+	integer[3][2] b;
 	main()
 	{
-
+		b = a;
 	}
 }
