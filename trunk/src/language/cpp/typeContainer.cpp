@@ -7,7 +7,7 @@ Create_type * TypeContainer::find_type(Type t)
 		{
 			return defined_types[i];
 		}
-	return NULL;//ZAVAZNA CHYBA! Ale zo strany programatora;), mozno by to stalo za excepsnu
+	throw "No such type defined";
 }
 
 Create_type * TypeContainer::find_array_type(size_t range, Create_type * descend)
