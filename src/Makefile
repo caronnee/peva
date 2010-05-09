@@ -81,7 +81,7 @@ dungeon:
 	cat output
 	
 brun:
-	make
+	make dep bparser
 	./bparser vstup
 run:
 	make dep codewars

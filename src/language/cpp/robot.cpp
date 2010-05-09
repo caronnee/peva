@@ -101,7 +101,7 @@ void Robot::leave_type()
 	active_type.top()->reset(); // prejde, pretoze hierarchicka struktura(nemoze zas ebou rovnake triedy, takze vzdy ked resetujeme, bude to potom mio stacku)
 	active_type.pop();
 }
-void Robot::declare_next()
+void Robot::declare_next(unsigned line)
 {
 	Create_type * t = active_type.top()->next();
 	if (NULL)

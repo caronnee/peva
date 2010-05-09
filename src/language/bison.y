@@ -1,6 +1,6 @@
 //TODO zrusit loadGlobal
 //TODO do funkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
-//TODO pri for-e odtranit vytvorenie premennej, spravit skor  defauult temp
+//FeIXME pri for-e odtranit vytvorenie premennej, spravit skor  defauult temp
 %{
 #include <iostream>
 #include <queue>
@@ -288,6 +288,9 @@ names_:	TOKEN_IDENTIFIER
 			$$.clear();
 			Node *n = program->robots.back()->add($1);
 			$$.push_back(new InstructionCreate(n)); 
+			$$.push_back(new InstructionLoadLocal(n)); 
+			for (int i = 1; i< $4.level; i++)
+				$$.push_back(new InstructionDuplicate());
 
 			$$.insert($$.end(), $4.ins.begin(), $4.ins.end());
 		} 
@@ -295,7 +298,7 @@ names_:	TOKEN_IDENTIFIER
 names: names_ { $$ = $1; }
 	|names names_ { $$ = $1; $$.insert($$.end(), $2.begin(), $2.end()); }
 		;
-begin_type: TOKEN_BEGIN { program->robots.back()->declare_next(); }
+begin_type: TOKEN_BEGIN { program->robots.back()->declare_next(@1); }
 		;
 end_type: TOKEN_END { program->robots.back()->leave_type(); }
 		;

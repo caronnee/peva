@@ -41,7 +41,7 @@ int main(int argc, char ** argv)
 	{
 		q.finalize(0);
 		q.robots.back()->save_to_xml();
-		q.robots.back()->execute();
+	//	q.robots.back()->execute();
 	}
 	fclose(yyin);	
 	my_destroy();

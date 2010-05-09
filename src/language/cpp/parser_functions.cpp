@@ -429,6 +429,7 @@ Instructions get_load_type ( Create_type t )
 	std::vector<int> toLoad;
 	std::vector<Create_type> types;
 	Create_type type = t;
+	types.push_back(type);
 	while(!types.empty())
 	{	
 		type = types.back();
@@ -470,6 +471,7 @@ Instructions get_store_type( Create_type t )
 	std::vector<int> toLoad;
 	std::vector<Create_type> types;
 	Create_type type = t;
+	types.push_back(type);
 	while(!types.empty())
 	{	
 		type = types.back();
