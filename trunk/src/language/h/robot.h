@@ -175,7 +175,7 @@ public:
 	void declare_type();
 
 	/* same as type, bt for arays */
-	void declare_next();
+	void declare_next(unsigned line);
 
 	/* removes last declared type and considers it as done*/
 	void leave_type();
