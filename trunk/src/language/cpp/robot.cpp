@@ -582,6 +582,7 @@ Robot::~Robot()
 		if (instructions[i] == NULL)
 		{
 			TEST("Eeeeek!") 
+			continue;
 		}
 		delete instructions[i];
 	}

@@ -632,10 +632,12 @@ assign: variable_left TOKEN_ASSIGN expression
 			program->robots.back()->error(@2, Robot::ErrorConversionImpossible);
 		}
 		$$ = $1.ins;
-		$$.insert($$.end(), $3.ins.begin(), $3.ins.end()); 
-		Instructions ins = get_store_type( $1.output.back() );
-
+		Instructions ins = get_load_type( $1.output.back() );
+		$$.insert($$.end(), ins.begin(), ins.end()); 
+		$$.insert($$.end(), $3.ins.begin(), $3.ins.end());
+		ins = get_store_type( $3.output.back() );
 		$$.insert($$.end(),ins.begin(), ins.end());
+
 		if ($3.temp.back())
 			$$.push_back(new InstructionRemoveTemp());
 		}
