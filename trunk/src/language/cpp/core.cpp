@@ -20,11 +20,12 @@ void Core::save(int j)
 
 void Core::restore() //+ pushnut vsetky parametre zadanej funkcie o jedno
 {
-	if (nested_functions.size() == 0)
+	if ( nested_functions.empty() )
 	{
 		nested_function =NULL;
 		return;
 	}
+	nested_function->return_var->var.pop_back(); //zmazanie navratovej hodnoty
 	nested_function = nested_functions.back();
 	nested_functions.pop_back();
 	PC = PCs.back();
