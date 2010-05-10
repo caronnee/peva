@@ -25,7 +25,6 @@ int main(int argc, char ** argv)
 	Robots q;
 	int err = yyparse(&q);
 	TEST("-------------------------------------END---------------------------------------------------------------")
-		q.robots.back()->output(&q.robots.back()->defined);
 		/*for (int i =0; i<q.robots.back()->instructions.size(); i++)
 		TEST( q.robots.back()->instructions[i]->name_)
 		q.robots.back()->save_to_xml();
@@ -33,12 +32,14 @@ int main(int argc, char ** argv)
 	 */
 	if ((err) || (q.robots.back()->errors))
 	{
-		TEST ( q.robots.back()->errorList )
+		for (size_t i =0; i< q.robots.size(); i++)
+			TEST ( q.robots.back()->errorList )
 		TEST( std::endl)
 		TEST ( q.parseErrorsList )
 	}
 	else
 	{
+//		q.robots.back()->output(&q.robots.back()->defined);
 		q.finalize(0);
 		q.robots.back()->save_to_xml();
 		q.robots.back()->execute();

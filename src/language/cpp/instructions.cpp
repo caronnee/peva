@@ -1306,7 +1306,8 @@ InstructionShootLocation::InstructionShootLocation()
 }
 int InstructionShootLocation::execute(Core *c)
 {
-	TEST("Shooting at location...") //TODO upravit pamat aby som nemusela ifovat
+	TEST("Shooting at location...[" << c->values.back()->array.elements[0]->integerValue << "," <<
+					c->values.back()->array.elements[1]->integerValue << "]" ) //TODO upravit pamat aby som nemusela ifovat
 	if (c->values.back()->array.elements.size() < 2)
 		return -1;
 	float f = (float)
