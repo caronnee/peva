@@ -1,15 +1,24 @@
 ROBOT qqq
 {
+	HEALTH = 100
+	ATTACK = 33			
+        DEFENSE	= 22		
+	MATTACK = 50	
+	MHEALTH	= 20	
 	Memory = 1000
-	health = 1
 
-	location[3][2] a = { {{500,400}, {300,200}}};
-	location[3][2] b;
-	main()
+	KILLED < 5
+	VISIT_SEQ( START[qqq], START[qqq], [13,18])
+	VISIT( [100,200])
+
+	location[3][6] a;
+	location function f(location[6] x)
 	{
-		//shoot (b[0][0]);
-		b = a;
-	//	shoot (b[0][0]);
-	//	return;
+		location pi = {1,2};
+		return pi;
+	}
+	main() // komentar
+	{
+		shoot(f(a[1]));
 	}
 }

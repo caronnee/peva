@@ -9,6 +9,7 @@
 #include <vector>
 #include "variable.h"
 #include "node.h"
+#include "functions.h"
 
 struct Memory_record
 {
@@ -50,6 +51,9 @@ private:
 public:
 	/* class constructor */
 	Memory( int size = 1 );
+
+	/* frees parameters of function f */
+	void freeParameters ( Function * f );
 
 	/* defailt variable */
 	Variable * dev_null();

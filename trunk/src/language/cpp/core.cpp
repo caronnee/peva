@@ -18,16 +18,18 @@ void Core::save(int j)
 	PC = j-1;
 }
 
-void Core::restore() //+ pushnut vsetky parametre zadanej funkcie o jedno
+void Core::restore() 
 {
 	if ( nested_functions.empty() )
 	{
 		nested_function =NULL;
 		return;
 	}
+	memory.freeParameters(nested_function);
 	nested_function->return_var->var.pop_back(); //zmazanie navratovej hodnoty
-	nested_function = nested_functions.back();
 	nested_functions.pop_back();
+	nested_function = nested_functions.back();
+
 	PC = PCs.back();
 	PCs.pop_back();
 	TEST("Context restored" << PC)
@@ -64,7 +66,7 @@ void Core::loadElement(int range)
 	if (v->array.range <= range)
 	{
 		TEST("Error - array out of range, which is:" << v->array.elements.size() << " against " << range )
-		values.push_back(memory.random());
+		values.push_back(memory.dev_null());
 		return;
 	}
 	return values.push_back(v->array.elements[range]);

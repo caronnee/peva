@@ -274,7 +274,8 @@ void Robot::save_to_xml()
 void Robot::execute()
 {
 	bool done = false;
-	while(action(done));
+	while(action(done))
+	;//	sleep(2);
 }
 bool Robot::action(bool & conditions)
 {

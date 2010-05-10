@@ -98,6 +98,7 @@ Body::Body() : Object(NULL,NULL)
 	movement.speed = 30;
 	movement.angle = 0;
 	toKill = NULL;
+	map = NULL;
 }
 void Body::init(GamePoints g, int v)
 {
@@ -208,6 +209,8 @@ bool Body::is_blocking()
 }
 int Body::see()
 {
+	if (map == NULL)
+		return 0;
 	//robime to drsne, ziadna heuristika
 	//TODO zamysliet sa nad tm, ci je to vhodne upravit
 	
@@ -333,10 +336,10 @@ int Body::shoot(int angle)
 {
 	if (angle > MAX_EYE_ANGLE)
 		return -1; //toto by ale nemalo nastat!
-	TEST("Shooting at angle [ " << angle)
+	TEST("Shooting at angle " << angle)
 	if (ammo.empty())
 	{
-		TEST("Prazdne ammo!")
+		TEST("Empty ammo!")
 		return 0;
 	}
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionAttack);

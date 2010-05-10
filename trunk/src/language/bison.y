@@ -22,23 +22,23 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 /* keywords */
 %token TOKEN_MAIN "main function"
 %token TOKEN_LOCATION "word location"
-%token TOKEN_OBJECT "keyword 'object'"
-%token TOKEN_VAR_REAL "keyword 'real'"
-%token TOKEN_VAR_INT "keyword 'integer'"
-%token TOKEN_VOID "keyword 'void'"
-%token TOKEN_FUNCTION "keyword 'function'"
-%token TOKEN_IF "keyword 'if'"
-%token TOKEN_ELSE "keyword 'else'"
-%token TOKEN_WHILE "keyword 'while'"
-%token TOKEN_DO "keyword 'do'"
-%token TOKEN_FOR "keyword 'for'"
-%token TOKEN_RETURN "keyword 'return'"
-%token TOKEN_BREAK "keyword 'break'"
-%token TOKEN_REFERENCE "keyword 'var'"
-%token TOKEN_NULL "keyword 'null'"
-%token TOKEN_THIS "keyword 'this'"
-%token TOKEN_CONTINUE "keyword 'continue'"
-%token TOKEN_ROBOT "keyword 'robot'"
+%token TOKEN_OBJECT "keyword object"
+%token TOKEN_VAR_REAL "keyword real"
+%token TOKEN_VAR_INT "keyword integer"
+%token TOKEN_VOID "keyword void"
+%token TOKEN_FUNCTION "keyword function"
+%token TOKEN_IF "keyword if"
+%token TOKEN_ELSE "keyword else"
+%token TOKEN_WHILE "keyword while"
+%token TOKEN_DO "keyword do"
+%token TOKEN_FOR "keyword for"
+%token TOKEN_RETURN "keyword return"
+%token TOKEN_BREAK "keyword break"
+%token TOKEN_REFERENCE "keyword var"
+%token TOKEN_NULL "keyword null"
+%token TOKEN_THIS "keyword this"
+%token TOKEN_CONTINUE "keyword continue"
+%token TOKEN_ROBOT "keyword robot"
 %token TOKEN_RET_TARGET "function 'get_target'"
 %token<op> TOKEN_OPTION "robot setings"
 %token<of> TOKEN_OBJECT_FEATURE "function asking about state"
@@ -468,7 +468,7 @@ end:	TOKEN_END { program->robots.back()->core->depth--; program->robots.back()->
 block_of_instructions: begin commands_and_empty end 
 		{ 
 			$$.push_back(new InstructionBegin()); 
-			$$.insert($$.begin(), $2.begin(), $2.end());
+			$$.insert($$.end(), $2.begin(), $2.end());
 			$$.push_back(new InstructionEndBlock()); 
 		}
 		;
@@ -534,6 +534,8 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		{
 			$$.clear();
 			$$.push_back(new InstructionLoadLocal(program->robots.back()->core->nested_function->return_var));
+			Instructions ins = get_load_type(*program->robots.back()->core->nested_function->return_var->type_of_variable);
+			$$.insert($$.end(), ins.begin(), ins.end());
 			$$.insert($$.end(),$2.ins.begin(), $2.ins.end());
 			
 			/* Check for types compatibility */
@@ -565,8 +567,6 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			}
 			else
 			{
-				Instructions ins = get_load_type(*program->robots.back()->core->nested_function->return_var->type_of_variable);
-				$$.insert($$.end(), ins.begin(), ins.end());
 				ins = get_store_type($2.output.back());
 				$$.insert($$.end(), ins.begin(), ins.end());
 			}
@@ -693,22 +693,26 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 				}
 				else
 				{
+					size_t last = 0;
 					for (size_t i= 0; i< f->parameters.size(); i++)
 					{
 						if (f->parameters[i].val_type == PARAMETER_BY_VALUE)
 						{
 							$$.ins.push_back(new InstructionCreate(f->parameters[i].node));
+							$$.ins.push_back(new InstructionLoadLocal(f->parameters[i].node));
 							Instructions ins = get_load_type(*f->parameters[i].node->type_of_variable);
 							$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 						}
-						while ((!$3.ins.empty())&&($3.ins.back()!= NULL))
+						while ( last < $3.ins.size()) //od i-teho az po i+1 NULL
 						{
-							$$.ins.push_back($3.ins.back());
-							$3.ins.pop_back();
-							continue;
+							if ($3.ins[last] == NULL)
+							{
+								last++;
+								break;
+							}
+							$$.ins.push_back($3.ins[last]);
+							last++;
 						}
-						if (!$3.ins.empty())
-							$3.ins.pop_back();
 						//we finished loading parameter value
 						if (($3.output[i].type == TypeReal)
 								&&(f->parameters[i].node->type_of_variable->type == TypeInteger))

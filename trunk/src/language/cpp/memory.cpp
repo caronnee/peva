@@ -75,6 +75,8 @@ Variable * Memory::assign_temp(Create_type * t)
 	{
 		TEST(temp[i]->ID << " ")
 	}*/
+	if (t->type == TypeVoid)
+		return dev_null();
 	Variable * v = find_free(t, 0); // 0 ako temprarily, TODO dat to nodes
 	temp.push_back(v);
 /*	TEST("AFTER:")
@@ -107,7 +109,7 @@ void Memory::set_free(Variable * v)
 
 void Memory::free_tmp()
 {
-	if (temp.size()>0)
+	if (temp.size() > 0)
 	{
 		set_free(temp.back());	
 		temp.pop_back();
@@ -168,6 +170,28 @@ Variable * Memory::find_free(Create_type * t, size_t ID)
 	return ret_v;
 }
 
+void Memory::freeParameters ( Function * f )
+{
+	int iter = f->parameters.size()-1;
+	while(!assigned.empty() && (iter >= 0))
+	{
+		if (f->parameters[iter].val_type == PARAMETER_BY_REFERENCE)
+		{
+			f->parameters[iter].node->var.pop_back();
+			iter++;
+		}
+		Memory_record r = assigned.back();
+		assigned.pop_back();
+		set_free(r.variable); 
+		r.node->var.pop_back();
+		if (r.node == f->parameters[iter].node)
+			iter--;
+	}
+	if (iter >= 0 )
+	{
+		TEST("Error, not enough paramaters loaded ")
+	}
+}
 void Memory::free(size_t depth)
 {
 	while((!assigned.empty())&&(assigned.back().depth >= depth))
