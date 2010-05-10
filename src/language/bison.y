@@ -38,7 +38,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_NULL "keyword 'null'"
 %token TOKEN_THIS "keyword 'this'"
 %token TOKEN_CONTINUE "keyword 'continue'"
-%token TOKEN_ROBOT "\bkeyword 'robot'"
+%token TOKEN_ROBOT "keyword 'robot'"
 %token TOKEN_RET_TARGET "function 'get_target'"
 %token<op> TOKEN_OPTION "robot setings"
 %token<of> TOKEN_OBJECT_FEATURE "function asking about state"

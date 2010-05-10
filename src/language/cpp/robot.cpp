@@ -273,11 +273,8 @@ void Robot::save_to_xml()
 
 void Robot::execute()
 {
-	bool done;
-	while(core->PC < instructions.size())
-	{
-		action(done);
-	}
+	bool done = false;
+	while(action(done));
 }
 bool Robot::action(bool & conditions)
 {
@@ -299,7 +296,7 @@ bool Robot::action(bool & conditions)
 	}
 	return core->body->alive();
 }
-Robots::Robots() { }
+Robots::Robots() :points(0,0){ }
 
 Skin * Robots::addSkin(std::string name)
 {
@@ -581,7 +578,7 @@ Robot::~Robot()
 	{
 		if (instructions[i] == NULL)
 		{
-			TEST("Eeeeek!") 
+			TEST("Null instruction in instructions!");
 			continue;
 		}
 		delete instructions[i];

@@ -141,6 +141,7 @@ void Memory::fill(Variable * &v,
 		types_to_assign.push(t->nested_vars[i].type);
 		variables_to_assign.push(tmp);
 		v->array.elements.push_back(tmp);
+		v->array.range = t->nested_vars.size();
 	}
 	TEST("end of block")
 }

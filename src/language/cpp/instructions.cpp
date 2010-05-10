@@ -361,7 +361,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 	TEST("Calling function: ") 
 	c->nested_functions.push_back(c->nested_function);
 	c->nested_function = function;
-	for( size_t i = 0; i< function->parameters.size(); i++)
+/*	for( size_t i = 0; i< function->parameters.size(); i++)
 	{
 		Variable * v;
 		//ak pridane ako referencia, skopiruj pointre
@@ -380,7 +380,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 			function->parameters[i].node->var.back()->copyValue(vvv);
 			c->values.pop_back();
 		}
-	}
+	}*/ //variales already set
 	Variable * v;
 	Node * ret = function->return_var;
 	v = c->memory.assign_temp(ret->type_of_variable); //aby zmizlo po ukonceni
@@ -541,18 +541,12 @@ InstructionReturn::InstructionReturn(int depth_)
 }
 int InstructionReturn::execute(Core * c)
 {
-	TEST("RETURN: vo values je aktualne: " << c->values.size()) //zmaz prebentivne navratove hodnoty a parametre
-	for (size_t i =0; i< c->values.size(); i++)
-	{
-		TEST(" " << c->values[i]->ID)
-	}
 	TEST("Return from depth" << c->depth)
 	c->depth -= depth-1;
-	TEST("to depth" << c->depth <<"...")
 	c->PC = c->nested_function->end - 3; //za restore, end_block a ++ u PC
-	Variable * v;
-	v = c->nested_function->return_var->var.back();
-	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
+//	Variable * v;
+//	v = c->nested_function->return_var->var.back();
+//	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
 //	c->values.push_back(v);
 	TEST("OK")
 	return 0;

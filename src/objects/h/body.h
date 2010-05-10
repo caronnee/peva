@@ -43,7 +43,9 @@ struct SecondSection
 
 struct GamePoints
 {
-
+	enum check{
+		DO_NOT_CHECK = 49
+	};
 	int total_[2];
 	FirstSection firstSection;
 	SecondSection secondSection;
