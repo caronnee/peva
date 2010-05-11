@@ -159,8 +159,11 @@ robot:  define_bot TOKEN_BEGIN options targets global_variables declare_function
 		program->robots.back()->add_function($10); 
 	}
 	;
-targets: /* default target */
-	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT { program->robots.back()->core->body->addKilled(@2,$3,$4);}
+targets: /* default target */  
+	|targets TOKEN_KILLED TOKEN_OPER_REL TOKEN_UINT 
+	{ 
+		program->robots.back()->getBody()->addKilled(@2,$3,$4);
+	}
 	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR 
 	{ 
 		Body * b = program->robots.back()->getBody();
@@ -173,7 +176,10 @@ targets: /* default target */
 		b->addVisitSeq($4);
 	}
 	;
-place: TOKEN_UINT { $$ = new TargetVisit($1); }
+place: TOKEN_UINT 
+	{ 
+		$$ = new TargetVisit($1); 
+	}
 	|TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA
 	{
 		$$ = new TargetVisit(-1);
@@ -220,161 +226,177 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 		program->robots.back()->setSkin(program->addSkin($3)); 
 	}
 	;
-global_variables:	/*	ziadne parametre	*/ { $$.clear(); }
-		| global_variables local_variables { $$=$1; $$.insert($$.end(),$2.begin(), $2.end());}
-		;
-type:	  simple_type { $$ = $1; program->robots.back()->declare_type();}
-	| complex_type { $$ = $1;program->robots.back()->declare_type();}
+global_variables:	/*	ziadne parametre	*/ 
+	{
+		$$.clear();
+	}
+	| global_variables local_variables 
+	{ 
+		$$=$1; 
+		$$.insert($$.end(), $2.begin(), $2.end());
+	}
+	;
+type: simple_type 
+	{ 
+		$$ = $1; 
+		program->robots.back()->declare_type();
+	}
+	| complex_type 
+	{ 
+		$$ = $1;
+		program->robots.back()->declare_type();
+	}
 	; 
 local_variables: type names TOKEN_SEMICOLON 
-		{
-			$$ = $2;	
-			program->robots.back()->leave_type();
-		}
-		;
+	{
+		$$ = $2;	
+		program->robots.back()->leave_type();
+	}
+	;
 simple_type: TOKEN_VAR_REAL { $$ = program->robots.back()->find_type(TypeReal); } 
-		|TOKEN_VAR_INT { $$ = program->robots.back()->find_type(TypeInteger); }
-		|TOKEN_LOCATION{ $$ = program->robots.back()->find_type(TypeLocation);}
-		|TOKEN_OBJECT{ $$ = program->robots.back()->find_type(TypeObject); }
-		;
+	|TOKEN_VAR_INT { $$ = program->robots.back()->find_type(TypeInteger); }
+	|TOKEN_LOCATION{ $$ = program->robots.back()->find_type(TypeLocation);}
+	|TOKEN_OBJECT{ $$ = program->robots.back()->find_type(TypeObject); }
+	;
 complex_type: simple_type ranges 
-		{ 
-			Create_type * t = $1; 
-			while(!$2.empty())
-			{
-				t = program->robots.back()->find_array_type($2.back(),t);
-				$2.pop_back();
-			}
-			Create_type y= *t;
-			while (y.data_type!=NULL)
-			{
-				y = *y.data_type;
-			}
-			$$ = t;
+	{ 
+		Create_type * t = $1; 
+		while(!$2.empty())
+		{
+			t = program->robots.back()->find_array_type($2.back(),t);
+			$2.pop_back();
 		}
-		;
+		Create_type y= *t;
+		while (y.data_type!=NULL)
+		{
+			y = *y.data_type;
+		}
+		$$ = t;
+	}
+	;
 
 ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
-		|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
-		;
+	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($3); }
+	;
 
 names_:	TOKEN_IDENTIFIER
-		{ 
-			$$.clear();
-			Node *n = program->robots.back()->add($1);
-			$$.push_back(new InstructionCreate(n)); 
-		} 
-		|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
-		{ 
-			$$.clear();
-			Node *n = program->robots.back()->add($1);
-			$$.push_back(new InstructionCreate(n)); 
+	{ 
+		$$.clear();
+		Node *n = program->robots.back()->add($1);
+		$$.push_back(new InstructionCreate(n)); 
+	} 
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
+	{ 
+		$$.clear();
+		Node *n = program->robots.back()->add($1);
+		$$.push_back(new InstructionCreate(n)); 
 
-			$$.push_back(new InstructionLoadLocal(n));
-			Instructions ins = get_load_type(*program->robots.back()->active_type.top());
-			$$.insert($$.end(), ins.begin(), ins.end());
-			$$.insert($$.end(), $3.ins.begin(), $3.ins.end()); //naloadovana espresna
-			Instruction * in = possible_conversion(program->robots.back()->active_type.top()->type,$3.output.back().type);
-			if (in)
-			{
-				$$.push_back(in);
-				$3.output.back() = *program->robots.back()->active_type.top();
-			}
-			ins = get_store_type( $3.output.back() );
-			$$.insert($$.end(),ins.begin(), ins.end()); 
-		} 
-		|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
-		{ 
-			$$.clear();
-			Node *n = program->robots.back()->add($1);
-			$$.push_back(new InstructionCreate(n)); 
-			$$.push_back(new InstructionLoadLocal(n)); 
-			for (int i = 1; i< $4.level; i++)
-				$$.push_back(new InstructionDuplicate());
+		$$.push_back(new InstructionLoadLocal(n));
+		Instructions ins = get_load_type(*program->robots.back()->active_type.top());
+		$$.insert($$.end(), ins.begin(), ins.end());
+		$$.insert($$.end(), $3.ins.begin(), $3.ins.end()); //naloadovana espresna
+		Instruction * in = possible_conversion(program->robots.back()->active_type.top()->type,$3.output.back().type);
+		if (in)
+		{
+			$$.push_back(in);
+			$3.output.back() = *program->robots.back()->active_type.top();
+		}
+		ins = get_store_type( $3.output.back() );
+		$$.insert($$.end(),ins.begin(), ins.end()); 
+	} 
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
+	{ 
+		$$.clear();
+		Node *n = program->robots.back()->add($1);
+		$$.push_back(new InstructionCreate(n)); 
+		$$.push_back(new InstructionLoadLocal(n)); 
+		for (int i = 1; i< $4.level; i++)
+			$$.push_back(new InstructionDuplicate());
 
-			$$.insert($$.end(), $4.ins.begin(), $4.ins.end());
-		} 
-		;
+		$$.insert($$.end(), $4.ins.begin(), $4.ins.end());
+	} 
+	;
 names: names_ { $$ = $1; }
 	|names names_ { $$ = $1; $$.insert($$.end(), $2.begin(), $2.end()); }
-		;
+	;
 begin_type: TOKEN_BEGIN { program->robots.back()->declare_next(@1); }
-		;
+	;
 end_type: TOKEN_END { program->robots.back()->leave_type(); }
-		;
-values:		expression { 
-			$$.ins.clear();
-			$$.ins.push_back(new InstructionLoad(0));
-			$$.ins.push_back(new InstructionLoad());
-			$$.ins.insert($$.ins.end(),$1.ins.begin(), $1.ins.end());
-			Instruction * in = possible_conversion( program->robots.back()->active_type.top()->type,$1.output.back().type);
-			if (in)
-			{
-				$$.ins.push_back(in);
-				$1.output.back() = *program->robots.back()->active_type.top();
-			}
-			if ($1.output.back()!=*program->robots.back()->active_type.top())
-			{
-				program->robots.back()->error(@1, Robot::ErrorConversionImpossible);
-			}
-			else
-			{
-				//loadneme to, kde sme sa dostali
-				Instructions ins = get_load_type(*program->robots.back()->active_type.top());
-				$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
-				//a storneme
-				ins = get_store_type($1.output.back());
-				$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
-				$$.level = 1;
-			}
-		} 
-		| values TOKEN_COMMA expression 
+	;
+values:	expression 
+	{ 
+		$$.ins.clear();
+		$$.ins.push_back(new InstructionLoad(0));
+		$$.ins.push_back(new InstructionLoad());
+		$$.ins.insert($$.ins.end(),$1.ins.begin(), $1.ins.end());
+		Instruction * in = possible_conversion( program->robots.back()->active_type.top()->type,$1.output.back().type);
+		if (in)
 		{
-			$$.ins.clear();
-			$$.ins = $1.ins;
-			$$.ins.push_back(new InstructionLoad($1.level));
-			$$.ins.push_back(new InstructionLoad());
-			$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
-			Instruction * in = possible_conversion(program->robots.back()->active_type.top()->type,$3.output.back().type );
-			if (in)
-			{
-				$$.ins.push_back(in);
-				$3.output.back() = *program->robots.back()->active_type.top();
-			}
-			Instructions ins = get_store_type( $3.output.back());
-			$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
-			if ($3.temp.back())
-			{
-				$$.ins.push_back(new InstructionRemoveTemp());
-			}	
-			$$.level = $1.level + 1;
+			$$.ins.push_back(in);
+			$1.output.back() = *program->robots.back()->active_type.top();
 		}
-		| begin_type values end_type
-		{ 
-			$$.ins.clear();	
-			$$.ins.push_back(new InstructionLoad(0)); 
-			$$.ins.push_back(new InstructionLoad());
-			for (int i = 1; i < $2.level; i++)
-			{
-				$$.ins.push_back(new InstructionDuplicate());
-			}
-			$$.ins.insert($$.ins.end(), $2.ins.begin(), $2.ins.end());
+		if ($1.output.back()!=*program->robots.back()->active_type.top())
+		{
+			program->robots.back()->error(@1, Robot::ErrorConversionImpossible);
+		}
+		else
+		{
+			//loadneme to, kde sme sa dostali
+			Instructions ins = get_load_type(*program->robots.back()->active_type.top());
+			$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
+			//a storneme
+			ins = get_store_type($1.output.back());
+			$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 			$$.level = 1;
 		}
-		| values TOKEN_COMMA begin_type values end_type
+	} 
+	| values TOKEN_COMMA expression 
+	{
+		$$.ins.clear();
+		$$.ins = $1.ins;
+		$$.ins.push_back(new InstructionLoad($1.level));
+		$$.ins.push_back(new InstructionLoad());
+		$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
+		Instruction * in = possible_conversion(program->robots.back()->active_type.top()->type,$3.output.back().type );
+		if (in)
 		{
-			$$.ins.clear();
-			$$ = $1; 
-			$$.ins.push_back(new InstructionLoad($1.level));
-			$$.ins.push_back(new InstructionLoad());
-			for (int i = 1; i < $4.level; i++)
-			{
-				$$.ins.push_back(new InstructionDuplicate());
-			}
-			$$.ins.insert($$.ins.end(),$4.ins.begin(), $4.ins.end());
-			$$.level++;
-		} // TODO addOputpuTokenNotDefined?
-		;
+			$$.ins.push_back(in);
+			$3.output.back() = *program->robots.back()->active_type.top();
+		}
+		Instructions ins = get_store_type( $3.output.back());
+		$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
+		if ($3.temp.back())
+		{
+			$$.ins.push_back(new InstructionRemoveTemp());
+		}	
+		$$.level = $1.level + 1;
+	}
+	| begin_type values end_type
+	{ 
+		$$.ins.clear();	
+		$$.ins.push_back(new InstructionLoad(0)); 
+		$$.ins.push_back(new InstructionLoad());
+		for (int i = 1; i < $2.level; i++)
+		{
+			$$.ins.push_back(new InstructionDuplicate());
+		}
+		$$.ins.insert($$.ins.end(), $2.ins.begin(), $2.ins.end());
+		$$.level = 1;
+	}
+	| values TOKEN_COMMA begin_type values end_type
+	{
+		$$.ins.clear();
+		$$ = $1; 
+		$$.ins.push_back(new InstructionLoad($1.level));
+		$$.ins.push_back(new InstructionLoad());
+		for (int i = 1; i < $4.level; i++)
+		{
+			$$.ins.push_back(new InstructionDuplicate());
+		}
+		$$.ins.insert($$.ins.end(),$4.ins.begin(), $4.ins.end());
+		$$.level++;
+	} // TODO addOputpuTokenNotDefined?
+	;
 declare_functions: /*	ziadne deklarovane funkcie	*/ 
 			{ 
 				std::vector<Parameter_entry> em;
@@ -899,7 +921,7 @@ variable: 	TOKEN_THIS
 		}
 		| TOKEN_NULL
 		{
-			$$ = ident_load(@1,program->robots.back(), "null");
+			$$ = ident_load(@1,program->robots.back(), "NULL");
 			$$.temp.push_back(false);
 		}
 		|call_fce { $$ = $1; //TODO ak je to funkci a s navratovou hodnotou, kontrola vsetkych vetvi, ci obsahuju return; main je procedura:)

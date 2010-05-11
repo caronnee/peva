@@ -1309,7 +1309,10 @@ int InstructionShootLocation::execute(Core *c)
 	TEST("Shooting at location...[" << c->values.back()->array.elements[0]->integerValue << "," <<
 					c->values.back()->array.elements[1]->integerValue << "]" ) //TODO upravit pamat aby som nemusela ifovat
 	if (c->values.back()->array.elements.size() < 2)
+	{
+		TEST("Error! loaded variable does not have enough elements")
 		return -1;
+	}
 	float f = (float)
 	(c->values.back()->array.elements[1]->integerValue - c->body->get_pos().y)
 		/
@@ -1446,8 +1449,8 @@ int InstructionIsMissille::execute(Core *c)
 	TEST("OK")
 	return 0;
 }
-InstructionIsMissille::~InstructionIsMissille()
-{}
+InstructionIsMissille::~InstructionIsMissille() {}
+
 InstructionLocate::InstructionLocate()
 {
 	name_ = "InstructionLocate";
@@ -1457,9 +1460,11 @@ int InstructionLocate::execute(Core *c) //TODO location
 {
 	TEST("Getting location of object ...")
 	Object * o = c->getObjectFromStack();
-	Position p( -1, -1 ); //FIXME neaka inteligetnejsia hodnota? Last seen nefunguje, lebo nemam ako povedat, ze to je neplatna hodnota
-	if (c->body->seer.find(o))
+	Position p; //FIXME neaka inteligetnejsia hodnota? Last seen nefunguje, lebo nemam ako povedat, ze to je neplatna hodnota
+	if ((c->body == o)||(c->body->seer.find(o)))
 		p = o->get_pos();
+	else
+		p = c->memory.dummy()->get_pos();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation))); 
 	c->values.back()->array.elements[0]->integerValue = p.x;
 	c->values.back()->array.elements[1]->integerValue = p.y;

@@ -21,6 +21,9 @@ struct Memory_record
 class Memory
 {
 private:
+	/* object representig null or bad access, like dev_null */
+	Dummy * dummyObject;
+
 	/* position where to begint o check free space */
 	size_t position;
 
@@ -52,11 +55,14 @@ public:
 	/* class constructor */
 	Memory( int size = 1 );
 
+	/* returns dummyobject that nothing knows or does */
+	Object * dummy()const;
+	
 	/* frees parameters of function f */
 	void freeParameters ( Function * f );
 
 	/* defailt variable */
-	Variable * dev_null();
+	Variable * dev_null()const;
 
 	/* returns variable added in depth d */
 	void assign(Node *n ,size_t depth);

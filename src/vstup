@@ -7,19 +7,11 @@ ROBOT qqq
 	MHEALTH	= 20	
 	Memory = 1000
 
-	KILLED < 5
-	VISIT_SEQ( START[qqq], START[qqq], [13,18])
-	VISIT( [100,200])
-
-	location[3][6] a;
-	location function f(location[6] x)
-	{
-		location pi = {1,2};
-		return pi;
-	}
 	main() // komentar
 	{
-		shoot(f(a[1]));
+		location l;
+		l = locate(this);
+		shoot(l);
 		return;
 	}
 }

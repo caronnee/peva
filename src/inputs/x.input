@@ -2,10 +2,11 @@ ROBOT qqq
 {
 	HEALTH = 100
 	ATTACK = 7			
-	SEE = 56
+	ANGLE = 56
         DEFENSE	= 22		
 	MATTACK = 50	
 	MHEALTH	= 20	
+	memory = 1000
 
 	KILLED == 5
 
@@ -14,11 +15,11 @@ ROBOT qqq
 	main()
 	{
 //		turn(45);
-		step(1);
+		move(1);
 		while (true)
 		{
 			turn(45);
-			step(1);
+			move(100);
 		}
 	}
 }
