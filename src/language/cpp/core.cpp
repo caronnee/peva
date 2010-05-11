@@ -20,15 +20,15 @@ void Core::save(int j)
 
 void Core::restore() 
 {
-	if ( nested_functions.empty() )
+	if ( nested_functions.empty() ) //FIXME nikdy nemoze nastat
 	{
-		nested_function =NULL;
+		nested_functions.push_back(nested_function);
 		return;
 	}
 	memory.freeParameters(nested_function);
 	nested_function->return_var->var.pop_back(); //zmazanie navratovej hodnoty
 	nested_functions.pop_back();
-	nested_function = nested_functions.back();
+	nested_function = nested_functions.empty()? NULL:nested_functions.back();
 
 	PC = PCs.back();
 	PCs.pop_back();
