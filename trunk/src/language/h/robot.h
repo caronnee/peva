@@ -50,6 +50,8 @@ public:
 		WarningConversionToInt,
 		WarningRedefinedOption,
 		WarningTargetNotFound,
+		WarningMalformedInteger,
+		WarningMalformedReal,
 		ErrorVariableNotDefined,
 		ErrorToMuchInitializers,
 		ErrorTypeNotRecognized,

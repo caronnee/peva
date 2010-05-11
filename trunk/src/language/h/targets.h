@@ -5,6 +5,8 @@
 #include "../../add-ons/h/position.h"
 #include "../../objects/h/objects.h"
 
+#define TARGET_SPACE 15
+
 /* Abstract class for creating constraints for victory */
 class Target
 {

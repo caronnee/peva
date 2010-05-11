@@ -196,6 +196,7 @@ void ImageSkinWork::switch_state(States index, Actions action)
 	count = 0;
 	states[index] = action;
 	states[StateDefault] = ActionDefault;
+	rect.x = 0;
 	if (index<state.top())
 	{
 		//zarad to pod aktual

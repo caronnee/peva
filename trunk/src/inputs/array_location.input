@@ -2,7 +2,7 @@ ROBOT qqq
 {
 	HEALTH = 100
 	ATTACK = 33			
-	SEE = 56
+	ANGLE = 56
         DEFENSE	= 22		
 	MATTACK = 50	
 	MHEALTH	= 20	
@@ -37,7 +37,7 @@ ROBOT qqq
 	{
 		for (integer i =0; i< 10; i++)
 		{
-			step(i);
+			move(i);
 		}
 	}
 	main() // komentar

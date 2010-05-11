@@ -3,9 +3,9 @@ ROBOT qqq
 	main() // komentar
 	{
 		Location l = getTarget();
-		step(l.x/10);
+		move(l.x/10);
 		turnR();
-		step(l.y/10);
+		move(l.y/10);
 	}
 }
 

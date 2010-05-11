@@ -10,6 +10,6 @@ ROBOT qqq
 	{
 		Location l = getTarget();
 		turn(direction);
-		step(100);
+		move(100);
 	}
 }

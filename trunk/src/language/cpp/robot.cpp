@@ -336,7 +336,6 @@ void Robot::init(int vis)
 	consolidate();
 	getBody()->init(points, vis);
 	core->memory.realloc(points.firstSection.sections[FirstSection::SectionMemorySize]);	
-	variables();
 }
 
 void Robots::finalize(int vis)
@@ -348,6 +347,7 @@ void Robots::finalize(int vis)
 			robots[i]->setSkin(addSkin("dragon"));
 		}
 		robots[i]->init(vis);
+		robots[i]->variables();
 	}
 }
 void Robots::resolve()

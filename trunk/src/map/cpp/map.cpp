@@ -404,7 +404,11 @@ void Map::update(Object * o, Graphic * g)
 {
 	SDL_Rect r = getBoundingRect(o,g);
 	r.x-=boundaries.x;
+	if (r.x < 0)
+		r.x = 0;
 	r.y-=boundaries.y;
+	if (r.y < 0)
+		r.y = 0;
 	update(r,true, g);
 }
 

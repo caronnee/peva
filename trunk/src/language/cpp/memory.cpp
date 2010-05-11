@@ -5,14 +5,20 @@
 
 Memory::Memory( int size )
 {
-	position = 0;
+	dummyObject = new Dummy();
+	position = 1;
 	srand(time(NULL));
 	memory.clear();
 	for(int i =0; i< size; i++)
 		memory.push_back(new Variable(i));
 }
 
-Variable * Memory::dev_null()
+Object * Memory::dummy()const
+{
+	return dummyObject;
+}
+
+Variable * Memory::dev_null()const
 {
 	return memory[0];
 }
@@ -28,7 +34,10 @@ void Memory::realloc(size_t size_) //realokuje len cast, co nie je uz zadana
 		memory.pop_back();
 	}
 	while (memory.size() < size)
+	{
 		memory.push_back(new Variable());
+		memory.back()->objectValue = dummyObject;
+	}
 }
 
 
@@ -43,7 +52,7 @@ Variable * Memory::next_id(size_t ID)
 			return memory[i];
 		}
 	}
-	for(size_t i =0; i<position; i++) 
+	for(size_t i =1; i<position; i++) 
 	{
 		if (memory[i]->owner == (size_t)-1)
 		{
@@ -209,12 +218,13 @@ Variable * Memory::random()
 }
 Memory::~Memory()
 {
+	delete dummyObject;
 	for (size_t i =0; i< memory.size(); i++)
 	{
 		delete memory.back();
 		memory.pop_back();
 	}
-	position = 0;
+	position = 1;
 	temp.clear();
 	assigned.clear();
 }
