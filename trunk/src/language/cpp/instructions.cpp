@@ -34,7 +34,7 @@ Instruction::~Instruction()
 InstructionCreate::InstructionCreate(Node * n)
 {
 	node = n;
-	name_ = "InstructionCreate";
+	name_ = "Instruction Create";
 	group = IGroup_create;
 }
 
@@ -68,13 +68,13 @@ InstructionCreate::~InstructionCreate()
 InstructionLoadLocal::InstructionLoadLocal()
 {
 	node = NULL;
-	name_ = "InstructionLoadLocal";
+	name_ = "Instruction LoadLocal";
 	group = IGroup_load;
 }
 InstructionLoadLocal::InstructionLoadLocal(Node * n)
 {
 	node = n;
-	name_ = "InstructionLoadLocal";
+	name_ = "Instruction LoadLocal";
 	group = IGroup_load;
 }
 int InstructionLoadLocal::execute(Core * c)
@@ -102,13 +102,13 @@ InstructionLoadLocal::~InstructionLoadLocal()
 InstructionLoadGlobal::InstructionLoadGlobal()
 {
 	node = NULL;
-	name_ = "InstructionLoadGlobal";
+	name_ = "Instruction LoadGlobal";
 	group = IGroup_load;	
 }
 InstructionLoadGlobal::InstructionLoadGlobal(Node * n)
 {
 	node = n;
-	name_ = "InstructionLoadGlobal";
+	name_ = "Instruction LoadGlobal";
 	group = IGroup_load;
 }
 int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy tam nedam viac ako jednu premennu, pretoze sa nezanorujem,osetrene  bisone
@@ -137,7 +137,7 @@ InstructionLoadGlobal::~InstructionLoadGlobal()
 InstructionLoad::InstructionLoad()
 {
 	constant = false;
-	name_ = "InstructionLoad";
+	name_ = "Instruction Load";
 	var = NULL;
 	group = IGroup_load;
 }
@@ -147,12 +147,12 @@ InstructionLoad::InstructionLoad(int i)
 	var = new Variable("const");
 	type = TypeInteger;
 	var->integerValue = i;
-	name_ = "InstructionLoad";
+	name_ = "Instruction Load";
 	group = IGroup_load;
 }
 InstructionLoad::InstructionLoad(float f)
 {
-	name_ = "InstructionLoad";
+	name_ = "Instruction Load";
 	group = IGroup_load;
 	constant = true;
 	type = TypeReal;
@@ -215,7 +215,7 @@ InstructionLoad::~InstructionLoad()
 }
 InstructionConversionToInt::InstructionConversionToInt()
 {
-	name_ = "InstructionConversionToInt";
+	name_ = "Instruction ConversionToInt";
 	group = IGroup_conversion;
 }
 int InstructionConversionToInt::execute(Core * c)
@@ -236,7 +236,7 @@ InstructionConversionToInt::~InstructionConversionToInt()
 
 InstructionConversionToReal::InstructionConversionToReal()
 {
-	name_ = "InstructionConversionToReal";
+	name_ = "Instruction ConversionToReal";
 	group = IGroup_conversion;
 }
 
@@ -258,7 +258,7 @@ InstructionConversionToReal::~InstructionConversionToReal()
 
 InstructionDuplicate::InstructionDuplicate()
 {
-	name_ = "InstructionDuplicate";
+	name_ = "Instruction Duplicate";
 	group = IGroup_duplicate;
 }
 
@@ -278,7 +278,7 @@ InstructionDuplicate::~InstructionDuplicate()
 InstructionStoreRef::InstructionStoreRef(Node * n)
 {
 	node = n;
-	name_ = "InstructionStoreReference";
+	name_ = "Instruction StoreReference";
 	group = IGroup_store;
 }
 int InstructionStoreRef::execute(Core * c)
@@ -291,7 +291,7 @@ InstructionStoreRef::~InstructionStoreRef() { }
 
 InstructionStoreInteger::InstructionStoreInteger()
 {
-	name_ = "InstructionStoreInteger";
+	name_ = "Instruction StoreInteger";
 	group = IGroup_store;
 }
 
@@ -310,7 +310,7 @@ InstructionStoreInteger::~InstructionStoreInteger()
 
 InstructionStoreReal::InstructionStoreReal()
 {
-	name_ = "InstructionStoreReal";
+	name_ = "Instruction StoreReal";
 	group = IGroup_store;
 }
 int InstructionStoreReal::execute(Core * c)
@@ -327,7 +327,7 @@ InstructionStoreReal::~InstructionStoreReal()
 
 InstructionStoreObject::InstructionStoreObject()
 {
-	name_ = "InstructionStoreObject";
+	name_ = "Instruction StoreObject";
 	group = IGroup_store;
 }
 int InstructionStoreObject::execute(Core * c)
@@ -403,7 +403,7 @@ Call::~Call()
 }
 InstructionPop::InstructionPop()
 {
-	name_ = "InstructionPop";
+	name_ = "Instruction Pop";
 	group = IGroup_pop;
 }
 int InstructionPop::execute(Core *s)
@@ -420,7 +420,7 @@ InstructionPop::~InstructionPop()
 InstructionMustJump::InstructionMustJump(int steps)
 {
 	shift = steps;
-	name_ = "InstructionMustJump";
+	name_ = "Instruction MustJump";
 	group = IGroup_jump;
 }
 int InstructionMustJump::execute(Core * c)
@@ -447,7 +447,7 @@ InstructionJump::InstructionJump(int yes_, int no_)
 {
 	yes = yes_;
 	no = no_;
-	name_ = "InstructionJump";
+	name_ = "Instruction Jump";
 	group = IGroup_jump;
 }
 int InstructionJump::execute(Core * c)
@@ -482,7 +482,7 @@ InstructionJump::~InstructionJump()
 InstructionBreak::InstructionBreak(int depth_)
 {
 	depth = depth_;
-	name_ = "InstructionBreak";
+	name_ = "Instruction Break";
 	group = IGroup_break;
 }
 int InstructionBreak::execute(Core * c)
@@ -514,7 +514,7 @@ InstructionBreak::~InstructionBreak()
 InstructionContinue::InstructionContinue(int depth_)
 {
 	depth = depth_-1; //TODO v bisone
-	name_ = "InstructionContinue";
+	name_ = "Instruction Continue";
 	group = IGroup_continue;
 }
 int InstructionContinue::execute(Core * c)
@@ -536,7 +536,7 @@ InstructionReturn::InstructionReturn(int depth_)
 {
 	TEST("hlbka: " << depth_)
 	depth = depth_;
-	name_ = "InstructionReturn";
+	name_ = "Instruction Return";
 	group = IGroup_return;
 }
 int InstructionReturn::execute(Core * c)
@@ -557,7 +557,7 @@ InstructionReturn::~InstructionReturn()
 }
 InstructionRestore::InstructionRestore()
 {
-	name_ = "InstructionRestore";
+	name_ = "Instruction Restore";
 	group = IGroup_restore;
 }
 
@@ -574,7 +574,7 @@ InstructionRestore::~InstructionRestore()
 }
 InstructionRemoveTemp::InstructionRemoveTemp()
 {
-	name_ = "InstructionRemoveTemp";
+	name_ = "Instruction RemoveTemp";
 	group = IGroup_removetemp;
 }
 int InstructionRemoveTemp::execute(Core * c)
@@ -592,7 +592,7 @@ InstructionRemoveTemp::~InstructionRemoveTemp()
 
 InstructionPlusPlusInteger::InstructionPlusPlusInteger()
 {
-	name_ = "InstructionPlusPlusInteger";
+	name_ = "Instruction PlusPlusInteger";
 	group = IGroup_plusplus;
 }
 int InstructionPlusPlusInteger::execute(Core * c)
@@ -609,7 +609,7 @@ InstructionPlusPlusInteger::~InstructionPlusPlusInteger()
 }
 InstructionPlusPlusReal::InstructionPlusPlusReal()
 {
-	name_ = "InstructionPlusPlusReal";
+	name_ = "Instruction PlusPlusReal";
 	group = IGroup_plus;
 }
 int InstructionPlusPlusReal::execute(Core * c)
@@ -625,7 +625,7 @@ InstructionPlusPlusReal::~InstructionPlusPlusReal()
 }
 InstructionMinusMinusInteger::InstructionMinusMinusInteger()
 {
-	name_ = "InstructionMinusMinusInteger";
+	name_ = "Instruction MinusMinusInteger";
 	group = IGroup_minusminus;
 }
 int InstructionMinusMinusInteger::execute(Core * c)
@@ -641,7 +641,7 @@ InstructionMinusMinusInteger::~InstructionMinusMinusInteger()
 }
 InstructionMinusMinusReal::InstructionMinusMinusReal()
 {
-	name_ = "InstructionMinusMinusReal";
+	name_ = "Instruction MinusMinusReal";
 	group = IGroup_minus;
 }
 int InstructionMinusMinusReal::execute(Core * c)
@@ -657,7 +657,7 @@ InstructionMinusMinusReal::~InstructionMinusMinusReal()
 }
 InstructionPlusInteger::InstructionPlusInteger()
 {
-	name_ = "InstructionPlusInteger";
+	name_ = "Instruction PlusInteger";
 	group = IGroup_plus;
 	TEST(name_)
 }
@@ -675,7 +675,7 @@ InstructionPlusInteger::~InstructionPlusInteger()
 {}
 InstructionPlusReal::InstructionPlusReal()
 {
-	name_ = "InstructionPlusReal";
+	name_ = "Instruction PlusReal";
 	group = IGroup_plus;
 	TEST(name_)
 }
@@ -693,7 +693,7 @@ InstructionPlusReal::~InstructionPlusReal()
 {}
 InstructionMinusInteger::InstructionMinusInteger()
 {
-	name_ = "InstructionMinusInteger";
+	name_ = "Instruction MinusInteger";
 	group = IGroup_minus;
 }
 int InstructionMinusInteger::execute(Core * c)
@@ -710,7 +710,7 @@ InstructionMinusInteger::~InstructionMinusInteger()
 {}
 InstructionMinusReal::InstructionMinusReal()
 {
-	name_ = "InstructionMinusReal";
+	name_ = "Instruction MinusReal";
 	group = IGroup_minus;
 }
 int InstructionMinusReal::execute(Core * c)
@@ -727,7 +727,7 @@ InstructionMinusReal::~InstructionMinusReal()
 {}
 InstructionMultiplyInteger::InstructionMultiplyInteger()
 {
-	name_ = "InstructionMultiplyInteger";
+	name_ = "Instruction MultiplyInteger";
 	group = IGroup_multiply;
 }
 int InstructionMultiplyInteger::execute(Core * c)
@@ -748,7 +748,7 @@ InstructionMultiplyInteger::~InstructionMultiplyInteger()
 {}
 InstructionMultiplyReal::InstructionMultiplyReal()
 {
-	name_ = "InstructionMultiplyReal";
+	name_ = "Instruction MultiplyReal";
 	group = IGroup_multiply;
 }
 int InstructionMultiplyReal::execute(Core * c)
@@ -765,7 +765,7 @@ InstructionMultiplyReal::~InstructionMultiplyReal()
 {}
 InstructionDivideInteger::InstructionDivideInteger()
 {
-	name_ = "InstructionDivideInteger";
+	name_ = "Instruction DivideInteger";
 	group = IGroup_divide;
 }
 int InstructionDivideInteger::execute(Core * c)
@@ -782,7 +782,7 @@ InstructionDivideInteger::~InstructionDivideInteger()
 {}
 InstructionDivideReal::InstructionDivideReal()
 {
-	name_ = "InstructionDivideReal";
+	name_ = "Instruction DivideReal";
 	group = IGroup_divide;
 }
 int InstructionDivideReal::execute(Core * c)
@@ -799,7 +799,7 @@ InstructionDivideReal::~InstructionDivideReal()
 {}
 InstructionModulo::InstructionModulo()
 {
-	name_ = "InstructionModulo";
+	name_ = "Instruction Modulo";
 	group = IGroup_modulo;
 }
 int InstructionModulo::execute(Core * c)
@@ -816,7 +816,7 @@ InstructionModulo::~InstructionModulo()
 {}
 InstructionBinaryAnd::InstructionBinaryAnd()
 {
-	name_ = "InstructionBinaryAnd";
+	name_ = "Instruction BinaryAnd";
 	group = IGroup_binaryand;
 }
 int InstructionBinaryAnd::execute(Core * c)
@@ -833,7 +833,7 @@ InstructionBinaryAnd::~InstructionBinaryAnd()
 {}
 InstructionAnd::InstructionAnd()
 {
-	name_ = "InstructionAnd";
+	name_ = "Instruction And";
 	group = IGroup_and;
 }
 int InstructionAnd::execute(Core *c)
@@ -855,7 +855,7 @@ InstructionAnd::~InstructionAnd()
 {}
 InstructionBinaryOr::InstructionBinaryOr()
 {
-	name_ = "InstructionBinaryOr";
+	name_ = "Instruction BinaryOr";
 	group = IGroup_binaryor;
 }
 int InstructionBinaryOr::execute(Core * c)
@@ -872,7 +872,7 @@ InstructionBinaryOr::~InstructionBinaryOr()
 {}
 InstructionOr::InstructionOr()
 {
-	name_ = "InstructionOr";
+	name_ = "Instruction Or";
 	group = IGroup_or;
 }
 int InstructionOr::execute(Core *c) //TODO skratene vyhodnocovanie??
@@ -893,7 +893,7 @@ InstructionOr::~InstructionOr()
 {}
 InstructionBinaryNot::InstructionBinaryNot()
 {
-	name_ = "InstructionBinaryNot";
+	name_ = "Instruction BinaryNot";
 	group = IGroup_binarynot;
 }
 int InstructionBinaryNot::execute(Core *c)
@@ -909,7 +909,7 @@ InstructionBinaryNot::~InstructionBinaryNot()
 {}
 InstructionNot::InstructionNot()
 {
-	name_ = "InstructionNot";
+	name_ = "Instruction Not";
 	group = IGroup_not;
 }
 int InstructionNot::execute(Core *c) //POZOR, pri unarnych operaciach sa neda pouzivat int!
@@ -929,7 +929,7 @@ InstructionNot::~InstructionNot()
 //----------------RELATION------------------------------------------------------------------------------------
 InstructionGtInteger::InstructionGtInteger()
 {
-	name_ = "InstructionGtInteger";
+	name_ = "Instruction GtInteger";
 	group = IGroup_gt;
 }
 int InstructionGtInteger::execute(Core * c)
@@ -946,7 +946,7 @@ InstructionGtInteger::~InstructionGtInteger()
 {}
 InstructionGtReal::InstructionGtReal()
 {
-	name_ = "InstructionGtReal";
+	name_ = "Instruction GtReal";
 	group = IGroup_gt;
 }
 int InstructionGtReal::execute(Core * c)
@@ -963,7 +963,7 @@ InstructionGtReal::~InstructionGtReal()
 {}
 InstructionGeInteger::InstructionGeInteger()
 {
-	name_ = "InstructionGeInteger";
+	name_ = "Instruction GeInteger";
 	group = IGroup_ge;
 }
 int InstructionGeInteger::execute(Core *c)
@@ -980,7 +980,7 @@ InstructionGeInteger::~InstructionGeInteger()
 {}
 InstructionGeReal::InstructionGeReal()
 {
-	name_ = "InstructionGeReal";
+	name_ = "Instruction GeReal";
 	group = IGroup_ge;
 }
 int InstructionGeReal::execute(Core * c)
@@ -997,7 +997,7 @@ InstructionGeReal::~InstructionGeReal()
 {}
 InstructionEqualInteger::InstructionEqualInteger()
 {
-	name_ = "InstructionEqualInteger";
+	name_ = "Instruction EqualInteger";
 	group = IGroup_equal;
 }
 int InstructionEqualInteger::execute(Core * c) //pre location nech si napisu funkciu bujde o nastejno:)
@@ -1014,7 +1014,7 @@ InstructionEqualInteger::~InstructionEqualInteger()
 {}
 InstructionEqualReal::InstructionEqualReal()
 {
-	name_ = "InstructionEqualReal";
+	name_ = "Instruction EqualReal";
 	group = IGroup_equal;
 }
 int InstructionEqualReal::execute(Core *c)
@@ -1031,7 +1031,7 @@ InstructionEqualReal::~InstructionEqualReal()
 {}
 InstructionEqualObject::InstructionEqualObject()
 {
-	name_ = "InstructionEqualObject";
+	name_ = "Instruction EqualObject";
 	group = IGroup_equal;
 }
 int InstructionEqualObject::execute(Core * c)
@@ -1050,7 +1050,7 @@ InstructionEqualObject::~InstructionEqualObject()
 
 InstructionNotEqualInteger::InstructionNotEqualInteger()
 {
-	name_ = "InstructionNotEqualInteger";
+	name_ = "Instruction NotEqualInteger";
 	group = IGroup_notequal;
 }
 int InstructionNotEqualInteger::execute(Core * c)
@@ -1067,7 +1067,7 @@ InstructionNotEqualInteger::~InstructionNotEqualInteger()
 {}
 InstructionNotEqualReal::InstructionNotEqualReal()
 {
-	name_ = "InstructionNotEqualReal";
+	name_ = "Instruction NotEqualReal";
 	group = IGroup_notequal;
 }
 int InstructionNotEqualReal::execute(Core * c)
@@ -1083,7 +1083,7 @@ InstructionNotEqualReal::~InstructionNotEqualReal()
 {}
 InstructionNotEqualObject::InstructionNotEqualObject()
 {
-	name_ = "InstructionNotEqualObject";
+	name_ = "Instruction NotEqualObject";
 	group = IGroup_notequal;
 }
 int InstructionNotEqualObject::execute(Core * c)
@@ -1100,7 +1100,7 @@ InstructionNotEqualObject::~InstructionNotEqualObject()
 {}
 InstructionLtInteger::InstructionLtInteger()
 {
-	name_ = "InstructionLtInteger";
+	name_ = "Instruction LtInteger";
 	group = IGroup_lt;
 }
 int InstructionLtInteger::execute(Core * c)
@@ -1117,7 +1117,7 @@ InstructionLtInteger::~InstructionLtInteger()
 {}
 InstructionLtReal::InstructionLtReal()
 {
-	name_ = "InstructionLtReal";
+	name_ = "Instruction LtReal";
 	group = IGroup_lt;
 }
 int InstructionLtReal::execute(Core * c)
@@ -1134,7 +1134,7 @@ InstructionLtReal::~InstructionLtReal()
 {}
 InstructionLeInteger::InstructionLeInteger()
 {
-	name_ = "InstructionLeInteger";
+	name_ = "Instruction LeInteger";
 	group = IGroup_le;
 }
 int InstructionLeInteger::execute(Core * c)
@@ -1151,7 +1151,7 @@ InstructionLeInteger::~InstructionLeInteger()
 {}
 InstructionLeReal::InstructionLeReal()
 {
-	name_ = "InstructionLeReal";
+	name_ = "Instruction LeReal";
 	group = IGroup_le;
 }
 int InstructionLeReal::execute(Core * c)
@@ -1169,7 +1169,7 @@ InstructionLeReal::~InstructionLeReal()
 InstructionBegin::InstructionBegin(size_t depth_)
 {
 	depth = depth_;
-	name_ = "InstructionBegin";
+	name_ = "Instruction Begin";
 	group = IGroup_begin;
 }
 int InstructionBegin::execute(Core * c)
@@ -1184,7 +1184,7 @@ InstructionBegin::~InstructionBegin()
 InstructionEndBlock::InstructionEndBlock(size_t endl)
 {
 	end_loop = endl;
-	name_ = "InstructionEndBlock";
+	name_ = "Instruction EndBlock";
 	group = IGroup_endblock;
 }
 int InstructionEndBlock::execute(Core * c)
@@ -1201,7 +1201,7 @@ InstructionEndBlock::~InstructionEndBlock()
 InstructionSee::InstructionSee() //uzol ktory sa ma naplnit viditelnymi objektami
 {
 	node = NULL;
-	name_ = "InstructionSee";
+	name_ = "Instruction See";
 	group = IGroup_see;
 }
 int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
@@ -1219,7 +1219,7 @@ InstructionSee::~InstructionSee()
 InstructionEye::InstructionEye() //uzol ktory sa ma naplnit viditelnymi objektami
 {
 	node = NULL;
-	name_ = "InstructionEye";
+	name_ = "Instruction Eye";
 	group = IGroup_eye;
 }
 int InstructionEye::execute(Core *c) 
@@ -1238,7 +1238,7 @@ InstructionEye::~InstructionEye()
 }
 InstructionFetchState::InstructionFetchState()
 {
-	name_ = "InstructionFetchState";
+	name_ = "Instruction FetchState";
 	group = IGroup_step;
 }
 int InstructionFetchState::execute(Core *c) //prave jeden parameter
@@ -1254,7 +1254,7 @@ InstructionFetchState::~InstructionFetchState()
 
 InstructionStep::InstructionStep()
 {
-	name_ = "InstructionStep";
+	name_ = "Instruction Step";
 	group = IGroup_step;
 }
 int InstructionStep::execute(Core *c) //prave jeden parameter
@@ -1270,7 +1270,7 @@ InstructionStep::~InstructionStep()
 {}
 InstructionStepDefault::InstructionStepDefault()
 {
-	name_ = "InstructionStepDefault";
+	name_ = "Instruction StepDefault";
 	group = IGroup_step;
 }
 int InstructionStepDefault::execute(Core *c) //prave jeden parameter
@@ -1285,7 +1285,7 @@ InstructionStepDefault::~InstructionStepDefault()
 {}
 InstructionWait::InstructionWait()
 {
-	name_ = "InstructionWait";
+	name_ = "Instruction Wait";
 	group = IGroup_wait;
 }
 int InstructionWait::execute(Core *c) //prave jeden parameter
@@ -1301,7 +1301,7 @@ InstructionWait::~InstructionWait() {}
 
 InstructionShootLocation::InstructionShootLocation()
 {
-	name_ = "InstructionShootLocation";
+	name_ = "Instruction ShootLocation";
 	group = IGroup_shoot;
 }
 int InstructionShootLocation::execute(Core *c)
@@ -1328,7 +1328,7 @@ InstructionShootLocation::~InstructionShootLocation() {}
 
 InstructionShootAngle::InstructionShootAngle()
 {
-	name_ = "InstructionShootAngle";
+	name_ = "Instruction ShootAngle";
 	group = IGroup_shoot;
 }
 int InstructionShootAngle::execute(Core *c)
@@ -1344,7 +1344,7 @@ InstructionShootAngle::~InstructionShootAngle() {}
 
 InstructionTurn::InstructionTurn()
 {
-	name_ = "InstructionTurn";
+	name_ = "Instruction Turn";
 	group = IGroup_turn;
 }
 int InstructionTurn::execute(Core *c)
@@ -1360,7 +1360,7 @@ InstructionTurn::~InstructionTurn() {}
 
 InstructionTurnR::InstructionTurnR()
 {
-	name_ = "InstructionTurnR";
+	name_ = "Instruction TurnR";
 	group = IGroup_turn;
 }
 int InstructionTurnR::execute(Core *c)
@@ -1375,7 +1375,7 @@ InstructionTurnR::~InstructionTurnR() {}
 
 InstructionTurnL::InstructionTurnL()
 {
-	name_ = "InstructionTurnL";
+	name_ = "Instruction TurnL";
 	group = IGroup_turn;
 }
 int InstructionTurnL::execute(Core *c)
@@ -1389,7 +1389,7 @@ InstructionTurnL::~InstructionTurnL() {}
 
 InstructionHit::InstructionHit()
 {
-	name_ = "InstructionHit";
+	name_ = "Instruction Hit";
 	group = IGroup_hit;
 }
 int InstructionHit::execute(Core *c)
@@ -1405,7 +1405,7 @@ InstructionHit::~InstructionHit() {}
 
 InstructionIsPlayer::InstructionIsPlayer()
 {
-	name_ = "InstructionIsPlayer";
+	name_ = "Instruction IsPlayer";
 	group = IGroup_check;
 }
 int InstructionIsPlayer::execute(Core *c)
@@ -1421,7 +1421,7 @@ InstructionIsPlayer::~InstructionIsPlayer() {}
 
 InstructionIsWall::InstructionIsWall()
 {
-	name_ = "InstructionIsWall";
+	name_ = "Instruction IsWall";
 	group = IGroup_check;
 }
 int InstructionIsWall::execute(Core *c)
@@ -1437,7 +1437,7 @@ InstructionIsWall::~InstructionIsWall()
 {}
 InstructionIsMissille::InstructionIsMissille()
 {
-	name_ = "InstructionIsMissille";
+	name_ = "Instruction IsMissille";
 	group = IGroup_check;
 }
 int InstructionIsMissille::execute(Core *c)
@@ -1453,7 +1453,7 @@ InstructionIsMissille::~InstructionIsMissille() {}
 
 InstructionLocate::InstructionLocate()
 {
-	name_ = "InstructionLocate";
+	name_ = "Instruction Locate";
 	group = IGroup_locate;
 }
 int InstructionLocate::execute(Core *c) //TODO location
@@ -1475,7 +1475,7 @@ InstructionLocate::~InstructionLocate() {}
 
 InstructionIsMoving::InstructionIsMoving()
 {
-	name_ = "InstructionIsMoving";
+	name_ = "Instruction IsMoving";
 	group = IGroup_check;
 }
 int InstructionIsMoving::execute(Core *c)
@@ -1495,7 +1495,7 @@ InstructionIsMoving::~InstructionIsMoving() {}
 
 InstructionTarget::InstructionTarget()
 {
-	name_ = "InstructionTarget";
+	name_ = "Instruction Target";
 	group = IGroup_check;
 }
 int InstructionTarget::execute(Core *c)
@@ -1520,7 +1520,7 @@ InstructionTarget::~InstructionTarget() {}
 	
 InstructionSaveVariable::InstructionSaveVariable()
 {
-	name_ = "Save variable";
+	name_ = "Instruction Save variable";
 	group = IGroup_store;
 }
 int InstructionSaveVariable::execute(Core * c)
@@ -1538,7 +1538,7 @@ InstructionSaveVariable::~InstructionSaveVariable() {}
 
 InstructionLoadVariable::InstructionLoadVariable()
 {
-	name_ = "Load variable";
+	name_ = "Instruction Load variable";
 	group = IGroup_load;
 }
 int InstructionLoadVariable::execute(Core * c)
@@ -1548,3 +1548,29 @@ int InstructionLoadVariable::execute(Core * c)
 	return 0;
 }
 InstructionLoadVariable::~InstructionLoadVariable() { }
+
+InstructionDirection::InstructionDirection() 
+{ 
+	node = NULL;
+	name_ = "Instruction Direction";
+}
+int InstructionDirection::execute(Core * c) 
+{
+	Variable * v = c->getVariableFromStack();
+	if (v->array.elements.size()<2)
+		return -1;
+	int x = v->array.elements[0]->integerValue;
+	int y = v->array.elements[1]->integerValue;
+	float f = (float)
+	(y- c->body->get_pos().y)
+		/
+	(float)(x- c->body->get_pos().x);
+	int res = toDegree(atan(f));
+
+	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
+	v->integerValue = res;
+	c->values.push_back(v);
+	return 0;
+}
+
+InstructionDirection::~InstructionDirection() { }

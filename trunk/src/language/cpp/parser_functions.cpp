@@ -276,6 +276,20 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	}
 	switch(feat)
 	{
+		case FeatureDirection:
+			if (e.output.size()!=0)
+			{
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+				break;
+			}
+			if (e.output.back().type != TypeInteger)
+			{
+				r->error(line, Robot::ErrorConversionImpossible);
+				break;
+			}
+			ee.output.push_back(*r->find_type(TypeInteger));
+			ee.ins.push_back(new InstructionDirection());
+			break;
 		case FeatureTarget:
 			if ((e.output.size() > 0))
 			{
@@ -338,13 +352,25 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.output.push_back(*r->find_type(TypeObject));
 			break;
 		case FeatureTurn:
-			if (e.output.size() == 1)
+			if (e.output.size() != 1)
 			{
-				//TODO conversion int
-				ee.ins.push_back( new InstructionTurn());
-			}
-			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
+				break;
+			}
+			if (e.output.back().type == TypeReal)
+			{
+				ee.ins.push_back( new InstructionConversionToInt());
+				if (e.temp.back())
+					ee.ins.push_back( new InstructionRemoveTemp());
+				e.temp.back() = true;
+				e.output.back() = *r->find_type(TypeInteger);
+			}
+			if (e.output.back().type != TypeInteger)
+			{
+				r->error(line, Robot::ErrorConversionImpossible);
+				break;
+			}
+			ee.ins.push_back( new InstructionTurn());
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnR:

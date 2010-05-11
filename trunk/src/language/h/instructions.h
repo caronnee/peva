@@ -654,4 +654,12 @@ class InstructionLoadVariable : public Instruction
 		virtual int execute(Core * c);
 		virtual ~InstructionLoadVariable();
 };
+
+class InstructionDirection : public Instruction
+{
+	public:
+		InstructionDirection();
+		virtual int execute(Core * c);
+		virtual ~InstructionDirection();
+};
 #endif
