@@ -9,7 +9,7 @@ ROBOT qqq
 	main()
 	{
 		Location l = getTarget();
-		turn(direction);
+		turn(direction(l));
 		move(100);
 	}
 }
