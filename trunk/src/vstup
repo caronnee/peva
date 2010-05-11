@@ -20,5 +20,6 @@ ROBOT qqq
 	main() // komentar
 	{
 		shoot(f(a[1]));
+		return;
 	}
 }

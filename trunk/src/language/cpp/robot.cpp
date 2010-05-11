@@ -225,6 +225,8 @@ void Robot::add_function( Instructions ins)
 	}
 	if(core->nested_function->name != "main") //TODO mohla by vracat tiez nejaku hodnotu a vracat sa na 'begin'
 		instructions.push_back(new InstructionRestore()); //pre procedury
+	else
+		core->nested_functions.push_back(core->nested_function);
 }
 void Robot::enter(std::string name, std::vector<Parameter_entry> params, Create_type * return_type) //CONTINUE, add parameters_list
 {
