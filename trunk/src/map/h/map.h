@@ -55,6 +55,8 @@ struct Place
 
 struct Map
 {
+	Object * watch; 
+
 	/* relative time, accordig to it it is map drawed */
 	size_t ticks;
 

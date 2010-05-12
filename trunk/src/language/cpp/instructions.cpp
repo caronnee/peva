@@ -1561,10 +1561,8 @@ int InstructionDirection::execute(Core * c)
 		return -1;
 	int x = v->array.elements[0]->integerValue;
 	int y = v->array.elements[1]->integerValue;
-	float f = (float)
-	(y- c->body->get_pos().y)
-		/
-	(float)(x- c->body->get_pos().x);
+	float f = (float) (y- c->body->get_pos().y)
+		/ (float)(x- c->body->get_pos().x);
 	int res = toDegree(atan(f));
 
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
