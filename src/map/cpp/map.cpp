@@ -30,28 +30,28 @@ void Map::updateScreen( Graphic *g )
 		maxBox.x = boxesInRow+1;
 	if (maxBox.y > boxesInColumn)
 		maxBox.y = boxesInColumn+1; //kvoli floatom
-	for(box.x = bounds.x/BOX_WIDTH; box.x < maxBox.x; box.x++ )
+
+	for(box.x = bounds.x/BOX_WIDTH-1; box.x < maxBox.x; box.x++ )
 	{
-		for(box.y = bounds.y/BOX_HEIGHT; box.y < maxBox.y; box.y++ )
+		if (box.x <0)
+			continue;
+		for(box.y = bounds.y/BOX_HEIGHT-1; box.y < maxBox.y; box.y++ )
 		{
+			if (box.y < 0)
+				continue;
 			std::list<Object *>::iterator iter = map[box.x][box.y].objects[processing].begin();
 			while( iter != map[box.x][box.y].objects[processing].end() )
 			{
-				if (!(*iter)->isMoving() && !(*iter)->changed())
+				bool b = (*iter)->isMoving();
+				bool c = (*iter)->changed();
+				if (!( b || c ))
 				{
 					iter++;
 					continue;
 				}
 				update(*iter,g);
+				watch = *iter;
 				iter++;
-				/*SDL_Rect rects;
-				rects.x = o->get_pos().x - boundaries.x;
-				rects.y = o->get_pos().y - boundaries.y;
-				SDL_Rect r = o->get_rect(); //FOXME mohla by som overlapovat, ale nechce sa mne
-				SDL_BlitSurface(o->show(),&r,g->screen, &rects);
-				SDL_UpdateRect(g->screen,rects.x,rects.y,rects.w,rects.h);
-				o = map[box.x][box.y].objects.read();
-				*/
 			}
 		}
 	}
@@ -232,6 +232,7 @@ Map::Map(std::string skinName)
 
 void Map::commonInit(std::string skinName)
 {
+	watch = NULL;
 	processing = 0;
 	ticks = 30;
 	time = 1;
