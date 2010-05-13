@@ -38,7 +38,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 	clip.y = 0;
 	clip.w = m->boundaries.width;
 	clip.h = m->boundaries.height;
-	SDL_SetClipRect(w->g->screen,& clip);
+	SDL_SetClipRect(w->g->screen, &clip);
 	m->redraw( w->g );
 	SDL_Flip(w->g->screen);
 }
@@ -456,6 +456,32 @@ void SetSections::process()
 				down = true;
 				switch(key)
 				{
+					case SDLK_0: case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: case SDLK_5:
+					case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
+					{
+						if (gp->total_[iter] < 0)
+						{
+							gp->total_[iter] = key - SDLK_0;
+							SDL_FreeSurface(sections[iter*3 + 2] );
+							sections[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+							draw();
+							break;
+						}
+						gp->total_[iter] *=10;
+						gp->total_[iter] += key - SDLK_0;
+						SDL_FreeSurface(sections[iter*3 + 2] );
+						sections[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+						draw();
+						break;
+					}
+					case SDLK_BACKSPACE:
+					{
+						gp->total_[iter] /=10;
+						SDL_FreeSurface(sections[iter*3 + 2] );
+						sections[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+						draw();
+						break;
+					}
 					case SDLK_q:
 					case SDLK_ESCAPE:
 					case SDLK_RETURN:
@@ -484,7 +510,7 @@ void SetSections::process()
 						std::string s;
 						if ( gp->total_[iter] <= MININUM_SECTION)
 						{
-							gp->total_[iter] = MININUM_SECTION -1;
+							gp->total_[iter] = -1;
 							s = "Do not check";
 						}
 						else
@@ -499,10 +525,12 @@ void SetSections::process()
 					}
 					case SDLK_UP:
 					{
-						gp->total_[iter]++;
+						if (gp->total_[iter] < MININUM_SECTION)
+							gp->total_[iter] = MININUM_SECTION;
+						else
+							gp->total_[iter]++;
 						SDL_FreeSurface(sections[iter*3+2]);
 						sections[iter*3+2] = w->g->render( deconvert<int>(gp->total_[iter] ));
-
 						draw();
 						break;
 					}

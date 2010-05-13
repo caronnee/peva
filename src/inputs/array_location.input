@@ -12,13 +12,6 @@ ROBOT qqq
 	VISIT( [100,200])
 
 	location[3][6] a;
-	//location l = {100,200};
-/*	location function X(integer x)
-	{
-		location k = {x,x};
-		shoot(k);
-		return k;
-	}*/
 	void function f(location[6] x)
 	{
 		see();

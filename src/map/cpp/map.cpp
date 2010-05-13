@@ -9,7 +9,6 @@
 
 namespace bf = boost::filesystem;
 
-//TODO externe si pamatat steny pre bezpecne odmonotvanie
 Box::Box()
 {
 	bounds.x = bounds.y = bounds.height = bounds.width = 0;
@@ -591,7 +590,7 @@ void Map::remove(Object * o)
 	map[pos.x][pos.y].objects[1-processing].remove(o);//nevieme, kde to je FIXME
 }
 
-void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak sa o to ma postarat object
+void Map::resolveBorders(Object *o ) 
 {
 	//TODO vobec by nmalo nastavat
 	if (o->movement.position_in_map.x <0)
@@ -599,7 +598,6 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 		TEST("Pozicia objektu je mensia ako 0");
 		//	o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = -1; //odrazene
-		//TODO doplnit na checkovanie kolizii kvli lamaniu ciary
 	}
 	else if (o->movement.position_in_map.x > resolution.x-(int)o->width())
 	{
@@ -623,6 +621,7 @@ void Map::resolveBorders(Object *o ) //TODO zmazat, budu tam solid steny, ak tak
 		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
 	}
 }
+
 /* Only for moving object */
 void Map::resolveMove(Object * o)
 {
