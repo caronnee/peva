@@ -46,7 +46,6 @@ protected:
 	/* static directory where are images kept */
 	std::string directory;
 
-public:
 	/* number of files a skin have to load */
 	size_t size;
 
@@ -55,6 +54,7 @@ public:
 
 	/* size of image that should be visible */
 	Position imageSize;
+public:
 
 	/* how manu pixels we must add t get to he next state of images */
 	Position shift;
@@ -62,18 +62,14 @@ public:
 	/* how many pixels in the begining is 'empty' */
 	Position begin_in_picture; //kolko toho ma urezat zo zaciatku
 
+	/* common method for loading images */
+	void create(std::string * loadImages, std::string name, int sizeToLoad);
 public:
 	/* constructor */
 	Skin();
 
 	/* name of set for memory optimalization, no need to be private */
 	std::string nameOfSet;
-
-	/* constructor for skin */
-//	Skin(std::string name, Skin::Type t);
-
-	/* common method for loading images */
-	void create(std::string * loadImages, std::string name, int sizeToLoad);
 
 	/* returns image corresponding to index */
 	SDL_Surface * get_surface(size_t index);
@@ -111,8 +107,8 @@ class BotSkin : public Skin
 public:
 	BotSkin(std::string name);
 };
-/* class for handling the skin */
 
+/* class for handling the skin */
 class ImageSkinWork
 {
 public:
@@ -124,7 +120,7 @@ public:
 		NumberOfStates
 	};
 
-public:
+//public:
 	/* miliseconds grom the last blit */
 	Uint32 lastUpdate;
 	size_t count;
@@ -135,6 +131,10 @@ public:
 	/* constructor */
 	ImageSkinWork(Skin * s);
 
+	/* return skin that is in use */
+	Skin * getSkin()const;
+
+	/* returns part of the rectangle that should collide */
 	Rectangle getCollissionRectagle() const;
 
 	/* return whether temporary action is still running */
@@ -153,13 +153,13 @@ public:
 	void removeState();
 
 	/* returns width of picture that should be visible */
-	size_t width();
+//	size_t width();
 
 	/* returns height of picture that should be visible */
-	size_t height();
+//	size_t height();
 
 	/* returns the size of visible rectangle in picture */
-	Position get_size();
+//	Position get_size();
 
 	/* changes the direction of object , shift removeswring image direction at beginning */
 	float turn(int degree, int shift = SHIFT);
@@ -168,20 +168,20 @@ public:
 	Position head();
 
 	/* return beginning of the picture */
-	Position get_begin()const;
+//	Position get_begin()const;
 
 	/* skin used */
 	Skin * s;
 public:
 
-	std::string name();
+//	std::string name();
 	Actions states[NumberOfStates];
 	//size_t row; netreba, zostane stale stejna
 	SDL_Rect rect; //kde prave som
 };
 class ImageSkinWallWorker: public ImageSkinWork
 {
-	public:
+public:
 	virtual void switch_state(States s, Actions a);
 };
 #endif

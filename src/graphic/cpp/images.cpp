@@ -173,7 +173,7 @@ SDL_Surface * ImageSkinWork::get_image()
 }
 SDL_Rect ImageSkinWork::get_rect()
 {
-	Uint32 t  = SDL_GetTicks();
+	Uint32 t = SDL_GetTicks();
 	if (t - lastUpdate > TICKS)
 		{
 			rect.x +=  s->get_shift().x;
@@ -221,26 +221,30 @@ void ImageSkinWork::removeState()
 	if(state.empty())
 		state.push(StateDefault);
 }
-size_t ImageSkinWork::width() //bude sa pytat kvoli kolizii
+Skin * ImageSkinWork::getSkin()const
+{
+	return s;
+}
+/*size_t ImageSkinWork::width() //bude sa pytat kvoli kolizii
 {
 	return s->get_size().x;
 }
 size_t ImageSkinWork::height() //bude sa pytat kvoli kolizii
 {
 	return s->get_size().y;
-}
+}*/
 Rectangle ImageSkinWork::getCollissionRectagle() const
 {
 	return imageCut;
 }
-Position ImageSkinWork::get_begin() const
+/*Position ImageSkinWork::get_begin() const
 {
 	return s->get_begin();
 }
 Position ImageSkinWork::get_size()
 {
 	return s->get_size();
-}
+}*/
 
 float ImageSkinWork::turn(int degree, int shift)//nastavi uhol na degree, ak je nula, tak na lezato
 {
@@ -291,7 +295,7 @@ Position ImageSkinWork::head()
 	}
 	return p;
 }
-std::string ImageSkinWork::name()
+/*std::string ImageSkinWork::name()
 {
 	return s->nameOfSet;
-}
+}*/

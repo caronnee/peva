@@ -82,12 +82,12 @@ std::string Object::info() const
 //TODO zmenit na float, aby aj pre male steps to fungovalo
 //TODO da sa aj krajsie?
 
-void Object::move(int fps)
+void Object::move(size_t fps)
 {
 	movement.old_pos = movement.position_in_map;
 
-	movement.realX+=movement.direction.x/fps;
-	movement.realY+=movement.direction.y/fps;
+	movement.realX+=(float)movement.direction.x/fps;
+	movement.realY+=(float)movement.direction.y/fps;
 	TEST(fps);
 
 	Position passed(movement.realX,movement.realY);
@@ -126,7 +126,7 @@ SDL_Surface * Object::show()
 }
 Position Object::get_size()
 {
-	return skinWork->get_size();
+	return skinWork->getSkin()->get_size();
 }
 Position Object::get_pos() const
 {
@@ -138,11 +138,11 @@ Position Object::get_old_pos() const
 }
 size_t Object::width()
 {
-	return skinWork->width();
+	return get_size().x;
 }
 size_t Object::height()
 {
-	return skinWork->height();
+	return get_size().y;
 }
 int Object::absoluteTurn(int angle, size_t size)
 {

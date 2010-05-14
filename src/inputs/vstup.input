@@ -4,12 +4,13 @@ ROBOT qqq
 	ATTACK = 33			
 
 	MHEALTH = 10
-	VISIT( [100,200])
+	VISIT( [300,200])
 
 	main()
 	{
 		Location l = getTarget();
 		turn(direction(l));
+		shoot(0);
 		move(100);
 	}
 }
