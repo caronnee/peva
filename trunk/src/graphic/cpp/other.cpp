@@ -39,7 +39,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 	clip.w = m->boundaries.width;
 	clip.h = m->boundaries.height;
 	SDL_SetClipRect(w->g->screen, &clip);
-	m->redraw( w->g );
+	m->drawAll( w->g );
 	SDL_Flip(w->g->screen);
 }
 
