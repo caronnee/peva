@@ -277,12 +277,12 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	switch(feat)
 	{
 		case FeatureDirection:
-			if (e.output.size()!=0)
+			if (e.output.size() != 1)
 			{
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 				break;
 			}
-			if (e.output.back().type != TypeInteger)
+			if (e.output.back().type != TypeLocation)
 			{
 				r->error(line, Robot::ErrorConversionImpossible);
 				break;

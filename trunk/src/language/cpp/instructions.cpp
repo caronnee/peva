@@ -1559,11 +1559,16 @@ int InstructionDirection::execute(Core * c)
 	Variable * v = c->getVariableFromStack();
 	if (v->array.elements.size()<2)
 		return -1;
-	int x = v->array.elements[0]->integerValue;
-	int y = v->array.elements[1]->integerValue;
-	float f = (float) (y- c->body->get_pos().y)
-		/ (float)(x- c->body->get_pos().x);
-	int res = toDegree(atan(f));
+	Position p( v->array.elements[0]->integerValue, v->array.elements[1]->integerValue );
+	p.substractVector(c->body->get_pos());
+	p.x -= c->body->collisionSize().x/2;
+	p.y -= c->body->collisionSize().y/2;
+	Position t(c->body->movement.direction);
+	float f;
+	int dotProd = sqrt(p.x * p.x + p.y*p.y)*sqrt(t.x*t.x+t.y*t.y);
+	f = (p.x*t.x + t.y*p.y) / (float)dotProd;
+	int res = toDegree(acos(f));
+	res = 360 - res; //pretoze sa otazam v mere divnom
 
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
 	v->integerValue = res;

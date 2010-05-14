@@ -61,7 +61,7 @@ void GamePoints::check()
 	{
 		if (secondSection.sections[i]<0)
 			continue;
-		todo-=firstSection.sections[i];
+		todo -= secondSection.sections[i];
 	}
 	if (total_[1] < MININUM_SECTION)
 		todo = 0;
@@ -74,7 +74,7 @@ void GamePoints::check()
 			todo++;
 		}
 		iter++;
-		iter%=SecondSection::NumberOfSections;
+		iter %= SecondSection::NumberOfSections;
 	}
 	while (todo > 0)
 	{
@@ -112,7 +112,7 @@ void Body::init(GamePoints g, int v)
 	if(!hasSkin())
 		throw "Robot body is not skined!";
 	if (!ms)
-		ms = new MissilleSkin(skinWork->name());
+		ms = new MissilleSkin(skinWork->getSkin()->nameOfSet);
 	for (int i =0; i< g.secondSection.sections[SecondSection::SectionMissilles]; i++ )
 		addAmmo(new Missille(ms,&ammo));
 	defense = g.secondSection.sections[SecondSection::SectionDefense];

@@ -135,7 +135,7 @@ public:
 	void setPosition(Position p, int angle = 0);
 
 	/* moves in the desired direction, not mentioning obstacles */
-	virtual void move(int fps);
+	virtual void move(size_t fps);
 
 	/* returns direction of robot in degrees */
 	int getAngle()const;
@@ -179,9 +179,8 @@ public:
 	/*resolves item behaviour if it is hit */
 	virtual void hit(Object * o);
 
-	virtual void hitted(Object * o, Position direction, int attack);
 	/* checks if ther is a collision */
-
+	virtual void hitted(Object * o, Position direction, int attack);
 
 	/* returns size of image that should be visible */
 	Position get_size();
