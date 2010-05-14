@@ -1561,15 +1561,19 @@ int InstructionDirection::execute(Core * c)
 		return -1;
 	Position p( v->array.elements[0]->integerValue, v->array.elements[1]->integerValue );
 	p.substractVector(c->body->get_pos());
+
 	p.x -= c->body->getSkin()->get_shift().x/2;
 	p.y -= c->body->getSkin()->get_shift().y/2;
+	
 	Position t(c->body->movement.direction);
 	float f;
+
 	int dotProd = sqrt(p.x * p.x + p.y*p.y)*sqrt(t.x*t.x+t.y*t.y);
+
 	f = (p.x*t.x + t.y*p.y) / (float)dotProd;
 	int res = toDegree(acos(f));
-	int nas = t.y<0 ? -1:1;
-	if ((p.x*t.y +p.y*t.x)*nas < 0) //ak na druhej strane zorneho pola
+	int nas = f < 0 ? -1:1;
+	if ( p.y*t.x - p.x*t.y < 0) //ak na druhej strane zorneho pola
 		res = 360 - res; //pretoze sa otazam v mere divnom
 
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
