@@ -100,6 +100,10 @@ Body::Body() : Object(NULL,NULL)
 	toKill = NULL;
 	map = NULL;
 }
+Skin * Body::getSkin()const
+{
+	return skinWork->getSkin();
+}
 void Body::init(GamePoints g, int v)
 {
 	points = g;

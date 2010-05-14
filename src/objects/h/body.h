@@ -77,6 +77,9 @@ public:
 	/* class handling visibility issue */
 	Seer seer;
 
+	/* returns used skin */
+	Skin * getSkin()const;
+
 	/* place targt that need to be fullfilled */
 	std::vector<Target *> targets;
 

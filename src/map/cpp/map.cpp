@@ -680,10 +680,7 @@ void Map::update(SDL_Rect newBound, bool all, Graphic * g)
 	SDL_Rect clip = newBound;
 
 	SDL_SetClipRect(g->screen, &clip);
-	if (all)
-		drawAll(g);
-	else
-		redraw(g);
+	drawAll(g);
 	SDL_UpdateRect(g->screen,clip.x,clip.y,clip.w,clip.h);
 	SDL_SetClipRect(g->screen, NULL);
 }
