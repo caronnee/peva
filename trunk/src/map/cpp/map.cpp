@@ -109,8 +109,16 @@ bool Map::collideWith( Object * o1, Object* o2 )
 }
 void Map::setShift(int x, int y)
 {
+	if (boundaries.x < 0)
+		boundaries.width +=boundaries.x;
+	if (boundaries.y < 0)
+		boundaries.height +=boundaries.y;
 	boundaries.x = x;
 	boundaries.y = y;
+	if (boundaries.x < 0)
+		boundaries.width -=boundaries.x;
+	if (boundaries.y < 0)
+		boundaries.height -=boundaries.y;
 }
 Position Map::setBoundary(int x, int y)
 {
@@ -467,8 +475,8 @@ void Map::draw(Graphic * g )
 	ticks = (SDL_GetTicks() - time)%100 + 30;
 	time = SDL_GetTicks();
 	Position pos;
-	pos.x = boundaries.x/BOX_WIDTH;
-	pos.y = boundaries.y/BOX_HEIGHT;
+	pos.x = boundaries.x > 0 ? boundaries.x/BOX_WIDTH:0;
+	pos.y = boundaries.y > 0 ? boundaries.y/BOX_HEIGHT:0;
 	Rectangle b = map[pos.x][pos.y].bounds;
 	Position max(boundaries.x+boundaries.width, boundaries.y+boundaries.height);
 	while ( b.x< max.x ) //prejde tolkokrat, kolko boxov sa zvisle zmesti
