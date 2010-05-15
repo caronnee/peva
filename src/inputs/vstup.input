@@ -4,8 +4,8 @@ ROBOT qqq
 	ATTACK = 33			
 
 	MHEALTH = 10
-	VISIT_SEQ( 4,9,2 )
-//	VISIT_SEQ( 0, 5, 2, 6, 4, 2)
+	VISIT( 4,9,2 )
+	VISIT_SEQ( 0, 5, 2, 6, 4, 2)
 
 	main()
 	{
