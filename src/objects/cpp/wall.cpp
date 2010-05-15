@@ -34,6 +34,7 @@ BreakableWall::BreakableWall( Skin * s, List * abyss):Wall(s, abyss)
 	name = "Wall";
 	movement.direction.x = 0;
 	movement.direction.y = 0;
+	movement.speed = 10;
 }
 void BreakableWall::hitted(Object * o, Position p, int attack)
 {

@@ -360,8 +360,9 @@ int Body::shoot(int angle)
 	o->attack = points.secondSection.sections[SecondSection::SectionMissilleAttack];
 	o->defense = 0;
 	o->movement.angle = movement.angle;
-	o->movement.direction = movement.direction;
-	o->movement.speed = 50;
+	o->movement.direction.x = movement.direction.x;
+	o->movement.direction.y = movement.direction.y;
+	o->movement.speed = 10;
 	o->movement.position_in_map = mP;
 	o->movement.realX = 0;
 	o->movement.realY = 0;
