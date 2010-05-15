@@ -33,7 +33,7 @@ public:
 	virtual void reset();
 
 	/* ask, if the condition was fulfilled */
-	bool getOk();
+	bool getOk()const;
 
 	/* Destructor */
 	virtual ~Target();

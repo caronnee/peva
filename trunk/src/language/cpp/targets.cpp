@@ -6,14 +6,12 @@ Target::Target()
 	ok = false; //este nesplnena podmienka
 	//TODO objects features
 }
-bool Target::getOk()
+bool Target::getOk()const
 {
 	return ok;
 }
-void Target::reset()
-{
-	ok = false;
-}
+void Target::reset() { }
+
 Target::~Target() 
 {
 	/*
@@ -22,6 +20,7 @@ Target::~Target()
 }
 TargetVisit::TargetVisit(size_t Id):Target()
 {
+	ok = false;
 	targetId = Id;
 }
 bool TargetVisit::setOk()

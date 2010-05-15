@@ -284,6 +284,8 @@ std::string Body::initTargetPlaces()
 			int id = targets[i]->tellId();
 			if (id < 0)
 				break;
+			if (targets[i]->getOk())
+				break;
 			bool set = false;
 			for ( std::list<Place>::iterator k = map->places.begin(); k != map->places.end(); k++)
 			{
