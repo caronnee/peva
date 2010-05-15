@@ -10,7 +10,6 @@
 
 #define PROBABILITY 10
 #define MY_INFINITY ~0
-#define MAX_PX_PER_SECOND 100
 
 enum ObjectsToSave
 {
@@ -147,7 +146,7 @@ public:
 	int turn(int angle);
 
 	/* turn to desired position */
-	int absoluteTurn(int angle, size_t size = MAX_PX_PER_SECOND);
+	int absoluteTurn(int angle);
 
 	/* for visibility, it is good to know whether object is transparent */
 	virtual bool is_blocking();

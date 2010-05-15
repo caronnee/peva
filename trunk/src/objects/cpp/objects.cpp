@@ -6,7 +6,7 @@ void ObjectMovement::clean()
 {
 	realX = 0;
 	realY = 0;
-	speed = 30;
+	speed = 60;
 	old_pos = position_in_map = direction = Position (0,0);
 	angle = 0;
 	steps = 0;
@@ -97,8 +97,8 @@ void Object::move(size_t fps)
 	{
 		endMove();
 		stepsPass = movement.steps;
-		passed.x = movement.steps*movement.direction.x/MAX_PX_PER_SECOND;
-		passed.y = movement.steps*movement.direction.y/MAX_PX_PER_SECOND;
+		passed.x = movement.steps*movement.direction.x/movement.speed;
+		passed.y = movement.steps*movement.direction.y/movement.speed;
 	}
 	movement.steps -= stepsPass;
 	movement.position_in_map.x += passed.x;
@@ -143,7 +143,7 @@ size_t Object::height()
 {
 	return get_size().y;
 }
-int Object::absoluteTurn(int angle, size_t size)
+int Object::absoluteTurn(int angle)
 {
 	movement.angle = angle;
 	while (movement.angle < 0)
@@ -151,7 +151,7 @@ int Object::absoluteTurn(int angle, size_t size)
 	while (movement.angle > 360)
 		movement.angle-=360;
 	skinWork->turn(movement.angle);  //TODO potom skontrolovat, keby to bolo pocaa chodenia
-	movement.direction.turn(movement.angle, size);
+	movement.direction.turn(movement.angle, movement.speed);
 	return 0;
 }
 int Object::turn(int angle)

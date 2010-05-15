@@ -13,7 +13,7 @@ ROBOT qqq
 		shoot(0);
 		shoot(0);
 		shoot(0);
-		move(10);
+		move(20);
 		turn(10);
 	}
 }
