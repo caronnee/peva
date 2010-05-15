@@ -70,6 +70,9 @@ public:
 
 class TargetVisitSequence : public Target
 {
+	/* internal vounter to cout number of succeses */
+	size_t number;
+
 	/* sequence that should be visited */
 	std::vector<TargetVisit *> places;
 

@@ -52,6 +52,7 @@ TargetVisit::~TargetVisit()
 
 TargetVisitSequence::TargetVisitSequence(std::vector<TargetVisit *> p)
 {
+	number = p.size();
 	iter = 0;
 	places = p;
 }
@@ -69,7 +70,7 @@ bool TargetVisitSequence::initPosition(Rectangle p)
 	iter++;
 	if (iter >= places.size())
 	{
-		iter = 0;
+		iter = places.size()-1;
 		return true;
 	}
 	return false;
@@ -80,13 +81,12 @@ Rectangle TargetVisitSequence::tellPosition()
 }
 bool TargetVisitSequence::setOk()
 {
-	places[iter]->setOk();
+	if (places[iter]->setOk())
+		number--;;
 	while((iter < places.size())&&(places[iter]->getOk()))
 		iter++;
-	if (iter < places.size())
-		return false;
-	ok = true;
-	return true;
+	ok = number == 0;
+	return ok;
 }
 void TargetVisitSequence::reset()
 {
