@@ -420,6 +420,7 @@ void Body::hit(Object * o)
 	Position p,t;
 	intersection(o,p,t);
 
+	Object::hit(o);
 	if (p.x < p.y)
 	{
 		movement.position_in_map.x -= p.x*t.x;
@@ -432,7 +433,6 @@ void Body::hit(Object * o)
 		TEST(movement.position_in_map << " " )
 		exit(3);
 	}
-	Object::hit(o);
 }
 Body::~Body()
 {

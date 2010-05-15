@@ -332,6 +332,12 @@ void Create_map::saving()
 			Uint16 znak = w->g->event.key.keysym.unicode;
 			switch(znak)
 			{
+				case SDLK_BACKSPACE:
+				{
+					file_name = file_name.substr(0,file_name.size()-1);
+					draw();
+					break;
+				}
 				case SDLK_ESCAPE:
 				{
 					w->pop();
