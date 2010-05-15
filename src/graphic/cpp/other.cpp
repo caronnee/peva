@@ -34,10 +34,10 @@ Play::~Play(){} //uz predtym sa zavola clear, takze to netreba
 void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 {
 	SDL_Rect clip;
-	clip.x = 0;
-	clip.y = 0;
-	clip.w = m->boundaries.width;
-	clip.h = m->boundaries.height;
+	clip.x = m->boundaries.x < 0? -m->boundaries.x:0;
+	clip.y = m->boundaries.y < 0? -m->boundaries.y:0;
+	clip.w = m->boundaries.width - clip.x;
+	clip.h = m->boundaries.height - clip.y;
 	SDL_SetClipRect(w->g->screen, &clip);
 	m->drawAll( w->g );
 	SDL_Flip(w->g->screen);
@@ -204,7 +204,10 @@ void Play::resume()
 }
 void Play::resize()
 {
-	m->setBoundary(w->g->screen->w, w->g->screen->h);
+	Position rct = m->setBoundary(w->g->screen->w, w->g->screen->h);
+	//rozdiel medzi poslednym a sucasnym shiftom
+	//TODO nacentrovat do posledneho robota
+	m->setShift( (w->g->screen->w - rct.x)/-2,(w->g->screen->h - rct.y)/-2);
 }
 void Play::process()
 {
@@ -318,6 +321,10 @@ void Play::process()
 						p.x = 0;
 					if (p.y < 0)
 						p.y = 0;
+					if (m->boundaries.x < 0	)
+						p.x = m->boundaries.x;
+					if (m->boundaries.y < 0)
+						p.y = m->boundaries.y;
 					m->setShift(p.x,p.y);
 					draw();
 					break;
