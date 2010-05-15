@@ -1,11 +1,17 @@
 ROBOT qqq
 {
-	main() // komentar
+	HEALTH = 10
+	ATTACK = 33			
+
+	MHEALTH = 10
+	VISIT( 4,9,2 )
+	VISIT_SEQ( 0, 5, 2, 6, 4, 2)
+
+	main()
 	{
 		Location l = getTarget();
-		move(l.x/10);
-		turnR();
-		move(l.y/10);
+		turn(direction(l));
+		shoot(0);
+		move(70);
 	}
 }
-
