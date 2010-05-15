@@ -2,13 +2,16 @@ ROBOT qqq
 {
 	HEALTH = 10
 	ATTACK = 33			
+	Missilles = 5
 
-	MHEALTH = 10
+	MHEALTH = 1000
 	VISIT( 4,9,2 )
 	VISIT_SEQ( 0, 5, 2, 6, 4, 2)
 
 	main()
 	{
+		shoot(0);
+		shoot(0);
 		shoot(0);
 		move(10);
 		turn(10);

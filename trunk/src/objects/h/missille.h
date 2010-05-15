@@ -10,7 +10,7 @@ public:
 
 	Missille(Skin * s, List * list);
 	virtual bool is_blocking();
-	void move(int fps);
+	void move(size_t fps);
 	virtual void hitted(Object *o, Position dir, int attack);
 	virtual void hit(Object *o);
 	~Missille();

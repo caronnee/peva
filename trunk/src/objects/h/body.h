@@ -31,7 +31,7 @@ struct SecondSection
 	{
 		SectionMissilles,
 		SectionMissilleAttack,
-		SectionMissilleDefense,
+		SectionMissilleHitpoints,
 		SectionSteps,
 		SectionDefense,
 		SectionAttack,
@@ -71,9 +71,6 @@ private:
 	/* in which map is an object located */
 	Map * map;
 public:
-	/* missiles parameters */
-	int mHealth, mAttack;
-
 	/* class handling visibility issue */
 	Seer seer;
 
