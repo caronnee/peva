@@ -36,6 +36,7 @@ WHITESPACE		[ \r\t\f]
 [aA][nN][gG][lL][eE]				{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
 [sS][tT][eE][pP]				{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
 [mM][eE][mM][oO][rR][yY]			{*l = line; lv->op = OptionMemory; return TOKEN_OPTION;}
+[mM][iI][sS][sS][iI][lL][lL][eE][sS]		{*l = line; lv->op = OptionMissilles; return TOKEN_OPTION;}
                                 	
 [vV][iI][sS][iI][tT]				{*l = line; return TOKEN_VISIT; }
 [vV][iI][sS][iI][tT]_[sS][eE][qQ]		{*l = line; return TOKEN_VISIT_SEQUENCE; }

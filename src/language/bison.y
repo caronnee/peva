@@ -71,8 +71,8 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 
 /* group tokens */
 %token<operation> TOKEN_OPER_REL "<"
-%token<operation> TOKEN_OPER_SIGNADD "+"
-%token<operation> TOKEN_OPER_MUL "*"
+%token<operation> TOKEN_OPER_SIGNADD "sign or additive operator"
+%token<operation> TOKEN_OPER_MUL "multiplicative operator"
 %token<operation> TOKEN_PLUSPLUS "++"
 %token<operation> TOKEN_MINUSMINUS "--"
 %token<operation> TOKEN_BOOL_AND "&&"

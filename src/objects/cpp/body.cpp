@@ -356,7 +356,9 @@ int Body::shoot(int angle)
 	mP.y += p.y;
 
 	Object * o= *ammo.begin();
-	o->hitpoints = o->movement.steps = mHealth;
+	o->hitpoints = o->movement.steps = points.secondSection.sections[SecondSection::SectionMissilleHitpoints];
+	o->attack = points.secondSection.sections[SecondSection::SectionMissilleAttack];
+	o->defense = 0;
 	o->movement.angle = movement.angle;
 	o->movement.direction = movement.direction;
 	o->movement.speed = 50;
@@ -394,7 +396,7 @@ void Body::hitted(Object * attacker, Position p, int attack)
 	TEST("zasiahnuty!")
 	state_ = movement.steps; //kolko mu este chybalo spravit
 	Object::hitted(attacker,p,attack);
-	int hpLost = (attack > defense) ? attack-defense:1;
+	int hpLost = (attacker->attack > defense) ? attack-defense:1;
 	hitpoints -= hpLost;
 	if (hitpoints <= 0)
 	{

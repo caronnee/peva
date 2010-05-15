@@ -211,6 +211,7 @@ enum Options
 	OptionDefense,
 	OptionMisilleAttack,
 	OptionMisilleHealth,
+	OptionMissilles
 };
 
 struct ResolveName

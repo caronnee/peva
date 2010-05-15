@@ -1572,7 +1572,6 @@ int InstructionDirection::execute(Core * c)
 
 	f = (p.x*t.x + t.y*p.y) / (float)dotProd;
 	int res = toDegree(acos(f));
-	int nas = f < 0 ? -1:1;
 	if ( p.y*t.x - p.x*t.y < 0) //ak na druhej strane zorneho pola
 		res = 360 - res; //pretoze sa otazam v mere divnom
 

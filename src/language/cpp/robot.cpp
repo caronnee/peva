@@ -401,6 +401,10 @@ void Robots::set(Options o, size_t value)
 {
 	switch(o) //TODO po zlinkovani
 	{
+		case OptionMissilles:	
+			TEST("setting number of missilles to:" << value ); 
+			robots.back()->points.secondSection.sections[SecondSection::SectionMissilles] = value;
+			break;
 		case OptionHealth:
 			TEST("setting health to:" << value ); 
 			robots.back()->points.firstSection.sections[FirstSection::SectionHitpoints] = value;
@@ -419,7 +423,7 @@ void Robots::set(Options o, size_t value)
 			break;
 		case OptionMisilleHealth:
 			TEST("setting Missille health to:" << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleDefense] = value;
+			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleHitpoints] = value;
 			break;
 		case OptionSee:
 			TEST("setting eyes angle to:" << value ); 
