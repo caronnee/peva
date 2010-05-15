@@ -9,9 +9,8 @@ ROBOT qqq
 
 	main()
 	{
-		Location l = getTarget();
-		turn(direction(l));
 		shoot(0);
-		move(70);
+		move(10);
+		turn(10);
 	}
 }
