@@ -10,13 +10,16 @@
 #include "../../graphic/h/loadMapMenu.h"
 
 #define SPACE_KOEF 2
+#define MAP_SHIFT 20
+#define BORDER_SHIFT 15
+#define ADD_VISIBILITY 10
+#define OBJECT_SPACE 20
 
 Create_map::Create_map(Window *w_)
 { 
 	w = w_;
 	name(w->g, "Create map");
 	nextMenu = NULL;
-	lastPut = NULL;
 	map= NULL;
 	skins.clear();
 	text = NULL;
@@ -26,20 +29,16 @@ Create_map::Create_map(Window *w_)
 		resol[i] = NULL;
 	clean();
 }
+
 void Create_map::resize()
 {
-	std::string info = "Zadajte meno suboru";
-	int info_width;
-	TTF_SizeText(w->g->g_font,info.c_str(),&info_width,NULL); 
-	info_o = TTF_RenderText_Solid(w->g->g_font,info.c_str(), w->g->normal);//TODO prehodit do kontruktora
-
 	file_r.y = w->g->screen-> h/2 - 2*TTF_FontLineSkip(w->g->g_font);
-	file_r.x = w->g->screen->w /2 - info_width/2;
-	file_r.w = info_width+20;
-	file_r.h = 3*TTF_FontLineSkip(w->g->g_font);
+	file_r.x = w->g->screen->w /2 - w->g->font_size/2;
+	file_r.w = w->g->font_size + OBJECT_SPACE; //magic number, FIXME
+	file_r.h = 3 * TTF_FontLineSkip(w->g->g_font);
 
 	/*setting widths*/
-	rects[LEFT].w = rects[RIGHT].w =  15;//15 pixelov, obr neskor
+	rects[LEFT].w = rects[RIGHT].w =  BORDER_SHIFT;//BORDER_SHIFT pixelov, obr neskor
 	rects[CHOOSE].w = 2*skins[0]->get_size().x; 
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
@@ -51,7 +50,7 @@ void Create_map::resize()
 	rects[SAVE].h = rects[EXIT].h = rects[LOAD].h =
 		rects[CLEAN].h = rects[GENERATE].h = rects[VISIBILITY].h = 30;
 	rects[CHOOSE].h = w->g->screen->h;
-	rects[UP].h = rects[DOWN].h = 15; //TODO potom sa to zosti z obrazkov naloadovanych
+	rects[UP].h = rects[DOWN].h = BORDER_SHIFT; //TODO potom sa to zosti z obrazkov naloadovanych
 	rects[LEFT].h = rects[RIGHT].h = w->g->screen->h - rects[EXIT].h - rects[UP].h - rects[DOWN].h;
 	rects[MAP].h = w->g->screen->h - rects[UP].h - rects[DOWN].h - rects[EXIT].h;
 
@@ -85,7 +84,7 @@ void Create_map::resize()
 		tile_rect[i].y = pom;
 		tile_rect[i].w = skins[0]->get_size().x;
 		tile_rect[i].h = skins[0]->get_size().y;
-		pom += skins[0]->get_size().y +20; //TODO konstanta
+		pom += skins[0]->get_size().y +OBJECT_SPACE; //TODO konstanta
 	}
 	if (map)
 	{
@@ -94,38 +93,66 @@ void Create_map::resize()
 }
 void Create_map::init()
 {
+	Resolution res;
+	std::string name = "Mini";
+	res.normal = w->g->render(name);
+	res.chosen = w->g->renderLight(name);
+	res.value = 600;
+
+	resolutions[name] = res;
+
+	name = "Small";
+	res.normal = w->g->render(name);
+	res.chosen = w->g->renderLight(name);
+	res.value = 1000;
+	resolutions[name] = res;
+
+	name = "Normal";
+	res.normal = w->g->render(name);
+	res.chosen = w->g->renderLight(name);
+	res.value = 2000;
+	resolutions[name] = res;
+
+	name = "Big";
+	res.normal = w->g->render(name);
+	res.chosen = w->g->renderLight(name);
+	res.value = 4000;
+	resolutions[name] = res;
+
+	name = "Mega";
+	res.normal = w->g->render(name);
+	res.chosen = w->g->renderLight(name);
+	res.value = 6000;
+	resolutions[name] = res;
+	
+	name = "Custom";
+	res.normal = w->g->render(name);
+	res.chosen = w->g->renderLight(name);
+	res.value = 0;
+	resolutions[name] = res;
+	resolutionIterFirst = resolutions.begin();
+	resolutionIterSecond = resolutions.begin();
+	info_o = w->g->render("Save to:");
+
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 		skins.push_back(new WallSkin("grass",i)); //TODO zo subora	
 	
-	std::string txt = "Write map resolution:";
-	text = TTF_RenderText_Solid(w->g->g_font,txt.c_str(),w->g->normal);// na resize 2.krat
-	TTF_SizeText(w->g->g_font,txt.c_str(),&text_width,NULL);
-	if (text == NULL)  
-	{
-		TEST("Ajta krajta, nevytvoril sa text!");
-	}
+	text = w->g->render("Write map resolution:");
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
 	for (int i =0; i< NUMCHARS; i++)
-	{
-		resol[i] = TTF_RenderText_Solid(w->g->g_font,s[i].c_str(),w->g->normal);
-		TTF_SizeText(w->g->g_font,s[i].c_str(),&resol_width[i],NULL);
-	}//TODO! po esc spat na resolution a resize
-
+		resol[i] = w->g->render(s[i]);
 
 	std::string ids[] = {"clean", "save", "load", "generate", "exit" };
 	for (int i =0; i< BUTTONS-1; i++)
-	{
-		buttonsImages[i] = TTF_RenderText_Solid( w->g->g_font,ids[i].c_str(), w->g->normal);
-	}
+		buttonsImages[i] = w->g->render(ids[i]);
 	resize();
 }
 
 int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 {
-	int i;
-	for (i = 0; i < max; i++)
+	for (int i = 0; i < max; i++)
 	{
-		if ((x >=r[i].x) 
+		if ((x >= r[i].x) 
 				&& (x< r[i].x + r[i].w)
 				&& (y >= r[i].y)
 				&& (y < r[i].y + r[i].h))
@@ -134,24 +161,54 @@ int Create_map::get_rect(int x, int y,SDL_Rect * r, int max)
 	return -1;
 }
 
-void Create_map::draw_resol() //TODO tu staci len raz vykreslit a potom sa pozriet na zmeny
+void Create_map::draw_resol() //FIXME tu staci len raz vykreslit a potom sa pozriet na zmeny
 {
 	SDL_Rect r;
-	r.x = (w->g->screen->w >> 1) - (text_width >> 1);
+	r.x = (w->g->screen->w >> 1) - (text->w >> 1);
 	r.y = (w->g->screen->h >> 1) - TTF_FontLineSkip(w->g->g_font)*2;
 	SDL_BlitSurface (text, NULL, w->g->screen, &r);
-	r.y+=TTF_FontLineSkip(w->g->g_font);
-	for (unsigned int i = 0; i< written_x.size(); i++)
-	{
-		SDL_BlitSurface(resol[written_x[i] - '0'], NULL,w->g->screen, &r);
-		r.x+=resol_width[written_x[i] - '0'];//potom to vycentrovat, samostatna funkcia
-	}
+	r.y += TTF_FontLineSkip(w->g->g_font)*2; //jeden volny riadok
+	//do stredu blit 'X'
+	
+	r.x = (w->g->screen->w >> 1); //FIXME njake odcitanie
 	SDL_BlitSurface(resol[NUMCHARS - 1], NULL,w->g->screen, &r);
-	r.x+=resol_width[NUMCHARS - 1];//potom to vycentrovat, samostatna funkcia
-	for (unsigned int i = 0; i< written_y.size(); i++)
+
+	r.x/=2;
+
+	r.x -= resolutionIterFirst->first.size() * w->g->font_size/2;
+	SDL_Surface * surface = x? resolutionIterFirst->second.normal:resolutionIterFirst->second.chosen;
+	SDL_BlitSurface(surface, NULL, w->g->screen, &r);
+
+	if (resolutionIterFirst->first == "Custom")
 	{
-		SDL_BlitSurface(resol[written_y[i] - '0'], NULL,w->g->screen, &r);
-		r.x+=resol_width[written_y[i] - '0'];// TODO potom to vycentrovat, samostatna funkcia
+		SDL_Rect rect2 = r;
+		rect2.x = w->g->screen->w >> 2;
+		rect2.x -= written_x.size()* w->g->font_size/2;
+		rect2.y += TTF_FontLineSkip(w->g->g_font)*2; //jeden volny riadok
+
+		for (size_t i = 0; i< written_x.size(); i++)
+		{
+			SDL_BlitSurface(resol[written_x[i] - '0'], NULL,w->g->screen, &rect2);
+			rect2.x+=resol[written_x[i] - '0']->w;
+		}
+	}
+	//druhe okienko
+	r.x = w->g->screen->w - (w->g->screen->w >> 2);
+	r.x -= resolutionIterSecond->first.size() * w->g->font_size/2; 
+	surface = !x? resolutionIterSecond->second.normal:resolutionIterSecond->second.chosen;
+	SDL_BlitSurface(surface, NULL, w->g->screen, &r);
+
+	if (resolutionIterSecond->first == "Custom")
+	{
+		r.x = w->g->screen->w - (w->g->screen->w >> 2);
+		r.x -= written_x.size()* w->g->font_size/2;
+
+		r.y += TTF_FontLineSkip(w->g->g_font)*2; //jeden volny riadok
+		for (size_t i = 0; i< written_y.size(); i++)
+		{
+			SDL_BlitSurface(resol[written_y[i] - '0'], NULL,w->g->screen, &r);
+			r.x+=resol[written_y[i] - '0']->w;
+		}
 	}
 }
 void Create_map::draw()
@@ -205,9 +262,17 @@ void Create_map::drawPanel(int i)
 void Create_map::handleKey(SDLKey c)
 {
 	if (!x) 
+	{
+		if (written_x.size() >=5)
+			return;
 		written_x+=w->g->event.key.keysym.sym; 
+	}
 	else 
+	{
+		if (written_y.size() >=5)
+			return;
 		written_y+=w->g->event.key.keysym.sym;
+	}
 }
 void Create_map::backspace()
 {
@@ -221,9 +286,13 @@ void Create_map::drawInit()
 {
 	state = DRAW;
 	Position p(convert<int>(written_x),convert<int>(written_y));
+	if (resolutionIterFirst->first != "Custom")
+		p.x = resolutionIterFirst->second.value;
+	if (resolutionIterSecond->first != "Custom")
+		p.y = resolutionIterSecond->second.value;
 	map = new Map(p,"grass");
 
-	buttonsImages[BUTTONS-1] = TTF_RenderText_Solid( w->g->g_font, deconvert<size_t>(map->visibility/10).c_str(), w->g->normal);
+	buttonsImages[BUTTONS-1] = TTF_RenderText_Solid( w->g->g_font, deconvert<size_t>(map->visibility/ADD_VISIBILITY).c_str(), w->g->normal);
 
 	map->shift(-rects[MAP].x, -rects[MAP].y);
 	resize();
@@ -252,9 +321,26 @@ void Create_map::keyDown(SDLKey c)
 			drawInit();
 			break;
 		}
+		case SDLK_UP:
+		{
+			if (!x)
+			{
+				resolutionIterFirst++;
+				if (resolutionIterFirst == resolutions.end())
+					resolutionIterFirst = resolutions.begin();
+			}
+			else
+			{
+				resolutionIterSecond++;
+				if (resolutionIterSecond == resolutions.end())
+					resolutionIterSecond = resolutions.begin();
+			}
+			draw();
+			break;
+		}
 		case SDLK_RIGHT:
-		case SDLK_x: { x = true; break;}
-		case SDLK_LEFT:{x = false;break;}
+		case SDLK_LEFT:
+		case SDLK_x: { x = !x; draw(); break;} //TODO update
 		case SDLK_q:
 		case SDLK_ESCAPE:
 		{
@@ -262,7 +348,7 @@ void Create_map::keyDown(SDLKey c)
 			return;
 		}
 		default:
-			TEST("Unknown command (Create map)" )
+			TEST_RELEASE("Unknown command (Create map)" )
 			break;
 	}
 }
@@ -461,24 +547,18 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				if (collide == NULL)
 				{
 					map->add(wall);
-					lastPut = wall;
 					update.w = wall->width();
 					update.h = wall->height(); //TODO check, netreba shift?
-					if (update.h+update.y > map->boundaries.height + 15)
-						update.h -= update.h + update.y - map->boundaries.height - 15; //TODO zrusit a dat pre pred funkciu v tom, kde to vola, newBound sa proste nebde menit
-					if (update.w+update.x > map->boundaries.width + 15)
-						update.w -= update.w + update.x - map->boundaries.width - 15;
+					if (update.h+update.y > map->boundaries.height + BORDER_SHIFT)
+						update.h -= update.h + update.y - map->boundaries.height - BORDER_SHIFT; //TODO zrusit a dat pre pred funkciu v tom, kde to vola, newBound sa proste nebde menit
+					if (update.w+update.x > map->boundaries.width + BORDER_SHIFT)
+						update.w -= update.w + update.x - map->boundaries.width - BORDER_SHIFT;
 
 					map->update(update,true,w->g);
 					break;
 				}
-				else
-				{
-					TEST("Koliduje")
-				}
 				update.w = -1;
 				update.h = -1;
-				lastPut = collide;
 				delete wall;
 				break;
 			}
@@ -556,7 +636,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			while (true)
 			{
 				if (map->boundaries.x > -rects[MAP].x)
-					map->shift(-2,0);
+					map->shift(-MAP_SHIFT,0);
 				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
@@ -570,7 +650,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			while (true)
 			{
 				if (map->boundaries.x < map->size().x - rects[RIGHT].x)
-					map->shift(2,0);
+					map->shift(MAP_SHIFT,0);
 				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP)){
@@ -586,7 +666,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			while (true)
 			{
 				if (map->boundaries.y > -rects[MAP].y)
-					map->shift(0,-2);
+					map->shift(0,-MAP_SHIFT);
 				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
@@ -600,7 +680,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			while (true)
 			{
 				if (map->boundaries.y < map->size().y -rects[DOWN].y)
-					map->shift(0, 2);
+					map->shift(0, MAP_SHIFT);
 				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
 						&&(w->g->event.type == SDL_MOUSEBUTTONUP))
@@ -626,7 +706,7 @@ void Create_map::resume()
 void Create_map::setVisibility()
 {
 	SDL_FreeSurface(buttonsImages[BUTTONS -1]);
-	buttonsImages[BUTTONS -1] = TTF_RenderText_Solid(w->g->g_font, deconvert<size_t>(map->visibility/10).c_str(), w->g->normal);
+	buttonsImages[BUTTONS -1] = TTF_RenderText_Solid(w->g->g_font, deconvert<size_t>(map->visibility/ADD_VISIBILITY).c_str(), w->g->normal);
 
 }
 //BIG TODO zmenit na citatelnejsie
@@ -643,10 +723,10 @@ void Create_map::process_map()
 			{
 
 				case SDLK_m:
-					map->visibility-=20; //bez breaku, aby som sa nemusela opakovat:)
+					map->visibility-=2*ADD_VISIBILITY; //bez breaku, aby som sa nemusela opakovat:)
 				case SDLK_p:
 					{
-						map->visibility +=10;
+						map->visibility +=ADD_VISIBILITY;
 						setVisibility();
 						SDL_Rect r = rects[VISIBILITY];
 						r.w = w->g->screen->w - r.x;
@@ -667,7 +747,7 @@ void Create_map::process_map()
 					return;
 				}
 				default:
-					TEST("Unknown command (Create map)" )
+					TEST_RELEASE("Unknown command (Create map)" )
 					break;
 
 			}
@@ -682,7 +762,6 @@ void Create_map::process_map()
 		case SDL_MOUSEBUTTONUP:
 		{
 			mouse_down = false; //POZOR na to, ze to moze byt aj iny button!
-			lastPut = NULL;
 			break;
 		}
 		case SDL_MOUSEMOTION:
@@ -745,7 +824,6 @@ void Create_map::process()
 }
 void Create_map::clean()
 {	
-	lastPut = NULL;
 	state = RESOLUTION;
 	file_name = "";
 	x = false;
@@ -754,6 +832,17 @@ void Create_map::clean()
 	written_x = "";
 	written_y = "";
 	map = NULL;
+	resolutionIterFirst = resolutions.begin();
+
+	while(resolutionIterFirst != resolutions.end())
+	{
+		Resolution r = resolutionIterFirst->second;
+		SDL_FreeSurface (r.normal);
+		SDL_FreeSurface (r.chosen);
+		resolutionIterFirst++;
+	}
+	resolutions.clear();
+
 	if (text)
 		SDL_FreeSurface(text);
 	text = NULL;

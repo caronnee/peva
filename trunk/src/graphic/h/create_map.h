@@ -6,12 +6,36 @@
 #include "../../editor/h/snake.h"
 #include "../../graphic/h/images.h"
 #include "../../map/h/map.h"
+#include <map>
 
 #define BUTTONS 6
 
+/* struct for holding information which size (resolution) belongs to name */
+struct Resolution
+{
+	/* surface to be blit whe not chosen */
+	SDL_Surface * normal;
+	
+	/* surface to be lit when chosen */
+	SDL_Surface * chosen;
+
+	/* pre-defined resolution according to name */
+	size_t value;
+};
+
+/* class processing the creation of map */
 class Create_map:public Menu
 {
 private:
+	/* map of resolutions according to name */
+	std::map<std::string, Resolution> resolutions;
+
+	/* iterator holding informatio abou resolution in X-axis */
+	std::map<std::string, Resolution>::iterator resolutionIterFirst;
+
+	/* iterator holding informatio abou resolution in Y-axis */
+	std::map<std::string, Resolution>::iterator resolutionIterSecond;
+	
 	/* division of screen, should be recomputed when fullscreened */
 	enum Map_divide
 	{
@@ -29,6 +53,7 @@ private:
 		DOWN,
 		NumberOfMapDivision
 	};
+
 	/* switch states */ //TODO zmenit na vlastne menu
 	enum Win_type
 	{
@@ -36,6 +61,7 @@ private:
 		DRAW,
 		SAVING
 	};
+
 	/* sets button fo visibility to actual visibility of load map */
 	void setVisibility();
 
@@ -102,10 +128,8 @@ private:
 	/* handling the key in resolution, checkging type */
 	void keyDown(SDLKey c);
 
-	/* width of the text shown in resolution processing */
-	int text_width;
-
-	/* returns index of area in position x, y */ //TODO position namiesto x, y
+	/* returns index of area in position x, y, 
+	 * where max is maximum number of areas */ //TODO position namiesto x, y
 	int get_rect(int x, int y, SDL_Rect * r,int max);
 
 	/* storing typed filename so far */
@@ -117,10 +141,10 @@ private:
 	/* map being drawn */
 	Map * map;
 
-	/* width for every char in allowed char */ //TODO vlastna klasa?
+	/* width for every char in allowed char */
 	int resol_width[NUMCHARS];
 
-	/* map resolution as typed */ //TODO netrebalo by
+	/* map resolution as typed */ 
 	std::string written_x, written_y;
 
 	/* in drawing state process events */
@@ -135,7 +159,6 @@ private:
 	/* window to save map */
 	void saving();
 
-	Object * lastPut;
 	void removeFromMap(Position p);
 
 public:
@@ -145,13 +168,15 @@ public:
 	/* resumes window */
 	void resume();
 	
-	/* init creates instances of elements immediately needed, in passive state (not running), it is needed only name for drawing */
+	/* init creates instances of elements immediately needed,
+	 *  in passive state (not running), it needs only name 
+	 *  for drawing */
 	void init();
 
-	/* reaction to events and drawing */
+	/* event handling */
 	void process(void);
 
-	/* draws the screen again, if needed */
+	/* draws the screen again */
 	void draw();
 
 	/* goiing to passive state and cleaning variables */

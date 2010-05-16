@@ -5,6 +5,8 @@
 #include "../h/instructions.h"
 #include "../../add-ons/h/macros.h"
 
+#define CRITICAL_AMOUNT_OF_FUNCTIONS 100
+
 //FIXME premenovat floatfrom an real, aby to olo konzistentne
 
 Instruction::Instruction()
@@ -359,32 +361,19 @@ Call::Call(Function * f_)
 int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 {
 	TEST("Calling function: ") 
+	Node * ret = function->return_var;
+	Variable * v = c->memory.assign_temp(ret->type_of_variable); //aby zmizlo po ukonceni
+	
+	if (c->nested_functions.size() == CRITICAL_AMOUNT_OF_FUNCTIONS)
+	{
+		c->values.push_back(v);
+		return -1;
+	}
 	c->nested_functions.push_back(c->nested_function);
 	c->nested_function = function;
-/*	for( size_t i = 0; i< function->parameters.size(); i++)
-	{
-		Variable * v;
-		//ak pridane ako referencia, skopiruj pointre
-		if (function->parameters[i].val_type == PARAMETER_BY_REFERENCE)
-		{
-			TEST("Storing parameter by reference")
-			v = c->getVariableFromStack(); //mozem to tam spravit, lebo v gramatike sa to da pouzit len pramo s premennou
-			//Musi byt premenna
-			function->parameters[i].node->var.push_back(v);
-		}
-		else
-		{
-			TEST("Storing parameter by value")
-			c->memory.assign(function->parameters[i].node,c->depth + 1);
-			Variable * vvv = c->values.back();
-			function->parameters[i].node->var.back()->copyValue(vvv);
-			c->values.pop_back();
-		}
-	}*/ //variales already set
-	Variable * v;
-	Node * ret = function->return_var;
-	v = c->memory.assign_temp(ret->type_of_variable); //aby zmizlo po ukonceni
+
 	ret->var.push_back(v);//skopiruje si zo stacku hodnoty svojich parametrov
+
 	c->save(function->begin);	
 	TEST("OK")
 	return 0;

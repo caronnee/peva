@@ -6,3 +6,4 @@
 #endif
 
 #define List std::list<Object *>
+#define TEST_RELEASE(x) std::cout << x << std::endl;
