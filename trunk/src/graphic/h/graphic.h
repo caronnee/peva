@@ -52,7 +52,7 @@ public:
 	void set_resolution(std::string r);
 	void set_font(std::string res);
 	void set_font_size(std::string res);
-	void waitKeyDown();
+	bool waitKeyDown();
 	//TODO take veci ako napriklad vykreslovanie
 };
 #endif

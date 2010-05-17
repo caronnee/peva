@@ -358,7 +358,7 @@ void Robots::resolve()
 		Body * killer = NULL, * toKill = NULL;
 		for (size_t j=0; j<robots.size(); j++)
 		{
-			if (robots[i]->getName() == resolveName[i].name)
+			if (robots[j]->getName() == resolveName[i].name)
 			{
 				killer = resolveName[i].robot->getBody();
 				toKill = robots[j]->getBody();
@@ -396,6 +396,9 @@ void Robots::resolve()
 	/* tell robot what means position '0,1,2...' in the map */
 	for (size_t j=0; j<robots.size(); j++)
 		robots[j]->getBody()->initTargetPlaces();
+	for (size_t j=0; j<robots.size(); j++)
+		if (robots[j]->getBody()->tasks == 0)
+			robots[j]->getBody()->tasks++;
 }
 void Robots::set(Options o, size_t value)
 {

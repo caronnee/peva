@@ -29,6 +29,7 @@ GamePoints::GamePoints(int total, int total2)
 
 void GamePoints::check()
 {
+	firstSection.sections[FirstSection::SectionAngle] = min<int>(MAX_EYE_ANGLE,firstSection.sections[FirstSection::SectionAngle]);
 	int todo = total_[0];
 	int numberNotOk = 0;
 	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
@@ -51,14 +52,18 @@ void GamePoints::check()
 
 	while(todo < 0 )
 	{
+		if (iter == FirstSection::SectionAngle)
+		{
+			iter++;
+			iter%=FirstSection::NumberOfSections;
+		}
 		if (todo + FirstSection::NumberOfSections > 0)
 			minus = -1;
-		if (firstSection.sections[iter] >0)
+		if (firstSection.sections[iter] + minus > 0)
 		{
 			firstSection.sections[iter]+=minus;
 			todo-=minus;
 		}
-		iter++;
 		iter%=FirstSection::NumberOfSections;
 	}
 
@@ -68,6 +73,11 @@ void GamePoints::check()
 
 	while (todo > 0)
 	{
+		if (firstSection.sections[FirstSection::SectionAngle] + minus  > MAX_EYE_ANGLE)
+		{
+			iter++;
+			iter%= FirstSection::NumberOfSections;
+		}
 		if (todo - FirstSection::NumberOfSections <0)
 			minus = 1;
 		firstSection.sections[iter]+=minus;
@@ -98,7 +108,7 @@ void GamePoints::check()
 	{
 		if (todo + SecondSection::NumberOfSections > 0)
 			minus = -1;
-		if(secondSection.sections[iter]>0)
+		if(secondSection.sections[iter] + minus > 0)
 		{
 			secondSection.sections[iter]+=minus;
 			todo-=minus;
@@ -158,8 +168,6 @@ void Body::init(GamePoints g, int v)
 		addAmmo(new Missille(ms,&ammo));
 	defense = g.secondSection.sections[SecondSection::SectionDefense];
 	attack =g.secondSection.sections[SecondSection::SectionAttack];
-	if (tasks == 0) //pokial nema nic, potom chce byt jedine v okoli
-		tasks = 1;
 }
 
 bool Body::changed()
@@ -297,14 +305,14 @@ int Body::see()
 			}
 		}
 
-	return seer.checkVisibility();
+	size_t y= seer.checkVisibility();
+	seer.output();
+	return y;
 }
 Object * Body::eye(int index)
 {
 	TEST("Getting object from fills")
 	Object * o = seer.getObject(index);
-	if (!o)
-		return this; //TODO dummy object
 	return o;
 }
 void Body::place (Map * m, Position p, int angle)
@@ -426,6 +434,7 @@ void Body::killed(Object * o)
 		{
 			killTarget[i] = killTarget.back();
 			killTarget.pop_back();
+			tasks--;
 			break;
 		}
 	}
