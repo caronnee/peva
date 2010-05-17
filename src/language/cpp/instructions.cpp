@@ -1281,8 +1281,9 @@ int InstructionWait::execute(Core *c) //prave jeden parameter
 {
 	TEST("Waiting ...")
 	int waits = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->wait(waits);
+//	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+//	c->values.back()->integerValue = 
+	c->body->wait(waits);
 	TEST("OK")
 	return 0;
 }

@@ -105,6 +105,9 @@ bool Map::collideWith( Object * o1, Object* o2 )
 
 	bool a = r1.overlaps(r2);
 
+	Position aa,b;
+	if (a)
+		o1->intersection(o2,aa,b);
 	return a;
 }
 void Map::setShift(int x, int y)
@@ -473,6 +476,7 @@ void Map::background(Graphic * g)
 void Map::draw(Graphic * g ) 
 {
 	ticks = (SDL_GetTicks() - time)%100 + 30;
+	ticks = 30;
 	time = SDL_GetTicks();
 	Position pos;
 	pos.x = boundaries.x > 0 ? boundaries.x/BOX_WIDTH:0;
@@ -641,11 +645,14 @@ void Map::resolveMove(Object * o)
 	o->move(ticks);
 	resolveBorders(o);
 	Object * collidedWith= checkCollision(o);
+	ObjectMovement muf;
+	muf.position_in_map = Position( 1999,2000);
 	while (collidedWith!=NULL)
 	{
 		o->hit(collidedWith);
 		collidedWith= checkCollision(o);
 		TEST("Pozicia po kolidovani:" << o->get_pos())
+		muf = o->movement;
 	}
 }
 

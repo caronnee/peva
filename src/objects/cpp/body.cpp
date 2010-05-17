@@ -30,56 +30,93 @@ GamePoints::GamePoints(int total, int total2)
 void GamePoints::check()
 {
 	int todo = total_[0];
+	int numberNotOk = 0;
 	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
 	{
 		if (firstSection.sections[i]<0)
+		{
+			firstSection.sections[i] = 0;
 			continue;
+		}
 		todo-=firstSection.sections[i];
+		numberNotOk++;
 	}
 	if (total_[0] < MININUM_SECTION)
 		todo = 0;
 	int iter = 0;
+	int minus;
+
+	if (numberNotOk) 
+		minus = todo/numberNotOk;
+
 	while(todo < 0 )
 	{
+		if (todo + FirstSection::NumberOfSections > 0)
+			minus = -1;
 		if (firstSection.sections[iter] >0)
 		{
-			firstSection.sections[iter]--;
-			todo++;
+			firstSection.sections[iter]+=minus;
+			todo-=minus;
 		}
 		iter++;
 		iter%=FirstSection::NumberOfSections;
 	}
+
+	numberNotOk = FirstSection::NumberOfSections - numberNotOk;
+	if (numberNotOk) 
+		minus = todo/numberNotOk;
+
 	while (todo > 0)
 	{
-		firstSection.sections[iter]++;
-		todo--;
+		if (todo - FirstSection::NumberOfSections <0)
+			minus = 1;
+		firstSection.sections[iter]+=minus;
+		todo-=minus;
 		iter++;
 		iter%=FirstSection::NumberOfSections;
 	}
 	todo = total_[1];
+	numberNotOk = 0;
 	for(size_t i =0; i< SecondSection::NumberOfSections; i++)
 	{
 		if (secondSection.sections[i]<0)
+		{
+			secondSection.sections[i]=0;
 			continue;
+		}
 		todo -= secondSection.sections[i];
+		numberNotOk++;
 	}
 	if (total_[1] < MININUM_SECTION)
 		todo = 0;
+
 	iter = 0;
+	if (numberNotOk) 
+		minus = todo/numberNotOk;
+
 	while(todo < 0)
 	{
+		if (todo + SecondSection::NumberOfSections > 0)
+			minus = -1;
 		if(secondSection.sections[iter]>0)
 		{
-			secondSection.sections[iter]--;
-			todo++;
+			secondSection.sections[iter]+=minus;
+			todo-=minus;
 		}
 		iter++;
 		iter %= SecondSection::NumberOfSections;
 	}
+
+	numberNotOk = SecondSection::NumberOfSections - numberNotOk;
+	if (numberNotOk) 
+		minus = todo/numberNotOk;
+
 	while (todo > 0)
 	{
-		secondSection.sections[iter]++;
-		todo--;
+		if (todo - SecondSection::NumberOfSections < 0)
+			minus = 1;
+		secondSection.sections[iter]+=minus;
+		todo-=minus;
 		iter++;
 		iter%=SecondSection::NumberOfSections;
 	}
@@ -121,6 +158,8 @@ void Body::init(GamePoints g, int v)
 		addAmmo(new Missille(ms,&ammo));
 	defense = g.secondSection.sections[SecondSection::SectionDefense];
 	attack =g.secondSection.sections[SecondSection::SectionAttack];
+	if (tasks == 0) //pokial nema nic, potom chce byt jedine v okoli
+		tasks = 1;
 }
 
 bool Body::changed()
@@ -334,6 +373,7 @@ int Body::turnR()
 }
 int Body::wait(int x)
 {
+	state_ = 0;
 	TEST("Waiting " << x << "times" )
 	waits = x;
 	return 0;
@@ -362,7 +402,7 @@ int Body::shoot(int angle)
 	o->movement.angle = movement.angle;
 	o->movement.direction.x = movement.direction.x;
 	o->movement.direction.y = movement.direction.y;
-	o->movement.speed = 10;
+	o->movement.speed = 100;
 	o->movement.position_in_map = mP;
 	o->movement.realX = 0;
 	o->movement.realY = 0;
@@ -395,7 +435,8 @@ void Body::killed(Object * o)
 void Body::hitted(Object * attacker, Position p, int attack)
 {
 	TEST("zasiahnuty!")
-	state_ = movement.steps; //kolko mu este chybalo spravit
+	state_ = movement.steps + waits; //kolko mu este chybalo spravit
+	waits = 0;
 	Object::hitted(attacker,p,attack);
 	int hpLost = (attacker->attack > defense) ? attack-defense:1;
 	hitpoints -= hpLost;
@@ -417,9 +458,11 @@ void Body::dead()
 }
 void Body::hit(Object * o)
 {
-	Position p,t;
+	Position p(-11111,-11111),t(-11111,-11111);
 	intersection(o,p,t);
 
+	ObjectMovement th = movement;
+	ObjectMovement obj = o->movement;
 	Object::hit(o);
 	if (p.x < p.y)
 	{

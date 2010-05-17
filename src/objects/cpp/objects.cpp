@@ -93,8 +93,10 @@ void Object::move(size_t fps)
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
+	bool bbb = false;
 	if ( stepsPass >= movement.steps )
 	{
+		bbb=true;
 		endMove();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/movement.speed;
@@ -178,8 +180,7 @@ void Object::hitted(Object * o, Position p, int attack)
 }
 void Object::bounce(Object * attacked) //od koho s ma odrazit
 {
-	Position p(1,1);
-	Position xy;
+	Position p(-11111,-11111),xy(-11111,-11111);
 	intersection(attacked, xy, p);
 	if (xy.y < xy.x)
 	{
@@ -204,6 +205,7 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 	r1.x += movement.position_in_map.x;
 	r1.y += movement.position_in_map.y;
 
+	bool test = false;
 	distances.x = r1.width * r1.width;
 	distances.y = r1.height * r1.height;
 
@@ -216,29 +218,43 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 		p.y =1;
 		int yAxis = r1.y + r1.height; //ta os, ktora nas zaujima, musi byt medzi
 		if (( r2.y < yAxis ) && ( yAxis < r2.y + r2.height ))
+		{
+			test = true;
 			distances.y = yAxis - r2.y;
+		}
 	}
 	if (movement.direction.y < 0) //smerujeme dole
 	{
 		p.y = -1;
 		int yAxis = r1.y; //ta os, ktora nas zaujima, musi byt medzi
 		if ( ( r2.y < yAxis ) && (yAxis  < r2.y + r2.height ) )
+		{
+			test = true;
 			distances.y = r2.y + r2.height - yAxis;
+		}
 	}
 	if (movement.direction.x > 0) // doprava
 	{
 		p.x =1;
 		int xAxis = r1.x + r1.width; //ta os, ktora nas zaujima, musi byt medzi
 		if ((r2.x < xAxis)&&(xAxis < r2.x + r2.width))
+		{
+			test = true;
 			distances.x = xAxis - r2.x;
+		}
 	}
 	if (movement.direction.x <0)
 	{
 		p.x = -1;
 		int xAxis = r1.x; //ta os, ktora nas zaujima, musi byt medzi
 		if ((r2.x < xAxis)&&(xAxis < r2.x + r2.width))
+		{
+			test = true;
 			distances.x = r2.x + r2.width - xAxis;
+		}
 	}
+	if (!test)
+		std::cout << "!!!";
 	return true; //FIXME
 }
 

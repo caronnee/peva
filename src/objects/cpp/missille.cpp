@@ -24,6 +24,8 @@ void Missille::hit(Object * o)
 {
 	//nowhereToRun = true; //ak sa nezavola bounce, tato hodnota
 	o->hitted(this, movement.direction, attack);
+	ObjectMovement th = movement;
+	ObjectMovement obj = o->movement;
 	bounce(o);
 
 /*	if (nowhereToRun)
@@ -35,7 +37,8 @@ void Missille::hit(Object * o)
 
 void Missille::hitted(Object * o, Position d, int attack)
 {
-	hit(o); //never 
+//	hit(o); //never 
+	o->hitted(this,movement.direction, attack);
 }
 void Missille::move(size_t fps)
 {
