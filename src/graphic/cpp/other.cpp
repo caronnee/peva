@@ -7,7 +7,7 @@
 #include "../../language/h/bison.h"
 #include "../../language/h/robot.h"
 
-#define LAST 1000
+#define LAST 1
 
 // pre debug ucelu = 0, inak = 1
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
@@ -244,12 +244,13 @@ void Play::process()
 		SDL_Flip(w->g->screen); //TODO update
 		w->g->waitKeyDown();
 		
-		SDL_FreeSurface(end);
-		w->pop();
+		for (size_t i =0; i< robots.robots.size(); i++)
+			m->remove(robots.robots[i]->getBody());
+		resume();
 		return;
 	}
 	done = m->performe(w->g);
-	//SDL_Delay(w->settings->delay);
+	SDL_Delay(w->settings->delay);
 	m->updateScreen(w->g);
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)

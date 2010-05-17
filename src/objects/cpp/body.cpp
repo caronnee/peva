@@ -35,11 +35,11 @@ void GamePoints::check()
 	{
 		if (firstSection.sections[i]<0)
 		{
+			numberNotOk++;
 			firstSection.sections[i] = 0;
 			continue;
 		}
 		todo-=firstSection.sections[i];
-		numberNotOk++;
 	}
 	if (total_[0] < MININUM_SECTION)
 		todo = 0;
@@ -81,11 +81,11 @@ void GamePoints::check()
 	{
 		if (secondSection.sections[i]<0)
 		{
+			numberNotOk++;
 			secondSection.sections[i]=0;
 			continue;
 		}
 		todo -= secondSection.sections[i];
-		numberNotOk++;
 	}
 	if (total_[1] < MININUM_SECTION)
 		todo = 0;
