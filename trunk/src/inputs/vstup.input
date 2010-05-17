@@ -5,6 +5,7 @@ ROBOT a1
 	Missilles = 10
 
 	MHEALTH = 1000
+	Mattack  = 40
 	KILL a3
 
 	main()
@@ -15,6 +16,7 @@ ROBOT a1
 }
 robot a2
 {
+	defense = 1
 	health = 2
 	attack = 5
 	main()
@@ -25,6 +27,7 @@ robot a2
 }
 robot a3
 {
+	defense = 1
 	health = 3
 	attack = 5
 
