@@ -300,6 +300,27 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.ins.push_back( new InstructionTarget());
 			
 			break;
+		case FeatureWait:
+			if (e.output.size() != 1)
+			{
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+				break;
+			}
+			if (e.output.back().type == TypeReal)
+			{
+				e.output.back() = *r->find_type(TypeInteger);
+				ee.ins.push_back(new InstructionConversionToInt());
+			}
+			if (e.output.back()!= *r->find_type(TypeInteger))
+			{
+				r->error(line, Robot::ErrorConversionImpossible);
+				break;
+			}
+			ee.ins.push_back(new InstructionWait());
+			ee.ins.push_back(new InstructionFetchState());
+			ee.output.push_back(*r->find_type(TypeInteger));
+			ee.temp.push_back(true);
+			break;
 		case FeatureIsPlayer:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
 				ee.ins.push_back( new InstructionIsPlayer());

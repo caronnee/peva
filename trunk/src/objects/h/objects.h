@@ -31,7 +31,7 @@ struct ObjectMovement
 	float realY;
 
 	/* object speed, pixels per turn */
-	size_t speed;
+	int speed;
 
 	/* actual position in map */
 	Position position_in_map;
@@ -60,6 +60,7 @@ private:
 	Object * last_attack;
 
 protected:
+public:
 	/* checks if iobject intersection, if so, returning in p, coords */
 	bool intersection(Object *o, Position &p1, Position& coords);
 

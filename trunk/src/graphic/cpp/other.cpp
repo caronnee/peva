@@ -249,7 +249,7 @@ void Play::process()
 		return;
 	}
 	done = m->performe(w->g);
-	SDL_Delay(w->settings->delay);
+	//SDL_Delay(w->settings->delay);
 	m->updateScreen(w->g);
 	while (SDL_PollEvent(&w->g->event))
 	switch (w->g->event.type)
