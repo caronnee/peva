@@ -4,7 +4,7 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
-void Graphic::waitKeyDown()
+bool Graphic::waitKeyDown()
 {
 	while(true)
 	{
@@ -12,6 +12,9 @@ void Graphic::waitKeyDown()
 				||(event.type ==SDL_KEYDOWN))
 			break;
 	}
+	if (event.key.keysym.sym == SDLK_ESCAPE)
+		return true;
+	return false;
 }
 SDL_Surface * Graphic::render(std::string s)
 {

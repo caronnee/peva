@@ -1217,6 +1217,8 @@ int InstructionEye::execute(Core *c)
 	Object * o = c->body->eye(c->values.back()->integerValue);
 	c->values.pop_back(); 
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeObject)));
+	if (!o)
+		o = c->memory.dummy();
 	c->values.back()->objectValue = o; 
 	TEST("OK")
 	return 0;

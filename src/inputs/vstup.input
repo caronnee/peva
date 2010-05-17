@@ -3,25 +3,29 @@ ROBOT a1
 	HEALTH = 10
 	ATTACK = 33			
 	Missilles = 10
+	Angle = 45
 
+	memory = 100
 	MHEALTH = 100
 	Mattack  = 40
 	KILL a3
 
+	Object o = NULL;
 	main()
 	{
 		for(integer i = 0; i <6;i++)
 		{
-			while(see())
+			see();
+			if (isPlayer(eye[0]))
 			{
-				shoot(0);
+				o = eye[0];
 			}
-			turn(180);
-			while(see())
+			while (hit(o) > 0 )
 			{
-				shoot(0);
+				shoot(direction(locate(o)));
 			}
-			move(i*4);
+			turn(30);
+			move(5);
 		}
 	}
 }

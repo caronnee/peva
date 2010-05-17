@@ -147,38 +147,40 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		objectPosition.x += relation.rect.width;
 		objectPosition.y = relation.rect.y;
 	}
-	if ((a2 - angleBegin >PI)) //staci nam PI,  ze to presiahlo 90*
+	if (a2 - a1 > PI)
 	{
-		a2 -= 2*PI; //dame do zaporu
+		a2 -= 2* PI;
+		float aa=a2;
+		a2 = a1;
+		a1 = aa; //vymenili sme begin a end
 	}
-	if ( a1 - angleBegin > PI)
-	{
-		a1 -= 2*PI; //dame do zaporu
-	}
-	float aa1 = a1, aa2=a2;
-	a1=min<float>(aa1,aa2);
-	a2=max<float>(aa1,aa2);
 
-	if (((angleBegin <= a1)
-		 && (angleEnd >= a1))
-	||((angleBegin <= a2) 
-		&& (angleEnd >= a2 ))
-	|| ((a1 <= angleBegin)
-		&& (angleBegin <= a2))) //FIXME fo funkcie
+	for (int i =0; i<2; i++)
 	{
-		relation.angleBegin = max<float> (relation.angleBegin, a1);
-		relation.angleEnd = min<float> (relation.angleEnd, a2);
-		relation.distance = dist;
-		std::list<ObjectRelation>::iterator ins = visibleObjects.begin();
-		while (ins!=visibleObjects.end())
+		if (((angleBegin <= a1)
+					&& (angleEnd >= a1))
+				||((angleBegin <= a2) 
+					&& (angleEnd >= a2 ))
+				|| ((a1 <= angleBegin)
+					&& (angleBegin <= a2))) //FIXME fo funkcie
 		{
-			if((*ins).distance > dist )
-				break;
-			ins++;
+			relation.angleBegin = max<float> (relation.angleBegin, a1);
+			relation.angleEnd = min<float> (relation.angleEnd, a2);
+			relation.distance = dist;
+			std::list<ObjectRelation>::iterator ins = visibleObjects.begin();
+			while (ins!=visibleObjects.end())
+			{
+				if((*ins).distance > dist )
+					break;
+				ins++;
+			}
+			visibleObjects.insert(ins, relation);
+			for (ins = visibleObjects.begin(); ins!=visibleObjects.end(); ins++)
+				TEST(" " << (*ins).distance)
+			return;
 		}
-		visibleObjects.insert(ins, relation);
-		for (ins = visibleObjects.begin(); ins!=visibleObjects.end(); ins++)
-			TEST(" " << (*ins).distance)
+		a1-=2*PI;
+		a2-=2*PI;
 	}
 }
 int Seer::checkVisibility()

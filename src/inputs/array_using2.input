@@ -1,0 +1,15 @@
+ROBOT qqq
+{
+	Memory = 1000
+	health = 1
+
+	location[3][2] a = { {{500,400}, {300,200}}};
+	location[3][2] b;
+	main()
+	{
+		shoot (b[0][0]);
+		b = a;
+		shoot (b[0][0]);
+	//	return;
+	}
+}

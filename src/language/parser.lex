@@ -66,7 +66,7 @@ WHITESPACE		[ \r\t\f]
 [vV][oO][iI][dD]				{*l = line; return TOKEN_VOID; }
 [lL][oO][cC][aA][tT][iI][oO][nN]		{*l = line;return TOKEN_LOCATION; }
 [rR][eE][aA][lL] 				{*l = line;return TOKEN_VAR_REAL; }
-[sS][eE][eE][nN] 				{*l = line;return TOKEN_SEEN; }
+[eE][yY][eE] 					{*l = line;return TOKEN_SEEN; }
 [iI][nN][tT][eE][gG][eE][rR]			{*l = line;return TOKEN_VAR_INT; }
 [fF][uU][nN][cC][tT][iI][oO][nN]		{*l = line;return TOKEN_FUNCTION; }
 [eE][lL][sS][eE] 				{*l = line;return TOKEN_ELSE; }

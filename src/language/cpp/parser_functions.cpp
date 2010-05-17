@@ -319,7 +319,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			ee.ins.push_back(new InstructionWait());
 			ee.ins.push_back(new InstructionFetchState());
 			ee.output.push_back(*r->find_type(TypeInteger));
-			ee.temp.push_back(true);
 			break;
 		case FeatureIsPlayer:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
@@ -365,12 +364,12 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
-		case FeatureHit: //obbjekt nieco zasiahol, vracia NULL ak nikoho, Objekt ak ano. Robot musi strelu vidiet
+		case FeatureHit: 
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
 				ee.ins.push_back( new InstructionHit());
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
-			ee.output.push_back(*r->find_type(TypeObject));
+			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurn:
 			if (e.output.size() != 1)

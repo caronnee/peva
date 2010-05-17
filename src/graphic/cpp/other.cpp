@@ -77,17 +77,15 @@ void Play::init()
 
 void Play::resume()
 {
+	done = false;
 	focus = 0;
-	if (show)
+
+	if (show ||w->settings->inputs.empty())
 	{
 		w->pop();
 		return;
 	}
-	if (w->settings->inputs.empty())
-	{
-		w->pop();	
-		return;
-	}
+
 	robots.clean();
 	robots.points = w->settings->gamePoints;
 	int err = 0;
@@ -242,8 +240,9 @@ void Play::process()
 		rect.y = (m->resolution.y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
-		w->g->waitKeyDown();
-		
+		if (w->g->waitKeyDown())
+			w->pop();
+
 		for (size_t i =0; i< robots.robots.size(); i++)
 			m->remove(robots.robots[i]->getBody());
 		resume();

@@ -1,6 +1,7 @@
 //TODO zrusit loadGlobal
 //TODO do funkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
-//FeIXME pri for-e odtranit vytvorenie premennej, spravit skor  defauult temp
+//FIXME pri for-e odtranit vytvorenie premennej, spravit skor  defauult temp
+
 %{
 #include <iostream>
 #include <queue>
@@ -842,7 +843,7 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 			}
 			$3.ins.push_back(new InstructionJump(0,$5.size()));
 			$$ = $3.ins;
-			$$.insert($3.ins.end(),$5.begin(), $5.end());
+			$$.insert($$.end(),$5.begin(), $5.end());
 		}
 	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command 
 	{
