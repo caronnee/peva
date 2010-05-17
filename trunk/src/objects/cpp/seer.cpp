@@ -3,7 +3,7 @@
 #include "../../add-ons/h/macros.h"
 #include "../h/seer.h"
 
-#define FLOAT_COMP_ZERO -0.1
+#define FLOAT_COMP_ZERO -0.0001
 
 Seer::Seer()
 {
@@ -189,6 +189,7 @@ int Seer::checkVisibility()
 	TEST(visibleObjects.size())
 	while(iter!=visibleObjects.end())
 	{
+		TEST(iter->object->info());
 		if ((*iter).angleBegin - (*iter).angleEnd > FLOAT_COMP_ZERO) //kvoli nepresnosto floatov
 		{
 			TEST("mazem")

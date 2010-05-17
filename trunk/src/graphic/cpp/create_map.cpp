@@ -280,7 +280,7 @@ void Create_map::backspace()
 		written_x.erase(written_x.length()-1,1);
 	if (x && (written_y.length())) 
 		written_y.erase(written_y.length()-1,1);
-
+	draw();
 }
 void Create_map::drawInit()
 {

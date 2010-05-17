@@ -4,14 +4,25 @@ ROBOT a1
 	ATTACK = 33			
 	Missilles = 10
 
-	MHEALTH = 1000
+	MHEALTH = 100
 	Mattack  = 40
 	KILL a3
 
 	main()
 	{
-		turn(45);
-		shoot(0);
+		for(integer i = 0; i <6;i++)
+		{
+			while(see())
+			{
+				shoot(0);
+			}
+			turn(180);
+			while(see())
+			{
+				shoot(0);
+			}
+			move(i*4);
+		}
 	}
 }
 robot a2
@@ -21,8 +32,7 @@ robot a2
 	attack = 5
 	main()
 	{
-		turn(45);
-		move(5);
+		wait(19);
 	}
 }
 robot a3
@@ -33,7 +43,6 @@ robot a3
 
 	main()
 	{
-		turn(45);
 		wait(188);
 	}
 }
