@@ -278,6 +278,7 @@ int Object::Hit()const
 
 Dummy::Dummy() : Object(NULL, NULL)
 {
+	name = "Dummy";
 	type =~0;
 }
 

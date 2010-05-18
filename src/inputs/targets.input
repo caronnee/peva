@@ -1,11 +1,12 @@
 ROBOT qqq
 {
 	HEALTH = 10
-	ATTACK = 33			
+	ATTACK = 33
 
+	memory = 100
 	MHEALTH = 10
-	VISIT( 4,9,2 )
-	VISIT_SEQ( 0, 5, 2, 6, 4, 2)
+//	VISIT( 4,9,2 )
+	VISIT_SEQ( 0, 5 )
 
 	main()
 	{
@@ -13,5 +14,13 @@ ROBOT qqq
 		turn(direction(l));
 		shoot(0);
 		move(70);
+	}
+}
+robot a
+{
+	health = 100
+	main()
+	{
+		wait (2000);
 	}
 }

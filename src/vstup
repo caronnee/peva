@@ -1,17 +1,38 @@
-ROBOT qqq
+ROBOT a1
 {
-	HEALTH = 100
+	HEALTH = 10
 	ATTACK = 33			
-        DEFENSE	= 22		
-	MATTACK = 50	
-	MHEALTH	= 20	
-	Memory = 1000
+	Missilles = 10
+	Angle = 45
 
-	main() // komentar
+	memory = 100
+	MHEALTH = 100
+	Mattack  = 40
+	KILL a3
+
+	Object o = NULL;
+	main()
 	{
-		location l;
-		l = locate(this);
-		shoot(l);
-		return;
+		for(integer i = 0; i <6;i++)
+		{
+			integer s = see();
+			for (integer i =0 ;i < s; i++)
+			{
+				if (isPlayer(eye[i]))
+				{
+					o = eye[i];
+					break;
+				}
+				else
+				{
+					turn(180);
+					move(5*i+5);
+				}
+			}
+			while (hit(o) > 0 )
+			{
+				shoot(direction(locate(o)));
+			}
+		}
 	}
 }

@@ -15,7 +15,6 @@ Robot::Robot(std::string s, std::string space_, GamePoints points_)
 	errors = false;
 	defined_types = new TypeContainer();
 	core = new Core( defined_types);
-	nullable = new Object(NULL,NULL);
 	
 	defined_types->add(new Create_type(TypeUndefined));
 	defined_types->add(new Create_type(TypeVoid));
@@ -68,7 +67,7 @@ void Robot::variables()
 	//pridana premenna pre NULL;
 	n = defined.find("NULL");
 	core->memory.assign(n, 0);
-	n->var[0]->objectValue = nullable;
+	n->var[0]->objectValue = core->memory.dummy();
 
 	//pridana premenna pre this;
 	n = defined.find("this");
@@ -575,8 +574,6 @@ Robot::~Robot()
 		delete scheduller;
 	if (core)
 		delete core;
-	if (nullable)
-		delete nullable;
 	if (defined_types)
 		delete defined_types;
 

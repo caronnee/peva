@@ -20,18 +20,19 @@ ROBOT a1
 			{
 				if (isPlayer(eye[i]))
 				{
-					o = eye[0];
+					o = eye[i];
 					break;
 				}
 				else
+				{
 					turn(180);
+					move(5*i+5);
+				}
 			}
 			while (hit(o) > 0 )
 			{
 				shoot(direction(locate(o)));
 			}
-			turn(30);
-			move(5);
 		}
 	}
 }
@@ -42,7 +43,7 @@ robot a2
 	attack = 5
 	main()
 	{
-		wait(19);
+		wait(2000);
 	}
 }
 robot a3
@@ -53,6 +54,6 @@ robot a3
 
 	main()
 	{
-		wait(188);
+		wait(2001);
 	}
 }

@@ -134,6 +134,7 @@ void GamePoints::check()
 
 Body::Body() : Object(NULL,NULL)
 {
+	type = Player;
 	waits = 0;
 	state_ = 0;
 	ms = NULL;

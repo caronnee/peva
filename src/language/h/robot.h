@@ -71,9 +71,6 @@ public:
 	/* return nam of input where robot was created */
 	std::string getSpace()const;
 
-	/* acces for NULL */
-	Object * nullable;
-
 	/* flags if there asre errors */
 	bool errors;
 

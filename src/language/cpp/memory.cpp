@@ -49,6 +49,7 @@ Variable * Memory::next_id(size_t ID)
 		{
 			memory[i]->owner = ID;
 			TEST("Assignujem " <<i)
+			memory[i]->array.elements.clear();
 			return memory[i];
 		}
 	}
@@ -58,11 +59,13 @@ Variable * Memory::next_id(size_t ID)
 		{
 			TEST("Assignujem " <<i)
 			memory[i]->owner = ID;
+			memory[i]->array.elements.clear();
 			return memory[i];
 		}
 	}
 	int id = rand()%memory.size();
 	TEST("Assignujem nahodne" << id);
+	memory[id]->array.elements.clear();
 	return memory[id];
 }
 
@@ -112,7 +115,7 @@ void Memory::set_free(Variable * v)
 		{
 			vars.push(tmp->array.elements[i]);
 		}
-		tmp->array.elements.clear();
+	//	tmp->array.elements.clear();
 	}
 }
 
@@ -137,21 +140,21 @@ void Memory::fill(Variable * &v,
 	if (t->is_simple())
 		return;
 	TEST("begin of block")
-	Variable * tmp = NULL;
+	std::vector<Variable *> tmps;
 	for(size_t i =0; i<t->range; i++) 
 	{
-		tmp = next_id(ID);
+		tmps.push_back(next_id(ID));
 		types_to_assign.push(t->data_type);
-		variables_to_assign.push(tmp);
-		v->array.elements.push_back(tmp);
+		variables_to_assign.push(tmps.back());
+		v->array.elements.push_back(tmps.back());
 		v->array.range = t->range;
 	}
 	for(size_t i =0; i<t->nested_vars.size(); i++) 
 	{
-		tmp = next_id(ID);
+		tmps.push_back(next_id(ID));
 		types_to_assign.push(t->nested_vars[i].type);
-		variables_to_assign.push(tmp);
-		v->array.elements.push_back(tmp);
+		variables_to_assign.push(tmps.back());
+		v->array.elements.push_back(tmps.back());
 		v->array.range = t->nested_vars.size();
 	}
 	TEST("end of block")
