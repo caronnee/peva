@@ -202,6 +202,7 @@ void Play::resume()
 }
 void Play::resize()
 {
+	m->setShift( 0 ,0);
 	Position rct = m->setBoundary(w->g->screen->w, w->g->screen->h);
 	//rozdiel medzi poslednym a sucasnym shiftom
 	//TODO nacentrovat do posledneho robota

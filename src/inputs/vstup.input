@@ -15,10 +15,16 @@ ROBOT a1
 	{
 		for(integer i = 0; i <6;i++)
 		{
-			see();
-			if (isPlayer(eye[0]))
+			integer s = see();
+			for (integer i =0 ;i < s; i++)
 			{
-				o = eye[0];
+				if (isPlayer(eye[i]))
+				{
+					o = eye[0];
+					break;
+				}
+				else
+					turn(180);
 			}
 			while (hit(o) > 0 )
 			{
