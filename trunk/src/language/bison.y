@@ -683,7 +683,7 @@ array: TOKEN_IDENTIFIER array_access
 				$$.output.back() = *t;
 			}
 		}
-		|TOKEN_SEEN TOKEN_LSBRA number TOKEN_RSBRA
+		|TOKEN_SEEN TOKEN_LSBRA expression TOKEN_RSBRA
 		{
 			$$.clear();
 			$$.ins = $3.ins;
