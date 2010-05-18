@@ -927,7 +927,7 @@ int InstructionGtInteger::execute(Core * c)
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = (left > right)? 0:1; 
+	c->values.back()->integerValue = (left > right)? 1:0; 
 	TEST("OK")
 	return 0;
 }
@@ -944,7 +944,7 @@ int InstructionGtReal::execute(Core * c)
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = (left > right)? 0:1; 
+	c->values.back()->integerValue = (left > right)? 1:0; 
 	TEST("OK")
 	return 0;
 }
@@ -961,7 +961,7 @@ int InstructionGeInteger::execute(Core *c)
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = (left >= right)? 0:1; 
+	c->values.back()->integerValue = (left >= right)? 1:0; 
 	TEST("OK")
 	return 0;
 }
@@ -978,7 +978,7 @@ int InstructionGeReal::execute(Core * c)
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = (left >= right)? 0:1; 
+	c->values.back()->integerValue = (left >= right)? 1:0; 
 	TEST("OK")
 	return 0;
 }

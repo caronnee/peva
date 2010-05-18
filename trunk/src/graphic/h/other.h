@@ -142,25 +142,58 @@ public:
 
 class Play:public Menu
 {
+	/* addition manu to show when something happens */
 	Menu * show;
+
+	/* which robot is focused */
 	size_t focus;
-	std::vector<std::string> files;
+
+	/* map of the dungeon */
 	Map * m;
+
+	/* window hadler */
 	Window * w;
+
+	/* if true, game is over */
 	bool done;
+
+	/* loaded robots */
 	Robots robots;
+
+	/* which map is currently in use */
 	int mapIter;
-	SDL_Rect rect;
+
+	/* init some map when none was chosen */
 	void init(int, int);
+
+	/* menu for loading robot inputs */
 	Menu * loadInput;
+
+	/* sets map to center robot with focus */
+	void setFocus();
 public:
+	/* constructor */
 	Play(Window * w_);
+
+	/* handling events */
 	void process();
+
+	/* initialization when meni chosen */
 	void init();
+
+	/* handling resizing */
 	void resize();
+
+	/* handling return to menu */
 	void resume();
+
+	/* drawing events */
 	void draw();
+
+	/* clening after menu if called off */
 	void clean();
+
+	/* destructor */
 	virtual ~Play();
 };
 #endif

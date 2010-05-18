@@ -58,8 +58,6 @@ void Play::clean()
 	if (show)
 		delete show;
 	show = NULL;
-	rect.x = 0;
-	rect.y = 0;
 
 	if (m!=NULL)
 		delete m;
@@ -198,6 +196,7 @@ void Play::resume()
 	//resolving targets
 	robots.resolve();
 	resize();
+	setFocus();
 	draw();
 }
 void Play::resize()
@@ -207,6 +206,32 @@ void Play::resize()
 	//rozdiel medzi poslednym a sucasnym shiftom
 	//TODO nacentrovat do posledneho robota
 	m->setShift( (w->g->screen->w - rct.x)/-2,(w->g->screen->h - rct.y)/-2);
+}
+void Play::setFocus()
+{
+	Rectangle t = robots.robots[focus]->getBody()->collisionSize();
+	Position p = robots.robots[focus]->getBody()->get_pos();
+	p.x = p.x + (t.width - w->g->screen->w)/2;
+	p.y = p.y + (t.height - w->g->screen->h)/2;
+	Position lastAcceptable(m->resolution.x - w->g->screen->w,
+			m->resolution.y - w->g->screen->h);
+	if (lastAcceptable.x < 0)
+		lastAcceptable.x = 0;
+	if (lastAcceptable.y < 0)
+		lastAcceptable.y = 0;
+	if (lastAcceptable.x < p.x)
+		p.x = lastAcceptable.x;
+	if (lastAcceptable.y < p.y)
+		p.y = lastAcceptable.y;
+	if (p.x < 0)
+		p.x = 0;
+	if (p.y < 0)
+		p.y = 0;
+	if (m->boundaries.x < 0	)
+		p.x = m->boundaries.x;
+	if (m->boundaries.y < 0)
+		p.y = m->boundaries.y;
+	m->setShift(p.x,p.y);
 }
 void Play::process()
 {
@@ -242,7 +267,10 @@ void Play::process()
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
 		if (w->g->waitKeyDown())
+		{
 			w->pop();
+			return;
+		}
 
 		for (size_t i =0; i< robots.robots.size(); i++)
 			m->remove(robots.robots[i]->getBody());
@@ -302,31 +330,7 @@ void Play::process()
 				}
 				case SDLK_c: //center aktual
 				{
-					if (focus >= robots.robots.size() )
-						break; //should NOT be here, consider exception?
-					Rectangle t = robots.robots[focus]->getBody()->collisionSize();
-					Position p = robots.robots[focus]->getBody()->get_pos();
-					p.x = p.x + (t.width - w->g->screen->w)/2;
-					p.y = p.y + (t.height - w->g->screen->h)/2;
-					Position lastAcceptable(m->resolution.x - w->g->screen->w,
-						m->resolution.y - w->g->screen->h);
-					if (lastAcceptable.x < 0)
-						lastAcceptable.x = 0;
-					if (lastAcceptable.y < 0)
-						lastAcceptable.y = 0;
-					if (lastAcceptable.x < p.x)
-						p.x = lastAcceptable.x;
-					if (lastAcceptable.y < p.y)
-						p.y = lastAcceptable.y;
-					if (p.x < 0)
-						p.x = 0;
-					if (p.y < 0)
-						p.y = 0;
-					if (m->boundaries.x < 0	)
-						p.x = m->boundaries.x;
-					if (m->boundaries.y < 0)
-						p.y = m->boundaries.y;
-					m->setShift(p.x,p.y);
+					setFocus();	
 					draw();
 					break;
 				}
