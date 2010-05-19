@@ -122,9 +122,6 @@ TargetVisitSequence::~TargetVisitSequence()
 	*/
 }
 
-TargetKill::TargetKill()
-{}
-
 int TargetKill::done()
 {
 	if (constraint == 0)
@@ -132,9 +129,11 @@ int TargetKill::done()
 	return 1;
 }
 
-TargetKillNumber::TargetKillNumber()
+TargetKill::TargetKill(){} 
+
+TargetKill::TargetKill(int i) 
 {
-	constraint = 0;
+	constraint = i;
 }
 TargetKillNumber::TargetKillNumber(int i)
 {
@@ -150,7 +149,13 @@ int TargetKillNumber::fullfilled()
 		return -1;
 	return 0;
 }
-
+std::string TargetKillNumber::state()
+{
+	if (constraint)
+		return "Failed to kill " + deconvert<int>(constraint) 
+			+ " more robots";
+	return "Success";
+}
 TargetKillNumber::~TargetKillNumber()
 {
 	/*
@@ -158,12 +163,14 @@ TargetKillNumber::~TargetKillNumber()
 	*/
 }
 
-TargetKillNumberLess::TargetKillNumberLess()
+std::string TargetKillNumberLess::state()
 {
-	constraint = 0;
+	if (constraint)
+		return "Success";
+	return "Failed. Killed " + deconvert<int>(constraint) 
+			+ " more robots";
 }
-
-TargetKillNumberLess::TargetKillNumberLess(int i)
+TargetKillNumberLess::TargetKillNumberLess(int i) : TargetKillNumber(i)
 {
 	first = 2;
 	constraint = i;
@@ -177,16 +184,23 @@ int TargetKillNumberLess::done()
 int TargetKillNumberLess::fullfilled()
 {
 	constraint--;
-	if (constraint == 0)
+	return done();
+
+/*	if (constraint == 0)
 		return first-1;
 	if (first)
 	{
 		first = 0;
 		return 1; //bude stale splnene, az kym sa to neprehupne na druhu stranu
 	}
-	return 0;
+	return 0;*/
 }
-
+TargetKillNumberLessThen::~TargetKillNumberLessThen()
+{
+	/*
+	   Nothing to destroy yet
+	*/
+}
 TargetKillNumberLess::~TargetKillNumberLess()
 {
 	/*
@@ -194,12 +208,7 @@ TargetKillNumberLess::~TargetKillNumberLess()
 	*/
 }
 
-TargetKillNumberLessThen::TargetKillNumberLessThen()
-{
-	constraint = 0;
-}
-
-TargetKillNumberLessThen::TargetKillNumberLessThen(int i)
+TargetKillNumberLessThen::TargetKillNumberLessThen(int i) : TargetKillNumberLess(i)
 {
 	first = 2;
 	constraint = i;
@@ -214,29 +223,33 @@ int TargetKillNumberLessThen::done()
 int TargetKillNumberLessThen::fullfilled()
 {
 	constraint--;
-	if (constraint == -1 )
+	return done();
+/*	if (constraint == -1 )
 		return first-1;
 	if (first)
 	{
 		first = 0;
 		return 1; //prave sa splnilo, prave jeden krat
 	}
-	return 0;
+	return 0;*/
 }
 
-TargetKillNumberLessThen::~TargetKillNumberLessThen()
+std::string TargetKillNumberLessThen::state()
 {
-	/*
-	   Nothing to destroy yet
-	*/
+	if (done())
+		return "Success";
+	return "Failed. Killed " + deconvert<int>(-1*constraint+1) + "more robots";	
 }
-TargetKillNumberMore::TargetKillNumberMore()
-{
-	constraint = 0;
-}
-TargetKillNumberMore::TargetKillNumberMore(int i)
+
+TargetKillNumberMore::TargetKillNumberMore(int i) : TargetKillNumber(i)
 {
 	constraint = i;
+}
+std::string TargetKillNumberMore::state()
+{
+	if (done())
+		return "Success";
+	return "Failed. Killed " + deconvert<int>(-1*constraint) + "less robots";	
 }
 int TargetKillNumberMore::done()
 {
@@ -258,11 +271,13 @@ TargetKillNumberMore::~TargetKillNumberMore()
 	   Nothing to destroy yet
 	*/
 }
-TargetKillNumberMoreThen::TargetKillNumberMoreThen()
+std::string TargetKillNumberMoreThen::state()
 {
-	constraint = 0;
+	if (done())
+		return "Success";
+	return "Failed. Killed " + deconvert<int>(-1*constraint+1) + "less robots";	
 }
-TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i)
+TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i) : TargetKillNumber(i)
 {
 	constraint = i;
 }
@@ -285,15 +300,17 @@ TargetKillNumberMoreThen::~TargetKillNumberMoreThen()
 	   Nothing to destroy yet
 	*/
 }
-TargetKillNumberNot::TargetKillNumberNot()
-{
-	constraint = 0;
-}
-TargetKillNumberNot::TargetKillNumberNot(int i)
+TargetKillNumberNot::TargetKillNumberNot(int i) : TargetKillNumberLess(i)
 {
 	first = 1;
 	firstAfterZero =false;
 	constraint = i;
+}
+std::string TargetKillNumberNot::state()
+{
+	if (done())
+		return "Success";
+	return "Failed. Killed wrong number of robots";	
 }
 int TargetKillNumberNot::done()
 {
