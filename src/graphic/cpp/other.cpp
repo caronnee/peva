@@ -20,6 +20,7 @@ std::string instructionNames[] ={ "undefined ", "Call", "Create variable ", "loa
 Play::Play(Window *w_)
 {
 	/* init, not repeatable */
+	error = false;
 	srand(time(NULL));
 	w = w_;
 	name(w->g, "Play Game");
@@ -55,6 +56,7 @@ void Play::init(int x, int y)
 
 void Play::clean()
 {
+	error = false;
 	if (show)
 		delete show;
 	show = NULL;
@@ -78,7 +80,7 @@ void Play::resume()
 	done = false;
 	focus = 0;
 
-	if (show ||w->settings->inputs.empty())
+	if (error ||w->settings->inputs.empty())
 	{
 		w->pop();
 		return;
@@ -117,6 +119,7 @@ void Play::resume()
 			robots.robots.pop_back();
 		}
 		show = new ShowMenu(w,s);	
+		error = true;
 		w->add(show);
 		return;
 	}
@@ -266,7 +269,7 @@ void Play::process()
 		rect.y = (m->resolution.y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
-		if (w->g->waitKeyDown())
+		if (w->waitKeyDown())
 		{
 			w->pop();
 			return;
@@ -774,7 +777,7 @@ void ShowMenu::init()
 	int borders = 20;
 	size_t position =0;
 	//najdeme header
-	position = strToshow.find(':',0);//predpokladam, ze je dost male
+	position = strToshow.find(':',0);
 	std::string show;	
 	if (position == std::string::npos)
 	{
@@ -790,13 +793,14 @@ void ShowMenu::init()
 	images.push_back(w->g->render(show));
 	while(position < strToshow.size())
 	{
-		size_t pos = strToshow.find_first_of("\n\r", position);
+		size_t pos = strToshow.find_first_of("\t\n\r", position);
 		if (pos == std::string::npos)
 			pos = strToshow.size();
 		if (pos - position > chars)
 			pos = position + chars;
 		std::string srt = strToshow.substr(position, pos - position);
-		if(pos-position == chars)
+		
+		if(pos - position == chars)
 		{
 			size_t space = srt.find_last_of(" ");
 			if(space < srt.size()-1)
@@ -806,8 +810,13 @@ void ShowMenu::init()
 			}
 			pos--;
 		}
-		position = pos+1;
+
 		images.push_back(w->g->render(srt));
+		if ((pos < strToshow.size()) && (strToshow[pos] == '\t'))
+		{
+			images.push_back(NULL);
+		}
+		position = pos+1;
 	}
 	size = min<size_t>(images.size(),maxToHold);
 }
@@ -829,10 +838,18 @@ void ShowMenu::draw()
 	r.y = w->g->font_size << 2;
 	for (size_t i = iter; i < size; i++)
 	{
+		if (images[i]==NULL)
+		{
+			if (i == size -1)
+				break;
+			r.x =  w->g->screen->w - borders - images[i+1]->w;
+			continue;
+		}
 		r.w = images[i]->w;
 		r.h = images[i]->h;
 		SDL_BlitSurface(images[i],NULL, w->g->screen, &r);
 		r.y += w->g->font_size;
+		r.x = borders;
 	}
 	SDL_Flip(w->g->screen);
 }

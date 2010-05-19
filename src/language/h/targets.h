@@ -13,12 +13,16 @@ class Target
 protected:
 	/* whether the constraint was fulfilled */
 	bool ok;
+
 public:
 	/* Constructor */
 	Target();
 
 	/* tell me your ID */
 	virtual int tellId() = 0;
+
+	/* text informatio about state */
+	virtual std::string state() = 0;
 
 	/* Tell me what you need */
 	virtual Rectangle tellPosition() = 0;
@@ -44,16 +48,23 @@ class TargetVisit : public Target
 {
 protected:
 	/* id of the object */
-	size_t targetId;
+	int targetId;
 
 	/* boux about target position */
 	Rectangle boundingBox;
+
+	/* for statistic purposes */
+	std::string targetName;
 public:
-	/* Consturctor*/
-	TargetVisit(size_t id);
+
+	/* Constructor*/
+	TargetVisit(int id);
 
 	/* id of the target, created in contructor, should be unique*/
 	int tellId();
+
+	/* text informatio about state */
+	virtual std::string state();
 
 	/* change or init position */
 	bool initPosition(Rectangle position);
@@ -70,7 +81,7 @@ public:
 
 class TargetVisitSequence : public Target
 {
-	/* internal vounter to cout number of succeses */
+	/* internal counter to count number of successes */
 	size_t number;
 
 	/* sequence that should be visited */
@@ -79,22 +90,41 @@ class TargetVisitSequence : public Target
 	/* index of place that should be visited now */
 	size_t iter;
 public:
-	
+	/* Constructor */
 	TargetVisitSequence(std::vector<TargetVisit*> p);
+
+	/* text informatio about state */
+	virtual std::string state();
+
+	/* tells id og last not inited place */
 	int tellId();
+
+	/* inits position */
 	bool initPosition(Rectangle p);
+
+	/* tells inited position */
 	Rectangle tellPosition();
+
+	/* tries to set as done, return true id all places from sequence if fullfilled */
 	bool setOk();
+
+	/* sets all as unvisited */
 	void reset();
+
+	/* destructor */
 	virtual ~TargetVisitSequence();
 };
 class TargetKill
 {
 protected:
+	/* how many robots were set */
 	int constraint;
 public:
-	virtual int done();
+	/* Contructor */
 	TargetKill();
+
+	/* checks if appropriate */
+	virtual int done();
 };
 
 class TargetKillNumber : public TargetKill

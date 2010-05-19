@@ -6,7 +6,7 @@ ROBOT a1
 	Angle = 45
 
 	memory = 100
-	MHEALTH = 100
+	MHEALTH = 1000
 	Mattack  = 40
 	KILL a3
 
@@ -23,15 +23,21 @@ ROBOT a1
 					o = eye[i];
 					break;
 				}
-				else
-				{
-					turn(180);
-					move(5*i+5);
-				}
+			}
+			if ((o == NULL)||
+				(hit(o) <=0))
+			{
+				turn (random);
+				move(10);
 			}
 			while (hit(o) > 0 )
 			{
-				shoot(direction(locate(o)));
+				if(!shoot(direction(locate(o))))
+				{
+					turn (180);
+					move(4);
+					turn (180);
+				}
 			}
 		}
 	}

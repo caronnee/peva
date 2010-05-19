@@ -330,25 +330,28 @@ std::string Body::initTargetPlaces()
 		do
 		{
 			int id = targets[i]->tellId();
-			if (id < 0)
+			if (id < 0) //not on map
 				break;
-			if (targets[i]->getOk())
+			if (targets[i]->getOk()) //not found on map
 				break;
-			bool set = false;
+
+			bool set = false, done;
 			for ( std::list<Place>::iterator k = map->places.begin(); k != map->places.end(); k++)
 			{
 				if (k->id != id)
 					continue;
 				set = true;
-				targets[i]->initPosition(k->r);
+				done = targets[i]->initPosition(k->r);
 				break;
 			}
 			if (!set)
 			{
-				if(targets[i]->setOk()) //TODO check, whether it works!
+				if(targets[i]->setOk()) 
 					tasks--;
-				warning += "There is no number " + deconvert<int>(id) + "defined in this map, ignoring";
+				warning += "There is no number " + deconvert<int>(id) + "defined in this map, ignoring\n";
 			}
+			if (done)
+				break;
 		}
 		while (true);
 		targets[i]->reset();
@@ -389,8 +392,6 @@ int Body::wait(int x)
 }
 int Body::shoot(int angle)
 {
-	if (angle > MAX_EYE_ANGLE)
-		return -1; //toto by ale nemalo nastat!
 	TEST("Shooting at angle " << angle)
 	if (ammo.empty())
 	{
@@ -486,6 +487,25 @@ void Body::hit(Object * o)
 		TEST(movement.position_in_map << " " )
 		exit(3);
 	}
+}
+int Body::getDirection(Position position)
+{
+	Position p = position;
+	p.substractVector(get_pos());
+
+	p.x -= getSkin()->get_shift().x/2;
+	p.y -= getSkin()->get_shift().y/2;
+	
+	Position t(movement.direction);
+	float f;
+
+	int dotProd = sqrt(p.x * p.x + p.y*p.y)*sqrt(t.x*t.x+t.y*t.y);
+
+	f = (p.x*t.x + t.y*p.y) / (float)dotProd;
+	int res = toDegree(acos(f));
+	if ( p.y*t.x - p.x*t.y < 0) //ak na druhej strane zorneho pola
+		res = 360 - res; //pretoze sa otazam v mere divnom
+	return res;
 }
 Body::~Body()
 {

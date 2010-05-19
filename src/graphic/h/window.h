@@ -55,6 +55,9 @@ private:
 	std::stack<Menu *> state;
 
 public:
+	/* waits for key to  be pressed */
+	SDLKey waitKeyDown();
+
 	/* class doing graphical operation with this window */
 	Graphic * g;
 

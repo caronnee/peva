@@ -8,12 +8,13 @@
 Seer::Seer()
 {
 	setEyes(0,0); //slepy :)
+	degree = 0;
 }
 
 int Seer::getDegree(Object * o, Position point)
 {
 	float a = getRadian(o, point);
-	return a*180/PI;
+	return toDegree(a);
 }
 float Seer::getRadian(Object * o, Position point)
 {
@@ -48,6 +49,7 @@ void Seer::setEyes(int angle, int visibility)
 		angleBegin_ -=2*PI;
 	}
 	size = visibility;
+	degree = angle;
 }
 void Seer::setEyes(Position eyeDimension)
 {

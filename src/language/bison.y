@@ -40,6 +40,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_THIS "keyword this"
 %token TOKEN_CONTINUE "keyword continue"
 %token TOKEN_ROBOT "keyword robot"
+%token TOKEN_RND "random function"
 %token TOKEN_RET_TARGET "function 'get_target'"
 %token<op> TOKEN_OPTION "robot setings"
 %token<of> TOKEN_OBJECT_FEATURE "function asking about state"
@@ -71,7 +72,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_START "keyword 'start'"
 
 /* group tokens */
-%token<operation> TOKEN_OPER_REL "<"
+%token<operation> TOKEN_OPER_REL "<, >, >=, =<"
 %token<operation> TOKEN_OPER_SIGNADD "sign or additive operator"
 %token<operation> TOKEN_OPER_MUL "multiplicative operator"
 %token<operation> TOKEN_PLUSPLUS "++"
@@ -480,6 +481,12 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL
 			$$.output.push_back(*program->robots.back()->find_type(TypeInteger));
 			$$.temp.push_back(false); 
 		} 
+		|TOKEN_RND
+		{
+			$$.ins.push_back(new InstructionRandom()); 
+			$$.output.push_back(*program->robots.back()->find_type(TypeInteger));
+			$$.temp.push_back(true); 
+		}
 		;
 
 begin:	TOKEN_BEGIN { program->robots.back()->core->depth++; program->robots.back()->defined.new_block();}

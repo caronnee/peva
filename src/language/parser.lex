@@ -44,6 +44,7 @@ WHITESPACE		[ \r\t\f]
 [sS][kK][iI][nN]				{*l = line; return TOKEN_SKIN;}
 [kK][iI][lL][lL]				{*l = line; return TOKEN_KILL;}
 [sS][tT][aA][rR][tT]				{*l = line; return TOKEN_START; }
+[rR][aA][nN][dD][oO][mM]			{*l = line; return TOKEN_RND; }
                                 	
 [iI][sS][pP][lL][aA][yY][eE][rR]		{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
 [iI][sS][wW][aA][lL][lL]			{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}

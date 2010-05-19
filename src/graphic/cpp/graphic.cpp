@@ -4,18 +4,7 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
-bool Graphic::waitKeyDown()
-{
-	while(true)
-	{
-		if((SDL_WaitEvent(&event)==0)
-				||(event.type ==SDL_KEYDOWN))
-			break;
-	}
-	if (event.key.keysym.sym == SDLK_ESCAPE)
-		return true;
-	return false;
-}
+
 SDL_Surface * Graphic::render(std::string s)
 {
 	return TTF_RenderText_Solid(g_font, s.c_str(), normal);

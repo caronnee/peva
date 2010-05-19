@@ -16,8 +16,6 @@
 #define WIN_FLAGS SDL_HWSURFACE|SDL_RESIZABLE //TODO! on resizeable
 #define WIN_BPP 0
 #define WIN_TITLE "Codewars"
-#define WIN_MAX_WIDTH 1280
-#define WIN_MAX_HEIGHT 1024
 
 #define ICON "./images/icon.png"
 
@@ -34,25 +32,50 @@
 
 class Graphic
 {
-public:
+	/* name of font to be used*/
 	std::string font;
+
+	/* initial resolution arfter load */
 	int resolution_width, resolution_heigth;
+public:
+	/* size of font as was initialized *///FIXME sholud not b used
 	int font_size;
+
+	/* used font */
 	TTF_Font * g_font;//main font
-	SDL_Color normal, light;//TODO read_only
-	SDL_Surface * screen; //TODO pridat funkciu get_screen
+
+	/* used colors */
+	SDL_Color normal, light;
+
+	/* screen to be blit on */
+	SDL_Surface * screen;
+
+	/* handling evenets */
 	SDL_Event event;
 
+	/* constructor, initialize graphic */
 	Graphic();
+
+	/* returns a newly creaed image of text, user should call sdl_freeSurface */
 	SDL_Surface * render(std::string str);
+
+	/* returns a newly creaed image of highlited text, user should call sdl_freeSurface */
 	SDL_Surface * renderLight(std::string str);
+
+	/* initialized graphic with parameters, should
+	 * be always called before using anything from this class */
 	bool Init(); //initne screen, nacita background a pod.
+
+	/* destroys everything that was allocated */
 	void Destroy();
 
+	/* function to initilialize some parameters */
 	void set_resolution(std::string r);
+
+	/* function to initilialize some parameters */
 	void set_font(std::string res);
+
+	/* function to initilialize some parameters */
 	void set_font_size(std::string res);
-	bool waitKeyDown();
-	//TODO take veci ako napriklad vykreslovanie
 };
 #endif
