@@ -41,7 +41,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_CONTINUE "keyword continue"
 %token TOKEN_ROBOT "keyword robot"
 %token TOKEN_RND "random function"
-%token TOKEN_RET_TARGET "function 'get_target'"
+%token TOKEN_RET_TARGET "function get_target"
 %token<op> TOKEN_OPTION "robot setings"
 %token<of> TOKEN_OBJECT_FEATURE "function asking about state"
 
@@ -64,12 +64,12 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token TOKEN_SEEN "seen function"
 
 /* target of game*/
-%token TOKEN_VISIT "keyword 'visit'"
-%token TOKEN_VISIT_SEQUENCE "keyword 'visit_seq'"
-%token TOKEN_KILLED "keyword 'killed'"
-%token TOKEN_SKIN "keyword 'skin'"
-%token TOKEN_KILL "keyword 'kill'"
-%token TOKEN_START "keyword 'start'"
+%token TOKEN_VISIT "keyword visit"
+%token TOKEN_VISIT_SEQUENCE "keyword visit_seq"
+%token TOKEN_KILLED "keyword killed"
+%token TOKEN_SKIN "keyword skin"
+%token TOKEN_KILL "keyword kill"
+%token TOKEN_START "keyword start"
 
 /* group tokens */
 %token<operation> TOKEN_OPER_REL "<, >, >=, =<"
@@ -78,7 +78,7 @@ static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
 %token<operation> TOKEN_PLUSPLUS "++"
 %token<operation> TOKEN_MINUSMINUS "--"
 %token<operation> TOKEN_BOOL_AND "&&"
-%token<operation> TOKEN_BOOL_OR "||"
+%token<operation> TOKEN_BOOL_OR "|| or !"
 
 %type<ident> function_name "function name"
 
@@ -172,6 +172,15 @@ targets: /* default target */
 		for(size_t i = 0; i< $4.size();i++)
 			b->addVisit($4[i]);
 	}
+	|targets TOKEN_KILL TOKEN_IDENTIFIER
+	{ 
+		ResolveName n;
+		n.prefix = program->input;
+		n.robot = program->robots.back();
+		n.name = $3;
+		n.line = @3;
+		program->resolveName.push_back(n);
+	}
 	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR 
 	{
 		Body *b = program->robots.back()->getBody();
@@ -213,16 +222,7 @@ options: /* defaultne opsny, normalny default alebo ako boli nadekralovane */
 	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT 
 	{ 
 		program->set($2,$4); 
-	}
-	| options TOKEN_KILL TOKEN_IDENTIFIER
-	{ 
-		ResolveName n;
-		n.prefix = program->input;
-		n.robot = program->robots.back();
-		n.name = $3;
-		n.line = @3;
-		program->resolveName.push_back(n);
-	}
+	}	
 	| options TOKEN_SKIN TOKEN_IDENTIFIER 
 	{	
 		program->robots.back()->setSkin(program->addSkin($3)); 

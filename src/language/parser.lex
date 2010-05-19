@@ -27,24 +27,24 @@ WHITESPACE		[ \r\t\f]
 \/\/						BEGIN(COMMENT_LINE);
 \/\*						BEGIN(COMMENT);
 
-[rR][oO][bB][oO][tT]				{*l = line; return TOKEN_ROBOT; }
-[hH][eE][aA][lL][tT][hH] 			{*l = line; lv->op = OptionHealth; return TOKEN_OPTION; }
-[aA][tT][tT][aA][cC][kK]			{*l = line; lv->op = OptionAttack; return TOKEN_OPTION; }
-[dD][eE][fF][eE][nN][sS][eE]			{*l = line; lv->op = OptionDefense;return TOKEN_OPTION; }
-[mM][aA][tT][tT][aA][cC][kK] 			{*l = line; lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
-[mM][hH][eE][aA][lL][tT][hH]			{*l = line; lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
-[aA][nN][gG][lL][eE]				{*l = line; lv->op = OptionSee; return TOKEN_OPTION;}
-[sS][tT][eE][pP]				{*l = line; lv->op = OptionStep; return TOKEN_OPTION;}
-[mM][eE][mM][oO][rR][yY]			{*l = line; lv->op = OptionMemory; return TOKEN_OPTION;}
-[mM][iI][sS][sS][iI][lL][lL][eE][sS]		{*l = line; lv->op = OptionMissilles; return TOKEN_OPTION;}
+[rR][oO][bB][oO][tT]				{*l = line;return TOKEN_ROBOT; }
+[hH][eE][aA][lL][tT][hH] 			{*l = line;lv->op = OptionHealth; return TOKEN_OPTION; }
+[aA][tT][tT][aA][cC][kK]			{*l = line;lv->op = OptionAttack; return TOKEN_OPTION; }
+[dD][eE][fF][eE][nN][sS][eE]			{*l = line;lv->op = OptionDefense;return TOKEN_OPTION; }
+[mM][aA][tT][tT][aA][cC][kK] 			{*l = line;lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
+[mM][hH][eE][aA][lL][tT][hH]			{*l = line;lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
+[aA][nN][gG][lL][eE]				{*l = line;lv->op = OptionSee; return TOKEN_OPTION;}
+[sS][tT][eE][pP]				{*l = line;lv->op = OptionStep; return TOKEN_OPTION;}
+[mM][eE][mM][oO][rR][yY]			{*l = line;lv->op = OptionMemory; return TOKEN_OPTION;}
+[mM][iI][sS][sS][iI][lL][lL][eE][sS]		{*l = line;lv->op = OptionMissilles; return TOKEN_OPTION;}
                                 	
-[vV][iI][sS][iI][tT]				{*l = line; return TOKEN_VISIT; }
-[vV][iI][sS][iI][tT]_[sS][eE][qQ]		{*l = line; return TOKEN_VISIT_SEQUENCE; }
-[kK][iI][lL][lL][eE][dD]			{*l = line; return TOKEN_KILLED; }
-[sS][kK][iI][nN]				{*l = line; return TOKEN_SKIN;}
-[kK][iI][lL][lL]				{*l = line; return TOKEN_KILL;}
-[sS][tT][aA][rR][tT]				{*l = line; return TOKEN_START; }
-[rR][aA][nN][dD][oO][mM]			{*l = line; return TOKEN_RND; }
+[vV][iI][sS][iI][tT]				{*l = line;return TOKEN_VISIT; }
+[vV][iI][sS][iI][tT]_?[sS][eE][qQ]		{*l = line;return TOKEN_VISIT_SEQUENCE; }
+[kK][iI][lL][lL][eE][dD]			{*l = line;return TOKEN_KILLED; }
+[sS][kK][iI][nN]				{*l = line;return TOKEN_SKIN;}
+[kK][iI][lL][lL]				{*l = line;return TOKEN_KILL;}
+[sS][tT][aA][rR][tT]				{*l = line;return TOKEN_START; }
+[rR][aA][nN][dD][oO][mM]			{*l = line;return TOKEN_RND; }
                                 	
 [iI][sS][pP][lL][aA][yY][eE][rR]		{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
 [iI][sS][wW][aA][lL][lL]			{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
@@ -61,10 +61,9 @@ WHITESPACE		[ \r\t\f]
 [mM][oO][vV][eE]				{*l = line;lv->of = FeatureStep;return TOKEN_OBJECT_FEATURE;}
 [gG][eE][tT][tT][aA][rR][gG][eE][tT]		{*l = line;lv->of = FeatureTarget; return TOKEN_OBJECT_FEATURE;}
 [dD][iI][rR][eE][cC][tT][iI][oO][nN]		{*l = line;lv->of = FeatureDirection; return TOKEN_OBJECT_FEATURE;}
-
-[mM][aA][iI][nN]				{*l = line; return TOKEN_MAIN; }
-[vV][aA][rR]					{*l = line; return TOKEN_REFERENCE;}
-[vV][oO][iI][dD]				{*l = line; return TOKEN_VOID; }
+[mM][aA][iI][nN]				{*l = line;return TOKEN_MAIN; }
+[vV][aA][rR]					{*l = line;return TOKEN_REFERENCE;}
+[vV][oO][iI][dD]				{*l = line;return TOKEN_VOID; }
 [lL][oO][cC][aA][tT][iI][oO][nN]		{*l = line;return TOKEN_LOCATION; }
 [rR][eE][aA][lL] 				{*l = line;return TOKEN_VAR_REAL; }
 [eE][yY][eE] 					{*l = line;return TOKEN_SEEN; }
