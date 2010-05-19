@@ -58,7 +58,7 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 		return e;
 	}
 	else
-		e.output.push_back(t1);
+		e.output.push_back(*r->find_type(TypeInteger));
 	switch (e.output[0].type)
 	{
 		case TypeInteger:
@@ -423,12 +423,6 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			if (e.output.back() == *r->find_type(TypeInteger))
 			{
 				ee.ins.push_back(new InstructionShootAngle);
-				ee.output.push_back(*r->find_type(TypeInteger));
-				break;
-			}
-			if (e.output.back() == *r->find_type(TypeLocation))
-			{
-				ee.ins.push_back(new InstructionShootLocation());
 				ee.output.push_back(*r->find_type(TypeInteger));
 				break;
 			}

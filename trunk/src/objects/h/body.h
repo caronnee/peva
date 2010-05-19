@@ -73,6 +73,9 @@ private:
 public:
 	/* class handling visibility issue */
 	Seer seer;
+	
+	/* for determining direction */
+	int getDirection(Position p);
 
 	/* returns used skin */
 	Skin * getSkin()const;

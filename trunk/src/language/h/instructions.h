@@ -55,6 +55,7 @@ enum Instr
 	IGroup_check,
 	IGroup_locate,
 	IGroup_direction,
+	IGroup_random,
 	IGroups
 };
 
@@ -552,13 +553,6 @@ class InstructionWait : public Instruction
 		virtual int execute(Core * c);
 		virtual ~InstructionWait();
 };
-class InstructionShootLocation : public Instruction
-{
-	public:
-		InstructionShootLocation();
-		virtual int execute(Core * c);
-		virtual ~InstructionShootLocation();
-};
 class InstructionShootAngle : public Instruction
 {
 	public:
@@ -661,5 +655,12 @@ class InstructionDirection : public Instruction
 		InstructionDirection();
 		virtual int execute(Core * c);
 		virtual ~InstructionDirection();
+};
+class InstructionRandom : public Instruction
+{
+	public:
+		InstructionRandom();
+		virtual int execute(Core * c);
+		virtual ~InstructionRandom();
 };
 #endif

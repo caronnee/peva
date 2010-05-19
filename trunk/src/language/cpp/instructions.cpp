@@ -1291,33 +1291,6 @@ int InstructionWait::execute(Core *c) //prave jeden parameter
 }
 InstructionWait::~InstructionWait() {}
 
-InstructionShootLocation::InstructionShootLocation()
-{
-	name_ = "Instruction ShootLocation";
-	group = IGroup_shoot;
-}
-int InstructionShootLocation::execute(Core *c)
-{
-	TEST("Shooting at location...[" << c->values.back()->array.elements[0]->integerValue << "," <<
-					c->values.back()->array.elements[1]->integerValue << "]" ) //TODO upravit pamat aby som nemusela ifovat
-	if (c->values.back()->array.elements.size() < 2)
-	{
-		TEST("Error! loaded variable does not have enough elements")
-		return -1;
-	}
-	float f = (float)
-	(c->values.back()->array.elements[1]->integerValue - c->body->get_pos().y)
-		/
-	(float)(c->values.back()->array.elements[0]->integerValue - c->body->get_pos().x);
-	int x = toDegree(atan(f));
-	c->values.pop_back();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
-	c->values.back()->integerValue = c->body->shoot(x); 
-	TEST("OK")
-	return 0;
-}
-InstructionShootLocation::~InstructionShootLocation() {}
-
 InstructionShootAngle::InstructionShootAngle()
 {
 	name_ = "Instruction ShootAngle";
@@ -1546,27 +1519,16 @@ InstructionDirection::InstructionDirection()
 	node = NULL;
 	name_ = "Instruction Direction";
 }
+
 int InstructionDirection::execute(Core * c) 
 {
 	Variable * v = c->getVariableFromStack();
 	if (v->array.elements.size()<2)
 		return -1;
-	Position p( v->array.elements[0]->integerValue, v->array.elements[1]->integerValue );
-	p.substractVector(c->body->get_pos());
-
-	p.x -= c->body->getSkin()->get_shift().x/2;
-	p.y -= c->body->getSkin()->get_shift().y/2;
 	
-	Position t(c->body->movement.direction);
-	float f;
-
-	int dotProd = sqrt(p.x * p.x + p.y*p.y)*sqrt(t.x*t.x+t.y*t.y);
-
-	f = (p.x*t.x + t.y*p.y) / (float)dotProd;
-	int res = toDegree(acos(f));
-	if ( p.y*t.x - p.x*t.y < 0) //ak na druhej strane zorneho pola
-		res = 360 - res; //pretoze sa otazam v mere divnom
-
+	Position p( v->array.elements[0]->integerValue, 
+		v->array.elements[1]->integerValue );
+	int res =c->body->getDirection(p);
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
 	v->integerValue = res;
 	c->values.push_back(v);
@@ -1574,3 +1536,18 @@ int InstructionDirection::execute(Core * c)
 }
 
 InstructionDirection::~InstructionDirection() { }
+
+InstructionRandom::InstructionRandom() 
+{ 
+	name_ = "Instruction Number ";
+}
+
+int InstructionRandom::execute (Core * c) 
+{
+	Variable * v;
+	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
+	v->integerValue = random ();
+	c->values.push_back(v);
+	return 0;
+}
+InstructionRandom::~InstructionRandom() { }

@@ -101,6 +101,19 @@ bool Window::Init(int argc, char * argv[] )
 	return b;
 }
 
+SDLKey Window::waitKeyDown()
+{
+	while(true)
+	{
+		if((SDL_WaitEvent(&g->event)==0)
+				||(g->event.type ==SDL_KEYDOWN))
+			return g->event.key.keysym.sym;
+		if((g->event.type == SDL_VIDEORESIZE))
+			resize();
+	}
+	return SDLK_ESCAPE;
+}
+
 void Window::resize()
 {
 	g->screen = SDL_SetVideoMode(g->event.resize.w, g->event.resize.h, WIN_BPP, WIN_FLAGS);

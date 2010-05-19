@@ -142,6 +142,9 @@ public:
 
 class Play:public Menu
 {
+	/* flag of error occured */
+	bool error;
+
 	/* addition manu to show when something happens */
 	Menu * show;
 

@@ -1,10 +1,10 @@
 #include "../h/targets.h"
 #include "../../add-ons/h/macros.h"
+#include "../../add-ons/h/help_functions.h"
 
 Target::Target()
 {
-	ok = false; //este nesplnena podmienka
-	//TODO objects features
+	ok = false;
 }
 bool Target::getOk()const
 {
@@ -18,16 +18,28 @@ Target::~Target()
 	   Nothing so far, nothing to destroy
 	*/
 }
-TargetVisit::TargetVisit(size_t Id):Target()
+TargetVisit::TargetVisit(int Id):Target()
 {
 	ok = false;
 	targetId = Id;
+	if (Id <0)
+		targetName = "user defined place";
+	else
+		targetName = "Place with number " + deconvert<int>(Id);
 }
 bool TargetVisit::setOk()
 {
 	ok = true;
 	return ok;
 }
+
+std::string TargetVisit::state()
+{
+	if (ok)
+		return "Success visiting " + targetName;
+	return "Failed to visit" + targetName;
+}
+
 int TargetVisit::tellId()
 {
 	return targetId;
@@ -35,7 +47,9 @@ int TargetVisit::tellId()
 bool TargetVisit::initPosition(Rectangle p)
 {
 	boundingBox = p;
-	targetId =-8; //FIXME aby sa to dalo resetovat
+	if (targetId < 0)
+		targetName += "["+deconvert<int>(p.x + p.width/2)+","
+			+deconvert<int>(p.y + p.height/2)+"]";
 	return true;
 }
 Rectangle TargetVisit::tellPosition()
@@ -62,6 +76,15 @@ int TargetVisitSequence::tellId()
 	if (iter >= places.size())
 		return -1;
 	return places[iter]->tellId();
+}
+std::string TargetVisitSequence::state()
+{
+	std::string out;
+	for (size_t i =0; i< places.size(); i++)
+	{
+		out += places[i]->state() +"\t\n";
+	}
+	return out;
 }
 bool TargetVisitSequence::initPosition(Rectangle p)
 {

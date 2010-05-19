@@ -35,6 +35,9 @@ class Seer
 	void addToVisible(ObjectRelation& rel);
 
 public:
+	/* visile anle in degrees, for later recognizion */
+	int degree;
+
 	/* constructor, set class to be blind */
 	Seer();
 
