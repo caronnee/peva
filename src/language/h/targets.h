@@ -122,6 +122,10 @@ protected:
 public:
 	/* Contructor */
 	TargetKill();
+	TargetKill(int i);
+
+	/* text iformation about state of killing spree */
+	virtual std::string state() = 0;
 
 	/* checks if appropriate */
 	virtual int done();
@@ -130,10 +134,10 @@ public:
 class TargetKillNumber : public TargetKill
 {
 public:
-	/* 0 = not chaged, 1 = cheche & fulfilled, -1 = begin to b unfuillfilled */
+	/* 0 = not chaged, 1 = cheche & fulfilled, -1 = begin to b unfullfilled */
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
-	TargetKillNumber();
 	TargetKillNumber(int i);
+	std::string state();
 	virtual ~TargetKillNumber();
 };
 
@@ -144,7 +148,10 @@ protected:
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
-	TargetKillNumberLess();
+
+	/* text iformation about state of killing spree */
+	virtual std::string state();
+
 	TargetKillNumberLess(int i);
 	virtual ~TargetKillNumberLess();
 };
@@ -154,7 +161,8 @@ class TargetKillNumberLessThen : public TargetKillNumberLess
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
-	TargetKillNumberLessThen();
+	/* text information about state of killing spree */
+	virtual std::string state();
 	TargetKillNumberLessThen(int i);
 	virtual ~TargetKillNumberLessThen();
 };
@@ -163,7 +171,7 @@ class TargetKillNumberMore : public TargetKillNumber
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
-	TargetKillNumberMore();
+	virtual std::string state();
 	TargetKillNumberMore(int i);
 	virtual ~TargetKillNumberMore();
 };
@@ -171,8 +179,8 @@ class TargetKillNumberMoreThen : public TargetKillNumber
 {
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
+	virtual std::string state();
 	virtual int done();
-	TargetKillNumberMoreThen();
 	TargetKillNumberMoreThen(int i);
 	virtual ~TargetKillNumberMoreThen();
 };
@@ -181,8 +189,8 @@ class TargetKillNumberNot : public TargetKillNumberLess
 protected:
 	bool firstAfterZero;
 public:
+	virtual std::string state();
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
-	TargetKillNumberNot();
 	TargetKillNumberNot(int i);
 	virtual int done();
 	virtual ~TargetKillNumberNot();
