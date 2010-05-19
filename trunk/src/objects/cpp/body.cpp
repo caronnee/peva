@@ -191,10 +191,7 @@ int Body::state() const
 bool Body::addKilled(unsigned i,Operation op, size_t number)
 {
 	if (toKill !=NULL)
-	{
-	//	error(i,WarningKillAlreadyDefined);
-		return false;
-	}
+		throw "Target numbr already defined";
 	switch (op)
 	{
 		case OperationNotEqual:

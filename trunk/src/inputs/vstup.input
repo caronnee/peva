@@ -8,6 +8,8 @@ ROBOT a1
 	memory = 100
 	MHEALTH = 1000
 	Mattack  = 40
+	visit ( 1,2,3, [100,100] )
+	visitSeq ( 4,6,5, [300,300] )
 	KILL a3
 
 	Object o = NULL;
@@ -32,7 +34,7 @@ ROBOT a1
 			}
 			while (hit(o) > 0 )
 			{
-				if(!shoot(direction(locate(o))))
+				if(shoot(direction(locate(o)))==false)
 				{
 					turn (180);
 					move(4);
