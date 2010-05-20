@@ -127,6 +127,9 @@ struct Map
 	/* adds boundary walls */
 	void addBoundaryWalls();
 
+	/* removes boundary walls */
+	void removeBoundaryWalls();
+
 	/* how many row boxes */
 	float boxesInRow;
 

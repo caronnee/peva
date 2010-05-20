@@ -68,7 +68,8 @@ bool Map::saveToFile(std::string filename)
 		TEST("cannot create file ")
 		return false;
 	}
-		//resolution + visibility
+	//resolution + visibility
+	removeBoundaryWalls();
 	output << resolution << " " << visibility << "\n";
 	for(int i = 0; i< boxesInRow; i++)
 		for (int j =0; j < boxesInColumn; j++)
@@ -91,6 +92,7 @@ bool Map::saveToFile(std::string filename)
 		output << "#:-" <<i<< " " << saveInfo[i]<<std::endl;
 	}
 	output.close();
+	addBoundaryWalls();
 	return true;
 }
 bool Map::collideWith( Object * o1, Object* o2 )
@@ -206,6 +208,7 @@ bool Map::load(Graphic * g, std::string filename)
 	}
 	//suppose the right structure
 		
+	addBoundaryWalls();
 	input.close();
 	return true;
 }
@@ -301,6 +304,27 @@ void Map::addBoundaryWalls()
 		w2->setPosition(p,0);
 		add(w1);
 		add(w2);
+	}
+}
+void Map::removeBoundaryWalls()
+{
+	Position p(wskins[1]->get_size().x,0);
+	//X-ova os
+	SDL_Rect rect;
+	for (p.x = 0; p.x < resolution.x; p.x += wskins[1]->get_size().x)
+	{
+		p.y = 0;
+		removeAt(p,rect);
+		p.y = resolution.y - wskins[1]->get_shift().x;
+		removeAt(p,rect);
+	}	
+	p.y = 0;
+	for (p.y = 0; p.y < resolution.y; p.y += wskins[1]->get_size().y)
+	{
+		p.x = 0;
+		removeAt(p,rect);
+		p.x = resolution.x - wskins[1]->get_shift().x;
+		removeAt(p,rect);
 	}
 }
 
