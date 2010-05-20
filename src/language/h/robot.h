@@ -160,6 +160,9 @@ public:
 
 	/* constructor */
 	Robot(std::string name, std::string space, GamePoints g);
+
+	/* return complex information about robot */
+	std::string info();
 	
 	/* sets robot to*/
 	void init(int vis);

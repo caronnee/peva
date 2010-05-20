@@ -145,6 +145,9 @@ class Play:public Menu
 	/* flag of error occured */
 	bool error;
 
+	/* wheather mnu should recreate map and robots */
+	bool recreate;
+
 	/* addition manu to show when something happens */
 	Menu * show;
 
