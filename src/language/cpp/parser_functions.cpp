@@ -59,7 +59,7 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 	}
 	else
 		e.output.push_back(*r->find_type(TypeInteger));
-	switch (e.output[0].type)
+	switch (t1.type)
 	{
 		case TypeInteger:
 			switch(op)
