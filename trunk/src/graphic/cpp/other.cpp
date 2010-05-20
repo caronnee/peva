@@ -21,6 +21,7 @@ Play::Play(Window *w_)
 {
 	/* init, not repeatable */
 	error = false;
+	recreate = true;
 	srand(time(NULL));
 	w = w_;
 	name(w->g, "Play Game");
@@ -83,6 +84,11 @@ void Play::resume()
 	if (error ||w->settings->inputs.empty())
 	{
 		w->pop();
+		return;
+	}
+	if (!recreate)
+	{
+		draw();
 		return;
 	}
 
@@ -269,12 +275,13 @@ void Play::process()
 		rect.y = (m->resolution.y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
-		if (w->waitKeyDown())
+		if (w->waitKeyDown()==SDLK_ESCAPE)
 		{
 			w->pop();
 			return;
 		}
 
+		recreate = true;
 		for (size_t i =0; i< robots.robots.size(); i++)
 			m->remove(robots.robots[i]->getBody());
 		resume();
@@ -337,8 +344,21 @@ void Play::process()
 					draw();
 					break;
 				}
+				case SDLK_s:
+				{
+					recreate = false;
+					std::string out = "States:";
+					if (show)
+						delete show;
+					for (size_t i =0; i<robots.robots.size(); i++)
+						out += robots.robots[i]->info();
+					show = new ShowMenu(w,out);
+					w->add(show);
+					return;
+				}
 				case SDLK_n: //next map
 				{
+					recreate = true;
 					if (w->settings->maps.empty())
 						break;
 						//removing body objects
@@ -682,9 +702,9 @@ void SetPenalize::process()
 					}
 					case SDLK_LEFT:
 					{
+						if (instructions[index].penalize == 1)
+							break;
 						instructions[index].penalize--;
-						if (instructions[index].penalize == 0)
-							instructions[index].penalize--;
 						SDL_FreeSurface(instructions[index].penal);
 						std::string txt = deconvert<int>(instructions[index].penalize);
 						instructions[index].penal =  TTF_RenderText_Solid(w->g->g_font, txt.c_str(), w->g->light);
@@ -815,6 +835,11 @@ void ShowMenu::init()
 			pos--;
 		}
 
+		if (srt == "")
+		{
+			position = pos+1;
+			continue;
+		}
 		images.push_back(w->g->render(srt));
 		if ((pos < strToshow.size()) && (strToshow[pos] == '\t'))
 		{

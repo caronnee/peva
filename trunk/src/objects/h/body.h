@@ -74,6 +74,9 @@ public:
 	/* class handling visibility issue */
 	Seer seer;
 	
+	/* textual state of robot */
+	std::string info();
+
 	/* for determining direction */
 	int getDirection(Position p);
 

@@ -23,9 +23,9 @@ TargetVisit::TargetVisit(int Id):Target()
 	ok = false;
 	targetId = Id;
 	if (Id <0)
-		targetName = "user defined place";
+		targetName = " user defined place";
 	else
-		targetName = "Place with number " + deconvert<int>(Id);
+		targetName = " place with number " + deconvert<int>(Id);
 }
 bool TargetVisit::setOk()
 {
@@ -37,7 +37,7 @@ std::string TargetVisit::state()
 {
 	if (ok)
 		return "Success visiting " + targetName;
-	return "Failed to visit" + targetName;
+	return "\tFailed to visit" + targetName;
 }
 
 int TargetVisit::tellId()
@@ -82,7 +82,7 @@ std::string TargetVisitSequence::state()
 	std::string out;
 	for (size_t i =0; i< places.size(); i++)
 	{
-		out += places[i]->state() +"\t\n";
+		out += "\t"+places[i]->state();
 	}
 	return out;
 }
@@ -152,7 +152,7 @@ int TargetKillNumber::fullfilled()
 std::string TargetKillNumber::state()
 {
 	if (constraint)
-		return "Failed to kill " + deconvert<int>(constraint) 
+		return "\tFailed to kill " + deconvert<int>(constraint) 
 			+ " more robots";
 	return "Success";
 }
@@ -167,7 +167,7 @@ std::string TargetKillNumberLess::state()
 {
 	if (constraint)
 		return "Success";
-	return "Failed. Killed " + deconvert<int>(constraint) 
+	return "\tFailed. Killed " + deconvert<int>(constraint) 
 			+ " more robots";
 }
 TargetKillNumberLess::TargetKillNumberLess(int i) : TargetKillNumber(i)
@@ -238,7 +238,7 @@ std::string TargetKillNumberLessThen::state()
 {
 	if (done())
 		return "Success";
-	return "Failed. Killed " + deconvert<int>(-1*constraint+1) + "more robots";	
+	return "\tFailed. Killed " + deconvert<int>(-1*constraint+1) + "more robots";	
 }
 
 TargetKillNumberMore::TargetKillNumberMore(int i) : TargetKillNumber(i)
@@ -249,7 +249,7 @@ std::string TargetKillNumberMore::state()
 {
 	if (done())
 		return "Success";
-	return "Failed. Killed " + deconvert<int>(-1*constraint) + "less robots";	
+	return "\tFailed. Killed " + deconvert<int>(-1*constraint) + "less robots";	
 }
 int TargetKillNumberMore::done()
 {
@@ -275,7 +275,7 @@ std::string TargetKillNumberMoreThen::state()
 {
 	if (done())
 		return "Success";
-	return "Failed. Killed " + deconvert<int>(-1*constraint+1) + "less robots";	
+	return "\tFailed. Killed " + deconvert<int>(-1*constraint+1) + "less robots";	
 }
 TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i) : TargetKillNumber(i)
 {
@@ -310,7 +310,7 @@ std::string TargetKillNumberNot::state()
 {
 	if (done())
 		return "Success";
-	return "Failed. Killed wrong number of robots";	
+	return "\tFailed. Killed wrong number of robots";	
 }
 int TargetKillNumberNot::done()
 {

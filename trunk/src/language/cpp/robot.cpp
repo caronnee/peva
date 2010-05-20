@@ -2,6 +2,13 @@
 #include "../h/robot.h"
 #include "../../add-ons/h/macros.h"
 
+std::string Robot::info()
+{
+	std::string output;
+	output += "name " + name +"(" + space + ")\n";
+	output+= core->body->info();
+	return output;
+}
 Robot::Robot(std::string s, std::string space_, GamePoints points_)
 {
 	points = points_;

@@ -152,6 +152,20 @@ Skin * Body::getSkin()const
 {
 	return skinWork->getSkin();
 }
+std::string Body::info()
+{
+	std::string output;
+	//hitpoints
+	if (hitpoints > 0)
+		output += "\tHitpoints :" + deconvert<int> (hitpoints);
+	else 
+		output+= "\tDead.";
+	if (toKill)
+		output += toKill->state();
+	for (size_t i =0; i < targets.size(); i++)
+		output += targets[i]->state();
+	return output+"\n";
+}
 void Body::init(GamePoints g, int v)
 {
 	points = g;
