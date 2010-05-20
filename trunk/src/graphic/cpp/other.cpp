@@ -683,6 +683,8 @@ void SetPenalize::process()
 					case SDLK_LEFT:
 					{
 						instructions[index].penalize--;
+						if (instructions[index].penalize == 0)
+							instructions[index].penalize--;
 						SDL_FreeSurface(instructions[index].penal);
 						std::string txt = deconvert<int>(instructions[index].penalize);
 						instructions[index].penal =  TTF_RenderText_Solid(w->g->g_font, txt.c_str(), w->g->light);
@@ -692,6 +694,8 @@ void SetPenalize::process()
 					case SDLK_RIGHT:
 					{
 						instructions[index].penalize++;
+						if(instructions[index].penalize == 0)
+							instructions[index].penalize++;
 						SDL_FreeSurface(instructions[index].penal);
 						std::string txt = deconvert<int>(instructions[index].penalize);
 						instructions[index].penal =  TTF_RenderText_Solid(w->g->g_font, txt.c_str(), w->g->light);

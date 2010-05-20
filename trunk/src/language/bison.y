@@ -1048,6 +1048,7 @@ expression_bool_or: expression_bool_base {$$ = $1; }
 			$$.ins = $1.ins;
 			$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
 			Element e = operOr(@2,program->robots.back(),$2,$1.output.back(),$3.output.back());
+			$$.ins.insert($$.ins.end(), e.ins.begin(),e.ins.end());
 			$$.output = e.output; //aj tak by tu vzy mal byt integer
 			$$.temp.push_back(true);
 		}
