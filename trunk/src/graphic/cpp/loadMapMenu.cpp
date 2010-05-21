@@ -37,6 +37,20 @@ void Load::process()
 			case SDL_VIDEORESIZE:
 				w->resize();
 				break;
+			case SDL_MOUSEBUTTONDOWN:
+			{
+				Position p;
+				SDL_GetMouseState(&p.x, &p.y);
+				//y-os
+				int rs = (p.y - BEGIN_Y)/vSkip;
+				if ((rs < 0)|(rs > size))
+					break;
+				unchoose(index);
+				index = begin + rs;
+				choose(index);
+				enter();
+				break;
+			}
 			case SDL_KEYDOWN:
 			{
 				switch(w->g->event.key.keysym.sym)
