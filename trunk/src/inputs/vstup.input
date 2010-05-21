@@ -1,8 +1,9 @@
 ROBOT a1
 {
+	skin bowman
 	HEALTH = 10
 	ATTACK = 33			
-	Missilles = 10
+	Missilles = 100
 	Angle = 45
 
 	memory = 100
@@ -15,7 +16,9 @@ ROBOT a1
 	Object o = NULL;
 	main()
 	{
-		for(integer i = 0; i <6;i++)
+		turn(10);
+		shoot(0);
+	/*	for(integer i = 0; i <6;i++)
 		{
 			integer s = see();
 			for (integer i =0 ;i < s; i++)
@@ -29,23 +32,19 @@ ROBOT a1
 			if ((o == NULL)||
 				(hit(o) <=0))
 			{
-				turn (random);
-				move(10);
+				turn (10);
+				return;
 			}
 			while (hit(o) > 0 )
 			{
-				if(shoot(direction(locate(o)))==false)
-				{
-					turn (180);
-					move(4);
-					turn (180);
-				}
+				shoot(direction(locate(o)));
 			}
-		}
+		}*/
 	}
 }
 robot a2
 {
+	skin bowman
 	defense = 1
 	health = 2
 	attack = 5
@@ -56,6 +55,7 @@ robot a2
 }
 robot a3
 {
+	skin bowman
 	defense = 1
 	health = 3
 	attack = 5
