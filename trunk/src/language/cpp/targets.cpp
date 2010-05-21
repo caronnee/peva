@@ -2,6 +2,10 @@
 #include "../../add-ons/h/macros.h"
 #include "../../add-ons/h/help_functions.h"
 
+#define SUCCESS 1
+#define FAIL -1
+#define NOCHANGE 0
+
 Target::Target()
 {
 	ok = false;
@@ -36,7 +40,7 @@ bool TargetVisit::setOk()
 std::string TargetVisit::state()
 {
 	if (ok)
-		return "Success visiting " + targetName;
+		return "\tSuccess visiting " + targetName;
 	return "\tFailed to visit" + targetName;
 }
 
@@ -125,8 +129,8 @@ TargetVisitSequence::~TargetVisitSequence()
 int TargetKill::done()
 {
 	if (constraint == 0)
-		return 0;//uz splnene
-	return 1;
+		return SUCCESS;
+	return NOCHANGE;
 }
 
 TargetKill::TargetKill(){} 
@@ -139,22 +143,25 @@ TargetKillNumber::TargetKillNumber(int i)
 {
 	constraint = i;
 }
-
+int TargetKillNumber::done()
+{
+	if (constraint == 0)
+		return SUCCESS;
+	if (constraint == -1) //stalo sa nesplnitelnym
+		return FAIL;
+	return NOCHANGE;
+}
 int TargetKillNumber::fullfilled()
 {
 	constraint--;
-	if (constraint == 0)
-		return 1;
-	if (constraint == -1) //stalo sa nesplnitelnym
-		return -1;
-	return 0;
+	return done();
 }
 std::string TargetKillNumber::state()
 {
-	if (constraint)
-		return "\tFailed to kill " + deconvert<int>(constraint) 
-			+ " more robots";
-	return "Success";
+	if (constraint == 0)
+		return "\tSuccess in killin exact number of robots";
+	return "\tFailed to kill " + deconvert<int>(constraint) 
+		+ " more robots";
 }
 TargetKillNumber::~TargetKillNumber()
 {
@@ -165,37 +172,27 @@ TargetKillNumber::~TargetKillNumber()
 
 std::string TargetKillNumberLess::state()
 {
-	if (constraint)
-		return "Success";
-	return "\tFailed. Killed " + deconvert<int>(constraint) 
+	if (constraint > 0)
+		return "\tSuccess in killing number of enemies";
+	return "\tFailed. Killed " + deconvert<int>(constraint+1) 
 			+ " more robots";
 }
 TargetKillNumberLess::TargetKillNumberLess(int i) : TargetKillNumber(i)
 {
-	first = 2;
 	constraint = i;
 }
 int TargetKillNumberLess::done()
 {
 	if (constraint > 0)
-		return 0;
-	return 1;
+		return NOCHANGE;
+	return FAIL;
 }
 int TargetKillNumberLess::fullfilled()
 {
 	constraint--;
 	return done();
-
-/*	if (constraint == 0)
-		return first-1;
-	if (first)
-	{
-		first = 0;
-		return 1; //bude stale splnene, az kym sa to neprehupne na druhu stranu
-	}
-	return 0;*/
 }
-TargetKillNumberLessThen::~TargetKillNumberLessThen()
+TargetKillNumberLessEqual::~TargetKillNumberLessEqual()
 {
 	/*
 	   Nothing to destroy yet
@@ -208,61 +205,54 @@ TargetKillNumberLess::~TargetKillNumberLess()
 	*/
 }
 
-TargetKillNumberLessThen::TargetKillNumberLessThen(int i) : TargetKillNumberLess(i)
+TargetKillNumberLessEqual::TargetKillNumberLessEqual(int i) : TargetKillNumberLess(i)
 {
-	first = 2;
 	constraint = i;
 }
 
-int TargetKillNumberLessThen::done()
+int TargetKillNumberLessEqual::done()
 {
 	if (constraint >=0)
-		return 0;
-	return 1;
+		return NOCHANGE;
+	return FAIL;
 }
-int TargetKillNumberLessThen::fullfilled()
+int TargetKillNumberLessEqual::fullfilled()
 {
 	constraint--;
 	return done();
-/*	if (constraint == -1 )
-		return first-1;
-	if (first)
-	{
-		first = 0;
-		return 1; //prave sa splnilo, prave jeden krat
-	}
-	return 0;*/
 }
 
-std::string TargetKillNumberLessThen::state()
+std::string TargetKillNumberLessEqual::state()
 {
-	if (done())
-		return "Success";
-	return "\tFailed. Killed " + deconvert<int>(-1*constraint+1) + "more robots";	
+	if (constraint <= 0)
+		return "\tFailed. Killed " + deconvert<int>(-1*constraint+1) + "more robots";	
+	return "\tSuccess in killing number of enemies";
 }
 
 TargetKillNumberMore::TargetKillNumberMore(int i) : TargetKillNumber(i)
 {
+	firstSuccess = false;
 	constraint = i;
 }
 std::string TargetKillNumberMore::state()
 {
 	if (done())
-		return "Success";
+		return "\tSuccess in killing enough enemies";
 	return "\tFailed. Killed " + deconvert<int>(-1*constraint) + "less robots";	
 }
 int TargetKillNumberMore::done()
 {
-	if (constraint < 0)
-		return 0;
-	return 1;
+	if (constraint <= 0)
+		return NOCHANGE;
+	if (firstSuccess)
+		return SUCCESS;
+	return NOCHANGE;
 }
 int TargetKillNumberMore::fullfilled()
 {
 	constraint--;
-	if (constraint ==-1)
-		return 1; //nemoze sa to pokazit, nevraciame -1
-	return 0;
+	firstSuccess = false;
+	return done();
 }
 
 TargetKillNumberMore::~TargetKillNumberMore()
@@ -271,30 +261,23 @@ TargetKillNumberMore::~TargetKillNumberMore()
 	   Nothing to destroy yet
 	*/
 }
-std::string TargetKillNumberMoreThen::state()
+std::string TargetKillNumberMoreEqual::state()
 {
 	if (done())
-		return "Success";
+		return "\tSuccess in killing enough robots";
 	return "\tFailed. Killed " + deconvert<int>(-1*constraint+1) + "less robots";	
 }
-TargetKillNumberMoreThen::TargetKillNumberMoreThen(int i) : TargetKillNumber(i)
+TargetKillNumberMoreEqual::TargetKillNumberMoreEqual(int i) : TargetKillNumberMore(i)
 {
 	constraint = i;
 }
-int TargetKillNumberMoreThen::done()
+int TargetKillNumberMoreEqual::done()
 {
-	if (constraint <= 0)
-		return 0;
-	return 1;
-}
-int TargetKillNumberMoreThen::fullfilled()
-{
-	constraint--;
 	if (constraint == 0)
-		return 1;
-	return 0;
+		return NOCHANGE;
+	return TargetKillNumberMore::done();	
 }
-TargetKillNumberMoreThen::~TargetKillNumberMoreThen()
+TargetKillNumberMoreEqual::~TargetKillNumberMoreEqual()
 {
 	/*
 	   Nothing to destroy yet
@@ -302,37 +285,28 @@ TargetKillNumberMoreThen::~TargetKillNumberMoreThen()
 }
 TargetKillNumberNot::TargetKillNumberNot(int i) : TargetKillNumberLess(i)
 {
-	first = 1;
 	firstAfterZero =false;
 	constraint = i;
 }
 std::string TargetKillNumberNot::state()
 {
 	if (done())
-		return "Success";
+		return "\tSuccess in killing exact number of enemies";
 	return "\tFailed. Killed wrong number of robots";	
 }
 int TargetKillNumberNot::done()
 {
 	if (constraint == 0)
-		return 1;
-	return 0;
+		return FAIL;
+	if (firstAfterZero)
+		return SUCCESS;
+	return NOCHANGE;
 }
 int TargetKillNumberNot::fullfilled()
 {
 	constraint--;
-	if (constraint == 0)
-	{
-		firstAfterZero = true;
-		return first-1; //ak si po prvy krat, vrat nulu, aby sa to neodcitalo, bo sa splnenie a nesplnenie rusi
-	}
-	if (firstAfterZero||first) //prvy krat od predchadzajuceho returnu
-	{
-		first = 0;
-		firstAfterZero =false;
-		return -1;
-	}
-	return 0;
+	firstAfterZero = constraint == 0;
+	return done();
 }
 TargetKillNumberNot::~TargetKillNumberNot()
 {

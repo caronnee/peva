@@ -173,6 +173,8 @@ void Body::init(GamePoints g, int v)
 	/* information from firt section */
 	seer.setEyes(g.firstSection.sections[FirstSection::SectionAngle],v);
 	hitpoints = g.firstSection.sections[FirstSection::SectionHitpoints];
+	movement.speed = g.secondSection.sections[SecondSection::SectionSteps];
+
 
 	/* second section information */
 	if(!hasSkin())
@@ -205,7 +207,10 @@ int Body::state() const
 bool Body::addKilled(unsigned i,Operation op, size_t number)
 {
 	if (toKill !=NULL)
-		throw "Target numbr already defined";
+	{
+		tasks -= toKill->done();
+		delete toKill;
+	}
 	switch (op)
 	{
 		case OperationNotEqual:
@@ -215,13 +220,13 @@ bool Body::addKilled(unsigned i,Operation op, size_t number)
 			toKill = new TargetKillNumberLess(number);
 			break;
 		case OperationLessEqual:
-			toKill = new TargetKillNumberLessThen(number);
+			toKill = new TargetKillNumberLessEqual(number);
 			break;
 		case OperationGreater:
 			toKill = new TargetKillNumberMore(number);
 			break;
 		case OperationGreaterEqual:
-			toKill = new TargetKillNumberMoreThen(number);
+			toKill = new TargetKillNumberMoreEqual(number);
 			break;
 		default:
 			toKill = new TargetKillNumber(number);
@@ -372,7 +377,6 @@ std::string Body::initTargetPlaces()
 }
 int Body::step(int steps)
 {
-	//TODO presunut to do movementu
 	movement.steps = steps * movement.speed;
 	state_ = 0;
 	skinWork->switch_state(ImageSkinWork::StatePermanent, ActionWalk);
@@ -516,6 +520,8 @@ int Body::getDirection(Position position)
 	float f;
 
 	int dotProd = sqrt(p.x * p.x + p.y*p.y)*sqrt(t.x*t.x+t.y*t.y);
+	if (dotProd == 0)
+		return 0;
 
 	f = (p.x*t.x + t.y*p.y) / (float)dotProd;
 	int res = toDegree(acos(f));

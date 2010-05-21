@@ -25,53 +25,71 @@ void Main::process()
 	if (SDL_WaitEvent(&w->g->event) == 0){w->pop();return;}
 	switch (w->g->event.type)
 	{
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			if (getMenu(menus, size, w->g) > -1)
+				w->add(menus[iterator]);
+			break;
+		}
+		case SDL_MOUSEMOTION:
+		{
+			int itr = getMenu(menus, size, w->g);
+			if (itr <0)
+				break;
+			menus[iterator]->unset();
+			update(menus, size, iterator, w->g);
+			iterator = itr;
+			menus[iterator]->set();
+			update(menus, size, iterator, w->g);
+			break;
+		}
 		case SDL_VIDEORESIZE:
 		{
 			w->resize();
 			break;
 		}
 		case SDL_KEYDOWN:
+		{
+			switch(w->g->event.key.keysym.sym)
 			{
-				switch(w->g->event.key.keysym.sym)
-				{
-					case SDLK_q:
-					case SDLK_ESCAPE:
-						{
-							w->pop();
-							return;
-						}
-					case SDLK_RETURN:
-						{
-							w->add(menus[iterator]);
-							break;
-						}
-					case SDLK_UP:
-						{
-							menus[iterator]->unset();
-							update(menus, size, iterator, w->g);
-							iterator--;
-							if (iterator<0) 
-								iterator = size -1;
-							menus[iterator]->set();
-							update(menus, size, iterator, w->g);
-							break;
-						}
-					case SDLK_DOWN:
-						{
-							menus[iterator]->unset();
-							update(menus, size, iterator, w->g);
-							iterator++;
-							iterator%=size;
-							menus[iterator]->set();
-							update(menus, size, iterator, w->g);
-							break;
-						}
-					default:
-						//throw exception
+				case SDLK_q:
+				case SDLK_ESCAPE:
+					{
+						w->pop();
+						return;
+					}
+				case SDLK_RETURN:
+					{
+						w->add(menus[iterator]);
 						break;
-				}
-				break;
+					}
+				case SDLK_UP:
+					{
+						menus[iterator]->unset();
+						update(menus, size, iterator, w->g);
+						iterator--;
+						if (iterator<0) 
+							iterator = size -1;
+						menus[iterator]->set();
+						update(menus, size, iterator, w->g);
+						break;
+					}
+				case SDLK_DOWN:
+					{
+						menus[iterator]->unset();
+						update(menus, size, iterator, w->g);
+						iterator++;
+						iterator%=size;
+						menus[iterator]->set();
+						update(menus, size, iterator, w->g);
+						break;
+					}
+				default:
+					//throw exception
+					break;
 			}
+			break;
+		}
 	}
 }
 void Main::clean()

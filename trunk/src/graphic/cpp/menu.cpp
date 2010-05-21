@@ -1,4 +1,5 @@
 #include "../h/menu.h"
+#include "../../add-ons/h/position.h"
 
 Menu::Menu()
 {
@@ -49,6 +50,16 @@ void Menu::drawMenu(Menu ** menus, int size, Graphic * g)
 	}
 
 } 
+int Menu::getMenu( Menu ** menus, int size, Graphic* g)
+{
+	Position p;
+	SDL_GetMouseState(&p.x,&p.y);
+	int i = (g->screen->h)/2 - size * (g->font_size);// TODO zmenit na lepsie
+	int itr = (p.y - i)/(g->font_size * 2);
+	if ((itr < 0)||(itr >=size))
+		return -1;
+	return itr;
+}
 void Menu::unset()
 {
 	show = nameNormal;
