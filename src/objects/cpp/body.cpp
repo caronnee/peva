@@ -412,11 +412,18 @@ int Body::shoot(int angle)
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionAttack);
 	Position mP = this->get_pos();
 	
-	Position p = skinWork->head();
-	mP.x += p.x;
-	mP.y += p.y;
 
 	Object * o= *ammo.begin();
+
+	Position p = skinWork->head();
+	mP.x += p.x;
+	if (movement.direction.x < 0)
+		mP.x -= o->width();
+	
+	mP.y += p.y;
+	if (movement.direction.y < 0)
+		mP.y -= o->height();
+	
 	o->hitpoints = o->movement.steps = points.secondSection.sections[SecondSection::SectionMissilleHitpoints];
 	o->attack = points.secondSection.sections[SecondSection::SectionMissilleAttack];
 	o->defense = 0;
@@ -456,7 +463,6 @@ void Body::killed(Object * o)
 }
 void Body::hitted(Object * attacker, Position p, int attack)
 {
-	TEST("zasiahnuty!")
 	state_ = movement.steps + waits; //kolko mu este chybalo spravit
 	waits = 0;
 	Object::hitted(attacker,p,attack);
@@ -468,7 +474,6 @@ void Body::hitted(Object * attacker, Position p, int attack)
 		attacker->killed(this);
 		Object::dead();
 	}
-	TEST("Aktualne hitpoints" << hitpoints)
 }
 void Body::dead()
 {

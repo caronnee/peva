@@ -65,7 +65,7 @@ void Skin::create(std::string * load, std::string name, int sizeLoaded)
 		shift.y = images[0]->w;
 		imageSize.x = images[0]->w; //predpokladame, ze su vsetky rovnakej velkosti
 		imageSize.y = images[0]->h;
-		return; //exception?
+		return; 
 	}
 	std::fstream f;
 	f.open((directory + "config").c_str());
@@ -115,9 +115,9 @@ MissilleSkin::MissilleSkin(std::string name)
 
 	begin_in_picture.x = 0;
 	begin_in_picture.y = 0;
-	shift.x = images[0]->h;
-	shift.y = images[0]->h;
-	imageSize.x = imageSize.y = images[0]->h; //strely su stvorcove
+	shift.x = images[0]->w;
+	shift.y = images[0]->w;
+	imageSize.x = imageSize.y = images[0]->w; //strely su stvorcove
 }
 WallSkin::WallSkin(std::string name, size_t wall)
 {

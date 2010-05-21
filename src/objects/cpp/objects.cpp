@@ -192,6 +192,7 @@ void Object::bounce(Object * attacked) //od koho s ma odrazit
 		movement.direction.x *=-1;
 		movement.position_in_map.x -= p.x*xy.x * 2 - 1;
 	}
+	skinWork->turn(movement.angle);
 }
 void Object::hit(Object * attacked)
 {

@@ -27,6 +27,8 @@ void Missille::hit(Object * o)
 	ObjectMovement th = movement;
 	ObjectMovement obj = o->movement;
 	bounce(o);
+	if (o->typeObject() & Object::Player)
+		hitpoints = 0;
 
 /*	if (nowhereToRun)
 	{
