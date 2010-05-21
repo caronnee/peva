@@ -43,11 +43,9 @@ void Skin::create(std::string * load, std::string name, int sizeLoaded)
 	{
 		throw "Directory " + directory + name + " not found!";
 	}
-	directory = directory+name + '/';
+	directory = directory + name + '/';
 	for (int i = 0; i<sizeLoaded; i++ )
-	{
 		images[i] = IMG_Load((directory + load[i]).c_str());
-	}
 
 	for (size_t i  = 1; i<size; i++) //action default tam musi byt v kazdom pripade, TODO doplnit
 	{

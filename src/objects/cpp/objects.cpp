@@ -93,10 +93,8 @@ void Object::move(size_t fps)
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
-	bool bbb = false;
-	if ( stepsPass >= movement.steps )
+	if (( stepsPass >= movement.steps )||(stepsPass == 0))
 	{
-		bbb=true;
 		endMove();
 		stepsPass = movement.steps;
 		passed.x = movement.steps*movement.direction.x/movement.speed;
@@ -152,7 +150,7 @@ int Object::absoluteTurn(int angle)
 		movement.angle+=360;
 	while (movement.angle > 360)
 		movement.angle-=360;
-	skinWork->turn(movement.angle);  //TODO potom skontrolovat, keby to bolo pocaa chodenia
+	skinWork->turn(movement.angle);
 	movement.direction.turn(movement.angle, movement.speed);
 	return 0;
 }

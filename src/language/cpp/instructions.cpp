@@ -1466,7 +1466,7 @@ InstructionTarget::InstructionTarget()
 int InstructionTarget::execute(Core *c)
 {
 	TEST("Returning first unvisited place ...")
-	Position p(-1,-1);
+	Position p(-1,-1); //TODO random? NEEE, nevedelo by sa, ze vseko skoncilo
 	for (size_t i =0; i<c->body->targets.size(); i++)
 		if (!c->body->targets[i]->getOk())
 		{

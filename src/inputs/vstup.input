@@ -1,56 +1,46 @@
 ROBOT a1
 {
-	skin bowman
 	HEALTH = 10
 	ATTACK = 33			
 	Missilles = 100
 	Angle = 45
+	step = 1
 
 	memory = 100
 	MHEALTH = 1000
 	Mattack  = 40
-	visit ( 1,2,3, [100,100] )
-	visitSeq ( 4,6,5, [300,300] )
-	KILL a3
+	visit (1)
+	KILLed == 1
 
 	Object o = NULL;
+	void function shooting()
+	{
+		while(true)
+		{
+			shoot(0);
+			turn(10);
+		}
+	}
+	
 	main()
 	{
-		turn(10);
-		shoot(0);
-	/*	for(integer i = 0; i <6;i++)
-		{
-			integer s = see();
-			for (integer i =0 ;i < s; i++)
-			{
-				if (isPlayer(eye[i]))
-				{
-					o = eye[i];
-					break;
-				}
-			}
-			if ((o == NULL)||
-				(hit(o) <=0))
-			{
-				turn (10);
-				return;
-			}
-			while (hit(o) > 0 )
-			{
-				shoot(direction(locate(o)));
-			}
-		}*/
+		Location l = getTarget();
+		if (l.x == -1)
+			shooting();
+		turn(direction(getTarget()));
+		move(10);
 	}
 }
 robot a2
 {
 	skin bowman
 	defense = 1
-	health = 2
+	health = 3
 	attack = 5
+
 	main()
 	{
-		wait(2000);
+		wait(2001);
 	}
 }
 robot a3

@@ -137,14 +137,13 @@ public:
 	/* 0 = not chaged, 1 = cheche & fulfilled, -1 = begin to b unfullfilled */
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	TargetKillNumber(int i);
+	int done();
 	std::string state();
 	virtual ~TargetKillNumber();
 };
 
 class TargetKillNumberLess : public TargetKillNumber
 {
-protected:
-	int first;
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
@@ -156,18 +155,20 @@ public:
 	virtual ~TargetKillNumberLess();
 };
 
-class TargetKillNumberLessThen : public TargetKillNumberLess
+class TargetKillNumberLessEqual : public TargetKillNumberLess
 {
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
 	/* text information about state of killing spree */
 	virtual std::string state();
-	TargetKillNumberLessThen(int i);
-	virtual ~TargetKillNumberLessThen();
+	TargetKillNumberLessEqual(int i);
+	virtual ~TargetKillNumberLessEqual();
 };
 class TargetKillNumberMore : public TargetKillNumber
 {
+protected:
+	bool firstSuccess;
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
@@ -175,14 +176,13 @@ public:
 	TargetKillNumberMore(int i);
 	virtual ~TargetKillNumberMore();
 };
-class TargetKillNumberMoreThen : public TargetKillNumber
+class TargetKillNumberMoreEqual : public TargetKillNumberMore
 {
 public:
-	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual std::string state();
 	virtual int done();
-	TargetKillNumberMoreThen(int i);
-	virtual ~TargetKillNumberMoreThen();
+	TargetKillNumberMoreEqual(int i);
+	virtual ~TargetKillNumberMoreEqual();
 };
 class TargetKillNumberNot : public TargetKillNumberLess
 {

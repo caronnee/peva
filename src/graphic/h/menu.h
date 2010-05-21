@@ -23,6 +23,9 @@ class Menu
 		/* updates drawing menu */
 		void update(Menu ** menus, int size, int iterator, Graphic * g);
 
+		/* returns at which menu is mouse pointed at */
+		int getMenu( Menu ** menus, int size, Graphic* g);
+
 		/* returns name of the menu */
 		SDL_Surface * get_name()const;
 
