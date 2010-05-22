@@ -126,6 +126,12 @@ TargetVisitSequence::~TargetVisitSequence()
 	*/
 }
 
+int TargetKill::check()
+{
+	if (constraint == 0)
+		return NOCHANGE;
+	return FAIL;
+}
 int TargetKill::done()
 {
 	if (constraint == 0)
@@ -170,6 +176,12 @@ TargetKillNumber::~TargetKillNumber()
 	*/
 }
 
+int TargetKillNumberLess::check()
+{
+	if (constraint > 0)
+		return NOCHANGE;
+	return FAIL;
+}
 std::string TargetKillNumberLess::state()
 {
 	if (constraint > 0)
@@ -210,6 +222,12 @@ TargetKillNumberLessEqual::TargetKillNumberLessEqual(int i) : TargetKillNumberLe
 	constraint = i;
 }
 
+int TargetKillNumberLessEqual::check()
+{
+	if (constraint >= 0)
+		return NOCHANGE;
+	return FAIL;
+}
 int TargetKillNumberLessEqual::done()
 {
 	if (constraint >=0)
@@ -240,6 +258,12 @@ std::string TargetKillNumberMore::state()
 		return "\tSuccess in killing enough enemies";
 	return "\tFailed. Killed " + deconvert<int>(-1*constraint) + "less robots";	
 }
+int TargetKillNumberMore::check()
+{
+	if (constraint > 0)
+		return FAIL;
+	return NOCHANGE;
+}
 int TargetKillNumberMore::done()
 {
 	if (constraint <= 0)
@@ -260,6 +284,12 @@ TargetKillNumberMore::~TargetKillNumberMore()
 	/*
 	   Nothing to destroy yet
 	*/
+}
+int TargetKillNumberMoreEqual::check()
+{
+	if (constraint >= 0)
+		return FAIL;
+	return NOCHANGE;
 }
 std::string TargetKillNumberMoreEqual::state()
 {
@@ -293,6 +323,12 @@ std::string TargetKillNumberNot::state()
 	if (done())
 		return "\tSuccess in killing exact number of enemies";
 	return "\tFailed. Killed wrong number of robots";	
+}
+int TargetKillNumberNot::check()
+{
+	if (constraint == 0)
+		return FAIL;
+	return NOCHANGE;
 }
 int TargetKillNumberNot::done()
 {

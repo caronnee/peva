@@ -386,8 +386,11 @@ void Robots::resolve()
 		for (size_t j=0; j<robots.size(); j++)
 			if (robots[j]->getName() == resolveStart[i].name)
 			{
-				t.x = robots[j]->getBody()->get_pos().x;
-				t.y = robots[j]->getBody()->get_pos().y;
+				Body* b = robots[j]->getBody();
+				t.x = b->get_pos().x + b->collisionSize().x;
+				t.y = b->get_pos().y + b->collisionSize().y;
+				t.width = b->collisionSize().width;
+				t.height = b->collisionSize().height;
 				if (robots[j]->getSpace() == resolveStart[i].prefix)
 					break;
 			}
@@ -400,7 +403,7 @@ void Robots::resolve()
 		}
 	}
 	/* tell robot what means position '0,1,2...' in the map */
-	for (size_t j=0; j<robots.size(); j++)
+	for (size_t j=0; j<robots.size(); j++ )
 		robots[j]->getBody()->initTargetPlaces();
 	for (size_t j=0; j<robots.size(); j++)
 		if (robots[j]->getBody()->tasks == 0)

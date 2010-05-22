@@ -208,7 +208,7 @@ bool Body::addKilled(unsigned i,Operation op, size_t number)
 {
 	if (toKill !=NULL)
 	{
-		tasks -= toKill->done();
+		tasks += toKill->check();
 		delete toKill;
 	}
 	switch (op)
@@ -232,7 +232,7 @@ bool Body::addKilled(unsigned i,Operation op, size_t number)
 			toKill = new TargetKillNumber(number);
 			break;	
 	}
-	tasks += toKill->done();
+	tasks -= toKill->check();
 	return true;
 }
 void Body::addKill(Object * id)

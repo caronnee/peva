@@ -126,6 +126,7 @@ public:
 
 	/* text iformation about state of killing spree */
 	virtual std::string state() = 0;
+	virtual int check();
 
 	/* checks if appropriate */
 	virtual int done();
@@ -147,6 +148,7 @@ class TargetKillNumberLess : public TargetKillNumber
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
+	virtual int check();
 
 	/* text iformation about state of killing spree */
 	virtual std::string state();
@@ -160,6 +162,7 @@ class TargetKillNumberLessEqual : public TargetKillNumberLess
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
+	virtual int check();
 	/* text information about state of killing spree */
 	virtual std::string state();
 	TargetKillNumberLessEqual(int i);
@@ -172,6 +175,7 @@ protected:
 public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	virtual int done();
+	int check();
 	virtual std::string state();
 	TargetKillNumberMore(int i);
 	virtual ~TargetKillNumberMore();
@@ -181,6 +185,7 @@ class TargetKillNumberMoreEqual : public TargetKillNumberMore
 public:
 	virtual std::string state();
 	virtual int done();
+	int check();
 	TargetKillNumberMoreEqual(int i);
 	virtual ~TargetKillNumberMoreEqual();
 };
@@ -193,6 +198,7 @@ public:
 	virtual int fullfilled();	//0-cont, Fullfill, -1 = lost
 	TargetKillNumberNot(int i);
 	virtual int done();
+	virtual int check();
 	virtual ~TargetKillNumberNot();
 };
 

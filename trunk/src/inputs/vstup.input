@@ -2,7 +2,14 @@ ROBOT a1
 {
 	HEALTH = 10
 	visit (start[a2])
+	KILLed < 1
+	KILLed <= 1
+	KILLed == 1
+	KILLed >= 1
 	KILLed > 1
+
+	KILLed != 1
+	KILLed != 1
 
 	Object o = NULL;
 	void function shooting()
