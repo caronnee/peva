@@ -4,7 +4,6 @@ ROBOT a1
 	ATTACK = 33			
 	Missilles = 100
 	Angle = 45
-	step = 1
 
 	memory = 100
 	MHEALTH = 1000

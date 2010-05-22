@@ -29,7 +29,6 @@ struct Penalize
 	/* image of name, highlited */
 	SDL_Surface * nameChosen;
 };
-
 /* 
  * menu drawing penalization instruction 
  * */
@@ -107,9 +106,11 @@ public:
 };
 class SetSections : public Menu
 {
-	SDL_Surface * sections[SECTIONS * 3];
+	SDL_Surface * sectionPart[SECTIONS * 3];
+	SDL_Surface ** sections;
 	GamePoints * gp;
 	int iter;
+	int iterSubSection;
 	Window * w;
 public:
 	SetSections(Window * w, GamePoints * points);

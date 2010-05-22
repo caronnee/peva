@@ -167,7 +167,6 @@ class Call : public Instruction
 {
 	Function* function;
 	public:
-		Call();
 		Call(Function * f);
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core * c);
