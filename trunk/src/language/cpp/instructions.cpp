@@ -344,13 +344,6 @@ InstructionStoreObject::~InstructionStoreObject()
 	/* Nothing to be done yet */
 }
 
-Call::Call()
-{
-	node = NULL;
-	function = NULL;
-	name_ = "Call";
-	group = IGroup_call;
-}
 Call::Call(Function * f_)
 {
 	node = NULL;

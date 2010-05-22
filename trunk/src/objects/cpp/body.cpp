@@ -27,7 +27,7 @@ GamePoints::GamePoints(int total, int total2)
 	total_[1] =  total2;
 }
 
-void GamePoints::check()
+void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME dalsia volba, aby to doplnovalo
 {
 	firstSection.sections[FirstSection::SectionAngle] = min<int>(MAX_EYE_ANGLE,firstSection.sections[FirstSection::SectionAngle]);
 	int todo = total_[0];
@@ -67,7 +67,7 @@ void GamePoints::check()
 		iter%=FirstSection::NumberOfSections;
 	}
 
-	numberNotOk = FirstSection::NumberOfSections - numberNotOk;
+/*	numberNotOk = FirstSection::NumberOfSections - numberNotOk;
 	if (numberNotOk) 
 		minus = todo/numberNotOk;
 
@@ -84,7 +84,7 @@ void GamePoints::check()
 		todo-=minus;
 		iter++;
 		iter%=FirstSection::NumberOfSections;
-	}
+	}*/
 	todo = total_[1];
 	numberNotOk = 0;
 	for(size_t i =0; i< SecondSection::NumberOfSections; i++)
@@ -117,7 +117,7 @@ void GamePoints::check()
 		iter %= SecondSection::NumberOfSections;
 	}
 
-	numberNotOk = SecondSection::NumberOfSections - numberNotOk;
+/*	numberNotOk = SecondSection::NumberOfSections - numberNotOk;
 	if (numberNotOk) 
 		minus = todo/numberNotOk;
 
@@ -129,7 +129,7 @@ void GamePoints::check()
 		todo-=minus;
 		iter++;
 		iter%=SecondSection::NumberOfSections;
-	}
+	}*/
 }
 
 Body::Body() : Object(NULL,NULL)

@@ -15,7 +15,7 @@ extern void my_destroy();
 extern int yyparse(Robots *);
 
 
-std::string instructionNames[] ={ "undefined ", "Call", "Create variable ", "loadlocal variable ", "loadglobal variable ", "load element", "conversion to int ", "conversion to real", "duplicate instruction", "store integer ", "store real ", "store object ", "store element", "pop ", "goto instruction ", "jump if true condition", "break ", "continue ", "return ", "restore", "remove temporary", "plusplus integer ", "plusplus real ", "minusminus integer ", "minusminus real ", "plus integer ", "plus real ", "minus integer ", "minus real ", "multiply integer ", "multiply real ", "divide integer ", "divide real ", "modulo ", "binary and ", "logical and ", "binary or ", "or ", "binary not ", "not ", "greater than integer ", " greater than real ", "greater or equal integer ", "greater or equal real ", "equal integer ", "equal real ", "equal object ", "not equal structure", "not equal integer ", "not equal real ", "not equal object ", "less than integer ", "less than real ", "less equal integer ", "less equal real ", "begin block ", "end block ", "see ", "eye ", "fetchstate after action", "step ", "step default number ", "wait ", "shoot at location ", "shoot at angle ", "turn ", "turn right ", "turn left", "is hit question", "is player question", "is wall question", "is missille question ", "locate question", "is moving question"};
+std::string instructionNames[] = { "undefined", "call", "create", "load", "conversion", "duplicate", "store", "pop", "jump", "break", "continue", "return", "restore", "removetemp", "plusplus", "minusminus", "plus", "minus", "multiply", "divide", "modulo", "binaryand", "and", "binaryor", "or", "binarynot", "not", "gt", "ge", "equal", "notequal ", "lt", "le", "begin", "endblock", "see", "eye", "fetchstate", "step", "wait", "shoot", "turn", "hit", "check", "locate", "direction", "random" };
 
 Play::Play(Window *w_)
 {
@@ -389,7 +389,8 @@ SetSections::SetSections(Window * w_, GamePoints * gp_)
 	gp = gp_;
 	name(w->g,"Set maximum value of sections");
 	for ( int i =0; i< SECTIONS * 3; i++)
-		sections[i] = NULL;
+		sectionPart[i] = NULL;
+	sections = NULL;
 }
 void SetSections::resume() { }
 
@@ -406,26 +407,66 @@ void SetSections::draw()
 	SDL_SetClipRect(w->g->screen, &rct);
 	w->tapestry(rct);
 
+	SDL_Rect r;
+	r.y = w->g->screen->h/3; //proste niekde
 	for (int a = 0; a< SECTIONS; a++)
 	{
 		int i = a*3;
 		int partSize = w->g->screen->w / SECTIONS;
 		SDL_Rect rect;
-		rect.y = w->g->screen->h/3; //proste niekde
-		rect.x = a*partSize + ( partSize - sections[i]->w )/2;//do stredu
+		rect.y = r.y ; //proste niekde
+		rect.x = a*partSize + ( partSize - sectionPart[i]->w )/2;//do stredu
 		SDL_Rect tb = rect;
 		if (a == iter)
 		{
-			SDL_BlitSurface(sections[i+1],NULL,w->g->screen,&rect);
-			tb.x = a*partSize + (partSize - sections[i+2]->w )/2;
+			SDL_BlitSurface(sectionPart[i+1],NULL,w->g->screen,&rect);
+			tb.x = a*partSize + (partSize - sectionPart[i+2]->w )/2;
 			tb.y += w->g->font_size*2;
-			SDL_BlitSurface(sections[i+2],NULL,w->g->screen,&tb);
+			SDL_BlitSurface(sectionPart[i+2],NULL,w->g->screen,&tb);
 			continue;
 		}
-		SDL_BlitSurface(sections[i],NULL,w->g->screen,&rect);
+		SDL_BlitSurface(sectionPart[i],NULL,w->g->screen,&rect);
 		tb.y += w->g->font_size*2;
-		tb.x = a*partSize + (partSize - sections[i+2]->w )/2;//do stredu
-		SDL_BlitSurface(sections[i+2],NULL,w->g->screen,&tb);
+		tb.x = a*partSize + (partSize - sectionPart[i+2]->w )/2;//do stredu
+		SDL_BlitSurface(sectionPart[i+2],NULL,w->g->screen,&tb);
+	}
+
+	r.y += w->g->font_size*4+BEGIN_Y;
+	r.x = BEGIN_X;
+	for (int i =0; i< 2*FirstSection::NumberOfSections; i+=2)
+	{
+		SDL_Rect sctrct = r;
+		sctrct.x = BEGIN_X;
+		sctrct.y += i*w->g->font_size;
+		SDL_BlitSurface(sections[i],NULL,w->g->screen, &sctrct);
+		sctrct.x += sections[i]->w + BEGIN_X;
+		SDL_BlitSurface(sections[i+1],NULL,w->g->screen, &sctrct);
+	}
+	int j = 2*FirstSection::NumberOfSections;
+	for (int i =0; i< 2*SecondSection::NumberOfSections; i+=2)
+	{
+		SDL_Rect sctrct = r;
+		sctrct.x = BEGIN_X + w->g->screen->w/2;
+		sctrct.y += i*w->g->font_size;
+		SDL_BlitSurface(sections[i+j],NULL,w->g->screen, &sctrct);
+		sctrct.x += sections[i+j]->w + BEGIN_X;
+		SDL_BlitSurface(sections[i+j+1],NULL,w->g->screen, &sctrct);
+	}
+	//iter subsection
+	if (iterSubSection>=0)
+	{
+		SDL_Rect chrct = r;
+		chrct.x = BEGIN_X;
+		chrct.y += 2*iterSubSection*w->g->font_size;
+		int sect = FirstSection::NumberOfSections + SecondSection::NumberOfSections;
+		sect *=2;
+		if (iter == 1)
+		{
+			chrct.x+= w->g->screen->w/2;
+			sect += FirstSection::NumberOfSections;
+		}
+		sect+=iterSubSection;
+		SDL_BlitSurface(sections[sect], NULL, w->g->screen, &chrct);
 	}
 	SDL_Flip(w->g->screen);
 	SDL_SetClipRect(w->g->screen, NULL);
@@ -433,21 +474,44 @@ void SetSections::draw()
 
 void SetSections::init()
 {
+	iterSubSection = -1;
 	iter = 0;
 	for (int i = 0; i< SECTIONS*3; i+=3)
 	{
-		sections[i] = w->g->render("Section:"+deconvert<int>(i/3));
-		sections[i+1] = w->g->renderLight("Section:"+deconvert<int>(i/3));
+		sectionPart[i] = w->g->render("Section:"+deconvert<int>(i/3));
+		sectionPart[i+1] = w->g->renderLight("Section:"+deconvert<int>(i/3));
 		std::string s = deconvert<int>(gp->total_[i/3]);
 		if (gp->total_[i/3] < 50)
 			s = "Do not check";
-		sections[i+2] = w->g->render( s );
+		sectionPart[i+2] = w->g->render( s );
 	}
 	for ( int i =0; i< SECTIONS * 3; i++)
-		if (sections[i] == NULL)
+		if (sectionPart[i] == NULL)
 			throw "Cannot create image!";	
-	
+		
+	//prva sekcia
+	std::string names[] = {"hitpoints", "memory","angle", "misilles", "missilles attack","missilles hitpoints","speed","defense","attack"};
+
+	sections = new SDL_Surface *[3*(FirstSection::NumberOfSections+ SecondSection::NumberOfSections)];
 	//blit FIXME center
+	int i=0;
+	for ( i =0; i< 2*FirstSection::NumberOfSections; i+=2)
+	{
+		sections[i] = w->g->render(names[i/2]);
+		sections[i+1] = w->g->render(deconvert<int>(gp->firstSection.sections[i/2]));
+	}
+	i = 2*FirstSection::NumberOfSections;
+	for (int j =0; j<2*SecondSection::NumberOfSections; j+=2)
+	{
+		sections[i+j] = w->g->render(names[(i+j)/2]);
+		sections[i+1+j] = w->g->render(deconvert<int>(gp->secondSection.sections[j/2]));
+	}
+	//names highlited
+	int a = FirstSection::NumberOfSections+ SecondSection::NumberOfSections;
+	a*=2;
+	for (i = 0; i<FirstSection::NumberOfSections+ SecondSection::NumberOfSections; i++)
+		sections[a+i] = w->g->renderLight(names[i]);
+	
 	SDL_Surface * n = get_name();
 
 	SDL_Rect rct;
@@ -460,7 +524,7 @@ void SetSections::init()
 	rct.x = (w->g->screen->w - n->w)/2;
 	rct.y = (BEGIN_Y - n->h)/2;
 	SDL_BlitSurface(n, NULL, w->g->screen, &rct );
-	SDL_UpdateRect(w->g->screen, 0,0,w->g->screen->w, BEGIN_Y);
+	SDL_Flip(w->g->screen);
 }
 
 void SetSections::process()
@@ -494,26 +558,80 @@ void SetSections::process()
 					case SDLK_0: case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: case SDLK_5:
 					case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
 					{
+						if (iterSubSection >=0) //spracuj subsectiony
+						{
+							if (iter == 0)
+							{
+								SDL_FreeSurface(sections[iterSubSection*2+1]);
+								gp->firstSection.sections[iterSubSection]*=10;
+								gp->firstSection.sections[iterSubSection]+= key - SDLK_0;
+								sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
+							}
+							else
+							{
+								int shift = FirstSection::NumberOfSections+iterSubSection;
+								SDL_FreeSurface(sections[shift*2+1]);
+								gp->secondSection.sections[iterSubSection]*=10;
+								gp->secondSection.sections[iterSubSection]+=key - SDLK_0;
+								sections[shift*2+1] = w->g->render(deconvert<int>(gp->secondSection.sections[iterSubSection]));
+							}
+							draw();
+							break;
+						}
 						if (gp->total_[iter] < 0)
 						{
 							gp->total_[iter] = key - SDLK_0;
-							SDL_FreeSurface(sections[iter*3 + 2] );
-							sections[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+							SDL_FreeSurface(sectionPart[iter*3 + 2] );
+							sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
 							draw();
 							break;
 						}
 						gp->total_[iter] *=10;
 						gp->total_[iter] += key - SDLK_0;
-						SDL_FreeSurface(sections[iter*3 + 2] );
-						sections[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+						SDL_FreeSurface(sectionPart[iter*3 + 2] );
+						sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
 						draw();
 						break;
 					}
 					case SDLK_BACKSPACE:
 					{
+						if (iterSubSection >=0)
+						{
+							if (iter == 0)
+							{
+								SDL_FreeSurface(sections[iterSubSection*2+1]);
+								gp->firstSection.sections[iterSubSection]/=10;
+								sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
+							}
+							else
+							{
+								int shift = FirstSection::NumberOfSections+iterSubSection;
+								SDL_FreeSurface(sections[shift*2+1]);
+								gp->secondSection.sections[iterSubSection]/=10;
+								sections[shift*2+1] = w->g->render(deconvert<int>(gp->secondSection.sections[iterSubSection]));
+							}
+							draw();
+							break;
+						}
 						gp->total_[iter] /=10;
-						SDL_FreeSurface(sections[iter*3 + 2] );
-						sections[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+						SDL_FreeSurface(sectionPart[iter*3 + 2] );
+						sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+						draw();
+						break;
+					}
+					case SDLK_PAGEDOWN:
+					{
+						int max = (iter==0)? (int)FirstSection::NumberOfSections:(int)SecondSection::NumberOfSections;
+						iterSubSection++;
+						if (iterSubSection == max)
+							iterSubSection--;
+						draw();
+						break;
+					}
+					case SDLK_PAGEUP:
+					{
+						if (iterSubSection>=0)
+							iterSubSection--;
 						draw();
 						break;
 					}
@@ -528,11 +646,13 @@ void SetSections::process()
 					{
 						iter++;
 						iter%=SECTIONS;
-						draw();
+						iterSubSection = -1;
+						draw(); //FIXME check
 						break;
 					}
 					case SDLK_RIGHT:
 					{
+						iterSubSection = -1;
 						if (iter <=0)
 							iter = SECTIONS-1;
 						else
@@ -553,8 +673,8 @@ void SetSections::process()
 							gp->total_[iter]--;
 							s = deconvert<int>(gp->total_[iter]);
 						}
-						SDL_FreeSurface(sections[iter*3+2]);
-						sections[iter*3 + 2] = w->g->render( s );
+						SDL_FreeSurface(sectionPart[iter*3+2]);
+						sectionPart[iter*3 + 2] = w->g->render( s );
 						draw();
 						break;
 					}
@@ -564,8 +684,8 @@ void SetSections::process()
 							gp->total_[iter] = MININUM_SECTION;
 						else
 							gp->total_[iter]++;
-						SDL_FreeSurface(sections[iter*3+2]);
-						sections[iter*3+2] = w->g->render( deconvert<int>(gp->total_[iter] ));
+						SDL_FreeSurface(sectionPart[iter*3+2]);
+						sectionPart[iter*3+2] = w->g->render( deconvert<int>(gp->total_[iter] ));
 						draw();
 						break;
 					}
@@ -589,9 +709,14 @@ void SetSections::clean()
 {
 	for ( int i =0; i< SECTIONS * 3; i++)
 	{
-		SDL_FreeSurface(sections[i]);
-		sections[i] = NULL;
+		SDL_FreeSurface(sectionPart[i]);
+		sectionPart[i] = NULL;
 	}
+	int hlp = FirstSection::NumberOfSections + SecondSection::NumberOfSections;
+	for (int i =0; i< 3*hlp; i++ )
+		SDL_FreeSurface(sections[i]);
+	delete []sections;
+	sections = NULL;
 }
 
 Settings::Settings(Window *w_):Main(w_,0,NULL)
