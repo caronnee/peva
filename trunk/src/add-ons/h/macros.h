@@ -7,3 +7,5 @@
 
 #define List std::list<Object *>
 #define TEST_RELEASE(x) std::cout << x << std::endl;
+#define FLOAT_COMP_ZERO -0.0001
+
