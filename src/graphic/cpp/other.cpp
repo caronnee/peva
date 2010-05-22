@@ -275,10 +275,39 @@ void Play::process()
 		rect.y = (m->resolution.y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
-		if (w->waitKeyDown()==SDLK_ESCAPE)
+		bool wait = false;
+		while (!wait)
 		{
-			w->pop();
-			return;
+			SDLKey key =w->waitKeyDown();
+			switch (key)
+			{
+				case SDLK_ESCAPE:
+				{
+					w->pop();
+					return;
+				}
+				case SDLK_s:
+				{
+					std::string out = "States:";
+					if (show)
+						delete show;
+					for (size_t i =0; i<robots.robots.size(); i++)
+						out += robots.robots[i]->info();
+					show = new ShowMenu(w,out);
+					w->add(show);
+					wait = true;
+					recreate = true;
+					for (size_t i =0; i< robots.robots.size(); i++)
+						m->remove(robots.robots[i]->getBody());
+					return;
+				}	
+				case SDLK_RETURN:
+				case SDLK_SPACE:
+					wait = true;
+					break;
+				default:
+					break;
+			}
 		}
 
 		recreate = true;
