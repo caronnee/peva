@@ -88,12 +88,14 @@ void Object::move(size_t fps)
 
 	movement.realX+=(float)movement.direction.x/fps;
 	movement.realY+=(float)movement.direction.y/fps;
+	if ((movement.realY*movement.realY < FLOAT_COMP_ZERO) && (movement.realX*movement.realX < FLOAT_COMP_ZERO))
+		movement.steps = 0;
 
 	Position passed(movement.realX,movement.realY);
 	movement.realX-=passed.x;
 	movement.realY-=passed.y;
 	int stepsPass = passed.x*passed.x + passed.y*passed.y;
-	if (( stepsPass >= movement.steps )||(stepsPass == 0))
+	if (( stepsPass >= movement.steps ))
 	{
 		endMove();
 		stepsPass = movement.steps;

@@ -3,8 +3,6 @@
 #include "../../add-ons/h/macros.h"
 #include "../h/seer.h"
 
-#define FLOAT_COMP_ZERO -0.0001
-
 Seer::Seer()
 {
 	setEyes(0,0); //slepy :)

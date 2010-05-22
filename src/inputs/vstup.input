@@ -1,14 +1,7 @@
 ROBOT a1
 {
 	HEALTH = 10
-	ATTACK = 33			
-	Missilles = 100
-	Angle = 45
-
-	memory = 100
-	MHEALTH = 1000
-	Mattack  = 40
-	visit (1)
+	visit (start[a2])
 	KILLed == 1
 
 	Object o = NULL;
