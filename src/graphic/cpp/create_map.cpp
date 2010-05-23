@@ -369,7 +369,7 @@ void Create_map::process_resolution()
 void Create_map::generuj()
 {
 	map->clean();
-	Position hlp = map->resolution;
+	Position hlp = map->getResolution();
 	hlp.substractVector(Position(2*skins[WallSolidId]->get_shift().x,2*skins[WallSolidId]->get_shift().y));
 	Position snakeRes = hlp/(SPACE_KOEF*60);
 

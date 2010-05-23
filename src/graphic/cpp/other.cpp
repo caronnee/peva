@@ -180,11 +180,11 @@ void Play::resume()
 		}
 		if(!set)
 		{
-			Position resol(m->resolution.x - body->collisionSize().x,
-					m->resolution.y - body->collisionSize().y);
+			Position resol(m->getResolution().x - body->collisionSize().x,
+					m->getResolution().y - body->collisionSize().y);
 			TEST("No appropriate start place found")
 			set = false;
-			for (int iter = 0;iter < m->resolution.x + m->resolution.y; iter++) //FIXME other 'random' value
+			for (int iter = 0;iter < m->getResolution().x + m->getResolution().y; iter++) //FIXME other 'random' value
 			{
 				Position randomPosition(rand()%resol.x, rand()%resol.y);
 				body->place(m,randomPosition);
@@ -222,8 +222,8 @@ void Play::setFocus()
 	Position p = robots.robots[focus]->getBody()->get_pos();
 	p.x = p.x + (t.width - w->g->screen->w)/2;
 	p.y = p.y + (t.height - w->g->screen->h)/2;
-	Position lastAcceptable(m->resolution.x - w->g->screen->w,
-			m->resolution.y - w->g->screen->h);
+	Position lastAcceptable(m->getResolution().x - w->g->screen->w,
+			m->getResolution().y - w->g->screen->h);
 	if (lastAcceptable.x < 0)
 		lastAcceptable.x = 0;
 	if (lastAcceptable.y < 0)
@@ -271,8 +271,8 @@ void Play::process()
 		else
 			end = w->g->render((endText+lastBots));
 		SDL_Rect rect;
-		rect.x = (m->resolution.x) >> 1;
-		rect.y = (m->resolution.y) >> 1;
+		rect.x = (m->getResolution().x) >> 1;
+		rect.y = (m->getResolution().y) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
 		bool wait = false;

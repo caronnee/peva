@@ -120,12 +120,20 @@ public:
 		NumberOfStates
 	};
 
-//public:
+protected:
 	/* miliseconds grom the last blit */
 	Uint32 lastUpdate;
+
+	/* count to sleep */
 	size_t count;
+
+	/* which state are we in */
 	std::stack<States> state;
 
+	/* skin used */
+	Skin * s;
+
+	/* information about image to be blit */
 	Rectangle imageCut;
 public:
 	/* constructor */
@@ -152,27 +160,13 @@ public:
 	/* set the image to the previous state, if none, default */
 	void removeState();
 
-	/* returns width of picture that should be visible */
-//	size_t width();
-
-	/* returns height of picture that should be visible */
-//	size_t height();
-
-	/* returns the size of visible rectangle in picture */
-//	Position get_size();
-
 	/* changes the direction of object , shift removeswring image direction at beginning */
 	float turn(int degree, int shift = SHIFT);
 
 	/* returns position od supposed head character according size */
 	Position head();
 
-	/* return beginning of the picture */
-//	Position get_begin()const;
-
-	/* skin used */
-	Skin * s;
-public:
+private:
 
 //	std::string name();
 	Actions states[NumberOfStates];
