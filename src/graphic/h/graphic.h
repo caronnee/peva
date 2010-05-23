@@ -76,7 +76,5 @@ public:
 	/* function to initilialize some parameters */
 	void set_font(std::string res);
 
-	/* function to initilialize some parameters */
-	void set_font_size(std::string res);
 };
 #endif

@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
 			std::string name = line.substr(0,pos);
 			std::string par = line.substr(pos+1);
 			if (name == "resolution") g.set_resolution(par);
-			if (name == "font-size") g.set_font_size(par);
+			if (name == "font-size") 
+				g.font_size = convert<int>(par);
 			if (name == "font") g.set_font(par);
 			if (name == "background") w.set_background(par);
 		}
