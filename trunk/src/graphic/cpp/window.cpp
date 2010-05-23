@@ -1,7 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include "../h/window.h"
-#include "../h/main_menu.h"
+#include "../h/menu.h"
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
@@ -87,7 +87,6 @@ Window:: Window(Graphic * g_)
 {
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	g = g_;
-	main_menu =NULL;
 	background = NULL;
 	settings = NULL;
 }
@@ -98,16 +97,12 @@ bool Window::Init(int argc, char * argv[] )
 	bool b = g->Init();
 	settings = new Setting();
 
-	if(main_menu)
-		return b;
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	if (background == NULL) 
 	{
 		TEST("Background image  not found!");
 		return false;
 	}
-	main_menu = new Main(this, argc, argv);
-	add(main_menu);
 	return b;
 }
 
@@ -181,9 +176,6 @@ void Window::set_background(std::string res)
 
 void Window::Destroy()
 {
-	if (main_menu)
-		delete main_menu;
-	main_menu = NULL;
 	if (background)
 		SDL_FreeSurface(background);
 	background = NULL;
