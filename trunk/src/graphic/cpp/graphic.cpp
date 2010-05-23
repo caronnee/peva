@@ -100,7 +100,3 @@ void Graphic::set_font(std::string s)
 	font = s;
 }
 
-void Graphic::set_font_size(std::string s)
-{
-	font_size = convert<int>(s);
-}
