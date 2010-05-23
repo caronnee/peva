@@ -37,6 +37,9 @@ class Graphic
 
 	/* initial resolution arfter load */
 	int resolution_width, resolution_heigth;
+
+	/* used colors */
+	SDL_Color normal, light;
 public:
 	/* size of font as was initialized *///FIXME sholud not b used
 	int font_size;
@@ -44,8 +47,6 @@ public:
 	/* used font */
 	TTF_Font * g_font;//main font
 
-	/* used colors */
-	SDL_Color normal, light;
 
 	/* screen to be blit on */
 	SDL_Surface * screen;

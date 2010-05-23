@@ -292,7 +292,7 @@ void Create_map::drawInit()
 		p.y = resolutionIterSecond->second.value;
 	map = new Map(p,"grass");
 
-	buttonsImages[BUTTONS-1] = TTF_RenderText_Solid( w->g->g_font, deconvert<size_t>(map->visibility/ADD_VISIBILITY).c_str(), w->g->normal);
+	buttonsImages[BUTTONS-1] = w->g->render(deconvert<size_t>(map->visibility/ADD_VISIBILITY));
 
 	map->shift(-rects[MAP].x, -rects[MAP].y);
 	resize();
@@ -439,7 +439,7 @@ void Create_map::saving()
 					state = DRAW;
 					resize();
 					draw();
-					SDL_Surface *srf = TTF_RenderText_Solid(w->g->g_font,msg.c_str(),w->g->normal);
+					SDL_Surface *srf = w->g->render(msg);
 					SDL_Rect rcr = file_r;
 					rcr.y += TTF_FontLineSkip(w->g->g_font)>>4;
 					SDL_BlitSurface(srf, NULL, w->g->screen, &rcr);
@@ -462,7 +462,7 @@ void Create_map::saving()
 						break;
 					}
 
-					SDL_Surface *s = TTF_RenderText_Solid(w->g->g_font,file_name.c_str(),w->g->normal);
+					SDL_Surface *s = w->g->render(file_name);
 					if (s == NULL)
 					{
 						TEST("something's reeeally really wrong")
@@ -706,7 +706,7 @@ void Create_map::resume()
 void Create_map::setVisibility()
 {
 	SDL_FreeSurface(buttonsImages[BUTTONS -1]);
-	buttonsImages[BUTTONS -1] = TTF_RenderText_Solid(w->g->g_font, deconvert<size_t>(map->visibility/ADD_VISIBILITY).c_str(), w->g->normal);
+	buttonsImages[BUTTONS -1] = w->g->render(deconvert<size_t>(map->visibility/ADD_VISIBILITY));
 
 }
 //BIG TODO zmenit na citatelnejsie
