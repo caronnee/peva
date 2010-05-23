@@ -48,9 +48,6 @@ private:
 	/* default surface background for menu */
 	SDL_Surface * background; //background pre hlavne okno 
 
-	/* menu first created */
-	Menu * main_menu;
-
 	/* menus invoked */
 	std::stack<Menu *> state;
 

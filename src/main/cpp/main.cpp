@@ -3,6 +3,7 @@
 #include <string>
 #include "../../graphic/h/window.h"
 #include "../../graphic/h/images.h"
+#include "../../graphic/h/main_menu.h"
 #include "../../add-ons/h/macros.h"
 
 //config file
@@ -57,7 +58,8 @@ int main(int argc, char *argv[])
 		w.Destroy(); 
 		return 1;
 	}
-
+	Menu * m = new Main(&w, argc, argv);
+	w.add(m);
 	try
 	{
 		while (!w.empty())
@@ -69,6 +71,7 @@ int main(int argc, char *argv[])
 	{
 		TEST(msg);
 	}
+	delete m;
 	g.Destroy();
 	w.Destroy(); //odalokovavanie premennych a podobne
 	return 0;
