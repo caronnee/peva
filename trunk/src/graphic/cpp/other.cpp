@@ -267,9 +267,9 @@ void Play::process()
 		}
 		SDL_Surface * end;
 		if (doneBots != "")
-			end = TTF_RenderText_Solid(w->g->g_font,(endText+doneBots).c_str(), w->g->normal);
+			end = w->g->render((endText+doneBots));
 		else
-			end = TTF_RenderText_Solid(w->g->g_font,(endText+lastBots).c_str(), w->g->normal);
+			end = w->g->render((endText+lastBots));
 		SDL_Rect rect;
 		rect.x = (m->resolution.x) >> 1;
 		rect.y = (m->resolution.y) >> 1;
@@ -769,11 +769,11 @@ void SetPenalize::init()
 	index = 0;
 	for (int i = 0; i<IGroups; i++)
 	{
-		instructions[i].name = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->normal);
-		instructions[i].nameChosen = TTF_RenderText_Solid(w->g->g_font, instructionNames[i].c_str(),w->g->light);
+		instructions[i].name = w->g->render( instructionNames[i]);
+		instructions[i].nameChosen = w->g->renderLight( instructionNames[i]);
 		std::string s = deconvert<int>((*penals)[i]);
 		instructions[i].penalize = (*penals)[i];
-		instructions[i].penal = TTF_RenderText_Solid(w->g->g_font, s.c_str(),w->g->normal);
+		instructions[i].penal = w->g->render( s);
 	}
 	resize();
 }
@@ -861,7 +861,7 @@ void SetPenalize::process()
 						instructions[index].penalize--;
 						SDL_FreeSurface(instructions[index].penal);
 						std::string txt = deconvert<int>(instructions[index].penalize);
-						instructions[index].penal =  TTF_RenderText_Solid(w->g->g_font, txt.c_str(), w->g->light);
+						instructions[index].penal =  w->g->renderLight( txt);
 						draw(); //TODO iba tu cast
 						break;
 					}
@@ -872,7 +872,7 @@ void SetPenalize::process()
 							instructions[index].penalize++;
 						SDL_FreeSurface(instructions[index].penal);
 						std::string txt = deconvert<int>(instructions[index].penalize);
-						instructions[index].penal =  TTF_RenderText_Solid(w->g->g_font, txt.c_str(), w->g->light);
+						instructions[index].penal =  w->g->renderLight( txt);
 						draw();
 						break;
 					}
@@ -1092,9 +1092,9 @@ SetScheduller::SetScheduller(Window * w_)
 }
 void SetScheduller::init() 
 {
-	txt = TTF_RenderText_Solid(w->g->g_font, "Aktualne je nastaveny scheduller:", w->g->normal);
-	schedullers[0] = TTF_RenderText_Solid(w->g->g_font, "Pocet kol/instrukciu:", w->g->normal);
-	schedullers[1] = TTF_RenderText_Solid(w->g->g_font, "Pocet instrukcii/kolo za cas:", w->g->normal);
+	txt = w->g->render( "Aktualne je nastaveny scheduller:");
+	schedullers[0] = w->g->render( "Pocet kol/instrukciu:");
+	schedullers[1] = w->g->render( "Pocet instrukcii/kolo za cas:");
 	valueString = "1";
 	iter = 0;
 	if (w->settings->scheduller)
@@ -1102,7 +1102,7 @@ void SetScheduller::init()
 		iter = 1;
 		valueString = deconvert<int>(w->settings->scheduller);
 	}
-	value =TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
+	value =w->g->render( valueString);
 }
 
 void SetScheduller::draw()
@@ -1172,7 +1172,7 @@ void SetScheduller::process()
 								if (valueString.size() > 4 )
 									break;
 								valueString +=w->g->event.key.keysym.sym;
-								value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
+								value = w->g->render( valueString);
 								draw();
 								break;
 							}
@@ -1180,7 +1180,7 @@ void SetScheduller::process()
 							{
 								SDL_FreeSurface(value);
 								valueString.erase(valueString.size()-1,1);
-								value = TTF_RenderText_Solid(w->g->g_font, valueString.c_str(), w->g->normal);	
+								value = w->g->render( valueString);
 								draw();
 								break;
 							}

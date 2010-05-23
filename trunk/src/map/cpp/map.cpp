@@ -391,7 +391,7 @@ void Map::addTarget(Graphic * g,size_t x, size_t y)
 	pl.saveId = SaveTarget;
 	pl.r = r;
 	pl.numberImage = TargetPlace;
-	pl.img = TTF_RenderText_Solid(g->g_font,deconvert<size_t>(i).c_str(), g->light);
+	pl.img = g->renderLight(deconvert<size_t>(i));
 	pl.id = i;
 	addPlace(g,pl);
 }

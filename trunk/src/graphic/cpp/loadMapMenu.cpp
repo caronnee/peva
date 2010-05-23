@@ -43,7 +43,7 @@ void Load::process()
 				SDL_GetMouseState(&p.x, &p.y);
 				//y-os
 				int rs = (p.y - BEGIN_Y)/vSkip;
-				if ((rs < 0)|(rs > size))
+				if ((rs < 0)|((size_t)rs > size))
 					break;
 				unchoose(index);
 				index = begin + rs;
@@ -197,8 +197,8 @@ void Load::init()
 			continue;
 		MapRecord record;
 		record.name = dir_itr->leaf();
-		record.show = TTF_RenderText_Solid(w->g->g_font, record.name.c_str(), w->g->normal);
-		record.chosen = TTF_RenderText_Solid(w->g->g_font, record.name.c_str(), w->g->light);
+		record.show = w->g->render( record.name );
+		record.chosen = w->g->renderLight(record.name);
 		record.name = dir_itr->path().string();
 		maps.push_back( record );
 	}
@@ -209,7 +209,7 @@ void Load::init()
 		SDL_GetClipRect(w->g->screen, &clip);
 		w->tapestry(clip);
 		std::string text = "No *" + ext + " found in " +adr;
-		SDL_Surface* textImage = TTF_RenderText_Solid(w->g->g_font, text.c_str(), w->g->normal);
+		SDL_Surface* textImage = w->g->render(text);
 		SDL_Rect r;
 		r.x = (w->g->screen->w - textImage->w)/2;
 		r.y = (w->g->screen->h - textImage->h)/2;
