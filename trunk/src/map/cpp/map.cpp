@@ -15,6 +15,12 @@ Box::Box()
 	objects[0].clear();
 	objects[1].clear();
 }
+
+Position Map::getResolution()const
+{
+	return resolution;
+}
+
 void Map::updateScreen( Graphic *g )
 {
 	SDL_Rect clip;
@@ -49,7 +55,6 @@ void Map::updateScreen( Graphic *g )
 					continue;
 				}
 				update(*iter,g);
-				watch = *iter;
 				iter++;
 			}
 		}
@@ -245,7 +250,6 @@ Map::Map(std::string skinName)
 
 void Map::commonInit(std::string skinName)
 {
-	watch = NULL;
 	processing = 0;
 	ticks = 30;
 	time = 1;

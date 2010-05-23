@@ -29,9 +29,6 @@ struct Box
 
 	/* Objects in area */
 	std::list<Object *> objects[2]; 
-
-	/* Objects in area */
-	std::list<Object *> objectStatic; 
 };
 
 /* class resolving movement */
@@ -53,15 +50,8 @@ struct Place
 	Rectangle r;
 };
 
-struct Map
+class Map
 {
-	Object * watch; 
-
-	/* relative time, accordig to it it is map drawed */
-	size_t ticks;
-
-	/* last time the screen was updated */
-	size_t time;
 
 	/* where dead object go */
 	std::list< Object *> abyss;
@@ -70,10 +60,34 @@ struct Map
 	void checkNearest(Object * center, Object *objectToCheck, 
 		size_t& distanceSoFar, Object * &nearestObjectSoFar );
 
+	/* structure holdin images of wall */
+	std::vector<WallSkin *> wskins;
+
+	/* draws background*/
+	void background(Graphic * g);
+
+	/* adding special place to map */
+	void addPlace(Graphic* w, Place p);
+
+	/* size of map in pixels */
+	Position resolution; 
+public:
+	/* returns map resolution */
+	Position getResolution()const;
+
+	/* significant places*/
+	std::list<Place> places; //starts and targets
+
+	/* relative time, accordig to it it is map drawed */
+	size_t ticks;
+
 	/* iterator describing position 
 	 * where are the object already 
 	 * processed */
 	int processing;
+
+	/* last time the screen was updated */
+	size_t time;
 
 	/* return maximum bonding rectangl, for drawing purposes */
 	SDL_Rect getBoundingRect(Object * o, Graphic * g);
@@ -84,17 +98,8 @@ struct Map
 	/* map visibility */
 	int visibility;
 
-	/* structure holdin images of wall */
-	std::vector<WallSkin *> wskins;
-
 	/* returns start positions */
 	std::list<Rectangle> getStarts();
-
-	/* significant places*/
-	std::list<Place> places; //starts and targets
-
-	/* draws background*/
-	void background(Graphic * g);
 
 	/* draws only visible objects*/
 	void draw(Graphic *w);
@@ -108,12 +113,6 @@ struct Map
 	/* removes object at position p*/
 	Object * removeAt(Position position, SDL_Rect & r);
 
-	/* how many column boxes */
-	float boxesInColumn;
-
-	/* adding special place to map */
-	void addPlace(Graphic* w, Place p);
-
 	/* loads map from file */
 	bool load(Graphic * w, std::string filename);
 
@@ -122,6 +121,8 @@ struct Map
 
 	/* adding target places */
 	void addTarget(Graphic* w, size_t x, size_t y);
+
+	/* adding target places */
 	void addStart(Graphic* w, size_t x, size_t y);
 
 	/* adds boundary walls */
@@ -133,11 +134,11 @@ struct Map
 	/* how many row boxes */
 	float boxesInRow;
 
+	/* how many column boxes */
+	float boxesInColumn;
+
 	/* where bot th initial positions of bots for fair play*/
 	std::vector<Position> bot_begins;
-
-	/* size of map in pixels */
-	Position resolution; 
 
 	void update(SDL_Rect rect, bool all , Graphic * w);
 
