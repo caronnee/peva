@@ -1,7 +1,8 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper,notitlepage]{report}
 
-  \usepackage{slovak}
-  \usepackage{indentfirst}
+\usepackage[utf8]{inputenc}
+\usepackage{slovak}
+\usepackage{indentfirst}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% custom settings and definitions - begining
@@ -11,109 +12,101 @@
 %% custom settings and definitions - end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\pagestyle{plain}
+\frenchspacing 
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{vmargin}
+
 \begin{document}
-ľščťžýáíé=§.,ôúä\\
-čžšžšťžžš
 
+\begin{titlepage}
+\begin{center}
+\vspace{1.5in}
+{\rm Univerzita Karlova v Prahe\\
+    Matematicko-fyzikálna fakulta}
+\par
+\vspace{0.7in}
+{\huge \bf Bakalárska práca}
+\par
+\vspace{0.5in}
+{Eva Pešková}
+\par
+\vspace{0.5in}
+Codewars, vojna robotov
+\par
+\vfill
+Katedra softwarového inžinierstva
+\par
+vspace{0.5in}
+Vedúci bakalárskej práce: Mgr. Tomáš Poch
+\par
+\vspace{0.5in}
+Všeobecná informatika
+\par
+\vspace{0.5in}
+2009
+\end{center}
+\end{titlepage}
+\vfill
+Prehlasujem, že som svoju bakalársku prácu napísala samostatne a výhradne s použitím citovaných prameňov.\\
+Súhlasím so zapožičiavaním práce.\\
+\par
+V Prahe \today
+\begin{flushright}
+Eva Pešková
+\end{flushright}
+
+\newtheorem{definicia}{Značenie}
+
+\tableofcontents
+\chapter{Uvod}% na com sa to skusa, preco, co je hlanym  cielom, apod.
+\input uvod.tex
+\chapter{Analýza}
+%\input sdl.tex
+\input porovnania.tex
+\input pravidla.tex
+\section{Problem optimálnej stratégie pre viacerých hráčov}
+\section{Prakticke vyuzitie}
+Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad:\\
+	\begin{itemize}
+	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov
+	\item v okamihu dobre vygenerovaného bludiska sa dá použit na vizualizáciu niektorých algoritmov, napríklad na vyhľadávanie v stromoch a tak zistiť optimálnosť algoritmu vzhľadom na architekturu stroja
+	\item program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný
+	\item pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C, aby podobne ako Codewars, ale iba v tomto specifickom prípade, bola zistená ideálna stratégia. %todo zistit spravne roky 
+	\item pomocou codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý
+	\end{itemize}
+\input impl.tex
+\input analyza.tex
+\section {Burst tree uchovávajúci informácie o premenných a funkciách} 
+\chapter{Sietova komunikacia}
+\chapter{Výber a popis testovaných algoritmov}
+\section{Algoritmus 1}
+\section{Algoritmus 2}
+\section{Algoritmus 3}
+\chapter{Testovanie}
+\input todo.tex
+\chapter{Záver}
+\newpage
+\addcontentsline{toc}{chapter}{\bfseries Literatúra}
+\begin{thebibliography}{99}
+\bibitem{pogamut}http://artemis.ms.mff.cuni.cz/pogamut/tiki-index.php
+\bibitem{robocode} http://robocode.sourceforge.net/
+\bibitem{trees}
+Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
+{\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
+\bibitem{vm}
+http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
+\bibitem{imaginecup}http://imaginecup.com
+\bibitem{simtool}http://mpherbert.codeplex.com/
+\bibitem{facade}http://www.proceduralarts.com/
+\bibitem{quadtree}http://www.kyleschouviller.com/wsuxna/quadtree-source-included/
+\bibitem{http://www.bghq.com/fft } sprites/
+\end{thebibliography}
 \end{document}
-
-%\documentclass[12pt,notitlepage]{report}
-%\pagestyle{plain}
-%\frenchspacing 
-%\usepackage[utf8]{inputenc}
-%\usepackage[slovak]{babel}
-%\usepackage{a4wide}
-%\usepackage{amsmath}
-%\usepackage{amsfonts}
-%\usepackage{amssymb}
-%\usepackage{amsthm}
-%\usepackage{graphicx}
-%\usepackage{psfrag}
-%\usepackage{vmargin}
-%
-%\begin{document}
-%
-%\begin{titlepage}
-%\begin{center}
-%\vspace{1.5in}
-%{\rm Univerzita Karlova v Prahe\\
-%    Matematicko-fyzikálna fakulta}
-%\par
-%\vspace{0.7in}
-%{\huge \bf Bakalárska práca}
-%\par
-%\vspace{0.5in}
-%{Eva Pešková}
-%\par
-%\vspace{0.5in}
-%Codewars, vojna robotov
-%\par
-%\vfill
-%Katedra softwarového inžinierstva
-%\par
-%\vspace{0.5in}
-%Vedúci bakalárskej práce: Mgr. Tomáš Poch
-%\par
-%\vspace{0.5in}
-%Všeobecná informatika
-%\par
-%\vspace{0.5in}
-%2009
-%\end{center}
-%\end{titlepage}
-%\vfill
-%Prehlasujem, že som svoju bakalársku prácu napísala samostatne a výhradne s použitím citovaných prameňov.\\
-%Súhlasím so zapožičiavaním práce.\\
-%\par
-%V Prahe \today
-%\begin{flushright}
-%Eva Pešková
-%\end{flushright}
-%
-%\newtheorem{definicia}{Značenie}
-%
-%\tableofcontents
-%\chapter{Uvod}% na com sa to skusa, preco, co je hlanym  cielom, apod.
-%\input uvod.tex
-%\chapter{Analýza}
-%%\input sdl.tex
-%\input porovnania.tex
-%\input pravidla.tex
-%\section{Problem optimálnej stratégie pre viacerých hráčov}
-%\section{Prakticke vyuzitie}
-%Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad:\\
-%	\begin{itemize}
-%	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov
-%	\item v okamihu dobre vygenerovaného bludiska sa dá použit na vizualizáciu niektorých algoritmov, napríklad na vyhľadávanie v stromoch a tak zistiť optimálnosť algoritmu vzhľadom na architekturu stroja
-%	\item program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný
-%	\item pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C, aby podobne ako Codewars, ale iba v tomto specifickom prípade, bola zistená ideálna stratégia. %todo zistit spravne roky 
-%	\item pomocou codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý
-%	\end{itemize}
-%\input impl.tex
-%\input analyza.tex
-%\section {Burst tree uchovávajúci informácie o premenných a funkciách} 
-%\chapter{Sietova komunikacia}
-%\chapter{Výber a popis testovaných algoritmov}
-%\section{Algoritmus 1}
-%\section{Algoritmus 2}
-%\section{Algoritmus 3}
-%\chapter{Testovanie}
-%\input todo.tex
-%\chapter{Záver}
-%\newpage
-%\addcontentsline{toc}{chapter}{\bfseries Literatúra}
-%\begin{thebibliography}{99}
-%\bibitem{pogamut}http://artemis.ms.mff.cuni.cz/pogamut/tiki-index.php
-%\bibitem{robocode} http://robocode.sourceforge.net/
-%\bibitem{trees}
-%Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
-%{\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
-%\bibitem{vm}
-%http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
-%\bibitem{imaginecup}http://imaginecup.com
-%\bibitem{simtool}http://mpherbert.codeplex.com/
-%\bibitem{facade}http://www.proceduralarts.com/
-%\bibitem{quadtree}http://www.kyleschouviller.com/wsuxna/quadtree-source-included/
-%\bibitem{http://www.bghq.com/fft } sprites/
-%\end{thebibliography}
-%\end{document}
