@@ -53,6 +53,9 @@ struct Place
 class Map
 {
 
+	/* initialization common to all constructors */
+	void commonInit(std::string name);
+
 	/* where dead object go */
 	std::list< Object *> abyss;
 
@@ -71,7 +74,14 @@ class Map
 
 	/* size of map in pixels */
 	Position resolution; 
+
+	/* map finds out the object movement*/
+	void move(Object * o); 
+
 public:
+	/* map is a join of areas */
+	Box ** map;
+	
 	/* returns map resolution */
 	Position getResolution()const;
 
@@ -90,7 +100,7 @@ public:
 	size_t time;
 
 	/* return maximum bonding rectangl, for drawing purposes */
-	SDL_Rect getBoundingRect(Object * o, Graphic * g);
+	SDL_Rect getBoundingRect(Object * o);
 
 	/* creates map according to resolution */
 	void create();
@@ -137,18 +147,12 @@ public:
 	/* how many column boxes */
 	float boxesInColumn;
 
-	/* where bot th initial positions of bots for fair play*/
-	std::vector<Position> bot_begins;
-
 	void update(SDL_Rect rect, bool all , Graphic * w);
 
 	/* updates area around one object */
 	void update(Object * o, Graphic * w);
 
-	/* map is a join of areas */
-	Box ** map;
-	
-	/* check whether actual position is legal */
+	/* check whether actual position is legal, should not be used in realeade */
 	void resolveBorders(Object * o);
 
 	/* resolves move actions, check collision etc.*/
@@ -157,17 +161,11 @@ public:
 	/* drawing boundaries, rectangel, where its safe to draw */
 	Rectangle boundaries;
 
-	/* initialization common to all constructors */
-	void commonInit(std::string name);
-
-public:
 	/* constructor defining map resolution in pixels and name of skin*/
 	Map(Position resolution, std::string skinName);
 
+	/* shifts boundaries to be blit */
 	void shift(int shiftLeft, int shiftUp);
-
-	/* returns size of map */
-	Position size()const;
 
 	/* creates empty map */
 	Map(std::string skinName);
@@ -183,9 +181,6 @@ public:
 
 	/* checking for colision and resolving it*/
 	void collision(Object * o1, Object * o2);
-
-	/* map finds out the object movement*/
-	void move(Object * o); 
 
 	/* events in map */
 	bool performe(Graphic * g);

@@ -60,10 +60,6 @@ private:
 	Object * last_attack;
 
 protected:
-public:
-	/* checks if iobject intersection, if so, returning in p, coords */
-	bool intersection(Object *o, Position &p1, Position& coords);
-
 	/* where an object should go after dead */
 	List * abyss_;
 
@@ -83,6 +79,9 @@ private:
 	/* number of enemies killed by this object */
 	size_t numberOfKilled;
 public:
+	/* checks objects intersection, if so, returning in p, coords */
+	bool intersection(Object *o, Position &p1, Position& coords);
+
 	enum Substantial
 	{
 		Miss = 0,

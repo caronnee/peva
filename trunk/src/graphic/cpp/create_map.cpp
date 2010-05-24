@@ -649,7 +649,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			mouse_down = false;
 			while (true)
 			{
-				if (map->boundaries.x < map->size().x - rects[RIGHT].x)
+				if (map->boundaries.x < map->getResolution().x - rects[RIGHT].x)
 					map->shift(MAP_SHIFT,0);
 				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))
@@ -679,7 +679,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			mouse_down = false;
 			while (true)
 			{
-				if (map->boundaries.y < map->size().y -rects[DOWN].y)
+				if (map->boundaries.y < map->getResolution().y -rects[DOWN].y)
 					map->shift(0, MAP_SHIFT);
 				map->update(rects[MAP], true,w->g);
 				if ((SDL_PollEvent(&w->g->event))

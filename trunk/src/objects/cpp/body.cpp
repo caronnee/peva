@@ -462,7 +462,7 @@ void Body::killed(Object * o)
 			break;
 		}
 	}
-	if (toKill!=NULL)
+	if ((toKill!=NULL)&&(o->typeObject()&Player))
 		tasks -= toKill->fullfilled();
 }
 void Body::hitted(Object * attacker, Position p, int attack)
@@ -505,7 +505,7 @@ void Body::hit(Object * o)
 	{
 		TEST("Stale to koliduje podla mna")
 		TEST(movement.position_in_map << " " )
-		exit(3);
+		throw "New position after collision is not counted properly. Please, report the bug :)";
 	}
 }
 int Body::getDirection(Position position)

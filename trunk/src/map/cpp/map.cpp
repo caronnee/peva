@@ -417,11 +417,7 @@ void Map::addPlace(Graphic * g, Place p)
 
 	places.insert(iter,p);
 }
-Position Map::size()const
-{
-	return resolution;
-}
-SDL_Rect Map::getBoundingRect(Object *o, Graphic*g)
+SDL_Rect Map::getBoundingRect(Object *o)
 {
 	Position diff = o->get_old_pos().substractVector(o->get_pos());
 	if (diff.x < 0)
@@ -441,7 +437,7 @@ SDL_Rect Map::getBoundingRect(Object *o, Graphic*g)
 }
 void Map::update(Object * o, Graphic * g)
 {
-	SDL_Rect r = getBoundingRect(o,g);
+	SDL_Rect r = getBoundingRect(o);
 	r.x-=boundaries.x;
 	if (r.x < 0)
 		r.x = 0;
@@ -638,6 +634,7 @@ void Map::resolveBorders(Object *o )
 		TEST("Pozicia objektu je mensia ako 0");
 		//	o->movement.direction.x *= -1;
 		o->movement.position_in_map.x = -1; //odrazene
+		throw "Illegal position less than zero";
 	}
 	else if (o->movement.position_in_map.x > resolution.x-(int)o->width())
 	{
@@ -645,6 +642,7 @@ void Map::resolveBorders(Object *o )
 		//	o->movement.direction.x *= -1;
 		//		o->movement.position_in_map.x = 2*(resolution.x-o->width()) - o->movement.position_in_map.x;
 		o->movement.position_in_map.x = resolution.x - o->width(); //odrazene
+		throw "Illegal position more than allowed";
 	}
 	if (o->movement.position_in_map.y < 0)
 	{
@@ -652,6 +650,7 @@ void Map::resolveBorders(Object *o )
 		//	o->movement.direction.y *= -1;
 		//		o->movement.position_in_map.y *= -1;
 		o->movement.position_in_map.y = 0; //odrazene
+		throw "Illegal position less than zero";
 	}
 	else if(o->movement.position_in_map.y > resolution.y-(int)o->height())
 	{
@@ -659,6 +658,7 @@ void Map::resolveBorders(Object *o )
 		//	o->movement.direction.y *= -1;
 		//	o->movement.position_in_map.y = 2*(resolution.y - o->height()) - o->movement.position_in_map.y;
 		o->movement.position_in_map.y = resolution.y - o->height(); //odrazene
+		throw "illegal position more than allowed";
 	}
 }
 
@@ -673,14 +673,10 @@ void Map::resolveMove(Object * o)
 	o->move(ticks);
 	resolveBorders(o);
 	Object * collidedWith= checkCollision(o);
-	ObjectMovement muf;
-	muf.position_in_map = Position( 1999,2000);
 	while (collidedWith!=NULL)
 	{
 		o->hit(collidedWith);
 		collidedWith= checkCollision(o);
-		TEST("Pozicia po kolidovani:" << o->get_pos())
-		muf = o->movement;
 	}
 }
 
