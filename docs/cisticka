@@ -2,6 +2,9 @@ rm -rf temp
 mkdir temp
 cp *.tex temp
 cd temp; cslatex ./bakalarka.tex
-cd temp; cslatex ./bakalarka.tex
-cd temp; dvipdf bakalarka.dvi
-evince bakalarka.pdf &
+cslatex ./bakalarka.tex
+dvips bakalarka.dvi
+if [ $? == 0 ]; then
+	dvipdf bakalarka.ps
+	evince bakalarka.pdf &
+fi
