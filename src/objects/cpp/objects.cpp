@@ -255,7 +255,7 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 		}
 	}
 	if (!test)
-		std::cout << "!!!";
+		std::cout << "!*!object.cpp:258!";
 	return true; //FIXME
 }
 
