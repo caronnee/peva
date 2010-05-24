@@ -1,10 +1,11 @@
 rm -rf temp
 mkdir temp
 cp *.tex temp
+cp *.eps temp
 cd temp; cslatex ./bakalarka.tex
 cslatex ./bakalarka.tex
 dvips bakalarka.dvi
 if [ $? == 0 ]; then
-	dvipdf bakalarka.ps
+	ps2pdf bakalarka.ps
 	evince bakalarka.pdf &
 fi
