@@ -3,9 +3,13 @@ mkdir temp
 cp *.tex temp
 cp *.eps temp
 cd temp; cslatex ./bakalarka.tex
+if [ $? != 0 ]; then
+	exit
+fi
 cslatex ./bakalarka.tex
 dvips bakalarka.dvi
-if [ $? == 0 ]; then
-	ps2pdf bakalarka.ps
-	evince bakalarka.pdf &
+if [ $? != 0 ]; then
+	exit
 fi
+ps2pdf bakalarka.ps
+evince bakalarka.pdf &

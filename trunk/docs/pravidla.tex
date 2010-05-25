@@ -1,28 +1,71 @@
-\section{Úvod do Codewars}
-V tejto sekcii by som chcela objasniť úlohu a pravidla simulácie Codewars, keďže sa na ne neskôr budem odkazovať. \\ 
-Ako názov naznačuje, v Codewars sa proti sebe postaví niekoľko užívateľom napísaných programov. Tieto programy predstavujú logiku robota a sú opakovane vykonávané v prípade, že boli vykonané všetky inštrukcie, ktoré program obsahoval. Každý hráč(užívateľ) si po spustení programu vytvorí minimálne jedného virtuálneho robota na hranie, dalších si neskôr môže pridať. Pre jednoduchosť predpokladajme, že každý užívateľ vlastní práve jedného robota a že máme viacero hráčov. Úlohou hráčov je napísať pre každého svojho robota vlastnú logiku, ktorou sa bude riadiť. Po napísaní tejto logiky v špeciálnom jazyku stvoreným pre Codewars sú títo roboti vypustení do dopredu pripraveného prostredia. \\
-\indent Okrem robotov sa v Codewars vyskytujú aj ďalšie objekty, na ktoré má hráč pomerne malý vplyv. V súčasnosti sú to strely a steny. Vplyv robota na tieto objekty bude vysvetlený neskôr pri samotnom popisovaní vlastností a priebehu hry. \\%TODO  referencia na tu kapitolu
-\indent Robot je vlastne iba postava, ktorou hráč môže pred samotným bojom pripraviť. Príprava spočíva okrem vybavenia ho vnútornou logikou aj v úprave vlastností robota a jeho zbrane. Tieto vlastnosti sa rozdeľujú do určitých tematicky podobných skupín (sekcií), v rámci ktorých sa môžu vlastnosti meniť. Sú to tieto:
-\begin{itemize}
-\item Vlastnosti pojednávajúce o stave robota
-\begin{itemize} 
-\item Dĺžka života : je číslo označujúce životaschopnosť robota. Štandartne sa znižuje v okamihu, keď na miesto, kde stojí robot, chce pristúpiť iný objekt. Existuje možnosť, že sa v tomto prípade toto číslo aj tak nezmení, viz \ref{kolizie} 
-\item Polomer viditeľnosti: určuje vzdialenosť, do akej maximálne robot môže robot rozoznávať ostatné objekty
-\item Uhol viditeľnosti: určuje kruhovú výseč, vnútri ktorej robot rozoznáva objekty.
-\item Veľkosť pamäte : určuje maximálny počet premenných, funkcií a návratových hodnôt, ktoré si robot pamätá a tým obmedzuje napríklad hĺbku rekurzí, keďže každá funkcia má nejaký návratový typ, ktorý si robot musí pamätať, vrátane typu 'Void', teda prázdno
-\item Obranné číslo: určuje odolnosť robota vočí iným objektom
-\item Útočné číslo: určuje útočnosť robotovho tela pri kolízií s inými objektami
+\section{ Požiadavky }
+Mapou nazvime prostredie, kde sa bude robot pohybovať. Robotove počínanie na mape nazvime misiou.\\ Výstupný program by mal teda splňovať nasledovné požiadavky:
+\begin {itemize}
+\item užívateľ si bude moc napísať algoritmus chovania pre jedného alebo viac robotov naraz \\
+	Hlavne z toho dôvodu, že je užívateľsky príjemnejšie mat pokope robotov, ktorí budú spúšťaní vždy spoločne. Táto stratégia má aj tú výhodu pre prípadné rozširenie o spolupracovníkov, ako napríklad z už spomínaného Dragon Ag
+\item akékoľvek vstupné algoritmy rôznych robotov by sa mali dať skombinovať.
+	\\Týmto spôsobom sa bude dať okamžite spustiť skupina robotov spolu s inou skupinou a nebude treba ich manuálne upravovať pred spustením
+\item algoritmus sa musí dať napísať v jazyku, ktorý je ľahko pochopiteľný, dostatočne detailný a ľahko rozšíriteľný.
+	Rozšírením sa myslí napríklad reakcie robota, alebo zakomponovanie novej činnosti, ktorú môže robot vykonávať
+\item napísaný algoritmus by sa mal dať rozdeliť na malé čati, ktorých vykonávanie bude ľahko sledovateľné
+\item užívateľ bude môcť vypustiť do mapy jedného alebo viac robotov do dopredu určený miest
+\item užívateľ bude môcť nastaviť parametre robota, ovplyvňujúce jeho chovanie, a to globálne alebo lokálne. \\
+	V rôznych hrách sa totiž prejavujú rozlične vlastnosti robotov, ako napríklad ničivosť zbraní.
+\item užívateľ by mal mať možnosťa definovať, kedy sa misia úspešne zakončila. \\
+	Niektoré hry ako napríklad Thief alebo Capture the flag totiž podmieňujú úspešné ukončenie misie inými podmienkami ako prázdnym bojiskom.\\
+	Do úvahy boli zobraté najčastejšie verzie úloh z RPG a bojových hier, čo sú vykonanie akcie v nejakej lokácií, pričom akcia sa líši v kazdej hre, odmedzenie na počet zabitým nepriateľov ako je to poveané napríklad v hre Thief, a zameranie sa na určitého neprateľa, ktorý a vyskytol vo viacerých hrách.
+\item program by mal rozhodovať, kedy je misia úspešná.\\
+	Na úspech misie sa dá alebo nazerať dvoma spôsobmi - pokiaľ sú splnené všetky podmienky zadané užívateľom alebo neexistuje nič, čo by úspech prekazilo. Druhá podmienka je pomerne diskutabilná, pretože v tomto prípade by úspechu mohlo zabrániť samotný algoritmus, ale keďže to inak ako dokončením simulácie nezistíme, je možné bez ujmy na obecnosti predpokladať, že algoritmus raz k splneniu podmienky dojde a vyhlásiť misiu za úspešnú.
+\item V každom okamihu by mal robot vedieť, kde v programe sa nachádza. Teda vždy bude mať čo vykonávať. To taktiež znamená rozhodnúť sa, čo sa stane, keď robot dojde na koniec algoritmu. 
 \end{itemize}
-\item Vlastnosti týkajúce sa akcií na diaľku
-\begin{itemize}
-\item Ďalekonosnosť zbrane: určuje, ako daleko je možné náboj vystreliť. Ak zbraň prejde viac ako daný počet políčok, automaticky zaniká. Dá sa tak zameniť so životnosťou zbrane
-\item Útočnosť zbrane: určuje ako moc je zbraň schopná ublížiť objektom, viz \ref{kolizie}
-\end{itemize}
-\end{itemize}
-Toto rozdelenie znamená, že hráč môže napríklad zvýšit robotovu odolnosť voči stretu s inúmi objektami, ale súčasne mu potom zostáva menej na zvýšenia životaschopnosti robota. Počet bodov, ktoré sa v rámci sekcie prerozdeľujú, je vždy v každom oddieli pre každého hráča rovnaký (T.j. každý hráč prerozdelí X bodov v rámci prvej sekci a  Y v rámci druhej, kde X, Y nemusia byť nutne navzájom rôzne čísla). Rozdelenie vlastností do sekcií nemá väčší než estetický význam. Predstava, ze na úkor očí bude puška alebo podobný nástroj lepšie strielať, nie je príliš intuitívna a užívateľa by to mohlo pomerne zmiasť. Ďalej je toto rozdelenie výhodné aj z toho dôvodu, že užívateľa núti znížiť obranyschopnosť robota. Ako vyplýva z popisu kolízií, ak by bola obranyschopnosť robota príliš vysoká, nič by honemalo šancu zasiahnuť. Potom výsledok celej simulácie by bol, ze buď vyhrá hráč s vyššiou obranyschopnosťou, alebo hra skončí remízou, keďže ani jeden z hráčov nemá dostatočné prostriedky zraniť druhého hráča. \\
-Čo sa týka samotných čísel X a Y, je možné si ich samostatne definovať, a to práve kvôli veľkostiam pamäte. Tieto čísla sú potom záväzné pre každého robota.
-\\Hlavnou úlohou hráča je však napísať algoritmus, podľa ktorého sa bude robot správať. Optimálny algoritmus spraví to, robot ako jediný prežije, t.j väčšinu svojich nepriateľov zničí alebo ich prinúti zničíť sa(napríklad navedením na vlastnú strelu alebo podobne).
 
+Aplikácia Codewars rešpektuje predchádzajúce podmienky nasledujúco:\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%skor do analyzy?
+%\section { Codewars } %struktura aneb analyza
+\subsection {Získavanie vstupov}
+\indent Najskôr bolo nutné rozoznávať vstup. Na výber sa ponúka niekoľko možností. Bolo by možné implemetovať priamo do aplikácie editor vstupov. Keďže ale hlavne v unixe, pre ktorý bol program primárne vyvíjaný, majú užívatelia svoj preddefinovaný editor, ktorý ovládajú a kde majú nadefinované makrá a skratky. Vzhľadom na túto okolosť je užívateľsky príjemnejšie neimplementovať nič nové a ponechať užívateľovi jeho preddefinovaný editor.\\
+Algoritmy robotov je teda výhodné načítavať zo súboru, kde sú popísané pomocou jazyka. A keďže štardartne bude mať užívateľ tieto vstupy pospolu pre rýchlejší prístup, bez ujmy na obecnosti na neho môže byť kladený nárok na pomenovanie vstupu s preddefinovanou koncovkou a v predefinovanom adresári. V práci sa použila koncovka ''input'' a adresár ''inputs'', ktorý sa pre lepšiu lokalizáciu bude nachádzať v adresári so spustiteľným súborom aplikácie.
+
+\subsection{ Definícia jazyka vstupov }
+Jazyk, v ktorom má užívateľ napísať svoj algoritmus, musí byť ľahko pochopiteľný, jednoduchý na porozumenie a hlavne obsahujúci funkcie pre popis virtuálneho sveta. Napríklad popis objektov, ktorá vidí, kde sa nachádza, a pod., a teda z toho princípu musi byť tiež rozšíriteľný na ďaľsie udalosti, ktoré by mohli nastať. Na výber sa ponúka niekoľko scriptovacích jazykov, ako napríklad Lua, vytvorenie vlastného jazyka pomocou parsovacích nástrojov, ako je napríklad Bison a Flex, alebo ponechanie napísania vstupu v jazyku aplikácie.Všetky prístupy majú svoj výhody aj nevýhody.
+\begin{description}
+	\item[Objektový jazyk aplikácie]\hfill \\ Výhodou tohoto prístupu je, že nie je potrebné nič naimplementovať, stačí definovať rozhranie, aké musí súbor mať, poprípade knižnice, hlavičky/package, v závislosti na zvolenom jazyku. Nevýhodou tohoto prístupu je nutnosť kompilovať, čo môže nepríliš oboznámených užívateľov k smrti vydesiť. Ďalšou malou nevýhodou je nutnosť poznať daný jazyk minimálne na základnej úrovni a taktiez nutnosť poznať implementačné detaily.Rovnako by bolo pomerne obtiažne určiť, kde presne sa aktuálne nachádza kód robota a ktorú metódu/funkciu bude vykonávať následovne. Taktiež sa edá konntrolovať vyťaženosť pamäte.
+	\item[Scriptovací jazyk]\hfill \\ Jedná sa napríklad o scriptovací jazyk Lua, ktorú už bol úspešne použitý napríklad pri hre Baldurs Gate na prispôsobenie vzhľadu sveta. Výhodou tohoto jazyka je pomerne prehľadná kompilácia, multiplatformnosť, prehľadné písanie kódu a kompilácia za behu programu. Malou nevýdodou je nutnosť inštalovania Lua virtua machine, ktorá, podobne ako Java Virtual Machine, je virtuálny stroj určený pre vykonávanie inštrukcií lua scriptu
+	\item[Parsovacie nástroje]\hfill \\ Jedná sa napríklad o nástroje Bison a Flex. Výhodou je vygenerovanie priamo zdrojového kódu podľa zadaných pravidiel, multiplatformnosť, možnosť parsovať za behu programu. drobnou nevýhodou je fakt, že Flex a Bison boli vyvíjané v jazyku C a konverzia do C++ vyžaduje netriviálne úpravy. Ďalšou nevýhodou sa môže zdať fakt, že sú to skutočne iba parsovacie nástroje a teda celý mechanizmus vykonávania algoritmu je nutné naimplementovať.
+\end{description}
+V aplikácií bol zvolený posledný spôsob vzhľadom na predchádzajúce skúsenosti s týmito nástrojmi a na možnosť rozdeliť vstup na detailné, atomické a prehľadné časti.
+
+\subsection{Vlastnosti robotov}
+\indent Robota okrem jeho algoritmu definuje aj spôsob, akým sa bude chovať v prostredi/mape.
+%Ako názov naznačuje, v Codewars sa proti sebe postaví niekoľko užívateľom napísaných programov. Tieto programy predstavujú logiku robota a sú opakovane vykonávané v prípade, že boli vykonané všetky inštrukcie, ktoré program obsahoval. Každý hráč(užívateľ) si po spustení programu vytvorí minimálne jedného virtuálneho robota na hranie, dalších si neskôr môže pridať. Pre jednoduchosť predpokladajme, že každý užívateľ vlastní práve jedného robota a že máme viacero hráčov. Úlohou hráčov je napísať pre každého svojho robota vlastnú logiku, ktorou sa bude riadiť. Po napísaní tejto logiky v špeciálnom jazyku stvoreným pre Codewars sú títo roboti vypustení do dopredu pripraveného prostredia. \\
+%\indent Okrem robotov sa v Codewars vyskytujú aj ďalšie objekty, na ktoré má hráč pomerne malý vplyv. V súčasnosti sú to strely a steny. Vplyv robota na tieto objekty bude vysvetlený neskôr pri samotnom popisovaní vlastností a priebehu hry. \\%TODO  referencia na tu kapitolu
+Robot je vlastne iba postava, ktorou hráč môže pred samotným bojom pripraviť. Príprava spočíva okrem vybavenia ho vnútornou logikou aj v úprave vlastností robota a jeho zbrane, keďže tieto sú najviac dôležité pri pohybe mapou a plnení cieľov. Tieto vlastnosti sa rozdeľujú do určitých tematicky podobných skupín (sekcií), v rámci ktorých sa môžu vlastnosti meniť. Sú to tieto:
+\begin{description}
+\item [Vlastnosti pojednávajúce o stave robota] \hfill \\
+\begin{description} 
+\item [Dĺžka života] \hfill \\ číslo označujúce životaschopnosť robota. Štandartne sa znižuje v okamihu, keď na miesto, kde stojí robot, chce pristúpiť iný objekt. Existuje možnosť, že sa v tomto prípade toto číslo aj tak nezmení, viz \ref{kolizie} Znižovanie životachopnosti je vlastne kolízia s iným objektom s následkami
+\item [Uhol viditeľnosti]\hfill \\ určuje polovicu kruhovej výseče, vnútri ktorej robot rozoznáva objekty. Polomer tejto kruhovej výseče je logicky závislý na prostredí a teda na mape(v skutočnom živote by to mu zodpovedalo prostredie ako apríklad voda alebo dym, alebo čistý vzduch). Uhol nesmie byť väčší ako $90^\circ$. Inak by to znamenalo, že robot vidí aj na opačnú stranu než je otočený, čo nie je úplne žiadúce. Uhol teda zopovedá výseču, akú pokryje jedno ''oko'' robota, viz \ref{uhol}
+\begin {figure}
+\centering
+\includegraphics{angle}
+\caption { Uhol z jedného ''oka'' robota }
+\label{uhol}
+\end {figure}
+\item [Veľkosť pamäte]\hfill \\ určuje maximálny počet premenných, funkcií a návratových hodnôt, ktoré si robot pamätá. 
+\end{description}
+\item [Vlastnosti týkajúce sa boja]\hfill \\
+\begin{description}
+\item [Obranné číslo]\hfill \\ určuje odolnosť robota voči iným objektom
+\item [Útočné číslo]\hfill \\ určuje útočnosť robotovho tela pri kolízií s inými objektami
+\item [Ďalekonosnosť zbrane]\hfill \\ určuje, ako daleko je možné náboj vystreliť. Ak zbraň prejde viac ako daný počet políčok, automaticky zaniká. Dá sa tak zameniť so životnosťou zbrane
+\item [Počet striel]\hfill \\ maximálny počet striel, ktoré má robot k dispozícií
+\item [Rýchlosť]\hfill \\ rýchlosť pohybu robota
+\item [Útočnosť zbrane]\hfill \\ určuje ako moc je zbraň schopná ublížiť objektom, viz \ref{kolizie}
+\end{description}
+\end{description}
+Toto rozdelenie znamená, že hráč môže napríklad zvýšit robotovu odolnosť voči stretu s inými objektami, ale súčasne mu potom zostáva menej na zvýšenia životaschopnosti robota. Počet bodov, ktoré sa v rámci sekcie prerozdeľujú, je vždy v každom oddieli pre každého hráča rovnaký (T.j. každý hráč prerozdelí X bodov v rámci prvej sekci a  Y v rámci druhej, kde X, Y nemusia byť nutne navzájom rôzne čísla). Čo sa týka samotných čísel X a Y, pre rôzne hry sa ich veľkosť môže líšit, preto by mali byť v aplikácií plne konfigurovateľné.\\
+Potreba vytvoriť plne konfigurovateľné vlastnosti vyplýva z variability nepriateľov v rôznych hrách, nutnosť obmedziť ich nejakým horným čislom zas kvôli tomu, aby mal jeden robot voči druhému približne rovnakú šancu. Rozdelenie do dvoch sekcií namiesto jednej je viac=menej estetické a iba logicku oddeluje nesúvisica vlastnosti
+\section { Virtuálny svet }
 \subsection{Vlastnosti stien}\label{walls} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
 Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú komunikovať s mapou. Sú to:\\
 \begin{itemize}
@@ -31,8 +74,6 @@ Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vyc
 \item TrapWall. Táto stena vždy na náhodný čas zmizne a znova sa objaví. V prípade, že sa v okamžiku jej objavenia je na jej políčku nachádza iný objekt, program sa chová, akoby nastala kolízia, viz \ref{kolizie}.
 \item SolidWall, obyčajná stena bez špeciálnych vlastností.
 \end {itemize}
-Steny sa dajú kombinovať, to znamená, že napríklad stena sa môže pohybovať alebo miznúť alebo súčasne. Pri generovaní mapy sa toto dosiahne položením steny na políčko, ktoré už obsahuje iný typ steny.
-
 \subsection{Kolízie}\label{kolizie}
 Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to buď útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou, ako výsledok sa mu zmení smer, ktorým sa doteraz pohyboval), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. Toto zranenie sa vypočíta ako rozdiel útočnosti útočníka a obranyschopnosti brániaceho sa objektu. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to napríklad strela, zanikne alebo sa odrazí od steny, ak je to stena, svojím pohybom útočí ďalej, ak je to hráč, závisí na jeho algoritme.
 \subsubsection{Detekovanie kolízií}%TODO referencia
