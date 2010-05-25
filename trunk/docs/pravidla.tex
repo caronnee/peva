@@ -1,8 +1,27 @@
+\section{ Základné pojmy }
+V nasledujúcom texte sa budú používať tieto pojmy:
+\begin{description}
+\item[Mapa (bojisko)]\hfill \\
+	Mapou nazvime prostredie, kde sa odohráva boj (testovane algoritmov )
+\item[Objekt]\hfill \\
+	Pod objektom sa rozumie akákoľvek vec na mape, ktorá smie priamo alebo nepriamo ovplyvňovať výsledok vykonávania algoritmov. Tento pojem nemá žiadnu súvislosť s pojmom Objekt, ako je známy z objektových programovacích jazykov.
+\item[Algoritmus]\hfill \\
+	Algoritmom nazvime postup, zapísaný pomocou nejakého jazyka. 
+\item[Robot]\hfill \\
+	Pod pojmom robot rozumieme objekt, ktorého chovanie je dané algoritmom.
+\item[Misia]\hfill \\
+	Misiou nazvime algoritmus robota, ktorý predpokladá splnenie nejakých podmienok. Úspešne ukončenou misiou nazveme algoritmus, o ktorom vieme s naprostou istotou povedať, že tieto podmienky sú splnené.
+\item[Oponent robota]\hfill \\
+	Pod týmto pojmom sa rozumie robot, ktorého algoritmus může byť potenciálnou hrozbou pre robota.
+\item[Spojenec robota] \hfill \\
+	Spojencom robota A je taký robot B, o ktorom algoritme robot A predpokladá, že prispeje k úspešnej misii robota A %?OMG!
+\end{description}
+
 \section{ Požiadavky }
-Mapou nazvime prostredie, kde sa bude robot pohybovať. Robotove počínanie na mape nazvime misiou.\\ Výstupný program by mal teda splňovať nasledovné požiadavky:
+Náplnou bakalárskej práce je vytvoriť čo najuniverzálnejšie prostredie pre skúšanie algoritmov pre umelú inteligenciu. Výsledky ( výstup z programu ) by mali byť podobné, ideálne rovnaké, ako  pri použití algoritmu v danej hre.
 \begin {itemize}
 \item užívateľ si bude moc napísať algoritmus chovania pre jedného alebo viac robotov naraz \\
-	Hlavne z toho dôvodu, že je užívateľsky príjemnejšie mat pokope robotov, ktorí budú spúšťaní vždy spoločne. Táto stratégia má aj tú výhodu pre prípadné rozširenie o spolupracovníkov, ako napríklad z už spomínaného Dragon Ag
+	Hlavne z toho dôvodu, že je užívateľsky príjemnejšie mat pokope robotov, ktorí budú spúšťaní vždy spoločne. Táto stratégia má aj tú výhodu pre prípadné rozširenie o spolupracovníkov, ako napríklad z už spomínaného Dragon Age
 \item akékoľvek vstupné algoritmy rôznych robotov by sa mali dať skombinovať.
 	\\Týmto spôsobom sa bude dať okamžite spustiť skupina robotov spolu s inou skupinou a nebude treba ich manuálne upravovať pred spustením
 \item algoritmus sa musí dať napísať v jazyku, ktorý je ľahko pochopiteľný, dostatočne detailný a ľahko rozšíriteľný.
@@ -33,7 +52,7 @@ Jazyk, v ktorom má užívateľ napísať svoj algoritmus, musí byť ľahko poc
 	\item[Scriptovací jazyk]\hfill \\ Jedná sa napríklad o scriptovací jazyk Lua, ktorú už bol úspešne použitý napríklad pri hre Baldurs Gate na prispôsobenie vzhľadu sveta. Výhodou tohoto jazyka je pomerne prehľadná kompilácia, multiplatformnosť, prehľadné písanie kódu a kompilácia za behu programu. Malou nevýdodou je nutnosť inštalovania Lua virtua machine, ktorá, podobne ako Java Virtual Machine, je virtuálny stroj určený pre vykonávanie inštrukcií lua scriptu
 	\item[Parsovacie nástroje]\hfill \\ Jedná sa napríklad o nástroje Bison a Flex. Výhodou je vygenerovanie priamo zdrojového kódu podľa zadaných pravidiel, multiplatformnosť, možnosť parsovať za behu programu. drobnou nevýhodou je fakt, že Flex a Bison boli vyvíjané v jazyku C a konverzia do C++ vyžaduje netriviálne úpravy. Ďalšou nevýhodou sa môže zdať fakt, že sú to skutočne iba parsovacie nástroje a teda celý mechanizmus vykonávania algoritmu je nutné naimplementovať.
 \end{description}
-V aplikácií bol zvolený posledný spôsob vzhľadom na predchádzajúce skúsenosti s týmito nástrojmi a na možnosť rozdeliť vstup na detailné, atomické a prehľadné časti.
+V aplikácií bol zvolený posledný spôsob vzhľadom na predchádzajúce skúsenosti s týmito nástrojmi a na možnosť rozdeliť vstup na detailné, atomické(ďalej nedeliteľné) a prehľadné časti.
 
 \subsection{Vlastnosti robotov}
 \indent Robota okrem jeho algoritmu definuje aj spôsob, akým sa bude chovať v prostredi/mape.
@@ -94,7 +113,7 @@ for each object in objects;\\
 checkForCollistion(iterator, object);\\
 \hline
 \end{tabular}
-\caption{pseudokód pre jednoduché detekovanie kolízií}
+\caption{pseudokód pre jednoduché detekovanie kolízií} %TODO nema byt tabulka:P Bude radsej obrazok
 \label{tab:k1}
 \end{table}
 Toto riešenie je ale v porovnaní s ďalšími navrhovanými algoritmami dosť pomalé. Pre málo objektov je však výhodná.\\
@@ -111,30 +130,73 @@ Reakcie na kolíziu sa riadia podľa na obrázku \ref{fig:kol}
 \begin {figure}
 \centering
 \includegraphics{kolizie}
-\caption { Výsledok kolízii medzi rôzymi objektami }
+{ Výsledok kolízii medzi rôznymi objektami }
 \label{fig:kol}
 \end {figure}
+
+\subsection{ Definovanie skončenia misie }
+Ako bolo spomenuté v požiadavkách, niektoré hry nepovažujú za důležité len prežitie robota v prostredí, ale dodatočné podmienky. Preto v algoritme robota musí existovať ak sekvenia znakov, ktorá ich umožňuje dodatočne definovať. Vyvstáva otázka, prečo by tieto podmienky nemohli byť definované aj globálne, teda mimo algoritmu. Odpoveďou je, že s neuplnou informáciou sa dobré algoritmu píšu pomerne ťažko.% o to sakra melem???
+Definovanie vítazného stavu sa v pro písaní programu pre robota objaví ešte pred funkciami v tvare:
+\begin{itemize}
+\item $Killed\ [>, < <=, >=, !=, ==]\ N, N \in Z$ , kde Killed je pocet zabitých nepratieľov a do tohoto počtu sa nezapočítavajú rozbité steny ani strely
+\item $Killed( N ), N \in [a-zA-Z0=9\_]*$ , kde N je identifikačný názov robota. Tento názov zadá užívateľ pre lepšiu identifikáciu algoritmu robota
+\item $Visit([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, v akomkoľvek poradi
+\item $VisitSequence([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, práve v tomto poradi. V prípade, že je definovaných viac takýchto inštrukcií, spracovávajú sa všetky simultánne, t.j ak má pravidlá definované ako v tabuľke \ref{tab:pr1} a pristúpi na políčko [20,20], splní sa v druhej sekvencii prvé miesto. Ak robot už predtým navštívil políčko [10,10], potom je kompletne splnená prvá podmienka a časť druhej
+\item $Visit(X, Y,...); X,Y \in N $, kde X,Y sú čísla miest, ktoré musí robot navšíviť, v akomkoľvek poradí. Tieto čísla budú teda definované v mape
+\item $VisitSequence(X,Y...0 X,Y \in N$, kde X,Y sú taktiež čísla miest, ktoré musí robot navštítiť, ale v presne danom poradí.
+\end{itemize}
+V tabuľke\ref{tab:allVis} je prehľad všetkých zápisov cieľov, aké sú možné. Tieto ciele je možné pre vyššiu variabilitu kombinovať. Dopredná kontrola splniteľnosti cieľov nie je žiadúca z důvodu
+\begin{table}
+\centering
+\begin{tabular}{l}
+VisitSequence([10,10],[20,20])\\
+VisitSequence([20,20],[20,30])\\
+\end{tabular}
+\caption {Príklad 1 : pravidlá definujúce cieľ robota} %TODO figure!
+\label{tab:pr1}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{l}
+VisitSequence([10,10],[20,20])\\
+Visit([20,20],[20,30],[20,30])\\
+Kill < 4
+Kill >= 5
+kill != 3
+kill == 8
+Kill > 8
+Kill <= 8
+Visit([20,20],2,0)\\
+
+\end{tabular}
+\caption {Príklad 2 : príklady pre pravidlá na definovanie cieľa} %TODO figure!
+\label{tab:allVis}
+\end{table}
+
+V týchto podmienkach je ešte možné použiť premennú 'Start', ku ktorej sa pristupuje ako k poľu a označuje štartovnú pozíciu i-teho robota.\\
+Kód, ktorý by simuloval populárnu hru 'Capture the flag' by napríklad vyzeral takto pre robota s menom Bot a oponenta s menom AnotherBot:\\
+\begin{table}
+\centering
+\begin{tabular}{l c}
+VisitSequence(start[AnotherBot],start[Bot]) &\\ 
+main()\\
+\{\\
+&//kod robota\\
+\}\\
+\end{tabular}
+\caption{ Príklad na simuláciu hry Capture the flag }
+\end{table}
 
 \subsection {Priebeh simulácie}
 Hra sa začína vhodením robotov do prostredia v poradí, v akom boli pridaní. Kvôli rovnosti šancí by mali roboti začať vykonávať svoj program súčasne. To však technicky nie je možné, takže je nutné zamaskovať to tým spôsobom, že sa vyhodnotia všetky akcie a v ďalšej fázi sa vyhodnotia naraz všetky výsledky. \\
  Priebeh simulácie codewars teda prebieha nasledujúco:
- \begin {enumerate}
-\item vyberú sa vstupy robotov na hracom poli
-\item vstupy sa spracujú na inštrukcie
-\item roboti sa umiestnia naštartovacie políčka. Ak nie je dostatok štartovacích políčok, pokúsia sa umiestniť náhodne. Ak sa epodarí ani, to, dotyčný robot vypadáva zo simulácie. Pozícia štartu robota nesmie kolidovať s iným objektom. Ak koliduje, robot sa tam neumiestni.
-\item priebieha kolo – zavolá sa plánovač u každého robota. Plánovač neurobí nič, pokiaľ sa robot nachádza v nasledujúcich stavoch ( pohybujúci sa, strieľajúci, zasiahnutý), alebo nenastal čas ďalšej inštrukcie. Inak nasledujúcu inštrukciu vykoná. Dĺžka trvania stavov robotov, v ktorých musí plánovač čakať, nie je možné dopredu určit.
-\item vypočítajú a vykreslia sa výsledky inštrukcií a akcií robotov ( pohyb objektov, zasiahnutie, vypočítanie škody, odstránenie častí so životnoštou menšou ako 0 )
-	\item skontroluje sa splnenosť cieľov u každého robota, ak má aspoň jeden robot splnené všetky ciele, alebo ako jediný z robotov má životnosť väčšiu ako 0, simulácia skočí výpisom robotov, ktorí úspešne ukončili simuláciu. Inak sa pokračuje krokom 4.
+\begin {enumerate}
+\item vyberú a spracujú sa vstupy robotov
+\item vstupy skontrolujú na syntaktické chyby, doplnia a skontrulú sa nastavenia vlastností robotov
+\item roboti sa umiestnia na štartovacie políčka. Ak nie je dostatok štartovacích políčok, pokúsia sa umiestniť náhodne. Ak sa nepodarí ani to, dotyčný robot vypadáva zo simulácie. Pozícia štartu robota nesmie kolidovať s iným objektom. Ak koliduje, nie je považovaná za validné štartovacie políčko a robot sa tam neumiestni.
+\item priebieha kolo – každý robot oznámi, akú časť kódu chce vykonávať. 
+\item vypočítajú a vykreslia sa výsledky robotích akcií a objektov na mape ( pohyb objektov, zasiahnutie, vypočítanie škody, odstránenie častí so životnosťou menšou ako 0 )
+\item skontroluje sa splnenosť cieľov u každého robota. Ak má aspoň jeden robot splnené všetky ciele, alebo ako jediný z robotov má životnosť väčšiu ako 0, simulácia skočí výpisom robotov, ktorí úspešne ukončili simuláciu. Inak sa pokračuje krokom 4.
 \end{enumerate}
-To implementačne znamená, že buď každý nový robot dostane vlastné vlákno, alebo sa určí spôsob zoradenia robotov tak, aby nesimultánnosť bola vidieť čo najmenej. Spôsob preplánovania jednotlivého súčastí CodeWars je popísaný neskôr, nateraz stačí povedať, že každý jednotlivý kus kódu programu robota zaberá istý čas (napríklad na premiestnenie sa alebo vypočítanie premennej), a teda sa robot môže dostať opať na radu(vykonať nasledujúcu inštrukciu) až v okamihu, keď tento čas pominie. Popis inštrukcií a čas, ktorý zaverajú, je popísaný v \ref{penalizacia}. Robot teda môže sa pohnúť a niekoľko políčok, vystreliť pod uhlom alebo na urcté miesto, otočit sa, rátať premenné, používať podmienené príkazy a skoky typu while, if, break, continue. Hra končí v okamihu, keď aspoň jeden z robotov dosiahne 'víťazného stavu'. Defaultne je to zabitie každého protivníka, je ale možné priamo v kóde definovat niekoľko variánt.\\
-Definovanie vítazného stavu sa v pro písaní programu pre robota objaví ešte pred funkciami v tvare:
-\begin{itemize}
-\item $Killed\ [>, < <=, >=, !=, ==]\ N, N \in Z$ , kde Killed je pocet zabitých nepratieľov a do tohoto počtu sa nezapočítavajú rozbité steny ani strely
-\item $Killed( N ), N \in Z$ , kde N je identifikačné čislo robota. Toto číslo je každému robotovi pridelená automaticky, ale pre lepšiuidentifikáciu, napríklad pri sieťovom pripojení, je možné i roboto toto číslo explicitne definovať napísaním $ ID\ n, n\in N$ na rovnak=ych miesach ako tieto pravidlá
-\item $Visit([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, v akomkoľvek poradi
-\item $VisitSequence([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, práve v tomto poradi. V prípade, že je definovaných viac takýchto inštrukcií, spracovávajú sa všetky simultánne, T.J ak má pravidlá:\\
-$VisitSequence([10,10],[20,20])\\VisitSequence([20,20],[20,30])$ a pristúpi na políčko [20,20], splní sa v druhej sekvencii prvé miesto. Ak robot už predtým navštívil políčko [10,10], potom je kompletne splnená prvá podmienka a časť druhej
-\end{itemize}
-V týchto podmienkach je ešte možné použit premennú 'Start', ku ktorej sa pristupuje ako k poľu a označuje štartovnú pozíciu i-teho robota.\\
-Kód, ktorý by simuloval populárnu hru 'Capture the flag' by napríklad vyzeral takto pre robota s ID 0:\\
-$VisitSequence(start[1],start[0]) \\ main()\\\{\\//kod robota\\\}\\$
+
