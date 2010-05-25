@@ -64,38 +64,69 @@ Robot je vlastne iba postava, ktorou hráč môže pred samotným bojom pripravi
 \end{description}
 \end{description}
 Toto rozdelenie znamená, že hráč môže napríklad zvýšit robotovu odolnosť voči stretu s inými objektami, ale súčasne mu potom zostáva menej na zvýšenia životaschopnosti robota. Počet bodov, ktoré sa v rámci sekcie prerozdeľujú, je vždy v každom oddieli pre každého hráča rovnaký (T.j. každý hráč prerozdelí X bodov v rámci prvej sekci a  Y v rámci druhej, kde X, Y nemusia byť nutne navzájom rôzne čísla). Čo sa týka samotných čísel X a Y, pre rôzne hry sa ich veľkosť môže líšit, preto by mali byť v aplikácií plne konfigurovateľné.\\
-Potreba vytvoriť plne konfigurovateľné vlastnosti vyplýva z variability nepriateľov v rôznych hrách, nutnosť obmedziť ich nejakým horným čislom zas kvôli tomu, aby mal jeden robot voči druhému približne rovnakú šancu. Rozdelenie do dvoch sekcií namiesto jednej je viac=menej estetické a iba logicku oddeluje nesúvisica vlastnosti
+Potreba vytvoriť plne konfigurovateľné vlastnosti vyplýva z variability nepriateľov v rôznych hrách, nutnosť obmedziť ich nejakým horným čislom zas kvôli tomu, aby mal jeden robot voči druhému približne rovnakú šancu, pokiaľ nie je vyslovene povedané, že má ísť o nerovný boj. Rozdelenie do dvoch sekcií namiesto jednej je viac-menej estetické a iba logicky oddeľuje nesúvisiace vlastnosti.
 \section { Virtuálny svet }
-\subsection{Vlastnosti stien}\label{walls} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
-Steny sú objekty sveta, cez ktoré robot nevidí a ktoré môžu napríklad vychýliť dráhu strely. Nie sú však len statické, exituje viacero druhov stien, ktoré budú komunikovať s mapou. Sú to:\\
+Svet, v ktorom sa bude robot pohybovať, musí spĺňať niekoľko základných vlastností. 
+\begin {description}
+\item[Požiadavok na terén] \hfill \\ keďze v majoritnej vačšine hier sa pri bojoch s nepriateľmi využívajú nerovnosti terénu, je žiadúce to do virtuálneho sveta zapracovať. V tomto prípade, keďže aplikácia podporuje iba dve dimenzie, stačia steny.
+\item[Požiadavok na prekážky] \hfill \\ pre zaujímavejšie boje sú po bojisku v niektorých hrách statické pasti, miesta, ktorým sa treba vyhnúť
+\item[Požiadavok na viditeľnoť]\hfill \\ je to vlastne charakteristika mapy ovplyvňujúca počet objektov, ktoré je robot schopný zahliadnuť
+\end {description}
+\subsection{Steny}\label{walls} % vseobecne oba rozne vlastnosti, ake maju steny, k comu to je
+Steny sú objekty sveta, cez ktoré robot nevidí a ktoré blokujú pohyb ostatných objektov. V rámci väčšej variability je vhodné mať niekoľko druhov stien. Sú to:\\
 \begin{itemize}
-\item Zvláštne políčko Start, ktoré sa používa iba pri generovaní mapy, označuje políčko, kde majú roboti na začiatku simulácie stáť. V prípade, že to políčko sa na mape nevyskytuje, potom sú roboti rozmiestní náhodne.
-\item MovableWall, touto stenou je možné pohnúť, ak na políčku za za ňou v smere pohybu nič nie je.
-\item TrapWall. Táto stena vždy na náhodný čas zmizne a znova sa objaví. V prípade, že sa v okamžiku jej objavenia je na jej políčku nachádza iný objekt, program sa chová, akoby nastala kolízia, viz \ref{kolizie}.
-\item SolidWall, obyčajná stena bez špeciálnych vlastností.
+\item Zvláštne políčko Start, ktoré sa používa iba pri generovaní mapy, označuje políčko, kde majú roboti na začiatku simulácie stáť. V prípade, že to políčko sa na mape nevyskytuje, potom sú roboti rozmiestnení náhodne. Hľadanie náhodného polía by nemalo presahovať rozumnu veľkosť vzhľadom na veľkosť mapy.
+\item MovableWall, touto stenou je možné pohnúť, ak na políčku za za ňou v smere pohybu nič nie je. Prostredie sa tak bude moe trohu meniť a tým algoritmus oponenta zmiasť.
+\item TrapWall. Táto stena vždy na náhodný čas zmizne a znova sa objaví. V prípade, že sa v okamžiku jej objavenia je na jej políčku nachádza iný objekt, program sa chová, akoby nastala kolízia, viz \ref{kolizie}. Jej nasadenie do mapy reprezentuje priepasti, jedy a podobné prkáZky, ktorým sa je nutné vyhnúť.
+\item SolidWall, obyčajná stena bez špeciálnych vlastností.Odráža strely a nepustí žiade iné objekty a svoju pozíciu.
 \end {itemize}
+
 \subsection{Kolízie}\label{kolizie}
-Kolízia je stav, keď na jedno miesto sa chcú dostať dva objekty. Miesto v našom príprade je jedno políčko mapy. V prípade kolízie jeden alebo druhý objekt utrpí a to buď útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou, ako výsledok sa mu zmení smer, ktorým sa doteraz pohyboval), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. Toto zranenie sa vypočíta ako rozdiel útočnosti útočníka a obranyschopnosti brániaceho sa objektu. To, ako sa po úspešnom útoku zachová útočník, závisí na jeho type. Ak je to napríklad strela, zanikne alebo sa odrazí od steny, ak je to stena, svojím pohybom útočí ďalej, ak je to hráč, závisí na jeho algoritme.
-\subsubsection{Detekovanie kolízií}%TODO referencia
-Detekovanie kolízií je jedno z najkritickejších miest pri vytváraní grafickej hry. Nejde pri tom ani tak o samotné spracovanie výsledkov kolízie ako uloženie samotných objektov do štruktúry, ktorá pomerne rýchlo vyhľadá objekty možných kolízií. Existije na to niekoľko metód.\\
-Najjednoduchšia metóda, ktorá sa dá použiť, je samozrejme uložiť si do poľa všetky objekty a systematicky prechádzať každú dvojicu, či náhodou nekoliduje. Kód vyzerá pomerne jednoducho:\\ $ for(std::vector<Object>::iterator = objects.begin();\\ iterator!=objects.end();\\ iterator++)\\ \\ checkForCollistion(iterator, object);$\\
-Toto riešenie je ale v porovnaní s ďalšími navrhovanými algoritmami dosť pomalá. Pre málo objektov je však pomerne výhodná.\\
-Ďalším navrhovaným riešením je rozdelenie priestoru do mriežky. Každá buňka v tejto mriežke môže obsahovať niekoľko objektov, ktoré treba testovať na kolíziu. V tomto okamihu sme podstatne zmenšili počet objektov, ktoré budeme testovať a teda môžene použiť prvý spôsob na všetky objektu, ktoré sa nachádzajú v rovnakej buňke. Keďže v okamihu pohybu môže objekt prejst z jednej buňky do druhej, je tiež potrebné testovať na zrážku s objektami vo vedľajších buňkách. Veľkosť plochy, aký pokrývajú jednotlivé buňky, je dobré zvoliť v závislosti na rýchlosti objektov a počte objektov. Ak by bola rýchlosť objektov príliš vysoká, mohlo by sa stať, že objekt neprejde len do susednej bňky, ale ešte do buňky za ňou, takže by sa museli porovnávať okolité buňku po ceste, čím by mohla výkonnosť klesnúť, nie však za predpokladu, ze že je v každej buňke málo objektov. Táto metída bola pre jednoduchosť implementovaná.\\%TODO obrazok
-Dosť často je využívaným spôsobom pre riešenie kolízií v 2D (3D) hrách je štruktúra zvaná quadtree. Quadtree je strom rozdeľujúci priestor na niekoľko častí podobne ako v mriežkovom spôsobe, na základe dostatočnej 'blizkosti' objektu, rozdiel spočíva v prístupe k informáciam a dynamickým vytváraním ďalších buniek. Na začiatku tvorí celý priestor jednu veľkú buňku. V okamihu, keď sa do buňku dostane istý počet objektov považovaný za maximálny, buňka sa rozdelí. Podobne, pokiaľ objekt prejde z jednej buňku do druhej a v pôvodnej už nezostáva nič, buňka zanikne (zostane už iba naradená, väčšia buňka). Samotná kolízia sa preráta podobne ako v predchádzajúcej metóde. Pekný tutoriál k implementácií Quadtree sa dá  nájst v \cite{quadtree}
-\subsection{Reakcie na kolízie}
+Pre správne komunikáciu medzi objektami (t.j. vyriešenie vzťahov zasiahol/zasiahnutý) je nnutné zistiť, kedy objekty kolidujú. Kolízia je stav, keď sa často objektov prekrývajú. V prípade kolízie jeden alebo druhý objekt utrpí a to buď útočník, ktorého útočnosť bola menšia ako obranyschopnosť brániaceho sa objektu(teda neprenikol obranou, ako výsledok sa mu zmení smer, ktorým sa doteraz pohyboval), alebo utrpí brániaci sa objekt, ak jeho obrana nebola dostatočná. V tom prípade dostane tento objekt odpovedajúce zranenie. Toto zranenie sa vypočíta ako rozdiel útočnosti útočníka a obranyschopnosti brániaceho sa objektu, čoje adekvátne k variabiliti nastaveniu útočnosti a obrany. To, ako sa po útoku zachová útočník, závisí na jeho type. Strela sa po zasiahnutí chová napríklad inak ako telo robota.
+\subsubsection{Detekovanie kolízií}
+Detekovanie kolízií je jedno z najkritickejších miest pri vytváraní grafickej hry. Nejde pri tom ani tak o samotné spracovanie výsledkov kolízie ako o uloženie samotných objektov do štruktúry, ktorá rýchlo vyhľadá možé kolidujúce objekty. Existuje na to niekoľko metód.\\
+Najjednoduchšia metóda, ktorá sa dá použiť, je samozrejme uložiť si do poľa všetky objekty a systematicky prechádzať každú dvojicu, či náhodou nekoliduje. Kód vyzerá pomerne jednoducho, viz tabuľka \ref{tab:k1} \\
 \begin{table}
 \centering
-\caption {Reakcie na kolíziu}
-\begin{tabular}{| c |c|c|c|c|}
-& Strela & Stena & Cieľ & Robot \\
-Strela & znizi zivot & odraz a pohne stenou & - & vybuch \\
-Ciel & - & - & - & - \\
-Stena &zmeni smer a prituli sa & utok alebo posuv ak stoji, ale pomalejsi & posunie alebo primackne \\
-Robot & vybuch & utok telom na stenu & vybuch & utok telom \\
+\begin{tabular}{|l|}
+\hline
+for each object in objects;\\
+checkForCollistion(iterator, object);\\
+\hline
 \end{tabular}
+\caption{pseudokód pre jednoduché detekovanie kolízií}
+\label{tab:k1}
 \end{table}
-\subsection {Priebeh hry}
-Hra sa začína vhodením robotov do prostredia v poradí, v akom boli pridaní a roboti by mali začať vykonávať svoj program súčasne. To implementačne znamená, že buď každý nový robot dostane vlastné vlákno, alebo sa určí spôsob zoradenia robotov tak, aby nesimultánnosť bola vidieť čo najmenej. Spôsob preplánovania jednotlivého súčastí CodeWars je popísaný neskôr, nateraz stačí povedať, že každý jednotlivý kus kódu programu robota zaberá istý čas (napríklad na premiestnenie sa alebo vypočítanie premennej), a teda sa robot môže dostať opať na radu(vykonať nasledujúcu inštrukciu) až v okamihu, keď tento čas pominie. Popis inštrukcií a čas, ktorý zaverajú, je popísaný v \ref{penalizacia}. Robot teda môže sa pohnúť a niekoľko políčok, vystreliť pod uhlom alebo na urcté miesto, otočit sa, rátať premenné, používať podmienené príkazy a skoky typu while, if, break, continue. Hra končí v okamihu, keď aspoň jeden z robotov dosiahne 'víťazného stavu'. Defaultne je to zabitie každého protivníka, je ale možné priamo v kóde definovat niekoľko variánt.\\
+Toto riešenie je ale v porovnaní s ďalšími navrhovanými algoritmami dosť pomalé. Pre málo objektov je však výhodná.\\
+\indent Ďalším navrhovaným riešením je rozdelenie priestoru do mriežky. Každá buňka v tejto mriežke môže obsahovať niekoľko objektov, ktoré treba testovať na kolíziu. V tomto okamihu sme podstatne zmenšili počet objektov, ktoré budeme testovať a teda môžeme použiť prvý spôsob na všetky objektu, ktoré sa nachádzajú v rovnakej buňke. Keďže v okamihu pohybu môže objekt prejst z jednej buňky do druhej, je tiež potrebné testovať na zrážku s objektami vo vedľajších buňkách. Veľkosť plochy, aký pokrývajú jednotlivé buňky, je dobré zvoliť v závislosti na rýchlosti objektov a počte objektov. Ak by bola rýchlosť objektov príliš vysoká, mohlo by sa stať, že objekt neprejde len do susednej bňky, ale ešte do buňky za ňou, takže by sa museli porovnávať okolité buňku po ceste, čím by mohla výkonnosť klesnúť, nie však za predpokladu, ze že je v každej buňke málo objektov (obr. \ref{fig:hash}). Táto metóda bola pre jednoduchosť implementovaná.\\%TODO obrazok
+\begin{figure}
+\centering
+	\includegraphics[totalheight=0.2\textheight,width=.2\textwidth]{mriezka}
+\caption { Mriežková metóda. Objekty s rovnakou farbou patria do rovnakej oblasti}
+\label{fig:hash}
+\end{figure}
+\indent Dosť často je využívaným spôsobom pre riešenie kolízií v 2D (3D) hrách je štruktúra zvaná quadtree. Quadtree je strom rozdeľujúci priestor na niekoľko častí podobne ako v mriežkovom spôsobe, na základe dostatočnej 'blizkosti' objektu, rozdiel spočíva v prístupe k informáciam a dynamickým vytváraním ďalších buniek. Na začiatku tvorí celý priestor jednu veľkú buňku. V okamihu, keď sa do buňku dostane istý počet objektov považovaný za maximálny, buňka sa rozdelí. Podobne, pokiaľ objekt prejde z jednej buňku do druhej a v pôvodnej už nezostáva nič, buňka zanikne (zostane už iba naradená, väčšia buňka). Samotná kolízia sa vypočíta podobne ako v predchádzajúcej metóde. Pekný tutoriál k implementácií Quadtree sa dá  nájst v \cite{quadtree}. Výhodou tejto implementácie je rýchlosť spracovania pre objekty rôznych veľkostí, poťažne a sú objektky zhlukované do malých oblastí.
+\subsection{Reakcie na kolízie}
+Reakcie na kolíziu sa riadia podľa na obrázku \ref{fig:kol}
+\begin {figure}
+\centering
+\includegraphics{kolizie}
+\caption { Výsledok kolízii medzi rôzymi objektami }
+\label{fig:kol}
+\end {figure}
+
+\subsection {Priebeh simulácie}
+Hra sa začína vhodením robotov do prostredia v poradí, v akom boli pridaní. Kvôli rovnosti šancí by mali roboti začať vykonávať svoj program súčasne. To však technicky nie je možné, takže je nutné zamaskovať to tým spôsobom, že sa vyhodnotia všetky akcie a v ďalšej fázi sa vyhodnotia naraz všetky výsledky. \\
+ Priebeh simulácie codewars teda prebieha nasledujúco:
+ \begin {enumerate}
+\item vyberú sa vstupy robotov na hracom poli
+\item vstupy sa spracujú na inštrukcie
+\item roboti sa umiestnia naštartovacie políčka. Ak nie je dostatok štartovacích políčok, pokúsia sa umiestniť náhodne. Ak sa epodarí ani, to, dotyčný robot vypadáva zo simulácie. Pozícia štartu robota nesmie kolidovať s iným objektom. Ak koliduje, robot sa tam neumiestni.
+\item priebieha kolo – zavolá sa plánovač u každého robota. Plánovač neurobí nič, pokiaľ sa robot nachádza v nasledujúcich stavoch ( pohybujúci sa, strieľajúci, zasiahnutý), alebo nenastal čas ďalšej inštrukcie. Inak nasledujúcu inštrukciu vykoná. Dĺžka trvania stavov robotov, v ktorých musí plánovač čakať, nie je možné dopredu určit.
+\item vypočítajú a vykreslia sa výsledky inštrukcií a akcií robotov ( pohyb objektov, zasiahnutie, vypočítanie škody, odstránenie častí so životnoštou menšou ako 0 )
+	\item skontroluje sa splnenosť cieľov u každého robota, ak má aspoň jeden robot splnené všetky ciele, alebo ako jediný z robotov má životnosť väčšiu ako 0, simulácia skočí výpisom robotov, ktorí úspešne ukončili simuláciu. Inak sa pokračuje krokom 4.
+\end{enumerate}
+To implementačne znamená, že buď každý nový robot dostane vlastné vlákno, alebo sa určí spôsob zoradenia robotov tak, aby nesimultánnosť bola vidieť čo najmenej. Spôsob preplánovania jednotlivého súčastí CodeWars je popísaný neskôr, nateraz stačí povedať, že každý jednotlivý kus kódu programu robota zaberá istý čas (napríklad na premiestnenie sa alebo vypočítanie premennej), a teda sa robot môže dostať opať na radu(vykonať nasledujúcu inštrukciu) až v okamihu, keď tento čas pominie. Popis inštrukcií a čas, ktorý zaverajú, je popísaný v \ref{penalizacia}. Robot teda môže sa pohnúť a niekoľko políčok, vystreliť pod uhlom alebo na urcté miesto, otočit sa, rátať premenné, používať podmienené príkazy a skoky typu while, if, break, continue. Hra končí v okamihu, keď aspoň jeden z robotov dosiahne 'víťazného stavu'. Defaultne je to zabitie každého protivníka, je ale možné priamo v kóde definovat niekoľko variánt.\\
 Definovanie vítazného stavu sa v pro písaní programu pre robota objaví ešte pred funkciami v tvare:
 \begin{itemize}
 \item $Killed\ [>, < <=, >=, !=, ==]\ N, N \in Z$ , kde Killed je pocet zabitých nepratieľov a do tohoto počtu sa nezapočítavajú rozbité steny ani strely
