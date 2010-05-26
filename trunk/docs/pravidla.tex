@@ -4,7 +4,7 @@ V nasledujúcom texte sa budú používať tieto pojmy:
 \item[Mapa (bojisko)]\hfill \\
 	Mapou nazvime prostredie, kde sa odohráva boj (testovane algoritmov )
 \item[Objekt]\hfill \\
-	Pod objektom sa rozumie akákoľvek vec na mape, ktorá smie priamo alebo nepriamo ovplyvňovať výsledok vykonávania algoritmov. Tento pojem nemá žiadnu súvislosť s pojmom Objekt, ako je známy z objektových programovacích jazykov.
+	Pod objektom sa rozumie akýkoľvek prvok na mape, ktorá smie priamo alebo nepriamo ovplyvňovať výsledok vykonávania algoritmov. Tento pojem nemá žiadnu súvislosť s pojmom Objekt, ako je známy z objektových programovacích jazykov.
 \item[Algoritmus]\hfill \\
 	Algoritmom nazvime postup, zapísaný pomocou nejakého jazyka. 
 \item[Robot]\hfill \\
@@ -145,7 +145,7 @@ Definovanie vítazného stavu sa v pro písaní programu pre robota objaví ešt
 \item $Visit(X, Y,...); X,Y \in N $, kde X,Y sú čísla miest, ktoré musí robot navšíviť, v akomkoľvek poradí. Tieto čísla budú teda definované v mape
 \item $VisitSequence(X,Y...0 X,Y \in N$, kde X,Y sú taktiež čísla miest, ktoré musí robot navštítiť, ale v presne danom poradí.
 \end{itemize}
-V tabuľke\ref{tab:allVis} je prehľad všetkých zápisov cieľov, aké sú možné. Tieto ciele je možné pre vyššiu variabilitu kombinovať. Dopredná kontrola splniteľnosti cieľov nie je žiadúca z důvodu
+V tabuľke\ref{tab:allVis} je prehľad všetkých zápisov cieľov, aké sú možné. Tieto ciele je možné pre vyššiu variabilitu kombinovať. Dopredná kontrola splniteľnosti cieľov nie je žiadúca, pretože až na triviálne prípady sa výsledok dá zistiť až po prebehnutí simulácie, čo je vlastne spor.
 \begin{table}
 \centering
 \begin{tabular}{l}
@@ -161,14 +161,13 @@ VisitSequence([20,20],[20,30])\\
 \begin{tabular}{l}
 VisitSequence([10,10],[20,20])\\
 Visit([20,20],[20,30],[20,30])\\
-Kill < 4
-Kill >= 5
-kill != 3
-kill == 8
-Kill > 8
-Kill <= 8
-Visit([20,20],2,0)\\
-
+$Kill < 4$\\
+$Kill >= 5$\\
+$Kill \!= 3$\\
+$Kill == 8$\\
+$Kill > 8$\\
+$Kill <= 8$\\
+$Visit([20,20],2,0)$\\
 \end{tabular}
 \caption {Príklad 2 : príklady pre pravidlá na definovanie cieľa} %TODO figure!
 \label{tab:allVis}

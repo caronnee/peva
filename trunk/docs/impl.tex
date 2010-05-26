@@ -1,9 +1,11 @@
 \chapter{Implementácia prostredia}
+Prostredie bolo implementované v jazyku C++ vzhľadom na použité nástroje Flex a Bison. Kapitola je zameraná na použité štruktúry a vysvetlenie výberu týchto štruktúr.
 \begin{definicia}
 Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať odinakiaľ ako z vnútra robota.
 \end{definicia}
 
-Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií (detailnejšie vysvetlené nižšie). Pre plynulosť simulácie je potrebné zaistiť spravodlivosť pri vykonávaní programu vzhľadom na vykonávané inštrukcie. 
+Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií, ktoré sú ďalej nedeliteľné. 
+
 \section{Priebeh penalizácie za inštrukciu}
 
 \begin{definicia}
@@ -19,53 +21,9 @@ Programom robota sa nazýva postupnosť inštrukcií, ProgramPointer je ukazate�
 \end{definicia}
 
 Nech je na rade robot R. R sa pozrie, či už ubehla dostatočne dlhá doba od vykonania jeho poslednej akcie. Ak áno, R začne vykonávať inštrukciu, na ktorú práve ukazuje jeho ProgramPointer. Po vykonaní tejto inštrukcie si poznamená, koľko ho stála tickov. Ak ešte neprebehla dostatočne dlhá doba, potom počká a na rade je ďalší objekt. \\
-Penalizácia prebieha podľa tabuľky \ref{penal}, je možné si ale v nastaveniach nastavit tieto funkcie:
-\begin{itemize}
-\item SizeOfFunction: počet inštrukcií vo funkcii
-\item SizeOfCleaned: počet premených, ktoré sa stali odchodom z bloku príkazov neplatnými. Použiteľné iba pri inštrukcii indikujúcej koniec bloku
-\item LastLoaded: počet tickov, ktoré ubehli od posledného loadovania premennej alebo funkcie, použiteľná iba s inštrukciami Load a Call
-\end{itemize}
-\begin{table}[ht]
-\centering
-\caption{Výpočet penalizácie inštrukcie}
-\begin{tabular}{|c | c |}
-\hline
-Inštrukcia & Penalizácia \\
-\hline
-Jump & 0\\
-Store & 1 \\
-Plus & 1 \\
-Minus & 1 \\
-Multiply & 2 \\
-Divide & 4 \\
-Less & 1 \\
-LessEqual & 2 \\ %kontroluje sa aj real/integer!
-Call &  0 \\
-StartBlock & 0 \\ %iba zvysi aktuane zanorenie
-EndBlock &  SizeOfCleaned \\
-Load & 1\\
-Return & 1 \\
-Restore & 1 \\
-\hline
-step & 1\\
-see & 3\\
-shoot & 1\\
-turn & 1\\ 
-turnL & 1\\
-turnR & 1\\
-\hline
-\end {tabular}
-\label{penal}
-\end{table}
+Penalizácia prebieha podľa aktuálnej tabuľky penalizácií, ako bola nastavená v základnom menu. \\
 
-\begin{figure}
-\centering
-\includegraphics[totalheight=0.2\textheight,width=.2\textwidth]{thinking}
-\caption {Priebeh premýšľania u robota}
-\label{thinking}
-\end{figure}
-
-Týmto spôsobom sa efektívne vyrieši prípad, keby robot premýšľa príliš dlho alebo keby sa zacyklil. Keďze po každej vykonanej inštrukcii predá riadenie daľsiemu objektu, zacyklenie sa pozná len podľa toho, že robot sa nebude hýbať, ale nijak to nespomalí ostatné objekty.%TODO ref
+Týmto spôsobom sa efektívne vyrieši prípad, kedy robot premýšľa príliš dlho alebo keby sa zacyklil. Keďze po každej vykonanej inštrukcii predá riadenie daľšiemu objektu, zacyklenie sa pozná len podľa toho, že robot sa nebude hýbať, ale nijak to nespomalí ostatné objekty.%TODO ref
 \newline
 Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu (strela štandartne 0) a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom.Sú rôzne v závislosti na type objektu.
 
@@ -79,10 +37,10 @@ $ Uint32 diff= actualTime - timeLastUpdate;\\ while (diff > 0)\\\{\\ diff-=nextI
 \section{Hracia plocha} % z coho sa sklada
 Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Táto pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viz \ref{walls}. Ďalej celú túto konštrukciu nazývam bojisko. V tomto okamihu je hra pripravená na spustenie. V závislosti na veľkosti bojiska sa čaká na odpovedajúce množštvo robotov, ktorí sa zapoja do hry. Toto množstvo je defaultne obmedzené iba zdola. Na zdôvodnenie tohoto rozhodnutia je nutné spomenúť základné vlastnosti programu. 
 \subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
-\section{Jazyk hry a priebeh hry} %bison, preco
+Jedným z užívateľsky príjemných vlastností aplikácie je aj možnosť vytvoriť si vlastné mapy. Pre tento účel je v aplikácií naimplementované samostatný editor, kde si môže užívateľ defnovať vlastnú mapu.
+\section{Jazyk hry a priebeh hry} %bison, prec
 \begin{definicia}
-Cieľom určenia robota nazývam políčko na mape sveta, kam sa má robot dostať. Teda ak je pozícia robota rovnaká ako pozícia tohoto cieľu, hra končí. Týchto cieľov môže byť viac. V prípade viacerých cieľových oblastí má užívateľ možnosť zvoliť voľbu \it{Vlastný Exit}, kde sa každému robotomi priradí práve jedna cieľová pozícia a to tá najvzdialenesia od jeho výskytu v mape po začatí hry.
-Pod vzdialenosťou rozumiem veľkosť obsahu obdĺžnika v vrcholmi cieľom a výskytom robota. %TODO preco?
+Cieľom určenia robota nazývam políčko na mape sveta, kam sa má robot dostať. Teda ak je pozícia robota rovnaká ako pozícia tohoto cieľa, hra končí. Týchto cieľov môže byť viac.  Pod vzdialenosťou rozumiem veľkosť obsahu obdĺžnika v vrcholmi cieľom a výskytom robota. %TODO preco?
 \end{definicia}
 
 Samotná hra prebieha tak, že roboti vykonávajú užívateľom definovaný kód až do okamžiku, keď dosiahnu víťazný stav alebo kým nezostane na bojisku maximálne jeden robot. Cieľ môže byť pre každého robota rozdielny a je jeho súčasťou. Hra nie je zabezpečená proti nekonečne dlhotrvajúcim cyklom (napríklad keď každý robot stojí na mieste), predpokladá sa v tomto prípade vstup od uživateľa, ktorým hru preruší.
@@ -159,11 +117,13 @@ Jazyk pre Codewars je rozpoznavaný pomocou nástrojov Flex pre lexikálne rozpo
 \begin{huge}TODO \end{huge}
 \\
 Zaujímavejšie je to pri volaní funkcie, ktorá má defaultný parameter. Pretože sa predpokladá, že program bude prístupný aj pre obyčaných užívateľov, je možné u funkcie definovať aj explicitnú hodnotu a to nezávisle na poradí parametrov. T.j. explicitné hodnota môže byť zadaná ako prvý a tretí parameter, ale nie ako druhý. Takáto funkcia sa nadefinuje podobne ako v C/C++, napríklad : \\\begin{center} $ function distance(integer x=3, integer y=2, integer radius, Location l) $ \\\end{center}V okamžiku, keď sa zavolá \begin{center} $ distance(, , radius,l) $ \end{center} sa ušetrí loadovane dvoch premenných.
+
 \subsection{Zaujímave nastavenia a efekty}
 
-Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamať. Takýto robot nie je schopný si zapatať jedinú premennú a ani vracat návratové hodnoty, teda v kóde programu by nemali byť definované žiadne funkcie, ale iba procedúry.Je nutné povedať, že funkcie a procedúry sa v žiadnom prípade nechovajú ako premenné a teda nezaberajú robotovi pamať. Teda v tomto prípade dojde k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že nemá povolené napriklad strieľanie, pretože to je funkcia, ktorá potrebuje za každých okolností parametre.
+Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamäť. Takýto robot nie je schopný si zapatať jedinú premennú a ani vracat návratové hodnoty, teda v kóde programu by nemali byť definované žiadne funkcie, ale iba procedúry.Je nutné povedať, že funkcie a procedúry sa v žiadnom prípade nechovajú ako premenné a teda nezaberajú robotovi pamať. Teda v tomto prípade dojde k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že  nepríklad strieľať alebo pohybovať sa môže len pomocou konštaty. Iné hodnoty nemajú garantované miesto v pamäti
+
 \subsection{Zrak robota}
-V úvode si užívateľ má možnost nastavit dve premenné, ktoré ovplyvňujú to, ako ďaleko bude robot vidieť. Sú to premenné X, Y, ktoré označujú obdĺžnik, podľa ktorého sa zrak ďalej určí. Opať máme viacero možností, ako s týmito premennými zacházdať. Jedným z pomerne rýchlych spôsobov, ako určiť viditeľnosť, je následuuci algoritmus:
+Vo vstupe si užívateľ má možnosť nastavit premennú, ktorá ovplyvňuje to, ako ďaleko bude robot vidieť do strán. Je to premenná $\alpha$, ktorá označuje uhol, pod ktorým vidí robot na jedno oko. Pochopiteľne má robot symetrické oči a teda do druhej strany vidí pod rovnakým uhlom. Jedným z pomerne rýchlych spôsobov, ako určiť viditeľné objekty, je následuuci algoritmus:
 
 \begin{figure}
 \centering
@@ -179,12 +139,12 @@ Obdĺžnik môže mať vzhľadom na implementáciu maximálne obsah 32, čo je n
 \begin{figure}
 \centering
 \includegraphics[totalheight=0.4\textheight,width=.8\textwidth]{visibility}
-\caption {Viditeľnosť robota s parametrami x = 5, y = 6}
+\caption {Viditeľnosť robota s parametrom uhla $20_\circ$}
 \label{visibility}
 \end{figure}
 Nech má obdĺžnik rozmery (x,y) a jeho dolný ľavý vrchol je na pozícií (0,0), čo je v podstate pozícia bota. Obdĺžnik je teda rozdelený na XxY menších obdĺžničkov. Kazdý z nich má svoje poradové číslo a masku, ktorá má na i-tej pozícií jedničku práve vtedy, ak úsećka počínajúca v bode [0.5,0.5],čo je stred políčko s robotom, a stredom skúmaného políčka prechádza políčkom s identifikaćným číslom ID. takto ale robot bude vidieť len na jednu stranu, ale keďže druhá polovička je presne symetrická, môžeme tieto práve vygenerované masky použiť, viz \ref{visibility}  na obe strany bez upravovania. \\
 Podla obrázka \ref{visibility} bude mať políčko s ID 4 masku 1111, pretože na to, aby ho bolo vidno, je nutné vidieť políčka s ID 1,2,3. Podobne políčko 9 bude mať masku 110000011, pretože úsečka spájajúca tieto dva body prebieha tiež týmito políčkami. Zistenie, či práve toto políčko je pretnuté úsečkou, sa takto zjednodušuje na nájdenie všeobecnej rovnice priamky s koncovými bodmi v stredoch týchto dvoch políčoka zistenie, či pravý dolný vrchol a ľavý horný vrchol patria rovnakej polrovine generovanej touto priamkou.\\
-
+obdĺžnik, podľa ktorého sa zrak ďalej určí.
 Za života robota sa jeho zrak nemení a teda môžeme použiť tieto vygenerované masky bez ďalšieho prepočítavania. Pri volaní metody see(), ktorá dodá viditeľné objekty robotovi, potom stačí namapovať náš obdĺžnik na príslušné miesto na mape(podľa robotovej pozície a natočenia), nastaviť 1 na i-té miesto políčka s ID = i, na ktorom nie je nič alebo len neblokujúci objekt, a výslednú masku porovnať s predtým vypočítanou maskou každého políčka, na ktoré by robot mohol vidieť. Nech zisťujeme, či vidíme objekt na pozícií na mape X,Y, ktorý sme namapovali na políčko s ID = I a maskou M. Ak výsledná maska má jedničky presne na tých istých miestach ako M, potom I je viditeľné, pretože všetky políčka, na ktorých I záviselo, boli označené ako viditeľné. \\
 Nech existuje také políčko s ID = P, na ktorom je nejaký blokujúci objekt. Potom vo výslednej maske bude na P-tom mieste 0 a políčko I, ak úsečka spájajúca stredy políčok robota a I prechádzala cez P, bude mať na P-tom mieste 1. Maska políčka I bude mať teda o minimálne jednu 1 viac ako výsledná maska a teda políčko bude označené ako neviditeľné.\\
 Na obrázku \ref{visibleo} je červeným znázornen=y objekt, ktorý robot uź neuvidía zelenou, ktorý uvidí. Napríklad je viditeľný robot R, pretože pred ním je strela S a keďže je neblokujúca, políčko 4 pripojilo na výslednej maske 1 na 4.pozícií. Pozícia 5 má masku 1111 a teda je viditeľná.
@@ -193,10 +153,16 @@ Na obrázku \ref{visibleo} je červeným znázornen=y objekt, ktorý robot uź n
 \centering
 \includegraphics[totalheight=0.4\textheight,width=.8\textwidth]{VisibleObjects}
 \caption { Objekty v zornom poli robota}
-\label{visibleo}
+\label{fig:visibleo}
 \end{figure}
 \indent
 \newline
-\indent Tento spôsob má ale nevýhodu pri použití v programoch typu Codewars. Predpokladá totiž, že v okamžiku žiadosti o naplnenie viditeľných ojektov budú tieto objekty stáť oresne v strede daných políčok. Ak by povedzme jedna stena stála presne nedzi dvoma políčkami, už nie jasné, aké políčka robot vidí. Preto bol primo v implementácií použitý spôsob..TODO
-
-
+\indent Tento spôsob má ale nevýhodu pri použití v programoch typu Codewars. Predpokladá totiž, že v okamžiku žiadosti o naplnenie viditeľných ojektov budú tieto objekty stáť presne v strede daných políčok. Ak by povedzme jedna stena stála presne nedzi dvoma políčkami, už nie jasné, aké políčka robot vidí. Preto bol primo v implementácií použitý spôsob porovnania uhlov viditeľnosti.
+\\
+\begin{figure}
+\centering
+\includegraphics{visibility2}
+\caption { Objekty v zornom poli robota podľa fruhého algortimtmu. červeným je vyznačený objekt, ktoré nie je vidno}
+\label{fig:visibleo}
+\end{figure}
+\indent
