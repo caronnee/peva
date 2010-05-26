@@ -72,7 +72,7 @@ Eva Pešková
 %\input sdl.tex
 \input pravidla.tex
 \input analyza.tex
-\section{Prakticke vyuzitie}
+\section{Praktické využitie}
 Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad:\\
 	\begin{itemize}
 	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov
@@ -84,11 +84,12 @@ Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad
 \input porovnania.tex
 \section {Burst tree uchovávajúci informácie o premenných a funkciách} 
 \chapter{Sietova komunikacia}
-\chapter{Výber a popis testovaných algoritmov}
-\section{Algoritmus 1}
-\section{Algoritmus 2}
-\section{Algoritmus 3}
-\chapter{Testovanie}
+Sieťová komunikácia nebola pre nedostatok času implementovaná. Preto len stručný návrh. Aplikácia by sa mala správať ako tenký klient s jedným serverom. Toto riešenie bolo navrhnuté kvôli tomu, že pohyb stien, striel a robotov závisí na počte milisekúnd ktoré prejdú od vykreslenia posldného poľa teda o rýchlosti procesora. Preto by mala sieťová komunikácia prebiehať tak, že sa počká na výber všetkých vstupov od počítačov. Tieto sa pošlú na jeden vybraný počítač, ktorý bol vybraný ako server. Zpravidla to bude ten, korý bude inicializovať spojenie. Následne sa spustí simulácia a obrazové výsledky sa v pravidelných intervaloch budú prenášať medzi počítačmi.
+%\chapter{Výber a popis testovaných algoritmov}
+%\section{Algoritmus 1}
+%\section{Algoritmus 2}
+%\section{Algoritmus 3}
+%\chapter{Testovanie}
 \input todo.tex
 \chapter{Záver}
 \newpage
@@ -96,6 +97,7 @@ Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad
 \begin{thebibliography}{99}
 \bibitem{pogamut}http://artemis.ms.mff.cuni.cz/pogamut/tiki-index.php
 \bibitem{robocode} http://robocode.sourceforge.net/
+\bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
 \bibitem{trees}
 Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
 {\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
@@ -105,6 +107,6 @@ http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
 \bibitem{simtool}http://mpherbert.codeplex.com/
 \bibitem{facade}http://www.proceduralarts.com/
 \bibitem{quadtree}http://www.kyleschouviller.com/wsuxna/quadtree-source-included/
-\bibitem{http://www.bghq.com/fft } sprites/
+\bibitem{usedPictures}http://www.bghq.com/fft 
 \end{thebibliography}
 \end{document}
