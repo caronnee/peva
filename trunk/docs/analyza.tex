@@ -18,7 +18,7 @@ Z toho je vidno, že jazyk Codewars je oklieštený, ale zároveň rozšíriteľ
 \item inštrukcie pre nahranie premennej do zásobníka, odkiaľ sa neskôr použije jej hodnota. Premenná je definovaná svojím menom, čo je zhluk písmen alebo podržítka nezačínajúci číslovkou. Na túto inštrukciu sa dá nahliadať viacerými spôsobmi v závislosti na tom, ako vyzerá celkový mechaizmus spracovania jej hodnôt. Napríklad v jazyku Mlaska má táto inštrukcia niekoľko variant v závislosti na tom, či je premenná globálna, lokálna, a na jej type. Je to spôsobené rozdielnym chovaním v závislosti na tom, kde bola premenná definovaná a spôsobe, akým sa ukladajú hodnoty na vrchol zásobníka. Druhým spôsobom nazerania na túto inštrukciu je mať premenné všetky jedného typu a tie ukladať a zásobník, teda nie len hodnoty, ktoré sa buu zpracovávať, ale všetky, aké sú povolené. Táto metóda má zrejmú nevýhodu v zbytočnej veľkosti tejto premennej, avšak umožňuje napríklad pri prístupe na zlý typ okamžite zareagovať bez ejakého nepríjemného vedľajšieho efektu.
 \item inštrukcie pre uloženie premenej. Vzhľadom a to, že na zásobníku budeme mať premennú všetkých typov, je vhodné si rozdeliť inštrukcie na uloženie každého jedného typu, Nastáva otázka, ako to je potom s uložením zloženého typu, napríklad poľa. Pole je v tom prípade nutné rozložiť na jednotlivé elemety a na na aplikovať inštrukcie o ukladaní premených jednoduchých typov. Tento prístup je podobný, aký sa použil v Mlaskale.
 \item inštrukcie  na zničenie naalokovaných premenných. Toto sa týka hlavne okamihu, keď skončí blok. Premenné v ňom deklarované prestanú existovať. Opäť sa použije stejný princíp ako pri vytváraní premenných. Táto verzia je veľmi zjednodušená Garbage collectoru, aký sa používa napríklad v Jave, kde sa o deštrukcii premennej rozhoduje až potom, co sa heuristicky pomocou kódu zistí, že sa premenná už nepoužije.
-\item inštrukcie pre zničenie dočasne alokovaných premenných.a Toto je nutné pri funkciách, ktorú maju návratovú hodnotu. Môže sa stať, že za návratovou hodotou nejde žiadna inštrukcia pre uloženie, takže by premenná zostava vidieť v zásobiku. Preto je táto instrukci nutná. Opať ale vďaka tomu, že nahranie premennej na zásobník pridá práve jeden prvok, postači jedna inštrukcia pre každú dočasne naalokovanú premennú
+\item inštrukcie pre zničenie dočasne alokovaných premenných.a Toto je nutné pri funkciách, ktorú maju návratovú hodnotu. Môže sa stať, že za návratovou hodotou nejde žiadna inštrukcia pre uloženie, takže by premenná zostava vidieť v zásobiku. Preto je táto inštrukcia nutná. Opäť ale vďaka tomu, že nahranie premennej na zásobník pridá práve jeden prvok, postači jedna inštrukcia pre každú dočasne naalokovanú premennú
 \item inštrukcia pre volanie funkcie
 \item inštrukcie pre aritmetické a relačné operátory, pre podporu najtriviálnejších funkcií
 \item inštrukcie pre začatie a ukončenie bloku kvôli neskorším deinicializáciam
@@ -56,6 +56,102 @@ Nevýhody takto implementovaného jazyka:
 %Problém môže nastať v okamihu, keď sú povolené rovkako rekurzívne funkcie. V okamihu zavolania takejto funkcie, 
 
 Výhodou takéhoto detailného rozloženia kódu je okrem vysokej transparentnosti aj možnosť priradiť jednotlivým inštrukciám hodnotu, takzvanú penalizáciu. V reálnych hrách by to zodpovedalo zdržaniu pred vykonaním akcie. Typickým príkladom je mág v dobrudružných hrách, ktorý podporuje svoju družinu kúzlami. Štandartne ale potrebuje istý čas na vyrieknutie kúzla.\\
+Podľa tohoto prieskumu teda výsledné potrebné inštrukcie sú popísané v tabuľke \ref{tab:instrukcie}
+\begin{center}
+\begin{longtable}{|l|l|}
+\caption[používané inštrukcie]{používaneé inštrukcie}
+\label{tab:instrukcie}\\
+\hline \hline \\[-2ex]
+\multicolumn{1}{c}{\textbf{názov inštrukcie}} &
+\multicolumn{1}{c}{\textbf{výsledok akcie}} \\[0.5ex] \hline
+\\[-1.8ex]
+\endfirsthead
+
+\multicolumn{2}{c}{{\tablename} \thetable{} -- pokračovanie} \\[0.5ex]
+\hline \hline \\[-2ex]
+\multicolumn{1}{c}{\textbf{názov inštrukcie}} &
+\multicolumn{1}{c}{\textbf{výsledok akcie}} \\[0.5ex]\hline
+\\[-1.8ex]
+\endhead
+InstructionCreate&\\
+InstructionLoad&\\
+InstructionConversionToInt&\\
+InstructionConversionToReal&\\
+InstructionDuplicate&\\
+InstructionStoreRef&\\
+InstructionStoreInteger&\\
+InstructionStoreReal&\\
+InstructionStoreObject&\\
+Call&\\
+InstructionPop&\\
+InstructionMustJump&\\
+InstructionJump&\\
+InstructionBreak&\\
+InstructionContinue&\\
+InstructionReturn&\\
+InstructionRestore&\\
+InstructionRemoveTemp&\\
+InstructionPlusPlusInteger&\\
+InstructionPlusPlusReal&\\
+InstructionMinusMinusInteger&\\
+InstructionMinusMinusReal&\\
+InstructionPlus&\\
+InstructionPlusInteger&\\
+InstructionPlusReal&\\
+InstructionMinusInteger&\\
+InstructionMinusReal&\\
+InstructionMultiplyInteger&\\
+InstructionMultiplyReal&\\
+InstructionDivideInteger&\\
+InstructionDivideReal&\\
+InstructionModulo&\\
+InstructionBinaryAnd&\\
+InstructionAnd&\\
+InstructionBinaryOr&\\
+InstructionOr&\\
+InstructionBinaryNot&\\
+InstructionNot&\\
+InstructionGtInteger&\\
+InstructionGtReal&\\
+InstructionGeInteger&\\
+InstructionGeReal&\\
+InstructionEqualInteger&\\
+InstructionEqualReal&\\
+InstructionEqualObject&\\
+InstructionNotEqual&\\
+InstructionNotEqualInteger&\\
+InstructionNotEqualReal&\\
+InstructionNotEqualObject&\\
+InstructionLtInteger&\\
+InstructionLtReal&\\
+InstructionLeInteger&\\
+InstructionLeReal&\\
+InstructionBegin&\\
+InstructionEndBlock&\\
+InstructionSee&\\
+InstructionEye&\\
+InstructionFetchState&\\
+InstructionStep&\\
+InstructionStepDefault&\\
+InstructionWait&\\
+InstructionShootAngle&\\
+InstructionTurn&\\
+InstructionTurnR&\\
+InstructionTurnL&\\
+InstructionHit&\\
+InstructionIsPlayer&\\
+InstructionIsWall&\\
+InstructionIsMissille&\\
+InstructionLocate&\\
+InstructionIsMoving&\\
+InstructionTarget&\\
+InstructionSaveVariable&\\
+InstructionLoadVariable&\\
+InstructionDirection&\\
+InstructionRandom&\\
+\hline
+\end{longtable}
+\end{center}
 \subsection{Penalizácia a plánovanie}
 penalizácia je zatiaľ implementovaná globálne, čo nie je najvhodnesie, pretože to vylučuje možnoť mať testovacieho robota, na ktorom chceme nacvičit boj napríklad proti kuzelníkovi. Detailné zobrazenie plánovača je zobrazené na obrázku \ref{fig:sch}
 \begin{figure}

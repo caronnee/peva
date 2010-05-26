@@ -1,23 +1,48 @@
 \chapter{Implementácia prostredia}
-Prostredie bolo implementované v jazyku C++ vzhľadom na použité nástroje Flex a Bison. Kapitola je zameraná na použité štruktúry a vysvetlenie výberu týchto štruktúr.
-\begin{definicia}
-Vlastné premenné robota sú premenné, ktorých adresu pozná len robot a tak nie je možné s nimi manipulovať odinakiaľ ako z vnútra robota.
-\end{definicia}
+Prostredie bolo implementované v jazyku C++ vzhľadom na použité nástroje Flex a Bison. Kapitola je zameraná na použité štruktúry, vysvetlenie výberu týchto štruktúr a použité algoritmy.\\
+V tej to kapitole sa používa nasledujúce značenie:
+\begin{description}
+\item[Kontext]\hfill \\
+	Pojem kontext je v tejto kapitole používaný sa definovaie relevantých okolností, za akých je vykonávaná inštrukcia kódu. Zjednodušene povedané, popis toho, akou najkratšou cestou, myslené vykonávaním kódu, je možné dostať sa k vykonávaniu danej inštrukcie, pričom relevatné sú iba volania funkcií a definovanie nových blokov. Matematicky povedané, kontext je usporiadaný zoznam volaní funkcií a definoaní nových blokov. Príkladom: nech máme kód tak, ako je naznačený v tabuľke \ref{tab:rek}, potom kontext inštrukcie zodpovedajúcej riadku 3 je <main(),f(),\{>. Napriek tomu, že funkcia f je rekurzívna a hĺbka zanorenia môže byť iná. Z opačného pohľadu, v rovnakom kontexte sa môžu vyskytovať viaceré inštrukcie. V našom príklade je tomu tak pri volaní funkcie f na riadku 4. kontext volania  funkcie f na riadku 8 je <main()>
+\item[Premenná] \hfill \\
+	Pojem premenná reprezentuje dáta pomenované jednoznačným reťazcom začínajúcim písmenom alebo podtržítkom. Napríklad \it{integer test} je premenná s názvom test, ktorá je typu integer. Slovo test by v danom kontexte nemalo byť použité pre inú premennú. V tabuľke \ref{tab:rek} je teda premenná a zadefinovaná chybne, pretože existujú dve premenné a v rovnakom kontexte.
+\item[Premenné robota]\hfill \\
+Premenná robota je taká premenná, o ktorej robot predpokladá, že data v nej sa menia len v závislosti na jeho akciách. Predpokladajme, že v tabuľke \ref{tab:rek} je definovaný kód robota A. Potom a je premenná robota A. Pokiaľ existuje iný robot B, nemá žiaden vplyv na premennú a robota A.
+\item [Tick] \hfill \\
+	označuje je jednotka virtuálneho času sveta. počet tikov, koľko trvá jedno kolo, je záväznú pre všetkých robotov a závisí na plánovači. Defaulte sa jedn tick rovná jedno kolo.
+\item[Penalizácia za inštrukciu]
+	je počet tikov, ktoré robot stratí, ak inštrukciu vykoná. Pre rôzne inštrukcie môže byť (a typicky bude)rôzna.
+\item [Program robota] 
+	značí postupnosť inštrukcií
+\item [ProgramPointer]
+ 	je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísaný v \ref{instrukcie}.
+\end{description}
+
+\begin{table}
+\centering
+\begin{tabular}{| lll |}
+\hline
+1&void function f()\\
+2&\{\\
+3&&integer a;\\
+4&&f();\\
+5&&integer a;\\
+6&\}\\
+7&int main()\\
+\{\\
+8&&	f();\\
+9&\}\\
+\hline
+\end{tabular}
+\caption{ Príklad kódu robota }
+\label{tab:rek}
+\end{table}
 
 Každý robot má vlastný program, užívateľom definovaný, podľa ktorého sa správa. Tento program sa z hľadiska jednotlivého robota skladá z postupnosti základných inštrukcií, ktoré sú ďalej nedeliteľné. 
 
 \section{Priebeh penalizácie za inštrukciu}
 
 \begin{definicia}
-Tick je jednotka virtuálneho času sveta. 
-\end{definicia}
-
-\begin{definicia}
-Penalizáciou za inštrukciu nazývam počet tikov, ktoré robot stratí, ak inštrukciu vykoná. Pre rôzne inštrukcie môže byť (a typicky bude)rôzna.
-\end{definicia}
-
-\begin{definicia}
-Programom robota sa nazýva postupnosť inštrukcií, ProgramPointer je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísaný v \ref{instrukcie}.
 \end{definicia}
 
 Nech je na rade robot R. R sa pozrie, či už ubehla dostatočne dlhá doba od vykonania jeho poslednej akcie. Ak áno, R začne vykonávať inštrukciu, na ktorú práve ukazuje jeho ProgramPointer. Po vykonaní tejto inštrukcie si poznamená, koľko ho stála tickov. Ak ešte neprebehla dostatočne dlhá doba, potom počká a na rade je ďalší objekt. \\
