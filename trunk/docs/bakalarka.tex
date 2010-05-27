@@ -89,9 +89,10 @@ Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad
 %\chapter{Testovanie}
 \chapter{Záver}
 Cieľom bakalárskej práce bolo implementovať také prostredie, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
-Najdôležitejšou časťou práce je samotný pribeh simulácie.
- Testované algoritmy ukázali, že 
-Aplikácia Codewars bola vyvíjaná tak, aby tieto požiadavky definované v sekcii\ref{poziadavky} rešpektovala.
+Aplikácia je schopná určit splnenie misií a prehľadne vypísať stav robotovho tela. Podrobné informácie o tom, ako bol vstup interpretovaný, je možné nájsť vo vygenrovanom XML scripte a teda aplikácia môže fungovať ako debugger pre napísané algoritmy.\\
+Najdôležitejšou časťou práce je samotný priebeh simulácie a možnosť jeho ovlyvňovania. Simulácia prebieha diskrétne po kolách, kde množstvo toho,čo môže robot spraviť, je možné ovplyvňovať. Vzhľadom a globálne definovanie výpočtu udalostí v kolách bolo však nemožné testovať jednotlivé sposobi proti sebe.
+Vzhľadom na malý počet zdrojov taktík pre 2D priestor boli na aplikácií testované len vlastné algoritmy a algoritmy na vyhľadávanie miesta, ktoré sa však správali podľa očakávania.\\
+Aplikácia Codewars bola vyvíjaná tak, aby požiadavky definované v sekcii\ref{poziadavky} rešpektovala.
 \input todo.tex
 \newpage
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}

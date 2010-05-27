@@ -173,7 +173,7 @@ void Body::init(GamePoints g, int v)
 	/* information from firt section */
 	seer.setEyes(g.firstSection.sections[FirstSection::SectionAngle],v);
 	hitpoints = g.firstSection.sections[FirstSection::SectionHitpoints];
-	movement.speed = g.secondSection.sections[SecondSection::SectionSteps];
+	movement.speed = g.secondSection.sections[SecondSection::SectionSteps]%100;
 
 
 	/* second section information */
