@@ -90,7 +90,7 @@ NULL						{*l = line; return TOKEN_NULL; }
 = 						{*l = line;return TOKEN_ASSIGN; }
 \+\+						{*l = line;return TOKEN_PLUSPLUS; }
 \-\-						{*l = line;return TOKEN_MINUSMINUS; }
-[A-Za-z]+[A-Z_a-z0-9]* 				{*l = line;lv->ident = yytext; return TOKEN_IDENTIFIER; }
+[A-Za-z_]+[A-Z_a-z0-9]* 				{*l = line;lv->ident = yytext; return TOKEN_IDENTIFIER; }
 [0-9]+		 	 	 	 	{*l = line;lv->ident = yytext; lv->number = atoi(yytext);return TOKEN_UINT; }
 [0-9]+[A-Za-z0-9]* 	 	 	 	{*l = line;lv->ident = yytext; 
 							if (!robots->robots.empty()) 
