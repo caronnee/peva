@@ -44,7 +44,7 @@ Codewars, vojna robotov
 \vfill
 Katedra softwarového inžinierstva
 \par
-vspace{0.5in}
+\vspace{0.5in}
 Vedúci bakalárskej práce: Mgr. Tomáš Poch
 \par
 \vspace{0.5in}
@@ -55,7 +55,7 @@ Všeobecná informatika
 \end{center}
 \end{titlepage}
 \vfill
-Prehlasujem, že som svoju bakalársku prácu napísala samostatne a výhradne s použitím citovaných prameňov.\\
+Prehlasujem, že som svoju bakalársku prácu napísala samostatne a výhradne s~použitím citovaných prameňov.\\
 Súhlasím so zapožičiavaním práce.\\
 \par
 V Prahe \today
@@ -75,26 +75,29 @@ Eva Pešková
 \section{Praktické využitie}
 Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad:\\
 	\begin{itemize}
-	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov
-	\item program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný
-	\item pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C, aby podobne ako Codewars, ale iba v tomto specifickom prípade, bola zistená ideálna stratégia. %todo zistit spravne roky 
-	\item pomocou codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý
+	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov.
+	\item program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný.
+	\item pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C++ pre zistenie ideálnej stratégie v tomto jednom žpecifickom prípade. %todo zistit spravne roky 
+	\item pomocou codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý.
 	\end{itemize}
 \input impl.tex
 \input porovnania.tex
-\section {Burst tree uchovávajúci informácie o premenných a funkciách} 
-\chapter{Sietova komunikacia}
-Sieťová komunikácia nebola pre nedostatok času implementovaná. Preto len stručný návrh. Aplikácia by sa mala správať ako tenký klient s jedným serverom. Toto riešenie bolo navrhnuté kvôli tomu, že pohyb stien, striel a robotov závisí na počte milisekúnd ktoré prejdú od vykreslenia posldného poľa teda o rýchlosti procesora. Preto by mala sieťová komunikácia prebiehať tak, že sa počká na výber všetkých vstupov od počítačov. Tieto sa pošlú na jeden vybraný počítač, ktorý bol vybraný ako server. Zpravidla to bude ten, korý bude inicializovať spojenie. Následne sa spustí simulácia a obrazové výsledky sa v pravidelných intervaloch budú prenášať medzi počítačmi.
 %\chapter{Výber a popis testovaných algoritmov}
 %\section{Algoritmus 1}
 %\section{Algoritmus 2}
 %\section{Algoritmus 3}
 %\chapter{Testovanie}
-\input todo.tex
 \chapter{Záver}
+Cieľom bakalárskej práce bolo implementovať také prostredie, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
+Najdôležitejšou časťou práce je samotný pribeh simulácie.
+ Testované algoritmy ukázali, že 
+Aplikácia Codewars bola vyvíjaná tak, aby tieto požiadavky definované v sekcii\ref{poziadavky} rešpektovala.
+\input todo.tex
 \newpage
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}
 \begin{thebibliography}{99}
+\bibitem{historia}http://cs.wikipedia.org/wiki/Di\%C4\%9Bjiny\_po\%C4\%8D\%C3\%ADta\%C4\%8Dov\%C3\%BDch\_her\_a\_videoher
+\bibitem{bioware}www.bioware.com
 \bibitem{pogamut}http://artemis.ms.mff.cuni.cz/pogamut/tiki-index.php
 \bibitem{robocode} http://robocode.sourceforge.net/
 \bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
