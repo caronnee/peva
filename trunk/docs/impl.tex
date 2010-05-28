@@ -6,9 +6,9 @@ Prostredie bolo implementované v jazyku C++ vzhľadom na použité nástroje Fl
 \item[Premenná] \hfill \\
 	Pojem premenná reprezentuje dáta pomenované jednoznačným reťazcom začínajúcim písmenom alebo podtržítkom. Napríklad \emph{integer test} je premenná s názvom test, ktorá je typu integer. Slovo test by v danom kontexte nemalo byť použité pre inú premennú. V tabuľke \ref{tab:rek} je teda premenná \emph{a} zadefinovaná chybne, pretože existujú dve premenné \emph{a} v rovnakom kontexte.
 \item[Premenné robota]\hfill \\
-Premenná robota je taká premenná, o ktorej robot predpokladá, že data v nej sa menia len v závislosti na jeho akciách. Predpokladajme, že v tabuľke \ref{tab:rek} je definovaný kód robota A. Potom a je premenná robota A. Pokiaľ existuje iný robot B, nemá žiaden vplyv na premennú a robota A.
-\item [Tick] \hfill \\
-	Označuje je jednotka virtuálneho času sveta. Počet tikov, koľko trvá jedno kolo, je záväznú pre všetkých robotov a závisí na plánovači. Defaulte sa jeden tick rovná jedno kolo.
+Premenná robota je taká premenná, o ktorej robot predpokladá, že data v nej sa menia len v závislosti na jeho akciách. Predpokladajme, že v tabuľke \ref{tab:rek} je definovaný kód robota A. Potom \emph{a} je premenná robota A. Pokiaľ existuje iný robot B, nemá žiaden vplyv na premennú a robota A.
+\item [Tik] \hfill \\
+	Označuje je jednotka virtuálneho času sveta. Počet tikov, koľko trvá jedno kolo, je záväznú pre všetkých robotov a závisí na plánovači. Defaultne sa jeden tik rovná jedno kolo.
 \item[Penalizácia za inštrukciu]
 	Je počet tikov, ktoré robot potrebuje na vykonanie inštrukcie. Pre rôzne inštrukcie môže byť (a typicky bude)rôzna.
 \item [Program robota]
@@ -204,7 +204,7 @@ Na obrázku \ref{fig:visibleo} je červeným znázornený objekt, ktorý robot u
 \end{figure}
 \indent
 \section{Priebeh penalizácie za inštrukciu}
-Nech je na rade robot R. R sa pozrie, či už ubehla dostatočne dlhá doba od vykonania jeho poslednej akcie. Ak áno, R začne vykonávať inštrukciu, na ktorú práve ukazuje jeho ProgramPointer. Po vykonaní tejto inštrukcie si poznamená, koľko ho stála tickov. Ak ešte neprebehla dostatočne dlhá doba, potom počká a na rade je ďalší objekt. Penalizácia prebieha podľa aktuálnej tabuľky penalizácií, ako bola nastavená v základnom menu. \\
+Nech je na rade robot R. R sa pozrie, či už ubehla dostatočne dlhá doba od vykonania jeho poslednej akcie. Ak áno, R začne vykonávať inštrukciu, na ktorú práve ukazuje jeho ProgramPointer. Po vykonaní tejto inštrukcie si poznamená, koľko ho stála tikov. Ak ešte neprebehla dostatočne dlhá doba, potom počká a na rade je ďalší objekt. Penalizácia prebieha podľa aktuálnej tabuľky penalizácií, ako bola nastavená v základnom menu. \\
 
 Týmto spôsobom sa efektívne vyrieši prípad, keby robot premýšľal príliš dlho, alebo keby sa zacyklil. Keďze po každej vykonanej inštrukcii predá riadenie daľšiemu objektu, zacyklenie sa pozná len podľa toho, že robot sa nebude hýbať, ale nijak to nespomalí ostatné objekty.%TODO ref
 \newline
