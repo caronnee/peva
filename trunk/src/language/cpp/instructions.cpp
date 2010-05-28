@@ -1291,7 +1291,7 @@ InstructionShootAngle::InstructionShootAngle()
 }
 int InstructionShootAngle::execute(Core *c)
 {
-	TEST("Shooting at angle...TODO convert")
+	TEST("Shooting at angle...")
 	int an = c->getIntFromStack();
 	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->shoot(an); //TODO angle

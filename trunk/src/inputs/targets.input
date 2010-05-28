@@ -5,7 +5,7 @@ ROBOT qqq
 
 	memory = 100
 	MHEALTH = 10
-//	VISIT( 4,9,2 )
+	VISIT( 4,9,2 )
 	VISIT_SEQ( 0, 5 )
 
 	main()

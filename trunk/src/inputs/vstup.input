@@ -1,7 +1,7 @@
 ROBOT a1
 {
 	HEALTH = 10
-	visit (222)
+	visit (start[axx])
 	KILLed < 1
 	KILLed <= 1
 	KILLed == 1
@@ -14,7 +14,7 @@ ROBOT a1
 	Object o = NULL;
 	void function shooting()
 	{
-		while(true)
+		while(tru)
 		{
 			shoot(0);
 			turn(10e);
