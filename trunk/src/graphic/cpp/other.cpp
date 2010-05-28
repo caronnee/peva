@@ -8,9 +8,10 @@
 #include "../../language/h/robot.h"
 
 #define LAST 1
+#define TIMESTAMP 20
 
 // pre debug ucelu = 0, inak = 1
-extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
+extern FILE * yyin; 
 extern void my_destroy();
 extern int yyparse(Robots *);
 
@@ -91,7 +92,7 @@ void Play::resume()
 		draw();
 		return;
 	}
-
+	timeStamp = TIMESTAMP;
 	robots.clean();
 	robots.points = w->settings->gamePoints;
 	int err = 0;
@@ -206,6 +207,15 @@ void Play::resume()
 	robots.resolve();
 	resize();
 	setFocus();
+	if (robots.parseWarningList!="")
+	{	
+		std::string out = "";
+		recreate = false;
+		out += "warning!:"+robots.parseWarningList;
+		show = new ShowMenu(w,out);
+		w->add(show);
+		return;
+	}
 	draw();
 }
 void Play::resize()
@@ -244,7 +254,7 @@ void Play::setFocus()
 }
 void Play::process()
 {
-	size_t aliveRobots = robots.robots.size();//TODO vlastna funckia
+	size_t aliveRobots = robots.robots.size();
 	bool t = false;
 	for (size_t i = 0; i< robots.robots.size();i++)
 	{	
@@ -252,7 +262,11 @@ void Play::process()
 			aliveRobots--;
 		done |= t;
 	}
-	if ((aliveRobots == LAST) || done) //ak je posledny robot
+	if (done)
+		timeStamp--;
+	else 
+		timeStamp = TIMESTAMP;
+	if ((aliveRobots == LAST) || timeStamp == 0) //ak je posledny robot
 	{
 		std::string endText = " Vitazi su:";
 		std::string doneBots = "";
@@ -261,7 +275,7 @@ void Play::process()
 		{
 			if(!robots.robots[i]->getBody()->alive())
 				continue;
-			if (!robots.robots[i]->getBody()->tasks)
+			if (!robots.robots[i]->getBody()->getTasks())
 				doneBots +=robots.robots[i]->getName();
 			lastBots +=robots.robots[i]->getName();
 		}

@@ -337,6 +337,10 @@ void Body::place (Map * m, Position p, int angle)
 	Object::setPosition(p, angle);
 	map = m;
 }
+int Body::getTasks()const
+{
+	return tasks;
+}
 std::string Body::initTargetPlaces()
 {
 	size_t i = 0;
@@ -373,6 +377,17 @@ std::string Body::initTargetPlaces()
 		targets[i]->reset();
 		i++;
 	}
+	tasks = 0;
+	for (size_t i =0; i< targets.size(); i++)
+	{
+		if (!targets[i]->getOk())
+			tasks++;
+	}
+	tasks+= killTarget.size();
+	if (toKill!=NULL)
+		tasks+=toKill->check();
+	if ((tasks == 0 )&& (toKill == NULL))
+		tasks = 1;
 	return warning;
 }
 int Body::step(int steps)

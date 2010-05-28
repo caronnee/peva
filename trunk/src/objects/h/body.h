@@ -70,12 +70,19 @@ private:
 
 	/* in which map is an object located */
 	Map * map;
+
+	/* number of tasks to be done in order to win */
+	size_t tasks;
+
 public:
 	/* class handling visibility issue */
 	Seer seer;
 	
 	/* textual state of robot */
 	std::string info();
+
+	/* returns number of tasks to be fulfilled */
+	int getTasks()const;
 
 	/* for determining direction */
 	int getDirection(Position p);
@@ -91,9 +98,6 @@ public:
 
 	/* ammo, that can be shot */
 	std::list<Object *> ammo;
-
-	/* number of tasks to be done in order to win */
-	size_t tasks;
 
 	/* original eye angle */
 	size_t eyeAngle;

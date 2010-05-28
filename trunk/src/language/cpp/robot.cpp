@@ -6,7 +6,7 @@ std::string Robot::info()
 {
 	std::string output;
 	output += "name " + name +"(" + space + ")\n";
-	output+= core->body->info();
+	output+= getBody()->info();
 	return output;
 }
 Robot::Robot(std::string s, std::string space_, GamePoints points_)
@@ -79,7 +79,7 @@ void Robot::variables()
 	//pridana premenna pre this;
 	n = defined.find("this");
 	core->memory.assign(n,0);
-	n->var[0]->objectValue = core->body;
+	n->var[0]->objectValue = getBody();
 }
 
 Create_type * Robot::find_type(Type t)
@@ -94,7 +94,7 @@ Body * Robot::getBody()
 void Robot::setSkin(Skin * s)
 {
 	skinName = s->nameOfSet;
-	core->body->setSkin(s);
+	getBody()->setSkin(s);
 }
 void Robot::declare_type()
 {
@@ -288,13 +288,13 @@ void Robot::execute()
 bool Robot::action(bool & conditions)
 {
 	//TEST("Number :" << core->PC<< "@"<<instructions[core->PC]->name());
-	conditions = core->body->tasks == 0;
-	bool b = core->body->alive();
-	if (core->body->isMoving()||!b)
+	conditions = getBody()->getTasks() == 0;
+	bool b = getBody()->alive();
+	if (getBody()->isMoving()||!b)
 		return b;
-	if (core->body->waits)
+	if (getBody()->waits)
 	{
-		core->body->waits--;
+		getBody()->waits--;
 		return b;
 	}
 	while (scheduller->ready())
@@ -303,7 +303,7 @@ bool Robot::action(bool & conditions)
 		instructions[core->PC]->execute(core);
 		core->PC++;
 	}
-	return core->body->alive();
+	return getBody()->alive();
 }
 Robots::Robots() :points(0,0){ }
 
@@ -404,10 +404,10 @@ void Robots::resolve()
 	}
 	/* tell robot what means position '0,1,2...' in the map */
 	for (size_t j=0; j<robots.size(); j++ )
-		robots[j]->getBody()->initTargetPlaces();
-	for (size_t j=0; j<robots.size(); j++)
-		if (robots[j]->getBody()->tasks == 0)
-			robots[j]->getBody()->tasks++;
+	{
+		parseWarningList += robots[j]->getBody()->initTargetPlaces();
+		parseWarningList += robots[j]->warningList;
+	}
 }
 void Robots::set(Options o, size_t value)
 {
@@ -456,6 +456,14 @@ void Robot::error(unsigned line, ErrorCode e, std::string m)
 {
 	switch (e)
 	{
+		case WarningMalformedInteger:
+			warning = true;
+			warningList += "Line: " + deconvert<size_t>(line) + ", malformed integer\n";
+			break;
+		case WarningMalformedReal:
+			warning = true;
+			warningList += "Line: " + deconvert<size_t>(line) + ", malformed real\n";
+			break;
 		case WarningTargetNotFound:
 			warning = true;
 			warningList += "Line: " + deconvert<size_t>(line) + ", name of robot to kill ( " + m + ") not found\n";
