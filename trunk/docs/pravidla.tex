@@ -2,7 +2,7 @@
 V nasledujúcom texte sa budú používať tieto pojmy, ktoré sú zavedené pre potrebu bakalárskej práce a nepoužívajú sa v inom zmysle:
 \begin{description}
 \item[Mapa (bojisko)]\hfill \\
-	Mapou nazveme prostredie, kde sa odohráva boj (testovane algoritmov )
+	Mapou nazveme prostredie, kde sa odohráva boj (testovanie algoritmov )
 \item[Objekt]\hfill \\
 	Pod objektom rozumieme akýkoľvek prvok na mape, ktorá smie priamo alebo nepriamo ovplyvňovať výsledok vykonávania algoritmov. Tento pojem nemá žiadnu súvislosť s pojmom Objekt, ako je známy z objektových programovacích jazykov.
 \item[Algoritmus]\hfill \\
@@ -14,21 +14,20 @@ V nasledujúcom texte sa budú používať tieto pojmy, ktoré sú zavedené pre
 \item[Súper robota]\hfill \\
 	Pod týmto pojmom sa rozumie robot, ktorého algoritmus môže byť potenciálnou hrozbou pre robota.
 \item[Spojenec robota] \hfill \\
-	Spojencom robota A je taký robot B, o ktorom algoritme robot A predpokladá, že prispeje k úspešnej misii robota A %?OMG!
+	Spojencom robota A je taký robot B, o ktorom algoritme robot A predpokladá, že prispeje k úspešnej misii robota A. %?OMG!
 \end{description}
 
 \section{ Požiadavky }\label{poziadavky}
-Náplnou bakalárskej práce je vytvoriť čo najuniverzálnejšie prostredie pre skúšanie algoritmov pre umelú inteligenciu.Aplikácia algoritmu, ktorý bol programom bakalárskej práce označený za víťazný, by mal aj v reálnej hre s rovnakými parametrami a cieľami uspieť. Preto  boli  v tejto práci zvolené nasledujúce požiadavky:
+	Náplnou bakalárskej práce je vytvoriť čo najuniverzálnejšie prostredie pre skúšanie algoritmov pre umelú inteligenciu. Aplikácia algoritmu, ktorý bol programom bakalárskej práce označený za víťazný, by mal aj v reálnej hre s rovnakými parametrami a cieľami uspieť. Preto  boli  v tejto práci zvolené nasledujúce požiadavky:
 \begin {itemize}
-\item Hráč si bude moc napísať algoritmus chovania pre jedného alebo viac robotov naraz. \\
-	Užívateľsky je príjemnejšie mať pokope robotov, ktorí budú spúšťaní vždy spoločne. Výhodou je aj ľahké prípadné rozšírenie o spolupracujúcich robotov, ako je to napríklad v hre Dragon Age.
+\item Hráč si bude moc napísať algoritmus chovania pre jedného alebo viac robotov naraz. Užívateľsky je príjemnejšie mať pokope robotov, ktorí budú spúšťaní vždy spoločne. Výhodou je aj ľahké prípadné rozšírenie o spolupracujúcich robotov, ako je to napríklad v hre Dragon Age.
 \item Všetky vstupné algoritmy rôznych robotov by sa mali dať skombinovať.
 	\\Týmto spôsobom sa bude dať okamžite spustiť skupina robotov spolu s inou skupinou a nebude treba ich manuálne upravovať pred spustením.
 \item Algoritmus sa musí dať napísať v jazyku, ktorý je ľahko pochopiteľný, dostatočne detailný a ľahko rozšíriteľný.
 	Rozšírením sa myslí napríklad reakcie robota, alebo zakomponovanie novej činnosti, ktorú môže robot vykonávať
 \item Napísaný algoritmus by sa mal dať rozdeliť na malé čati, ktorých vykonávanie bude ľahko sledovateľné.
 \item Užívateľ bude môcť vypustiť do mapy jedného alebo viac robotov do dopredu určených miest.
-\item Užívateľ bude môcť nastaviť parametre robota, ovplyvňujúce jeho chovanie, a to globálne alebo lokálne. Globálne nastavenie sa prejaví u každého robota. Lokálne nastavenie je vlaste prepísanie čísla v globálnom nastavení, ale pltné len pre jedného robota, ktoreho vstup obsahuje prepísanie tejto hodnoty.\\
+\item Užívateľ bude môcť nastaviť parametre robota, ovplyvňujúce jeho chovanie, a to globálne alebo lokálne. Globálne nastavenie sa prejaví u každého robota. Lokálne nastavenie je vlaste prepísanie čísla v globálnom nastavení, ale pltné len pre jedného robota, ktorého vstup obsahuje prepísanie tejto hodnoty.\\
 	V rôznych hrách sa totiž prejavujú rozlične vlastnosti robotov, ako napríklad ničivosť zbraní.
 \item Užívateľ by mal mať možnosťa definovať, kedy sa misia úspešne ukončila. \\
 	Niektoré hry ako napríklad Thief alebo Capture the flag totiž podmieňujú úspešné ukončenie misie inými podmienkami ako prázdnym bojiskom.\\
@@ -48,7 +47,7 @@ Algoritmy robotov je teda výhodné načítavať zo súboru, kde sú popísané 
 Jazyk, v ktorom má užívateľ napísať svoj algoritmus, musí byť ľahko pochopiteľný, jednoduchý na porozumenie a hlavne obsahujúci funkcie pre popis virtuálneho sveta. Napríklad funkcie pre získavanie informácií o objektoch, ktoré robot vidí, kde sa nachádzajú, a pod. . Preto musí byť tiež rozšíriteľný na ďalšie udalosti, ktoré by mohli nastať. Na výber sa ponúka niekoľko scriptovacích jazykov, ako napríklad \emph{Lua}, vytvorenie vlastného jazyka pomocou parsovacích nástrojov, ako je napríklad \emph{Bison} a \emph{Flex}, alebo ponechanie napísania vstupu v jazyku aplikácie.Všetky prístupy majú svoj výhody aj nevýhody.
 \begin{description}
 	\item[Objektový jazyk aplikácie]\hfill \\ Výhodou tohoto prístupu je, že nie je potrebné nič naimplementovať, stačí definovať rozhranie, aké musí súbor mať, poprípade knižnice, hlavičky/package, v závislosti na zvolenom jazyku. Nevýhodou tohoto prístupu je nutnosť kompilovať, čo môže nepríliš oboznámených užívateľov k smrti vydesiť. Ďalšou malou nevýhodou je nutnosť poznať daný jazyk minimálne na základnej úrovni a tiež nutnosť poznať implementačné detaily.Rovnako by bolo pomerne obtiažne určiť, kde presne sa aktuálne nachádza kód robota a ktorú metódu/funkciu bude vykonávať následovne. Tiež sa nedá kontrolovať vyťaženosť pamäte.
-	\item[Scriptovací jazyk]\hfill \\ Jedná sa napríklad o scriptovací jazyk Lua, ktorú už bol úspešne použitý napríklad pri hre Baldurs Gate na prispôsobenie vzhľadu sveta. Výhodou tohoto jazyka je pomerne prehľadná kompilácia, multiplatformnosť, prehľadné písanie kódu a kompilácia za behu programu. Malou nevýhodou je nutnosť inštalovania Lua virtua machine, ktorá, podobne ako Java Virtual Machine, je virtuálny stroj určený pre vykonávanie inštrukcií Lua scriptu
+	\item[Scriptovací jazyk]\hfill \\ Jedná sa napríklad o scriptovací jazyk \emph{Lua}, ktorú už bol úspešne použitý napríklad pri hre Baldurs Gate na prispôsobenie vzhľadu sveta. Výhodou tohoto jazyka je pomerne prehľadná kompilácia, multiplatformnosť, prehľadné písanie kódu a kompilácia za behu programu. Malou nevýhodou je nutnosť inštalovania Lua virtua machine, ktorá, podobne ako Java Virtual Machine, je virtuálny stroj určený pre vykonávanie inštrukcií Lua scriptu
 	\item[Parsovacie nástroje]\hfill \\ Jedná sa napríklad o nástroje Bison a Flex. Výhodou je vygenerovanie priamo zdrojového kódu podľa zadaných pravidiel, multiplatformnosť, možnosť parsovať za behu programu. Drobnou nevýhodou je fakt, že Flex a Bison boli vyvíjané v jazyku C a konverzia do C++ vyžaduje netriviálne úpravy. Ďalšou nevýhodou sa môže zdať fakt, že sú to skutočne iba parsovacie nástroje a teda celý mechanizmus vykonávania algoritmu je nutné naimplementovať.
 \end{description}
 V aplikácií bol zvolený posledný spôsob vzhľadom na predchádzajúce skúsenosti s týmito nástrojmi a na možnosť rozdeliť vstup na detailné, atomické(ďalej nedeliteľné) a prehľadné časti.
@@ -136,10 +135,10 @@ Reakcie na kolíziu sa riadia podľa na obrázku \ref{fig:kol}.\\
 Ako bolo spomenuté v požiadavkách, niektoré hry nepovažujú za důležité len prežitie robota v prostredí, ale musia byť splnené aj dodatočné podmienky. Preto v algoritme robota musí existovať ak sekvenia znakov, ktorá ich umožňuje dodatočne definovať. Vyvstáva otázka, prečo by tieto podmienky nemohli byť definované aj globálne, teda mimo algoritmu. Odpoveďou je, že s neuplnou informáciou sa dobré algoritmu píšu pomerne ťažko.\\% o to sakra melem???
 Definovanie vítazného stavu sa v pro písaní programu pre robota objaví ešte pred funkciami v tvare:
 \begin{itemize}
-\item $Killed\ [>, < <=, >=, !=, ==]\ N, N \in Z$ , kde Killed je počet zabitých nepratieľov a do tohoto počtu sa nezapočítavajú rozbité steny ani strely.
-\item $Killed( N ), N \in [a-zA-Z0=9\_]*$ , kde N je identifikačný názov robota. Tento názov zadá užívateľ pre lepšiu identifikáciu algoritmu robota.
-\item $Visit([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, v akomkoľvek poradí.
-\item $VisitSequence([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, práve v tomto poradí. V prípade, že je definovaných viac takýchto inštrukcií, spracovávajú sa všetky simultánne, t.j ak má pravidlá definované ako v tabuľke \ref{tab:pr1} a pristúpi na políčko [20,20], splní sa v druhej sekvencii prvé miesto. Ak robot už predtým navštívil políčko [10,10], potom je kompletne splnená prvá podmienka a časť druhej
+\item $Killed\ [>, < <=, >=, !=, ==]\ N, N \in Z$ , kde Killed je počet zabitých nepratieľov. Do tohoto počtu sa nezapočítavajú rozbité steny ani strely.
+\item $Killed( N ), N \in [a-zA-Z0=9\_]*$ , kde N je identifikačný názov robota. Tento názov zadá užívateľ pre lepšiu identifikáciu algoritmu robota. Meno robota sa vyhľadá po naloadovaní všetkých vstupov. Ak sa toto meno nenájde, potom sa podmienka ignoruje.
+\item $Visit([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, v akomkoľvek poradí. Neprípustné hodnoty sa nekontrolujú, keďže v čase definovania misie nie je známa mapa, kde bude
+\item $VisitSequence([X,Y], [Z,W],..)$, kde X,Y sú súradnice miesta, ktoré musí robot prekročiť, práve v tomto poradí. V prípade, že je definovaných viac takýchto inštrukcií, spracovávajú sa všetky simultánne, t.j ak má pravidlá definované ako v tabuľke \ref{tab:pr1} a pristúpi na políčko [20,20], splní sa v druhej sekvencii prvé miesto. Ak robot už predtým navštívil políčko [10,10], potom je kompletne splnená prvá podmienka a časť druhej. Opäť sa nekontrolujú neprípustné hodnoty vzhľadom na absenciu informácií o mape.
 \item $Visit(X, Y,...); X,Y \in N $, kde X,Y sú čísla miest, ktoré musí robot navšíviť, v akomkoľvek poradí. Tieto čísla budú teda definované v mape
 \item $VisitSequence(X,Y...0 X,Y \in N$, kde X,Y sú tiež čísla miest, ktoré musí robot navštítiť, ale v presne danom poradí.
 \end{itemize}

@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,notitlepage]{report}
+\documentclass[12pt,notitlepage]{report}
 
 \usepackage[utf8]{inputenc}
 \usepackage{slovak}
@@ -23,49 +23,92 @@
 \usepackage{graphicx}
 \usepackage{psfrag}
 \usepackage{vmargin}
+%\usepackage[left=4cm]{geometry} % nastavení dané velikosti okrajů
 
 \begin{document}
-
 \begin{titlepage}
 \begin{center}
-\vspace{1.5in}
-{\rm Univerzita Karlova v Prahe\\
-    Matematicko-fyzikálna fakulta}
-\par
-\vspace{0.7in}
-{\huge \bf Bakalárska práca}
-\par
-\vspace{0.5in}
-{Eva Pešková}
-\par
-\vspace{0.5in}
-Codewars, vojna robotov
-\par
-\vfill
-Katedra softwarového inžinierstva
-\par
-\vspace{0.5in}
-Vedúci bakalárskej práce: Mgr. Tomáš Poch
-\par
-\vspace{0.5in}
-Všeobecná informatika
-\par
-\vspace{0.5in}
-2009
+\vspace{15mm}
+
+\large
+Univerzita Karlova v Praze\\
+Matematicko-fyzikální fakulta\\
+
+\vspace{5mm}
+
+{\Large\bf BAKALÁRSKA PRÁCA}
+
+\vspace{10mm}
+
+\includegraphics[scale=0.3]{logo.eps} 
+
+\vspace{15mm}
+
+{\Large Eva Pešková}\\ % doplňte vaše jméno
+\vspace{5mm}
+{\Large\bf Codewars, vojna robotov }\\ % doplňte název práce
+\vspace{5mm}
+Katedra distribuovaných a spolehlivých systémů
+\vspace{15mm}
+
+\large
+\noindent Vedúci bakalárskej práce: RNDr. Tomáš Poch
+\vspace{1mm} 
+
+\noindent Studijní program: Všeobecná informatika % doplňte odpovídající údaje
+
+\vspace{20mm}
+
+2010
 \end{center}
 \end{titlepage}
-\vfill
-Prehlasujem, že som svoju bakalársku prácu napísala samostatne a výhradne s~použitím citovaných prameňov.\\
-Súhlasím so zapožičiavaním práce.\\
-\par
-V Prahe \today
-\begin{flushright}
-Eva Pešková
-\end{flushright}
 
-\newtheorem{definicia}{Značenie}
+\normalsize % nastavení normální velikosti fontu
+\setcounter{page}{2} % nastavení číslování stránek
+
+\ \vspace{10mm} 
+
+\noindent Ďakujem svojmu vedúcemu RNDr.Pochovi za vedenie práce, cenné rady a maximálnu ústretovosť a svojej rodine za morálnu podporu. 
+
+\vspace{\fill} % nastavuje dynamické umístění následujícího textu do spodní části stránky
+\noindent Prehlasujem, že jsem svoju bakalárskou práci napísala samostatne a výhradne s použitím citovaných prameňov. Súhlasím so zapožičovaním práce a jej zverejňovaním.
+
+\bigskip
+\noindent V Praze dne 28.5.2010 \hspace{\fill}Eva Pešková\\ % doplňte patřičné datum, jméno a příjmení
+
+%%%   Výtisk pak na tomto míste nezapomeňte PODEPSAT!
+%%%                
 
 \tableofcontents
+
+\newpage % přechod na novou stránku
+
+%%% Následuje strana s abstrakty. Doplňte vlastní údaje.
+\noindent
+Název práce: Codewars, vojna robotov\\
+Autor: Eva Pešková\\
+Katedra (ústav): Katedra distribuovaných a spolehlivých systémů\\
+Vedoucí bakalářské práce: RNDr. Tomáš Poch\\
+e-mail vedoucího: tomas.poch@d3s.mff.cuni.cz \\
+
+\noindent Abstrakt: V predloženej práci navrhujeme a implementujme prostredie pre testovanie algoritmov. Tieto algoritmy majú odrážať stratégiu použiteľnú v bojových hrách proti umelej inteligencii. Práca analyzuje možné  podmienky pre víťazstvo. Prostredie by alo byť
+\noindent Klíčová slova: robot, vojna, prostredie
+
+\vspace{10mm}
+
+\noindent
+Title: Codewars, battle of robots\\
+Author: Eva Pešková\\
+Department: Katedra distribuovaných a spolehlivých systémů\\
+Supervisor: RNDr. Tomáš Poch\\
+Supervisor's e-mail address: tomas.poch@d3s.mff.cuni.cz \\
+
+\noindent Abstract: In the present work we study ... Uvede se anglický abstrakt v rozsahu 80 až 200 slov. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut sit amet sem. Mauris nec turpis ac sem mollis pretium. Suspendisse neque massa, suscipit id, dictum in, porta at, quam. Nunc suscipit, pede vel elementum pretium, nisl urna sodales velit, sit amet auctor elit quam id tellus. Nullam sollicitudin. Donec hendrerit. Aliquam ac nibh. Vivamus mi. Sed felis. Proin pretium elit in neque. Pellentesque at turpis. Maecenas convallis. Vestibulum id lectus. Fusce dictum augue ut nibh. Etiam non urna nec mi mattis volutpat. Curabitur in tortor at magna nonummy gravida. Mauris turpis quam, volutpat quis, porttitor ut, condimentum sit amet, felis. \\
+
+\noindent Keywords: robot, war, enviroment
+
+\newpage
+
 \chapter{Úvod}% na com sa to skusa, preco, co je hlanym  cielom, apod.
 \input uvod.tex
 \chapter{Analýza}
@@ -73,26 +116,25 @@ Eva Pešková
 \input pravidla.tex
 \input analyza.tex
 \section{Praktické využitie}
-Súčasná implementácia poskytuje dosť širokú škálu použitia. Napríklad:\\
+Súčasná implementácia poskytuje dosť širokú škálu použitia:\\
 	\begin{itemize}
-	\item testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov.
-	\item program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný.
-	\item pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C++ pre zistenie ideálnej stratégie v tomto jednom žpecifickom prípade. %todo zistit spravne roky 
-	\item pomocou codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý.
+	\item Testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov.
+	\item Program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný.
+	\item Pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C++ pre zistenie ideálnej stratégie v tomto jednom žpecifickom prípade. %todo zistit spravne roky 
+	\item Pomocou Codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý.
 	\end{itemize}
-\input impl.tex
 \input porovnania.tex
+\input impl.tex
 %\chapter{Výber a popis testovaných algoritmov}
 %\section{Algoritmus 1}
 %\section{Algoritmus 2}
 %\section{Algoritmus 3}
 %\chapter{Testovanie}
 \chapter{Záver}
-Cieľom bakalárskej práce bolo implementovať také prostredie, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
+Cieľom bakalárskej práce bolo implementovať také prostredie, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota a pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
 Aplikácia je schopná určit splnenie misií a prehľadne vypísať stav robotovho tela. Podrobné informácie o tom, ako bol vstup interpretovaný, je možné nájsť vo vygenrovanom XML scripte a teda aplikácia môže fungovať ako debugger pre napísané algoritmy.\\
-Najdôležitejšou časťou práce je samotný priebeh simulácie a možnosť jeho ovlyvňovania. Simulácia prebieha diskrétne po kolách, kde množstvo toho,čo môže robot spraviť, je možné ovplyvňovať. Vzhľadom a globálne definovanie výpočtu udalostí v kolách bolo však nemožné testovať jednotlivé sposobi proti sebe.
+Najdôležitejšou časťou práce je samotný priebeh simulácie a možnosť jeho ovlyvňovania. Simulácia prebieha diskrétne po kolách, kde množstvo toho, čo môže robot spraviť, je možné ovplyvňovať. Vzhľadom a globálne definovanie výpočtu udalostí v kolách bolo však nemožné testovať jednotlivé sposobi proti sebe.
 Vzhľadom na malý počet zdrojov taktík pre 2D priestor boli na aplikácií testované len vlastné algoritmy a algoritmy na vyhľadávanie miesta, ktoré sa však správali podľa očakávania.\\
-Aplikácia Codewars bola vyvíjaná tak, aby požiadavky definované v sekcii\ref{poziadavky} rešpektovala.
 \input todo.tex
 \newpage
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}
@@ -102,15 +144,19 @@ Aplikácia Codewars bola vyvíjaná tak, aby požiadavky definované v sekcii\re
 \bibitem{pogamut}http://artemis.ms.mff.cuni.cz/pogamut/tiki-index.php
 \bibitem{robocode} http://robocode.sourceforge.net/
 \bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
-\bibitem{trees}
-Justin Zobel,Steffen Heinz,Hugh E. Williams:\\
-{\it Burst Tries: A Fast, Efficient Data Structure for String Keys} www.cs.mu.oz.au/~jz/fulltext/acmtois02.pdf
+\bibitem{trees}Steffen Heinz and Justin Zobel and Hugh E. Williams,
+    \emph{Burst Tries: A Fast, Efficient Data Structure for String Keys},
+    ACM Transactions on Information Systems, 2002,
+    volume 20, pp. 192--223.
+\bibitem{umByt}http://artemis.ms.mff.cuni.cz/main/tiki-index.php?page=Teaching
 \bibitem{vm}
 http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
 \bibitem{imaginecup}http://imaginecup.com
 \bibitem{simtool}http://mpherbert.codeplex.com/
 \bibitem{facade}http://www.proceduralarts.com/
-\bibitem{quadtree}http://www.kyleschouviller.com/wsuxna/quadtree-source-included/
-\bibitem{usedPictures}http://www.bghq.com/fft 
+\bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). Computational Geometry (2nd revised ed.). Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
+
+[edit] 
+\bibitem{usedPictures} Pouzitá galéria obrázkov: http://www.bghq.com/fft 
 \end{thebibliography}
 \end{document}

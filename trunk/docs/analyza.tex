@@ -8,27 +8,27 @@ Vytvorený jazyk je syntaxou podobný jazyku PHP. Volba syntaxe vychádzala z to
 \begin{itemize}
 \item na rozdiel od PHP jazyk Codewars nie je objektovo orientovaný nepodoporuje dedičnosť. Rozhodnutie o tejto vlastnosti vyplýva z technickej náročnosti implementovania dedičnosti.
 \item typy premenných museli byť tiež prispôsobené aplikácií Codewars. Preto jazyk podporuje iba premenné typu integer (celé 32-bitové číslo) a real, (je 4-bytové  číslo s plávajúcou desatinou čiarkou a so 7 významnými číslami). Naviac ale kvôli objektom na mape a robotom musí obsahovať novú premenú typu Location, ktorá bude definovať miesto na mape, a premennú typu Object, ktorá bude reprezentovať objekt na mape.
-\item na rozdiel of PHP je nutné definovať typ premennej. K tomuto rozhodnutie viedla práve netrasparetnosť premenných, ku ktorým sa dá pristupovať ako k rôznym typom. Užívateľa prestane mať o danej premennej prehľad a tým sa hromadia napísané chyby, čo nie je účeom codewars.
+\item na rozdiel of PHP je nutné definovať typ premennej. K tomuto rozhodnutie viedla práve netrasparetnosť premenných, ku ktorým sa dá pristupovať ako k~rôznym typom. Užívateľa prestane mať o danej premennej prehľad a tým sa hromadia napísané chyby, čo nie je účeom codewars.
 \item jazyk nepotrebuje žiadne dodatočné knižnice ani funkcie. Musí byť však obohatený o funkcie pracujúce s premennými typu Object.
-\item v jazyku nie je možné jak definovať nové štruktúry. Je však povolené vytvárať polia. K tomuto rozhodnutiu prispela zvlášť skutočnosť, že je jazyk obmedzený na tak málo typov a súčasne nie je podporená dedičnosť, kde sa nové štruktúry obzvlášť využívajú 
+\item v jazyku nie je možné jak definovať nové štruktúry. Je však povolené vytvárať polia. K tomuto rozhodnutiu prispela zvlášť skutočnosť, že je jazyk obmedzený na tak málo typov a súčasne nie je podporená dedičnosť, kde sa nové štruktúry obzvlášť využívajú.
 \end{itemize}
 Z toho je vidno, že jazyk Codewars je oklieštený, ale zároveň rozšíriteľný o ďalšie funkcie a možnosti, ako napríklad používanie štruktúr. To sa napríklad rozšíri jednoducho tak, že a pridá nové pravidlo na definovanie štruktúry, upraví pravidlo o názve premennej a upraví spôsob, akým sa táto premenná bude ukladať.% nema to ist do impl?
 \begin{itemize}
-\item inicializovanie premennej, teda priradiť premennej miesto v pamäti. Je možné tento krok ešte malinko zobecnit na inštrukcie pre inicializovaie každej jednej položky, ako je to v Mlaskale, ale tento prístup len zbytočne zahmlieva informáciu, že sa vytvorila premenná daného mena.
-\item inštrukcie pre nahranie premennej do zásobníka, odkiaľ sa neskôr použije jej hodnota. Premenná je definovaná svojím menom, čo je postupnosť písmen, podtržítka a čísel nezačínajúci číslovkou. Na túto inštrukciu sa dá nahliadať viacerými spôsobmi v závislosti na tom, ako vyzerá celkový mechaizmus spracovania jej hodnôt. Napríklad v jazyku Mlaskal\cite{mlaskal} má táto inštrukcia niekoľko variant v závislosti na tom, či je premenná globálna, lokálna, a na jej type. Je to spôsobené rozdielnym chovaním v závislosti na tom, kde bola premenná definovaná a spôsobe, akým sa ukladajú hodnoty na vrchol zásobníka. Druhým spôsobom nazerania na túto inštrukciu je mať premenné všetky jedného typu a tie ukladať a zásobník, teda nie len hodnoty, ktoré sa budú zpracovávať, ale všetky, aké sú povolené. Táto metóda má zrejmú nevýhodu v zbytočnej veľkosti tejto premennej, avšak umožňuje napríklad pri prístupe na zlý typ okamžite zareagovať bez nepríjemného vedľajšieho efektu.
-\item inštrukcie pre uloženie premenej. Vzhľadom a to, že na zásobníku budeme mať premennú všetkých typov, je vhodné si rozdeliť inštrukcie na uloženie každého jedného typu, Nastáva otázka, ako to je potom s uložením zloženého typu, napríklad poľa. Pole je v tom prípade nutné rozložiť na jednotlivé elemety a na na aplikovať inštrukcie o ukladaní premených jednoduchých typov. Tento prístup je podobný, aký sa použil v Mlaskale.
-\item inštrukcie  na zničenie naalokovaných premenných. Toto sa týka hlavne okamihu, keď skončí blok. Premenné v ňom deklarované prestanú existovať. Opäť sa použije stejný princíp ako pri vytváraní premenných. Táto verzia je veľmi zjednodušená Garbage collectoru, aký sa používa napríklad v Jave, kde sa o deštrukcii premennej rozhoduje až potom, co sa heuristicky pomocou kódu zistí, že sa premenná už nepoužije.
-\item inštrukcie pre zničenie dočasne alokovaných premenných.a Toto je nutné pri funkciách, ktorú maju návratovú hodnotu. Môže sa stať, že za návratovou hodotou nejde žiadna inštrukcia pre uloženie, takže by premenná zostava vidieť v zásobiku. Preto je táto inštrukcia nutná. Opäť ale vďaka tomu, že nahranie premennej na zásobník pridá práve jeden prvok, postači jedna inštrukcia pre každú dočasne naalokovanú premennú.
+\item inicializovanie premennej, teda priradiť premennej miesto v pamäti. Je možné tento krok ešte malinko zobecnit na inštrukcie pre inicializovaie každej jednej položky, ako je to v \emph{Mlaskale}, ale tento prístup len zbytočne zahmlieva informáciu, že sa vytvorila premenná daného mena.
+\item inštrukcie pre nahranie premennej do zásobníka, odkiaľ sa neskôr použije jej hodnota. Premenná je definovaná svojím menom, čo je postupnosť písmen, podtržítka a čísel nezačínajúci číslovkou. Na túto inštrukciu sa dá nahliadať viacerými spôsobmi v závislosti na tom, ako vyzerá celkový mechaizmus spracovania jej hodnôt. Napríklad v jazyku \emph{Mlaskal\cite{mlaskal}} má táto inštrukcia niekoľko variant v závislosti na tom, či je premenná globálna, lokálna, a na jej type. Je to spôsobené rozdielnym chovaním v závislosti na tom, kde bola premenná definovaná a spôsobe, akým sa ukladajú hodnoty na vrchol zásobníka. Druhým spôsobom nazerania na túto inštrukciu je mať premenné všetky jedného typu a tie ukladať a zásobník, teda nie len hodnoty, ktoré sa budú zpracovávať, ale všetky, aké sú povolené. Táto metóda má zrejmú nevýhodu v zbytočnej veľkosti tejto premennej, avšak umožňuje napríklad pri prístupe na zlý typ okamžite zareagovať bez nepríjemného vedľajšieho efektu.
+\item inštrukcie pre uloženie premenej. Vzhľadom a to, že na zásobníku budeme mať premennú všetkých typov, je vhodné si rozdeliť inštrukcie na uloženie každého jedného typu, Nastáva otázka, ako to je potom s uložením zloženého typu, napríklad poľa. Pole je v tom prípade nutné rozložiť na jednotlivé elemety a na na aplikovať inštrukcie o ukladaní premených jednoduchých typov. Tento prístup je podobný, aký sa použil v \emph{Mlaskale}.
+\item inštrukcie  na zničenie naalokovaných premenných. Toto sa týka hlavne okamihu, keď skončí blok. Premenné v ňom deklarované prestanú existovať. Opäť sa použije sa rovnaký princíp ako pri vytváraní premenných. Ide o veľmi zjednodušenú verziu \emph{Garbage collectoru\cite{vm}}, aký sa používa napríklad v Jave, kde sa o deštrukcii premennej rozhoduje až potom, co sa heuristicky pomocou kódu zistí, že sa premenná už nepoužije.
+\item inštrukcie pre zničenie dočasne alokovaných premenných. Toto je nutné pri funkciách, ktorú maju návratovú hodnotu. Môže sa stať, že za návratovou hodotou nejde žiadna inštrukcia pre uloženie, takže by premenná zostava vidieť v zásobníku. Preto je táto inštrukcia nutná. Opäť ale vďaka tomu, že nahranie premennej na zásobník pridá práve jeden prvok, postači jedna inštrukcia pre každú dočasne naalokovanú premennú.
 \item inštrukcia pre volanie funkcie.
 \item inštrukcie pre aritmetické a relačné operátory, pre podporu najtriviálnejších funkcií.
 \item inštrukcie pre začatie a ukončenie bloku kvôli neskorším deinicializáciam.
 \item inštrukcie pre funkcie pýtajúce sa na objekty v mape.
-\item inštrukcie pre konverzie. Keďže ale v tomto jazyku je sú jediné dve premenné, ktoré sa dajú na seba skonvertovať, budú to iba ľ typy inštrukcií.
+\item inštrukcie pre konverzie. Keďže ale v tomto jazyku je sú jediné dve premenné, ktoré sa dajú na seba skonvertovať, budú to iba 2 typy inštrukcií.
 \end{itemize}
 Nevýhody takto implementovaného jazyka:
 \begin{itemize}
-\item vytvárani premených zloženého typu prebieha rovnako ako inicializácia zložených typov, čo nie je úplne zodpovedajúce. Na druhej strane, detailné rozpísanie každej štruktúry, ako je to v je trochu matúce.\\
-\item definícia premenných ako union všetkých možných typov, zaberá neprimerané množstvo pamäte, pričom sa využije len jedna časť
+\item Vytvárani premených zloženého typu prebieha rovnako ako inicializácia zložených typov, čo nie je úplne zodpovedajúce. Na druhej strane, detailné rozpísanie každej štruktúry, ako je to v je trochu matúce.\\
+\item Definícia premenných ako union všetkých možných typov, zaberá neprimerané množstvo pamäte, pričom sa využije len jedna časť.
 \end{itemize}
 %\subsection{Funkcie a preddefinovanou hodnotou parametru}
 %zavedeniu funkcie s preddefinovanou hodnotou parametre má jediný, pomerne malý dôvod. V okamihu, keď sa robot a nejaký iný objekt sa naplánujú na rovnaký čas, ten, ktorý sa naplánoval skôr, skôr tiež príde na radu (jedna z podmienok fair-play). Ak však robot zavolá funkciu, ktorá má preddefinovaný parameter, po zavolaní sa ocitne pred robotom, aj keby mali rovnaké programy a začínali rovnaký čas. To môže tomuto robotovi priniesť isté výhody, pretože sa dostane na radu skôr s predstihom minimálne 3 tickov (1 za assign a 2 za loadovanie premenných). Za ten čas sa podla tabuľky dá spraviť inštrukcia STEP a teda sa napríklad efektívne vyhnúť strele. V skratke, čím skôr sa robot dostane na radu, tým je to pre neho výhodnejsie, lebo môže skôr reagovať na udalosť a predísť následkom a tým viac sa na radu vlastne dostane. Príklad: Strela S je naplánovaná na čas {\it s1}, robot R je po rozmýšľaní 10 tickov pred strelou strelou (predpokladáme, že zavolal funkciu s preddefinovaným parametrom a inak by bol naplánovaný maximálne 9 tickov pred S) Za ten čas sa môže 2x pohnúť, poťažne použiť inštrukciu see, zistit polohu strely a vystreliť jej smerom.
@@ -56,22 +56,17 @@ Nevýhody takto implementovaného jazyka:
 %Problém môže nastať v okamihu, keď sú povolené rovkako rekurzívne funkcie. V okamihu zavolania takejto funkcie, 
 
 Výhodou takéhoto detailného rozloženia kódu je okrem vysokej transparentnosti aj možnosť priradiť jednotlivým inštrukciám hodnotu, takzvanú penalizáciu. V reálnych hrách by to zodpovedalo zdržaniu pred vykonaním akcie. Typickým príkladom je mág v dobrudružných hrách, ktorý podporuje svoju družinu kúzlami. Štandartne ale potrebuje istý čas na vyrieknutie kúzla.\\
-Podľa tohoto prieskumu teda výsledné potrebné inštrukcie sú popísané v tabuľke \ref{tab:instrukcie}
+Podľa tohoto prieskumu sú výsledné potrebné inštrukcie sú popísané v tabuľke \ref{tab:instrukcie}
 \begin{center}
 \begin{longtable}{|l|l|l|}
 \caption[Používané inštrukcie]{Používané inštrukcie}
 \label{tab:instrukcie}\\
-\hline \hline \\[-2ex]
-\multicolumn{1}{c}{\textbf{názov inštrukcie}} &
-\multicolumn{1}{c}{\textbf{výsledok akcie}} \\[0.5ex] \hline
-\\[-1.8ex]
+\multicolumn{1}{c}{\textbf{Názov inštrukcie}} &
+\multicolumn{1}{c}{\textbf{Výsledok akcie}} \\\hline 
 \endfirsthead
-
 \multicolumn{2}{c}{{\tablename} \thetable{} -- pokračovanie} \\[0.5ex]
-\hline \hline \\[-2ex]
-\multicolumn{1}{c}{\textbf{názov inštrukcie}} &
-\multicolumn{1}{c}{\textbf{výsledok akcie}} \\[0.5ex]\hline
-\\[-1.8ex]
+\multicolumn{1}{c}{\textbf{Názov inštrukcie}} &
+\multicolumn{1}{c}{\textbf{Výsledok akcie}} \\\hline
 \endhead
 InstructionCreate& požiada pamäť o priradenie miesta pre premenú \\
 InstructionLoad& nahrá premenú alebo konštantu na zásobník \\
@@ -127,9 +122,6 @@ InstructionLeInteger&porovnanie 2 celých čísel\\\\
 InstructionLeReal&porovnanie 2 reálnych čísel\\
 InstructionBegin& zvýši hĺbku zanorenia\\
 InstructionEndBlock& zníže zanorenie, uvoľní pamäť\\
-\hline
-\multicolumn{2}{c}{inštrukcie pýtajúce sa na stav objektov}\\
-\hline
 InstructionSee& naplní robotove zorné pole\\
 InstructionEye& vyberie n-tý object z \\
 &robotovho zorného poľa\\
@@ -159,8 +151,7 @@ InstructionRandom& uloží na zásobník náhodné číslo\\
 \end{longtable}
 \end{center}
 \subsection{Penalizácia a plánovanie}
-Penalizácia je zatiaľ implementovaná globálne, čo nie je najvhodnejšie, pretože to vylučuje možnoť mať testovacieho robota, na ktorom chceme nacvičit boj napríklad proti kuzelníkovi alebo inému špecialistovi. Detailné zobrazenie plánovača je zobrazené na obrázku \ref{fig:sch}. Jednoducho povedané, v okamihu, keď mapa bude chcieť vedieť, robot, aké má robot naplánované ďalšie akcie a ako to ovlyvní mapy, spýta sa robotovko plánovača. V okamihu, keď plánovač zistí, že je pripravený vykonať ďalšiu inštrukciu, pozrie sa koľko bude stáť a vykoná ju. Opakuje sa dovtedy, kým plánovač nezmení svoj stav na nepripravený.\\
-Plánovač pri každom svojom zavolaní kontroloju znova, či je pripravený alebo nie.\\
+Penalizácia je zatiaľ implementovaná globálne, čo nie je najvhodnejšie, pretože to vylučuje možnoť mať testovacieho robota, na ktorom chceme nacvičit boj napríklad proti kuzelníkovi alebo inému špecialistovi. Detailné zobrazenie plánovača je zobrazené na obrázku \ref{fig:sch}. Jednoducho povedané, v okamihu, keď bude nutné zistiť, aké má robot naplánované ďalšie akcie a ako to ovlyvní mapu, zavolá sa robotov plánovač. V okamihu, keď plánovač zistí, že je pripravený vykonať ďalšiu inštrukciu, pozrie sa koľko bude stáť a vykoná ju. Opakuje sa dovtedy, kým plánovač nezmení svoj stav na nepripravený.  Plánovač pri každom svojom zavolaní kontroloju znova, či je pripravený alebo nie.\\
 \begin{figure}
 \centering
 \includegraphics{planovac}
