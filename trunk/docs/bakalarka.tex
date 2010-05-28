@@ -91,7 +91,7 @@ Katedra (ústav): Katedra distribuovaných a spolehlivých systémů\\
 Vedoucí bakalářské práce: RNDr. Tomáš Poch\\
 e-mail vedoucího: tomas.poch@d3s.mff.cuni.cz \\
 
-\noindent Abstrakt: V predloženej práci navrhujeme a implementujme prostredie pre testovanie algoritmov. Tieto algoritmy majú odrážať stratégiu použiteľnú v bojových hrách proti umelej inteligencii. Práca analyzuje možné  podmienky pre víťazstvo. Prostredie by alo byť
+\noindent Abstrakt: V predloženej práci navrhujeme a implementujeme prostredie pre testovanie algoritmov. Tieto algoritmy majú odrážať stratégiu použiteľnú  v rozličných bojových hrách proti umelej inteligencii. Práca analyzuje možné podmienky pre víťazstvo a vplyvy častí kódu na vykonávanie algoritmu. Kladie sa dôraz na jednoduchosť jazyka popisujúceho algoritmus, rozšíriteľnosť a 
 \noindent Klíčová slova: robot, vojna, prostredie
 
 \vspace{10mm}
@@ -120,7 +120,7 @@ Súčasná implementácia poskytuje dosť širokú škálu použitia:\\
 	\begin{itemize}
 	\item Testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov.
 	\item Program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný.
-	\item Pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{imaginecup}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C++ pre zistenie ideálnej stratégie v tomto jednom žpecifickom prípade. %todo zistit spravne roky 
+	\item Pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{simtool}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C++ pre zistenie ideálnej stratégie v tomto jednom žpecifickom prípade. %todo zistit spravne roky 
 	\item Pomocou Codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý.
 	\end{itemize}
 \input porovnania.tex
@@ -131,32 +131,28 @@ Súčasná implementácia poskytuje dosť širokú škálu použitia:\\
 %\section{Algoritmus 3}
 %\chapter{Testovanie}
 \chapter{Záver}
-Cieľom bakalárskej práce bolo implementovať také prostredie, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota a pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
+Cieľom bakalárskej práce bolo implementovať také prostredie pre súboj robotov, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota a pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
 Aplikácia je schopná určit splnenie misií a prehľadne vypísať stav robotovho tela. Podrobné informácie o tom, ako bol vstup interpretovaný, je možné nájsť vo vygenrovanom XML scripte a teda aplikácia môže fungovať ako debugger pre napísané algoritmy.\\
 Najdôležitejšou časťou práce je samotný priebeh simulácie a možnosť jeho ovlyvňovania. Simulácia prebieha diskrétne po kolách, kde množstvo toho, čo môže robot spraviť, je možné ovplyvňovať. Vzhľadom a globálne definovanie výpočtu udalostí v kolách bolo však nemožné testovať jednotlivé sposobi proti sebe.
-Vzhľadom na malý počet zdrojov taktík pre 2D priestor boli na aplikácií testované len vlastné algoritmy a algoritmy na vyhľadávanie miesta, ktoré sa však správali podľa očakávania.\\
+Vzhľadom na malý počet zdrojov taktík pre 2D priestor boli na aplikácií testované len vlastné algoritmy.\\
 \input todo.tex
 \newpage
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}
 \begin{thebibliography}{99}
-\bibitem{historia}http://cs.wikipedia.org/wiki/Di\%C4\%9Bjiny\_po\%C4\%8D\%C3\%ADta\%C4\%8Dov\%C3\%BDch\_her\_a\_videoher
-\bibitem{bioware}www.bioware.com
-\bibitem{pogamut}http://artemis.ms.mff.cuni.cz/pogamut/tiki-index.php
+\bibitem{historia}John Anderson : \emph{"Who Really Invented The Video Game?"}. Atari Magazines (http://www.atarimagazines.com/cva/v1n1/inventedgames.php),
+Retrieved November 27, 2006.
+\bibitem{bioware}Smee, Andrew (2010-02-07). \emph{"Mass Effect 3 \& Beyond"}. IGN UK. (http://xbox360.ign.com/articles/106/1066954p1.html). Retrieved September 32010.
+\bibitem{pogamut} Kadlec, R., Gemrot, J., Brom, C.:\emph{ Programování virtuálních agentů - Platforma Pogamut }, Datakon 2009, Czech Republic
 \bibitem{robocode} http://robocode.sourceforge.net/
 \bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
 \bibitem{trees}Steffen Heinz and Justin Zobel and Hugh E. Williams,
     \emph{Burst Tries: A Fast, Efficient Data Structure for String Keys},
     ACM Transactions on Information Systems, 2002,
     volume 20, pp. 192--223.
-\bibitem{umByt}http://artemis.ms.mff.cuni.cz/main/tiki-index.php?page=Teaching
-\bibitem{vm}
-http://java.sun.com/docs/books/jvms/second\_edition/html/Overview.doc.html\#7565
-\bibitem{imaginecup}http://imaginecup.com
+\bibitem{umByt} predmet Umelé bytosti : \emph{http://artemis.ms.mff.cuni.cz/main/tiki-index.php?page=Teaching}
+\bibitem{vm} Tim Lindholm, Frank Yellin :\emph{The JavaTM Virtual Machine Specification, Second Edition}
 \bibitem{simtool}http://mpherbert.codeplex.com/
-\bibitem{facade}http://www.proceduralarts.com/
-\bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). Computational Geometry (2nd revised ed.). Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
-
-[edit] 
-\bibitem{usedPictures} Pouzitá galéria obrázkov: http://www.bghq.com/fft 
+\bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). \emph{ Computational Geometry (2nd revised ed.) }. Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
+\bibitem{usedPictures} Použitá galéria obrázkov: http://www.bghq.com/fft 
 \end{thebibliography}
 \end{document}
