@@ -143,7 +143,10 @@ public:
 
 class Play:public Menu
 {
-	/* flag of error occured */
+	/* timestamp */
+	size_t timeStamp;
+
+	/* true of error occured */
 	bool error;
 
 	/* wheather mnu should recreate map and robots */

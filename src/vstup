@@ -13,7 +13,7 @@ ROBOT a1
 	Object o = NULL;
 	main()
 	{
-		for(integer i = 0; i <6;i++)
+		for(integer i = 03; i <6e;i++)
 		{
 			integer s = see();
 			for (integer i =0 ;i < s; i++)

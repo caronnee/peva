@@ -1,7 +1,7 @@
 ROBOT a1
 {
 	HEALTH = 10
-	visit (start[a2])
+	visit (222)
 	KILLed < 1
 	KILLed <= 1
 	KILLed == 1
@@ -17,7 +17,7 @@ ROBOT a1
 		while(true)
 		{
 			shoot(0);
-			turn(10);
+			turn(10e);
 		}
 	}
 	
