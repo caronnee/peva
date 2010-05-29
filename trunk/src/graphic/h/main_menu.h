@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "window.h"
 
+/* default class for defining crossmenu */
 class Main: public Menu
 {
 	std::vector<std::string> files;

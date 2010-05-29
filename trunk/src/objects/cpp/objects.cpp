@@ -254,8 +254,8 @@ bool Object::intersection(Object * attacked, Position &distances, Position& p)
 			distances.x = r2.x + r2.width - xAxis;
 		}
 	}
-	if (!test)
-		std::cout << "!*!object.cpp:258!";
+//	if (!test)
+//		std::cout << "!*!object.cpp:258!";
 	return true; //FIXME
 }
 

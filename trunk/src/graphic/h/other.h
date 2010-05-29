@@ -13,8 +13,7 @@
 
 
 /* penalization value to concrete robot 
- * instruction + images for drawing 
- * */
+ * instruction + images for drawing */
 struct Penalize
 {
 	/* value of penalization instruction */
@@ -56,6 +55,7 @@ public:
 	void clean();
 	virtual ~SetPenalize();
 };
+/* menu for showing a string on screen */
 class ShowMenu : public Menu
 {
 	Window * w;
@@ -75,6 +75,7 @@ public:
 	virtual ~ShowMenu();
 };
 
+/* class for setting scheduller */
 class SetScheduller : public Menu
 {
 	int iter;
@@ -95,6 +96,7 @@ public:
 	virtual ~SetScheduller();
 	
 };
+/* class for loading inputs */
 class SetMaps : public Load
 {
 	std::vector<std::string> * result;
@@ -104,6 +106,7 @@ public:
 	void clean();
 	virtual ~SetMaps();
 };
+/* class for setting sections values */
 class SetSections : public Menu
 {
 	SDL_Surface * sectionPart[SECTIONS * 3];

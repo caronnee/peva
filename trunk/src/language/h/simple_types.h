@@ -8,5 +8,5 @@ struct Location
 	int x, y;
 	Location(int x = 0, int y = 0);
 };
-struct Object;
+//struct Object;
 #endif

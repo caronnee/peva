@@ -15,14 +15,14 @@ lOBJECTS=o/bison.o o/help_functions.o o/instructions.o o/memory.o o/node.o o/par
 	
 LANGUAGE_OBJECTS= o/language.o $(lOBJECTS)
 
-.PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph test bparser codewars snakeTest dep
+.PHONY:bparser distclean debugMemory debugGraph debugGMemory debugGGraph test bparser codewars dungeon dep
 
-all: dep bparser codewars test debugSee snakeTest
+all: dep bparser codewars test debugSee dungeon
 
-snakeTest: o/snake.o o/movement.o o/position.o o/snakeTest.o  o/help_functions.o
+dungeon: o/snake.o o/movement.o o/position.o o/snakeTest.o  o/help_functions.o
 	@echo ""
 	@echo "..........................................."
-	@echo "Creating dungeon generator...:"
+	@echo "Creating genMap generator...:"
 	g++ $(LDFLAGS) -o $@ $^
 	@echo "..........................................."
 
@@ -75,9 +75,9 @@ distclean:
 	language/$(SRC)bison.* language/$(HEADER_DIR)bison.* test debugSee Makefile.dep* \
 	lex.backup *.xml *.config snake*
 
-dungeon:
-	make dep snakeTest
-	./snakeTest
+genMap:
+	make dep dungeon
+	./dungeon
 	cat output
 	
 brun:
