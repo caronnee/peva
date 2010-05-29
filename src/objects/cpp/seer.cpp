@@ -76,12 +76,12 @@ void Seer::reset(float angle)
 
 void Seer::output()
 {
-	TEST("Vidim "<< visibleObjects.size() << "objektov: ")
+	std::cout << "Vidim "<< visibleObjects.size() << "objektov: " << std::endl;
 	for (std::list<ObjectRelation>::iterator i = visibleObjects.begin();
 		 i!= visibleObjects.end();
 		 i++)
 	{
-		TEST(i->object->info())
+		std::cout << (i->object->info()) << std::endl;
 	}
 }
 

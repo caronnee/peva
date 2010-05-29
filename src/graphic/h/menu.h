@@ -7,6 +7,7 @@
 #define BEGIN_X 40
 #define BEGIN_Y 40
 
+/* default structure for hadling menus*/
 class Menu
 {
 	protected:

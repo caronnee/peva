@@ -44,6 +44,11 @@ void addToMap(Map * map, Object * object)
 int main(int argc, char ** args)
 {
 	bool end = false;
+	if (argc < 5)
+	{
+		std::cout << "nedostatok parametrov (" << 4 << ")"; 
+		return -1;
+	}
 	int params[] = { X, Y, ANGLE, DISTANCE };
 	for (int i =1; i< argc; i++)
 	{

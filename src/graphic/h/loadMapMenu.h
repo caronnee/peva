@@ -5,12 +5,15 @@
 #include "window.h"
 #include <vector>
 
+/* reccord that should be chose, very unfortunatelu called Maprecord */
 struct MapRecord
 {
 	std::string name;
 	SDL_Surface * chosen;
 	SDL_Surface * show;
 };
+
+/* class for loading inputs with certaint ending in ceraint directory */
 class Load : public Menu
 {
 protected:
