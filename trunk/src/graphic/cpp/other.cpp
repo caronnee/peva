@@ -285,8 +285,8 @@ void Play::process()
 		else
 			end = w->g->render((endText+lastBots));
 		SDL_Rect rect;
-		rect.x = (m->getResolution().x) >> 1;
-		rect.y = (m->getResolution().y) >> 1;
+		rect.x = (w->g->screen->w) >> 1;
+		rect.y = (w->g->screen->h) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
 		SDL_Flip(w->g->screen); //TODO update
 		bool wait = false;
