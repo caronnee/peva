@@ -48,6 +48,7 @@ void Play::draw() //zatial ratame s tym, ze sme urcite vo vykreslovacej oblasti
 
 void Play::init(int x, int y)
 {	
+	recreate = true;
 	focus = 0;
 	if (m)
 		delete m;
@@ -323,6 +324,7 @@ void Play::process()
 					break;
 			}
 		}
+		SDL_FreeSurface(end);
 
 		recreate = true;
 		for (size_t i =0; i< robots.robots.size(); i++)
