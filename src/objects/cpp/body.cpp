@@ -31,15 +31,11 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 {
 	firstSection.sections[FirstSection::SectionAngle] = min<int>(MAX_EYE_ANGLE,firstSection.sections[FirstSection::SectionAngle]);
 	int todo = total_[0];
-	int numberNotOk = 0;
+	int numberNotOk = FirstSection::NumberOfSections;
 	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
 	{
-		if (firstSection.sections[i]<0)
-		{
-			numberNotOk++;
-			firstSection.sections[i] = 0;
-			continue;
-		}
+		if (firstSection.sections[i]==0)
+			numberNotOk--;
 		todo-=firstSection.sections[i];
 	}
 	if (total_[0] < MININUM_SECTION)
@@ -52,11 +48,6 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 
 	while(todo < 0 )
 	{
-		if (iter == FirstSection::SectionAngle)
-		{
-			iter++;
-			iter%=FirstSection::NumberOfSections;
-		}
 		if (todo + FirstSection::NumberOfSections > 0)
 			minus = -1;
 		if (firstSection.sections[iter] + minus > 0)
@@ -64,6 +55,7 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 			firstSection.sections[iter]+=minus;
 			todo-=minus;
 		}
+		iter++;
 		iter%=FirstSection::NumberOfSections;
 	}
 
@@ -86,15 +78,11 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 		iter%=FirstSection::NumberOfSections;
 	}*/
 	todo = total_[1];
-	numberNotOk = 0;
-	for(size_t i =0; i< SecondSection::NumberOfSections; i++)
+	numberNotOk = SecondSection::NumberOfSections;
+	for(size_t i =0; i < SecondSection::NumberOfSections; i++)
 	{
-		if (secondSection.sections[i]<0)
-		{
-			numberNotOk++;
-			secondSection.sections[i]=0;
-			continue;
-		}
+		if (secondSection.sections[i] == 0) //not set
+			numberNotOk--;
 		todo -= secondSection.sections[i];
 	}
 	if (total_[1] < MININUM_SECTION)
