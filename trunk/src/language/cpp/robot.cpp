@@ -341,7 +341,7 @@ void Robot::init(int vis)
 	points.check();
 	consolidate();
 	getBody()->init(points, vis);
-	core->memory.realloc(points.firstSection.sections[FirstSection::SectionMemorySize]);	
+	core->memory.realloc(points.sections[GamePoints::SectionMemorySize]);	
 }
 
 void Robots::finalize(int vis)
@@ -415,38 +415,38 @@ void Robots::set(Options o, size_t value)
 	{
 		case OptionMissilles:	
 			TEST("setting number of missilles to:" << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionMissilles] = value;
+			robots.back()->points.sections[GamePoints::SectionMissilles] = value;
 			break;
 		case OptionHealth:
 			TEST("setting health to:" << value ); 
-			robots.back()->points.firstSection.sections[FirstSection::SectionHitpoints] = value;
+			robots.back()->points.sections[GamePoints::SectionHitpoints] = value;
 			break;
 		case OptionAttack:
 			TEST("setting Attack x to:" << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionAttack] = value;
+			robots.back()->points.sections[GamePoints::SectionAttack] = value;
 			break;
 		case OptionDefense:
 			TEST("setting defense to " << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionDefense] = value;
+			robots.back()->points.sections[GamePoints::SectionDefense] = value;
 			break;
 		case OptionMisilleAttack:
 			TEST("setting Missille attack to " << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleAttack] = value;
+			robots.back()->points.sections[GamePoints::SectionMissilleAttack] = value;
 			break;
 		case OptionMisilleHealth:
 			TEST("setting Missille health to:" << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionMissilleHitpoints] = value;
+			robots.back()->points.sections[GamePoints::SectionMissilleHitpoints] = value;
 			break;
 		case OptionSee:
 			TEST("setting eyes angle to:" << value ); 
-			robots.back()->points.firstSection.sections[FirstSection::SectionAngle] = value % MAX_EYE_ANGLE;
+			robots.back()->points.sections[GamePoints::SectionAngle] = value % MAX_EYE_ANGLE;
 			break;
 		case OptionStep:
 			TEST("setting step to:" << value ); 
-			robots.back()->points.secondSection.sections[SecondSection::SectionSteps] = value;
+			robots.back()->points.sections[GamePoints::SectionSteps] = value;
 			break;
 		case OptionMemory: 
-			robots.back()->points.firstSection.sections[FirstSection::SectionMemorySize] = value;
+			robots.back()->points.sections[GamePoints::SectionMemorySize] = value;
 			break;
 
 	}

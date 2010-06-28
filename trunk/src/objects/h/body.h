@@ -12,23 +12,14 @@
 #define MININUM_SECTION 50
 #define MAX_EYE_ANGLE 90
 
-struct FirstSection
+struct GamePoints
 {
 	enum Sections
 	{
 		SectionHitpoints,
 		SectionMemorySize,
 		SectionAngle,
-		NumberOfSections
-	};
-	int sections[FirstSection::NumberOfSections];
-	FirstSection();
-};
 
-struct SecondSection
-{
-	enum Sections
-	{
 		SectionMissilles,
 		SectionMissilleAttack,
 		SectionMissilleHitpoints,
@@ -37,19 +28,9 @@ struct SecondSection
 		SectionAttack,
 		NumberOfSections
 	};
-	SecondSection();
-	int sections[SecondSection::NumberOfSections];
-};
-
-struct GamePoints
-{
-	enum check{
-		DO_NOT_CHECK = 49
-	};
-	int total_[2];
-	FirstSection firstSection;
-	SecondSection secondSection;
-	GamePoints(int total = 100, int total2 = 100 );
+	int total_;
+	GamePoints(int total = 0 );
+	int sections[Sections::NumberOfSections];
 	void check();
 };
 

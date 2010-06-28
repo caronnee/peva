@@ -40,12 +40,11 @@ Setting::Setting()
 	for (int i =0; i< SECTIONS; i++)
 	{
 		input.ignore(256,' ');
-		input >> gamePoints.total_[i];
+		input >> gamePoints.total;
 	}
-	for (int i =0; i< FirstSection::NumberOfSections; i++)
-		input >> gamePoints.firstSection.sections[i];
-	for (int i =0; i< SecondSection::NumberOfSections; i++)
-		input >> gamePoints.secondSection.sections[i];
+	for (int i =0; i< GamePoints::NumberOfSections; i++)
+		input >> gamePoints.sections[i];
+
 	std::string s;
 	input >> s; //whitespace posriesi cou, cin
 	while (!input.eof())
@@ -71,13 +70,10 @@ Setting::~Setting()
 	output << delay << " ";
 
 	for (size_t i=0; i< SECTIONS; i++)
-		output << gamePoints.total_[i]<<" ";
+		output << gamePoints.total_<<" ";
 
-	for (size_t i=0; i< FirstSection::NumberOfSections; i++)
-		output << gamePoints.firstSection.sections[i]<<" ";
-
-	for (size_t i=0; i< SecondSection::NumberOfSections; i++)
-		output << gamePoints.secondSection.sections[i]<<" ";
+	for (size_t i=0; i< GamePoints::NumberOfSections; i++)
+		output << gamePoints.sections[i]<<" ";
 
 	for (size_t i=0; i< maps.size(); i++)
 		output << maps[i]<<"\n";

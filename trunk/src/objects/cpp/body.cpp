@@ -4,120 +4,51 @@
 #include "../../add-ons/h/help_functions.h"
 #include "../../add-ons/h/macros.h"
 
-
-FirstSection::FirstSection()
+GamePoints::GamePoints(int total)
 {
 	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
 	{
 		sections[i] = 0;
 	}
-}
-
-SecondSection::SecondSection()
-{
-	for(size_t i =0; i< SecondSection::NumberOfSections; i++)
+	for(size_t i =0; i< GamePoints::NumberOfSections; i++)
 	{
 		sections[i] = 0;
 	}
-}
-
-GamePoints::GamePoints(int total, int total2)
-{
-	total_[0] =  total;
-	total_[1] =  total2;
+	total_ =  total;
 }
 
 void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME dalsia volba, aby to doplnovalo
 {
-	firstSection.sections[FirstSection::SectionAngle] = min<int>(MAX_EYE_ANGLE,firstSection.sections[FirstSection::SectionAngle]);
-	int todo = total_[0];
-	int numberNotOk = FirstSection::NumberOfSections;
-	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
+	sections[Sections::SectionAngle] = min<int>(MAX_EYE_ANGLE,sections[FirstSection::SectionAngle]);
+
+	int todo = total_;
+
+	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		if (firstSection.sections[i]==0)
-			numberNotOk--;
-		todo-=firstSection.sections[i];
+		if (sections[i] > total_[0])
+			sections[i] = total_[0];
+		todo -= sections[i];
 	}
 	if (total_[0] < MININUM_SECTION)
 		todo = 0;
-	int iter = 0;
-	int minus;
 
-	if (numberNotOk) 
-		minus = todo/numberNotOk;
-
-	while(todo < 0 )
+	int done = 0;
+	for (int i = 0; i < NumberOfSections; i++)
 	{
-		if (todo + FirstSection::NumberOfSections > 0)
-			minus = -1;
-		if (firstSection.sections[iter] + minus > 0)
-		{
-			firstSection.sections[iter]+=minus;
-			todo-=minus;
-		}
-		iter++;
-		iter%=FirstSection::NumberOfSections;
+		int minus = sections[i]*total_[0]/todo; //negative
+		done += minus;
 	}
-
-/*	numberNotOk = FirstSection::NumberOfSections - numberNotOk;
-	if (numberNotOk) 
-		minus = todo/numberNotOk;
-
-	while (todo > 0)
+	todo += done; //how much should we do
+	
+	int i = 0;
+	while (todo < 0) 
 	{
-		if (firstSection.sections[FirstSection::SectionAngle] + minus  > MAX_EYE_ANGLE)
+		if (sections[i] > 0)
 		{
-			iter++;
-			iter%= FirstSection::NumberOfSections;
+			sections[i]--;
+			todo++;
 		}
-		if (todo - FirstSection::NumberOfSections <0)
-			minus = 1;
-		firstSection.sections[iter]+=minus;
-		todo-=minus;
-		iter++;
-		iter%=FirstSection::NumberOfSections;
-	}*/
-	todo = total_[1];
-	numberNotOk = SecondSection::NumberOfSections;
-	for(size_t i =0; i < SecondSection::NumberOfSections; i++)
-	{
-		if (secondSection.sections[i] == 0) //not set
-			numberNotOk--;
-		todo -= secondSection.sections[i];
 	}
-	if (total_[1] < MININUM_SECTION)
-		todo = 0;
-
-	iter = 0;
-	if (numberNotOk) 
-		minus = todo/numberNotOk;
-
-	while(todo < 0)
-	{
-		if (todo + SecondSection::NumberOfSections > 0)
-			minus = -1;
-		if(secondSection.sections[iter] + minus > 0)
-		{
-			secondSection.sections[iter]+=minus;
-			todo-=minus;
-		}
-		iter++;
-		iter %= SecondSection::NumberOfSections;
-	}
-
-/*	numberNotOk = SecondSection::NumberOfSections - numberNotOk;
-	if (numberNotOk) 
-		minus = todo/numberNotOk;
-
-	while (todo > 0)
-	{
-		if (todo - SecondSection::NumberOfSections < 0)
-			minus = 1;
-		secondSection.sections[iter]+=minus;
-		todo-=minus;
-		iter++;
-		iter%=SecondSection::NumberOfSections;
-	}*/
 }
 
 Body::Body() : Object(NULL,NULL)
@@ -161,7 +92,7 @@ void Body::init(GamePoints g, int v)
 	/* information from firt section */
 	seer.setEyes(g.firstSection.sections[FirstSection::SectionAngle],v);
 	hitpoints = g.firstSection.sections[FirstSection::SectionHitpoints];
-	movement.speed = g.secondSection.sections[SecondSection::SectionSteps]%100;
+	movement.speed = g.sections[GamePoints::SectionSteps]%100;
 
 
 	/* second section information */
@@ -169,10 +100,10 @@ void Body::init(GamePoints g, int v)
 		throw "Robot body is not skined!";
 	if (!ms)
 		ms = new MissilleSkin(skinWork->getSkin()->nameOfSet);
-	for (int i =0; i< g.secondSection.sections[SecondSection::SectionMissilles]; i++ )
+	for (int i =0; i< g.sections[GamePoints::SectionMissilles]; i++ )
 		addAmmo(new Missille(ms,&ammo));
-	defense = g.secondSection.sections[SecondSection::SectionDefense];
-	attack =g.secondSection.sections[SecondSection::SectionAttack];
+	defense = g.sections[GamePoints::SectionDefense];
+	attack =g.sections[GamePoints::SectionAttack];
 }
 
 bool Body::changed()
@@ -431,8 +362,8 @@ int Body::shoot(int angle)
 	if (movement.direction.y < 0)
 		mP.y -= o->height();
 	
-	o->hitpoints = o->movement.steps = points.secondSection.sections[SecondSection::SectionMissilleHitpoints];
-	o->attack = points.secondSection.sections[SecondSection::SectionMissilleAttack];
+	o->hitpoints = o->movement.steps = points.sections[GamePoints::SectionMissilleHitpoints];
+	o->attack = points.sections[GamePoints::SectionMissilleAttack];
 	o->defense = 0;
 	o->movement.angle = movement.angle;
 	o->movement.direction.x = movement.direction.x;
