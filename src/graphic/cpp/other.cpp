@@ -540,21 +540,15 @@ void SetSections::init()
 	sections = new SDL_Surface *[3*(FirstSection::NumberOfSections+ SecondSection::NumberOfSections)];
 	//blit FIXME center
 	int i=0;
-	for ( i =0; i< 2*FirstSection::NumberOfSections; i+=2)
+	for ( i =0; i< 2*GamePoints::NumberOfSections; i+=2)
 	{
 		sections[i] = w->g->render(names[i/2]);
 		sections[i+1] = w->g->render(deconvert<int>(gp->firstSection.sections[i/2]));
 	}
-	i = 2*FirstSection::NumberOfSections;
-	for (int j =0; j<2*SecondSection::NumberOfSections; j+=2)
-	{
-		sections[i+j] = w->g->render(names[(i+j)/2]);
-		sections[i+1+j] = w->g->render(deconvert<int>(gp->secondSection.sections[j/2]));
-	}
 	//names highlited
-	int a = FirstSection::NumberOfSections+ SecondSection::NumberOfSections;
+	int a = GamePoints::NumberOfSections;
 	a*=2;
-	for (i = 0; i<FirstSection::NumberOfSections+ SecondSection::NumberOfSections; i++)
+	for (i = 0; i < GamePoints::NumberOfSections; i++)
 		sections[a+i] = w->g->renderLight(names[i]);
 	
 	SDL_Surface * n = get_name();
@@ -603,31 +597,20 @@ void SetSections::process()
 					case SDLK_0: case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: case SDLK_5:
 					case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
 					{
-						if (iterSubSection >=0) //spracuj subsectiony
+						if (iterSubSection >= 0) //spracuj subsectiony
 						{
-							if (iter == 0)
-							{
-								SDL_FreeSurface(sections[iterSubSection*2+1]);
-								gp->firstSection.sections[iterSubSection]*=10;
-								gp->firstSection.sections[iterSubSection]+= key - SDLK_0;
-								sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
-							}
-							else
-							{
-								int shift = FirstSection::NumberOfSections+iterSubSection;
-								SDL_FreeSurface(sections[shift*2+1]);
-								gp->secondSection.sections[iterSubSection]*=10;
-								gp->secondSection.sections[iterSubSection]+=key - SDLK_0;
-								sections[shift*2+1] = w->g->render(deconvert<int>(gp->secondSection.sections[iterSubSection]));
-							}
+							SDL_FreeSurface(sections[iterSubSection*2+1]);
+							gp->firstSection.sections[iterSubSection]*=10;
+							gp->firstSection.sections[iterSubSection]+= key - SDLK_0;
+							sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
 							draw();
 							break;
 						}
-						if (gp->total_[iter] < 0)
+						if (gp->total_ < 0)
 						{
-							gp->total_[iter] = key - SDLK_0;
+							gp->total_ = key - SDLK_0;
 							SDL_FreeSurface(sectionPart[iter*3 + 2] );
-							sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
+							sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_).c_str() );
 							draw();
 							break;
 						}
@@ -647,14 +630,6 @@ void SetSections::process()
 								SDL_FreeSurface(sections[iterSubSection*2+1]);
 								gp->firstSection.sections[iterSubSection]/=10;
 								sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
-							}
-							else
-							{
-								int shift = FirstSection::NumberOfSections+iterSubSection;
-								SDL_FreeSurface(sections[shift*2+1]);
-								gp->secondSection.sections[iterSubSection]/=10;
-								sections[shift*2+1] = w->g->render(deconvert<int>(gp->secondSection.sections[iterSubSection]));
-							}
 							draw();
 							break;
 						}
