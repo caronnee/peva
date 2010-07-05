@@ -26,134 +26,88 @@
 %\usepackage[left=4cm]{geometry} % nastavení dané velikosti okrajů
 
 \begin{document}
-\begin{titlepage}
-\begin{center}
-\vspace{15mm}
-
-\large
-Univerzita Karlova v Praze\\
-Matematicko-fyzikální fakulta\\
-
-\vspace{5mm}
-
-{\Large\bf BAKALÁRSKA PRÁCA}
-
-\vspace{10mm}
-
-\includegraphics[scale=0.3]{logo.eps} 
-
-\vspace{15mm}
-
-{\Large Eva Pešková}\\ % doplňte vaše jméno
-\vspace{5mm}
-{\Large\bf Codewars, vojna robotov }\\ % doplňte název práce
-\vspace{5mm}
-Katedra distribuovaných a spolehlivých systémů
-\vspace{15mm}
-
-\large
-\noindent Vedúci bakalárskej práce: RNDr. Tomáš Poch
-\vspace{1mm} 
-
-\noindent Studijní program: Všeobecná informatika % doplňte odpovídající údaje
-
-\vspace{20mm}
-
-2010
-\end{center}
-\end{titlepage}
-
-\normalsize % nastavení normální velikosti fontu
-\setcounter{page}{2} % nastavení číslování stránek
-
-\ \vspace{10mm} 
-
-\noindent Ďakujem svojmu vedúcemu RNDr.Pochovi za vedenie práce, cenné rady a maximálnu ústretovosť a svojej rodine za morálnu podporu. 
-
-\vspace{\fill} % nastavuje dynamické umístění následujícího textu do spodní části stránky
-\noindent Prehlasujem, že jsem svoju bakalárskou práci napísala samostatne a výhradne s použitím citovaných prameňov. Súhlasím so zapožičovaním práce a jej zverejňovaním.
-
-\bigskip
-\noindent V Praze dne 28.5.2010 \hspace{\fill}Eva Pešková\\ % doplňte patřičné datum, jméno a příjmení
-
-%%%   Výtisk pak na tomto míste nezapomeňte PODEPSAT!
-%%%                
-
+\chapter{Uvod}
+\section{motivacia}
+\begin{itemize}
+\item vyznam hier s programovatelnymi robotmi ( napad, vyuzitie )
+\item ciel bakalarksej prace - vytvorenie hry, zameranie na boj
+\end{itemize}
+\section{ciele prace}
+\begin{itemize}
+\item vytvorenie sveta s vlastnostami, ktore by urcovali 'obtiaznost' hry
+\item pre kazdeho hraca moznost rozne konfigurovatelnej postavy, co sa vlastnosti tyka
+\item konfigurovatelna obtiaznost sveta vzhladom na napisany algoritmus
+\end{itemize}
+\chapter{Analyza}
+\section{svet}
+\subsection{Predstava sveta}
+\subsection{dynamika sveta}
+\section{Programovatelnost postavy}
+\subsection{vplyv programovatelnosti na svet}
+\subsection{prezentacia programovania}
+\subsection{Vytvorenie noveho jazyka} (norma jazyka, co sa kde smie pouzivat)
+\begin{itemize}
+\item minimalna sila jazyka, co vsetko by mal minimalne zvladat
+\item syntax jazyka
+\item priklady pouzitia (napisane algoritmy)
+\end{itemize}
+\section {Interpretacia jazyka}
+\subsection{mozne pristupy}
+\begin{itemize}
+\item cisty interprest ( mysleno nieco ako AWK, ciste text )
+\item vlastny prekladac, ale do standartneho medzikodu (WTH?) alebo sdo strojoveho kodu (x86)(net MSIL, Java BYTECODE)
+\item vlastnbe prekladac do vlastnmeho medzikodu
+\item preklad do indeho, vyssie pouzitelneho jazyka  (??)
+\end{itemize}
+\subsection{struktura jazyka vzhladom na interpret}
+\subsubsection{specifikacia instrukcii}
+\subsubsection{preklad do robotstiny}
+\subsubsection{Vysledna interpretacia}
+\chapter{Implementacia}
+\section{svet}
+\section{preklad a intepretacia}
+\chapter{porovnanie}
+\chapter{zaver}
+\section{Zhodnotenie splnitelnosti cielov}
+\section{Mozne rozsirenie do buducnosti}
 \tableofcontents
-
-\newpage % přechod na novou stránku
-
-%%% Následuje strana s abstrakty. Doplňte vlastní údaje.
-\noindent
-Název práce: Codewars, vojna robotov\\
-Autor: Eva Pešková\\
-Katedra (ústav): Katedra distribuovaných a spolehlivých systémů\\
-Vedoucí bakalářské práce: RNDr. Tomáš Poch\\
-e-mail vedoucího: tomas.poch@d3s.mff.cuni.cz \\
-
-\noindent Abstrakt: V predloženej práci navrhujeme a implementujeme prostredie pre testovanie algoritmov. Tieto algoritmy majú odrážať stratégiu použiteľnú  v rozličných bojových hrách proti umelej inteligencii. Práca analyzuje možné podmienky pre víťazstvo a vplyvy častí kódu na vykonávanie algoritmu. Súčasťou práce je návrh a implementácia vhodného jazyka. Kladie sa dôraz na jeho jednoduchosť, rozšíriteľnosť a prehľadnosť.\\
-\newline
-\noindent Klíčová slova: robot, vojna, prostredie
-
-\vspace{10mm}
-
-\noindent
-Title: Codewars, battle of robots\\
-Author: Eva Pešková\\
-Department: Katedra distribuovaných a spolehlivých systémů\\
-Supervisor: RNDr. Tomáš Poch\\
-Supervisor's e-mail address: tomas.poch@d3s.mff.cuni.cz \\
-
-\noindent Abstract: In the present work we design and implement enviroment for algorithms testing. These algorithms are supposed to be usable in various battle games where user fights againts artificial intelligence. This thesis analyses possible victory constraints and influence parts of code on achieving victory. Part of the work is also design and implementation of suitable language in which the algorithm is written. It is important for the language to be easy to learn, extensible and transparent.
-\\
-\newline
-\noindent Keywords: robot, war, enviroment
-
-\newpage
-
-\chapter{Úvod}% na com sa to skusa, preco, co je hlanym  cielom, apod.
-\input uvod.tex
-\chapter{Analýza}
-%\input sdl.tex
-\input pravidla.tex
-\input analyza.tex
-\section{Praktické využitie}
-Súčasná implementácia poskytuje dosť širokú škálu použitia:\\
-	\begin{itemize}
-	\item Testovanie umelej inteligencie, kde agent s touto umelou inteligenciou bude ovládať iba niekoľko základných príkazov.
-	\item Program môže simulovať stratégiu robota pri vykonávaní určitej úlohy. Idea vychádza z predmetu Eurobot, kde reálne zostrojený mechanický robot plní dopredu známu úlohu. Vzhľadom na rozdiel medzi aplikovaním stratégie v temer ideálnom prostredí a v praxi, nie je tento program na pre tneto predmet vhodný.
-	\item Pri istých parametroch môže simulovať pomerne zábavnú a chytľavú hru typu Herbert, ktorá bola náplňou súťaže ImagineCup pod záštitou firmu Microsoft v rokoch 2005-2008, viz\cite{simtool}. Táto hra bola neskôr nadšencami reimplementovaná v programovacom jazyku C++ pre zistenie ideálnej stratégie v tomto jednom žpecifickom prípade. %todo zistit spravne roky 
-	\item Pomocou Codewars sa dá simulovať stratégia na spôsob populárnej hry Thief - hľadanie a nasledné zničenie jedného robota ostatnými, alebo hra Capture the flag, teda prebehnutie z miesta na miesto bez toho, aby bol robot zabitý.
-	\end{itemize}
-\input porovnania.tex
-\input impl.tex
-%\chapter{Výber a popis testovaných algoritmov}
-%\section{Algoritmus 1}
-%\section{Algoritmus 2}
-%\section{Algoritmus 3}
-%\chapter{Testovanie}
-\chapter{Záver}
-Cieľom bakalárskej práce bolo implementovať také prostredie pre súboj robotov, ktoré je použiteľné pre širokú škálu požiadaviek, od testovania algoritmov pre nájdenie miest až po algoritmus, ktorý zabezpečí smrť jedného robota a pritom sa nedotkne ostatných robotov. Do veľkej miery sa toto podarilo. \\
-Aplikácia je schopná určit splnenie misií a prehľadne vypísať stav robotovej misie. Podrobné informácie o tom, ako bol vstup interpretovaný, je možné nájsť vo vygenerovanom XML skripte. Aplikácia môže fungovať ako debugger pre napísané algoritmy.\\
-Najdôležitejšou časťou práce je samotný priebeh simulácie a možnosť jeho ovlyvňovania. Simulácia prebieha diskrétne po kolách, kde množstvo toho, čo môže robot spraviť, je možné ovplyvňovať. Vzhľadom a globálne definovanie výpočtu udalostí v kolách bolo však nemožné testovať jednotlivé sposoby proti sebe.  Pre malý počet zdrojov taktík pre 2D priestor boli na aplikácií testované len vlastné algoritmy. Použiteľnosť známych taktík pre Pogamut\cite{pogamut} alebo Robocode\cite{robocode} je podmienená rozšírením.\\
-\input todo.tex
-\newpage
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}
+\addcontentsline{toc}{chapter}{\bfseries Prilohy}
 \begin{thebibliography}{99}
-\bibitem{historia}John Anderson : \emph{"Who Really Invented The Video Game?"}. Atari Magazines (http://www.atarimagazines.com/cva/v1n1/inventedgames.php),
-Retrieved November 27, 2006.
-\bibitem{bioware}Smee, Andrew (2010-02-07). \emph{"Mass Effect 3 \& Beyond"}. IGN UK. (http://xbox360.ign.com/articles/106/1066954p1.html). Retrieved September 32010.
-\bibitem{pogamut} Kadlec, R., Gemrot, J., Brom, C.:\emph{ Programování virtuálních agentů - Platforma Pogamut }, Datakon 2009, Czech Republic
 \bibitem{robocode} http://robocode.sourceforge.net/
 \bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
 \bibitem{trees}Steffen Heinz and Justin Zobel and Hugh E. Williams,
     \emph{Burst Tries: A Fast, Efficient Data Structure for String Keys},
     ACM Transactions on Information Systems, 2002,
     volume 20, pp. 192--223.
-\bibitem{umByt} predmet Umelé bytosti : \emph{http://artemis.ms.mff.cuni.cz/main/tiki-index.php?page=Teaching}
 \bibitem{vm} Tim Lindholm, Frank Yellin :\emph{The JavaTM Virtual Machine Specification, Second Edition}
 \bibitem{simtool}http://mpherbert.codeplex.com/
 \bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). \emph{ Computational Geometry (2nd revised ed.) }. Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
 \bibitem{usedPictures} Použitá galéria obrázkov: http://www.bghq.com/fft 
 \end{thebibliography}
+\appendix
+\chapter{CD}
+Prilohou bakalarskej prace je aj CD so zdrojovymi subormi.
+\section{behove prostredie}
+Pre beh aplikacie je nutne mat nainstalovane SDL verzie 1.2 alebo 1,3, (kniznu QT verzie 4), XML kniznicu libxml2 a kompiler gcc verzia 4
+\section{Instalacia}
+\begin{itemize}
+\item Pre unix -> make
+\item Pre windows -> prilozene solution
+\end{itemize}
+\section{struktura CD}
+\begin{itemize}
+\item sklada sa z tychto casti: language, image, vygenerovane subory (napisat az po upratani)
+\item pre kazdy cim sa priblizne zaobera
+\end{itemize}
+\chapter{Zoznam pojmov}
+\begin{description}
+\item[objekt]
+\item[robotstina]
+\item[postava]
+programovatelny robot, ktory sa objavi ako objekt vo svete
+\item[robopamat]
+	kvoli mylenie s pamatou fyzickou pamatou sa takto nazyva priestor, kde si postava uchovava hodnoty, ktore neskor pouzije
+\item[instrukcia]
+\end{description}
 \end{document}
