@@ -24,52 +24,195 @@
 \usepackage{psfrag}
 \usepackage{vmargin}
 %\usepackage[left=4cm]{geometry} % nastavení dané velikosti okrajů
-
 \begin{document}
 \chapter{Uvod}
-\section{motivacia}
+<v uvode nieco chyba>\\
+Codewar (war of codes) sa pouziva ako oznacenie pre sutaze, ktorych cielom je vytvorit algoritmy pomocou programovacieho jazyka a nasledne vyhodnotit podla nejakeho vzorca najlepsi(najrychlejsie napisane, pouziva najemenej premennych...). Tato bakalarska praca sa zaobera uzkou podmnozinou, a to subojmi robotov. Princip (napisat algoritmus a nasledne vyhodnotit) zostava rovnaky, to, na co sa tieto algoritmy pouziju, je vnutorna logika robota ( chodi rovne, otoci sa, zdvihne ruku...).
+\section{Motivacia}
+%preco zrovna tato praca, ake to bude fajn, ze nieco taketo bude
+Vysledkom bakalarskej prace by mal byt taky program, v ktorom je vyzvou naprogramovat robota a vpustit ho do prostredia, kde sa vyhodnocuje jeho algoritmus. Vysledny produkt ma tak prvky strategickej bojovej hry. Kedze ide o suboj, je logicke, aby sledovanie uspesnosti pozostavalo zo sledovania robota, ktory vykonava dany program. K tejto tematike existuje mnozstvo pristupov, konkretne napriklad implementovane koncepty v hrach:
 \begin{itemize}
-\item vyznam hier s programovatelnymi robotmi ( napad, vyuzitie )
-\item ciel bakalarksej prace - vytvorenie hry, zameranie na boj
+\item (pod kodovym oznacenim "povodne codewars";))ARES , co je hra, ktora sa odohrava na mieste simulujucom pamat pocitaca, ulohou hraca je naprogramovat robota v tomto prostredi. Hrac s naprogramovanym robotom prehra v okamziku, ked vstupi na policko robota, kde nie je uz ziadna instrukcia.
+\item pogamut je pre zmenu vysoko komplexna hra, kde sa roboti daju programovat v Jave, prostredie je trojrozmerne, roboti maju na vyber spustu zdrani, siroku skalu pohybov atd.
 \end{itemize}
-\section{ciele prace}
+Tieto hry uspokojujuco splnaju problematiku boja algoritmov. Uzivatel ma moznost naprogramovat postavu a  ma moznost ju vypustit do sveta proti inym postavam s inym programom(je nutne saa opakovat?). Lisia sa vsak sposobom, akym dosahuju ciel, definovanie vitazneho algoritmus, ako docielit vitazstvo, pozuzitim skodenia ostatnym robotom a podobne. Obrazok na (TODO) naznacuje zmeny, ktore boli oproti predstavenym hram spravene:
 \begin{itemize}
-\item vytvorenie sveta s vlastnostami, ktore by urcovali 'obtiaznost' hry
-\item pre kazdeho hraca moznost rozne konfigurovatelnej postavy, co sa vlastnosti tyka
-\item konfigurovatelna obtiaznost sveta vzhladom na napisany algoritmus
+\item priestor, kde sa dohravaju. Kym v ARESe ide o v postate 1d priestor ( vedna velka pamat ), boj v pogamute sa odohrava v 3d priestore. Nethack naopak pouziva 2d priestor, ale dikretny, rozdeleny na policka a casti. Variatne 3D priestoru pre codewars bola zavrhnuta pre prilisnu narocnost implemetacie, varianta s 1d zas neposkutuje prilis velky priestor pre visualizaciu a vymyslanie pohybu, preto bola zvoleny 2d priestor
+\item moznost pohybu po svete. Kym v pogamute/Unreal je pobyb vzhladom na svet velmi romanity ( skakanie do vysky, strilanie zboku, pozeranie hore/dole), v Arese sa o nejakom pohybe neda vlastne ani hovrit, pretoze vsetky akcie, ktore vykovana program. robot, je iba vykonavanie programu, co ale nesuvisi s pohybom, ale priamo so zaplnanim pamate, co je cast oddelena od pohybu
+\item najlepsi algoritmus sa lisi rovnako v zavislosti na uvazovanej hre. V ARESe je jasne, kedy hra skonci, ak hrac narazi na miesto v pamati obsadene uz niekym inym - niekto intrukciu, co tam bola, uz vyhmatol. V Pogamute je situacia o poznanie horsia. Pri programovani bota sleduje clovek, co ho chce vypustit, dva ciele-> bud naprogramovat takeho bota, ktoreho zdolat bude vyzva, alebo naopak takeho bota, o ktorom sa vseobecne vie, ze bude porazitelny, ale nie je trivialne ho obist. Codewars si za svoju hlavnu prioritu kladie programovanie boja, ktory splni kriterium, to znamena, ze kombinuje obe variantu Pogamuta(vitazny program ako najdrsnejsi bot, vitazny program ako macho-bot) a sucasne variantu a Aresa(vitazny program ako ten, co najdhsie vydrzi)
+\item Pogamut naviac od Aresa implementuje omnoho viac sposobov, ako ublizit robotovi, od roznych zbrani po odrazenie guliek. Jedonym sposobom, ako je mozne v ARESe ublizit protivnika, ne zobrat mu tu cast pamati, o ktorej je padny dovod predpokladat, ze ju bude v dohladnej dobre potrebovat. Codewars sa v tomto pripade priklana k moznosti ublizit protivnikovi aj nablizko aj zdaleka, a to tak, ze je ucinok okamzity, pretoze je to lepsie pre visualizaciu a znacne to urychli vyhodnotie.
+\item Ani jeden z tychto programov ale nema moznost specifikovat, ake budu jednotlive vlastnosti botov, ci ich skoli jedna rana v pripade pogamuta, alebo, v pripade aresa, moznost ejakeho obmedzeneho "respawnu". V bojovych hrach sa zdalo v case prace vhodne implementovat moznost pre uzivatela, aby si pred samotnym vypustenim do boja mohol tieto vlastnbosti upravit a tym zmenit priebeh bitky
+\item Dalzim dolezitym medznikom je aj sposob, v akom poradi su akcie hracov interpretovane. V arese je to jednoduche, hra prebieha po kolach, ked kazde jedno kolo znamena vykonanie aktualnej instrukcie, teda je to spravodlive pre vsetkych hracov. V pogamute sa tota spravodlivost riesi zdanlovou paralelizaciou. Kedze pri bojoch je spravodlivost vitana, bolo uznane za vhodne skombinovat tieto techniky tak, ze instrukcie sa vykonavaju nezavisle na procesorovom case, teda po kolach, ako je tomu a ARESE, ale sucasne je simulovana cena. Nastavenim ceny na jednicky sa ptoom tento koncept rovna ARESu, inym nastavenim simuluje program procesorove kvantum pridene na vykonavanie instrukcie/vlakna.
+\end{itemize}
+\section{ciele praca(iluzie)}
+\begin{itemize}
+\item vytvorenie sveta v dvojrozmernom priestore
+\item interakcia s postavami, ktore maju moznost si nejak ublizit
+\item moznost zmenit konceot sveta ( penalizacie )
+\item moznost zmenit postavu ( vlastnosti )
+\item moznost napisat algoritmus
+\item moznost testovat vitaznost algoritmu visualne, to znamena pustit robota ovladaneho tymto programom do pripraveneho prostredia
+\item moznost definovat, kedy je algoritmus vitazny
+\item moznosti roznych pristupov k ublizovaniu ( strielanie, vrhanie bomb )
+\item moznost zmeny sveta postavou
+\item moznost ovplyvnenie postavy inou postavou ( dominance! )
+\item postava bude mat moznost hybat sa
+\item postava bude mat moznost zistit, ktore objekty su v jej okoli
+\item postava bude moznost ublizit robotovi z dialky aj z blizka
+\item svet bude mozne pripravit/ vygenerovat na pozidanie hracom
+\end{itemize}
+Negativne vymedzenia, ktore vyznamym sposobom rozsiruju program generovany bakalrskou pracou a preto su uvazovane, ale pre prilisnu pracu s nimi nie je vo vyslednom programe ratane ...( co by bolo fajn ale ani omylom neplanujem, preto)
+\begin{itemize}
+\item nemoznost skakania 
+\item nemoznost zasielania sprav
+\item moznost vymienania zbrani
+\item rozne druhy zbrani
 \end{itemize}
 \chapter{Analyza}
 \section{svet}
 \subsection{Predstava sveta}
+\begin{itemize}
+\item Svet ako obal objektov, ktore v nom ziju. 
+\item Objekty, ktore by sa vzhladom na motivaciu mali vo svete bezpodmienecne vyskytovat-> ako bojova scena -> strelu, steny, ktore strely zastavuju( spokytuju krytie), postavy. motivacia k nim: steny -> zastavenie pohybu\& blokovanie striel. 
+\item V ramci stien, ktore blokuju strelu -> pohybujuce sa steny na poskytnutie ineho krytu ( styl sokoban ), rozbitne steny, nepodporena kombinacia ( implementacna narocnost )
+\item Moznost "prepasti" ako policka, kde by robot nmal vstupovat -> simulacia miny, vyssia narocnost na strategicke rozhodovanie.
+\item moznost definovania miesta, kde ma robot dorazit -> simulacia najdenia pokladu
+\end{itemize}
 \subsection{dynamika sveta}
+\begin{itemize}
+\item akcie, ktore mozu jednotlive objekty vykonavat, dovody, preco su prave tieto akcie potrebne ( strely -> litak, ok, ale odraz od steny, nicenie steny, kolidovanie a jeho vysledky )
+\item pohyb, pixelove rozlisenie vs rozlisenie na policka,  dovody vybrania pixelovej orientacie -> plynula animacia, rozhodnutie, do ktorej mriezky xco kde patri pri pohybe
+\item riesenie kolizi vzhladom na riesenie ukladania pozic, navrh algoritmu n dovody, porovnanie vykonnosti ( quadtree vs mriezkova metoda )
+\end{itemize}
+Sucastou pracu by malo byt aj generovanie map alebo iny pristup pre vytvaranie vlastnych map
+\subsection{Vytvaranie map}
+\begin{itemize}
+\item pristup ako k textovemu suboru, +/-
+\item pristup ako sucast aplikacie
+\item Algoritmus pre generovanie map, vysledkya a porovnanie pre skusane algoritmy
+\end{itemize}
 \section{Programovatelnost postavy}
-\subsection{vplyv programovatelnosti na svet}
-\subsection{prezentacia programovania}
+program ako testovanie vitazneho algoritmu ( motivacia ), za urcenych podmienok na istych mapach
+\subsection{Rozsirenie sveta vzhladom na programovatelnost}
+\begin{itemize}
+\item Pre splnenie motivacie -> nutnost  implementovat penalizacie-> zvysenie obtiaznosti naprogramovat jazyk, zvolit strategiu, ktora penalizaciu co najviac vykompenzuje. 
+\item priebeh penalizacie  - dva sposoby planovania cakania, popis
+\item mapa obohnana kontrolnymi stenami, aby sa nedostal ziadny objekt mimo mapy -> jeden z moznych pristupov
+\item nutnost definovat si podmienky. Vzhladom na objekty a miesta v mape je mozne definovat -> zabitie urcitej postavy, dostanie sa na iste miesto
+\item z toho vyplyvajuce -> kazda postava by mala mat unikatne meno. Je mozne mat stejne -> simulacia skupina zlodejov prosti policajtom, interpretacia -> skupina zlodejov po zabiti kamarada hromadne zdrhne, skupina policajtov po zisteni, ze nedokazali zabranit kradezi poda hromadnu vypoved
+\end{itemize}
+\subsection{Programovaci jazyk - moznosti}
+popis moznosti, ako jazyk intepretovat, kde sa to vyskytlo, +/-
+\begin{itemize}
+\item graficke jazyky, pomocou diagramov -> pomenre zlozita implenetacia, nutny interpret
+\item LUA - spatna implenentacia penalizacii
+\item vlastna definicia jazyka - plna kontrola pre pripadnu rozsiritelnost a penalizacie, nutny interpret
+\end{itemize}
 \subsection{Vytvorenie noveho jazyka} (norma jazyka, co sa kde smie pouzivat)
 \begin{itemize}
-\item minimalna sila jazyka, co vsetko by mal minimalne zvladat
+\item minimalna sila jazyka, co vsetko by mal minimalne zvladata(rekurzie, preco, priklad, aritmeticke, relacne opracie, continue, break, prirovnanie k inemu jazyku, nie dedicnost, nie struktury, okrem pozicei miesta) programom by mali byt zistitelne nasledujuce veci o svete
+\begin{itemize}
+\item miesto, sa postava nachadza. Zistitelna pozicia by mala byt aj u ostatnych objektov -> funkcia localize()
+\item -> poziadavka na program => definovanie struktury na urcenie pozicie -> z prezentacie sveta vyplyva -> pixelove suradnize stredu
+\item z toho vyplyvajuca premenna objekte
+\item z toho vyplyvajuce, ze musi v jazyku ecistovat premenna typu Object
+\item nove funkcie see() -> naplni pole objektov vidtelnymi objektami
+\item poziadavna na jazyk -> definovanie poli
+\item poziadavka na svet -> definovat, co je to viditelny objekt, ktory je v dosahu viditelnosti a sucasne existuje cast nezakryta opstatnymi objektami -> obr
+\item  poziadavka na moznosti pohybu, otocenia, cakania,..
+\end{itemize}
 \item syntax jazyka
+case - sensitive, dovod pre rychlejsiu implementaciu -> inak staci kazde slovo prehodit do malych/velkych pismen
+\begin{itemize}
+\item kodove slova typu this, null, for, while, repeat, real, integer, function..., tabulka vysvetleni
+\end{itemize}
 \item priklady pouzitia (napisane algoritmy)
 \end{itemize}
 \section {Interpretacia jazyka}
 \subsection{mozne pristupy}
 \begin{itemize}
-\item cisty interprest ( mysleno nieco ako AWK, ciste text )
-\item vlastny prekladac, ale do standartneho medzikodu (WTH?) alebo sdo strojoveho kodu (x86)(net MSIL, Java BYTECODE)
-\item vlastnbe prekladac do vlastnmeho medzikodu
-\item preklad do indeho, vyssie pouzitelneho jazyka  (??)
+\item cisty interpret ( mysleno nieco ako AWK, ciste text ), co sa mysli pod zistym interpretom ( ziadne dalsie upravy, ovladanie bota by sa priamo generovalo z textoveho suboru/bufferu). Spomenut rozdiel medzi skutocnymi interpretmi a intepretom v ramci programu ( u normalneho inteprpretru vyhoda s ppamovanim premennych, v ramci programu je to o zvoleni spravnej struktury ). Vyhody/nevyhody (+/-) vzhladom na vestko, aj co nakoniec nebolo implementovane:
+\begin{itemize}
+\item pomale, parsovanie kodovych slov za chodu(-)
+\item lahko implementovatelne ( spusta switchov )
+\item nie je nutne pisat ziadnu dalsiu pomocku, precuje sa iba s textom (+)
+\item mala abstrakcia
+\item referencia na najaky skutocny interpret
+\item nevyhody vzhladom na silu jazyka ( implementovanie penalizacii ) (-)
+\item nevyhody vzhladom na silu jazyka ( detekovanie premennych ) (-)
+\end{itemize}
+\item vlastny prekladac, ale do standartneho medzikodu alebo do strojoveho kodu (x86)(net MSIL, Java BYTECODE), preklad do medzikodu. Rozdiel medzi strojovy kodom a byttekodom/MSIL, priklad, ako to spracuvava Java. Ako by to vyzeralo -> spusti sa program, napise text, vygeneruje byte/strojovy kod, komunikuje medzi sebou dva programy.  Vyhody/nevyhody (+/-)
+\begin{itemize}
+\item portabilita, detaily, preco je ju nutne zmienovat 
+\item v bytekode nutnost implemenetovat sucasne penalizaciu -> nutne prekompilovat vzdy, ked sa zmeni penalizacia (-) 
+\item vyssie mnozstvo prenasanych dat ( samotny jazyk vie o stave postavy, cely stav je prenasany do mapy, kde sa vykresli ) Obrazok komunikacie
+\item (MSIL/Java bytecode) potreba nainstalovaneho prostredia (-)
+\end{itemize}
+\item vlastny prekladac do vlastneho medzikodu ( medzikod spomenuty predtym ), priblizenie prace flex + bison, +/-
+\begin{itemize}
+\item prenositelnost (+)
+\item kontrola nad kodom na softwarovej urovni (mozne zmena za behu -> vyhoda oproti strojovemu kodu), vyhodne pre rozsirenia (+)
+\end{itemize}
+\item preklad do ineho, vyssie pouzitelneho jazyka, predstava prace -> mame textak, ktory je tvoreny robotstinou. mame sustavu knzinic, ktore soracuvaju kusy robotstiny (map(postava, noze s apohni doprava) = ObjectTurnRight), "fail to see difference to bison -> uz teraz tam je vlastna klasa!"
 \end{itemize}
 \subsection{struktura jazyka vzhladom na interpret}
+pouzil sa bison + flex, predstava vyslednej cast interprtru -> rozpad robotstinu na nejake kusy
 \subsubsection{specifikacia instrukcii}
-\subsubsection{preklad do robotstiny}
+Uvahy o tom, ake velke kusku instrukcii tam maju byt:
+\begin{itemize}
+\item preklad zvlastnych instrukcii zavislych na svete ( see(), turn() ) -> jedna instrukcia, preco, ako by sa to dalo este zobecnit a preco to nie je treba ( zobecnenie na loadState, extractAbleToMove...,dovod -> zbytocna komplikacia neprispivajuca k pochopeniu jednotlivych istrukcii ), stav robota ukryty v specialnj triede, mimo pamate -> oddelenie, abstraktnych urovni
+\item preklad syntaxe normalne videnej v jazykoch -> deklarovanie premennej, aritmeticke operacie..., porovnanie instrukcii, ako ich vygeneruje napr. LUA a ako ich vygeneruje moj kod, v com sa lisia (obzvlast deklarovanie a odalokovavanie premennych, instrukcie skoku ...n)
+\item preklad zlozenych struktur (pole, location..))
+\end{itemize}
+\subsubsection{preklad z robotstiny}
+\begin{itemize}
+\item premenne akoo tie casti, co sa musia niekma ukladat, aby sa neskor zistila ich hodnota, datova struktura ukladajuca oznacene premenne
+\item drzanie hodnot premennych ( jeden uzol, ktory drzi vsetky typy, ake moze hodnota nadobudnut ), dovod ( porovnanie inych implementacii -> java)
+\item objekt instrukcie ( povidani o jednej abstraktnej triede a jej odvodeninach), kazda instrukcia ma svoju skuoinu, kde patri (stroInteger, storeReal..-> store), dovod -> rozvnaky sposob ukladania
+\item struktura, ktora drzi vsetky instrukcie
+\item specialne instrukcie vyzadujuce dalsie setrenie ( break, continue, cykly ), vo vysledku sa cykly prejdu este raz a skontroluje sa validida (ziadne NULL, nastavenie breakov a continue, preco sa toneda robit za prekladu )
+\item chybne zadany kod, moznosti, co s tym, ci pustit robotas  neuplnym kodom, ako sa bude chovat, vyhodi segfault...
+\end{itemize}
+vedlajsi ucinok -> zpatna rekonstrukcia robotstiny, ako by to vyzeraloi, vratane premennych
 \subsubsection{Vysledna interpretacia}
+popis vsetkeho, zo zatial mame z co potrebuje spolu komunikovat, lokalne zhrnutie vsetkych casti. Rozveedenie komunikacie jednotlivych casti:
+\begin{itemize}
+\item permanentne sa vykresluje mapa. Sme v nejakom stave sveta (svat = objekty a ich pozicia), zobrazenie znamena zistit, ci sa objekt ma prekreslit (flag) a nasledne tu cast vykreslit, Problemy SDL s blitovanim ( pomale ). Plus cakanie na uzivatelsky vstup -> jeden nekonecny cyklus.
+\item dynamicnost -> v nekonecnom cykluse volat planovac postavy -> postava zmeni svoj stav
+\item priebeh planovaca, ako je popisany predtym ( pri konstrukcii penalizacii ) -> stav ready/not ready. Ak je v stave ready, vykona instrukciu, najde penalizacne body (popisane neskor). spracuje ich podla svojho sposobu
+òm struktura pre penalizzcie ->  globalna, dovod (implementovatelnost+motivacia hry -> vyuzivanie kiektorych instrukcii menej, fair play), jedno pole, pristup = id skupiny instrukcii
+\item vykoanie jednej instrukcie = volanie jednej virtualnej metody
+\item praca s premennymi, ukladanie premennych na hodnotovy zasobnik a neskorsia praca s nimi,
+\item instruckia beginblock, createblock, endblock, vytvaranie premennych, vytvorenie miesta v pamati, dealokacia po opustenie bloku, preco dealokacia vsetkeho
+\end{itemize}
 \chapter{Implementacia}
+Technicke detaily -> Implementacia programu, SDL a cakanie na vstup uzivatela, rozdelenie na komponenty
 \section{svet}
+\begin{itemize}
+\item cyklus vykreslovania ( nekonecne volanie )
+\item mriezkova metoda na ukladanie objetov
+\item prekreslovanie iba casti obrazkov, sposob, akym  sa obrazaok prekresli ( nastreli sa tam pozadie o velkosti min/max ), ciastocny update, vysledne zruchlenie, predenie vsetkcyh mriezok
+\item riesenie kolizii vzhladom na pozuuity algoritmus detekovania kolizii
+\item riesenie situacie, ked postava vujde mimo hracieho
+\item vykreslovanie vyrezy mapy ( mapa vacsia ako maximum obrazovky)
+\item vykreslovanie obrazkov pomocou triedy imageWork -> ulozenie vsetkych stavov do jedneho obrazka a posuvanie vyrezov
+\end{itemize}
 \section{preklad a intepretacia}
+architektura prekladaca a interpretra, 
+\nopagebreak
 \chapter{porovnanie}
+\begin{itemize}
+\item podobne veci s prgramovatelnymi robotmi ->povodne Codewars ako bojuvka
+\item spojenie principu bojuvku a prvkov podmienok
+\item niekde inde zavisle instrucie, penalizacia
+\end{itemize}
 \chapter{zaver}
 \section{Zhodnotenie splnitelnosti cielov}
 \section{Mozne rozsirenie do buducnosti}
+\begin{itemize}
+\item posielanie zprav mediz robotmi, co to zlepsi-> implementovanie pocutia
+\item udalosti on event...
+\end{itemize}
 \tableofcontents
 \addcontentsline{toc}{chapter}{\bfseries Literatúra}
 \addcontentsline{toc}{chapter}{\bfseries Prilohy}
@@ -84,6 +227,7 @@
 \bibitem{simtool}http://mpherbert.codeplex.com/
 \bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). \emph{ Computational Geometry (2nd revised ed.) }. Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
 \bibitem{usedPictures} Použitá galéria obrázkov: http://www.bghq.com/fft 
+\bibitem {codewars} http://thegeekdistrict.com/topic/23-ares-codewar-and-other-programming-games/
 \end{thebibliography}
 \appendix
 \chapter{CD}
@@ -93,7 +237,7 @@ Pre beh aplikacie je nutne mat nainstalovane SDL verzie 1.2 alebo 1,3, (kniznu Q
 \section{Instalacia}
 \begin{itemize}
 \item Pre unix -> make
-\item Pre windows -> prilozene solution
+\item Pre windows -> prilozene solution ( progressing )
 \end{itemize}
 \section{struktura CD}
 \begin{itemize}
@@ -108,6 +252,6 @@ Pre beh aplikacie je nutne mat nainstalovane SDL verzie 1.2 alebo 1,3, (kniznu Q
 programovatelny robot, ktory sa objavi ako objekt vo svete
 \item[robopamat]
 	kvoli mylenie s pamatou fyzickou pamatou sa takto nazyva priestor, kde si postava uchovava hodnoty, ktore neskor pouzije
-\item[instrukcia]
 \end{description}
+%http://blogs.sun.com/yj/entry/yet_another_way_to_hack (jak na bytecode)
 \end{document}
