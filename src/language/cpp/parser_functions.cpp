@@ -23,7 +23,7 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 	Node *n = r->find_var(s, ok); 
 	if (!ok)
 	{
-		r->error(line,Robot::Robot::ErrorVariableNotFound, '\''+s+'\'');
+		r->error(line,Robot::ErrorVariableNotFound, '\''+s+'\'');
 		st.output.push_back(*r->find_type(TypeUndefined));
 		return st;
 	}
@@ -458,7 +458,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				break;
 			}
 		default:
-			r->error(line, Robot::Robot::ErrorOperationNotSupported);
+			r->error(line, Robot::ErrorOperationNotSupported);
 	}
 	return ee;
 }

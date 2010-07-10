@@ -61,6 +61,6 @@ int toDegree(float angle);
  * @brief converts @param angle to @return 
  * positive float number representing radians 
  * */
-float toRadians(int angle);
+double toRadians(int angle);
 
 #endif

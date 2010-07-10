@@ -9,8 +9,8 @@ public:
 	/* how much the snake tend to go this way */
 	int addiction; 
 
-	/* aktual direction*/
-	int x, y,;
+	/* actual direction*/
+	int x, y;
 
 	/* upper bound for checking determining next move according to random numbur in interval (0-100). we choose to go this direction, if random numebr is less than interval. The less upper bound the more pririty has dorection  */
 	int interval;	

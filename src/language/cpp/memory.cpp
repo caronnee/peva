@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include "../h/memory.h"
 #include "../../add-ons/h/macros.h"
 #include "../h/types.h"

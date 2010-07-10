@@ -7,8 +7,8 @@
 #include <queue>
 #include "../h/lval.h"
 #include "../h/robot.h"
-#include "../h/parser_functions.h"
 #include "../h/hflex.h"
+#include "../h/parser_functions.h"
 #include "../../add-ons/h/macros.h"
 
 #define YYSTYPE Lval 

@@ -1539,7 +1539,7 @@ int InstructionRandom::execute (Core * c)
 {
 	Variable * v;
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
-	v->integerValue = random ();
+	v->integerValue = rand();
 	c->values.push_back(v);
 	return 0;
 }

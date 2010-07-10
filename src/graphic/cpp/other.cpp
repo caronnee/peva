@@ -478,7 +478,7 @@ void SetSections::draw()
 
 	r.y += w->g->font_size*4+BEGIN_Y;
 	r.x = BEGIN_X;
-	for (int i =0; i< 2*FirstSection::NumberOfSections; i+=2)
+	for (int i =0; i< 2*GamePoints::NumberOfSections; i+=2)
 	{
 		SDL_Rect sctrct = r;
 		sctrct.x = BEGIN_X;
@@ -487,28 +487,18 @@ void SetSections::draw()
 		sctrct.x += sections[i]->w + BEGIN_X;
 		SDL_BlitSurface(sections[i+1],NULL,w->g->screen, &sctrct);
 	}
-	int j = 2*FirstSection::NumberOfSections;
-	for (int i =0; i< 2*SecondSection::NumberOfSections; i+=2)
-	{
-		SDL_Rect sctrct = r;
-		sctrct.x = BEGIN_X + w->g->screen->w/2;
-		sctrct.y += i*w->g->font_size;
-		SDL_BlitSurface(sections[i+j],NULL,w->g->screen, &sctrct);
-		sctrct.x += sections[i+j]->w + BEGIN_X;
-		SDL_BlitSurface(sections[i+j+1],NULL,w->g->screen, &sctrct);
-	}
 	//iter subsection
 	if (iterSubSection>=0)
 	{
 		SDL_Rect chrct = r;
 		chrct.x = BEGIN_X;
 		chrct.y += 2*iterSubSection*w->g->font_size;
-		int sect = FirstSection::NumberOfSections + SecondSection::NumberOfSections;
+		int sect = GamePoints::NumberOfSections;
 		sect *=2;
 		if (iter == 1)
 		{
 			chrct.x+= w->g->screen->w/2;
-			sect += FirstSection::NumberOfSections;
+			sect += GamePoints::NumberOfSections;
 		}
 		sect+=iterSubSection;
 		SDL_BlitSurface(sections[sect], NULL, w->g->screen, &chrct);
@@ -525,8 +515,8 @@ void SetSections::init()
 	{
 		sectionPart[i] = w->g->render("Section:"+deconvert<int>(i/3));
 		sectionPart[i+1] = w->g->renderLight("Section:"+deconvert<int>(i/3));
-		std::string s = deconvert<int>(gp->total_[i/3]);
-		if (gp->total_[i/3] < 50)
+		std::string s = deconvert<int>(gp->total_);
+		if (gp->total_ < 50)
 			s = "Do not check";
 		sectionPart[i+2] = w->g->render( s );
 	}
@@ -537,13 +527,13 @@ void SetSections::init()
 	//prva sekcia
 	std::string names[] = {"hitpoints", "memory","angle", "misilles", "missilles attack","missilles hitpoints","speed","defense","attack"};
 
-	sections = new SDL_Surface *[3*(FirstSection::NumberOfSections+ SecondSection::NumberOfSections)];
+	sections = new SDL_Surface *[3*(GamePoints::NumberOfSections)];
 	//blit FIXME center
 	int i=0;
 	for ( i =0; i< 2*GamePoints::NumberOfSections; i+=2)
 	{
 		sections[i] = w->g->render(names[i/2]);
-		sections[i+1] = w->g->render(deconvert<int>(gp->firstSection.sections[i/2]));
+		sections[i+1] = w->g->render(deconvert<int>(gp->sections[i/2]));
 	}
 	//names highlited
 	int a = GamePoints::NumberOfSections;
@@ -568,7 +558,7 @@ void SetSections::init()
 
 void SetSections::process()
 {
-	SDLKey key;
+	/*SDLKey key;
 	Uint8 type;
 	bool d = false;
 	bool down = false;
@@ -600,9 +590,9 @@ void SetSections::process()
 						if (iterSubSection >= 0) //spracuj subsectiony
 						{
 							SDL_FreeSurface(sections[iterSubSection*2+1]);
-							gp->firstSection.sections[iterSubSection]*=10;
-							gp->firstSection.sections[iterSubSection]+= key - SDLK_0;
-							sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
+							gp->sections[iterSubSection]*=10;
+							gp->sections[iterSubSection]+= key - SDLK_0;
+							sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->sections[iterSubSection]));
 							draw();
 							break;
 						}
@@ -614,8 +604,8 @@ void SetSections::process()
 							draw();
 							break;
 						}
-						gp->total_[iter] *=10;
-						gp->total_[iter] += key - SDLK_0;
+						gp->total_ *=10;
+						gp->total_ += key - SDLK_0;
 						SDL_FreeSurface(sectionPart[iter*3 + 2] );
 						sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
 						draw();
@@ -722,7 +712,7 @@ void SetSections::process()
 				break;
 			}
 		}	
-	}
+	}*/
 }
 
 void SetSections::clean()
@@ -732,7 +722,7 @@ void SetSections::clean()
 		SDL_FreeSurface(sectionPart[i]);
 		sectionPart[i] = NULL;
 	}
-	int hlp = FirstSection::NumberOfSections + SecondSection::NumberOfSections;
+	int hlp = GamePoints::NumberOfSections;
 	for (int i =0; i< 3*hlp; i++ )
 		SDL_FreeSurface(sections[i]);
 	delete []sections;

@@ -6,11 +6,7 @@
 
 GamePoints::GamePoints(int total)
 {
-	for(size_t i =0; i< FirstSection::NumberOfSections; i++)
-	{
-		sections[i] = 0;
-	}
-	for(size_t i =0; i< GamePoints::NumberOfSections; i++)
+	for(size_t i =0; i< NumberOfSections; i++)
 	{
 		sections[i] = 0;
 	}
@@ -19,23 +15,23 @@ GamePoints::GamePoints(int total)
 
 void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME dalsia volba, aby to doplnovalo
 {
-	sections[Sections::SectionAngle] = min<int>(MAX_EYE_ANGLE,sections[FirstSection::SectionAngle]);
+	sections[GamePoints::SectionAngle] = min<int>(MAX_EYE_ANGLE,sections[GamePoints::SectionAngle]);
 
 	int todo = total_;
 
 	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		if (sections[i] > total_[0])
-			sections[i] = total_[0];
+		if (sections[i] > total_)
+			sections[i] = total_;
 		todo -= sections[i];
 	}
-	if (total_[0] < MININUM_SECTION)
+	if (total_ < MININUM_SECTION)
 		todo = 0;
 
 	int done = 0;
 	for (int i = 0; i < NumberOfSections; i++)
 	{
-		int minus = sections[i]*total_[0]/todo; //negative
+		int minus = sections[i]*total_/todo; //negative
 		done += minus;
 	}
 	todo += done; //how much should we do
@@ -90,8 +86,8 @@ void Body::init(GamePoints g, int v)
 	points = g;
 	turn(0);
 	/* information from firt section */
-	seer.setEyes(g.firstSection.sections[FirstSection::SectionAngle],v);
-	hitpoints = g.firstSection.sections[FirstSection::SectionHitpoints];
+	seer.setEyes(g.sections[GamePoints::SectionAngle],v);
+	hitpoints = g.sections[GamePoints::SectionHitpoints];
 	movement.speed = g.sections[GamePoints::SectionSteps]%100;
 
 
@@ -453,7 +449,7 @@ int Body::getDirection(Position position)
 	Position t(movement.direction);
 	float f;
 
-	int dotProd = sqrt(p.x * p.x + p.y*p.y)*sqrt(t.x*t.x+t.y*t.y);
+	int dotProd = sqrt((double)p.x * p.x + p.y*p.y)*sqrt((double)t.x*t.x+t.y*t.y);
 	if (dotProd == 0)
 		return 0;
 
