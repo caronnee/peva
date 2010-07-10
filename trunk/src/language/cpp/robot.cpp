@@ -305,7 +305,7 @@ bool Robot::action(bool & conditions)
 	}
 	return getBody()->alive();
 }
-Robots::Robots() :points(0,0){ }
+Robots::Robots() :points(0){ }
 
 Skin * Robots::addSkin(std::string name)
 {

@@ -5,10 +5,10 @@
 
 int toDegree( float angle )
 {
-	return angle * 180 / PI;
+	return (int)(angle * 180 / PI);
 }
 
-float toRadians( int angle )
+double toRadians( int angle )
 {
-	return (float)angle * PI /180;
+	return (double)angle * PI /180;
 }

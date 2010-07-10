@@ -55,8 +55,8 @@ void Seer::setEyes(Position eyeDimension)
 		eyeDimension.x*=-1;
 	if (eyeDimension.y <0)
 		eyeDimension.y *=-1;
-	size = sqrt(eyeDimension.x*eyeDimension.x+eyeDimension.y+eyeDimension.y);
-	float a = tan(eyeDimension.y / eyeDimension.x);
+	size = sqrt((double)eyeDimension.x*eyeDimension.x+eyeDimension.y+eyeDimension.y);
+	float a = tan((double)eyeDimension.y / eyeDimension.x);
 	angleBegin_ = PI/2 - a;
 	angleEnd_ = PI/2 + a;
 	reset(0.0);

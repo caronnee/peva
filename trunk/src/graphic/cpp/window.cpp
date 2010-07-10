@@ -40,7 +40,7 @@ Setting::Setting()
 	for (int i =0; i< SECTIONS; i++)
 	{
 		input.ignore(256,' ');
-		input >> gamePoints.total;
+		input >> gamePoints.total_;
 	}
 	for (int i =0; i< GamePoints::NumberOfSections; i++)
 		input >> gamePoints.sections[i];

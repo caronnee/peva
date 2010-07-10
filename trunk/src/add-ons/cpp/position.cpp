@@ -73,12 +73,12 @@ Position& Position::substractVector( Position p2 )
 }
 Position& Position::turn(int degree)
 {
-	return turn(degree, sqrt(x*x + y*y));
+	return turn(degree, sqrt((double)(x*x + y*y)));
 }
 Position& Position::turn(int degree, int size)
 {
-	x = cos( toRadians(degree) ) * size;
-	y = sin( toRadians(degree) ) * size;
+	x = (int)cos( toRadians(degree) ) * size;
+	y = (int)sin( toRadians(degree) ) * size;
 	return *this;
 }
 

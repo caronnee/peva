@@ -75,7 +75,7 @@ TrapWall::TrapWall(Skin * s, List * abyss) : Wall(s, abyss)
 	defense = 0;
 	attack = 10;
 	hitpoints = 100;
-	invisible = random()%2;
+	invisible = rand()%2;
 	name = "TrapWall";	
 }
 bool TrapWall::is_blocking()
@@ -86,7 +86,7 @@ bool TrapWall::is_blocking()
 //FIXME nesmu sa prekryvat
 void TrapWall::hitted(Object *o, Position p, int oAttack)
 {
-	invisible = random()%3;
+	invisible = rand()%3;
 	if (invisible)
 		return;
 	o->hitted(this, movement.direction, attack);

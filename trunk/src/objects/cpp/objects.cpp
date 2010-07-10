@@ -285,15 +285,15 @@ Dummy::Dummy() : Object(NULL, NULL)
 
 int Dummy::Hit() const
 {
-	return random()%100;
+	return rand()%100;
 }
 
 bool Dummy::isMoving()
 {
-	return random()%2;
+	return rand()%2;
 }
 
 Position Dummy::get_pos() const
 {
-	return Position (random(),random());
+	return Position (rand(),rand());
 }

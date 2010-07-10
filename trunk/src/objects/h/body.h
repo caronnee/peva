@@ -30,7 +30,7 @@ struct GamePoints
 	};
 	int total_;
 	GamePoints(int total = 0 );
-	int sections[Sections::NumberOfSections];
+	int sections[NumberOfSections];
 	void check();
 };
 

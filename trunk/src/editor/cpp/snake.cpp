@@ -1,6 +1,7 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <time.h>
 #include "../h/snake.h"
 #include "../../add-ons/h/macros.h"
 #include "../../add-ons/h/help_functions.h"
