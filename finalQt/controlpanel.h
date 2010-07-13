@@ -4,21 +4,23 @@
 #include <vector>
 #include <QtGui/QMainWindow>
 #include "ui_controlpanel.h"
+#include <QScrollArea>
 #include "ui_instructions.h"
 
 class controlPanel : public QMainWindow
 {
 	Q_OBJECT
 
-		public slots:
-			void mySet();
-public:
+public slots:
+	void mySet();
 
+public:
 	controlPanel(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~controlPanel();
 
 private:
-	QWidget* myCentral;
+	QWidget * myCentral;
+	QWidget * scrollAreaWidgetContents;
 	QMainWindow * insWin;
 	Ui::controlPanelClass ui;
 	Ui::Instruction ins;
