@@ -1,7 +1,0 @@
-robot w
-{
-	main()
-	{
-		bbb = a;
-	}
-}
