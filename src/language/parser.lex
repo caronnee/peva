@@ -4,7 +4,6 @@
 %option never-interactive
 %option 8bit
 %option nounput
-%option header-file="../h/hlex.h"
 
 %x COMMENT_LINE
 %x COMMENT
