@@ -18,6 +18,7 @@ public:
 	~controlPanel();
 
 private:
+	QWidget* myCentral;
 	QMainWindow * insWin;
 	Ui::controlPanelClass ui;
 	Ui::Instruction ins;

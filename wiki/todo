@@ -1,0 +1,35 @@
+Programatorska dokumentacia
+uzivatelska dokumentacia
+
+Program------
+	Uvod:
+	pri znovu inicializovani (2x play za sebou) spadne)
+	pri play vypytat si meno subora
+	pri dvoch escapoch segfaoult -> dovodom je nebezpecne si predavanie stavu 
+	v settingu nastavitpocet bodov, na ktory sa hra, defaultny adresar, kde sa hladaju mapy...
+	brat pri generovani veci zo settings(subor)
+Priebeh:
+	telo 'robota' sa nevie odrazat od steny, obzvlas, ked koliduje s viacerymi			FIXED
+	treba doimplementovat funkciu see, ktora naplni robotov zorny pohlad (cast spraena v seer.cpp
+	otestovat kolizie s roznymi objektami
+	dotestovat, ci ked splni ciel cesty, zastavi sa
+	ked je posledny robot alebo niekolko robotov na splnene ciele, vykreslit hlasku o tom, ako to dopadlo
+	inicializovanie robotov na polickach urcenych mapou alebo nahodne
+	po stlaceni tabelatora vykreslit cast obrazovku so stredom nasledujuceho robota
+	rucne posuvanie vyseku, kde prebieha vykreslovanie
+	pri podmienke KILL vyhladat robota podla mena							
+	umiesnit robotov nahodne alebo na casti, ktore su oznacene ako startovne
+
+Generovanie mapy, soplnit:
+	save generovanej mapy v textovom formate 
+	load generovanej mapy pri play
+	load mapy do editora
+	definovanie ciela v editor, vygenerovanie jehi cisla a jeho nasledne pouzitie v mape ( vyhladavanie pri generovani robota)
+Kod:
+	dat dolezite polozky do private vymysliet k nim vhodne metody
+	komentare k funkciam
+Bakalarska praca:
+	nast a odskusat akgoritmy typu A-star, porovnat so znamymi vysledkami
+	 dopisat vysledky, model sveta
+
+
