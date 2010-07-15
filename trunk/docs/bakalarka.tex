@@ -13,89 +13,89 @@
 \begin{document}
 \chapter{Úvod}
                                    
-Cieľom tejto bakalárskej práce bolo vytvoriť taký program/hru, ktorý by koncového úživateľa donútil nenásilne a zábavne premýšľať jednotlivé kroky a postupy vo vybranej hre, ktoré sú podmienené množinou možných stratégií, a takto súčasne testovať svoje vlastné schopnosti pri vymyslani strategie.
+Cielom tejto bakalarskej práce bolo vytvorit taky program/hru, ktory by koncoveho uživatela donutil nenasilne a zabavne premyslať jednotlive kroky a postupy vo vybranej hre, ktoré su podmienené mnozinou možnych strategii, a takto sučasne testovat svoje vlastne schopnosti pri vymyslani strategie.\\
 
 Bakalarska praca vychadza z programu Karel, ktory bol urceny pre vyucbu programovacieho jazyka. Karel je robot, ktory sa pohybuje vo svojom virtualnom svete. Pouzivatelovi ma umoznit jednoduchou formou napisat program, ktory bude Karel vykonavat. Cielom bakalarskej prace je rozsirit tento koncept o naprogramovanie viacerych robotov ktori si mozu navzajom ublizovat. Takto rozsireny Karel ziskava koncept strategickej hry, pricom samostatna strategia je zavisla na algoritmoch chovania sa robotov vo virtualnom svete. Z toho vyplyva nazov prace CodeWars - vojna algoritmov - aj ked sa tento pojem pouziva v sirsom kontexte.\\
-Pod problematikou boja algoritmov tu budeme rozumiet zistenie uspesnosti algoritmu vzhladom na zadane kriteria boja v dopredu urcenom spolocnom prostredi pre robotov. \\
-Vysledkom bakalarskej prace bude taky program, v ktorom je vyzvou naprogramovat robota a vpustit ho do virtualneho prostredia, kde sa chova podla napisaneho algoritmu. Sledovanie uspesnosti pocas zivota potom pozostava v sledovani chovania robota. Z toho vyplyva narok na prostredie, v ktorom sa bude simulacia - suboj robotov - odohravat. \\
-
+Pod problematikou boja algoritmov tu budeme rozumiet zistenie uspesnosti algoritmu vzhladom na zadane kriteria boja v dopredu urcenom spolocnom prostredi pre robotov. Uspesny algoritmus je taky, ktory vyhovie vsetkym kriteriam. Hodnotenie poradia spomedzi uspesnych algoritmov zavisi na vyhodnocovacej funkcii ( napr. najrychlejsie napisany program, ktoreho vystupom je najkratsia cesta v sieti, program pouzivajuci najmenej premennych, ktoreho vystupom je triedenie atd. ) \\
+%Takze uz tu sme na to narazili, takze sem;)
+Vysledkom bakalarskej prace bude taka aplikacia, v ktorej je vyzvou naprogramovat robota(agenta) a vpustit ho do virtualneho prostredia, kde sa chova podla napisaneho algoritmu. Nepredpoklada sa znalost algoritmov supera ani kooperacia s ostatnymi robotmi. Sledovanie uspesnosti algoritmu pocas zivota potom pozostava v sledovani chovania robota.\\
 \section{Motivacia}
 %preco zrovna tato praca, ake to bude fajn, ze nieco taketo bude
-K tematike celkoveho ponatia virtualneho sveta robotov existuje niekolko pristupov. Prikladmi konkretneho dizajnu su nasledujuce hry:
+K tematike celkoveho chapania virtualneho sveta robotov existuje niekolko pristupov. Objasnime ich na nasledujucich hrach:
 \begin{itemize}
-\item ARES - hra sa odohrava na mieste simulujucom pamat pocitaca. Ulohou hraca je naprogramovat robota v tomto prostredi. Principom je vykonavanie instrukci a zistovanie, ktora postupnost prikazov sa bude vykonavat najdlhsie. Program skonci v okamihu, ked v mieste v pamati, ktoru okupuje, nie je ziadna instrukcie, ale len data. Program tak nema co vykonavat. Cielom je teda ukoncit program - suvisly sled instrukcii - protihraca pomocou zmien obsahu v pamati, na ktoru obaja hraci pristupuju.
-\item POGAMUT je uz vysoko komplexna hra, kde sa roboti daju programovat v Jave, prostredie je trojrozmerne, roboti maju na vyber mnozstvo zbrani, siroku skalu pohybov atd, hrac ma dokoca moznost interaktivne bojovat proti naprogramovanemu robotovi a tym otestovat vhodnost jeho algoritmu.
+\item ARES je hra dvoch  hracov . Odohrava sa na mieste simulujucom pamat pocitaca. Ulohou hraca je naprogramovat robota v tomto prostredi. Principom je vykonavanie instrukci a zistovanie, ktory program  sa bude vykonavat najdlhsie. Program skonci v okamihu, ked sa program pokusi vykonat neplatnu intrukciu ( napr. delenie nulou ). Program tak nema co vykonavat. Cielom je teda ukoncit program protihraca pomocou zmien obsahu v pamati, na ktoru obaja hraci pristupuju. % TODO rozviest
+\item POGAMUT je uz vysoko komplexna hra n robotov. Algoritmy sa daju programovat v Jave, prostredie je trojrozmerne, roboti maju na vyber mnozstvo zbrani, siroku skalu pohybov atd. Hrac ma dokoca moznost rucne riadit vlastneho robota proti naprogramovanemu a tym otestovat vhodnost jeho algoritmu.
 \end{itemize}
-Uvedene hry uspokojujuco splnaju zakladnu problematiku boja algoritmov. Rozumie sa tym navzajom superiacich algoritmov na zaklade zvolenych kriterii.  Hrac ma moznost naprogramovat postavu a  ma moznost ju vypustit do sveta proti inym postavam s inym programom. Lisia sa vsak sposobom, akym dosahuju ciel, definovanim podmienok vitazneho algoritmu, strategiami ako docielit vitazstvo, pouzitym sposobom skodenia ostatnym robotom atd. \\
-Preto sa dalej budeme podrobnejsie zaoberat analyzou niektorych hier CodeWars na zaklade nasledujucich charakteristik:
+Uvedene hry uspokojujuco splnaju zakladnu problematiku boja algoritmov. V ARESe je kriteriom zostat nazive, v POGAMUTe je naviac vopred dane kriticke mnozstvo protivnikom. Prvy, kto tieto kriteria splni, je vitazom.\\
+Lisia sa vsak sposobom, akym dosahuju ciel, definovanim podmienok vitazneho algoritmu, strategiami ako docielit vitazstvo, pouzitym sposobom skodenia ostatnym robotom atd. \\
+Dalej sa budeme podrobnejsie zaoberat analyzou niektorych hier CodeWars na zaklade nasledujucich charakteristik:
 \begin{description}
-\item[Priestor hier] Kym v ARESe ide o 1D priestor ( jedna velka pamat - pole), boj v POGAMUTe sa odohrava v 3D priestore. S tym suvisi pohyb po svete. 3D priestor ma omnoho viac moznosti, ako poznat pohyb. Je nutne sa zamysliet nad tym. ci bude povolene lietanie, padanie, pohlad zhora, zdola, vrhanie zbrani zboku, smeru, v ktorych sa objekty sveta odrazaju a podobne. V ARESe sa o pohybe, ako ho pozname ( plynuly prechod z miesta A na miesto B ) neda ani hovorit, pretoze vsetky akcie suviace so svetom su instrukcie a pohyb v pamati. 
-\item[Hodnotenie algoritmu]. V ARESe je jasne, ze hra skonci, ked hrac nedokaze nadalej vykonavat svoj program . V Pogamute je situacia o poznanie horsia: Pri programovani robota sleduje programator dva ciele (a) bud naprogramovat takeho robota, ktoreho zdolat bude vyzva, alebo (b) naopak takeho robota, o ktorom sa vseobecne vie, ze sice bude porazitelny, ale nie je lahke ho obist.
-\item[Sposoby dosiahnutia vitazstva]
-Pogamut naviac od Aresa implementuje omnoho viac sposobov, ako ublizit robotovi, od roznych zbrani po odrazenie guliek, rychleho spadnutia a zem atd. Jedinym sposobom, ako je mozne v ARESe ublizit protivnikovi, je zobrat mu tu cast pamati, o ktorej je padny dovod predpokladat, ze ju bude v dohladnej dobre potrebovat. Vysledne hodnotenie algoritmu nie je tak mozne po castiach, ale az po skonceni celej simulacie. V pogamute je mozne rozlisit  %uz z toho bude pekny odstavec - no jo, a co s tym? }
-\item [Spravodlivost vykonavania programu] Dalsim pristupom, ktory je v reprezentacii sveta dolezity, je aj sposob, v akom poradi su akcie hracov interpretovane. V ARESe je to jednoduche, hra prebieha po kolach, ked kazde jedno kolo znamena vykonanie aktualnej instrukcie, teda je to spravodlive pre vsetkych hracov. V pogamute je nutne zaistit zdanie paralelizacie, aby robot 
+\item[Priestor hier] Kym v ARESe ide o 1D priestor ( jedna velka pamat - pole), boj v POGAMUTe sa odohrava v 3D priestore. S tym suvisi pohyb po svete. 3D priestor ma omnoho viac moznosti, ako realizovat pohyb. Je nutne zvazit, ci bude povolene lietanie, padanie, pohlad zhora, zdola, vrhanie zbrani zboku, a v akych smeroch sa objekty sveta odrazaju a podobne. V ARESe sa o pohybe, ako ho pozname ( plynuly prechod z miesta A na miesto B ) neda ani hovorit, pretoze vsetky akcie suviace so svetom su instrukcie a zmeny v pamati. 
+\item[Kriteria uspesnosti]. V ARESe je jasne, ze hra skonci, ked hrac nedokaze nadalej vykonavat svoj program . V POGAMUTe je situacia o poznanie horsia: Pri programovani robota sleduje programator(hrac) dva ciele (a) bud naprogramovat takeho robota, ktoreho zdolat bude vyzva, alebo (b) naopak takeho robota, o ktorom sa vseobecne vie, ze sice bude porazitelny, ale nie je lahke ho obist.
+\item[Sposoby boja]
+POGAMUT naviac od ARESa implementuje omnoho viac sposobov, ako ublizit robotovi, od roznych zbrani po odrazenie guliek, rychleho spadnutia a zem atd. Jedinym sposobom, ako je mozne v ARESe poskodit protivnikovi, je zobrat mu tu cast pamati, o ktorej je padny??? dovod predpokladat, ze ju bude v dohladnej dobe potrebovat. Vyhodnotenie algoritmu nie je tak mozne po castiach, ale az po skonceni celej simulacie. V POGAMUTe je mozne rozlisit  uz v priebehu simulacie, ako robot zasahuje protivnika.
+\item [Vykonavanie programu] Dalsim pristupom, ktory je v reprezentacii sveta dolezity, je aj sposob, v akom poradi su akcie hracov interpretovane. Aby ostatni hraci neboli znevyhodneny, je vhodne vykonavat jednotlive casti nezavisle na ostatnych robotov podla jednotnych pravidiel pre vsetkych. V ARESe je to jednoduche, hra prebieha po kolach. Kazde kolo znamena vykonanie aktualnej instrukcie, co je to spravodlive pre vsetkych hracov. V POGAMUTe je nutne zaistit paralelizaciu, aby robot nebol zavisly na vykonavani programu ostanych robotov.
 \end{description}
-\section{Ciele prace (iluzie?)}% tie iluzie pre veducich, a mne sko pomocka nebude to tam
+\section{Ciele prace (iluzie?)}% tie iluzie pre veducich, a mne ako pomocka nebude to tam
 Na zaklade analyzy vyssie uvedenych pristupov k CodeWars boli vytipovane  tieto ciele:
 \begin{description}
 \item [Reprezentacia sveta]
-Svet bude realizovany v dvojrozmernom priestore. Sucastou sveta budu objekty, ktore interaguju s robotmi a prinasaju tak do vymyslania strategii komplikovanejsie prvky. V ARESe su reprezentuju tieto objekty data ulozene vo svete ( pamati ), v pripade POGAMUTa su to steny, teleporty, priepasti, strely a pod. Treba tiez vymedzit a implementovat take objekty do sveta, ktore prispievaju ku vymyslaniu sofistikovanejsich strategii. To zahrna napriklad steny a ich vlastnosti, mozu byt priehladne z jednej strany alebo z oboch alebo zo ziadnej, ci existuju tiez predmety na dobijani zdravia, streliva a pod. Predpoklada sa, ze taky svet bude mozne vygenerovat.
+Naprogramovany robot by mal zit vo svete, kde je jednoduche sledovat jeho algoritmus. Z toho vyplyva narok na prostredie, v ktorom sa bude suboj robotov odohravat. \\
+Svet bude realizovany v dvojrozmernom priestore. Sucastou sveta budu objekty, ktore interaguju s robotmi a prinasaju tak do vymyslania strategii komplikovanejsie prvky. V ARESe reprezentuju tieto objekty data ulozene vo svete ( pamati ), v pripade POGAMUTa su to steny, teleporty, priepasti, strely a pod. Treba tiez vymedzit a implementovat take objekty do sveta, ktore prispievaju ku vymyslaniu sofistikovanejsich strategii. To zahrna steny a ich vlastnosti, napr. priehladnost, existencia predmetov na dobijani zdravia, streliva a pod. Predpoklada sa, ze taky svet bude mozne vygenerovat.
 \item [Dynamika sveta] 
-Programovani roboti budu mat moznost bojovat t.j. si ublizit a vysledok utoku bude znamy okamzite. Roboti vo svete sa budu pohybovat vsetkymi smermi a interagovat s ostatnymi objektami vo svete.
-\item [Zmysluplny zivotny cyklus robotov ] %TODO
-Zivot robotov bude zacinat vstupom do sveta a koncit opustenim sveta. Moznost  nejakeho obmedzeneho znovuzrodenia ako v hre POGAMUT sa nebude pripustat. Vitazny robot ostava vecne zivy.Tento koncept je spojenim pristupu v hre POGAMUT, kde robot moze vstat z mrtvych a ARESA, kde je smrt definitivna.
-\item [Vyhodnotenie algoritmu] 
-Ani jeden z uvedenych programov ale nema moznost specifikovat, ake budu  jednotlive  vlastnosti robotov, ci ich skoli jedna rana v pripade POGAMUTa,  alebo, v  pripade  ARESa, moznost nejakeho obmedzeneho znovuzrodenia. V  bojovych  hrach sa tiez ukazalo vhodne implementovat moznost, aby si hrac pred   samotnym vstupom do sveta mohol tieto  vlastnosti upravit a tym  ovplyvnil   priebeh suboja.
-Hrac by mal  mat tiez volbu utoku robotov na blizko aj na dialku
-Hrac bude mat moznost zmenit sposob, akym sa  intepretuje program (vplyv programu na svet). Tento sposob bude potom  zavazny pre vsetkych robotov vo svete. Hrac tiez bude mat moznost definovat ciel vitazneho algoritmu z vicerych moznoti. Tieto podmienky sa budu odkazovat na objekty veta a bude mozne ich kombinovat. Sucastou analyzy je presne znenie podmienok. % SKONTORLOVAT!
+Programovani roboti budu mat moznost bojovat t.j. si ublizovat a vysledok utoku bude znamy okamzite. Roboti vo svete sa budu pohybovat vsetkymi smermi a interagovat s ostatnymi objektami vo svete rovnakou rychlostou. Hrac by mal mat tiez volbu utoku robotov na blizko aj na dialku.
+\item [Zivotny cyklus robotov]
+Zivot robotov bude zacinat vstupom do sveta a koncit opustenim sveta. Moznost nejakeho znovuzrodenia ako v hre POGAMUT sa nebude pripustat, ale bude otazkou dalsieho rozsirenia. Vitazny robot ostava zivy. Zivotny cyklus robota sa bude dat naprogramovat pomocou nejakeho programovacieho jazyka (, ktory bude dostatocne rozumitelny aj pre laika%-> pockat na hodnotenie tatu;).)
+\item [Vlastnosti robotov] 
+Ani jeden z uvedenych programov ale nema moznost specifikovat, ake budu  jednotlive  vlastnosti robotov, ci ich skoli jedna rana v pripade POGAMUTa,  alebo, v  pripade  ARESa, moznost nejakeho obmedzeneho znovuzrodenia. V bojovych  hrach sa tiez ukazalo vhodne implementovat moznost, aby si hrac pred samotnym vstupom do sveta mohol tieto  vlastnosti upravit a tym ovplyvnil priebeh suboja.
+
+Hrac bude mat moznost zmenit sposob, akym sa  intepretuje program (vplyv programu na svet). Tento sposob bude potom  zavazny pre vsetkych robotov vo svete. Hrac tiez bude mat moznost definovat ciel vitazneho algoritmu z vicerych moznoti. Tieto podmienky sa budu odkazovat na objekty veta a bude mozne ich kombinovat. Sucastou analyzy je presne znenie podmienok.
 \end{description}
-Obrazok na (TODO) naznacuje smer, v ktorom sa bude praca  uberat. \\
-%zby ciele, ktore by boli vhodne a nie? Bolo mi to odmavnute packou
+Obrazok na (TODO) naznacuje smer, v ktorom sa bude praca uberat. \\
+
 \chapter{Analyza}
 \section{svet}
 \subsection{Predstava sveta}
-Pod svetom rozumieme spolocne prostredie pre objekty, ktore v nom mozeme najst. %objekt sveta do pojmov? Toto prostredie ma navyse nejake vlastnosti.
-%podla mna netreba vysvetlovat, co je prvok sveta!
-Tato sekcia popisuje objekty ktore su pre splenie vytycenych cielov dolezite. \\
+Pod svetom rozumieme spolocne prostredie pre objekty, ktore sa v nom daju najst to znamena suhrn vlastnoti aplikovanych na kazdy objekt ( vplyv trenia, slnecne svetla a pod.) Objekty su prvky sveta, ktore moze robot vo svojom algoritme vyuzivat. Kedze robot je tiez sucastou sveta, je tiez objektom.\\ %definovanie, co je to najst? 
+%objekt sveta do pojmov? Toto prostredie ma navyse nejake vlastnosti->dynamika, ako sa to chova %podla mna netreba vysvetlovat, co je prvok sveta!
+Tato sekcia popisuje dodatocne objekty, ktore su pre splnenie vytycenych cielov dolezite. \\
 %ci to nahodou nepatri uz do dynamiky?
-Robotovou prirodzenostou je ublizovat inym robotom, a to zdialky aj zblizka. Na to, aby zautocil, potrebuje nutne vediet poziciu, na ktory utoci/ Ziskat poziciu je mozne tipom ( nahodny utok ), co ale neslneuje narocnost na premyslanie, alebo sofistikovanie z okolia sveta. To znamena, ze robot bude musiet mat schopnost zistit poziciu objektu vo svete, Nazvime to, ze robot vidi objekty. V arese vdenie objektov reprezentuju data na pamatovych miestach, kde si robot moze ulozit specialu hodnotu, ze tam bol. V okamihu, ked a zmeni, vie, ze policko bolo navstivene. Problemom je, ze toto overovanie je nepolahlive (instrukcia nemusi nemit hodnotu. V tom pripade to odporuje cieli o vyhodnoteni algoritmu, pretoze sucastou toho, aky dobry je algoritmus, je analyza jeho behu. To znamena aj pravdive informacie o okolno svete. \\ %Rozhodnutie! No jo, ale podla mna to neplati-> co steny?
-Robot teda vidi. Na druhej strane je vhodne, aby robot nevidel vsade a iny robot sa k nemu mal moznost priblizit nepozorovane.%zase zabieham do toho, co uz nmam:(
+Robotovou prirodzenostou je ublizovat inym robotom, a to zdialky alebo zblizka. Na to, aby zautocil, potrebuje nutne vediet poziciu, na ktoru utoci. Ziskat poziciu je mozne tipom ( nahodny utok, co ale nesplnuje narocnost na premyslanie ) alebo z okolia sveta. To znamena, ze robot bude musiet mat schopnost zistit poziciu objektu vo svete, Nazvime to, ze robot vidi objekty. V arese vdenie objektov reprezentuju data na pamatovych miestach, kde si robot moze ulozit specialu hodnotu, ze tam bol. V okamihu, ked sa zmeni, vie, ze policko bolo navstivene. Problemom je, ze toto overovanie je nepolahlive (instrukcia nemusi nemit hodnotu. V tom pripade to odporuje cieli o vyhodnoteni algoritmu, pretoze sucastou toho, aky dobry je algoritmus, je analyza jeho behu. To znamena aj pravdive informacie o okolno svete. \\ %Rozhodnutie! No jo, ale podla mna to neplati-> co steny?
+Popisme teda svet z pohladu robota. \\
+Robot teda vidi inych robotov. Na druhej strane je vhodne, aby robot nevidel vsade a iny robot sa k nemu mal moznost priplizit nepozorovane.%zase zabieham do toho, co uz nmam:(
 Z tohoto dovodu jednym z objektov je stena. Tato blokuje viditelnost robota. Predchadzajucemu tvrdeniu to neodporuje, pretoze sa otazka na dane mieto nepovoli polozit.\\% parsoanie stien pri pohyb pozdejc
-Kedze robot je schpony utocit aj zdaleka, dalsim objetom, ktory je treba zohladnit, je strela. To je objekt, ktory prevedie akciu utoku nablizko namiesto robota, ktore v tom okamziku moze v metrike sveta stat daleko.
+Kedze robot je schopny utocit aj zdaleka, dalsim objetom, ktory je treba zohladnit, je strela. To je objekt, ktory prevedie akciu utoku nablizko namiesto robota, ktore v tom okamziku moze v metrike sveta stat daleko. Utok nablizko nieje treba nijak specialne prikazat, revedie sa automaticky v okamihu, ked robot narazi na miesto okupovane dalsim robotom. Toto rozhodnutie bolo ucinene z toho dovodu, aby hrac nemusel kazdu chvilu kontrolovat, ci je dostatocne blizko na utok zblizka. Prichadza sa tym o moznost minut protivnika utoko zblizka, ale kedze v okamihu, ked by minul uderom zblizka, protivnik nie je na tom mieste, kde by mal byt a teda s utok nepodari, co je rovnake ako v pripade samostatneho pohybu. Automaticke zautocenie aj v okamihu, ked hrac necakal, ze to bude potrebne, prinasa zjednodusenie napisania algoritmu bez toho, aby utrpela tazkost vymyslania strategie. Ak to bol utocny robot, hrac by si s navjacsou pravdepodobnost zistoval, ci p pohybe narazil do robota okamzite potom vykonal utok, robot, ktory nema v zaujme ublizovat, bysi stale najskor musel ozrejmit situaciu.
 %reku, ci sa zbytocne nerozkecavam? Potazne nemalo by tu este nieco byt?
 % Objekty, ktore by sa vzhladom na motivaciu mali vo svete bezpodmienecne vyskytovat-> ako bojova scena -> strelu, steny, ktore strely zastavuju( spokytuju krytie), postavy. motivacia k nim: steny -> zastavenie pohybu\& blokovanie striel. 
 % V ramci stien, ktore blokuju strelu -> pohybujuce sa steny na poskytnutie ineho krytu ( styl sokoban ), rozbitne steny, nepodporena kombinacia ( implementacna narocnost )
 % Moznost "prepasti" ako policka, kde by robot nmal vstupovat -> simulacia miny, vyssia narocnost na strategicke rozhodovanie. Moznost definovania miesta, kde ma robot dorazit -> simulacia najdenia pokladu
 \subsection{Dynamika sveta}
-V tejto sekcii je cielom rozobrat mozne akcie, ktore ma robot moznost robit. Je nutne si rozmysliet, co to znamena ublizovanie. K tomu moze byt pristupovat dvojakym sposobom, bud podobne ako u ARESA zmena programu a donutienie vkonanie nieocoho ineho alebo vytvorit robotovi jeho telo, ktore na ktore sa bude dat utocit. To zodpoveda POGAMUTovi s naprogramovanym robotom. Bol zvoleny druhy pristup, pretoze je lahko vizuovatelny a lahsie pochopitelny koncovemu uzivatelovi.\\%Je tak?
-Svet bude reprezentovany v 2D. Tento priestor obsahuje  dostatocne vela moznosti pre pohyb a sucasne je dostatocne lahko implementovatelny. Uvazovane boli aj 1D priestor ako v Aresovi a 3D priestor v pogamutovi. 1D priestor poskytuje iba zakladny pohyb, bud iba dvoma smermi, ak si predtsavime prietor ako priamku, alebo sa robot kedykolvek dostane na akekolvek policko, ktore nie je stena, to znamena cisto premistovanie. Pri predstave ako priamky nie je mozne napriklad utoku zdialky vyhnut, co by bolo ziaduce, inak staci strielat oboma smermi a zavisi na tm, ktora strela doazi prva. Takze by bolo nutne pouzit premistnovanie. Tento sposob bol opat zavrhnuty neplynulost pohybu a teda nemoznost odhadovat dalsi postup. Teda poziadavok a strategicku narocnost. 2D a 3D obsahuju dostatocne mnozstvo koncptov. 3D vdaka pridavnym smerom obsahuje dalsie moznosti, ako napriklad viditelnost hore, dole a pod. \\
+V tejto sekcii je cielom rozobrat mozne akcie, ktore ma robot moznost robit. Je nutne si rozmysliet, co to znamena ublizovanie. K tomu moze byt pristupovat dvojakym sposobom, bud podobne ako u ARESA zmena programu a donutienie vykonanie niecoho ineho, alebo vytvorit robotovi jeho telo, ktore na ktore sa bude dat utocit. To zodpoveda POGAMUTovi s naprogramovanym robotom. Bol zvoleny druhy pristup, pretoze je lahko vizuovatelny a lahsie pochopitelny koncovemu uzivatelovi.\\%Je tak?
+Svet bude reprezentovany v 2D. Tento priestor obsahuje  dostatocne vela moznosti pre pohyb a sucasne je dostatocne lahko implementovatelny. Uvazovane boli aj 1D priestor ako v Aresovi a 3D priestor v pogamutovi. 1D priestor poskytuje iba zakladny pohyb, bud iba dvoma smermi, ak si predtsavime prietor ako priamku, alebo sa robot kedykolvek dostane na akekolvek policko, ktore nie je stena, to znamena cisto premistovanie. Pri predstave ako priamky nie je mozne napriklad utoku zdialky vyhnut, co by bolo ziaduce, inak staci strielat oboma smermi a zavisi na tm, ktora strela doazi prva. Takze by bolo nutne pouzit premistnovanie. Tento sposob bol opat zavrhnuty neplynulost pohybu a teda nemoznost odhadovat dalsi postup. Teda poziadavok a strategicku narocnost. 2D a 3D obsahuju dostatocne mnozstvo konceptov. 3D vdaka pridavnym smerom obsahuje dalsie moznosti, ako napriklad viditelnost hore, dole a pod. \\
 Pre implementacnu narocnost bol zvolny 2d priestor. Otazkou dalej zostava, ako sa bude samotny pohyb realizovat, ci budu dane pevne miesta, kde sa budu moct vyskytovat objekty alebo objekty budu plynulo prechadzat z jedneho miesta na druhe. Pre prvu moznost hovori to, ze vidtelnost bude lahko implementovatelna podla algoritmu ... a je jasne, kedy budu objekty spolu interagovat - v okamihu, ked budu oba objekty na rovnakom mieste. \\
 Dalsi pristup je nijak neobmedzovat, kde sa objekt moze vyskytovat. Potom sa pri kazdom pohybe zistovat, ci sa dva objekry neprekryvaju.Vyhodou je, ze je lahie rozhodnut, ktorym smerom sa strela napiklad odrazi.//skontrolovat.
-Robot teda moze strielat, chodit po mape, zistovat poziciu ostatnych robotov. Kedze steny zabranuju vidiet robota za nim, robot by tam standartne nemal stielat. preto sa zda vhodne, aby stena zabranovala aj pohybuObjektov. Teda je utne rozhodnut, co sa stane, ked do steny narazi strela alebo robot. Strela ublizuje robotvi, ak tomu, ktoreho strelec nevidi, Preto je moznost odrazenie strely od steny dobrou moznostou, ao vycistit priestor za steenou, aj ke d a tam ziadnobjekt nemui nachadzat. Preto sa zda vhodne nechat sa strelu od steny odrazat.\\
+Robot teda moze strielat(utocit na dialku), chodit po mape, zistovat poziciu ostatnych robotov. Kedze steny zabranuju vidiet robota za nim, robotove rozhodnutie vystrelit tym smerom by sa nezakladalo na ohodnoteni situacie ale nahodne. Preto sa zda vhodne, aby stena zabranovala aj pohybu objektov. Teda je utne rozhodnut, co sa stane, ked do steny narazi strela alebo robot. Strela ublizuje robotovi, aj tomu, ktoreho strelec nevidi, kedze je mimo robotovho zorneho pola, Preto je moznost odrazenie strely od steny dobrou moznostou, ao vycistit priestor za steenou, aj ke d a tam ziadnobjekt nemui nachadzat. Preto sa zda vhodne nechat sa strelu od steny odrazat.\\
 Stena poskytuje teda kryt pre robota. Jedoy z dobry strategii je priblizit sa k robotovi tak, aby ho tn evidel a nemoho nan teda reagovat, Ak vsak niej oruke ziadny kryt, je to dost obtiazne. Preti bol do objektov pridany dalsi druh stenu, pohybyhyca sa stena.\\
 Opak krytu je stena, na ktory su da stupit a pritom neposkytuje ziadnu vyhodu, akor opacne, robota nici..%premysliet!
 Zaveromje, ze mam estvoreny svt, kde sa roboti mozu hybat tak, ako im to prikazuje ich algoritmus, strielat, zistovat poziciu, narazta do stiejna avytvarat si zo stien kryt. Zistovanie objektov v blizkosti robota, vytvaranie krytov a strilanie poskytuje zlozitejsi system analyzu situaciea na bojisku.
 Pri zvolenom systeme ukladania pozicie objektov je nutne zaistit spravne zistovanie kolizii. K tomu su vhodne algoritmy QuadTree a mriezkova metoda. %popisat algoritmu obecne
-Pre jednoduchost bolaimlementovana mriezkova metoda
+Pre jednoduchost bola imlementovana mriezkova metoda.\\
 %\begin{itemize}
 %\item akcie, ktore mozu jednotlive objekty vykonavat, dovody, preco su prave tieto akcie potrebne ( strely -> litak, ok, ale odraz od steny, nicenie steny, kolidovanie a jeho vysledky )
 %\item pohyb, pixelove rozlisenie vs rozlisenie na policka,  dovody vybrania pixelovej orientacie -> plynula animacia, rozhodnutie, do ktorej mriezky xco kde patri pri pohybe
 %\item riesenie kolizi vzhladom na riesenie ukladania pozic, navrh algoritmu n dovody, porovnanie vykonnosti ( quadtree vs mriezkova metoda )
 %\end{itemize}
-Sucastou pracu by malo byt aj generovanie map alebo iny pristup pre vytvaranie vlastnych map
 \subsection{Vytvaranie map}
-Testovanie algoritmov je zavisle aj na svete, kde sa boj odohrava. reto je hracovi fana moznost zmenit alebo vytvorit mapu, na ktorej bude suboj prebiehat.
-Generovanie map pozostava z troch krokov -> vygenerovanie dostatocneho poctu tie alebo volenho miesta, uistenie sa, ze sa da dostat z jedneho miesta, kde sa zmesti robot, hocijake ine, a vygenerovanie pociatocnych miest robotov.\\
-Do rogramu je mozne nahrat mapy nasledovnym sposobom:
-
-\begin{itemize}
-\item pristup ako k textovemu suboru, +/-
-\item pristup ako sucast aplikacie
-\item Algoritmus pre generovanie map, vysledkya a porovnanie pre skusane algoritmy
-\end{itemize}
+Sucastou prace bude aj generovanie map alebo iny pristup pre vytvaranie vlastnych map, kedze cielom nie je vytvorenie algortimu na konkretnych mapach a
+testovanie algoritmov je zavisle aj na svete, kde sa boj odohrava. Preto je hracovi dana moznost zmenit alebo vytvorit mapu, na ktorej bude suboj prebiehat.
+Generovanie map pozostava z troch krokov -> vygenerovanie dostatocneho poctu stien alebo volenho miesta, uistenie sa, ze sa da dostat z jedneho miesta, kde sa zmesti robot, hocijake ine, a vygenerovanie pociatocnych miest robotov.\\
+Ako vhodne sa zda byt generovanie v grafickom editor, aby bol vysledok okamzite vidiet.\\
+Kedze mapy mozu byt velke, hracovi je dopriate vygenerovanie zakladnej "kostry" sveta, t.j sveta, ktory obsahuje len pevne steny. Je a hracovi, aby pridal ostatne objekty sveta, vyznamne miesta pre robota hladajuceho lokaciu a startovne miesta. patri to sem? $->$ Pokial v mape nie su startovne miesta alebo je ich na pocet robot primalo, robot, ktory sa neumietni, si opakovanie hlada miesto, kde sa zmeti ( nenastan kolizia s iym objektom ). ripade, ze si v dpstatocnej iteracii nenajde miesto, nezucastni sa simulacie.(asi to malo it predtym).\\
+Ako vhodnym pre generovanie kotry sa ukazal \"pazravy\" algoritmus (tu bude nasledovat copy\& paste z posledej bakalarky, nechce sa mi to pisat teraz:P)
 \section{Programovatelnost postavy}
-program ako testovanie vitazneho algoritmu ( motivacia ), za urcenych podmienok na istych mapach
+Mame svet so stenami, ktore blokuju viditelnost aj pohyb. Pre zakladne prechadzanie bludiska a najdenie robotov je to podstatne. Samotna progrmovatelnost robota je zavisla na svete, takze zlozitost algoritmu vyzaduje aj zmeny vo svete. V skratke cim zlozitejsi svet, tym komplikovanejsi algoritmus je potreba.
 \subsection{Rozsirenie sveta vzhladom na programovatelnost}
+Uzivatel musi napisat algoritmu v nejakom jazku, ktory je interretovatelny programom. Tento algoritmu sa musi rozdelit na jednotlive casti
 \begin{itemize}
 \item Pre splnenie motivacie -> nutnost  implementovat penalizacie-> zvysenie obtiaznosti naprogramovat jazyk, zvolit strategiu, ktora penalizaciu co najviac vykompenzuje. 
 \item priebeh penalizacie  - dva sposoby planovania cakania, popis
@@ -103,6 +103,70 @@ program ako testovanie vitazneho algoritmu ( motivacia ), za urcenych podmienok 
 \item nutnost definovat si podmienky. Vzhladom na objekty a miesta v mape je mozne definovat -> zabitie urcitej postavy, dostanie sa na iste miesto
 \item z toho vyplyvajuce -> kazda postava by mala mat unikatne meno. Je mozne mat stejne -> simulacia skupina zlodejov prosti policajtom, interpretacia -> skupina zlodejov po zabiti kamarada hromadne zdrhne, skupina policajtov po zisteni, ze nedokazali zabranit kradezi poda hromadnu vypoved
 \end{itemize}
+\subsection{Ciele algoritmu}
+Vysledny program vychadza z myslienky naprogramovat robota, aby nieco dokazal. V prezentovanych hrach je dokaz schopnosti algoritmu znicenie protivnika. Z toho vyplyva jeden z moznych cielov, zostat na bojisku sam. Tato praca si kladie za ciel nechat hraca vymysliet vitaznu strategiu tak, aby tato nebolo jednoducha. Praca dalej vychadza z predpokladu, ze je rovnako tazke vymysliet sposob, ako protivnika znicit, ako sposob akym sa mu vyhnut. Tento predpoklad vychadza z predstavy popisanej v tabulke, co nutne potrebuje hrac vyjadrit pre napisanie algoritmu pre znicenie protivnika a pre vyhnutie sa mu.\\
+% otazka, ci to tu uz mozem dat su to poziadavky a algoritmus, nie na jazyk, o ktorom nemam este ani paru v tomto mieste?
+\begin{table}
+\centering
+\caption { Mechanizmy nutne vzhladom na pouzite ucely }
+\begin{tabular}{|cll|}
+\hline
+poziadavok na algoritmus & pouzitie za cielom znicenia & pouzitie vzhladom na unik\\
+\hline
+zistenie objektov v okoli & urcenie primarneho ciela & urcenie unikovej cesty\\
+utok & zabitie protivnika & zastrasenie/zmatenie protivnika\\
+mechanizmus predikcie &&\\
+vyskytu robota& vytvorenie utoku na miesto & zistovanie bezpecnosti cesty\\
+mechanizmus vypoctu & urcenie ciela & urcenie pravdepodobnosti \\
+&&utok\\
+\hline
+\end{tabular}
+\end{table}
+Z toho vyplyva, ze na zakladnej urovni je napisanie algoritmu porovnatelne tazke a teda by program mohol podporovat obe varianty bez vyraznejsich zmien.Tento pristup potom kombinuje vlastnost ARESa, ktory je hrou obranno-utocneho typu ( pokusa sa znizit protivnika a sucasne co ajdhsie prezit ) a POGAMUTa, kde robotovym hlavnym cielom je znicenie otatnych a vlastne prezitie ho vzhladom na vzkriesenie trapi menej. V skratke, v okamihu, ked robot vie, ze a neho bude utocene, potrebuje mat pristup ku vsetkym moznostiam utoku  opacne, utociaci robot musi vediet, akym sposobom sa branit. Z toho vyplyva, je mozne napisat robota, ktory bude cisto obranneho charakteru a bude ostatnym robotom iba zabranovat ho znicit. Otazkou zostava, ako potom algoritmus takeho robota hodnotit.\\
+Existuje niekolko moznosti:
+\begin{itemize}
+\item hrac bude moct specifikovat minimalny cas, po ktory musi algoritmus udrzat robota nazive. Tento cas moze by bud realny, co ale nie je vhodne. V okamihu vytazenosti procesora prejde urcity cas cez toho, aby sa program vyhodnocoval akcie robotov, snaci mat zapnute aktualizacie a pripojenie k interetu. dalsou moznostou je cas zavisly na pocte odohranych kol, t.j. sposobom, akym sa roboti striedaju pri vyhodnocovani svojich akcii. To je formalne v poriadku, ale obrane algoritmu zavisle od casu budu potom zavisiet aj od algoritmov ostatnych robotov-lovcov. V tom okamihu potrebujeme poznat, ako moc dobry je algoritmus lovca. ako dobre vyhladava, ale to zas nie je zistitelne, pokial sa lovcov algoritmus neosvedcil v tejto alebo inych simulaciach. Teda pri napisani cisto obranneho algoritmu zavisleho na case nebude mozne spravne vyhodnotit uspesnost obranneho mechanizmu. % troku rozviest?
+\item hrac bude moct specifikovat miesto, ktore musi robot navstivit, aby bol uspesny. Teda jeho algoritmus bude stale cisto obranny, ale robot sam bude aktivne prisputovat k problemu najdenia miesta, cim sa zasadne lisi od predchadzajuceho pristupu kde sa algoritmus mohol uplatit len pri objaveni nejakeho robota. Tento ciel si ale kladie podmienku na reprezentaciu sveta, ktory musi tiez obsahovat cielove miesto. Toto miesta vsak nebude objekt, pretoze ma vyznam len pre mnozinu konkretnych robotov.
+\end{itemize} 
+V POGAMUTe je cielovy algoritmus definovany ako pocet zabitych nepriatelov. Tento sposob je plne zopadveda o predstave ciela bojoveho algoritmu, co najrychlsie znicit urcite mnozstvo protivnikov. Preto je vhodne pridat do programu moznost zvolit ci, ake cislo to ma byt. Predpoklada sa, ze toto cislo je mensie alebo rovne poctu robotov vo svete. Kedze roboti nemaju povolene vzkriesenie, je vhodne potom toto cislo upravit.\\
+Dalsim moznym pristupom k definovaniu ciela zadat si ciel znicit konkretneho robota. Kazdy robot musi byt identifikovany menom, aby sa presne vedelo, kto vyhral. Preto je lahke v pripade potreby urcit konkretneho robota.\\
+Mame teda jasne definovany jeden ciel, ktory vy robot mohol snazzit sa dosiahnut. Kombinaciou tychto cielov dostaneme dalsie ciele, ktore je takzsie dosiahnut. Nariklad sa da skombinovat zabitie konkretneho nepriatela s poctom zabiti prave jedna. co znamena, ze robot sa vsetkym ostatnym musi vyhnut albo im utiect, az pokial nenarazi na toho spravneho. Tento ciel je ale pomenre tazke dosiahnut prave z toho dovodu, ze robot nesmie zabit ziadneho ineho robota. Preto je vhodne zaviest pre takyto ciel istu toleranciu to znamena relacny operator, kolko maximalne robotov moze zabit. Naopak mozeme mat ale aj robota, ktory ma za ciel dojst na nejakemiesto, ale pritom sa nema flakat len hladanim toho miesta, ale cestou aj niekoho znicit. Preto sa zda vhodne ako ciel zadat aj mnozstvo cielov, ktore musi robot zabit. Podmienky s relacnymi operatormi  $>, <$ sa potom daju ale vyuzit len s kombinaciami hladania miesta, pri samotno zadani poctu zabitym mensie ako nejake cislo ( rozne od nuly ) je podmieka automaticky slpnena a na to netreba vymyslat ziaden algoritmus, podmieka na vacsie mnoztvo sa potom bude splyvat s podmienkou na presne mnozstvo zabitych nepriatelov.\\
+V kontexte so zabitymi nepriatelmi ma zmysel aj obmedzenie na cas.\\%toto sa mi nepaci, nejak zlikvidovat
+Vysledne mozne ciele algoritmu, ktore davaju zmysel, teda su: (zhrnutie)
+\begin{itemize}
+\item znicit vsetkych ostatnych robotov
+\item zabit presne mnozstvo nepriatelov - tradicny koncept z hry POGAMUT
+\item zabit robota z definovaneho zoznamu
+\item dorazit na nejake miesto alebo zoznam miest - novy koncept
+\item kombinacia zoznamu nepriatelov a najdenia miesta
+\item kombinacia zoznamu nepriatelov a najdenia konkretneho miesta
+\item kombinacia najdenia miesta a obmedzenia a pocet nepratelov pomocou relacnych operatorov
+\item kombinacia najdenia miesta, obmedzenia casu a obmedzenia na pocet nepriatelov
+\item kombinacia predolych kombinacii a zoznamu nepriatelov
+\item kombinacia predolych kombinacii a casoveho obmedzenia % ucesat!
+\end{itemize}
+V pripade definoania takychto cielov je ale nutne ale rozhodnut, co sa stane, ak robot nesplni svoj ciel a to tak, ze pokracovanie simulacie ho k tomuto cielu neproblizi. To je napriklad pripad definovani ciela "zabit 2 nepriatelov a najdi na miesto A", pricom po ceste sa robotvi podari zabit nepriatelov troch, nie je ciel slnitelny za ziadnych okolnosti. Preto je definovany takzvany superciel, a to, z pricipy ked ja nedokazem splnit svoj ciel, nech ho nesplania aspon ani ostatni. To znamena, ze robotovi je dana dalsia sanca ako vyhrat, a to odstanit vsetkych, co videli jeho pochybenie. Je na hracovom algoritme ci tuto moznost vyuzije. Vo vysledku by sa vsak malo dat jasne najavo, ze robot vyhral takymto necestnym sposobom.\\
+Pridanie superciela nezabrani simulacii donekonecna prebiehat. To vsak ani nie je umyslom, kedze hracom definovany algoritmus moze byt v danom svete nepouzitelny a je na hracovi, aby potom simulaciu zastavil.
+\subsection{Vlastnosti robota}
+Pred bojom je vhodne si vybrat takeho robota, ktory bude viacej odpovedat cielu algoritmu. Teda pre robota, ktoreho cielom je dostat sa na nejake miesto, nie je zaujimava velkost utoku nablizko, pretoze sa standartne bude snazit ostatnym robotom vyhybat. Z tohoto dovod boli vybrane nasledovne vlastnosti, ktore je u mozne u robota uravit:
+\begin{description}
+\item[zivotnost]
+Toto cislo definuje, ako moc je robot "zivy", znamena to pocet zivotov, ktory mu je nutne odobrat, aby bol vyradeny zo simulacie.
+\item [sila utoku na blizko]
+Toto cislo definuje, ako moc sa snazi robot ublizit. To, ako moc je robotovi ublizene, potom zavisi a jeho obrane, minimalne je to vsak vzdy 1 zivot. Toto rozhodnutie bolo ucinene preto, aby robot dopredu eprehral tym, ze si ostatni hraci navolia prilis velke obranne cislo. ( vduchu hesla kazdy ma pravo vyhrat)
+\item [sila utoku na dialku]
+toto cislo definuje, ako moc doaze robot ublizit na dialku, je to teda sila utoku zblika strely. Riadi sa rovnakymi zasadmi ako sila utou robota blizka.
+\item [zivotnost strely]
+definuje dialku, ako daleko je strela schopna doletiet. Toto cislo je zadavne v jednotkach krokov, takze napr. cislo 1000 znamena 1000 krokov. Velkomst kroku zavisi od mapy. Krok rovny 1 je rovnaka vzdalenost, aku ujde robot jednym krokom. Moze sa zdat zvlastne, ze rychlost strely zavisi od terenu, ale tato modifikacna konstanta vytvori strelu s vlastnym doletom, co je nove cislo, takze od coho sa vysledny dolet odvija, na tom az tak nezalezi.
+\item [obrana pred utokom]
+Obranne cislo definuje, ako moc bude robot odolny voci strelam. Celkove zranenie, ktore dostane, bude potom rozdiel medzi utokom a obrannym cislom. Ak je toto cislo nekladne, potom cini zranenie 1 zivot.
+\item [uhol viditelnosti]
+definuje kruhovu vysec o velkosti dvojnasobku definovaneho uhla. Predpoklada sa totiz symetria na obe oci, preti maximalna hodnota, ktoru moze uzivatel zadat, je 180. Definovanie viditelnosti na jedno oko alebo nesymetrickost oci je predmetom dalsieho rozsirenia.%tuto zadat, jak sa o bude riesit?
+\item [pamat]
+pamat robota je miesto, kde si robot moze ulozit informacie, ktore ziskal o svete a potom k nim neskor pristupovat a na zaklade nich sa rozhodnut o dalsom postupe. Tato pamat nie je nekonecna, aby to hraca prinutilo efektivne vyuzivat znalosti o svete.
+\end{description}
+Aby sa zabranilo maximalnemu navysovaniu vsetkych hodnot ( pamat o velkosti 2000000, utoky 200000 a pod.), bude mat moznot uzivatel definovat maximalny ciastu, ktoru sucet hodnot nesmie prekrocit. Teda ak je toto cuslo 100, potom sucet cislej uvlastnosti pamat, zivotnost atd. Ak toto cislo prekroci, potom sa hodnoty upravia do takeho tvaru, aby ich pomer k suctu zostal zachovany a pritom sucet epresahoval danu hodnotu $->$ prevedie sa skalovanie do intervalu 0->definovane cislo.chce to priklad? 
+
 \subsection{Programovaci jazyk - moznosti}
 popis moznosti, ako jazyk intepretovat, kde sa to vyskytlo, +/-
 \begin{itemize}
@@ -178,7 +242,7 @@ sucastou jazyka u premenne, identifikovane podla mena.
 \end{itemize}
 Ako vedlasim ucinkom takehoto konceptu je moznost zpatne vytvorit kod, ktory robi to iste ako program zadany uzivatelom a pouziva rovnako pomenoane premenne.
 \begin{verbatim}
-instructioBegin	
+instructioBegin    
 instruction create(n)
 instruction load(n)
 instruction load(p)
@@ -276,6 +340,10 @@ Pre beh aplikacie je nutne mat nainstalovane SDL verzie 1.2 alebo 1,3, (kniznu Q
 \end{itemize}
 \chapter{Zoznam pojmov}
 \begin{description}
+\item[aplikacia] \newline % to tu asui nemusim davat, ale co ak
+vyslednu produkt bakalrskej prace
+\item[program] \newline 
+postupnost prikazov
 \item[objekt]
 \item[robotstina]
 \item[postava]
@@ -287,4 +355,3 @@ programovatelny robot, ktory sa objavi ako objekt vo svete
 \%Towards an integral approach of organizations in multi-agent systems: the MASQ approach - www.lirmm.fr/~ferber/publications/papers/MASQ-2008-book-OMAS.pdf
 
 \end{document}
-
