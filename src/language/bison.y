@@ -157,7 +157,7 @@ define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER
 robot:  define_bot TOKEN_BEGIN options targets global_variables declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR block_of_instructions TOKEN_END
 	{ 
 		program->robots.back()->add_global($5);
-		program->robots.back()->add_function($10); 
+		program->robots.back()->add_function(@1,$10); 
 	}
 	;
 targets: /* default target */  
@@ -284,35 +284,35 @@ names_:	TOKEN_IDENTIFIER
 	{ 
 		$$.clear();
 		Node *n = program->robots.back()->add(@1,$1);
-		$$.push_back(new InstructionCreate(n)); 
+		$$.push_back(new InstructionCreate(@1, n)); 
 	} 
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
 	{ 
 		$$.clear();
 		Node *n = program->robots.back()->add(@1, $1);
-		$$.push_back(new InstructionCreate(n)); 
+		$$.push_back(new InstructionCreate(@1,n)); 
 
-		$$.push_back(new InstructionLoadLocal(n));
-		Instructions ins = get_load_type(*program->robots.back()->active_type.top());
+		$$.push_back(new InstructionLoadLocal(@1,n));
+		Instructions ins = get_load_type(@1,*program->robots.back()->active_type.top());
 		$$.insert($$.end(), ins.begin(), ins.end());
 		$$.insert($$.end(), $3.ins.begin(), $3.ins.end()); //naloadovana espresna
-		Instruction * in = possible_conversion(program->robots.back()->active_type.top()->type,$3.output.back().type);
+		Instruction * in = possible_conversion(@1,program->robots.back()->active_type.top()->type,$3.output.back().type);
 		if (in)
 		{
 			$$.push_back(in);
 			$3.output.back() = *program->robots.back()->active_type.top();
 		}
-		ins = get_store_type( $3.output.back() );
+		ins = get_store_type(@1, $3.output.back() );
 		$$.insert($$.end(),ins.begin(), ins.end()); 
 	} 
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
 	{ 
 		$$.clear();
 		Node *n = program->robots.back()->add(@1, $1);
-		$$.push_back(new InstructionCreate(n)); 
-		$$.push_back(new InstructionLoadLocal(n)); 
+		$$.push_back(new InstructionCreate(@1, n)); 
+		$$.push_back(new InstructionLoadLocal(@1, n)); 
 		for (int i = 1; i< $4.level; i++)
-			$$.push_back(new InstructionDuplicate());
+			$$.push_back(new InstructionDuplicate(@1));
 
 		$$.insert($$.end(), $4.ins.begin(), $4.ins.end());
 	} 
@@ -327,10 +327,10 @@ end_type: TOKEN_END { program->robots.back()->leave_type(); }
 values:	expression 
 	{ 
 		$$.ins.clear();
-		$$.ins.push_back(new InstructionLoad(0));
-		$$.ins.push_back(new InstructionLoad());
+		$$.ins.push_back(new InstructionLoad(@1, 0));
+		$$.ins.push_back(new InstructionLoad(@1));
 		$$.ins.insert($$.ins.end(),$1.ins.begin(), $1.ins.end());
-		Instruction * in = possible_conversion( program->robots.back()->active_type.top()->type,$1.output.back().type);
+		Instruction * in = possible_conversion(@1, program->robots.back()->active_type.top()->type,$1.output.back().type);
 		if (in)
 		{
 			$$.ins.push_back(in);
@@ -343,10 +343,10 @@ values:	expression
 		else
 		{
 			//loadneme to, kde sme sa dostali
-			Instructions ins = get_load_type(*program->robots.back()->active_type.top());
+			Instructions ins = get_load_type(@1, *program->robots.back()->active_type.top());
 			$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 			//a storneme
-			ins = get_store_type($1.output.back());
+			ins = get_store_type(@1, $1.output.back());
 			$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 			$$.level = 1;
 		}
@@ -355,31 +355,31 @@ values:	expression
 	{
 		$$.ins.clear();
 		$$.ins = $1.ins;
-		$$.ins.push_back(new InstructionLoad($1.level));
-		$$.ins.push_back(new InstructionLoad());
+		$$.ins.push_back(new InstructionLoad(@2, $1.level));
+		$$.ins.push_back(new InstructionLoad(@1));
 		$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
-		Instruction * in = possible_conversion(program->robots.back()->active_type.top()->type,$3.output.back().type );
+		Instruction * in = possible_conversion(@1,program->robots.back()->active_type.top()->type,$3.output.back().type );
 		if (in)
 		{
 			$$.ins.push_back(in);
 			$3.output.back() = *program->robots.back()->active_type.top();
 		}
-		Instructions ins = get_store_type( $3.output.back());
+		Instructions ins = get_store_type(@1, $3.output.back());
 		$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 		if ($3.temp.back())
 		{
-			$$.ins.push_back(new InstructionRemoveTemp());
+			$$.ins.push_back(new InstructionRemoveTemp(@1));
 		}	
 		$$.level = $1.level + 1;
 	}
 	| begin_type values end_type
 	{ 
 		$$.ins.clear();	
-		$$.ins.push_back(new InstructionLoad(0)); 
-		$$.ins.push_back(new InstructionLoad());
+		$$.ins.push_back(new InstructionLoad(@1,0)); 
+		$$.ins.push_back(new InstructionLoad(@1));
 		for (int i = 1; i < $2.level; i++)
 		{
-			$$.ins.push_back(new InstructionDuplicate());
+			$$.ins.push_back(new InstructionDuplicate(@1));
 		}
 		$$.ins.insert($$.ins.end(), $2.ins.begin(), $2.ins.end());
 		$$.level = 1;
@@ -388,11 +388,11 @@ values:	expression
 	{
 		$$.ins.clear();
 		$$ = $1; 
-		$$.ins.push_back(new InstructionLoad($1.level));
-		$$.ins.push_back(new InstructionLoad());
+		$$.ins.push_back(new InstructionLoad(@1, $1.level));
+		$$.ins.push_back(new InstructionLoad(@1));
 		for (int i = 1; i < $4.level; i++)
 		{
-			$$.ins.push_back(new InstructionDuplicate());
+			$$.ins.push_back(new InstructionDuplicate(@1));
 		}
 		$$.ins.insert($$.ins.end(),$4.ins.begin(), $4.ins.end());
 		$$.level++;
@@ -439,12 +439,12 @@ parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY
 		;
 declare_function_:	function_header block_of_instructions  
 		{ 
-			program->robots.back()->add_function($2);
+			program->robots.back()->add_function(@1, $2);
 			program->robots.back()->leave();
 		} 
 		|declare_function_ function_header block_of_instructions 
 		{ 
-			program->robots.back()->add_function($3); 
+			program->robots.back()->add_function(@1, $3); 
 			program->robots.back()->leave();
 		}
 		;
@@ -454,7 +454,7 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL
 			{
 				$2*=-1;
 			} 
-			$$.ins.push_back(new InstructionLoad($2));
+			$$.ins.push_back(new InstructionLoad(@1, $2));
 			$$.output.push_back(*program->robots.back()->find_type(TypeReal)); 
 			$$.temp.push_back(false);
 		} 
@@ -464,25 +464,25 @@ number:		TOKEN_OPER_SIGNADD TOKEN_REAL
 			{
 				$2*=-1;
 			} 
-			$$.ins.push_back(new InstructionLoad($2)); 
+			$$.ins.push_back(new InstructionLoad(@1, $2)); 
 			$$.output.push_back( *program->robots.back()->find_type(TypeInteger));
 			$$.temp.push_back(false);
 		}
 		|TOKEN_REAL 
 		{ 
-			$$.ins.push_back(new InstructionLoad($1)); 
+			$$.ins.push_back(new InstructionLoad(@1, $1)); 
 			$$.output.push_back(*program->robots.back()->find_type(TypeReal));
 			$$.temp.push_back(false); 
 		} 
 		|TOKEN_UINT 
 		{ 
-			$$.ins.push_back(new InstructionLoad($1)); 
+			$$.ins.push_back(new InstructionLoad(@1, $1)); 
 			$$.output.push_back(*program->robots.back()->find_type(TypeInteger));
 			$$.temp.push_back(false); 
 		} 
 		|TOKEN_RND
 		{
-			$$.ins.push_back(new InstructionRandom()); 
+			$$.ins.push_back(new InstructionRandom(@1)); 
 			$$.output.push_back(*program->robots.back()->find_type(TypeInteger));
 			$$.temp.push_back(true); 
 		}
@@ -496,9 +496,9 @@ end:	TOKEN_END { program->robots.back()->core->depth--; program->robots.back()->
 
 block_of_instructions: begin commands_and_empty end 
 		{ 
-			$$.push_back(new InstructionBegin()); 
+			$$.push_back(new InstructionBegin(@1)); 
 			$$.insert($$.end(), $2.begin(), $2.end());
-			$$.push_back(new InstructionEndBlock()); 
+			$$.push_back(new InstructionEndBlock(@1)); 
 		}
 		;
 commands_and_empty:  /* empty */ {$$.clear();}
@@ -512,24 +512,24 @@ commands: 	TOKEN_SEMICOLON { $$.clear(); }
 		| commands unmatched { $$ = $1; $$.insert($$.end(), $2.begin(), $2.end()); }
 		;
 //FIXME dalo by sa aj inteligentjsie? Rozlisovat, ci som vytvorila premennu a potom oachat cyklus
-cycle_for: TOKEN_FOR { program->robots.back()->core->depth++; $$.push_back(new InstructionBegin());program->robots.back()->defined.new_block();}
+cycle_for: TOKEN_FOR { program->robots.back()->core->depth++; $$.push_back(new InstructionBegin(@1));program->robots.back()->defined.new_block();}
 		;
 command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_command TOKEN_RPAR begin commands end 
 		{ 
 		//	INIT, BLOCK, COMMAND CONDITION
 			if ($4.temp.back())
 			{
-				$4.ins.push_back(new InstructionRemoveTemp());
+				$4.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-			$9.push_back(new InstructionEndBlock($4.ins.size()+$6.size()+1));
+			$9.push_back(new InstructionEndBlock(@1, $4.ins.size()+$6.size()+1));
 			$9.insert($9.end(), $6.begin(), $6.end()); 
-			$3.push_back(new InstructionMustJump($9.size()+1)); 
-			$3.push_back(new InstructionBegin(program->robots.back()->core->depth));
-			$4.ins.push_back(new InstructionJump(-1*$9.size()-$4.ins.size()-2,0));
+			$3.push_back(new InstructionMustJump(@1, $9.size()+1)); 
+			$3.push_back(new InstructionBegin(@1, program->robots.back()->core->depth));
+			$4.ins.push_back(new InstructionJump(@1, -1*$9.size()-$4.ins.size()-2,0));
 			$9.insert($9.end(),$4.ins.begin(), $4.ins.end());
 			$$ = $3;
 			$$.insert($$.end(),$9.begin(), $9.end());
-			$$.push_back(new InstructionEndBlock());
+			$$.push_back(new InstructionEndBlock(@1));
 			$$.insert($$.begin(), $1.begin(), $1.end() );
 			program->robots.back()->core->depth--;
 			program->robots.back()->defined.leave_block();
@@ -538,32 +538,32 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 		{ 
 			if ($7.temp.back())
 			{
-				$7.ins.push_back(new InstructionRemoveTemp());
+				$7.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-			$$.push_back(new InstructionBegin(program->robots.back()->core->depth));
-			$3.push_back(new InstructionEndBlock($7.ins.size()+1));
+			$$.push_back(new InstructionBegin(@1, program->robots.back()->core->depth));
+			$3.push_back(new InstructionEndBlock(@1, $7.ins.size()+1));
 			$$.insert( $$.end(), $3.begin(), $3.end());
 			$$.insert($$.end(),$7.ins.begin(), $7.ins.end()); 
-			$$.push_back(new InstructionJump(-1*$$.size()-1,0));
+			$$.push_back(new InstructionJump(@1, -1*$$.size()-1,0));
 		}
 		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR begin commands end
 		{
 			if ($3.temp.back())
 			{
-				$3.ins.push_back(new InstructionRemoveTemp());
+				$3.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-			$$.push_back(new InstructionMustJump($6.size()+2));
-			$$.push_back(new InstructionBegin(program->robots.back()->core->depth));
-			$6.push_back(new InstructionEndBlock($3.ins.size()+1));
+			$$.push_back(new InstructionMustJump(@1, $6.size()+2));
+			$$.push_back(new InstructionBegin(@1, program->robots.back()->core->depth));
+			$6.push_back(new InstructionEndBlock(@1, $3.ins.size()+1));
 			$$.insert($$.end(),$6.begin(), $6.end());
 			$$.insert($$.end(),$3.ins.begin(), $3.ins.end());
-			$$.push_back(new InstructionJump(-1*$$.size(),0));
+			$$.push_back(new InstructionJump(@1, -1*$$.size(),0));
 		}
 		|TOKEN_RETURN expression TOKEN_SEMICOLON
 		{
 			$$.clear();
-			$$.push_back(new InstructionLoadLocal(program->robots.back()->core->nested_function->return_var));
-			Instructions ins = get_load_type(*program->robots.back()->core->nested_function->return_var->type_of_variable);
+			$$.push_back(new InstructionLoadLocal(@1, program->robots.back()->core->nested_function->return_var));
+			Instructions ins = get_load_type(@1, *program->robots.back()->core->nested_function->return_var->type_of_variable);
 			$$.insert($$.end(), ins.begin(), ins.end());
 			$$.insert($$.end(),$2.ins.begin(), $2.ins.end());
 			
@@ -572,20 +572,20 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			{
 				if ($2.temp.back())
 				{
-					$$.push_back(new InstructionRemoveTemp());
+					$$.push_back(new InstructionRemoveTemp(@1));
 				}
 				$2.output.back() = *program->robots.back()->find_type(TypeReal);
-				$$.push_back(new InstructionConversionToReal());
+				$$.push_back(new InstructionConversionToReal(@1));
 				$2.temp.back() = true;
 			}
 			else if (($2.output.back().type == TypeReal) && (program->robots.back()->core->nested_function->return_var->type_of_variable->type == TypeInteger))
 			{
 				if ($2.temp.back())
 				{
-					$$.push_back(new InstructionRemoveTemp());
+					$$.push_back(new InstructionRemoveTemp(@1));
 				}
 				$2.output.back() = *program->robots.back()->find_type(TypeInteger);
-				$$.push_back(new InstructionConversionToInt());
+				$$.push_back(new InstructionConversionToInt(@1));
 				$2.temp.back() = true;
 			}
 
@@ -596,28 +596,28 @@ command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON simple_comman
 			}
 			else
 			{
-				ins = get_store_type($2.output.back());
+				ins = get_store_type(@1, $2.output.back());
 				$$.insert($$.end(), ins.begin(), ins.end());
 			}
 			if ($2.temp.back())
 			{
-				$$.push_back(new InstructionRemoveTemp());
+				$$.push_back(new InstructionRemoveTemp(@1));
 			}
-			$$.push_back(new InstructionLoadLocal(program->robots.back()->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
-			$$.push_back(new InstructionReturn(program->robots.back()->core->depth));	
+			$$.push_back(new InstructionLoadLocal(@1, program->robots.back()->core->nested_function->return_var));// da sa dat aj na konci, vestko  uz je upratane
+			$$.push_back(new InstructionReturn(@1, program->robots.back()->core->depth));	
 		}
 		|TOKEN_RETURN TOKEN_SEMICOLON 
 		{
-			$$.push_back(new InstructionReturn(program->robots.back()->core->depth));
+			$$.push_back(new InstructionReturn(@1, program->robots.back()->core->depth));
 		} //v node zostane predchadzajuca hodnota//TODO ocheckovat vsetky vetvy
 		
 		|TOKEN_BREAK TOKEN_SEMICOLON 
 		{
-			$$.push_back(new InstructionBreak(program->robots.back()->core->depth));
+			$$.push_back(new InstructionBreak(@1, program->robots.back()->core->depth));
 		}
 		|TOKEN_CONTINUE TOKEN_SEMICOLON  //TODO nobreakable veci?
 		{
-			$$.push_back(new InstructionContinue(program->robots.back()->core->depth));
+			$$.push_back(new InstructionContinue(@1, program->robots.back()->core->depth));
 		}
 		|simple_command TOKEN_SEMICOLON {$$ = $1;}
 		;
@@ -630,9 +630,9 @@ simple_command:	assign {$$ = $1;} //tu nie je ziadne output
 			$$ = $1.ins; 
 			if($1.output.size()>0)
 			{
-				$$.push_back(new InstructionPop());
+				$$.push_back(new InstructionPop(@1));
 				if($1.temp.back())
-					$$.push_back(new InstructionRemoveTemp());
+					$$.push_back(new InstructionRemoveTemp(@1));
 			}
 		} //Plus Plus Plus neee:)
 		;
@@ -642,18 +642,18 @@ assign: variable_left TOKEN_ASSIGN expression
 		{
 			if ($3.temp.back())
 			{
-				$$.push_back(new InstructionRemoveTemp());
+				$$.push_back(new InstructionRemoveTemp(@1));
 			}
-			$3.ins.push_back(new InstructionConversionToInt());
+			$3.ins.push_back(new InstructionConversionToInt(@1));
 			$3.temp.back() = true;
 		}
 		else if	(($1.output.back().type == TypeReal)&&($3.output.back().type == TypeInteger))
 		{
 			if ($3.temp.back())
 			{
-				$$.push_back(new InstructionRemoveTemp());
+				$$.push_back(new InstructionRemoveTemp(@1));
 			}
-			$3.ins.push_back(new InstructionConversionToReal());
+			$3.ins.push_back(new InstructionConversionToReal(@1));
 			$3.temp.back() = true;
 		}
 		else if ($1.output.back()!=$3.output.back())
@@ -661,14 +661,14 @@ assign: variable_left TOKEN_ASSIGN expression
 			program->robots.back()->error(@2, Robot::ErrorConversionImpossible);
 		}
 		$$ = $1.ins;
-		Instructions ins = get_load_type( $1.output.back() );
+		Instructions ins = get_load_type(@1, $1.output.back() );
 		$$.insert($$.end(), ins.begin(), ins.end()); 
 		$$.insert($$.end(), $3.ins.begin(), $3.ins.end());
-		ins = get_store_type( $3.output.back() );
+		ins = get_store_type(@1, $3.output.back() );
 		$$.insert($$.end(),ins.begin(), ins.end());
 
 		if ($3.temp.back())
-			$$.push_back(new InstructionRemoveTemp());
+			$$.push_back(new InstructionRemoveTemp(@1));
 		}
 		;
 array: TOKEN_IDENTIFIER array_access 
@@ -694,12 +694,12 @@ array: TOKEN_IDENTIFIER array_access
 			$$.clear();
 			$$.ins = $3.ins;
 			$$.output.push_back(*program->robots.back()->find_type(TypeObject));
-			Instruction * in = possible_conversion($3.output.back().type, TypeInteger);
+			Instruction * in = possible_conversion(@1, $3.output.back().type, TypeInteger);
 			if (in!=NULL)
 			{
 				$$.ins.push_back(in);
 			}
-			$$.ins.push_back(new InstructionEye());
+			$$.ins.push_back(new InstructionEye(@1));
 			$$.temp.push_back(true);
 		}
 		;
@@ -727,9 +727,9 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 					{
 						if (f->parameters[i].val_type == PARAMETER_BY_VALUE)
 						{
-							$$.ins.push_back(new InstructionCreate(f->parameters[i].node));
-							$$.ins.push_back(new InstructionLoadLocal(f->parameters[i].node));
-							Instructions ins = get_load_type(*f->parameters[i].node->type_of_variable);
+							$$.ins.push_back(new InstructionCreate(@1, f->parameters[i].node));
+							$$.ins.push_back(new InstructionLoadLocal(@1, f->parameters[i].node));
+							Instructions ins = get_load_type(@1, *f->parameters[i].node->type_of_variable);
 							$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 						}
 						while ( last < $3.ins.size()) //od i-teho az po i+1 NULL
@@ -748,9 +748,9 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						{
 							if ($3.temp[i])
 							{
-								$$.ins.push_back(new InstructionRemoveTemp());
+								$$.ins.push_back(new InstructionRemoveTemp(@1));
 							}
-							$$.ins.push_back(new InstructionConversionToInt());
+							$$.ins.push_back(new InstructionConversionToInt(@1));
 							$3.temp[i] = true;
 							$3.output[i] = *program->robots.back()->find_type(TypeInteger);
 						}
@@ -759,10 +759,10 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						{
 							if ($3.temp[i])
 							{
-								$$.ins.push_back(new InstructionRemoveTemp());
+								$$.ins.push_back(new InstructionRemoveTemp(@1));
 							}
 							$3.temp[i] = true;
-							$$.ins.push_back(new InstructionConversionToReal());
+							$$.ins.push_back(new InstructionConversionToReal(@1));
 							$3.output[i] = *program->robots.back()->find_type(TypeReal);
 						}
 						if ($3.output[i] != *f->parameters[i].node->type_of_variable)
@@ -773,13 +773,13 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 
 						if (f->parameters[i].val_type == PARAMETER_BY_VALUE)
 						{
-							Instructions ins = get_store_type($3.output[i]);
+							Instructions ins = get_store_type(@1, $3.output[i]);
 							$$.ins.insert($$.ins.end(), ins.begin(), ins.end());
 						}
 						else
-							$$.ins.push_back(new InstructionStoreRef(f->parameters[i].node));
+							$$.ins.push_back(new InstructionStoreRef(@1, f->parameters[i].node));
 					}
-					$$.ins.push_back(new InstructionCall(f));
+					$$.ins.push_back(new InstructionCall(@1, f));
 					if (f->return_var->type_of_variable->type == TypeVoid)
 						$$.output.clear();
 					else
@@ -788,7 +788,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 				for (size_t i =0; i< $3.temp.size(); i++)
 				{
 					if ($3.temp[i])
-						$$.ins.push_back(new InstructionRemoveTemp()); //likvidovnie premennyh obsadenych v pamati
+						$$.ins.push_back(new InstructionRemoveTemp(@1)); //likvidovnie premennyh obsadenych v pamati
 
 				}
 				if (f->return_var->type_of_variable->type!= TypeVoid)
@@ -830,10 +830,10 @@ matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched TOKEN_ELSE matche
 		$$.clear();
 		if ($3.temp.back())
 			{
-				$3.ins.push_back(new InstructionRemoveTemp());
+				$3.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-		$5.push_back(new InstructionMustJump($7.size()));
-		$3.ins.push_back(new InstructionJump(0,$5.size()));
+		$5.push_back(new InstructionMustJump(@1, $7.size()));
+		$3.ins.push_back(new InstructionJump(@1, 0,$5.size()));
 		$$ = $3.ins;
 		$$.insert($$.end(),$5.begin(), $5.end());
 		$$.insert($$.end(),$7.begin(), $7.end());
@@ -845,9 +845,9 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 		{
 			if ($3.temp.back())
 			{
-				$3.ins.push_back(new InstructionRemoveTemp());
+				$3.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-			$3.ins.push_back(new InstructionJump(0,$5.size()));
+			$3.ins.push_back(new InstructionJump(@1, 0,$5.size()));
 			$$ = $3.ins;
 			$$.insert($$.end(),$5.begin(), $5.end());
 		}
@@ -855,9 +855,9 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 	{
 		if ($3.temp.back())
 			{
-				$3.ins.push_back(new InstructionRemoveTemp());
+				$3.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-		$3.ins.push_back(new InstructionJump(0,$5.size()));
+		$3.ins.push_back(new InstructionJump(@1, 0,$5.size()));
 		$$ = $3.ins;
 		$$.insert($$.end(),$5.begin(), $5.end());
 	}
@@ -865,10 +865,10 @@ unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR block_of_instructions
 	{
 		if ($3.temp.back())
 			{
-				$3.ins.push_back(new InstructionRemoveTemp());
+				$3.ins.push_back(new InstructionRemoveTemp(@1));
 			}
-		$5.push_back(new InstructionMustJump($7.size())); //outputy sa tymto znicia
-		$3.ins.push_back(new InstructionJump(0,$5.size()));
+		$5.push_back(new InstructionMustJump(@1, $7.size())); //outputy sa tymto znicia
+		$3.ins.push_back(new InstructionJump(@1, 0,$5.size()));
 		$$ = $3.ins;
 		$$.insert($$.end(),$5.begin(), $5.end());
 		$$.insert($$.end(),$7.begin(), $5.end());
@@ -882,9 +882,9 @@ unary_var: variable {$$ = $1;}
 		{
 			$$ = $1; 
 			if($$.output.back() == TypeReal) 
-				$$.ins.push_back(new InstructionPlusPlusReal());
+				$$.ins.push_back(new InstructionPlusPlusReal(@1));
 			else if ($$.output.back() == TypeInteger) 
-				$$.ins.push_back(new InstructionPlusPlusInteger());
+				$$.ins.push_back(new InstructionPlusPlusInteger(@1));
 			else program->robots.back()->error(@2,Robot::ErrorOperationNotSupported);
 			$$.temp.push_back($1.temp.back());
 		} 
@@ -892,9 +892,9 @@ unary_var: variable {$$ = $1;}
 		{
 			 $$ = $1; 
 			 if($$.output.back() == TypeReal)
-				 $$.ins.push_back(new InstructionMinusMinusReal());
+				 $$.ins.push_back(new InstructionMinusMinusReal(@1));
 			else if ($$.output.back() == TypeInteger) 
-				$$.ins.push_back(new InstructionMinusMinusInteger());
+				$$.ins.push_back(new InstructionMinusMinusInteger(@1));
 			else program->robots.back()->error(@2,Robot::ErrorOperationNotSupported);
 			$$.temp.push_back($1.temp.back());
 		}
@@ -913,8 +913,8 @@ variable_left:TOKEN_IDENTIFIER
 					Create_type t = *$$.output.back().nested_vars[i].type; 
 					$$.output.pop_back();
 					$$.output.push_back(t);
-					$$.ins.push_back(new InstructionLoad((int)i));
-					$$.ins.push_back(new InstructionLoad());
+					$$.ins.push_back(new InstructionLoad(@1, (int)i));
+					$$.ins.push_back(new InstructionLoad(@1));
 					break;
 				}
 			$$.temp.push_back($1.temp.back());
@@ -944,9 +944,9 @@ array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 			{
 				if ($2.ins[i] == NULL)
 				{
-					$$.ins.push_back(new InstructionLoad());
+					$$.ins.push_back(new InstructionLoad(@1));
 					if ($2.temp[i])
-						$$.ins.push_back(new InstructionRemoveTemp());
+						$$.ins.push_back(new InstructionRemoveTemp(@1));
 					$$.dimension++;
 				}
 				else
@@ -961,9 +961,9 @@ array_access: TOKEN_LSBRA exps TOKEN_RSBRA
 			{
 				if ($3.ins[i] == NULL)
 				{
-					$$.ins.push_back(new InstructionLoad());
+					$$.ins.push_back(new InstructionLoad(@1));
 					if ($3.temp[i])
-						$$.ins.push_back(new InstructionRemoveTemp());
+						$$.ins.push_back(new InstructionRemoveTemp(@1));
 					$$.dimension++;
 				}
 				else
@@ -994,10 +994,10 @@ expression_mul:expression_base { $$ = $1; }
 			$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
 			if ($1.temp.back())
 			{
-				$$.ins.push_back(new InstructionRemoveTemp());
+				$$.ins.push_back(new InstructionRemoveTemp(@1));
 			}
 			if ($3.temp.back())
-				$$.ins.push_back(new InstructionRemoveTemp());
+				$$.ins.push_back(new InstructionRemoveTemp(@1));
 			Element e = operMul(@2, program->robots.back(), $2, $1.output.back(), $3.output.back());
 			$$.ins.insert($$.ins.end(), e.ins.begin(),e.ins.end());
 			$$.output = e.output;
@@ -1012,10 +1012,10 @@ expression_add: expression_mul { $$ = $1;}
 			$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
 			if ($1.temp.back())
 			{
-				$$.ins.push_back(new InstructionRemoveTemp());
+				$$.ins.push_back(new InstructionRemoveTemp(@1));
 			}
 			if ($3.temp.back())
-				$$.ins.push_back(new InstructionRemoveTemp());
+				$$.ins.push_back(new InstructionRemoveTemp(@1));
 			Element e = (operAdd(@2, program->robots.back(),$2,$1.output.back(), $3.output.back()));
 			$$.ins.insert($$.ins.end(), e.ins.begin(), e.ins.end());
 			$$.output = e.output;
@@ -1031,9 +1031,9 @@ expression_bool_base: expression { $$ = $1;}
 			$$.ins = $1.ins;
 			$$.ins.insert($$.ins.end(), $3.ins.begin(), $3.ins.end());
 			if ($1.temp.back())
-				$$.ins.push_back(new InstructionRemoveTemp());
+				$$.ins.push_back(new InstructionRemoveTemp(@1));
 			if ($3.temp.back())
-				$$.ins.push_back(new InstructionRemoveTemp());
+				$$.ins.push_back(new InstructionRemoveTemp(@1));
 			Element e = operRel(@2,program->robots.back(),$2,$3.output.back(),$1.output.back());
 			$$.ins.insert($$.ins.end(), e.ins.begin(), e.ins.end());
 			$$.output = e.output;
@@ -1062,9 +1062,9 @@ expression_bool:	expression_bool_or { $$ = $1;}
 			{
 				if ($1.temp.back())
 				{
-					$$.ins.push_back(new InstructionRemoveTemp());
+					$$.ins.push_back(new InstructionRemoveTemp(@1));
 				}
-				$$.ins.push_back(new InstructionConversionToInt());
+				$$.ins.push_back(new InstructionConversionToInt(@1));
 				$$.output.push_back(Create_type(TypeInteger));
 			}
 			else if ($1.output.back().type!= TypeInteger) 
@@ -1074,14 +1074,14 @@ expression_bool:	expression_bool_or { $$ = $1;}
 			{
 				if ($3.temp.back())
 				{
-					$$.ins.push_back(new InstructionRemoveTemp());
+					$$.ins.push_back(new InstructionRemoveTemp(@1));
 				}
-				$$.ins.push_back(new InstructionConversionToInt());
+				$$.ins.push_back(new InstructionConversionToInt(@1));
 				$$.output.push_back(Create_type(TypeInteger));
 			}
 			else if ($3.output.back().type!= TypeInteger) 
 				program->robots.back()->error(@2,Robot::ErrorConversionImpossible); 
-			$$.ins.push_back(new InstructionAnd);
+			$$.ins.push_back(new InstructionAnd(@1));
 			$$.temp.push_back(true);
 		}
 	;

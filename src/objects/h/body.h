@@ -29,6 +29,8 @@ struct GamePoints
 		NumberOfSections
 	};
 	int total_;
+	int total2;
+	std::string name[NumberOfSections];
 	GamePoints(int total = 0 );
 	int sections[NumberOfSections];
 	void check();

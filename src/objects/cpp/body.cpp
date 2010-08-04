@@ -10,6 +10,10 @@ GamePoints::GamePoints(int total)
 	{
 		sections[i] = 0;
 	}
+	name[SectionAngle] = "Angle";
+	name[SectionHitpoints] = "Hitpoints";
+	name[SectionMissilles] = "Missilles";
+	name[SectionSteps] = "speed";//....
 	total_ =  total;
 }
 
