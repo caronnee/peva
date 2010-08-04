@@ -10,7 +10,7 @@
 enum Instr
 {		
 	IGroup_undefined = 0,
-	IGroup_call,
+	IGroup_InstructionCall,
 	IGroup_create,
 	IGroup_load,
 	IGroup_conversion,
@@ -63,7 +63,7 @@ class Instruction
 {
 protected:
 	Node * node;
-	bool constant;
+	//bool constant;
 public:
 	size_t group; //inukatne pre azdu instrukciu
 	std::string name_;
@@ -163,14 +163,14 @@ class InstructionStoreObject : public Instruction
 		InstructionStoreObject();
 		virtual ~InstructionStoreObject();
 };
-class Call : public Instruction
+class InstructionCall : public Instruction
 {
 	Function* function;
 	public:
-		Call(Function * f);
+		InstructionCall(Function * f);
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core * c);
-		virtual ~Call();
+		virtual ~InstructionCall();
 };
 
 class InstructionPop : public Instruction
@@ -632,6 +632,29 @@ class InstructionTarget: public Instruction
 		virtual int execute(Core * c);
 		virtual ~InstructionTarget();
 };
+
+class InstructionSeeMoving: public Instruction
+{
+	public:
+		InstructionSeeMoving();
+		virtual int execute(Core * c);
+		virtual ~InstructionSeeMoving();
+};
+class InstructionIsEnemy: public Instruction
+{
+	public:
+		InstructionIsEnemy();
+		virtual int execute(Core * c);
+		virtual ~InstructionIsEnemy();
+};
+class InstructionSeeEnemy: public Instruction
+{
+	public:
+		InstructionSeeEnemy();
+		virtual int execute(Core * c);
+		virtual ~InstructionSeeEnemy();
+};
+
 class InstructionSaveVariable : public Instruction
 {
 	public:

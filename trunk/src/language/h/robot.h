@@ -39,6 +39,9 @@ class Robot
 	 * namespace when target kill or start place  */
 	std::string space;
 
+	/* node used when an exception occurs in addig to tree */
+	Node * nullableNode;
+
 public:
 	/* game points */
 	GamePoints points;

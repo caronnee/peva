@@ -29,10 +29,10 @@ public:
 	/* index of last visited tile */
 	int indexLast;
 
-	/* inits our class, it is called in every constructor */
+	/* inits our class, it is InstructionCalled in every constructor */
 	void Init();	
 
-	/* number of tile to left and rigt, symmetrically */
+	/* number of tile to left and rigt, symmetriInstructionCally */
 	int fatness;
 	
 	/* for detection infinite cycle */

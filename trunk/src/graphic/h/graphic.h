@@ -13,7 +13,7 @@
 #include <SDL/SDL_ttf.h>
 
 #define SDL_SUBSYSTEMS SDL_INIT_VIDEO
-#define WIN_FLAGS SDL_HWSURFACE|SDL_RESIZABLE //TODO! on resizeable
+#define WIN_FLAGS SDL_HWSURFACE|SDL_RESIZABLE
 #define WIN_BPP 0
 #define WIN_TITLE "Codewars"
 
@@ -57,14 +57,14 @@ public:
 	/* constructor, initialize graphic */
 	Graphic();
 
-	/* returns a newly creaed image of text, user should call sdl_freeSurface */
+	/* returns a newly creaed image of text, user should InstructionCall sdl_freeSurface */
 	SDL_Surface * render(std::string str);
 
-	/* returns a newly creaed image of highlited text, user should call sdl_freeSurface */
+	/* returns a newly creaed image of highlited text, user should InstructionCall sdl_freeSurface */
 	SDL_Surface * renderLight(std::string str);
 
 	/* initialized graphic with parameters, should
-	 * be always called before using anything from this class */
+	 * be always InstructionCalled before using anything from this class */
 	bool Init(); //initne screen, nacita background a pod.
 
 	/* destroys everything that was allocated */

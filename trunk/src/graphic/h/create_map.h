@@ -182,7 +182,7 @@ public:
 	/* goiing to passive state and cleaning variables */
 	void clean();
 	
-	/* destructor, calling function clean()*/
+	/* destructor, InstructionCalling function clean()*/
 	virtual ~Create_map()throw();
 
 	/*function to fill created map */

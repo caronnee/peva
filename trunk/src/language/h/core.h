@@ -64,9 +64,13 @@ struct Core
 
 	/* loads array element, if any, else loads dev_null */
 	void loadElement(int range);
+
 public:
 	/* contructor */
 	Core(TypeContainer *t);
+
+	/* load a variable onto stack */
+	void addValue(Variable * v);
 
 	/* performs integer assign */
 	void saveInteger();

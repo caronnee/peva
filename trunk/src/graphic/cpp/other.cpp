@@ -16,7 +16,7 @@ extern void my_destroy();
 extern int yyparse(Robots *);
 
 
-std::string instructionNames[] = { "undefined", "call", "create", "load", "conversion", "duplicate", "store", "pop", "jump", "break", "continue", "return", "restore", "removetemp", "plusplus", "minusminus", "plus", "minus", "multiply", "divide", "modulo", "binaryand", "and", "binaryor", "or", "binarynot", "not", "gt", "ge", "equal", "notequal ", "lt", "le", "begin", "endblock", "see", "eye", "fetchstate", "step", "wait", "shoot", "turn", "hit", "check", "locate", "direction", "random" };
+std::string instructionNames[] = { "undefined", "InstructionCall", "create", "load", "conversion", "duplicate", "store", "pop", "jump", "break", "continue", "return", "restore", "removetemp", "plusplus", "minusminus", "plus", "minus", "multiply", "divide", "modulo", "binaryand", "and", "binaryor", "or", "binarynot", "not", "gt", "ge", "equal", "notequal ", "lt", "le", "begin", "endblock", "see", "eye", "fetchstate", "step", "wait", "shoot", "turn", "hit", "check", "locate", "direction", "random" };
 
 Play::Play(Window *w_)
 {

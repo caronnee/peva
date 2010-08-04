@@ -203,7 +203,7 @@ public:
 	/* drawing events */
 	void draw();
 
-	/* clening after menu if called off */
+	/* clening after menu if InstructionCalled off */
 	void clean();
 
 	/* destructor */

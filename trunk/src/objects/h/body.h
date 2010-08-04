@@ -46,9 +46,6 @@ private:
 	/* condition according to number of killed robots */
 	TargetKillNumber * toKill;
 
-	/* robots that need to be destroye, recognized by name */
-	std::vector<Object *> killTarget;
-
 	/* in which map is an object located */
 	Map * map;
 
@@ -56,6 +53,9 @@ private:
 	size_t tasks;
 
 public:
+	/* robots that need to be destroye, recognized by name */
+	std::vector<Object *> killTarget;
+
 	/* class handling visibility issue */
 	Seer seer;
 	
@@ -86,7 +86,7 @@ public:
 	/* cleaning when death occured */
 	void dead();
 
-	/* number of steps to be done when step() called */
+	/* number of steps to be done when step() InstructionCalled */
 	int default_steps; 
 
 	/* gamepoints holding ini informations */
