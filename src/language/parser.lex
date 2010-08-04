@@ -8,9 +8,9 @@
 %x COMMENT_LINE
 %x COMMENT
 %{
-	#include "../h/lval.h"
-	#include "../h/bison.h"
+	#include "../../generatedFiles/h/bison.h"
 	#include "../../add-ons/h/macros.h"
+	#include "../../language/h/lval.h"
 
 int line = 1;
 
@@ -20,7 +20,7 @@ WHITESPACE		[ \r\t\f]
 
 %%
 
-<<EOF>>						{ line = 1;TEST("OK, zmenuila som na 1"); yyterminate(); }
+<<EOF>>						{ line = 1; yyterminate(); }
 
 {WHITESPACE}+					;
 

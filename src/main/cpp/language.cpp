@@ -1,7 +1,7 @@
 #define _NO_IMAGES_
 #include <iostream>
 #include "../../language/h/robot.h"
-#include "../../language/h/bison.h"
+#include "../../generatedFiles/h/bison.h"
 #include "../../add-ons/h/macros.h"
 
 extern FILE * yyin; //TODO zmenit na spravne nacitanie z editora
