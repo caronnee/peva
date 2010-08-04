@@ -117,10 +117,10 @@ public:
 	Node * find_var(std::string s, bool & b);
 
 	/* adds node in tree with type t and under name name*/
-	Node * add(std::string name, Create_type * t);
+	Node * add(unsigned line, std::string name, Create_type * t);
 
 	/* adds node under name name and assigns it undefined type */
-	Node * add(std::string name);
+	Node * add(unsigned line, std::string name);
 
 	/* returns fnction with name s, NULL if none exists */
 	Function * find_f(std::string s);
