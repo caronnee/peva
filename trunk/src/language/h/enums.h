@@ -27,6 +27,8 @@ enum Operation
 
 enum ObjectFeatures
 {
+	FeatureSeeEnemy,
+	FeatureIsEnemy,
 	FeatureIsPlayer,
 	FeatureIsWall,
 	FeatureIsMissille,

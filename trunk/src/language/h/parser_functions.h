@@ -8,9 +8,9 @@ typedef std::vector<std::string> strings;
 
 Element ident_load(unsigned line, Robot * r, std::string s);
 
-Instructions check_integer(Element e);
+//Instructions check_integer(unsigned line, Element e);
 
-Instruction * conversionToReal(Type t1, Type t2);
+Instruction * conversionToReal(unsigned line, Type t1, Type t2);
 
 Element operRel(int line, Robot *r,Operation op, Create_type t1, Create_type t2);
 Element operMul(int line, Robot * r,Operation op, Create_type t1, Create_type t2);
@@ -18,8 +18,8 @@ Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2
 Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type T2);
 Element feature (int line, Robot * r, ObjectFeatures feat, Element t);
 
-Instruction* possible_conversion(Type to, Type from);
+Instruction* possible_conversion(unsigned line, Type to, Type from);
 Instructions load_full(Node * n);
-Instructions get_load_type (Create_type t);
-Instructions get_store_type (Create_type t);
+Instructions get_load_type (unsigned line, Create_type t);
+Instructions get_store_type (unsigned line, Create_type t);
 #endif

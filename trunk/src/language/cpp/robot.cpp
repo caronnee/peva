@@ -6,6 +6,22 @@ std::string Robot::info()
 {
 	std::string output;
 	output += "name " + name +"(" + space + ")\n";
+	//memory, attack, missile attack, vlastnosti
+	for (int i = 0; i< GamePoints::NumberOfSections; i++)
+		output += points.name[i] + deconvert<int>(points.sections[i]);
+	output += "\n";\
+	//missiles left
+	//na ktorej instrukcii prave
+	if (getBody()->waits>0)
+		output+= "Waiting" + deconvert<int>(getBody()->waits);
+	//numbers of steps
+	else if (getBody()->isMoving())
+		output += "Moving" + deconvert<int>(getBody()->movement.steps);
+	else 
+		output += "Processing " + instructions[core->PC]->name();
+	
+	output += "\n";
+	//numbers of hitpoints
 	output+= getBody()->info();
 	return output;
 }
@@ -232,7 +248,7 @@ void Robot::add(Instructions ins)
 		instructions.push_back(ins[i]);
 	}
 }
-void Robot::add_function( Instructions ins)
+void Robot::add_function(unsigned line, Instructions ins)
 {
 	core->nested_function->begin = instructions.size();
 	core->nested_function->end = core->nested_function->begin + ins.size()+1;
@@ -241,8 +257,8 @@ void Robot::add_function( Instructions ins)
 	{
 		instructions.push_back(ins[i]);
 	}
-	if(core->nested_function->name != "main") //TODO mohla by vracat tiez nejaku hodnotu a vracat sa na 'begin'
-		instructions.push_back(new InstructionRestore()); //pre procedury
+	if(core->nested_function->name != "main") 
+		instructions.push_back(new InstructionRestore(line)); //pre procedury
 	else
 		core->nested_functions.push_back(core->nested_function);
 }
@@ -596,7 +612,7 @@ void Robot::consolidate()
 			continue;
 		}
 	}
-	instructions.push_back(new InstructionMustJump(-instructions.size()+find_f("main")->begin -1));
+	instructions.push_back(new InstructionMustJump(-1, -instructions.size()+find_f("main")->begin -1)); // a tu to bude zamerne!
 }
 Robot::~Robot()
 {

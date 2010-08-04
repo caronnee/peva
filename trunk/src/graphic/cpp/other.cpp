@@ -289,7 +289,7 @@ void Play::process()
 		rect.x = (w->g->screen->w) >> 1;
 		rect.y = (w->g->screen->h) >> 1;
 		SDL_BlitSurface(end, NULL, w->g->screen, &rect);
-		SDL_Flip(w->g->screen); //TODO update
+		SDL_Flip(w->g->screen); 
 		bool wait = false;
 		while (!wait)
 		{

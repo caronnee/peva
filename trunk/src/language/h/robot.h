@@ -132,7 +132,7 @@ public:
 	void enter(std::string s, std::vector<Parameter_entry> p,Create_type *t);
 
 	/* adds function to robot's function list */
-	void add_function( Instructions ins);
+	void add_function( unsigned line, Instructions ins);
 
 	/* leaves function */
 	void leave();

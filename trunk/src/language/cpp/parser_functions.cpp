@@ -6,16 +6,16 @@
 /* Maximalny pocet dimenzii u pola*/
 #define MAX_DIMENSION 7 
 
-Instructions check_integer(Element e)
+/*Instructions check_integer(unsigned line, Element e)
 {
 	Instructions ins;
 	ins = e.ins;
 	if (e.output.back().type == TypeReal)
 	{
-		ins.push_back(new InstructionConversionToInt());
+		ins.push_back(new InstructionConversionToInt(line));
 	}
 	return ins;
-}
+}*/
 Element ident_load(unsigned line, Robot * r, std::string s)
 {
 	Element st;
@@ -28,25 +28,25 @@ Element ident_load(unsigned line, Robot * r, std::string s)
 		return st;
 	}
 	if(n->nested == Local)
-		st.ins.push_back(new InstructionLoadLocal(n));
+		st.ins.push_back(new InstructionLoadLocal(line, n));
 	else  
-		st.ins.push_back(new InstructionLoadGlobal(n));
+		st.ins.push_back(new InstructionLoadGlobal(line, n));
 	st.output.push_back(*n->type_of_variable);	
 	return st;
 }
-Instruction * possible_conversion(Type to, Type from)
+Instruction * possible_conversion(unsigned line, Type to, Type from)
 {
 	if ((to == TypeInteger) && (from == TypeReal))
-		return new InstructionConversionToInt();
+		return new InstructionConversionToInt(line);
 	if ((from == TypeInteger) && (to == TypeReal))
-		return new InstructionConversionToReal();
+		return new InstructionConversionToReal(line);
 	return NULL;
 }
 
-Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
+Element operRel(int line, Robot * r, Operation op, Create_type t1, Create_type t2)
 {
 	Element e;
-	Instruction * il = conversionToReal(t1.type, t2.type);
+	Instruction * il = conversionToReal(line, t1.type, t2.type);
 	if (il!=NULL)
 	{
 		e.ins.push_back(il);
@@ -54,7 +54,7 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 	}
 	else if ( t1!=t2)
 	{
-		r->error(l,Robot::ErrorConversionImpossible);
+		r->error(line,Robot::ErrorConversionImpossible);
 		return e;
 	}
 	else
@@ -65,22 +65,22 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 			switch(op)
 			{
 				case OperationLess:
-					e.ins.push_back(new InstructionLtInteger());
+					e.ins.push_back(new InstructionLtInteger(line));
 					break;
 				case OperationLessEqual:
-					e.ins.push_back(new InstructionLeInteger());
+					e.ins.push_back(new InstructionLeInteger(line));
 					break;
 				case OperationEqual:
-					e.ins.push_back(new InstructionEqualInteger());
+					e.ins.push_back(new InstructionEqualInteger(line));
 					break;
 				case OperationGreater:
-					e.ins.push_back(new InstructionGtInteger());
+					e.ins.push_back(new InstructionGtInteger(line));
 					break;
 				case OperationGreaterEqual:
-					e.ins.push_back(new InstructionGeInteger());
+					e.ins.push_back(new InstructionGeInteger(line));
 					break;
 				case OperationNotEqual:
-					e.ins.push_back(new InstructionNotEqualInteger());
+					e.ins.push_back(new InstructionNotEqualInteger(line));
 					break;
 				default: ;
 			}
@@ -89,22 +89,22 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 			switch(op)
 			{
 				case OperationLess:
-					e.ins.push_back(new InstructionLtReal());
+					e.ins.push_back(new InstructionLtReal(line));
 					break;
 				case OperationLessEqual:
-					e.ins.push_back(new InstructionLeReal());
+					e.ins.push_back(new InstructionLeReal(line));
 					break;
 				case OperationEqual:
-					e.ins.push_back(new InstructionEqualReal());
+					e.ins.push_back(new InstructionEqualReal(line));
 					break;
 				case OperationGreater:
-					e.ins.push_back(new InstructionGtReal());
+					e.ins.push_back(new InstructionGtReal(line));
 					break;
 				case OperationGreaterEqual:
-					e.ins.push_back(new InstructionGeReal());
+					e.ins.push_back(new InstructionGeReal(line));
 					break;
 				case OperationNotEqual:
-					e.ins.push_back(new InstructionNotEqualReal());
+					e.ins.push_back(new InstructionNotEqualReal(line));
 					break;
 				default: ;
 			}
@@ -113,30 +113,30 @@ Element operRel(int l, Robot * r, Operation op, Create_type t1, Create_type t2)
 			switch(op)
 			{
 				case OperationEqual:
-					e.ins.push_back(new InstructionEqualObject());
+					e.ins.push_back(new InstructionEqualObject(line));
 					break;
 				case OperationNotEqual:
-					e.ins.push_back(new InstructionNotEqualObject());
+					e.ins.push_back(new InstructionNotEqualObject(line));
 					break;
-				default: r->error(l, Robot::ErrorOperationNotSupported);
+				default: r->error(line, Robot::ErrorOperationNotSupported);
 			}
 			break;
 		default:
-			r->error(l, Robot::ErrorOperationNotSupported);
+			r->error(line, Robot::ErrorOperationNotSupported);
 	}
 	return e;
 }
-Instruction * conversionToReal(Type t1, Type t2)
+Instruction * conversionToReal(unsigned line, Type t1, Type t2)
 {
 	if (((t1 == TypeInteger)&& (t2 == TypeReal))||((t1 == TypeReal) && (t2 == TypeInteger)))
 	
-		return new InstructionConversionToReal();
+		return new InstructionConversionToReal(line);
 	return NULL;
 }
 Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t2)
 {	
 	Element e;
-	Instruction * i = conversionToReal(t1.type, t2.type);
+	Instruction * i = conversionToReal(line, t1.type, t2.type);
 	Type output = t1.type;
 	if (i!=NULL)
 	{
@@ -149,22 +149,22 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 			switch (op)
 			{
 				case OperationMultiply:
-					e.ins.push_back(new InstructionMultiplyInteger());
+					e.ins.push_back(new InstructionMultiplyInteger(line));
 					break;
 				case OperationDivide:
-					e.ins.push_back( new InstructionDivideInteger());
+					e.ins.push_back( new InstructionDivideInteger(line));
 					break;
 				case OperationModulo:
-					e.ins.push_back( new InstructionModulo());
+					e.ins.push_back( new InstructionModulo(line));
 					break;
 				case OperationAnd:
-					e.ins.push_back( new InstructionBinaryAnd());
+					e.ins.push_back( new InstructionBinaryAnd(line));
 					break;
 				case OperationOr:
-					e.ins.push_back( new InstructionBinaryOr());
+					e.ins.push_back( new InstructionBinaryOr(line));
 					break;
 				case OperationNot:
-					e.ins.push_back( new InstructionBinaryNot());
+					e.ins.push_back( new InstructionBinaryNot(line));
 					break;
 				default: r->error(line,Robot::ErrorOperationNotSupported);
 			}
@@ -173,10 +173,10 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 			switch (op)
 			{
 				case OperationMultiply:
-					e.ins.push_back(new InstructionMultiplyReal());
+					e.ins.push_back(new InstructionMultiplyReal(line));
 					break;
 				case OperationDivide:
-					e.ins.push_back( new InstructionDivideReal());
+					e.ins.push_back( new InstructionDivideReal(line));
 					break;
 				default: r->error(line,Robot::ErrorOperationNotSupported);
 			}		
@@ -190,7 +190,7 @@ Element operMul(int line, Robot * r, Operation op, Create_type t1, Create_type t
 Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 {
 	Element e;
-	Instruction *i = conversionToReal(t1.type,t2.type);
+	Instruction *i = conversionToReal(line, t1.type,t2.type);
 	Type output = t1.type;;
 	if (i!=NULL)
 	{
@@ -208,10 +208,10 @@ Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2
 			switch(op)
 			{
 				case OperationPlus:
-					e.ins.push_back( new InstructionPlusInteger());
+					e.ins.push_back( new InstructionPlusInteger(line));
 					break;
 				case OperationMinus:
-					e.ins.push_back( new InstructionMinusInteger());
+					e.ins.push_back( new InstructionMinusInteger(line));
 					break;
 				default:
 					r->error(line, Robot::ErrorOperationNotSupported);
@@ -221,10 +221,10 @@ Element operAdd(int line, Robot * r,Operation op, Create_type t1, Create_type t2
 			switch(op)
 			{
 				case OperationPlus:
-					e.ins.push_back( new InstructionPlusReal());
+					e.ins.push_back( new InstructionPlusReal(line));
 					break;
 				case OperationMinus:
-					e.ins.push_back( new InstructionMinusReal());
+					e.ins.push_back( new InstructionMinusReal(line));
 					break;
 				default:
 					r->error(line, Robot::ErrorOperationNotSupported);
@@ -248,10 +248,10 @@ Element operOr(int line, Robot * r,Operation op, Create_type t1, Create_type t2)
 	switch(op)
 	{
 		case OperationBoolNot:
-			e.ins.push_back( new InstructionBinaryNot());
+			e.ins.push_back( new InstructionBinaryNot(line));
 			break;
 		case OperationBoolOr:
-			e.ins.push_back( new InstructionBinaryOr());
+			e.ins.push_back( new InstructionBinaryOr(line));
 			break;
 		default: 
 			r->error(line, Robot::ErrorOperationNotSupported);
@@ -272,7 +272,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	{
 		if (e.temp[i])
 		{
-			ee.ins.push_back(new InstructionRemoveTemp());
+			ee.ins.push_back(new InstructionRemoveTemp(line));
 		}
 	}
 	switch(feat)
@@ -289,7 +289,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				break;
 			}
 			ee.output.push_back(*r->find_type(TypeInteger));
-			ee.ins.push_back(new InstructionDirection());
+			ee.ins.push_back(new InstructionDirection(line));
 			break;
 		case FeatureTarget:
 			if ((e.output.size() > 0))
@@ -298,7 +298,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				break;
 			}
 			ee.output.push_back(*r->find_type(TypeLocation));
-			ee.ins.push_back( new InstructionTarget());
+			ee.ins.push_back( new InstructionTarget(line));
 			
 			break;
 		case FeatureWait:
@@ -310,56 +310,72 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			if (e.output.back().type == TypeReal)
 			{
 				e.output.back() = *r->find_type(TypeInteger);
-				ee.ins.push_back(new InstructionConversionToInt());
+				ee.ins.push_back(new InstructionConversionToInt(line));
 			}
 			if (e.output.back()!= *r->find_type(TypeInteger))
 			{
 				r->error(line, Robot::ErrorConversionImpossible);
 				break;
 			}
-			ee.ins.push_back(new InstructionWait());
-			ee.ins.push_back(new InstructionFetchState());
+			ee.ins.push_back(new InstructionWait(line));
+			ee.ins.push_back(new InstructionFetchState(line));
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureIsPlayer:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionIsPlayer());
+				ee.ins.push_back( new InstructionIsPlayer(line));
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
+			break;
+		case FeatureIsEnemy:
+			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
+				ee.ins.push_back( new InstructionIsEnemy(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureIsWall:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionIsWall());
+				ee.ins.push_back( new InstructionIsWall(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureIsMissille:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionIsMissille());
+				ee.ins.push_back( new InstructionIsMissille(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureIsMoving:
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionIsMoving());
+				ee.ins.push_back( new InstructionIsMoving(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureLocate: //vracia poziciu objektu, ak ho r vidi, ak nie, vyhodi -1, -1;
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionLocate());
+				ee.ins.push_back( new InstructionLocate(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeLocation));
 			break;
+		case FeatureSeeEnemy:
+			if (e.output.size() == 0)
+			{
+				ee.ins.push_back( new InstructionSeeEnemy(line));
+			}
+			else
+				r->error(line, Robot::ErrorWrongNumberOfParameters);
+			ee.output.push_back(*r->find_type(TypeInteger));
+			break;
 		case FeatureSee:
 			if (e.output.size() == 0)
 			{
-				ee.ins.push_back( new InstructionSee());
+				ee.ins.push_back( new InstructionSee(line));
 			}
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
@@ -367,7 +383,7 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			break;
 		case FeatureHit: 
 			if ((e.output.size() == 1) && (e.output.back().type == TypeObject))
-				ee.ins.push_back( new InstructionHit());
+				ee.ins.push_back( new InstructionHit(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
@@ -380,9 +396,9 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			}
 			if (e.output.back().type == TypeReal)
 			{
-				ee.ins.push_back( new InstructionConversionToInt());
+				ee.ins.push_back( new InstructionConversionToInt(line));
 				if (e.temp.back())
-					ee.ins.push_back( new InstructionRemoveTemp());
+					ee.ins.push_back( new InstructionRemoveTemp(line));
 				e.temp.back() = true;
 				e.output.back() = *r->find_type(TypeInteger);
 			}
@@ -391,19 +407,19 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				r->error(line, Robot::ErrorConversionImpossible);
 				break;
 			}
-			ee.ins.push_back( new InstructionTurn());
+			ee.ins.push_back( new InstructionTurn(line));
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnR:
 			if (e.output.size() == 0)
-				ee.ins.push_back( new InstructionTurnR());
+				ee.ins.push_back( new InstructionTurnR(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
 			break;
 		case FeatureTurnL:
 			if (e.output.size() == 0)
-				ee.ins.push_back( new InstructionTurnL());
+				ee.ins.push_back( new InstructionTurnL(line));
 			else
 				r->error(line, Robot::ErrorWrongNumberOfParameters);
 			ee.output.push_back(*r->find_type(TypeInteger));
@@ -416,13 +432,13 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 			}
 			if (e.output.back() == *r->find_type(TypeReal))
 			{
-				ee.ins.push_back(new InstructionConversionToInt());
-				ee.ins.push_back(new InstructionRemoveTemp());
+				ee.ins.push_back(new InstructionConversionToInt(line));
+				ee.ins.push_back(new InstructionRemoveTemp(line));
 				e.output.back() = *r->find_type(TypeInteger);
 			}
 			if (e.output.back() == *r->find_type(TypeInteger))
 			{
-				ee.ins.push_back(new InstructionShootAngle);
+				ee.ins.push_back(new InstructionShootAngle(line));
 				ee.output.push_back(*r->find_type(TypeInteger));
 				break;
 			}
@@ -433,22 +449,22 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 				ee.output.push_back(*r->find_type(TypeInteger));
 				if(e.output.size() == 0)
 				{
-					ee.ins.push_back(new InstructionStepDefault());
-					ee.ins.push_back(new InstructionFetchState());
+					ee.ins.push_back(new InstructionStepDefault(line));
+					ee.ins.push_back(new InstructionFetchState(line));
 					break;
 				}
 				if (e.output.size() == 1)
 				{
 					if (e.output.back() == *r->find_type(TypeReal))
 					{	
-						ee.ins.push_back(new InstructionConversionToInt());
-						ee.ins.push_back(new InstructionRemoveTemp());
+						ee.ins.push_back(new InstructionConversionToInt(line));
+						ee.ins.push_back(new InstructionRemoveTemp(line));
 						e.output.back() = *r->find_type(TypeInteger); 
 					}
 					if (e.output.back() == *r->find_type(TypeInteger))
 					{
-						ee.ins.push_back(new InstructionStep());
-						ee.ins.push_back(new InstructionFetchState());
+						ee.ins.push_back(new InstructionStep(line));
+						ee.ins.push_back(new InstructionFetchState(line));
 						break;
 					}
 					r->error(line, Robot::ErrorOperationNotSupported);
@@ -462,11 +478,11 @@ Element feature ( int line, Robot *r, ObjectFeatures feat, Element e )
 	}
 	return ee;
 }
-Instructions get_load_type ( Create_type t )
+Instructions get_load_type ( unsigned line, Create_type t )
 {
 	Instructions fullAccessBack;
 	if (!t.is_simple())
-		fullAccessBack.push_back(new InstructionSaveVariable());
+		fullAccessBack.push_back(new InstructionSaveVariable(line));
 	std::vector<int> toLoad;
 	std::vector<Create_type> types;
 	Create_type type = t;
@@ -479,8 +495,8 @@ Instructions get_load_type ( Create_type t )
 		{
 			for(size_t i =0; i < toLoad.size(); i++)
 			{
-				fullAccessBack.push_back(new InstructionLoad(toLoad[i]));
-				fullAccessBack.push_back(new InstructionLoad());
+				fullAccessBack.push_back(new InstructionLoad(line, toLoad[i]));
+				fullAccessBack.push_back(new InstructionLoad(line));
 			}
 			if (!toLoad.empty())
 				toLoad.back()--;
@@ -492,7 +508,7 @@ Instructions get_load_type ( Create_type t )
 				toLoad.back()--;
 			}			
 			if (!toLoad.empty())
-				fullAccessBack.push_back(new InstructionLoadVariable());
+				fullAccessBack.push_back(new InstructionLoadVariable(line));
 			continue;
 		}
 		toLoad.push_back(type.range + type.nested_vars.size()-1);
@@ -504,11 +520,11 @@ Instructions get_load_type ( Create_type t )
 	return fullAccessBack;
 }
 
-Instructions get_store_type( Create_type t )
+Instructions get_store_type(unsigned line, Create_type t )
 {
 	Instructions fullAccessBack;
 	if (!t.is_simple())
-		fullAccessBack.push_back(new InstructionSaveVariable());
+		fullAccessBack.push_back(new InstructionSaveVariable(line));
 	std::vector<Position> toLoad;
 	std::vector<Create_type> types;
 	Create_type type = t;
@@ -521,19 +537,19 @@ Instructions get_store_type( Create_type t )
 		{
 			for(size_t i =0; i < toLoad.size(); i++)
 			{
-				fullAccessBack.push_back(new InstructionLoad(toLoad[i].x));
-				fullAccessBack.push_back(new InstructionLoad());
+				fullAccessBack.push_back(new InstructionLoad(line, toLoad[i].x));
+				fullAccessBack.push_back(new InstructionLoad(line));
 			}
 			switch(type.type)
 			{
 				case TypeInteger:
-					fullAccessBack.push_back(new InstructionStoreInteger());
+					fullAccessBack.push_back(new InstructionStoreInteger(line));
 					break;
 				case TypeReal:
-					fullAccessBack.push_back(new InstructionStoreReal());
+					fullAccessBack.push_back(new InstructionStoreReal(line));
 					break;
 				case TypeObject:
-					fullAccessBack.push_back(new InstructionStoreObject());
+					fullAccessBack.push_back(new InstructionStoreObject(line));
 					break;
 				default:
 					throw "No instrucion for saving such a type";
@@ -548,7 +564,7 @@ Instructions get_store_type( Create_type t )
 				toLoad.back().x++;
 			}			
 			if (!toLoad.empty())
-				fullAccessBack.push_back(new InstructionLoadVariable());
+				fullAccessBack.push_back(new InstructionLoadVariable(line));
 			continue;
 		}
 		toLoad.push_back(Position(0, type.range + type.nested_vars.size()-1));

@@ -10,7 +10,7 @@
 enum Instr
 {		
 	IGroup_undefined = 0,
-	IGroup_InstructionCall,
+	IGroup_call,
 	IGroup_create,
 	IGroup_load,
 	IGroup_conversion,
@@ -62,23 +62,38 @@ enum Instr
 class Instruction
 {
 protected:
+	/* node that can be used */
 	Node * node;
 	//bool constant;
-public:
-	size_t group; //inukatne pre azdu instrukciu
+
+	/*name of intruction */
 	std::string name_;
-	virtual std::string name();
+
+	unsigned line;
+public:
+	size_t group; //inukatne pre azdu instrukciu, TODO spravit z toho funkciu
+	/* Contructor */
+	Instruction(unsigned line);
+
+	/* returns name of intruction */
+	std::string name();
+	
+	/* return xml node */
 	virtual xmlNodePtr xml_format();
+
+	/* executes an instruction */
 	virtual int execute(Core * s) = 0;
-	Instruction();
+
+	/* virtual destructor */
 	virtual ~Instruction();
 };
+
 class InstructionCreate : public Instruction
 {
 	public:
 		virtual int execute(Core * c);
 		virtual xmlNodePtr xml_format();
-		InstructionCreate(Node * n);
+	InstructionCreate(unsigned line, Node * n);
 		virtual ~InstructionCreate();
 };
 class InstructionLoadLocal : public Instruction
@@ -86,8 +101,8 @@ class InstructionLoadLocal : public Instruction
 	public:
 		virtual int execute(Core * c);
 		virtual xmlNodePtr xml_format();
-		InstructionLoadLocal(Node * n);
-		InstructionLoadLocal(); //loadne z toho, co ma na value stacku
+		InstructionLoadLocal(unsigned line,Node * n);
+		InstructionLoadLocal(unsigned line); //loadne z toho, co ma na value stacku
 		virtual ~InstructionLoadLocal();
 };
 class InstructionLoadGlobal : public Instruction
@@ -95,8 +110,8 @@ class InstructionLoadGlobal : public Instruction
 	public:
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core * c);
-		InstructionLoadGlobal(Node * n);
-		InstructionLoadGlobal(); //loadne z toho, co ma na value stacku
+	InstructionLoadGlobal(unsigned line, Node * n);
+	InstructionLoadGlobal(unsigned line); //loadne z toho, co ma na value stacku
 		virtual ~InstructionLoadGlobal();
 };
 class InstructionLoad : public Instruction
@@ -107,22 +122,22 @@ class InstructionLoad : public Instruction
 	public:
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core * c);
-		InstructionLoad(int i);
-		InstructionLoad(float f);
-		InstructionLoad(); 
+	InstructionLoad(unsigned line, int i);
+	InstructionLoad(unsigned line, float f);
+	InstructionLoad(unsigned line); 
 		virtual ~InstructionLoad();
 };
 class InstructionConversionToInt : public Instruction
 {
 	public:
-		InstructionConversionToInt();
+	InstructionConversionToInt(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionConversionToInt();
 };
 class InstructionConversionToReal: public Instruction
 {
 	public:
-		InstructionConversionToReal();
+	InstructionConversionToReal(unsigned line);
 		virtual int execute(Core *c);
 		virtual ~InstructionConversionToReal();
 };
@@ -130,13 +145,13 @@ class InstructionDuplicate: public Instruction
 {
 	public:
 		virtual int execute(Core * c);
-		InstructionDuplicate();
+	InstructionDuplicate(unsigned line);
 		virtual ~InstructionDuplicate();
 };
 class InstructionStoreRef : public Instruction
 {
 	public:
-		InstructionStoreRef(Node * n);
+	InstructionStoreRef(unsigned line, Node * n);
 		virtual int execute(Core * c);
 		virtual ~InstructionStoreRef();
 };
@@ -144,14 +159,14 @@ class InstructionStoreInteger : public Instruction
 {
 	public:
 		virtual int execute(Core * c);
-		InstructionStoreInteger();
+	InstructionStoreInteger(unsigned line);
 		virtual ~InstructionStoreInteger();
 };
 class InstructionStoreReal : public Instruction
 {
 	public:
 		virtual int execute(Core * c);
-		InstructionStoreReal();
+	InstructionStoreReal(unsigned line);
 		virtual ~InstructionStoreReal();
 };
 /*Location, struct, array sa robi v InstructionStore, panlizacia potom vyppocitana*/
@@ -160,14 +175,14 @@ class InstructionStoreObject : public Instruction
 { 
 	public:
 		virtual int execute(Core * c);
-		InstructionStoreObject();
+	InstructionStoreObject(unsigned line);
 		virtual ~InstructionStoreObject();
 };
 class InstructionCall : public Instruction
 {
 	Function* function;
 	public:
-		InstructionCall(Function * f);
+	InstructionCall(unsigned line, Function * f);
 		virtual xmlNodePtr xml_format();
 		virtual int execute(Core * c);
 		virtual ~InstructionCall();
@@ -177,7 +192,7 @@ class InstructionPop : public Instruction
 {
 	public:
 		virtual int execute(Core * c);
-		InstructionPop();
+	InstructionPop(unsigned line);
 		virtual ~InstructionPop();
 };
 
@@ -185,7 +200,7 @@ class InstructionMustJump : public Instruction
 {
 	int shift;
 	public:
-		InstructionMustJump(int steps);
+	InstructionMustJump(unsigned line, int steps);
 		virtual int execute(Core * c);
 		virtual xmlNodePtr xml_format();
 		virtual ~InstructionMustJump();
@@ -196,14 +211,14 @@ class InstructionJump : public Instruction
 	public:
 		virtual int execute(Core * c);
 		virtual xmlNodePtr xml_format();
-		InstructionJump(int stepsYes, int stepsNo);
+	InstructionJump(unsigned line, int stepsYes, int stepsNo);
 		virtual ~InstructionJump();
 };
 
 class InstructionBreak : public Instruction
 {
 	public:
-		InstructionBreak(int depth_ = 0);
+		InstructionBreak(unsigned line, int depth_ = 0);
 		int jump, depth;
 		virtual int execute(Core * c);
 		virtual xmlNodePtr xml_format();
@@ -213,7 +228,7 @@ class InstructionBreak : public Instruction
 class InstructionContinue : public InstructionBreak //stejne ako break, ale skace inam
 {
 	public:
-		InstructionContinue(int depth_ = 0);
+	InstructionContinue(unsigned line, int depth_ = 0);
 		virtual int execute(Core * c);
 		virtual ~InstructionContinue();
 };
@@ -221,7 +236,7 @@ class InstructionReturn : public Instruction
 {
 	int depth,jump;
 	public:
-		InstructionReturn(int dep);
+	InstructionReturn(unsigned line, int dep);
 		virtual int execute(Core * c);
 		virtual ~InstructionReturn();
 };
@@ -229,14 +244,14 @@ class InstructionRestore: public Instruction
 {
 	public:
 		virtual int execute(Core * c);
-		InstructionRestore();
+	InstructionRestore(unsigned line);
 		virtual ~InstructionRestore();
 };
 
 class InstructionRemoveTemp: public Instruction
 {
 	public:
-		InstructionRemoveTemp();
+	InstructionRemoveTemp(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionRemoveTemp();
 };
@@ -246,28 +261,28 @@ class InstructionRemoveTemp: public Instruction
 class InstructionPlusPlusInteger : public Instruction
 {
 	public:
-		InstructionPlusPlusInteger();
+	InstructionPlusPlusInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionPlusPlusInteger();
 };
 class InstructionPlusPlusReal : public Instruction
 {
 	public:
-		InstructionPlusPlusReal();
+	InstructionPlusPlusReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionPlusPlusReal();
 };
 class InstructionMinusMinusInteger : public Instruction
 {
 	public:
-		InstructionMinusMinusInteger();
+	InstructionMinusMinusInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionMinusMinusInteger();
 };
 class InstructionMinusMinusReal : public Instruction
 {
 	public:
-		InstructionMinusMinusReal();
+	InstructionMinusMinusReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionMinusMinusReal();
 };
@@ -275,26 +290,26 @@ class InstructionMinusMinusReal : public Instruction
 {
 	public:
 		virtual int execute(Core * c);
-		InstructionPlus();
+	InstructionPlus(unsigned line);
 };*/
 class InstructionPlusInteger : public Instruction //pre pointre
 {
 	public:
-		InstructionPlusInteger();
+	InstructionPlusInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionPlusInteger();
 };
 class InstructionPlusReal : public Instruction //pre pointre
 {
 	public:
-		InstructionPlusReal();
+	InstructionPlusReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionPlusReal();
 };
 class InstructionMinusInteger : public Instruction
 {
 	public:
-		InstructionMinusInteger();
+	InstructionMinusInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionMinusInteger();
 };
@@ -302,84 +317,84 @@ class InstructionMinusInteger : public Instruction
 class InstructionMinusReal : public Instruction
 {
 	public:
-		InstructionMinusReal();
+	InstructionMinusReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionMinusReal();
 };
 class InstructionMultiplyInteger : public Instruction
 {
 	public:
-		InstructionMultiplyInteger();
+	InstructionMultiplyInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionMultiplyInteger();
 };
 class InstructionMultiplyReal : public Instruction
 {
 	public:
-		InstructionMultiplyReal();
+	InstructionMultiplyReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionMultiplyReal();
 };
 class InstructionDivideInteger : public Instruction
 {
 	public:
-		InstructionDivideInteger();
+	InstructionDivideInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionDivideInteger();
 };
 class InstructionDivideReal : public Instruction
 {
 	public:
-		InstructionDivideReal();
+	InstructionDivideReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionDivideReal();
 };
 class InstructionModulo : public Instruction
 {
 	public:
-		InstructionModulo();
+	InstructionModulo(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionModulo();
 };
 class InstructionBinaryAnd : public Instruction
 {
 	public:
-		InstructionBinaryAnd();
+	InstructionBinaryAnd(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionBinaryAnd();
 };
 class InstructionAnd : public Instruction
 {
 	public:
-		InstructionAnd();
+	InstructionAnd(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionAnd();
 };
 class InstructionBinaryOr : public Instruction
 {
 	public:
-		InstructionBinaryOr();
+	InstructionBinaryOr(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionBinaryOr();
 };
 class InstructionOr : public Instruction
 {
 	public:
-		InstructionOr();
+	InstructionOr(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionOr();
 };
 class InstructionBinaryNot : public Instruction
 {
 	public:
-		InstructionBinaryNot();
+	InstructionBinaryNot(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionBinaryNot();
 };
 class InstructionNot : public Instruction
 {
 	public:
-		InstructionNot();
+	InstructionNot(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionNot();
 };
@@ -387,35 +402,35 @@ class InstructionNot : public Instruction
 class InstructionGtInteger : public Instruction
 {
 	public:
-		InstructionGtInteger();
+	InstructionGtInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionGtInteger();
 };
 class InstructionGtReal : public Instruction
 {
 	public:
-		InstructionGtReal();
+	InstructionGtReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionGtReal();
 };
 class InstructionGeInteger : public Instruction
 {
 	public:
-		InstructionGeInteger();
+	InstructionGeInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionGeInteger();
 };
 class InstructionGeReal : public Instruction
 {
 	public:
-		InstructionGeReal();
+	InstructionGeReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionGeReal();
 };
 class InstructionEqualInteger : public Instruction //na pointre
 {
 	public:
-		InstructionEqualInteger();
+	InstructionEqualInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionEqualInteger();
 };
@@ -423,42 +438,42 @@ class InstructionEqualInteger : public Instruction //na pointre
 class InstructionEqualReal : public Instruction
 {
 	public:
-		InstructionEqualReal();
+	InstructionEqualReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionEqualReal();
 };
 class InstructionEqualObject : public Instruction
 {
 	public:
-		InstructionEqualObject();
+	InstructionEqualObject(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionEqualObject();
 };
 class InstructionNotEqual : public Instruction
 {
 	public:
-		InstructionNotEqual();
+	InstructionNotEqual(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionNotEqual();
 };
 class InstructionNotEqualInteger : public Instruction
 {
 	public:
-		InstructionNotEqualInteger();
+	InstructionNotEqualInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionNotEqualInteger();
 };
 class InstructionNotEqualReal : public Instruction
 {
 	public:
-		InstructionNotEqualReal();
+	InstructionNotEqualReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionNotEqualReal();
 };
 class InstructionNotEqualObject : public Instruction
 {
 	public:
-		InstructionNotEqualObject();
+	InstructionNotEqualObject(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionNotEqualObject();
 };
@@ -466,21 +481,21 @@ class InstructionNotEqualObject : public Instruction
 class InstructionLtInteger : public Instruction
 {
 	public:
-		InstructionLtInteger();
+	InstructionLtInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionLtInteger();
 };
 class InstructionLtReal : public Instruction
 {
 	public:
-		InstructionLtReal();
+	InstructionLtReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionLtReal();
 };
 class InstructionLeInteger : public Instruction
 {
 	public:
-		InstructionLeInteger();
+	InstructionLeInteger(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionLeInteger();
 };
@@ -488,7 +503,7 @@ class InstructionLeInteger : public Instruction
 class InstructionLeReal : public Instruction
 {
 	public:
-		InstructionLeReal();
+	InstructionLeReal(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionLeReal();
 };
@@ -496,7 +511,7 @@ class InstructionLeReal : public Instruction
 class InstructionBegin : public Instruction
 {
 	public:
-		InstructionBegin(size_t d = 0); //label for 
+	InstructionBegin(unsigned line, size_t d = 0); //label for 
 		size_t depth;
 		virtual int execute(Core * c);
 		virtual ~InstructionBegin(); //label for 
@@ -504,7 +519,7 @@ class InstructionBegin : public Instruction
 class InstructionEndBlock : public Instruction
 {
 	public:
-		InstructionEndBlock(size_t end_l = 0);
+	InstructionEndBlock(unsigned line, size_t end_l = 0);
 		size_t end_loop;
 		virtual int execute(Core * c);
 		virtual ~InstructionEndBlock();
@@ -513,49 +528,49 @@ class InstructionEndBlock : public Instruction
 class InstructionSee : public Instruction
 {
 	public:
-		InstructionSee();
+	InstructionSee(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionSee();
 };
 class InstructionEye : public Instruction
 {
 	public:
-		InstructionEye();
+	InstructionEye(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionEye();
 };
 class InstructionFetchState : public Instruction
 {
 	public:
-		InstructionFetchState();
+	InstructionFetchState(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionFetchState();
 };
 class InstructionStep : public Instruction
 {
 	public:
-		InstructionStep();
+	InstructionStep(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionStep();
 };
 class InstructionStepDefault : public Instruction
 {
 	public:
-		InstructionStepDefault();
+	InstructionStepDefault(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionStepDefault();
 };
 class InstructionWait : public Instruction
 {
 	public:
-		InstructionWait();
+	InstructionWait(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionWait();
 };
 class InstructionShootAngle : public Instruction
 {
 	public:
-		InstructionShootAngle();
+	InstructionShootAngle(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionShootAngle();
 };
@@ -563,28 +578,28 @@ class InstructionShootAngle : public Instruction
 class InstructionTurn : public Instruction
 {
 	public:
-		InstructionTurn();
+	InstructionTurn(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionTurn();
 };
 class InstructionTurnR : public Instruction
 {
 	public:
-		InstructionTurnR();
+	InstructionTurnR(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionTurnR();
 };
 class InstructionTurnL: public Instruction
 {
 	public:
-		InstructionTurnL();
+	InstructionTurnL(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionTurnL();
 };
 class InstructionHit: public Instruction
 {
 	public:
-		InstructionHit();
+	InstructionHit(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionHit();
 };
@@ -592,21 +607,21 @@ class InstructionHit: public Instruction
 class InstructionIsPlayer: public Instruction
 {
 	public:
-		InstructionIsPlayer();
+	InstructionIsPlayer(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionIsPlayer();
 };
 class InstructionIsWall: public Instruction
 {
 	public:
-		InstructionIsWall();
+	InstructionIsWall(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionIsWall();
 };
 class InstructionIsMissille: public Instruction
 {
 	public:
-		InstructionIsMissille();
+	InstructionIsMissille(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionIsMissille();
 };
@@ -614,43 +629,36 @@ class InstructionLocate: public Instruction
 {
 	Create_type type;
 	public:
-		InstructionLocate();
+	InstructionLocate(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionLocate();
 };
 class InstructionIsMoving: public Instruction
 {
 	public:
-		InstructionIsMoving();
+	InstructionIsMoving(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionIsMoving();
 };
 class InstructionTarget: public Instruction
 {
 	public:
-		InstructionTarget();
+	InstructionTarget(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionTarget();
 };
 
-class InstructionSeeMoving: public Instruction
-{
-	public:
-		InstructionSeeMoving();
-		virtual int execute(Core * c);
-		virtual ~InstructionSeeMoving();
-};
 class InstructionIsEnemy: public Instruction
 {
 	public:
-		InstructionIsEnemy();
+	InstructionIsEnemy(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionIsEnemy();
 };
 class InstructionSeeEnemy: public Instruction
 {
 	public:
-		InstructionSeeEnemy();
+	InstructionSeeEnemy(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionSeeEnemy();
 };
@@ -658,7 +666,7 @@ class InstructionSeeEnemy: public Instruction
 class InstructionSaveVariable : public Instruction
 {
 	public:
-		InstructionSaveVariable();
+	InstructionSaveVariable(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionSaveVariable();
 };
@@ -666,7 +674,7 @@ class InstructionSaveVariable : public Instruction
 class InstructionLoadVariable : public Instruction
 {
 	public:
-		InstructionLoadVariable();
+	InstructionLoadVariable(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionLoadVariable();
 };
@@ -674,14 +682,14 @@ class InstructionLoadVariable : public Instruction
 class InstructionDirection : public Instruction
 {
 	public:
-		InstructionDirection();
+	InstructionDirection(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionDirection();
 };
 class InstructionRandom : public Instruction
 {
 	public:
-		InstructionRandom();
+	InstructionRandom(unsigned line);
 		virtual int execute(Core * c);
 		virtual ~InstructionRandom();
 };

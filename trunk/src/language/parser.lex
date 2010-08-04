@@ -46,12 +46,14 @@ WHITESPACE		[ \r\t\f]
 [sS][tT][aA][rR][tT]				{*l = line;return TOKEN_START; }
 [rR][aA][nN][dD][oO][mM]			{*l = line;return TOKEN_RND; }
                                 	
+[iI][sS][eE][nN][eE][mM][yY]			{*l = line;lv->of = FeatureIsEnemy;return TOKEN_OBJECT_FEATURE;}
 [iI][sS][pP][lL][aA][yY][eE][rR]		{*l = line;lv->of = FeatureIsPlayer;return TOKEN_OBJECT_FEATURE;}
 [iI][sS][wW][aA][lL][lL]			{*l = line;lv->of = FeatureIsWall;return TOKEN_OBJECT_FEATURE;}
 [iI][sS][mM][iI][sS][sS][iI][lL][lL][eE]	{*l = line;lv->of = FeatureIsMissille;return TOKEN_OBJECT_FEATURE;}
 [iI][sS][mM][oO][vV][iI][nN][gG]		{*l = line;lv->of = FeatureIsMoving;return TOKEN_OBJECT_FEATURE;}
 [lL][oO][cC][aA][tT][eE]			{*l = line;lv->of = FeatureLocate;return TOKEN_OBJECT_FEATURE;}
 [sS][eE][eE]					{*l = line;lv->of = FeatureSee;return TOKEN_OBJECT_FEATURE;}
+[sS][eE][eE][Ee][nN][eE][mM][yY]		{*l = line;lv->of = FeatureSeeEnemy;return TOKEN_OBJECT_FEATURE;}
 [hH][iI][tT]					{*l = line;lv->of = FeatureHit;return TOKEN_OBJECT_FEATURE;}
 [tT][uU][rR][nN]				{*l = line;lv->of = FeatureTurn;return TOKEN_OBJECT_FEATURE;}
 [tT][uU][rR][nN]L				{*l = line;lv->of = FeatureTurnL;return TOKEN_OBJECT_FEATURE;}
