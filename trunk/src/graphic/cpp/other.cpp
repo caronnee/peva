@@ -4,7 +4,7 @@
 #include "../../add-ons/h/position.h"
 #include "../../add-ons/h/macros.h"
 #include "../../objects/h/missille.h"
-#include "../../language/h/bison.h"
+#include "../../generatedFiles/h/bison.h"
 #include "../../language/h/robot.h"
 
 #define LAST 1

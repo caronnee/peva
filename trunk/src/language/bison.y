@@ -1,14 +1,13 @@
 //TODO zrusit loadGlobal
-//TODO do funkcii kopirovat cez load/sotre a hned za tym pridavat remove tempy kvoli pamat
 //FIXME pri for-e odtranit vytvorenie premennej, spravit skor  defauult temp
 
 %{
 #include <iostream>
 #include <queue>
-#include "../h/lval.h"
-#include "../h/robot.h"
-#include "../h/hflex.h"
-#include "../h/parser_functions.h"
+#include "../../language/h/lval.h"
+#include "../../language/h/robot.h"
+#include "../../generatedFiles/h/hflex.h"
+#include "../../language/h/parser_functions.h"
 #include "../../add-ons/h/macros.h"
 
 #define YYSTYPE Lval 
@@ -780,7 +779,7 @@ call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR
 						else
 							$$.ins.push_back(new InstructionStoreRef(f->parameters[i].node));
 					}
-					$$.ins.push_back(new Call(f));
+					$$.ins.push_back(new InstructionCall(f));
 					if (f->return_var->type_of_variable->type == TypeVoid)
 						$$.output.clear();
 					else

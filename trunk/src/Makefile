@@ -45,25 +45,25 @@ bparser: $(LANGUAGE_OBJECTS)
 	$(CXX) $(LDFLAGS) $(LANGUAGE_OBJECTS) -o bparser
 	@echo "..........................................."
 
-language/h/bison.h:language/cpp/bison.cpp
+generatedFiles/h/bison.h:generatedFiles/cpp/bison.cpp
 
-language/h/hflex.h:language/cpp/parser.cpp
+generatedFiles/h/hflex.h:generatedFiles/cpp/parser.cpp
 
-language/cpp/parser.cpp:language/parser.lex
-	flex -Cf -b -p -p --header-file=language/$(HEADER_DIR)hflex.h -o $@ $<
+generatedFiles/cpp/parser.cpp:language/parser.lex	
+	flex -Cf -b -p -p --header-file=generatedFiles/$(HEADER_DIR)hflex.h -o $@ $<
 
-language/cpp/bison.cpp: language/bison.y language/h/hflex.h
-	bison --report=all -d -b bis --defines=language/$(HEADER_DIR)bison.h -o $@ $<
+generatedFiles/cpp/bison.cpp: language/bison.y generatedFiles/h/hflex.h
+	bison --report=all -d -b bis --defines=generatedFiles/$(HEADER_DIR)bison.h -o $@ $<
 
-o/bison.o: language/cpp/bison.cpp 
+o/bison.o: generatedFiles/cpp/bison.cpp 
 	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
-o/parser.o: language/cpp/parser.cpp
+o/parser.o: generatedFiles/cpp/parser.cpp
 	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
-o/language.o: language/h/bison.h
+o/language.o: generatedFiles/h/bison.h
 
-o/language.o: language/h/hflex.h
+o/language.o: generatedFiles/h/hflex.h
 
 o/%.o: */cpp/%.cpp
 	@echo ""
@@ -71,7 +71,7 @@ o/%.o: */cpp/%.cpp
 	${CXX} ${CFLAGS} -c ${XML} -o $@ $<
 
 distclean:
-	rm -rf o bparser codewars language/$(HEADER_DIR)hflex.h language/$(SRC)parser.cpp \
+	rm -rf o generatedFiles bparser codewars \
 	language/$(SRC)bison.* language/$(HEADER_DIR)bison.* test debugSee Makefile.dep* \
 	lex.backup *.xml *.config snake*
 
@@ -113,6 +113,12 @@ debugGGraph:
 
 dep:
 	touch Makefile.dep
+	@if [ ! -d generatedFiles ]; then \
+	echo "Creating compile objects directory"; \
+	mkdir generatedFiles; \
+	mkdir generatedFiles/h; \
+	mkdir generatedFiles/cpp; \
+	fi
 	@if [ ! -d o ]; then echo "Creating compile objects directory"; mkdir o; fi
 	@find . -name "*.cpp" |xargs  makedepend -Y -f Makefile.dep 2> /dev/null	
 	@sed "s/\([^/:]*\/\)*\([^/]*\.o:\)/\.\/o\/\2/g" Makefile.dep > Makefile.temp

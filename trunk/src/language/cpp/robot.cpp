@@ -51,7 +51,7 @@ Robot::Robot(std::string s, std::string space_, GamePoints points_)
 	n = defined.add("this",defined_types->find_type(TypeObject));
 	n->nested = Global;
 
-	nullableNode = new Node("null",defined_types->find_type(TypeUndefined);
+	nullableNode = new Node("   ",defined_types->find_type(TypeUndefined), 0);
 }
 
 std::string Robot::getSpace()const
@@ -177,7 +177,7 @@ Node * Robot::find_var(std::string var_name, bool & b)
 Node * Robot::add(std::string name, Create_type * type)
 {
 	std::string name_ = nested + name;
-	bool b;
+	Node * b;
 	try
 	{
 		b = defined.add(name_, type);
@@ -185,7 +185,7 @@ Node * Robot::add(std::string name, Create_type * type)
 	catch (char * text)
 	{
 		b = nullableNode;
-		error(-1,ErrorCode::ErrorVariableNotDefined,"Wrong variable usage");//TODO cislo
+		error(-1, ErrorVariableNotDefined,"Wrong variable usage");//TODO cislo
 	}
 	return b;
 }
@@ -600,7 +600,7 @@ void Robot::consolidate()
 }
 Robot::~Robot()
 {
-	delete nullableNode
+	delete nullableNode;
 	if (scheduller)
 		delete scheduller;
 	if (core)
