@@ -1,0 +1,282 @@
+\section{Programovateľnost postavy}
+Chovanie robota na  mape bude mať užívateľ moznost naprogramovat v nejakom jednoduchom jazyku. Ináč: Užívateľ bude mať možosť naprogramovať chovanie robota na mape v nejakom jednoduchom jazyku.Z toho vyplývaju ďalšie nároky na svet ako aj nároky na programovací jazyk robota. 
+%Robotstina bude este v pojmoch
+\subsection{Rozširenie sveta vzhľadom na programovatelnosť}
+\subsubsection{Získavanie informácii o svete}
+%Robot musíi vidieť svet
+Uživateľ ma napísat algoritmus, ktorým by sa robot riadil. Preto je nutné vhodným spôsobom získavat informácie o  okoli robota, na ktorý má robot reagovať. \\
+virtuálny svet máme dvojrozmerný a tak si užívateľ môže získať prehľad o tom, čo je vo svete pozrenim do mapy ( vizuálne ). Hneď bude vedieť, s čim môže počitať na danom mieste, ak sa tam robot ocitne. Ak by robot získaval informácie inak, ako to vidí uživateľ, nastane nekompatibilita v chápaní toho, čo práve robot vidí. Výsledkom môže byť nezrozumiteľnosť vykonávania algoritmu. %podla mna je to uz prilisna trivialita, nad ktorou sa zaoberam. 
+Preto je pre písanie algoritmu jednoduchšie, ak podobným spôsobom ako hráč reaguje na okolie sveta aj robot. Robot bude teda objekty vidieť.\\
+Videnie robota zahŕňa ešte ďaľsie otázky, na ktoré sa treba zamerať, a to ako ďaleko a akým spôsobom bude robot vidieť. Otázka, ako ďaleko je pre algorimus dôležitá, pretože čím ďalej robot vidí, tým ucelenejsiu predstavu o svete bude mať a tým je pravdepodobnejšie,že nájde nepriateľského robota a bude mu mocť škodiť $referencia na cieľ$ To môzž byť jednoducho vyriešené nastavením pevnej vzdialenosti alebo inom riadení robota v závislosti na užíivateľovej ľubovôli. \\ %mysleno uzivatel si moze definovat, ako daleko to chce
+Ďalšou otázkou je, akým spôsobom robot vidí, ako presne určiť, že objekt na danom mieste je robotom viditeľný. Najskôr začneme vymedzenim priestoru, v akom by mal robot vidieť. Sme v dvojrozmernom priestore a rozhodli sme sa pre plynulý pohyb, je zmysluplne predpokladať, že aj oblasť viditeľnosti robota bude súvislá. To znamená, že ak v robotovej oblasti viditeľnosti je objekt A a objekt B, potom je v tejto oblasti aj objekt C, ležiaci na spojnici  A a B.
+%to bolo rozhodnutit o spojitom videni.
+Z toho vyplýva, že objekty budu robotom viditeľné a dajú  sa  popísať nejakým dvojrozmerným útvarom.\\
+ Najvhodnejšia sa javí kruhová výseč, podobná tej ako vrhá baterka v tme. Tento spôsob je pre ľudské oko prirodzený $referencia na grafiku?$ a preto bol aplikovaný.\\
+Viditeľnosť robota tak bude znamenať,  brať do úvahy všetky objekty, ktoré sa nachádzaju v kruhovej výseči, definovanej polomerom a uhlom. Ak by všetky tieto objekty boli viditeľne, nemal by zmysel objekt sveta stena????, ktorá ma poskytovať úkryt. Preto z tychto objektov, ktoré môžu byť viditeľné robotom, sa musia vybrať len tie, ktoré neblokuju výhľad. \\
+Úkryt môžu použivať všetky objekty, nielen roboti. Inak by sa obtiažne implementovala viditelnosť závislá na tom, či už určitej vzdialenosti stojí robot a jednak nie je logicky dôvod, aby sa viditeľnosť správala rozdielne pre rôzne typy objetov. Preto je u každeho objektu okamžite jasné, či je priehladný alebo nie.\\
+Priehľadnosť objektov bola vybrana nasledovne:
+\begin{itemize}
+\item Strela by nemala poskytovať úkryt a teda blokovať viditeľnosť. Je to len nástroj k prevedeniu útoku na diaľku a ako taká by nemala tak výrazne ovplyvnovať svet, ako je poskytovanie úkrytu. V porovnaní s reálnym životom sa tiež obvykle nestáva, aby agresor hádzal po obeti ľadničku.
+%myslienka bola, ze je MALA:P
+\item Stena poskytuje úkryt a z toho dôvodu blokuje viditeľnost. Z rovnakého dôvodu to plati pre posuvnú stenu.
+\item Prepadlisko neblokuje viditeľnost. Z defininície vieme, že prepadlisko neblokuje pohyb, iba ho sťažuje. Preto je rozumné, aby robot vedel, ze cez neho môže prejst. To znamena, že musí cez prepadlisko vidieť.
+\item Samotný robot blokuje viditeľnosť. Toto rozhodnutie vyplýva z toho, že všetky objekty, ktoré sa pohybujú smerom k robotovi, sa v pripade kolízie zastavia. Preto sa da čakať, že robotom neprejde ani lúč,  určujúci viditeľnost.%nem dobre vysvetlenie, ale jedine, co ma napadlo - pripada mi to ako chaby argument treba vsetko vyargumentovat?
+\end{itemize}
+Navrhované algoritmy pre výber objektov sú tieto:\\
+Vygenerovanie bitových masiek: \\
+Algoritmus ráta s tým, že výseč sa pokryje najmenšim obdľžnikom a s ním sa potom pracuje .%...blabla, popis algoritmu z prechdz. bak, ale zrozumitelnejsie;)
+Výhody tejto metódy:
+\begin{itemize}
+\item lineárna časová zložitosť vzhľadom na veľkost pokrytej plochy
+\end{itemize}
+Nevýhody:
+\begin{itemize}
+\item Nutnosť rozdelťt výseč na rovnaké poíička a tým buď nerešpektovat veľkosť objektov alebo rátať s objektami vyskytujúcimi sa na viacerých políčkach.
+\item Existuje situácia, pre ktorú tento spôsob nenájde skutočnu viditeľnosť tak, ako by to hráč očakával. $OBR$. Tento pripad je však jediný a v simuláciíi nenastáva často.
+\end{itemize}
+Vzhľadom na uvedené nevýhody bola navrhnutá a použitá nasledujúca výsečová metóda:\\
+Ta pozostáva z vytvorenia výseče pre každý objekt, ktorý môže robot vidieť. Následne sa zistí pokrytie, viz.  $<OBR>$/ Najskôr pre každý objekt zistíme, či sa nachádza v pásme viditeľnosti. Pre každý objekt, ktorý blokuje viditeľnosť, vytvoríme ďaľšiu výseč s počiatkom v mieste robota. Potom je viditeľný každý objekt, ktorého ľubovoľna časť je mimo zjednotenia týchto výsečov. V praxi to znamená, že u každého objektu si zapamätáme, akú oblasť by roboti?zneviditeľnili, keby blokovali výhľad. Zoradime ich podla vzdialenosti od umiestnenia robota, aby orezávali výseče len tých objektov, ktoré sú vzdialenejšie a teda ich môžu pokryť. Každý blokujuci objekt potom znižuje uhol, pod ktorým je vzdialenejši objekt vidieťt a tým úspešne oddeľuje tie objekty, ktoré nie je vidieť. Avšak existuje situácia, keď tento algoritmus zlyhá, ako je vidieť na obrázku $<OBR>$ Táto metóda je veľmi presná. Počita s rozdielnými veľkosťami objektov, je však X-krát pomalšia než vyššie uvedená metóda ($K \approx 10$).
+% popísali sme si svet, v ktorom má byť výzvou písať algoritmus, tu chcem popisat, ake vyzvy to mozu byt -> budiz zacnime cielmi?
+%subsubsection len kvoli tomu, ze nejak to oddelit musim, ale to zanorenie sa mi nelubi
+\subsubsection{Ciele algoritmu}
+Popísaný svet je svetom robotov, ktorí  chcú vyhrať a dosahuju to tým, že ostatným robotom znemožňujô naplniť ich cieľ (uhýbajú strelám, škodia im útokmi ). Naším cieľom je upraviť tento virtuálny svet tak, aby bolo pre uživateľa podnetné napisať algoritmus. K tomu sa viažu podmienky úspešnosti algoritmu. 
+Vzhľadom na súťaž algoritmov sa ponúkaju nasledovné ciele robotov:
+\begin{description}
+\item [Zostať na bojisku posledný] \hfill \newline
+Úspešným algoritmom je ten, ktorý zostane na bojisku posledný. Spôsob, akým možno dosiahnúť tento cieľ, je iba boj so súuperiacimi robotmi, útočenie na ich reprezentáciu vo svete. Tento cieľ spľňa požiadavky na súboj algoritmov - je potrebné napísať čo najlepši bojový algoritmus, t.j. algoritmous, ktorý na danej mape v danom prostredia vyhrá. Tento spôsob bol použitý. lebo je intuitívny.
+\item [Obranný robot] \hfill \newline % tu si strasne vymyslam
+Nastáva otázka, či robot môže zvíťaziť aj inak než útočením na súperov. Viac sofistikovane vyzerá robot, ktorý zmätie svojho  protivníka natoľko, že začne bojovať s inými robotmi. Nazvime tohoto robota robot-manipulátor a robota, ktorý má za úlohu  ostatných zničiť, robot-agresor. \\
+Otáazkou  je ??znie, či svet, ktorý sme vytvorili, je vhodný aj pre  robotov-manipulátorov. Je, pretože všetko, čo využiva agresor, použiva aj manipulátor. Streľbou a odrazmi od stien sa snaží nalákať agresora na iný objekt, posuvnými stenami sa môže priblížiť na miesto, kde by ho inak zbadali a vystreliť do miest, kde by jeho strela inak nedosiahla. Môže naviesť súpera na prepadlisko a nechať ho tam biedne zhynúť, t.j manipulátor sa snaži zostaž nažive s minimom zabitých nepriateľov na konte.\\ %mooc pekne\\
+Problémom však je, že ak robot nebude mať za ulohu zničiť nejakého robota, nebude mať ani motiváciu aktívne ich vyhľadávať. Takto môže algoritmus zdegenerovat na úroveň čakania na to, kým sa objaví nepriateľ, pred ktorým by sa dalo utekat. Preto tento koncept sám o sebe je zaujimavy, ale je dosť ťažko zhodnotiteľný. V práci obranného robota preto nepodporujeme.???????? čo nepodporujeme?
+\item [Zničenie konkretného robota] \hfill \newline
+Aby sa roboti jednotlivých hráčov dali rozlíšiť, sú pomenovaní unikátnymi menami. Ďalšou možnosťou je tak zničenie konkrétného robota. Potom robot, ktorý má za úlohu zničiť takéhoto robota, vyhrá v okamžiku, ked tohoto cieľového robota zničí jeho útok. Ak je kritériom samotný tento cieľ, znamena to iba, že tento robot je bojový robot, ktorý môže skončiť svoju misiu skôr za predpokladu, že žničí toho správneho protivníka. Potom sa len potuluje po svete ako potenciálna obeť a nebojuje. Takýto koncept nie je zaujímavý.
+\item [Navstiíenie miesta]
+Problémom algoritmu obranného robota je to, že nie je primerane akčný. Rozhýbanie (potulovanie svetom) ho môže prinútiť dodatočná podmienka, napríklad nájdenie nejakého objektu. Potom sa pre viťazstvo musí robot skutočne hýbat. Objektom ale môžu byt aktuálne len roboti,  (čo v podstate splýva s predchádzajúcim tvrdením) alebo steny, prepadliská, ktoré sa ako objekt túžby nehodnotia????? ( prepadlisko zbrani???? a namiesto oslavy bude pohreb, na miesto steny sa robot nikdy nedostane, stretnutie strelou tiež končí fatálne). Preto je nutné, definovať špeciálne miesta, ktoré nebudú objekty a nebudú mať význam pre nikoho iného, len pre robota, ktorý si o toto miesto požiadal. Toto miesto by malo byť súčasťou mapy, aby uživateľ videl, čo presne po robotovi chce. Aby to robot nemal také ľahké a aby uživateľ mohol testovat algoritmus, možno ako špeciálne miesto označiť  plánované štartovné pozície robotov. \\
+%co sa stanne v pripade nepriaznivych vysledkov do impl?
+\item [Obmedzenie na počet nepriateľov]
+Nájdenie miesta, ktoré si robot vybral, môže vyzerat aj tak, že robot bude mať bojový algoritmus, s ktorým prejde celú mapu a raz na svoje pole dorazí, použije stratégiu  "dôjdem tam a kto sa miproti mne  postavi, je mŕtvy robot". Tým sa robot nebude nijak líšiť od obyčajného agresora. Preto sa hodí kombinácia hľadania?? miesta a obmezenie  maximálnym počtom robotov, ktoré môže robot zabiť pred dosiahnutím cieľa. Pre praktické účely bude predefinovany maximálny počet zabitých nepriateľov rovnýy $pocet robotov v mape - 2$ ( robot a aspoň jeden protivnik ).\\
+Podobne je možné,  použiť takéto obmedzenie zhora na zadanie maximálneho počtu súbojov pred dosiahnutim miesta, kde ma robot doraziť. Robot tu už musí mať za sebou nejaké súbojové skúseností.
+\item [Kombinácie]
+Kombinácie vyššie uvedených cieľov zvyšujú zložitosť vytváraných algoritmov, čím spľňajú základný cieľ, ktorým je výzva naprogramovať algoritmus. Preto sú kombinácie uvedených cieľov algoritmov nielen možné, ale dokonca žiadúce.
+\end{description}
+Z rovnakých dôvodov je vhodné kombinovať lokalizáciu s obmedzením počtu zabitých nepriateľov. \\
+%co sa stane, ak je sa robotovi nesplni ciel
+Každému robotovi teda môžeme prideliť špeciálny cieľ. Tento cieľ sa však vždy nepodarí splniť. Napríklad robot, ktorý bol cieľom, zahynie pri pokuse o prechod prepadliskom. Preto je nutné zaviesť buď takzvaný supercieľ (cieľ, ktorý je možné splniť kedykoľvek)  na zakončenie simulácie. Tiež je možné odstrániť robota, ktorý nesplnil cieľ. To ale môže vyvolať retazovú reakciu u ďalšieho robota, ktorý ale stále mal možnosť zviťaziť. Nebolo by spravodlive,  aby bol odstránený len preto, že zlyhala misia iného robota. Preto bolo spravene rozhodnutie o existencii supercieľa. Nech supercieľom bude znicit ostatných robotov na bojisku v zmysle zachovania principu "keď uz som zlyhal, nech to aspoň niekto neprežije!". Tento cieľ je vzdy dosiahnuteľný a obtiažnosť napísania algoritmu zodpovedá požadovanej obtiažnosti.\\
+%to boli ciele algoritmu
+%chceme vlastnosti robota ku vytycenym cielom
+Robot môže mať rôzne ciele a je na hráčovi, ako si ich definuje. Rozdielne ciele ale prirodzene vyžadujú od robota rozdielne chovanie. Robot, ktorý nemieni zničiť ostatných robotov, by mal mať možnosť len zastrašovacieho utoku, aby sa mu náhodou nestalo, že niekoho trafi. Podobne rozsah toho čo vidí, by mal byť väčší, aby si mohol lepšie naplánovať trasu pohybu. Preto bol zvolený spôsob modifikovania vlastnosti. \\ Vlastnosti, ktoré robot má a ktoré sme už uviedli vyššie,  sú:
+útok na blízko, na diaľku, počet životov a definovanie, ako ďaleko robot vidí, počet striel. Na to, aby si robot zisťoval informácie zo sveta a následne podľa nich vyhodnocoval stratégiu, si potrebuje robot niekde uchovávať informácie. Nazvime túto pamäť {\bf úložisko}. Každý robot bude mať vlastné úložisko, aby mohol sútažiť na úrovni sveta a nie prepisovať algoritmus nepriateľov. V tomto úložisku bude pre jednoduchosť akákoľvek informácia zaberat práve jedno miesto%( == pamäť )
+Veľkost úložiska potom ovplyvňuje znalosti o svete a tým aj algoritmus, ktorý znalosti využiva. Preto by malo byt jednou z ďalšich volitelných vlastnosti veľkosť úložiska (pamäte) \\ %Rychlost mam pocit nepodporujem
+Ďalšou vlastnosťou,  o ktorej je možné uvažovať pre podporu algorimu, je rýchlosť robotov. %tot neni podporovane, ale mohlo by
+Čím vyššia rýchlosť pohybu robotov, tým viac je pravdepodobné, že robot nájde iného robota, popripade ho dobehne a zaútoči. Rýchlost je ale potrebné obmedziť. Je povolený pohyb všetkymi smermi a tak je pri veľkej rýchlosti robota nutne kontrolovať celú možnú trasu. Tak môžeme zistťt, kde sa robot zastaví, či tam nie je náhodou kolízia. \\
+Väčšíim problémom je  ale kontrola cesty strely. Strela sa na rozdiel od robota môže odrážať od stien a navyše musí byť aspoň tak rýchla ako robot. Potom je pomerne náročne vypočitávat všetky odrazy striel, ktorých môže byť príliš mnoho. Celkove zobrazovanie simulácie sa tam môže dosť spomaliť. Rýchlost bude teda pevne vymedzená, ale v rámci intervalu s ňou môže každý robot manipulovať.\\
+%system pridelovania vlastnosti, potrebujeme ich obmedzit
+Ďalej je nutné  zadať hornu hranicu pre každú vlastnosť, aby niektorá z vlastností nemohla byťaj blízka nekonečnu. To sa môže stať pretože robota, ktorý má maximálny počet životov, maximálnu rýchlosť. a pod. je najlepši, akého môžeme vytvoriť. Nastavenie vlastnosti menšej, ako je maximum, by bol zámerny handicap, čo je v rozpore s tým, že robot chce vyhrať. Potom nemá zmysel hovoriť o vlastnostiach ako počt životov, pretože by boli pevne dané. My však chceme, aby to boli vlastnosti voliteľne, pretože algoritmy sú na týchto vlastnostiach závislé. \\ %tuto som to trosku skomolila, mozo by to chcelo priklad?
+To nás priviedlo k bodovaciemu  systému. 
+Najskôr si však musíme vysvetliť základne pravidla vlastností.\\
+
+Viditeľnost bude obmedzená intervalom (0-180), čo sú stupne, pod akými ešte robot vidi. Stupne udávaju pod akým uhlom môže robot vidieť doľava, rovnaký stupeň je potom použitý doprava. Tento koncept sa javí najprirodzenejší, nič však nebráni asymetrickému rozhľadu. Robot tak môže pokryť celých 360 stupnov.\\
+Mapou je definovaná maximálna vzdialenosť v pixeloch, na akú je možné dovidieť. Zodpovedá to viditeľnosti, ako je známa v reálnom živote (hmla, čistá voda a pod.)
+
+Viditeľnost sme obmedzili na konkrétne čislo, čo ju odlišuje od ostatných vlastnosíi. Je možné k viditeľnosti pristupovať i tak, že si uživateľ presne definuje, v akom polomere bude robot vidieť.
+%podla mna som odbocila a to dost vyrazne. A teraz sa..tramptatataa vratim k tomu reco hovorim o obmedzene viditelnosti, nemala by ist niekam inam? Hmm ak VIES KAM, ja nie.
+
+Z uvedeného vyplýva, že sa nám rysujú dva typy vlastností. Tie, ktoré nie su nijak obmedzené a tie, ktoré je nutné obmedziť. Preto budu vlastnosti rozdelené do dvoch sekcií, a to:
+Prva sekcia, ktorá nie je nijak obmedzená, obsahuje:
+\begin{itemize}
+\item veľkost úložiska
+\item životnosť
+\item útok strely
+\item životnosť strely
+\item útok zblizka
+\item počet striel
+\end{itemize}
+Vlastnosti, ktoré je nutné z rôznych príčin obmedziť sú:
+\begin{itemize}
+\item uhol - uhol 0-180 
+\item vzdialenosť viditeľnosti - táto vlastnosť by mohla byť neobmedzená, ale je v tejto sekciii kvôli tomu, aby vzdialenosť závisela na uhle
+\item rychlosť% >>>- obmedzenie je nutne pre vykreslovanie a kontrolovanie trasy %mozno viac osvetlit?>>> NIE opakovanie unavuje, uz bolo vyssie dostatocne zdovodnene
+\end{itemize}
+
+Bodovaci systém znamená, že dostaneme dve čísla, ktoré pre nás predstavujú body. Tieto body prerozdelíme medzi jednotlivé sekcie.\\
+
+Prva sekcia nie je neobmedzená priamo, iba technickymi parametrami (veľkost RAM pamäte), ktorými nie je vhodne obťažovat čitateľa ani hráča, preto bude prvá sekcia obmedzená vhodne velľym počtom bodov- Bolo vybrané 1000 bodov.
+
+Vzhľadom na to, že viditeľnosť je teda obmedzená na 180 ( maximálna čiastka, čo tam môžeme dať ), môžeme z toho vydedukovať maximálny počet bodov, aký bude možné zadať. Rýchlosť môžeme zadať číslom, ktoré hovorí, koľkokrát je rýchlosť vyššia ako normálna rychlosť. Tá je 1.  V prípade, že prekroči počet únosný implementáciou, je to už problém vykresľovania, ktorý v čase zadania nie je možné určite, preto naň užívateľ nebude upozorňovaný. Minimálna rýchlosť je 1. Teda maximálny počet bodov pre sekciu 2 je $180 + maxRýchlost + maxViditeľnost$. maxRýchosť a maxViditeľnosť obmedzíme dostatočne veľkým čislom, čo je pri plánovanom najpomalšom pohybe 50px/s a najrýchlejšom 400px/s je 8 pre rýchlosť a 10 pre viditeľnost%( najmessia maa ma velkost 500, takze uvidi celu mapu ), 
+Maximálny počet bodov je 198. 
+
+Užívateľ môže ale nechtiac prekročiť sumárne čislo sekcie pri zadávani vlastnosti. Zadavanie vlastnosti je zaväzné pre všetkých robotov, aby ani jeden nebol zvýhodnený, potom je potreba zadané hodnoty upraviť. Rozumným spôsobom sa zdá škalovanie hodnôt zo súčasného súčtu na deklarovany súčet sekcie, pretože zachováva istym spôsobom základnú myšlienku algoritmu (útok na bíizko veľky, útok na ďaleko malý, pretože nebude zbytočne strielať na diaľku).\\
+
+Rovnako môže užívateľ podceniť rozdelenie bodov. Vtedy nastávaju dve možnosti, buď to bolo zámerné (zámerne slabý robot so stratégiou "aj tak na nezničíte" ), alebo robot, ktorý bol vytvoreni pri znalosti iného rozdelenia bodov. V tom prípade sa dá uplatniť tiež škalovanie. Ktorý z týchto rozhodnuti sa použije, by malo byt na tvorcovi algoritmu.\\
+%snad je to vsetko, skontrolvat!<<< dufam ze vsetko
+
+%chceme penalizacie, rozpisujem, ako by sa roboti mali striedat - scheduller
+Algoritmus je potrebné napísať pomocou príkazov robotštiny. V záujme zachovania spravodlivosti by sa roboti mali chovať tak, aby ani jeden z nich nebol zvýhodnený, nevykonal väčšiu čast kódu ako ostatní roboti. To znamená, že v prípade, že roboti majú rovnaký algoritmus, tak po čase X všetci vykonávajú príkaz na riadku T $ \forall X,T \in N $.  Ideálne by bolo, ak by svoje algoritmy vykonávali súbežne a nemuseli by sme vykonaných časti kódu nijak kontorolovať. Pre každý algoritmus by sa dali využiť paralelne vlákna, takže paralelizácia by prebehla na najnižšej úrovni. Takéto rozhodnutie obsahuje nekoľko problémov. Pri jednojadrovych procesoroch sa vlákna striedaju na základe prideleného časového kvanta a tak by sa algoritmy tak či tak realizovali sekvenčne. Tento spôsob má navyše tú nevýhodu, že sa čas, ktorý jednotlivé vlákno reálne dostane, závisí na výtaženosti procesora, softwarovych a hardwarovych prerušení a pod., takže nemúžeme zaručiť spravodlivost. \\
+Použitie multiprocesora princíp spravodlivosti mierne vylepši. Vzniká tu ale zásadný problém v tom, že mapa je len jedina a tak je potrebné naimplementovať ochrany proti prístupu na jedno pamätové miesto naraz. Tento koncept má však kvôli prerušeniam stále ešte malý problém so spravodlivosťou, aby každý robot vykonal približne rovnakú čast kódu algoritmu. \\ %mozno co je to cast algoritmu
+Z týchto dôvodov je najvhodnejšie zaistiť spravodlivosť na úrovni software. To znamená, že program sám bude kontrolovat poradie robotov a ich vykonávaný algoritmus.
+%potrebujeme scheduller
+Doba, ktorá bude pridelená jednotlivým robotom, aby vykonali čast svojho programu a potom následne prenechali vykonávanie algoporitmu, nazvime časove kvantum.<<< výstižnejšie "časova dotácia" Je pre všetkych rovnaké, kvôli zaisteniu spravodlivosti. Proces, keď roboti toto kvantum využíivajú, nazvime kolo.%<<< vystiznejsie cyklus?. 
+Kolá sa periodicky musia opakovať. aby mohol prebehnúť celý algoritmus. V opačnom pripade by sa simulácia zasekla už po jednom kole. \\
+%ako vyzera scheduller
+Vidíme,  že je nutné implementovať mechanizmus, ktorý by kontroloval, aká časť kódu sa vykonala a následne prípadne odobral robotom slovo <<<(aktivitu?). Nazvime ho plánovač. Tento plánovač je kvôli spravodlivosti globálny,  t.j. musí ho využivať každý robot . %tu proste NEBUDEM hovorit o instanciach robota, a ze maju vlastmy scheduller
+Plánovač je ale možné implementovať dvoma spôsobmi:
+\begin{description}
+\item [Obmedzenie kvantitou] \hfill \newline
+Plánovač tohoto typu nikdy nedovolí vykonávanie veľkých časti algoritmu naraz. Robot teda striktne vykoná práve jednu, rovnako veľkú  časť svojho kódu a preda slovo ďalšim robotom. Tento spôsob prináša 
+\item [Obmedzenie časom] \hfill \newline
+Plánovač tohoto typu priradí každému robotovi čas, za ktorý môže vykonávať svoj program. To znamená, že na rozdiel od predchádzajúceho typu je možné postúpiť v programe ďalej v jednom kole.
+\end{description} 
+
+Robot by mal vykonávat svoj algorimus dovtedy, pokiaľ ho niekto externe nezničí. To znamená, že algoritmus sa musí opakovane vykonávat potenciálne do nekonečna. No nie je vhodné, aby na to dával pozor sám hráč, Jednak musel opakovanie deklarovať u každého svojho naprogramovaného robota a jednak táto deklarácia je iba manuálny zapis, ktorý nemá vplyv na použitú stratégiu. Preto sa v práci dbá na to, aby v okamihu, keď by mal robot  skončiť  jeho algoritmus, spustil odznova v nekonečnom cykle.???????
+
+%penalizáacie ... juchuuuuuuu<<< suhlas
+Doteraz sme mlčky predpokladali, že každá časť kš??? má rovnakú váhu. Tým, že niektoré časti algoritmu vyhlásime za ťažšie spraviteľne, potom vytvoríme novú inštanciu sveta. Tam sa nemení obsah, ale spôsob narábania s algoritmom (FUJ). Hráč potom musi vymyslieš taký algoritmus, ktorý počita s daným nastavenim. \\
+Potrebujeme ale vedieť, že to skutočne prispeje k atraktívnosti hľadania vhodnej stratégie. Rozoberme si teda, ako to bude vplývat na algoritmus, ak by jednotlivé časti boli iba  ocenení,??? t.j. trvali iný počet kôl. Potom by bol užívatel nútený použiť taký algorimus, ktorý dlho trvajúce časti použiva minimálne. Napriklad, ak by robotovi trvalo štyri kola na to, aby sa otočil, potom hráč sa pravdepodobne bude snažiť užiť minimálny počet otočení.???? 
+Tým spôsobom sa môže vymýšlanie stratégií posunúť na hlbšiu úroveň, čo vyhovuje nároku na prácu.\\%ako je ukazane na obrazku:<<< rad sa kuknem
+Výsledne plánovače potom dostanú iné vlastnosti, 
+\subsection{Možné prístupy k programovaniu virtuálneho sveta}
+Dôležitou časťou práce je predstaviť spôsob, akým bude užííivateľ zapisovať vymyslený algoritmus. Uvažujeme s nasledujúcimi jazykmi: %<<< Hmmm, najdolezitejsej casti bude dalsia kapitolka?bude, bude
+\begin{description}
+\item [Grafický jazyk] \hfill \newline
+Pod grafickým jazykom rozumieme jednoduché grafické zobrazenie zápisu algoritmov. Tento spôsob sa najskôr využival pri výuke programovacich jazykov ako 1ahký a jednoduchý spôsob íisania algoritmu. Jednoduchým sledovaním sipliek????  nie šípiek (OBR) sa dá zistiť, v akom stave sa program nachádza pri počiatočnych podmienkách. 
+%jak to funguje, ked je to grafické. ( prehľadne a cool )
+Implementovanie vlastného grafického jazyka, kde by boli príkazy len pre potrebu programátora, by bola dosť náročná. Jediný nástroj, ktorý splňoval základné predstavy, bol ale Microsoft Visual Language, ktorý je pre nekomerčné využitie  zdarma. Bohužiaľ je závislý na operačnom systéme,  takže sa ukázal ako nevhodný \\ 
+\item [scriptovací jazyk LUA]
+LUA je scriptovací jazyk, ktorý sa využíiva práve na programovanie problémov umelej inteligencie, čo je aj náš prípad. Jeho výhodou je, že tento jazyk je jednoduchý, voľne širiteľný a prenositeľný.  <REF> \\
+LUA je však konštruovaná na kompletne prevedenie daného algoritmu, takže by sme nemali priamo kontrolu nad jednotlivými časťami kódu. Napríklad kontrola obsadeného úložista, ktoré môže robot použivať, by sa skomplikovala. Rovnako rozhodnutie, kedy algoritmus vykonal dost príkazov a je nutne ho pozastaviť. Preto nebol pouzity jazyk LUA.
+%\item [XML] % to sa este rozmyslim
+\item [vlastný jazyk]
+Ďaľšou možnosťou je vytvoriť vlastný Domain Specific Language, ktorý bude použiteľný len na úlohy typu Codewars. Vytvoreniejazyka??? zahŕňa definíciu vlastného jazyka na spôsob, akým sa budú jednotlivé príkazy interpretovať, komunikovať s robotmi.
+ % toto uz mozno moc zachazdzam to immplementacie<<< je to tu na mieste
+Rozhodli sme sa preto pre tento koncept.
+\end{description} %snad to staci, je to kratke, ale co uz, spisovatelka zo mna nebude<<<to nie je take iste - ani ja som nechcel byt pedagogom.;)
+\subsection{Robotština}
+Algoritmus bude teda zapísaný vo vlastnom jazyku - robotštine. To naň kladie netriviálne nároky.
+\subsubsection{minimálne schopnosti}
+Najskôr sa zamerajme na to, čo všetko by mal jazyk ponúkať, aby sa pomocou neho dal napísať plnohodnotný algoritmus chovania robota v popísanom svete. \\
+Robot musí pomocou popísaného algoritmu ovládať akcie, ktoré smie robiť, aby vôec vo svete niečo vykonal. Jazyk preto bude obsahovať príkazy na 
+\begin{itemize}
+\item pohyb 
+\item čakanie (ako opak pohybu - ničnerobenie istý pocet kôl)<< na zmenu sveta?
+\item útok
+\item otočenie sa
+\item získavanie informácií o objektoch z okolia
+\end{itemize} % to je vsetko, co moze robot vizualne robot
+
+Tieto príkazy podmieňujú vznik operacií s objektami.
+%POZOR tu to pisem zmatene, mi pride, ze idem do hlbky a asi by som mala do sirky
+\begin{description}
+\item[Pohyb] znamená, že robot sa pohne daným smerom niekoľko krokov. Počet krokov je intuitívne vyjadrený celým číislom. V okamihu vykonávanie  príkazu nemusíme ešte presne vedieť, o koľko krokov sa robot pohne, preto je potrebné zaviesť premenné.
+\item[Premenné] v zmysle ich  definície uchovávajú určite informácie. Vzhľadom na náš virtuálny svet potrebujeme, aby uchovavali: %nebola by lepsia tabulka?
+\begin {itemize}
+\item celé číslo - {\it Integer}
+\item reálne čislo -- spresnenie celého čísla kvôli aritmetickým operáciam, ako je ďalej uvedené - {\it real}
+\item objekt sveta {\it Object}
+\item pozíicia sveta ako dvojrozmerný vektor {\it Location}
+\item pole premenných - {\it int[3], real[a][3], location[4] } %toto nechcem okecat, snad je to z  toho jasne<<<staci
+\item {\it null} pre oznámenie robotovi, že nemá uloženy žiadny objekt
+\item {\it this} pre referenciu svojho vlastneho objektu
+\end{itemize}  
+%mozno, co je este nepotrebne, ale to podla mna netrena, hovorim o tom, co tam nezpodmienecne musi byt
+\item[Operácie s čislami] sa objavuju v súvislosti s premennými. Budú podporované iba niektoré základné operácie s reálnymi čislami, a to :
+\begin{itemize}
+\item sčitanie
+\item odčitanie
+\item násobenie
+\item delenie, prčcom výsledok delenia celých čisel bude reálne číslo
+\item modulo pre cele čisla = {\it \%}
+\end{itemize}
+Ostatné aritmetické operácie nebudú podporované, nakoľko nie sú nevyhnutne potrebné. Aby sme dociellii delenie výsledok delenia v celom čisle????????, bude podporovaná automatická konverzia do celého  čisla z reálneho. Uživateľ toto nemusí špeciálne ošetrovať. %>>>kedze jazyk nema simulovat matlab. %;) Chcem povedat, ze MNE to staci, ostatne sa z toho daju spravit
+\item [Operácie s objektami] dávajú možnosť reagovat na  svet,  t.j. umožňujú zistiť:
+\begin{itemize}
+\item akým smerom je objekt otočený (vhodné pre robota, aby zistil, či nie je na muške ) {\it getDirection (o) }
+\item akým smerom sa objekt pohybuje { is Moving(o)}
+\item či je to strela, stena alebo robot -{\it isMissile(m), isWall(o), isPlayer(p), isEnemy(o) }
+\item či bol nepriatelský robot zasiahnutý - {\it isHit(robot)}
+\end{itemize}
+\item[Relačne operácie] $>, <, =, \ne $ a ich kombinácia pre všetky typy premenných. Využijú sa napríklad pri zisťovaní najbližšieho objektu, atd. Pre objekty je nezmysel porovnavať, číi je mensi alebo väčši, preto u objektov je povolený iba relačný operátor $=$ a $\ne$.
+\item[Podmienky] výrazne prispievajú k eliminovaniu  pre robot nepríjemných udalostí, ktoré môžu vo virtuálnom svete nastať (ak je tam mína, tak tam nesľapni). Viažu sa k nim ďaľšie kódové slová TRUE (1) a FALSE (0).
+\item[Cykly] zjednodušujú prácu pri vykonávaní rovnakých časti kódu. Podporované sú cykly s podmienkou na začiatku, na konci, pevný počet opakovaní a počet opakovaní v závislosti na premennej, s ktorou sa dá manipulovať. % je to ok (while a tak?)ano, presne tak, je to dobre vyjadrenie?
+\item[Procedry a funkcie] umožňuju sprehľadňovat a členiť kód. Prispievaju k lepšiemu kódovaniu algoritmov, využívaniu pamäte, ktorá sa po skončení procedúry uvoľní. Parametre k funkciám sa dajú predávat odkazom alebo referenciou.  Definovanie predávania parametra referenciou je značené kódovým slovom ref pred premennou, ktorá je takto predávana. Poradie parametrov predávaných odkazom a hodnotou nehrá rolu. Parameter s preddefinovannou hodnotou nie je podporovaný %a to NEMIENIM zdovodnovat
+\item [Definovanie cieľov a vlastností] reprezentuje chovanie robotuv. % <<< viac netreba %tu uz neviem, co mam napisat
+\end{description}
+
+Premenné sa ukladajú do pamate. Ak už nie je voľné miesto v pamäti, bolo by nemilé, aby preto robot umrel. Rovnako je to nefér aj voči robotom, ktorý ho lovia. Namiesto toho bude premenná ukazovať na miesto v pamäti, ktorá je už obsadená. 
+%mysleno prepise uz existujucu premennu, ktora tam uz je
+Algoritmus tak môže efektívne prepísat hodnotu, na ktorú sa spolieha ( napriklad hodnotu TRUE), ale to zodpovedá tomu, že sa robot z nedostatku pamäte zbláznil. Obzvlásť  je to viditeľné, ak si prepísš premennu, na ktorú sa spolieha, napríklad hodnotu TRUE bude zrazu FALSE. \\
+
+Aby sa predišlo týmto nepríjemnostiam, je vhodne vedieť, kedy premenné vznikajú (v zmysle obsadzujú pamať) a kedy zanikajú (uvošnujú pamät). \\
+
+Pri deklarovaniípremennej sa premenná automaticky vytvorí, čo je normálne chovanie, známe takmer vo všetkých vyšších programovacích jazykoch. \\
+Pri volaníi funkcie s parametrami sú tieto parametre kopírované, pokiaľ neboli definované kódovým slovom ref. To znamená, že sa vytvoria znova všetky premenné a pridá sa im hodnota, s akým je funkcia volaná. Návratova hodnota sa vytvorí v okamžiku volania return. V prípade, že ide o procedúru, návratová hodnota sa nevytvorí.
+Premenná sa môže dočasne vytvorťt aj v bloku označenom {}. Po ukončení bloku sa premenná v úložisku uvoľní. Preto sa v nasledujúcom kóde (mimo bloku) nemala dať použiť. Premennú s rovnakýym menom nie možné vzhľadom na implenentáciu vytvoriť ďalej s iným typom, než bola prvýkrát deklarovaná. Toto ale nie je závažný problém, keďže sa jedná iba o vytvorenie názvu pre premennú a rôzne mená s rôznym typom iba mätu neskoršieho čitateľa.?????\\
+
+Premenná obsadzuje miesto v úložisku. Vzhľadom na obmedzenie úložiska je namieste určiť, aké množstvo jednotiek úložiska jednotlivé premenné zaberajú. Premenné typu Object, Real a Integer budú zaberať jednu jednotku miesta, pretože nemá ďalej zmysel deliť ich na menšie časti. V reálnych jazykoch tomu tak pochopiteľne nie je, tu sme to obmedzili preto, aby obsadzovanie pamäte bolo jednoduché a pochopiteľné. Ďalej jť u je položka Location. Tá ma z definície dve zložky. Preto v pamäti bude zaberat 3 jednotky, pre 3 premenné typu integer, ktoré sú jej zložkami a jednu pre seba. Podobne obsadzujú pamäť zložné prvky (polia). To znamená jedno pre samotnú premennú a potom sučet obsadenia všetkých jeho premenných. \\%snad je to tu jasne
+
+\subsubsection{Syntax jazyka}
+Algoritmus je možné zapísat pomocou sekvencií príkazov. Pre správne pochopenie algoritmu je nutné definovať ich gramatiku. Tú zobrazuje obrazok <OBR-TODO>
+kde :
+\begin{description}
+\item [vlastnost] je jedno z:
+\begin{itemize}
+\item hipoints
+\item attack
+\item mAttack
+\item mHealth
+\item angle
+\end{itemize}
+nasledované čislom, ktoré definuje vlastnosť. V prípade, ak uživateľ počet bodov v jednotlivej sekcii prekroči určené číislo, vlastnosti sa budu škalovať.
+\item [Ciele algoritmu] sa skladá z:????
+\begin{itemize}
+\item $visit | visitSequence ( [X,Y] | X )$
+\item $kill [a-zA-Z0-9]*$
+\item $killed <|>|<=|==|!=|>=$
+\end{itemize}
+\item [Príkaz na robota] je príkaz z množiny $step(X), wait(X), see(), eye(X), turn(X) X\in N, seeEnemy()$
+\item [Príkaz na informáciu] je príkaz z množiny $(Locate(o), isWall(o), is Player(o), o \in Objekt, seen[n] n\in N  $ %kontrola, ci je tu vsetko
+\end{description}
+\subsubsection{priklady pouzitia} %snad nemusia robit nic konkretne
+Nasledujúce príklady vysvetľujú, ako sa použivajô jednotlivé príkazy, nemajú však za úlohu demonstrovať skutočný kód
+\begin{verbatim}
+robot R1 {
+    attack 20
+    mAttack 100
+    hitpoint 60
+    memory 10
+   kill R1
+   killed ! = 1 
+    integer l = 10;
+    main()
+    {
+    for (integer i = 0; i < l; i++)
+        {
+            while (see()>0 && isPlayer[seen[0]])
+                shoot(seen[0]);
+            turn (30);
+        }
+    }
+}
+robot R2 {
+    target ( Start[ R1 ], Start [R2])
+    kill < 2
+    
+    Location was = [0,0]
+    
+    main()
+    {
+        Location l = [-1,-1];
+        turn (getTarget());
+        while (step(4) != 0)
+        {
+            if (was == l)
+            {
+                turn(15);
+                continue;
+                was = locate(this);
+            }
+            turn ( -direction(l));
+        }        
+    }
+\end{verbatim}
+%STUDIUM príkazov je nad moje schopnosti, no vyzeraju doveryhodne
+

@@ -1,0 +1,46 @@
+\chapter{Porovnanie}
+Existuje mnoho nastrojov, ktore sa venuju sutazne algorimom zameranym na programovanie robotov. Z typickych zastupcov mozeme uviest uz spominanych POGAMUT, ARES, RoboCode, ako aj neuvedene C++ robots, MindRover, Grobots a mnozstvo dalsich \ref{}. Vacsinou sa zameriavaju na prezitie v arene.Podla corewar terminologie sa tento ciel nazyva "King Of The Hill" ( dalej KotH )
+\\
+% citacie by mali byt uvedene v Literature chysta sa
+%http://sumost.ca/steve/games/
+%http://www.gamerz.net/c++robots/
+%http://grobots.sourceforge.net/
+%a teraz nasleduje porovnanie
+Strucne porovname vysledny program bakalarskej prace s uvedenymi aplikaciami, zhrnieme vyhody a nevyhody ich pristupov a co nove prinasame. Obmedzime sa len na niekolko charakteristickych nastrojov ponimania sveta podobnych CODEWARS. Tie budu demonstrovat, aky koncept  CODEWARS pouzila a ako ho zmenila/vylepsila.\\
+
+C++ robots je velmi podobna hra o prezitie. Roboti si pisani v C++ a maju k dispozicii jedinu zbran  kanon. Svet je ale velmi jednoduchy, je to priestor 100x100 m ohraniceny stenami.  Cela hra je na rozdiel od codewars koncipovana ako turnaj, robot si postune vybera superov. %poment, scheknem, ci nekecam
+Codewars  naviac ponuka moznost pustit vsetky algoritmu naraz s tym, ze hrac moze vyuzivat aj ostatny robotov, aby za neho spravili spinavu pracu. \\%a viac by som nepisala..== viac sa mne neche
+
+ARES je typicko obranno-utocna hra, ktora je ale hlavne urcena programatorom. Svet sa meni velmi dynamicky a roboti nevedia vobec nic o svete. Len si sa domnievaju vysledky utoku a podla toho reaguju. Codewars je z tohoto pohladu uplne opacna aplikacia, Roboti vedia velmi dobre mapovat svet a spoznaju nepriatela. Spolocny prvok tak mozu mat len v sposobe interpretacie algoritmu. V Codewars bol tento koncept dovedeny ad absurdum, ked sa konfiguraciou mozu menit chovanie napisanych algoritmov. \\%chcelo by to tu rozpisat
+
+RoboCode je tiez zlozita hra, ktora sa dlho vyvijala. Je urcena pre uzivatelov, ktori zacinaju s programovacim jazykom Java. Svet sa riadi svojimi zvlastnymi pravidlami pre strelbu a vitazenie. Vitazny algoritmus je taky, ktory ziska najviac bodov. Codewars bolo silne ispirovane tymto programom.  Lisia sa ale vyznamne v sposobe, akym vykonavaju algoritmus ( RoboCode sa snazi o paralelizaciu ) s definovanim ciela. Codewars oproti Robocode prinasa moznost prisposobit si robota pomocou vlastnosti jeho algoritmu a s moznostou napisat aj cisto mierumilovneho no chytreho robota.\\ %vyborne!:P
+
+Koncepty prijate v jednotlivych hrach su popisane v tabulke \ref{tabulka}. Tabulka obsahuje iba tie hry, ktore sa od seba vyrazne lisia. 
+\begin{table}
+\centering
+\caption { Charakteristiky porovnavanych hier } %to bude musiet rozdelit asi na dve tabulky...
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+&Svet&zbrane& ciele & obmedzenia &pohyb &objekty&jazyk \\
+&&&na algoritmus &&\\
+POGAMUT & 3D & strely & rozne & ziadne & komplexny &mnozstvo&Java \\
+ARES & 1D & zdielana pamat & KotH & velkost pamate & vykonanie instr. & data & assembler\\
+Codewars &2D & strely, roboti & volitelne & volitelne & jednoduchy&variacie stien &jednoduchy \\
+C++Robots &2D& strely &roboti & KotH & ziadne & jednoduchy & C++ \\ 
+\end{tabular}
+\end{table}
+
+\chapter {Zaver}
+\subsection{Zhodnotenie splnitelnosti cielov}
+V nasom programe sa podarilo implementovat prostredie pre robotov, kde sa da sledovat postup algoritmu. Svet je navrhnuty tak, aby jeho zmena sposobila rozdielne naroky na algortmy a tym zvysovala obtiaznost hry v zmysle naroku na uspesnost algoritmu.\\
+Program je pripraveny na testovanie algoritmov. Z casovych dovodov sa vsak nepodarilo otestovat algoritmy, ktore su povazovanie v niektorych hrach za dobre, v danom rozsahu. 
+
+\subsection{Mozne rozsirenie CODEWARS}%tu ti asi zase padla siet :-{
+V tejto sekcii zhrnieme rozsirenia o ktorych uz bola zmienka v texte, ich prinos a mozny smer rozvoja problematiky. \\
+\subsubsection 
+Jednym zo spomenutych rozsireni je navrhnutie viditelnosti tak, ze aby robot mal asymetricke 'oci', t.j priamka definovana smerom robota v ktorom je prave otoceny nebude rozdelovat vysec na dva rovnake casti. Tento skulavy robot bude do nejakej strany vidiet viac ako do druhej. Dokonca je mozne pripustit extrem, kedy by robot vidiet iba za seba a tym miatol superov. Je povolena chodza do akejkolvek strany a tak jediny vysledok by bol, ze by nesedelo zobrazovanie. Prinasa to sice moznost, ze sa robot nemoze spolahnut ani na to, ako je otoceny. Algoritmus by musel sofistikove testovat, kam robot vidi, alebo si casto a spravne tipnut. Takto hendikepovany robot je skutocnou vyzvou najma pri hre skuseneho hraca so zaciatocnikom. Preto toto rozsirenie je  hodne pozornosti \\ %myslis?mne to pride ako zrada na hracovi:P <<<<TAKY byva aj realny zivot !
+Dalsou moznostou je nechat uzivatela definovat, aky planovac bude konkretny robot pouzivat. Mozno ocakavat, ze vysledky by mohli byt zaujimave nakolko to vedie naprogramovaniu robota, ktory ma podla vsetkeho rychlejsi algoritmus.\\
+\subsubsection{rozsirenie vzhladom na jazyk}
+Jazyk robota aktualne nepodporuje deklarovanie premennych, ktore boli vo funkcii uz niekedy deklarovane. Toto chovanie je sice pochopitelne, avsak programatorsky neprijemne. Preto by sa dalo uvazovat o primeranej naprave. %PEKNE:D \\
+Jazyk dostatocne pokryva zakladne poziadavky na popisania chovania robota. Avsak je prilis nizkourovnovy, uzivatel si musi mnohe detaily osetrit sam. To na jednej strane moze posobit blahodarne na vymyslanie strategie, na druhej strane moze uzivatela znechutit napr. to, ze si jeho robot zabuda vsimat, ze je ostrelovany. Preto by bolo mozne rozsirit jazyk o funkcie, ktore sa automaticky spustia pri vyvolani udalosti. Toto by vsak vyzadovalo  hlbsi zasah do kody, pretoze robot ako objekt a jazyk ako hybatel robota su  implementovane ako dve nezavisle entity. Bolo by nutne implementovat prislusne komunikacne rozhranie. \\%otazka, dalo by sa to u mna jednoducho? Podla mna NIE
+Dalsou moznostou je pri implementovani reakcii na udalosti nechat uzivatela vopred definovat tieto udalosti, na ktore bude robot reagovat (napriklad "on seeEnemy()>0"). Pri dobrom komunikacnom protokole by stacilo sucasne s vykonavanim kodu kontroloval zoznam podmienok. Obmedzenie poctu udalosti, na ktore robot moze reagovat, by tiez mohlo prispiet k zaujimavym uvaham nad strategiou.
+
