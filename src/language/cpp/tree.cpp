@@ -141,7 +141,11 @@ Node * Tree::add(std::string s, Create_type * type)
 		{
 			if ((*iter)->active)
 			{
-				TEST("Taka aktivna premenna uz existuje " <<s)
+				throw "Such variable already exists! (" + s + ")";
+			}
+			if ((*iter)->type_of_variable != type )
+			{
+				throw "Variable is not active but types are different! It's a bug. Please contact me!";
 			}
 			return *iter;
 		}

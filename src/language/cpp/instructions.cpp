@@ -84,7 +84,7 @@ int InstructionLoadLocal::execute(Core * c)
 	TEST("Loading local variable " << node->name)
 	if (node->var.size() == 0)
 		throw "Trying to load mpty variable";
-	c->values.push_back(node->var.back());
+	c->addValue(node->var.back());
 	TEST("OK")
 	return 0;
 }
@@ -119,7 +119,7 @@ int InstructionLoadGlobal::execute(Core * c) //FIXME kedyto potrebujem? nikdy ta
 	TEST(" id =  " << node->var.size() << "...")
 	Variable * v;
 	v = node->var.back();
-	c->values.push_back(v);
+	c->addValue(v);
 	TEST("OK")
 	return 0;
 }
@@ -166,7 +166,7 @@ int InstructionLoad::execute(Core *c)
 	if(constant)
 	{
 		TEST("Loading constant ..." << var->integerValue)
-		c->values.push_back(var);
+		c->addValue(var);
 		TEST("OK")
 		return 0;
 	}//else from stack
@@ -224,7 +224,7 @@ int InstructionConversionToInt::execute(Core * c)
 {
 	TEST("Converting " << c->values.back()->realValue)
 	float f=c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (int)f;
 	TEST(" to integer" << c->values.back()->integerValue << "...")
 	TEST("OK")
@@ -246,7 +246,7 @@ int InstructionConversionToReal::execute(Core * c)
 {
 	TEST("Converting" <<c->values.back()->integerValue)
 	float f = (float)c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->realValue = f;
 	TEST("to real" << c->values.back()->realValue << "...")
 	TEST("OK")
@@ -267,7 +267,7 @@ InstructionDuplicate::InstructionDuplicate()
 int InstructionDuplicate::execute(Core * c)
 {
 	TEST("Duplicating variable")
-	c->values.push_back(c->values.back());
+	c->addValue(c->values.back());
 	TEST("OK")
 	return 0;
 }
@@ -344,22 +344,22 @@ InstructionStoreObject::~InstructionStoreObject()
 	/* Nothing to be done yet */
 }
 
-Call::Call(Function * f_)
+InstructionCall::InstructionCall(Function * f_)
 {
 	node = NULL;
 	function = f_;
-	name_ = "Call";
-	group = IGroup_call;
+	name_ = "InstructionCall";
+	group = IGroup_InstructionCall;
 }
-int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
+int InstructionCall::execute(Core * c) //TODO zmenit kopirovanie parametrov
 {
-	TEST("Calling function: ") 
+	TEST("InstructionCalling function: ") 
 	Node * ret = function->return_var;
 	Variable * v = c->memory.assign_temp(ret->type_of_variable); //aby zmizlo po ukonceni
 	
 	if (c->nested_functions.size() == CRITICAL_AMOUNT_OF_FUNCTIONS)
 	{
-		c->values.push_back(v);
+		c->addValue(v);
 		return -1;
 	}
 	c->nested_functions.push_back(c->nested_function);
@@ -371,7 +371,7 @@ int Call::execute(Core * c) //TODO zmenit kopirovanie parametrov
 	TEST("OK")
 	return 0;
 }
-xmlNodePtr Call::xml_format()
+xmlNodePtr InstructionCall::xml_format()
 {
 	xmlNodePtr n = xmlNewNode(NULL, BAD_CAST name_.c_str());
 	xmlNodePtr n2 = xmlNewText(BAD_CAST function->name.c_str());
@@ -379,7 +379,7 @@ xmlNodePtr Call::xml_format()
 	xmlAddChild(n,n2);
 	return n;
 }
-Call::~Call()
+InstructionCall::~InstructionCall()
 {
 	/* Nothing to be done yet */
 }
@@ -529,7 +529,7 @@ int InstructionReturn::execute(Core * c)
 //	Variable * v;
 //	v = c->nested_function->return_var->var.back();
 //	c->nested_function->return_var->var.pop_back();//zmazanie returnu po naloadovani do stacku
-//	c->values.push_back(v);
+//	c->addValue(v);
 	TEST("OK")
 	return 0;
 }
@@ -648,7 +648,7 @@ int InstructionPlusInteger::execute(Core * c)
 	TEST("Adding two integer numbers...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left + right;
 	TEST("OK")
 	return 0;
@@ -666,7 +666,7 @@ int InstructionPlusReal::execute(Core * c)
 	TEST("Adding two real numbers...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
 	c->values.back()->realValue = left + right;
 	TEST("OK")
 	return 0;
@@ -683,7 +683,7 @@ int InstructionMinusInteger::execute(Core * c)
 	TEST("Substraction two integer numbers ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left - right;
 	TEST("OK")
 	return 0;
@@ -700,7 +700,7 @@ int InstructionMinusReal::execute(Core * c)
 	TEST("Substracting two real numbers ...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
 	c->values.back()->realValue = left - right;
 	TEST("OK")
 	return 0;
@@ -721,7 +721,7 @@ int InstructionMultiplyInteger::execute(Core * c)
 	TEST(" left value" << c->values.back()->ID << " ")
 	int left = c->getIntFromStack();
 	TEST("value " << left)
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left * right;
 	TEST("OK")
 	return 0;
@@ -738,7 +738,7 @@ int InstructionMultiplyReal::execute(Core * c)
 	TEST("Multiplying two real numbers ...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
 	c->values.back()->realValue = left * right;
 	TEST("OK")
 	return 0;
@@ -755,7 +755,7 @@ int InstructionDivideInteger::execute(Core * c)
 	TEST("Dividing two integer numbers ...") 
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left / right;
 	TEST("OK")
 	return 0;
@@ -772,7 +772,7 @@ int InstructionDivideReal::execute(Core * c)
 	TEST("Dividing two real numbers ...") 
 	int right = c->getFloatFromStack();
 	int left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeReal)));
 	c->values.back()->realValue = left / right;
 	TEST("OK")
 	return 0;
@@ -789,7 +789,7 @@ int InstructionModulo::execute(Core * c)
 	TEST("Module ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left % right;
 	TEST("OK")
 	return 0;
@@ -806,7 +806,7 @@ int InstructionBinaryAnd::execute(Core * c)
 	TEST(" & ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left & right;
 	TEST("OK")
 	return 0;
@@ -823,7 +823,7 @@ int InstructionAnd::execute(Core *c)
 	TEST(" && ...") 
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 
 	if ((right == 0)
          || (left ==0)) 
@@ -845,7 +845,7 @@ int InstructionBinaryOr::execute(Core * c)
 	TEST(" | ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = left | right;
 	TEST("OK")
 	return 0;
@@ -862,7 +862,7 @@ int InstructionOr::execute(Core *c) //TODO skratene vyhodnocovanie??
 	TEST(" || ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	if ((right != 0)
 	 || (left !=0)) 
 		c->values.back()->integerValue = 1;
@@ -882,7 +882,7 @@ int InstructionBinaryNot::execute(Core *c)
 {
 	TEST(" ~ ...")
 	int var = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = ~var;
 	TEST("OK")
 	return 0;
@@ -898,7 +898,7 @@ int InstructionNot::execute(Core *c) //POZOR, pri unarnych operaciach sa neda po
 {
 	TEST(" Not ...")
 	int var = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	if (var == 0)
 		c->values.back()->integerValue = 1;
 	else
@@ -919,7 +919,7 @@ int InstructionGtInteger::execute(Core * c)
 	TEST("Integer > ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left > right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -936,7 +936,7 @@ int InstructionGtReal::execute(Core * c)
 	TEST("Real > ...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left > right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -953,7 +953,7 @@ int InstructionGeInteger::execute(Core *c)
 	TEST("Integer >= ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left >= right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -970,7 +970,7 @@ int InstructionGeReal::execute(Core * c)
 	TEST("Real >= ...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left >= right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -987,7 +987,7 @@ int InstructionEqualInteger::execute(Core * c) //pre location nech si napisu fun
 	TEST(" Integer == ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left == right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1004,7 +1004,7 @@ int InstructionEqualReal::execute(Core *c)
 	TEST("Real == ...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left == right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1021,7 +1021,7 @@ int InstructionEqualObject::execute(Core * c)
 	TEST("Object == ...")
 	Object * right = c->getObjectFromStack();
 	Object * left = c->getObjectFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left == right)? 1:0;
 	TEST("OK")
 	return 0;
@@ -1040,7 +1040,7 @@ int InstructionNotEqualInteger::execute(Core * c)
 	TEST("object != ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left != right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1057,7 +1057,7 @@ int InstructionNotEqualReal::execute(Core * c)
 	TEST("Real != ...")
 	int right = c->getFloatFromStack();
 	int left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->realValue = (left != right)? 1:0; 
 	return 0;
 }
@@ -1073,7 +1073,7 @@ int InstructionNotEqualObject::execute(Core * c)
 	TEST("Object != ...")
 	Object * right = c->getObjectFromStack();
 	Object * left = c->getObjectFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left != right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1090,7 +1090,7 @@ int InstructionLtInteger::execute(Core * c)
 	TEST("Integer < ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left < right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1107,7 +1107,7 @@ int InstructionLtReal::execute(Core * c)
 	TEST("Real < ...")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left < right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1124,7 +1124,7 @@ int InstructionLeInteger::execute(Core * c)
 	TEST("Integer <= ...")
 	int right = c->getIntFromStack();
 	int left = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left <= right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1141,7 +1141,7 @@ int InstructionLeReal::execute(Core * c)
 	TEST("Real <=")
 	float right = c->getFloatFromStack();
 	float left = c->getFloatFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = (left <= right)? 1:0; 
 	TEST("OK")
 	return 0;
@@ -1189,7 +1189,7 @@ InstructionSee::InstructionSee() //uzol ktory sa ma naplnit viditelnymi objektam
 int InstructionSee::execute(Core *c) //	ziadne dlasie parametre
 {
 	TEST("Filling objects in robot's see angle ...")
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->see(); 
 	TEST("OK")
 	return 0;
@@ -1209,7 +1209,7 @@ int InstructionEye::execute(Core *c)
 	TEST("Getting object from the eye ...")
 	Object * o = c->body->eye(c->values.back()->integerValue);
 	c->values.pop_back(); 
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeObject)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeObject)));
 	if (!o)
 		o = c->memory.dummy();
 	c->values.back()->objectValue = o; 
@@ -1228,7 +1228,7 @@ InstructionFetchState::InstructionFetchState()
 int InstructionFetchState::execute(Core *c) //prave jeden parameter
 {
 	TEST("Fetching state ...")
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->state();
 	TEST("OK")
 	return 0;
@@ -1260,7 +1260,7 @@ InstructionStepDefault::InstructionStepDefault()
 int InstructionStepDefault::execute(Core *c) //prave jeden parameter
 {
 	TEST("Stepping default...")
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->step();
 	TEST("OK")
 	return 0;
@@ -1276,7 +1276,7 @@ int InstructionWait::execute(Core *c) //prave jeden parameter
 {
 	TEST("Waiting ...")
 	int waits = c->getIntFromStack();
-//	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+//	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 //	c->values.back()->integerValue = 
 	c->body->wait(waits);
 	TEST("OK")
@@ -1293,7 +1293,7 @@ int InstructionShootAngle::execute(Core *c)
 {
 	TEST("Shooting at angle...")
 	int an = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->shoot(an); //TODO angle
 	TEST("OK")
 	return 0;
@@ -1309,7 +1309,7 @@ int InstructionTurn::execute(Core *c)
 {
 	TEST("Turning ...")
 	int par = c->getIntFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->turn(par); //TODO angle
 	TEST("OK")
 	return 0;
@@ -1324,7 +1324,7 @@ InstructionTurnR::InstructionTurnR()
 int InstructionTurnR::execute(Core *c)
 {
 	TEST("Turning right ...")
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->turnR();
 	TEST("OK")
 	return 0;
@@ -1338,7 +1338,7 @@ InstructionTurnL::InstructionTurnL()
 }
 int InstructionTurnL::execute(Core *c)
 {
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = c->body->turnL();
 	TEST("OK")
 	return 0;
@@ -1354,7 +1354,7 @@ int InstructionHit::execute(Core *c)
 {
 	TEST("Checking hit state of object ...")
 	Object * o = c->getObjectFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = o->Hit();
 	TEST("OK")
 	return 0;
@@ -1370,7 +1370,7 @@ int InstructionIsPlayer::execute(Core *c)
 {
 	TEST("Checking playerism ...")
 	Object * o = c->getObjectFromStack();	
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = o->typeObject() & Object::Player;
 	TEST("OK")
 	return 0;
@@ -1386,7 +1386,7 @@ int InstructionIsWall::execute(Core *c)
 {
 	TEST("Checking wallism ...")
 	Object * o = c->getObjectFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = o->typeObject() & Object::Wall_;
 	TEST("OK")
 	return 0;
@@ -1402,7 +1402,7 @@ int InstructionIsMissille::execute(Core *c)
 {
 	TEST("Checking missilism ...") //s jednym parametrom
 	Object * o = c->getObjectFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	c->values.back()->integerValue = o->typeObject() & Object::Missille_;
 	TEST("OK")
 	return 0;
@@ -1423,7 +1423,7 @@ int InstructionLocate::execute(Core *c) //TODO location
 		p = o->get_pos();
 	else
 		p = c->memory.dummy()->get_pos();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation))); 
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation))); 
 	c->values.back()->array.elements[0]->integerValue = p.x;
 	c->values.back()->array.elements[1]->integerValue = p.y;
 	TEST("OK")
@@ -1436,11 +1436,12 @@ InstructionIsMoving::InstructionIsMoving()
 	name_ = "Instruction IsMoving";
 	group = IGroup_check;
 }
+
 int InstructionIsMoving::execute(Core *c)
 {
 	TEST("Checking movement ...")
 	Object * o = c->getObjectFromStack();
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeInteger)));
 	if (c->body->seer.find(o))
 		c->values.back()->integerValue = o->isMoving();
 	else
@@ -1468,14 +1469,54 @@ int InstructionTarget::execute(Core *c)
 			p.y = t.y + t.height/2;
 			break;
 		}
-	c->values.push_back(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation)));
+	c->addValue(c->memory.assign_temp(c->typeContainer->find_type(TypeLocation)));
 	c->values.back()->array.elements[0]->integerValue = p.x;
 	c->values.back()->array.elements[1]->integerValue = p.y;
 	TEST("OK")
 	return 0;
 }
 InstructionTarget::~InstructionTarget() {}
-	
+
+InstructionSeeMoving::InstructionSeeMoving()
+{
+	node = NULL;
+	name_ = "InstructionSeeMoving";
+	this->group = IGroup_see;
+}
+int InstructionSeeMoving::execute(Core * c)
+{
+}
+InstructionSeeMoving::~InstructionSeeMoving() {}
+
+InstructionIsEnemy::InstructionIsEnemy()
+{
+	name_ = "InstructionIsEnemy";
+	this->group = IGroup_see;
+}
+int InstructionIsEnemy::execute(Core * c)
+{
+	Object * o = c->getObjectFromStack();
+	Variable * v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
+	v->integerValue = 0;
+	for (int i =0; i<c->body->killTarget.size();i++)
+		if ( c->body->killTarget[i] == 0)
+			v->integerValue = 1;
+	c->addValue(v);
+}
+
+InstructionIsEnemy::~InstructionIsEnemy() {};
+
+InstructionSeeEnemy::InstructionSeeEnemy()
+{
+	this->group = IGroup_see;
+	name_ = "InstructionSeeEnemy";
+}
+int InstructionSeeEnemy::execute(Core * c)
+{
+	//TODO
+}
+InstructionSeeEnemy::~InstructionSeeEnemy() {}
+
 InstructionSaveVariable::InstructionSaveVariable()
 {
 	name_ = "Instruction Save variable";
@@ -1502,7 +1543,7 @@ InstructionLoadVariable::InstructionLoadVariable()
 int InstructionLoadVariable::execute(Core * c)
 {
 	TEST("loading variable from hiden place")
-	c->values.push_back(c->savedVar);
+	c->addValue(c->savedVar);
 	return 0;
 }
 InstructionLoadVariable::~InstructionLoadVariable() { }
@@ -1524,7 +1565,7 @@ int InstructionDirection::execute(Core * c)
 	int res =c->body->getDirection(p);
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
 	v->integerValue = res;
-	c->values.push_back(v);
+	c->addValue(v);
 	return 0;
 }
 
@@ -1539,8 +1580,8 @@ int InstructionRandom::execute (Core * c)
 {
 	Variable * v;
 	v = c->memory.assign_temp(c->typeContainer->find_type(TypeInteger));
-	v->integerValue = rand();
-	c->values.push_back(v);
+	v->integerValue = rand()%10000;
+	c->addValue(v);
 	return 0;
 }
 InstructionRandom::~InstructionRandom() { }

@@ -15,12 +15,12 @@ enum ObjectsToSave
 {
 	SaveDummy = -1,
 	SaveWall = 0,
-	SaveBreakableWall, 
 	SaveTrapWall,
 	SavePushableWall,
 	SaveStart,
 	SaveTarget,
-	NumberOfObjectToSave
+	NumberOfObjectToSave,
+	SaveBreakableWall
 };
 struct ObjectMovement
 {

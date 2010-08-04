@@ -5,7 +5,7 @@
 #include "window.h"
 #include <vector>
 
-/* reccord that should be chose, very unfortunatelu called Maprecord */
+/* reccord that should be chose, very unfortunatelu InstructionCalled Maprecord */
 struct MapRecord
 {
 	std::string name;

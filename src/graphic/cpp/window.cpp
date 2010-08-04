@@ -96,7 +96,7 @@ bool Window::Init(int argc, char * argv[] )
 	background = IMG_Load(DEFAULT_BACKGROUND);
 	if (background == NULL) 
 	{
-		TEST("Background image  not found!");
+		TEST("Background image not found!");
 		return false;
 	}
 	return b;

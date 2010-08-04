@@ -58,7 +58,7 @@ void Core::loadElement(int range)
 	if (values.empty())
 	{
 		TEST("Error - array not loaded!")
-		values.push_back(memory.dev_null());
+		addValue(memory.dev_null());
 		return;
 	}
 	Variable * v = values.back();
@@ -66,10 +66,17 @@ void Core::loadElement(int range)
 	if (v->array.range <= range)
 	{
 		TEST("Error - array out of range, which is:" << v->array.elements.size() << " against " << range )
-		values.push_back(memory.dev_null());
+		addValue(memory.dev_null());
 		return;
 	}
-	return values.push_back(v->array.elements[range]);
+	return addValue(v->array.elements[range]);
+}
+void Core::addValue(Variable *v)
+{
+	//restriction on number of variables in stack
+	if (values.size() >=10000)
+		return;
+	values.push_back(v);
 }
 Object * Core::getObjectFromStack()
 {

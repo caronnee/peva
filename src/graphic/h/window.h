@@ -88,7 +88,7 @@ public:
 	/* returns true if no menu is on stack */
 	bool empty();
 
-	/* removes last menu on stack and calls its cleaing method */
+	/* removes last menu on stack and InstructionCalls its cleaing method */
 	void pop();	
 
 	/* blits default background */

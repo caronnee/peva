@@ -61,7 +61,7 @@ void Map::updateScreen( Graphic *g )
 	}
 }
 bool Map::saveToFile(std::string filename)
-{
+{//TODO do output musi ist aj meno skinu
 	std::string saveInfo[NumberOfObjectToSave];
 	std::ofstream output;
 	if (!bf::exists("maps"))
