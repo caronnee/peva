@@ -1,249 +1,124 @@
-\chapter{Implementácia prostredia}
-Prostredie bolo implementované v jazyku C++ vzhľadom na použité nástroje Flex a Bison. Kapitola je zameraná na použité štruktúry, vysvetlenie výberu týchto štruktúr a použité algoritmy. Pre potreby vysvetlenia implementácie sa používajú nasledujúce pojmy:
+%\chapter{Unživateľska dokumentácia} podla mna by tu mala byt!
+\chapter{Implementácia} 
+Táto kapitola pojednáva o konkrétnych implementačných technikách, ktoré  vyplývajú zo záverov  analýzy. \\
+Aplikácia sa skladá z troch hlavných častí, ktoré sa dajú použivať samostatne. Sú to:
+\begin{itemize}
+\item Systém okien 
+\item Mapa sveta %hm, ta potrebuje objekty
+\item Preklad napísanéeho algoritmu do medzikódu
+\item Modul pre generovanie diskretného bludiska
+\end{itemize}
+%sakra, ja by som to chcela budovat zdola! Ale neda sa kvoli obrazkom
+
+Architektúra celej aplikácie je popísaná na obrázku <OBR>. Jednotlivé časti ďalej vysvetlíme
+\section{Správa okien}
+Ako grafická knižnica bola zvolená SDL $REF$, ktorá bola vyvinutá pre rýchle zobrazovanie a je jednou z najčastejšie používaných knižníc pri tvorbe 2D hier. $<REF>$. Aplikácia bude použíívať minimálny užívateľský vstup z klávesnice. Jediný vstup rozsiahlešsieho charakteru je napísanie samotného algoritmu. Pre uživateľa v Unixe, zvyknutého na svoj obľúbený editor, makra a zkratky, bola ponechaná možnosť vytvorťt si v ňom aj  algoritmus. \\ %mozu byt rozhodnutie tu, ked je to sucast imlementacie? - jo, tot mi napisal, ze sa zaoberam prkotinami, je to tak? %<< je to vec nazoru do akych detajlov mas ist, co je zrejme...OK, vsak mi povie
+Vzhľadom na to, že zvyšok okien, ktoré ma aplikácia zvládať, má tiež minimálne požiadavky,?????? bolo v práci použité vlastné rozhranie správ okien a nebolo nutné prikompilovať žiadnu dodatočnú knižnicu, ktorá sa zaoberá uživateľskými vstupmi.\\
+V zdrojovom kode to bolo realizované pomocou triedy \bf{Window} a potomkov abstraktnej triedy \bf{Menu}. Systém práce triedy  \bf{Window} je naznačený na obrázku <OBR>. Ide o to, že ak sa má nastaviť v obrazove??? nové menu, potom treba oknu, ktorého inštancia triedy Window reprezentuje, povedať, aby toto menu pridal do ZÁSOBNÍKA. Keďže okno je v SDL povolené maximálne jedno, inštancia triedy \bf{Window} bude práve jedna. Preto ďalej v texte budeme pod označením bf{Window} myslieť práve túto jednu inštanciu a nie triedu.\\
+
+Pomocou ZÁSOBNÍIKA na pridávania menu je zrejmé, do ktorého menu sa program vráti po zrušeni obrazovky so základným Menu. Zrušenie obrazovky sa prevedie zavolaním metódy pop(). Táto metóda odoberie menu zo zásobníka a pomocou metody Menu::clean uvoľni zložky potrebné pre vykreslenie. Efektívne sa tak šetri pamäť. Pre potomka triedy Menu musia byt implementované nasledovné metódy:
 \begin{description}
-\item[Kontext]\hfill \\
-	Pojem kontext je v tejto kapitole používaný sa definovanie relevantých okolností, za akých je vykonávaná inštrukcia kódu. Zjednodušene povedané ide tú najkratšiu možnu postupnosť inštrukcíí pred volaním danej inštrukcie. Významné sú iba volania funkcií a definovanie nových blokov. Matematicky povedané, kontext je usporiadaný zoznam volaní funkcií a definovaní nových blokov. Uvažujme kód v tabuľke \ref{tab:rek}, potom kontext inštrukcie na riadku 3 je $<main(),f(),\{>$. Napriek tomu, že funkcia f je rekurzívna a hĺbka zanorenia môže byť iná. Z opačného pohľadu, v rovnakom kontexte sa môžu vyskytovať viaceré inštrukcie. V našom príklade je tomu tak pri volaní funkcie f na riadku 4. kontext volania  funkcie f na riadku 9 je $<main()>$.
-\item[Premenná] \hfill \\
-	Pojem premenná reprezentuje dáta pomenované jednoznačným reťazcom začínajúcim písmenom alebo podtržítkom. Napríklad \emph{integer test} je premenná s názvom test, ktorá je typu integer. Slovo test by v danom kontexte nemalo byť použité pre inú premennú. V tabuľke \ref{tab:rek} je teda premenná \emph{a} zadefinovaná chybne, pretože existujú dve premenné \emph{a} v rovnakom kontexte.
-\item[Premenné robota]\hfill \\
-Premenná robota je taká premenná, o ktorej robot predpokladá, že data v nej sa menia len v závislosti na jeho akciách. Predpokladajme, že v tabuľke \ref{tab:rek} je definovaný kód robota A. Potom \emph{a} je premenná robota A. Pokiaľ existuje iný robot B, nemá žiaden vplyv na premennú a robota A.
-\item [Tik] \hfill \\
-	Označuje je jednotka virtuálneho času sveta. Počet tikov, koľko trvá jedno kolo, je záväznú pre všetkých robotov a závisí na plánovači. Defaultne sa jeden tik rovná jedno kolo.
-\item[Penalizácia za inštrukciu]
-	Je počet tikov, ktoré robot potrebuje na vykonanie inštrukcie. Pre rôzne inštrukcie môže byť (a typicky bude)rôzna.
-\item [Program robota]
-	Značí postupnosť inštrukcií.
-\item [ProgramPointer]
- 	Je ukazateľ na inštrukciu v programe. Druhy inštrukcií a ich vplyv na svet je popísaný v tabuľke \ref{tab:instrukcie}.
-\item[Cieľ určenia]
-	Tento pojem reprezentuje políčko na mape sveta, kam sa má robot dostať. Teda cieľ určenia je oblasť definovaná pomocou kódových slov \emph{VisitSeq} alebo \emph{Visit}.
+\item [Init] pre inicializáciu dynamických položiek nutných k správnej funkcií príslušného menu (načitanie obrázkov, vygenerovanie pisma a pod.)
+\item [Draw] pre vykreslenie celého okna
+\item [Process], ktorý je volaný v nekonečnom cykle  kvôli spracovaniu udalosti z klávesnice
+\item [Resume] uvedie menu do pôvodnej podoby
+\item [Resize] pre prípadné zmeny rozlišenia okna na prepočitanie premenných určujúcich pozíciu
+\item [Clean] pre deinicializáciu dynamických premenných pre čo najmenšie množstvo alokovaej pamäte. V tomto ohľade sa táto implementáacia, čo sa obsadenej pamäte týka, dokonca predčí implementáciu  pomocou grafickej knižnice QT. QT je zameraná na uživateľskú prívetivosť. Jednotlivé formuláre sa vytváraju pomocou WIDGETOV(prvkov), ktoré su vo formulári neustále prítomné. %na druhej strane, bola to praca naviac  vzdy pre programatora bude, takze to zase AZ taka vyhoda nie je.
 \end{description}
-
-\begin{table}
-\centering
-\begin{tabular}{| lll |}
-\hline
-1&void function f()&\\
-2&\{&\\
-3&&integer a;\\
-4&&f();\\
-5&&integer a;\\
-6&\}&\\
-7&int main()&\\
-8&\{&\\
-9&&	f();\\
-10&\}&\\
-\hline
-\end{tabular}
-\caption{ Príklad kódu robota }
-\label{tab:rek}
-\end{table}
-
-%Samotná hra prebieha tak, že roboti vykonávajú užívateľom definovaný kód až do okamžiku, keď dosiahnu víťazný stav alebo kým nezostane na bojisku maximálne jeden robot. Cieľ môže byť pre každého robota rozdielny a je jeho súčasťou. Hra nie je zabezpečená proti nekonečne dlhotrvajúcim cyklom (napríklad keď každý robot stojí na mieste), predpokladá sa v tomto prípade vstup od uživateľa, ktorým hru preruší.
-
-\section{Implementácia jazyka}
-Každý robot má vlastný program, hráčom definovaný, podľa ktorého sa správa. Tento program sa zo strany robota skladá z postupnosti základných inštrukcií, ktoré sú ďalej nedeliteľné. \\ 
-Najskôr bolo nutné určiť si základnú štruktúru práce s inštrukciami a premennými. Základným problémom bolo uchovávanie premenných a ich neskoršie spracovanie. Keďže premenné sú definované jednoznačným identifikátorom. Vhodnou je štruktúra, ktorá vyhľadáva podla reťazca. Ako mapa názvov premenných bola uvažovaná štruktúra podľa \cite{trees}
-\subsection {Burst tree} 
-Burst tree je stromová štruktúra, ktorá bola špeciálne vyvinutá pre rýchly prístup k záznamom podľa textového kľúča.\\
-Princíp burst tree je jednoduchý. Strom pozostáva z dvoch úrovní. Posledná vrstva sú kontainery. Tie obsahujú jednotlivé záznamy, ktoré chceme vyhľadávať podľa textového kľúča. Záznamy v kontajneri sú usporiadané buď do obyčajného binárneho stromu, alebo do akéhokoľvek iného zoznamu. Vrstva nad kontajnermi je prefixový strom. Prefixový strom pozostáva z uzlov, ktoré obsahujú prefix vložených textových reťazcov. S hĺbkou stromu sa zvyšuje dĺžka prefixu. List tohoto prefixového stromu bude obsahovať kontajner. Algoritmus vyhľadania záznamu v tejto štruktúre je nasledovný, ako je popísaná \cite{trees}:\\ 
-\begin{enumerate}
-\item Najskôr je uvažovaný uzol koreňom stromu a počiatočná hĺbka je 0.
-\item Prefixový strom je prechádzaný od koreňa.
-\item Ak je hĺbka väčsia ako reťazec, potom sa záznam pridá do aktuálneho uzla, kam sa už dostal, pod prázdnym znakom.
-\item Pokiaľ sa nenájde zodpovedajíci prefix alebo hĺbka hľadania presiahne hĺbku stromu, algoritmus skončí s nenájdeným reťazcom.
-\item Pokiaľ sa našiel zodpovedajúci prefix v danej hĺbke, aktuálny uzol sa zmení na tento uzol a prechádajú sa jeho potomkovia.
-\item Potomok uzlu môže byt opäť prefixový strom alebo kontajner.
-\item Ak je potom kontajner, potom sa prechádza ten, algoritmom zodpovedajúcim štruktúre v kontajneru
-\end{enumerate}
-Algoritmus vkladania je však ten, vďaka ktorému získala štruktúra meno:\\
-\begin{enumerate}
-\item Pomocou vyhľadávacieho algoritmu je nájdený kontajner, kde patrí záznam.
-\item Ak nie je kontainer dostatočne naplnený, potom sa záznam pridá do kontajneru a algoritmus skončí.
-\item Ak je dostatočne naplnený, potom nastáva burst fáza algoritmu
-\begin{itemize}
-\item Vytvorí sa nový uzol prefixového stromu.
-\item Uzol sa zaradí to prefixového stromu namiesto kontajneru
-\item Všetky záznamy z pôvodného kontajneru sa zaradia do kontajnerov nového uzlu
-\item Je nutné opakovať, až pokiaľ nie je splnená podmienka pre burst fázu
-\end{itemize}
-\end{enumerate}
-Názvy premenných je nutné rozlišovať vzhľadom na kontext. Kontext bol do tejto štruktúry zapracovaná následovne: K menu každej premennej sa pridá názov funkcie, v ktorej bola premená deklarovaná. Tým sa dosiahne jej unikátne meno. Problém v počte deklarovaných blokov sa vyriešil pomocou ďalšej premennej, ktorá signalizovala hĺbku v ktorej bola premenná definovaná. Pokiaľ sa vyskytla deklarácia, táto premenná sa nastaví a aktívnu v danej hĺbke. V okamihu opustenia bloku sa všetky premenné zmenili na neaktívne. \\
-Štruktúra Burst tree sa neskôr ukázala ako bezvýznamná, keďže sa k nej pristupuje len vo fázi inicializácie a tam nie je potrebné štruktúru optimalizovať. Princíp ukladania názvov premenných a štruktúra ukladania ale napriek tomu zostali. \\
-\subsection{Štruktúra vykonávania inštrukcií}
-Pre pochopenie práce inštrukcií a spôsob, akým menia mapu, je nutné si definovať pojmy:
+Trieda \bf{Window} potom pri žiadosti o pridanie menu do ZÁSOBNÍKA inicializuje menu, ktoré sa má pridať a v pripade úspechu inicializácie ho pridá a vykresli. Vďaka cyklickemu volaniu metódy process objektu na vrchole zásobníka je zaistené, že reakcia na udalosť (klávesnica, myš)  sa bude týkať práve nasadeného menu.   %mozno by som sa nemusel rozpisvat ale stacilo by okazat sa na tu stranku, odkial som to pochytila? \ref{} potesi
+%http://www.earchiv.cz/a95/a506c120.php3
+\section{Svet}
+%najskor zacnime objektami;)
+Virutálny svet pozostáva z objektov. Každý konkrétny objekt je potomkom abstraktnej triedy Object. Navzájom riešia výsledky kolízií, výsledky príkazov na zistenie pozície a pod.\\
+Súčasťou objektu je aj spôsob, akým sa objekt vykresľuje na plochu, čim sa zaoberá trieda ImageSkinWorker. \\
+%ImageSkinWorker
+Obrázky reprezentujúce jednotlivé objekty sú najskôr načitané triedou Skin. Počet obrázkov je presne N, kde N je počet stavov, aké môže objekt dosiahnúťt. Stavy sú nasledujúce:
 \begin{description}
-\item [Stav robota]
-	Stav robota vzhľadom na svet charakterizuje štvorica: (InstructionPointer IP, Hitpoints HP, FieldOfSight fs, Direction direct), kde 
+\item [defaultne] \hfill \newline
+Stav, ktorý má objekt, keď sa nčc nedeje.
 \begin{itemize}
-\item InstructionPointer je odkaz do štruktúry programu robota hovoriaci, ktorá inštrukcia je na rade
-\item HP je nezáporné celé číslo popisujúce životnosť robota
-\item FieldOfSight je štruktúra obsahujúca objekty v zornom poli od posledného volania funkcie \emph{see()}, volanej bez parametrov 
+\item čakajúci objekt
+\item spiaci objekt. Tento stav sa nastavi v okamžiku, ked je objekt príliš dlho v defaultnom stave
 \end{itemize}
-\item[Stav robota] \hfill \\
-	Stav robota s ohľadom na inštrukcie, ktore vykonáva, charakterizuje (PointerStack PS, ValueStack VS, Memory m) kde
+\item [trvale]
 \begin{itemize}
-\item PS zoznam pointerov do štruktúry programu
-\item VS je zásobník všetkých naloadovaných hodnôt, parametrov  a návratových adries z funkcií. Značí sa $[values|rest]$, kde values je prvý prvok na spracovanie ( takže posledný pridaný ). Zmena zásobníku ude značená $ oldValues -> newValues $
-\item Memory je štruktúra pre prideľovanie miest na zápis dát
+\item pohybujúci sa
+\item čakajúci
 \end{itemize}
-\label{StavRobota}
-\item[Svet] \hfill \\
-Na svet sa dá matematicky popísať ako dvojica $< RobotsList, Map >$, kde:
+\item [dočsne]
 \begin{itemize}
-\item RobotsList je cyklický zoznam robotov s programami. Ich telo by sa v tomto okamihu malo nachádzať na mape. Roboty v tomto zozname sa počas priebehu boja nemenia. V okamihu, keď umrú, sa ich telo kvôli zobrazovaniu stále ocitá v mape. Jediné, čím sa prejaví ich smrť je, že plánovač sa nikdy nedostane do stavu ''pripravený'', takže interakcia tohoto robota s mapou bude nulová.
-\item Map reprezentuje mapu, v ktorej sa roboti pohybujú. Na mape môžu pribúdať alebo miznúť objekty. Pribúdanie objektov súvisí s vystrelením zbrane, odoberanie môže nastať v okamihu, keď sa podarí zničit stenu alebo eliminovať strelu.
+\item zasiahnutý
+\item útočiaci
 \end{itemize}
 \end{description}
-Vygenerované inštrukcie sa nachádzajú u robota v jednom veľkom poli, vrátane inštrukcií všetkých funkcií. K inštrukciám ale existuje pomocná trieda Core, ktorá obsahuje deklaráciu všetkých funkcií vrátane ich parametrov, ukazovateľom na robotovo telo a ProgramCounterov pre zistenie, ktorá inštrukcia sa má vykonať. \\
-Pre všetky nasledujúce inštrukcie, ktorých vykonanie sa priamo prejaví na mape. Predpokladajme, že svet je v stave $<RobotsList, Map>$, kde RobotsList je postupnosť objektov $(robot1,robot2, robot3,...,robotN)$ a Map je dvojrozmerná matica obsahujúca objekty a informácie o nich. Inštrukcie vizuálne meniace mapu:\\
-move:\begin {itemize}
-\item Svet:$ < RobotsList, m) > $
-\item Bot: $ < NewIP, Hp, direct> $
-\end {itemize}
-turnLeft, turnRight \begin{itemize}
-\item $Svet:  <RobotsList, m>$
-\item $Bot:  < NewIP, Hp, NewDirect)>$
-\end{itemize}
-turn  \begin{itemize}
-\item $Svet:  < RobotsList, m > $
-\item $Bot:   < NewIP, Hp, NewDirect)> $
-\end {itemize}
-see  \begin{itemize}
-\item $Svet:  <RobotsList,m> $
-\item $ Bot:  < NewIP, Hp, NewDirect)> $
-\end {itemize}
-shoot \begin {itemize}
-\item $ Svet:  < RobotsList, m.insert(strela)> $ 
-\item $ Bot:  < NewIP, Hp, Direct)>  $
-\end {itemize}
-\indent
-kde NewIP je tu nový ukazateľ do programu robota, nutne odlišný od predošlého. NewDirect je číslo 1-4 označujúce aktuálne natočenie robota.
-Reinsert je funkcia, ktorá vloží na miesto blízko robota strely v definovamom smere. Ošetrovanie kolízií pri pohybe je už záležitosťou mapy. Preto sa Hp zdá byť pri vykonávaní inštrukcií statické, jeho zníženie ale je možné až pri kontrole kolízií.
+ Pre niektoré objekty, ako je napríklad stena, je definovanie týchto stavov veľmi veľa, preto rôzne objekty majú svoju vlastnú triedu, odvodenú od Skin. Trieda Skin berie do úvahy špeciálne požiadavky jednotlivých typov objektov. Každý nahrávaný obrázok ale obsahuje niekoľko častí - každý z obrázkov predstavuje objekt v inej fáze. Smerom doľava sa časť obrázka mení kvôli animácií, smerom dole sa vykresľovaný obrázok mení vzhľadom na to, ako má byť objekt otočený. Potrebujeme pritom vedieť veľkosč obrázka, ktorý sa má vykresľovať. Veľkosč obrázka nemusí súhlasiť s veľkosťou obrázka, ktorý spôsobí kolíziu. Preto je v každom adresári, odkiaľ sa nahrávajú obrázky, ešte súbor config. Tentp súbor hovorí ako je vykresľovaný obrazok veľký, odkiaľ začína kolízny obdĺžnik a aké má rozmery. <OBR>\\
+Trida ImageSkinWorker potom narába  s nahranými obrázkami. V jej vnútornej interpretácií sa nachádza ešte aj minizásobník, ktorý hovorí, že ktorý zo stavov "trvalý", "dočasný", "default" je aktívny. Dočasný stav ma vždy vyššiu prioritu ako trvalý a trvalý vyššiu ako default. Stavy sa nastavujú pomocou metódy { \it SetState(State, whichState) } s parametrami nadobudajúcimi hodnoty State [] a whichStat []. \\% to by mozno k vykresleniu obrazkov stacilo. Mozno by to chcelo vysvetlit, preco tam davam ()
+Objekt je základný prvok sveta, všetky ďalšie typy vzniknu len jeho dedenim. \\
+Pohyb sa v objekte rieši nastavením počtu pixelov, ktoré ma prejsť. V okamžiku,  keď je nastavený nenulový počet pixelov, objekt sa pri volaní metódy {\it move} pohne svojou rýchlosťou žiadaným smerom a odčíta sa  príslušný počet pixelov. Po skončení pohybu sa zavolá metóda {\it endMove()} , ktorá odstráni permanentný pohybujúci sa stav. U robota je situácia trochu zložitejšia, pretože potrebujeme naviac vedieť, či už náhodou nestúpil na poličcko, ktoré bolo deklarované ako cieľovéľ Preto sa v priebehu vykonávania pohybu kontroluje aj táto podmienka. \\
+Kolizie medzi objektami sa riešia pomocou virtuálnych metód {\it hit(Object *)} a {\it hitted(Object *)}. Problémom je strela, ktorá v čase, keď do nej niečo narazíi, sa musí chovať ako útočník. Ak by ale útočníkom bola opäť strela, výsledkom by bolo zacyklenie. K takej situácií ale nikdy nesmie dôjsť, čo ošetruje štruktúra zastrešujúca objekty.\\
+Objekt, ktorý pôsobením útoku zomrie, registruje, kto smrť priamo spôsobil. Je to zabezpečené premennou "Owner" vlastnika objektu. V pripade, že je obeťou robot, potom robot má možnosť poslať správu útočníkovi (vlastnikovi strely alebo tela robota). Tak sa robot dozvie, že niekoho zabil a zistí, či sa tým nespnila podmienka pre ukončenie simulácie. Objekt sa následne pridá do štruktúry, ktorá zhŕňa mŕtve objekty pre neskoršiu dealokáciu.\\
+Robot na rozdiel od obyčajného objektu má aj ďaľšie metódy. Menovite je to {\it shoot()}, {\it see()}\\
+Strieľanie robota je jednoduché, pokiaľ je známy smer, v ktorom ma robot strielať. Znamená to iba pridanie objektu na miesto, kde nebude kolidovať s robotom, ktorý ju vypustil.\\
+Robotové videnie je podobne realizované pomocou triedy Seer. >>> TAK JE TO skoro vzdy Tej sa predhodia objekty, ktore ma spracovat.<<< navrhujem vyhodit K objektom, ktore boli ohodnotene ako viditelne mozno pristupovat pomocou metody {\it getObject(int index)}\\
+%mapa?
+Vzájomné vplyvy objektov sa rieši len medzi objektami samotnými. Jediné, čo treba zistiť, je, že ktorý objekt má vplývat na ktorý. Takouto zastresujúcou štruktúrou  je mapa.<<< Digraf bez sluciek, kde vrcholmi su objekty a orientovane hrany vazby medzi nimi\\
+Mapa je riešená ako dvojrozmerné pole oblasti (obdĺžníkov) kvôli kolíziam, ako sme už spomínali v \ref{Kolizie} Oblasť je ohraničená počiatočnými súradnicami, ktoré sú pravým horným rohom jej obdĺžníka a jeho výškou a šíirkou.\\
+Každá oblasť potom obsahuje zoznam objektov, ktoré do nej patria. Pozícia týchto objektov nie je nijak obmedzovaná, takže sa môžu vyskytovat kdekoľvek v oblasti. Pozícia objektov v mape je určená ich ľavým horným rohom. Pri zisťovaní koíizií to prináša  nepríjemný jav, pretože je nutné kontrolovať všetky oblasti, kde by sa daný objekt mohol vyskytovať. Mapa ďalej obsahuje štartovacie políčka -- užívateľom definované významné políčka, ktoré sa dajú neskôr definovať ako cieľ. \\ <OBR?>
+%kolizie?\\
 
-Ďalšie inštrukcie nemajú vplyv na svet, preto sú uvedené oddelene. Tieto inštrukcie robot vykonáva počas svojho premýšľania. Vykoná ich toľko, dokedy bude lánovač pripravený. Pri týchto inštrukciách robot potrebuje poznať len svoje premenné. Po prevedení takýchto inštrukcií sa mení stav robota podľa tabuľky \ref{VnutroBota},kde
-\begin{itemize}
-\item IP+1 znamená posun v aktuálneho pointera v programe robota o jednu inštrukciu ďalej
-\item newIP je uloženie aktuálneho pointera na inštrukciu a vyhlásenie iného pointera za aktuálny (typicky začiatok procedúry alebo funkcie), informácie o tom, ktorý ProgramPointer je aktuálny, sa získajú pomocou triedy Core. Tá tým vlastne reprezentuje mozog robota.
-\item newMemory je pamäť robota po obsadení/uvoľení príslušného miesta.
-\item memory.deleteTemp() je označenie poslednej premennej alokovanej v pamäti za neplatnú a teda uvoľnenie miesta v pamäti.
-\item memory.temp() je uloženie výsledku aritmetických operácií na ValueStack. Miesto pre zápis takejto anonymnej premennej sa získa z pamäti robota pri požiadavke o anonymnú premennú.
-\item DeleteIP je zrušenie aktuálneho pointera na funkciu a obnovenie predchádzajúceho na inštrukciu, pred ktorou bol prerušený. 
-Na rozdiel od \ref{tab:instrukcie} sú inštrukcie popísané vzhľadom na skupinu, ku ktorej patria a táto tabuľka obsahuje detailnejší popis.
-\end{itemize}
+Mapa počíta iba s pozíciami objektov, preto o nich nič viac nepotrebuje vedieť. Každý objekt zobraziteľný na mape je teda potomkom abstraktnej triedy Object. en si musí pamätať svoju presnú pozíciu kvôli neskorším počitaním kolíziíi//
+Objekt sa pridá do mapy pomocou metódy {\it add}. Táto metóda skontroluje, či pridávaný objekt už nekoliduje s iným v mieste a ak áno, nepridá ho. \\ %mozno este nieco vyhodi
 
-\begin{table}[ht]
-\centering
-\caption{Vnútorné príkazy robota}
-\begin{tabular}{|l|c|}
-\hline\hline
-Inštrukcia & Stav robota po inštrukcii \\
-\hline
-create & $ IP+1, [rest]->[rest], newMemory$ \\
-store & $ IP+1, [a,b|rest]->[rest], memory$ \\
-aritmetické operácie & $IP+1, [a,b|rest]->[m.temp()|, newMemory$ \\
-relačne operácie & $IP+1, [a,b|rest]->[m.temp()|rest], newMemory$ \\
-call &  $ newIP, [rest]->[rest], newMemory$\\
-startBlock & $IP+1, [rest]->[rest], memory$\\
-endBlock & $IP+1, [rest]->[rest], newMemory$\\
-removeTemp & $IP+1, [rest]->[rest], memory.deleteTemp()$\\
-load & $ IP+1, [rest]->[a|rest], memory$\\
-duplicate & $ IP+1, [a|rest]->[a,a|rest], memory$\\
-restore & $ DeleteIP, [rest]->[returnValue|rest], newMemory$\\
-pop & $ IP+1, [a|rest]->[rest], memory$\\
-\hline
-\end{tabular}
-\label{VnutroBota}
-\end{table}
-\subsection{Zaujímave nastavenia a efekty}
-
-Velmi špeciálny je prípad, keď užívateľ nenastaví robotovi žiadnu pamäť. Takýto robot nie je schopný si zapamätať jedinú premennú a ani vraciať návratové hodnoty. V algoritme by nemali byť definované žiadne funkcie, ale iba procedúry, kedže funkcie a procedúry nezaberajú robotovi pamať. Teda v tomto prípade môže dojsť k masívnemu využitiu rekurzií. Samotne vstavané príkazy sú však vlastne funkcie, ale kedže sa nikam nemajú priradiť, ich návratová hodnota sa zahodí. Nevýhodou tohoto typu bota je však skutočnost, že strieľať alebo pohybovať sa môže len pomocou konštanty. Iné hodnoty nemajú garantované miesto v pamäti.
-
-\subsection{Zrak robota}
-
-\begin{figure}
-\centering
-\includegraphics[totalheight=0.2\textheight,width=.6\textwidth]{chooseVisible}
-\caption {Výber parametrov pre zrak robota}
-\label{choosing}
-\end{figure}
-
-\begin{description}
-\item[Zorné pole robota]\hfill \\
-Pod zorným poľom robota rozumieme hornú polovicu trojuholníka určeného uhlopriečkou medzi vrcholmi obdĺžnika o veľkosti X,Y, kde, X, Y sú odvesny pravouhléhotrojuholníka s preponou rovnou viditeľnosti mapy. \\
-Robot vidí objekt v okamihu, keď vidí stred políčka, na ktorom objekt stojí a úsečka spájajúca tieto dva body nepretína žiadny ďalší blokujúci objekt. Blokujúci objekt je definovaný implementáciou, v našom prípade je blokujúci objekt robot a stena, neblokujúci strela. Toto rozdelenie vychádza z bežneho pozorovania, že drobná strela nemá tendenciu zakrývať výhľad.
-\end{description}
-Vo vstupe si užívateľ má možnosť nastavit premennú, ktorá ovplyvňuje to, ako ďaleko bude robot vidieť do strán. Je to premenná $\alpha$, ktorá označuje uhol, pod ktorým vidí robot na jedno oko. Pochopiteľne má robot symetrické oči a teda do druhej strany vidí pod rovnakým uhlom. Jedným z pomerne rýchlych spôsobov, ako určiť viditeľné objekty, je algoritmus rozďeľujúci obdĺžnik zorného poľa na niekoľko rovnakých častí.
-Obdĺžnik môže mať vzhľadom na implementáciu maximálne obsah 32, čo je na väčšine architektúr veľkosť integeru. Samotné detekovanie toho, čo robot vidí, prebieha nasledujúco: \\
-\begin{figure}
-\centering
-\includegraphics[totalheight=0.4\textheight,width=.8\textwidth]{visibility}
-\caption {Viditeľnosť robota s parametrom uhla $20^\circ$}
-\label{fig:visibility}
-\end{figure}
-Nech má obdĺžnik rozmery (x,y) a jeho dolný ľavý vrchol je na pozícií (0,0), čo je v podstate pozícia bota. Obdĺžnik je teda rozdelený na XxY menších obdĺžničkov. Každý z nich má svoje poradové číslo a masku, ktorá má na i-tej pozícií jednotku práve vtedy, ak úsečka začínajúca v bode [0.5,0.5],čo je stred políčko s robotom, a stredom skúmaného políčka prechádza políčkom s identifikaćným číslom ID. Takto ale robot bude vidieť len na jednu stranu, ale keďže druhá polovička je presne symetrická, môžeme tieto práve vygenerované masky použiť, viď \ref{visibility}  na obe strany bez upravovania. \\
-Podľa obrázka \ref{fig:visibility} bude mať políčko s ID 4 masku 1111, pretože na to, aby ho bolo vidieť, je nutné vidieť políčka s ID 1,2,3. Podobne políčko 9 bude mať masku 110000011, pretože úsečka spájajúca tieto dva body prebieha tiež týmito políčkami. Zistenie, či práve toto políčko je pretnuté úsečkou, sa takto zjednodušuje na nájdenie všeobecnej rovnice priamky s koncovými bodmi v stredoch týchto dvoch políčok. Zistenie, či pravý dolný vrchol a ľavý horný vrchol patria rovnakej polrovine generovanej touto priamkou.\\
-Za života robota sa jeho zrak nemení a teda môžeme použiť tieto vygenerované masky bez ďalšieho prepočítavania. Pri volaní metody see(), ktorá dodá viditeľné objekty robotovi, potom stačí namapovať náš obdĺžnik na príslušné miesto na mape(podľa robotovej pozície a natočenia), nastaviť 1 na i-té miesto políčka s ID = i, na ktorom nie je nič alebo len neblokujúci objekt, a výslednú masku porovnať s predtým vypočítanou maskou každého políčka, na ktoré by robot mohol vidieť. Nech zisťujeme, či vidíme objekt na pozícií na mape X,Y, ktorý sme namapovali na políčko s ID = I a maskou M. Ak výsledná maska má jedničky presne na tých istých miestach ako M, potom I je viditeľné, pretože všetky políčka, na ktorých I záviselo, boli označené ako viditeľné. \\
-Nech existuje také políčko s ID = P, na ktorom je nejaký blokujúci objekt. Potom vo výslednej maske bude na P-tom mieste 0 a políčko I, ak úsečka spájajúca stredy políčok robota a I prechádzala cez P, bude mať na P-tom mieste 1. Maska políčka I bude mať teda o minimálne jednu 1 viac ako výsledná maska a teda políčko bude označené ako neviditeľné.\\
-Na obrázku \ref{fig:visibleo} je červeným znázornený objekt, ktorý robot už neuvidí a zelenou, ktorý naopak uvidí. Napríklad robot R je viditeľný, pretože pred ním je strela S a keďže je neblokujúca, políčko 4 pripojilo na výslednej maske 1 na 4.pozícií. Pozícia 5 má masku 1111 a teda je viditeľná.
-\begin{figure}
-\centering
-\includegraphics[totalheight=0.4\textheight,width=.8\textwidth]{VisibleObjects}
-\caption { Objekty v zornom poli robota}
-\label{fig:visibleo}
-\end{figure}
-\indent
-\newline
-\indent Tento spôsob má ale nevýhodu pri použití v programoch typu Codewars. Predpokladá totiž, že v okamihu žiadosti o naplnenie viditeľných objektov budú tieto objekty stáť presne v strede daných políčok, resp. že bojisko bude rozškatuľkované. Ak by povedzme jedna stena stála presne nedzi dvoma políčkami, už nie jasné, aké políčka robot vidí. Preto bol primo v implementácií použitý spôsob porovnania uhlov viditeľnosti.
+%alokácia a dealokácia, odstránenie mapy 
+Pridávané objekty na mape sú odkazy na vytvorený objekt z dôvodu využitia dedičnosti a virtuálnych funkcií. Tieto objekty môžu byť vytvárané samotnou mapou???? pri nahrávaní sveta alebo užívateľom pridané???????. Potom pri dealokovaní mapy mapa samozrejme nemí možnosť zistiť, či tieto objekty boli skutočne dealokované, alebo či si ich inštancia vytvorila samostatne??????. Preto ticho predpokladá druhú možnosť a pri skočeni na všetky prvky, ktoré zostali na mape, sa použije delete. Ak bol prvkom mapy objekt, s ktorým programátor ešte počita, musí ho najskôr z mapy odobrať. %to je ale PRKOTINA ale sposobi DIVY ak sa na to zabudne
 \\
-\begin{figure}
-\centering
-\includegraphics{visibility2}
-\caption { Objekty v zornom poli robota podľa fruhého algortimtmu. Červeným je vyznačený objekt, ktorý nie je vidno.}
-\label{fig:visibleo}
-\end{figure}
-\indent
-\section{Priebeh penalizácie za inštrukciu}
-Nech je na rade robot R. R sa pozrie, či už ubehla dostatočne dlhá doba od vykonania jeho poslednej akcie. Ak áno, R začne vykonávať inštrukciu, na ktorú práve ukazuje jeho ProgramPointer. Po vykonaní tejto inštrukcie si poznamená, koľko ho stála tikov. Ak ešte neprebehla dostatočne dlhá doba, potom počká a na rade je ďalší objekt. Penalizácia prebieha podľa aktuálnej tabuľky penalizácií, ako bola nastavená v základnom menu. \\
+%jak sa mapa loaduje, format tej veci, co sa loaduje
+Program podporuje uloženie a opätovné nahranie mapy. Keďže mapa tieto objekty iba zobrazuje, postači pre každý objekt zistiť, čo to vlastne je. To kladie nárok na jednotlivé objekty, ktoré si musia pamätať unikátne čislo označujúce tento typ. Mapa potom pri načítani sveta podľa typu vytvorí objekt. Ďaľšimi položkami, ktoré je nutné uchovať a ktoré nie sú objekty, sú štartovné políčka a miesta cialov???. Tieto sa ukladajú osobitne %mozno by to chcelo konkretnejsie?
+Mapa musí dbať na to, aby objekty, ktoré obsahuje, neprešli mimo vykresľovanej plochy. Aby sme nemuseli kontrolovať objekt pri každom pohybe a okrem kontroly kolízií kontrolovať aj prípustnosť pozície, sú ku každej nahrávanej mape pridané steny okolo celej mapy. 
+%<OBR> %veeelmi tazkopadne, chcelo by prekopat, napisat priklad takeho subory?
+Po vytvorení prostredia (mapy, sveta) sa v mape nenáchadzaju roboti, pretože nie podporovaný žiadny ďaľší mechanizmus na ovládanie tela robota ( nic by sa nedialo ). \\
+Mapu je možné okamžite vykresliť a objekty neskôr az neskor?????.
+%objekty
+Mapa ďalej nijak nevyhodnocuje výsledok kolízie, slúzi iba ako nastroj na ich detekciu. Detekuje kolíziu iba pre objekty, ktoré sa pohybujú, t.j pre každý pohybujúci sa objekt prejde lineárne všetky objekty v okolí, či nenastala kolízia. V okamžiku, keď sa objekty skolidujú, mapa vyberie najbližši objekt, s ktorým sa objekt skolidoval. Pod kolidáciou rozumiene prekrytie obrazov dvoch objektov. Kedže máme kombináciu dvoch objektov, ktoré spolu nekolidujú, je zaistiť riešenie aj pre takúto kombináciu. Na implementačnej úrovni to znamená, že sa buď:
+\begin{itemize} % FUJ
+\item zavolá aj tak riešenie kolízií u objektu. Až objekt, ktorý bol zasiahnutýy, spozná, že ku kolízií vlastne vôbec nedošlo. To ma nevýhodu, že objekt, ktorý sme kontrolovali na kolíziu, zostane na mieste, ktorý mu pohyb určil. Keďže ale kontrolujeme iba najblžši kolízny prvok, môže sa stať, že aj po vyriešeni kolízie bude prvok stále kolidovať
+\item nedôjde k volaniu riešenia kolízií medzi objektami. Objekt nebude uvažovaný pre kolíziu. Toto riešenie bolo zvolené, keďže má najlepšie výsledky. Pre kontrolu toho, či objekt má alebo nemá by uvažovaný pre koíiziu, bolo daný príznak Solid. Objekt, ktorého logicky súčet (or) zasiahnuteľnosti s uvažovaným objektom má priznak solid ( aspoň jeden z objektov má solid =  true),  je uvažovaný pre koíiziu
+\end{itemize}
+Mapa ako vykresľovacia štruktúra musí poznať, kedy by bolo vhodné objekt vykresliť a kedy naopak nie. Výrazne to šetri procesorový čas. Preto bola u každého objektu implementovaná metoda {\it changed() } 
 
-Týmto spôsobom sa efektívne vyrieši prípad, keby robot premýšľal príliš dlho, alebo keby sa zacyklil. Keďze po každej vykonanej inštrukcii predá riadenie daľšiemu objektu, zacyklenie sa pozná len podľa toho, že robot sa nebude hýbať, ale nijak to nespomalí ostatné objekty.%TODO ref
-\newline
-Nech je na rade objekt rôzny of typu 'robot'. Potom tento objekt má konštantnú penalizáciu (strela štandartne 0) a jeho program obsahuje iba inštrukcie, ktoré interagujú s bojiskom. Sú rôzne v závislosti na type objektu.
+\subsection{Interpret a jazyk}
+Ako bolo zmienené, jazyk sa generuje pomocou parsovacích nástrojov Bison a Flex. Tieto nástroje umožňujú veľmi ľahko meniť syntax jazyka a sú ľahko udržovateľne.\\ %to podla mna patri do analyzy
+%tu popisem, co a ako generujem
+Robotov môže byť niekoľko a vďaka cieľom, ako je KILL, je možné sa na ne odkazovať pomocou mena. Preto bolo nutné vytvoriť zastrešujúcu štruktúru. Tou je trieda Robots. Tá potom musí obsahovať:
+\begin{itemize}
+\item počet bodov, ako bol defaultne definovaný. Toto defaultne nastavenie sa tam potom dá jednoducho priradzovať vytvoreným robotom.
+\item pole generovaných robotov
+\item informacie o práve vytváranom robotovi
+\item zoznam nevyriešených požiadaviek na zabitie robota
+\item zoznam nevyriešených požiadaviek na miesto na mape
+\end{itemize}
+Novovytvorený robot sa skladá z týchto časti:
+\begin{itemize}
+\item názov robota pre definovanie cieľa KILL
+\item použitý plánovač
+\item prázdnu štruktúru na definované typy
+\item prázdnu štruktúru pre medzikód
+\item prázdne informácie o nájdenych chybách
+\item trie premenné
+\item pomocnú štruktúru pre spracovanie medzikódu %neni interpreter
+\item chybové kódy
+\item štruktúra pre prácu s medzikódom ( Core )
+\end{itemize}
+Algoritmus bude zapísany v textovom súbore. Z neho sa pomocou parsovacích nástrojov vygeneruje kód, ako je popísaný v \ref{spec}. V prípade, že nastala chyba, bude potom tato zapísana pomocou stringu. Výsledny medzikód je potom zapísaný v XML-súbore, ktorého názov je kombinácia názvu robota a vstupného súboru. Napríklad ...Technológia XML bola vybraná ako jedna dobre zo zrozumiteľných dostupných zobrazení. 
 
-\subsection{Možné plánovače}
+%jak to pracuje pri generovani - to dufam nemusim vysvetlovat, to boli take program kiksy az hroza
+Po dogenerovaní všetkých inštrukcií sa na záver pridá ešte jedna inštrukcia, ktorá spôsobí opakovanie celého programu. (instructionMustJump). Po správnom vygenerovaní je robot schopný vykonávať program pomocou metódy {\it execute()) alebo {\it action()}. Tu sa prejaví vplyv plánovača. Robot ma vlastnú inštanciu plánovača, každá inštrukcia si vnútorne drži čislo skupiny, do ktorej patrí. Jednolivé názvy skupín sa volaju intuitívne podla inštrukcii.  Metóda {'\it action()} volá plánovač.???? V okamžiku, keď plánovač povolí vykonanie inštrukcie, do plánovača sa zanesie, ako moc je inštrukcia hodnotená a následne je táto vykonaná., \\
+Vykonávanie inštrukcíi pozostáva z volania metódy {\it execute(Core *) } , kde trieda Core poskytuje prostriedky pre interpretovanie medzikódu. Trieda Core tiež obsahuje telo robota, ktorým sa bude hýbat po mape úložiska. Aj  strela sa teda bude realizovať vyvolaním príslušnej metódy robota. \\
+%kedy to konci
+Pri interpretácii algoritmu ešte ale musíme vedieť, kedy robot dosiahol splenie všetkých cieľov alebo či zostal vo svete sám. V pripade, keď zostal sám a cieľom nebolo len zničenie ostatných ,vráti metóda action  false????, ak hráč umrel, inak vracia true. Je vhodné ale sučasne kontrolovať splnenie podmienok. Metóda  {\it action } nemôže vrátit viac premenných naraz, preto ma naviac parameter odovzdávany referenciou. 
 
-Rozhodovanie robota, či má vykonať inštrukciu, prebieha pomocou plánovača. Problémom je určiť, kedy je plánovač pripravený vzhľadom na penalizácie za inštrukciu. Veľkosť penalizácií sa dá použiť dvoma spôsobmi:
-\begin{enumerate}
-\item Jedna inštrukcia trvá toľko kôl, koľko je jej penalizácia. Táto konštrukcia zodpovedá kontinuálnej dlhodobej práci ( predstave, že CreateVariable skutočne nejakú premennú vytvára a teda koná prácu ).
-\item Opačný prístup. Plánovač dostane do vienka nejaký čas a snaží sa ho čo najviac využiť, vyplniť inštrukciami.
-\end{enumerate}
-Prvý prístup je pomerne priamočiary, ľahko implementovateľný  na radu sa pomerne rýchlo dostanú aj ďalši roboti. Jeho nevýhodou je, že pokiaľ čaká, nemôže reagovať na ďalšie veci. Keby napríklad inštrukcia see stála 5 kôl, robot inštrukciu vykoná a čaká 5 kôl. Medzičasom sa mu zorné pole naplní informáciou, že videl strelu.  Rýchlosť strely je ale pomerne vysoká a preto je možné, že keď plánovač bude zase pripravený, strela bude preč a teda mimo zorného poľa robota. Robot tak nemôže určiť polohu, smer, pohyb, atď.\\
-Druhý spôsob sa k inštrukciám správa ako závislým na čase. Penalizácie nebudú značiť priamo čas, ale akú časť z pevne daného množstva F zaberajú. Predpokladajme, že prešlo X kôl. Plánovač, implementovaný podľa druhého algoritmu, bude naviac obsahovať nezáporné číslo, ktoré zostalo pri poslednom vykonaní inštrukcie. Nasledujúca inštrukcia mala totiž väčšiu penalizáciu ako počet bodov, ktorý zostal. K tomuto nezápornému číslu sa pridá naše pevne dané množstvo F. V okamihu, keď je čas menší ako penalizácia inštrukcie, sa plánovač stane nepripravený, inak zostáva v stave pripravený. Pseudokód pre tento spósob je popísaný v tabuľke \ref{tab:sched2}\\
-Tento spôsob je viac šetrnejší k robotovi, z pohľadu robota sa zastaví po čas. Požas tohoto zastaveniamôže reagovať a objekty.\\
-\begin {table}
-\centering
-\begin{tabular}{|ll|}
-\hline
-Uint32 diff= actualTime - timeLastUpdate; &\\
-while (diff $>$ 0)&\\
-\{& \\ 
-&diff-=nextInstruction.penalize();\\
-&nextInstruction.run();\\
-&Pointer ++; \\
-\}&\\ 
-\hline
-\end{tabular}
-\caption{Pseudokód plánovača druhého typu}
-\label{tab:sched2}
-\end{table}
+\subsection{Generovanie bludiska}
+Generovanie bludiska
+Z dôvodov, vysvetlťných v analýze, sa vygenerujú len základné steny.  Vygenerujú sa z dôvodov vysvetlených v analýze len zakladne steny.??????? Teraz potrebujeme tieto pevné steny z diskrétneho bludiska vhodne preniest do nášho sveta. Aby sme zachovali pomer rozostavenia, ako je vo vygenerovanom bludisku, steny sa rozmiestnia rovnomerne. 
+%toto je vsetko o generovani algoritmu, mozno este nejaky obrazok?
 
-\section{Hracia plocha} % z coho sa sklada
-Na začiatku hry sa vygeneruje mapa s veľkosťou, ktorú zadá užívateľ, alebo sa načíta už uložená mapa. Pozostáva zo voľných políčok a stien. Steny sú rôzneho typu, viď \ref{walls}. Pre vyššiu užívateľskú prívetivosť bol implementovaný generátor mapy. Generuje ''kostru'' mapy, teda pridáva iba základné steny.
-\subsection{Generovanie map}% ako sa generuje, podpora ukladania, zadne zhluky, vyhody, nevyhody, 
-iNa vygenerovanie máp sa osvedčil jednoduchý ''pažravý'' (greedy) algortimus. Celá mapa sa rozdelila na množstvo malých kúskov, ktoré predstavovali ''potravu''. Do takéhoto prichystaného prostredia bol vypustený ''had'', jednoduchá entita s primárnym cieľom čo ajviac sa nažrať. Had mal sprvu náhodný algoritmus. Tkto vygenerovaná mapa bola tvorená jedným pomerne malým zhlukom. Preto bol k hadovi pridaný mechanizmus, ktorý ho 'ťahá' na tú strane, ktorá je najvzialenejšia. Mapy, vygenerované pomocou tohto algoritmu vyplňovali mapu ďaleko viac. Problém bol, že cesty v mape vzniknutej týmto spôsobom boli veľmi úzke. Preto ďalšie vylepšenie zahrňovalo vytvorenie ďalších hadov, takzvaných potomkov. Títo sa veľmi pravdepodobne nenarodili na rovnakom mieste ako ich rodič, preto ich túžba vydať sa iným zmerom bola rozdielna. Takto spustený algoritmus mal pomerne dobré výsledky až na časti, keď išli hadi cestou sami. Preto bola pridaná možnosť, že had počas žrania bude tlsnúť. Tým sa vytvoria pre robotov koridory. Po vyskúšaní viacerých modifikácií, kedy sa majú hadi množiť a kedy tlstnúť, sa osvedčilo zadať 25\% šanciu na tlstnutie a náhodný algoritmus na rozmnožovanie. Algoritmus je pomerne rýchly a výstupom sú mapy, ktoré sú pre robota dostatocne široké a pritom rozľahlé ( cez celú mapu ), viz obrázok \ref{fig:mapa} pre veľkosť mapy 1000x1000.
-\begin{figure}
-\centering
-\includegraphics[totalheight=0.2\textheight,width=.6\textwidth]{mapa}
-\caption {Vygenerovaná mapa}
-\label{fig:mapa}
-\end{figure}
