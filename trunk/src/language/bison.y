@@ -283,13 +283,13 @@ ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA { $$.push_back($2); }
 names_:	TOKEN_IDENTIFIER
 	{ 
 		$$.clear();
-		Node *n = program->robots.back()->add($1);
+		Node *n = program->robots.back()->add(@1,$1);
 		$$.push_back(new InstructionCreate(n)); 
 	} 
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
 	{ 
 		$$.clear();
-		Node *n = program->robots.back()->add($1);
+		Node *n = program->robots.back()->add(@1, $1);
 		$$.push_back(new InstructionCreate(n)); 
 
 		$$.push_back(new InstructionLoadLocal(n));
@@ -308,7 +308,7 @@ names_:	TOKEN_IDENTIFIER
 	|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
 	{ 
 		$$.clear();
-		Node *n = program->robots.back()->add($1);
+		Node *n = program->robots.back()->add(@1, $1);
 		$$.push_back(new InstructionCreate(n)); 
 		$$.push_back(new InstructionLoadLocal(n)); 
 		for (int i = 1; i< $4.level; i++)
@@ -429,12 +429,12 @@ return_type:	TOKEN_VOID { $$ = program->robots.back()->find_type(TypeVoid);progr
 parameters_empty:	{ $$.clear(); }
 		| parameters { $$ = $1;}
 		;
-parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->robots.back()->add($2, $1))); }
-		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->robots.back()->add($4, $3))); }
-		| TOKEN_REFERENCE type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($3,PARAMETER_BY_REFERENCE, program->robots.back()->add($3, $2))); }
+parameters:	type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($2,PARAMETER_BY_VALUE, program->robots.back()->add(@2, $2, $1))); }
+		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER { $$ = $1; $$.push_back(Parameter_entry($4,PARAMETER_BY_VALUE,program->robots.back()->add(@4, $4, $3))); }
+		| TOKEN_REFERENCE type TOKEN_IDENTIFIER { $$.push_back(Parameter_entry($3,PARAMETER_BY_REFERENCE, program->robots.back()->add(@3,$3, $2))); }
 		| parameters TOKEN_COMMA TOKEN_REFERENCE type TOKEN_IDENTIFIER 
 		{ 
-			$$.push_back(Parameter_entry($5,PARAMETER_BY_REFERENCE, program->robots.back()->add($5, $4))); 
+			$$.push_back(Parameter_entry($5,PARAMETER_BY_REFERENCE, program->robots.back()->add(@5, $5, $4))); 
 		}
 		;
 declare_function_:	function_header block_of_instructions  

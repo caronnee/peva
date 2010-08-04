@@ -174,7 +174,7 @@ Node * Robot::find_var(std::string var_name, bool & b)
 	return NULL;
 }
 
-Node * Robot::add(std::string name, Create_type * type)
+Node * Robot::add(unsigned line, std::string name, Create_type * type)
 {
 	std::string name_ = nested + name;
 	Node * b;
@@ -185,18 +185,18 @@ Node * Robot::add(std::string name, Create_type * type)
 	catch (char * text)
 	{
 		b = nullableNode;
-		error(-1, ErrorVariableNotDefined,"Wrong variable usage");//TODO cislo
+		error(line, ErrorVariableNotDefined,"Wrong variable usage");//TODO cislo
 	}
 	return b;
 }
 
-Node * Robot::add(std::string name)
+Node * Robot::add(unsigned line, std::string name)
 {
 	if (active_type.empty())
 	{
 		TEST("empty active type")
 	}
-	return add(name, active_type.top());
+	return add(line, name, active_type.top());
 }
 /*
  *Vracia ukazovatel na samotny uzol, ktory skryva hodnotu, v ktorom je ulozena nasa hodnota
@@ -249,7 +249,7 @@ void Robot::add_function( Instructions ins)
 void Robot::enter(std::string name, std::vector<Parameter_entry> params, Create_type * return_type) //CONTINUE, add parameters_list
 {
 //	nested += name + DELIMINER_CHAR;
-	core->nested_function = new Function(name, params,add("",return_type));
+	core->nested_function = new Function(name, params,add(0, "",return_type));
 }
 void Robot::leave() //odide z funkcie
 {
