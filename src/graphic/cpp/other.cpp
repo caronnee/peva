@@ -141,7 +141,6 @@ void Play::resume()
 		if (!m->load(w->g, w->settings->maps[mapIter]))
 		{
 			init(400,500);
-			return;
 		};
 		mapIter ++;
 		mapIter%= w->settings->maps.size();

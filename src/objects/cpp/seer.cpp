@@ -183,7 +183,7 @@ void Seer::fill(Object * o, Object * center) //position = centre
 		a2-=2*PI;
 	}
 }
-int Seer::checkVisibility()
+int Seer::checkVisibility(int check)
 {
 	//mame vsetky objekty zoradene podla Y osy
 	std::list<ObjectRelation>::iterator iter = visibleObjects.begin();
@@ -218,6 +218,15 @@ int Seer::checkVisibility()
 			i++;
 		}
 		iter++;
+	}
+	iter = visibleObjects.begin();
+	while (iter != visibleObjects.end())
+	{
+		iter++;
+		if (!iter->object->typeObject()&check)
+		{
+			iter = visibleObjects.erase(iter);
+		}
 	}
 	return visibleObjects.size();
 }
