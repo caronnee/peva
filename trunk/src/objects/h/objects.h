@@ -20,7 +20,6 @@ enum ObjectsToSave
 	SaveStart,
 	SaveTarget,
 	NumberOfObjectToSave,
-	SaveBreakableWall
 };
 struct ObjectMovement
 {

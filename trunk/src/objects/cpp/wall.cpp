@@ -25,24 +25,6 @@ void Wall::hitted(Object * attacker, Position p, int attack)
 
 Wall::~Wall() { }
 
-BreakableWall::BreakableWall( Skin * s, List * abyss):Wall(s, abyss)
-{
-	objectSaveId = SaveBreakableWall;
-	type = Wall_;
-	hitpoints = 50;
-	attack = 0;
-	name = "Wall";
-	movement.direction.x = 0;
-	movement.direction.y = 0;
-	movement.speed = 10;
-}
-void BreakableWall::hitted(Object * o, Position p, int attack)
-{
-	hitpoints -= attack;
-}
-
-BreakableWall::~BreakableWall() { }
-
 PushableWall::PushableWall( Skin * s, List * abyss):Wall(s, abyss)
 {
 	objectSaveId = SavePushableWall;

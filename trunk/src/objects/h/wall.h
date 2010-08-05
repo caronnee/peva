@@ -17,13 +17,6 @@ public:
 	~Wall();
 };
 
-class BreakableWall:public Wall //da sa nou pohnut
-{
-public:
-	BreakableWall(Skin * skin, List * abyss);
-	void hitted(Object * o, Position p, int attack);
-	~BreakableWall();
-};
 class PushableWall:public Wall //da sa nou pohnut
 {
 	size_t defaultStep;

@@ -516,9 +516,6 @@ void Create_map::buttonDown(int number, int atX, int atY)
 				case TargetPlace:
 					map->addTarget(w->g, x, y);
 					break;
-				case WallBreakId:
-					wall = new BreakableWall(skins[WallBreakId], NULL);
-					break;
 				case WallSolidId:
 					wall = new Wall(skins[WallSolidId], NULL);
 					break;
