@@ -24,12 +24,10 @@ struct GamePoints
 		SectionMissilleAttack,
 		SectionMissilleHitpoints,
 		SectionSteps,
-		SectionDefense,
 		SectionAttack,
 		NumberOfSections
 	};
 	int total_;
-	int total2;
 	std::string name[NumberOfSections];
 	GamePoints(int total = 0 );
 	int sections[NumberOfSections];
