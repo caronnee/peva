@@ -26,4 +26,11 @@ ROBOT qqq
 		a[5] = 3;
 	}
 }
-
+robot T
+{
+	Health = 58
+	main()
+	{
+		wait(100);
+	}
+}
