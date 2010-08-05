@@ -22,7 +22,7 @@ protected:
 	std::vector<std::string> entered;
 	std::vector<MapRecord> maps;	
 	Window * w;
-	SDL_Surface *
+	SDL_Surface * selected;
 public:
 	Load( Window * w, std::string extension, std::string adr);
 	void process();
