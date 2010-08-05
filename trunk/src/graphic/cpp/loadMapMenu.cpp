@@ -169,6 +169,7 @@ void Load::draw()
 void Load::init()
 {
 	SDL_Surface * n = get_name();
+	selected =  IMG_Load("./images/choose.png");
 
 	SDL_Rect rct;
 	rct.x = 0;
