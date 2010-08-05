@@ -15,7 +15,7 @@ std::string toLoadMissille[] = {"missille.png"};
 
 //TODO akonsa steny rozbijaju
 std::string toLoadMap[] = {	"Free.png","SolidWall.png", "PushableWall.png", "TrapWall.png", 
-			    	"StartWall.png", "Target.png", "selected.png", "BreakableWall.png"};
+			    	"StartWall.png", "Target.png", "selected.png"};
 
 Skin::Skin()
 {

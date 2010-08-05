@@ -17,7 +17,6 @@ enum WallImageObjects
 	WallSolidId,
 	WallPushId,
 	WallTrapId,
-	WallBreakId,
 	WallStartId,
 	TargetPlace,
 	SelectedID,
