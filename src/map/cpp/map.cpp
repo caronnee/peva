@@ -150,7 +150,6 @@ bool Map::load(Graphic * g, std::string filename)
 	if (!input.good())
 	{
 		TEST(filename);
-		init(500,400);
 		return false;
 	}
 	//resolution change

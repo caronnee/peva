@@ -138,7 +138,11 @@ void Play::resume()
 		init( 500, 400 );//TODO makro
 	else
 	{
-		m->load(w->g, w->settings->maps[mapIter]);//fixme kontrola
+		if (!m->load(w->g, w->settings->maps[mapIter]))
+		{
+			init(400,500);
+			return;
+		};
 		mapIter ++;
 		mapIter%= w->settings->maps.size();
 	}
@@ -460,7 +464,7 @@ void SetSections::draw()
 		SDL_Rect rect;
 		rect.x = BEGIN_X;
 		rect.y = BEGIN_Y + 2*a*sections[0]->h;
-		SDL_BlitSurface(sections[a],NULL,w->g->screen,&rect);
+		SDL_BlitSurface(sections[a*3],NULL,w->g->screen,&rect);
 		rect.x = BEGIN_X + sections[a*3]->w+10;
 		SDL_BlitSurface(sections[a*3+2],NULL,w->g->screen,&rect);
 	}
@@ -469,7 +473,7 @@ void SetSections::draw()
 	SDL_Rect rect;
 	rect.x = BEGIN_X;
 	rect.y = BEGIN_Y + 2*iter*sections[0]->h;
-	SDL_BlitSurface(sections[iter*2],NULL,w->g->screen,&rect);
+	SDL_BlitSurface(sections[iter*3+1],NULL,w->g->screen,&rect);
 	SDL_Flip(w->g->screen);
 	SDL_SetClipRect(w->g->screen, NULL);
 }
@@ -480,12 +484,12 @@ void SetSections::init()
 	//vygenerujeme vsetky obrazky vykreslovane
 	sections[0] = w->g->render("sum:");
 	sections[1] = w->g->renderLight("sum");
-	sections[2] = w->g->renderLight(deconvert<int>(gp->total_));
+	sections[2] = w->g->render(deconvert<int>(gp->total_));
 	for ( int i =1; i< GamePoints::NumberOfSections; i++)
 	{
 		sections[i*3] = w->g->render(gp->name[i-1]);
 		sections[i*3+1] = w->g->renderLight(gp->name[i-1]);
-		sections[i*3+2] = w->g->renderLight(deconvert<int>(gp->sections[i-1]));
+		sections[i*3+2] = w->g->render(deconvert<int>(gp->sections[i-1]));
 	}/* there must be always some value! */
 }
 
@@ -505,21 +509,25 @@ void SetSections::process()
 				if(iter == GamePoints::NumberOfSections)
 					break;
 				iter++;
-				draw();
 				break;
 			case SDLK_UP:
 				if (iter == 0 )
 					break;
 				iter--;
-				draw();
 				break;
 			case SDLK_LEFT:
 			{
 				int c = 0;
 				if (iter == 0)
-					c = (gp->total_++)%1000;
+				{
+					c = ((gp->total_++)%1000);
+					c = gp->total_;
+				}
 				else
-					c = (gp->sections[iter-1]++)%1000;
+				{
+					c = ((gp->sections[iter-1]++)%1000);
+					c = gp->sections[iter-1];
+				}
 				SDL_FreeSurface(sections[iter*3+2]);
 				sections[iter*3+2] = w->g->render(deconvert<int>(c));
 				break;
@@ -528,14 +536,20 @@ void SetSections::process()
 			{
 				int c = 0;
 				if (iter == 0)
+				{
 					if (gp->total_ == 0)
 						gp->total_ = 999;
 					else gp->total_--;
+					c = gp->total_;
+				}
 				else
+				{
 					if (gp->sections[iter-1]==0)
 						gp->sections[iter-1]=999;
 					else
 						gp->sections[iter-1]--;
+					c = gp->sections[iter-1];
+				}
 				SDL_FreeSurface(sections[iter*3+2]);
 				sections[iter*3+2] = w->g->render(deconvert<int>(c));
 				break;
@@ -544,6 +558,7 @@ void SetSections::process()
 				TEST("Unhandled button at drawing help")
 				break;
 		}
+		draw();
 		break;
 	}
 }
