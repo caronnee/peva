@@ -33,6 +33,7 @@ SchedulleTime::SchedulleTime(int roundTime_, const std::vector<int> & penals)
 {
 	roundTime = roundTime_;
 	quantum = 0;
+	time = roundTime;
 	size_t size = min<size_t>(penals.size(), IGroups);
 	for (size_t i =0; i< size; i++)
 		penalties[i] = penals[i];
@@ -42,7 +43,7 @@ SchedulleTime::SchedulleTime(int roundTime_, const std::vector<int> & penals)
 
 bool SchedulleTime::ready()
 {
-	if (quantum > time)
+	if (time > 0)
 	{
 		quantum += roundTime;
 		return false;

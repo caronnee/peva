@@ -69,7 +69,7 @@ public:
 	void fill(Object * o1, Object * o2);
 
 	/* removing objects that are covered by another objects */
-	int checkVisibility();
+	int checkVisibility(int check = !0);
 
 	/* find if you see an object */
 	bool find(Object * o);
