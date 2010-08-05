@@ -453,10 +453,6 @@ void Robots::set(Options o, size_t value)
 			TEST("setting Attack x to:" << value ); 
 			robots.back()->points.sections[GamePoints::SectionAttack] = value;
 			break;
-		case OptionDefense:
-			TEST("setting defense to " << value ); 
-			robots.back()->points.sections[GamePoints::SectionDefense] = value;
-			break;
 		case OptionMisilleAttack:
 			TEST("setting Missille attack to " << value ); 
 			robots.back()->points.sections[GamePoints::SectionMissilleAttack] = value;

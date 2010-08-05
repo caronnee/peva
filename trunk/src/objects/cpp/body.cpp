@@ -10,14 +10,10 @@ GamePoints::GamePoints(int total)
 	{
 		sections[i] = 0;
 	}
-	name[SectionAngle] = "Angle ";
-	name[SectionHitpoints] = "Hitpoints ";
-	name[SectionMissilles] = "Missilles ";
-	name[SectionSteps] = "Speed ";
-	name[SectionAttack] = "Attack ";
-	name[SectionMissilleHitpoints] = "Missille health ";
-	name[SectionMissilleAttack] = "Misilles Attack ";
-	name[SectionMemorySize] = "Memory size ";
+	name[SectionAngle] = "Angle";
+	name[SectionHitpoints] = "Hitpoints";
+	name[SectionMissilles] = "Missilles";
+	name[SectionSteps] = "speed";//....
 	total_ =  total;
 }
 
@@ -25,29 +21,15 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 {
 	sections[GamePoints::SectionAngle] = min<int>(MAX_EYE_ANGLE,sections[GamePoints::SectionAngle]);
 
-	int sum = 0;
+	int todo = 0;
 
 	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		sum += sections[i];
+		todo += sections[i];
 	}
-	int i =0;
-	while (sum > total_)
+	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		if (sections[i] == 0)
-		{
-			i++;
-			continue;
-		}
-		sections[i]--;
-		sum--;
-		i++;
-	}
-	while (sum < total_ )
-	{
-		sum++;
-		sections[i]++;
-		i++;
+		sections[i]* (total_/todo);
 	}
 }
 

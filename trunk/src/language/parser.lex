@@ -30,7 +30,6 @@ WHITESPACE		[ \r\t\f]
 [rR][oO][bB][oO][tT]				{*l = line;return TOKEN_ROBOT; }
 [hH][eE][aA][lL][tT][hH] 			{*l = line;lv->op = OptionHealth; return TOKEN_OPTION; }
 [aA][tT][tT][aA][cC][kK]			{*l = line;lv->op = OptionAttack; return TOKEN_OPTION; }
-[dD][eE][fF][eE][nN][sS][eE]			{*l = line;lv->op = OptionDefense;return TOKEN_OPTION; }
 [mM][aA][tT][tT][aA][cC][kK] 			{*l = line;lv->op = OptionMisilleAttack; return TOKEN_OPTION; }
 [mM][hH][eE][aA][lL][tT][hH]			{*l = line;lv->op = OptionMisilleHealth; return TOKEN_OPTION; }
 [aA][nN][gG][lL][eE]				{*l = line;lv->op = OptionSee; return TOKEN_OPTION;}
