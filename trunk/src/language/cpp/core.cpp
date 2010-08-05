@@ -63,7 +63,7 @@ void Core::loadElement(int range)
 	}
 	Variable * v = values.back();
 	values.pop_back();
-	if (v->array.range <= range)
+	if (v->array.elements.size() <= range)
 	{
 		TEST("Error - array out of range, which is:" << v->array.elements.size() << " against " << range )
 		addValue(memory.dev_null());
