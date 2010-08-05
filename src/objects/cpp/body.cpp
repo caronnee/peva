@@ -21,33 +21,15 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 {
 	sections[GamePoints::SectionAngle] = min<int>(MAX_EYE_ANGLE,sections[GamePoints::SectionAngle]);
 
-	int todo = total_;
+	int todo = 0;
 
 	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		if (sections[i] > total_)
-			sections[i] = total_;
-		todo -= sections[i];
+		todo += sections[i];
 	}
-	if (total_ < MININUM_SECTION)
-		todo = 0;
-
-	int done = 0;
-	for (int i = 0; i < NumberOfSections; i++)
+	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		int minus = sections[i]*total_/todo; //negative
-		done += minus;
-	}
-	todo += done; //how much should we do
-	
-	int i = 0;
-	while (todo < 0) 
-	{
-		if (sections[i] > 0)
-		{
-			sections[i]--;
-			todo++;
-		}
+		sections[i]* (total_/todo);
 	}
 }
 
