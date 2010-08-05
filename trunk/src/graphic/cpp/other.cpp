@@ -144,7 +144,10 @@ void Play::resume()
 	}
 	robots.finalize(m->visibility);
 	for(size_t i =0; i< robots.robots.size(); i++)
+	{
+		robots.robots[i]->setScheduler(w->settings->scheduller, w->settings->penalizes);
 		robots.robots[i]->save_to_xml();
+	}
 
 	/* starts handling */
 	std::list<Rectangle> starts = m->getStarts();
