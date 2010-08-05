@@ -10,10 +10,14 @@ GamePoints::GamePoints(int total)
 	{
 		sections[i] = 0;
 	}
-	name[SectionAngle] = "Angle";
-	name[SectionHitpoints] = "Hitpoints";
-	name[SectionMissilles] = "Missilles";
-	name[SectionSteps] = "speed";//....
+	name[SectionAngle] = "Angle ";
+	name[SectionHitpoints] = "Hitpoints ";
+	name[SectionMissilles] = "Missilles ";
+	name[SectionSteps] = "Speed ";
+	name[SectionAttack] = "Attack ";
+	name[SectionMissilleHitpoints] = "Missille health ";
+	name[SectionMissilleAttack] = "Misilles Attack ";
+	name[SectionMemorySize] = "Memory size ";
 	total_ =  total;
 }
 
@@ -21,15 +25,29 @@ void GamePoints::check() //budeme kontrolovat len ak to presvihlo pocet, FIXME d
 {
 	sections[GamePoints::SectionAngle] = min<int>(MAX_EYE_ANGLE,sections[GamePoints::SectionAngle]);
 
-	int todo = 0;
+	int sum = 0;
 
 	for(size_t i =0; i< NumberOfSections; i++)
 	{
-		todo += sections[i];
+		sum += sections[i];
 	}
-	for(size_t i =0; i< NumberOfSections; i++)
+	int i =0;
+	while (sum > total_)
 	{
-		sections[i]* (total_/todo);
+		if (sections[i] == 0)
+		{
+			i++;
+			continue;
+		}
+		sections[i]--;
+		sum--;
+		i++;
+	}
+	while (sum < total_ )
+	{
+		sum++;
+		sections[i]++;
+		i++;
 	}
 }
 
@@ -84,7 +102,6 @@ void Body::init(GamePoints g, int v)
 		ms = new MissilleSkin(skinWork->getSkin()->nameOfSet);
 	for (int i =0; i< g.sections[GamePoints::SectionMissilles]; i++ )
 		addAmmo(new Missille(ms,&ammo));
-	defense = g.sections[GamePoints::SectionDefense];
 	attack =g.sections[GamePoints::SectionAttack];
 }
 

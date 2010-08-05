@@ -110,11 +110,9 @@ public:
 /* class for setting sections values */
 class SetSections : public Menu
 {
-	SDL_Surface * sectionPart[SECTIONS * 3];
-	SDL_Surface ** sections;
+	SDL_Surface * sections[GamePoints::NumberOfSections * 3 +3]; //hodnota, nemo a vysvietene meno
 	GamePoints * gp;
 	int iter;
-	int iterSubSection;
 	Window * w;
 public:
 	SetSections(Window * w, GamePoints * points);

@@ -436,9 +436,9 @@ SetSections::SetSections(Window * w_, GamePoints * gp_)
 	w = w_;
 	gp = gp_;
 	name(w->g,"Set maximum value of sections");
-	for ( int i =0; i< SECTIONS * 3; i++)
-		sectionPart[i] = NULL;
-	sections = NULL;
+//	for ( int i =0; i< SECTIONS * 3; i++)
+//		sectionPart[i] = NULL;
+//	sections = NULL;
 }
 void SetSections::resume() { }
 
@@ -449,287 +449,113 @@ void SetSections::draw()
 	SDL_Rect rct;
 	rct.x = BEGIN_X;
 	rct.y = BEGIN_Y;
-	rct.h = w->g->screen->h;
-	rct.w = w->g->screen->w;
+	rct.h = w->g->screen->h - BEGIN_Y;
+	rct.w = w->g->screen->w - BEGIN_X;
 
 	SDL_SetClipRect(w->g->screen, &rct);
 	w->tapestry(rct);
 
-	SDL_Rect r;
-	r.y = w->g->screen->h/3; //proste niekde
-	for (int a = 0; a< SECTIONS; a++)
+	for (int a = 0; a< GamePoints::NumberOfSections; a++)
 	{
-		int i = a*3;
-		int partSize = w->g->screen->w / SECTIONS;
 		SDL_Rect rect;
-		rect.y = r.y ; //proste niekde
-		rect.x = a*partSize + ( partSize - sectionPart[i]->w )/2;//do stredu
-		SDL_Rect tb = rect;
-		if (a == iter)
-		{
-			SDL_BlitSurface(sectionPart[i+1],NULL,w->g->screen,&rect);
-			tb.x = a*partSize + (partSize - sectionPart[i+2]->w )/2;
-			tb.y += w->g->font_size*2;
-			SDL_BlitSurface(sectionPart[i+2],NULL,w->g->screen,&tb);
-			continue;
-		}
-		SDL_BlitSurface(sectionPart[i],NULL,w->g->screen,&rect);
-		tb.y += w->g->font_size*2;
-		tb.x = a*partSize + (partSize - sectionPart[i+2]->w )/2;//do stredu
-		SDL_BlitSurface(sectionPart[i+2],NULL,w->g->screen,&tb);
+		rect.x = BEGIN_X;
+		rect.y = BEGIN_Y + 2*a*sections[0]->h;
+		SDL_BlitSurface(sections[a],NULL,w->g->screen,&rect);
+		rect.x = BEGIN_X + sections[a*3]->w+10;
+		SDL_BlitSurface(sections[a*3+2],NULL,w->g->screen,&rect);
 	}
+	/* chosen one */
 
-	r.y += w->g->font_size*4+BEGIN_Y;
-	r.x = BEGIN_X;
-	for (int i =0; i< 2*GamePoints::NumberOfSections; i+=2)
-	{
-		SDL_Rect sctrct = r;
-		sctrct.x = BEGIN_X;
-		sctrct.y += i*w->g->font_size;
-		SDL_BlitSurface(sections[i],NULL,w->g->screen, &sctrct);
-		sctrct.x += sections[i]->w + BEGIN_X;
-		SDL_BlitSurface(sections[i+1],NULL,w->g->screen, &sctrct);
-	}
-	//iter subsection
-	if (iterSubSection>=0)
-	{
-		SDL_Rect chrct = r;
-		chrct.x = BEGIN_X;
-		chrct.y += 2*iterSubSection*w->g->font_size;
-		int sect = GamePoints::NumberOfSections;
-		sect *=2;
-		if (iter == 1)
-		{
-			chrct.x+= w->g->screen->w/2;
-			sect += GamePoints::NumberOfSections;
-		}
-		sect+=iterSubSection;
-		SDL_BlitSurface(sections[sect], NULL, w->g->screen, &chrct);
-	}
+	SDL_Rect rect;
+	rect.x = BEGIN_X;
+	rect.y = BEGIN_Y + 2*iter*sections[0]->h;
+	SDL_BlitSurface(sections[iter*2],NULL,w->g->screen,&rect);
 	SDL_Flip(w->g->screen);
 	SDL_SetClipRect(w->g->screen, NULL);
 }
 
 void SetSections::init()
 {
-	iterSubSection = -1;
-	iter = 0;
-	for (int i = 0; i< SECTIONS*3; i+=3)
+	iter = 0; //nastaveni na section;
+	//vygenerujeme vsetky obrazky vykreslovane
+	sections[0] = w->g->render("sum:");
+	sections[1] = w->g->renderLight("sum");
+	sections[2] = w->g->renderLight(deconvert<int>(gp->total_));
+	for ( int i =1; i< GamePoints::NumberOfSections; i++)
 	{
-		sectionPart[i] = w->g->render("Section:"+deconvert<int>(i/3));
-		sectionPart[i+1] = w->g->renderLight("Section:"+deconvert<int>(i/3));
-		std::string s = deconvert<int>(gp->total_);
-		if (gp->total_ < 50)
-			s = "Do not check";
-		sectionPart[i+2] = w->g->render( s );
-	}
-	for ( int i =0; i< SECTIONS * 3; i++)
-		if (sectionPart[i] == NULL)
-			throw "Cannot create image!";	
-		
-	//prva sekcia
-	std::string names[] = {"hitpoints", "memory","angle", "misilles", "missilles attack","missilles hitpoints","speed","defense","attack"};
-
-	sections = new SDL_Surface *[3*(GamePoints::NumberOfSections)];
-	//blit FIXME center
-	int i=0;
-	for ( i =0; i< 2*GamePoints::NumberOfSections; i+=2)
-	{
-		sections[i] = w->g->render(names[i/2]);
-		sections[i+1] = w->g->render(deconvert<int>(gp->sections[i/2]));
-	}
-	//names highlited
-	int a = GamePoints::NumberOfSections;
-	a*=2;
-	for (i = 0; i < GamePoints::NumberOfSections; i++)
-		sections[a+i] = w->g->renderLight(names[i]);
-	
-	SDL_Surface * n = get_name();
-
-	SDL_Rect rct;
-	rct.x = 0;
-	rct.y = 0;
-	rct.w = w->g->screen->w;
-	rct.h = BEGIN_Y;
-
-	w->tapestry(rct);
-	rct.x = (w->g->screen->w - n->w)/2;
-	rct.y = (BEGIN_Y - n->h)/2;
-	SDL_BlitSurface(n, NULL, w->g->screen, &rct );
-	SDL_Flip(w->g->screen);
+		sections[i*3] = w->g->render(gp->name[i-1]);
+		sections[i*3+1] = w->g->renderLight(gp->name[i-1]);
+		sections[i*3+2] = w->g->renderLight(deconvert<int>(gp->sections[i-1]));
+	}/* there must be always some value! */
 }
 
 void SetSections::process()
 {
-	/*SDLKey key;
-	Uint8 type;
-	bool d = false;
-	bool down = false;
-	while (true)
+	while (SDL_WaitEvent(&w->g->event)!=0)
 	{
-		if (SDL_PollEvent(&w->g->event))
-		{
-			type = w->g->event.type;
-			key =w->g->event.key.keysym.sym;
-			d=true;
-		}
-		if (!down && !d)
+		if (w->g->event.type!= SDL_KEYDOWN)
 			continue;
-		switch (type)
+		switch(w->g->event.key.keysym.sym)
 		{
-			case SDL_VIDEORESIZE:
+			case SDLK_ESCAPE:
+			case SDLK_RETURN:
+				w->pop();
+				return;
+			case SDLK_DOWN:
+				if(iter == GamePoints::NumberOfSections)
+					break;
+				iter++;
+				draw();
+				break;
+			case SDLK_UP:
+				if (iter == 0 )
+					break;
+				iter--;
+				draw();
+				break;
+			case SDLK_LEFT:
 			{
-				w->resize();
+				int c = 0;
+				if (iter == 0)
+					c = (gp->total_++)%1000;
+				else
+					c = (gp->sections[iter-1]++)%1000;
+				SDL_FreeSurface(sections[iter*3+2]);
+				sections[iter*3+2] = w->g->render(deconvert<int>(c));
 				break;
 			}
-			case SDL_KEYDOWN:
+			case SDLK_RIGHT:
 			{
-				down = true;
-				switch(key)
-				{
-					case SDLK_0: case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: case SDLK_5:
-					case SDLK_6: case SDLK_7: case SDLK_8: case SDLK_9: 
-					{
-						if (iterSubSection >= 0) //spracuj subsectiony
-						{
-							SDL_FreeSurface(sections[iterSubSection*2+1]);
-							gp->sections[iterSubSection]*=10;
-							gp->sections[iterSubSection]+= key - SDLK_0;
-							sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->sections[iterSubSection]));
-							draw();
-							break;
-						}
-						if (gp->total_ < 0)
-						{
-							gp->total_ = key - SDLK_0;
-							SDL_FreeSurface(sectionPart[iter*3 + 2] );
-							sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_).c_str() );
-							draw();
-							break;
-						}
-						gp->total_ *=10;
-						gp->total_ += key - SDLK_0;
-						SDL_FreeSurface(sectionPart[iter*3 + 2] );
-						sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
-						draw();
-						break;
-					}
-					case SDLK_BACKSPACE:
-					{
-						if (iterSubSection >=0)
-						{
-							if (iter == 0)
-							{
-								SDL_FreeSurface(sections[iterSubSection*2+1]);
-								gp->firstSection.sections[iterSubSection]/=10;
-								sections[iterSubSection*2+1] = w->g->render(deconvert<int>(gp->firstSection.sections[iterSubSection]));
-							draw();
-							break;
-						}
-						gp->total_[iter] /=10;
-						SDL_FreeSurface(sectionPart[iter*3 + 2] );
-						sectionPart[iter*3 + 2] = w->g->render( deconvert<int>(gp->total_[iter]).c_str() );
-						draw();
-						break;
-					}
-					case SDLK_PAGEDOWN:
-					{
-						int max = (iter==0)? (int)FirstSection::NumberOfSections:(int)SecondSection::NumberOfSections;
-						iterSubSection++;
-						if (iterSubSection == max)
-							iterSubSection--;
-						draw();
-						break;
-					}
-					case SDLK_PAGEUP:
-					{
-						if (iterSubSection>=0)
-							iterSubSection--;
-						draw();
-						break;
-					}
-					case SDLK_q:
-					case SDLK_ESCAPE:
-					case SDLK_RETURN:
-					{
-						w->pop();
-						return;
-					}
-					case SDLK_LEFT:
-					{
-						iter++;
-						iter%=SECTIONS;
-						iterSubSection = -1;
-						draw(); //FIXME check
-						break;
-					}
-					case SDLK_RIGHT:
-					{
-						iterSubSection = -1;
-						if (iter <=0)
-							iter = SECTIONS-1;
-						else
-							iter--;
-						draw();
-						break;
-					}
-					case SDLK_DOWN:
-					{
-						std::string s;
-						if ( gp->total_[iter] <= MININUM_SECTION)
-						{
-							gp->total_[iter] = -1;
-							s = "Do not check";
-						}
-						else
-						{
-							gp->total_[iter]--;
-							s = deconvert<int>(gp->total_[iter]);
-						}
-						SDL_FreeSurface(sectionPart[iter*3+2]);
-						sectionPart[iter*3 + 2] = w->g->render( s );
-						draw();
-						break;
-					}
-					case SDLK_UP:
-					{
-						if (gp->total_[iter] < MININUM_SECTION)
-							gp->total_[iter] = MININUM_SECTION;
-						else
-							gp->total_[iter]++;
-						SDL_FreeSurface(sectionPart[iter*3+2]);
-						sectionPart[iter*3+2] = w->g->render( deconvert<int>(gp->total_[iter] ));
-						draw();
-						break;
-					}
-					default:
-						TEST("Unhandled button")
-						break;
-				}
-				SDL_Delay(100);
+				int c = 0;
+				if (iter == 0)
+					if (gp->total_ == 0)
+						gp->total_ = 999;
+					else gp->total_--;
+				else
+					if (gp->sections[iter-1]==0)
+						gp->sections[iter-1]=999;
+					else
+						gp->sections[iter-1]--;
+				SDL_FreeSurface(sections[iter*3+2]);
+				sections[iter*3+2] = w->g->render(deconvert<int>(c));
 				break;
 			}
-			case SDL_KEYUP:
-			{
-				//down = false;
+			default:
+				TEST("Unhandled button at drawing help")
 				break;
-			}
-		}	
-	}*/
+		}
+		break;
+	}
 }
 
 void SetSections::clean()
 {
-	for ( int i =0; i< SECTIONS * 3; i++)
+	for ( int i =0; i< GamePoints::NumberOfSections * 3+3; i++)
 	{
-		SDL_FreeSurface(sectionPart[i]);
-		sectionPart[i] = NULL;
-	}
-	int hlp = GamePoints::NumberOfSections;
-	for (int i =0; i< 3*hlp; i++ )
 		SDL_FreeSurface(sections[i]);
-	delete []sections;
-	sections = NULL;
+		sections[i]=NULL;
+	}
+	iter = 0;
 }
 
 Settings::Settings(Window *w_):Main(w_,0,NULL)
@@ -1076,9 +902,9 @@ SetScheduller::SetScheduller(Window * w_)
 }
 void SetScheduller::init() 
 {
-	txt = w->g->render( "Aktualne je nastaveny scheduller:");
-	schedullers[0] = w->g->render( "Pocet kol/instrukciu:");
-	schedullers[1] = w->g->render( "Pocet instrukcii/kolo za cas:");
+	txt = w->g->render( "Actually set schedullet, move arrows to change, then type value");
+	schedullers[0] = w->g->render( "Scheduller round per instruction");
+	schedullers[1] = w->g->render( "Scheduller instruction per round, type quantum value");
 	valueString = "1";
 	iter = 0;
 	if (w->settings->scheduller)
