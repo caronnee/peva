@@ -211,7 +211,6 @@ enum Options
 	OptionMemory,
 	OptionAttack,
 	OptionStep,
-	OptionDefense,
 	OptionMisilleAttack,
 	OptionMisilleHealth,
 	OptionMissilles
