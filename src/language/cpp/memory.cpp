@@ -108,9 +108,11 @@ void Memory::set_free(Variable * v)
 	while(!vars.empty())
 	{
 		tmp = vars.top();
+		vars.pop();
+		if (tmp->owner == -1)
+			continue;
 		tmp->owner = -1;
 		TEST("Freeing id: " << tmp->ID)
-		vars.pop();
 		for(size_t i =0; i<tmp->array.elements.size(); i++)		 
 		{
 			vars.push(tmp->array.elements[i]);
