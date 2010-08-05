@@ -687,6 +687,11 @@ void Map::add(Object * o)
 		TEST("Error! null object!"); 
 		return;
 	}
+	if (!o->alive())
+	{
+		TEST("Error! Adding zero hitpoints creature")
+		return;
+	}
 	Position pos= o->get_pos();
 	if ((pos.x > resolution.x) || (pos.y > resolution.y) ||(pos.x < 0) || (pos.y < 0))
 		return;

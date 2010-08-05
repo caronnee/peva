@@ -1,26 +1,28 @@
 ROBOT robot1
 {
+	health =45
+	missilles = 30
+	mhealth = 500
+
 	KILLED < 5
 	VISIT_SEQ( START[robot2], START[robot1])
 	VISIT( [100,200])
 
 	main() // komentar
 	{
-		turnL();
-		while(true)
-		{
-			shoot(0);
-		}
+	//	turnL();
+		shoot(0);
 	}
 }
 ROBOT robot2
 {
+	health = 28
 	KILLED < 5
 	VISIT_SEQ( START[robot1], START[robot2])
 	VISIT( [100,200])
 
 	main() // komentar
 	{
-		turnL();
+		wait(100);
 	}
 }
