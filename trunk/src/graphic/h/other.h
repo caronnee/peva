@@ -102,6 +102,7 @@ class SetMaps : public Load
 	std::vector<std::string> * result;
 public:
 	SetMaps(Window * w, std::vector<std::string> * result_, std::string ext, std::string addr );
+	void init();
 	void enter();
 	void clean();
 	virtual ~SetMaps();

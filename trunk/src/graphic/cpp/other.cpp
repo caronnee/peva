@@ -267,9 +267,9 @@ void Play::process()
 		timeStamp--;
 	else 
 		timeStamp = TIMESTAMP;
-	if ((aliveRobots == LAST) || timeStamp == 0) //ak je posledny robot
+	if ((aliveRobots <= LAST) || timeStamp == 0) //ak je posledny robot
 	{
-		std::string endText = " Vitazi su:";
+		std::string endText = "End of simulation. Winner is:";
 		std::string doneBots = "";
 		std::string lastBots = "";
 		for (size_t i = 0; i< robots.robots.size(); i++)
@@ -404,8 +404,8 @@ void Play::process()
 				case SDLK_n: //next map
 				{
 					recreate = true;
-					if (w->settings->maps.empty())
-						break;
+				//	if (w->settings->maps.empty())
+				//		break;
 						//removing body objects
 					for (size_t i = 0; i < robots.robots.size(); i++)
 						m->remove(robots.robots[i]->getBody());
@@ -1192,9 +1192,13 @@ SetMaps::SetMaps(Window * w_, std::vector<std::string> * result_, std::string ex
 {
 	name(w_->g, "Choose " + addr);
 	result = result_;
+	}
+void SetMaps::init()
+{
 	entered.clear();
 	for(size_t i=0; i< result->size(); i++)
 		entered.push_back((*result)[i]);
+	Load::init();
 }
 void SetMaps::enter()
 {
