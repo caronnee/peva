@@ -606,6 +606,12 @@ void SetPenalize::draw()
 	SDL_Rect clip;
 	SDL_GetClipRect(w->g->screen,&clip);
 	w->tapestry(clip);
+	SDL_SetClipRect(w->g->screen,NULL);
+	SDL_Surface * s = w->g->render("Move arrows to set up penalize values");
+	SDL_Rect brect;
+	brect.x = 0; brect.y = 0;
+	SDL_BlitSurface(s,NULL, w->g->screen, &brect);
+	SDL_FreeSurface(s);
 	for (int i =0; i< size; i++ )
 	{
 		SDL_Rect rect;
