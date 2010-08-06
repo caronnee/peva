@@ -178,7 +178,7 @@ void Object::hitted(Object * o, Position p, int attack)
 	skinWork->switch_state(ImageSkinWork::StateTemporarily, ActionHit);
 	owner = o;
 }
-void Object::bounce(Object * attacked) //od koho s ma odrazit
+void Object::bounce(Object * attacked) 
 {
 	Position p(-11111,-11111),xy(-11111,-11111);
 	intersection(attacked, xy, p);

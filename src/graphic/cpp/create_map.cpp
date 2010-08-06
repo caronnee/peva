@@ -43,11 +43,10 @@ void Create_map::resize()
 	rects[UP].w = rects[DOWN].w = w->g->screen->w - rects[LEFT].w - rects[RIGHT].w - rects[CHOOSE].w;
 	rects[MAP].w = w->g->screen->w - rects[CHOOSE].w - rects[LEFT].w - rects[RIGHT].w;
 	rects[SAVE].w = rects[GENERATE].w =  rects[LOAD].w =
-		rects[CLEAN].w = rects[EXIT].w = rects[VISIBILITY].w = 
-		(w->g->screen->w / BUTTONS);
+		rects[CLEAN].w = rects[EXIT].w = rects[VISIBILITY].w = rects[HELP].w = (w->g->screen->w / BUTTONS);
 
 	/*setting heights*/
-	rects[SAVE].h = rects[EXIT].h = rects[LOAD].h =
+	rects[SAVE].h = rects[EXIT].h = rects[LOAD].h = rects[HELP].h =
 		rects[CLEAN].h = rects[GENERATE].h = rects[VISIBILITY].h = 30;
 	rects[CHOOSE].h = w->g->screen->h;
 	rects[UP].h = rects[DOWN].h = BORDER_SHIFT; //TODO potom sa to zosti z obrazkov naloadovanych
@@ -64,7 +63,8 @@ void Create_map::resize()
 	rects[LOAD].x = rects[CLEAN].x + rects[CLEAN].w; //na jednej urovni
 	rects[SAVE].x = rects[LOAD].x + rects[LOAD].w; //na jednej urovni
 	rects[GENERATE].x = rects[SAVE].x + rects[SAVE].w; //na jednej urovni
-	rects[EXIT].x = rects[GENERATE].x + rects[GENERATE].w;
+	rects[HELP].x = rects[GENERATE].x + rects[GENERATE].w;
+	rects[EXIT].x = rects[HELP].x + rects[HELP].w;
 	rects[VISIBILITY].x = rects[EXIT].x + rects[EXIT].w;
 
 	/* setting y positions */
@@ -72,7 +72,7 @@ void Create_map::resize()
 	rects[CHOOSE].y = 0;
 	rects[MAP].y = rects[LEFT].y = rects[RIGHT].y = rects[UP].h;
 	rects[DOWN].y = rects[MAP].y+rects[MAP].h;
-	rects[EXIT].y = rects[SAVE].y  = rects[CLEAN].y = rects[LOAD].y =
+	rects[EXIT].y = rects[SAVE].y  = rects[CLEAN].y = rects[LOAD].y = rects[HELP].y =
 	rects[GENERATE].y = rects[VISIBILITY].y = rects[DOWN].y + rects[DOWN].h;
 
 	//vygnerujeme mapove s tym, ze prva rada a prvy stlpec nevykresluju nic	
@@ -93,6 +93,8 @@ void Create_map::resize()
 }
 void Create_map::init()
 {
+	help = new ShowMenu(w, "Click on the wall to place it on the map. \n Vlick on the buttons to save, map, exit or generate. \n \
+	When saving write a name and press enter\nTo move the map, click on the space that ia round map\n Touch escape to leave thw window");
 	Resolution res;
 	std::string name = "Mini";
 	res.normal = w->g->render(name);
@@ -137,12 +139,12 @@ void Create_map::init()
 	for (size_t i = 0; i< NumberObjectsImages; i++)
 		skins.push_back(new WallSkin("grass",i)); //TODO zo subora	
 	
-	text = w->g->render("Write map resolution:");
+	text = w->g->render("Choose resolution by up&down arraws, when custom, set input:");
 	std::string s[] = {"0","1","2","3","4","5","6","7","8","9","x"};
 	for (int i =0; i< NUMCHARS; i++)
 		resol[i] = w->g->render(s[i]);
 
-	std::string ids[] = {"clean", "save", "load", "generate", "exit" };
+	std::string ids[] = {"clean", "save", "load", "generate", "help", "exit" };
 	for (int i =0; i< BUTTONS-1; i++)
 		buttonsImages[i] = w->g->render(ids[i]);
 	resize();
@@ -596,6 +598,11 @@ void Create_map::buttonDown(int number, int atX, int atY)
 			mouse_down = false;
 			break;
 		}
+		case HELP:
+		{
+			w->add(help);
+			break;
+		}
 		case GENERATE:
 		{
 			generuj();//TODO vlastnost mapy
@@ -695,7 +702,7 @@ void Create_map::buttonDown(int number, int atX, int atY)
 void Create_map::resume()
 {
 	map->setBoundary(rects[MAP].w,rects[MAP].h); //kolko moze do sirky a vysky sa vykreslit, u resizu prekreslit
-	map->shift(-rects[MAP].x, -rects[MAP].y);
+	map->setShift(-rects[MAP].x, -rects[MAP].y);
 	setVisibility();
 	draw();
 }

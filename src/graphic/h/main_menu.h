@@ -25,4 +25,23 @@ public:
 	void clean();
 	virtual ~Main();
 };
+/* menu for showing a string on screen */
+class ShowMenu : public Menu
+{
+	Window * w;
+	std::string strToshow;
+	size_t iter;
+	size_t size;
+	std::vector<SDL_Surface *> images;
+public:
+
+	ShowMenu(Window * w, std::string str);
+	void init();
+	void process();
+	void resume();
+	void draw();
+	void clean();
+	void resize();
+	virtual ~ShowMenu();
+};
 #endif
