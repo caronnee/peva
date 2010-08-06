@@ -1,11 +1,11 @@
 \section {Konkrétna realizácia jazyka}
-Máme popísaný jazyk, ktorý bude robotov ovládat.Ďalej uvedieme mechanizmus ovládania robota pomocou príkazov \ref{} 
+Máme popísaný jazyk, ktorý bude robotov ovládať. Ďalej uvedieme mechanizmus ovládania robota pomocou príkazov robotštiny.
 \subsection{Možné prístupy}
-Jedným z možnych prístupov je interpretovať napísaný algoritmus v robotštine priamo. To znamená, vnútorne nereprezentovat jednotlivé časti algoritmu, ale opakovane prechádzať napísaný text. Nevýhodou tejto metódy je, že je veľmi pomalá. Pre každé kódové slovo treba rozlíšťt, do ktorej kategórie patrí a uviesť robota do príslušného  stavu, aby bol pripravený analyzovať ďalšie slovo. Napríklad pri kódovom slove {\it shoot} by si mal externe pamatať, že nasledujúce slovo, ktoré ma prijať, je celé čislo. Je to dosť časovo náročné a hrozí, že simulácia nebude plynulá. Navyše nie je vopred jasné, po akých častiach kódu sa roboti majú striedať. Je možné napríklad striedať sa, keď interpret prejde určiý počet slov. To ale nie je spravodlivé. Napriklad príkaz a=b, kde a,b su veľmi veľké polia, by logicky mal trvať dlhšie,  než keby boli typu integer. Preto tento prístup  nebol použitý.
+Jedným z možných prístupov je interpretovať napísaný algoritmus v robotštine priamo. To znamená, vnútorne nereprezentovať jednotlivé časti algoritmu, ale opakovane prechádzať napísaný text. Nevýhodou tejto metódy je, že je veľmi pomalá. Pre každé kódové slovo treba rozlíšť, do ktorej kategórie patrí a uviesť robota do príslušného stavu, aby bol pripravený analyzovať ďalšie slovo. Napríklad pri kódovom slove {\it shoot} by si mal externe pamätať, že nasledujúce slovo, ktoré ma prijať, je napríklad celé číslo. Je to dosť časovo náročné a hrozí, že simulácia nebude plynulá. Navyše nie je vopred jasné, po akých častiach kódu sa roboti majú striedať, ako bolo povedané pri plánovaní. Je možné napríklad striedať sa, keď interpret prejde určitý počet slov. To ale nie je spravodlivé. Napriklad príkaz a=b, kde a,b su veľmi veľké polia, by logicky mal trvať dlhšie, než keby boli typu integer. Preto tento prístup nebol použitý.
 
-Ďalšou možnosťou je použiť kompiler nejakého skutočneho programovacieho jazyka. To znamená upravťt jazyk, ako sme ho predstavili do podoby vhodnej pre robotštinu. Možno tu definovat interface, s ktorým bude užívateľom generovaný program komunikovať. Príkladom je použitie programovacieho jazyka C\# a následne vygenerovany medzikód MSIL. MSIL ale podobne ako strojový kód alokuje reálnu pamäť pri vytváraní premenných zo skutočnej pamäte.  Samotná aplikácia tak stráca kontrolou nad tým, kde je aká premenná uložená a kedy musí prepisovať z nedostatku voľnej pamäte. Preto bol tento koncept tiež odmietnutý.\\
+Ďalšou možnosťou je použiť kompiler nejakého skutočného programovacieho jazyka. To znamená upraviť jazyk tak, aby sme ho prepísali do podoby vhodnej pre robotštinu. Možno tu definovat interface, s ktorým bude užívateľom generovaný program komunikovať. Príkladom je použitie programovacieho jazyka C\# a následne vygenerovaný medzikód MSIL. MSIL ale podobne ako strojový kód alokuje reálnu pamäť pri vytváraní premenných zo skutočnej pamäte. Samotná aplikácia tak stráca kontrolou nad tým, kde je aká premenná uložená a kedy musí prepisovať z nedostatku voľnej pamäte. Preto bol tento koncept tiež odmietnutý.\\
 %http://www.codeguru.com/csharp/.net/net_general/il/article.php/c4635
-Metódu rozkladu kódu na menšie časti nemusíme opustiť celkom. Aby sme mali úplnú kontrolu nad chovaním algoritmu, je nutné okrem vytvorenia vlastného medzikódu vytvorit aj vlastny{\it virtual machine}, ktorý bude jednotlivé prelozené časti v medzikóde interpretovať. Inšpiráciou pre takúto metódu bola Java virtual machine \ref{blelb}. Súčasťou takéhoto virtuálneho stroja by mal byť potom aj plánovač a vlastná správa pamäte. To je  presne to, čo nám vyhovuje, preto bolo implementovane v robotštine.\\ %mysleno resne to, co nam vyhovuje.
+Metódu rozkladu kódu na menšie časti nemusíme opustiť celkom. Aby sme mali úplnú kontrolu nad chovaním algoritmu, je nutné okrem vytvorenia vlastného medzikódu vytvorit aj vlastnú {\it virtual machine}, ktorá bude jednotlivé preložené časti v medzikóde interpretovať. Inšpiráciou pre takúto metódu bola Java virtual machine \cite{java}. Súčasťou takéhoto virtuálneho stroja by mal byť potom aj plánovač a vlastná správa pamäte. To je  presne to, čo nám vyhovuje, preto bolo implementované v robotštine.\\ %mysleno resne to, co nam vyhovuje.
 
 Niekedy sa ale preklad do medzikódu vypustí a generuje sa priamo do cieľového jazyka, jazyka, v ktorom bude implementovaný program. To znamena opäť obtiažnu správu pamäte robota. \\ %mozno by to chcelo rozviest, napisat priklad, kde resne vidim problem? \\
 %Dalsou uvazovacou moznostou by bol priamy preklad do objektoveho jazyka, v ktorom je aplikacia vyvijana. Vieme, co ktory prikaz znamena, takze by stacilo algoritmus previest na . %mne toto priada podone ako LUA a uz neviem, co tym veduci myslel. Alebo to vyzera uplne rovnake ako to nad tym
@@ -13,46 +13,45 @@ Niekedy sa ale preklad do medzikódu vypustí a generuje sa priamo do cieľovéh
 %http://cs.wikipedia.org/wiki/Překladač
 
 \subsection{Práca s jazykom}
-Bolo teda rozhodnuté, že bude implementovaný vlastný jazyk s prekladom do medzikódu a interpretovaný vlastným virtuálnym strojom. Na to potrebujeme definovať, ako medzikód vyzera, ako komunikuje s robotmi a ako sa vykonáva.
+Rozhodli sme sa, že bude implementovaný vlastný jazyk s prekladom do medzikódu a interpretovaný vlastným virtuálnym strojom. Na to potrebujeme definovať, ako medzikód vyzerá, ako komunikuje s robotmi a ako sa vykonáva.
 
 \subsubsection{Generovaný medzikód}
-Algoritmus je zapísaný pomocou voľného textu, je teda nutné použiť parsovacie nástroje. Na základe predchádzajúcich skúseností boli zvolené nástroje Bison a Flex \ref{flex}. \\
+Algoritmus je zapísaný pomocou voľného textu, je teda nutné použiť parsovacie nástroje. Na základe predchádzajúcich skúseností boli zvolené nástroje Bison a Flex \cite{flex}. \\
+Najskôr bolo nutné si premyslieť formát medzikódovych inštrukcií. Jedným z najčastejších foriem je troj-dresný, štvor-dresný alebo formát zásobníkového čitača. Trojadresný a štvoradresný znamenajú, že medzikódové inštrukcie operujú nad dvoma alebo troma operandami a majú ešte ďalší ukazateľ na to, kde ukladá výsledok. My však budeme potrebovať aj premenný počet parametrov, preto bol použitý posledný spôsob. Inštrukcia medzikódu si tu zo zásobníka vyberie toľko operandov, koľko bude potrebovať a do zásobníka zapíše hodnotu operácie, resp. nevyberie alebo nezapíše vôbec nič.\\ % chce to ref?<<< MOZE byt
 
-Najskôr bolo nutné si premyslieť formát medzikódovych inštrukcií. Jedným z najčastejších foriem je troj-dresný, štvor-dresný alebo formát zásobníkového čitača. Trojadresný a štvoradresný znamenajú, že medzikódové inštrukcie operujú nad dvoma alebo troma operandami a majú ešte ďalši ukazateľ na to, kde ukladajú výsledok. My však budeme potrebovať aj premenný počet parametrov, preto bol použitý posledný spôsob. Inštrukcia medzikódu si tu zo zásobníka vyberie toľko operandov, koľko bude potrebovať a do zásobníka zapíše hodnotu operácie, resp. nevyberie alebo nezapíše vôbec nič, viz $OBR$ \\ % chce to ref?<<< MOZE byt
-
-Nastáva otázka, čo sa do tohto zásobnika ukladá. Je možné sa na tento zásobník pozerať ako na pole prvkov neznámeho typu, kde inštrukcie predpokladajú správny typ pre svoju funkčnosť. Toto je zaistené už pri pokuse o preklad. Problém nastáva v okamihu, keď je úložisko robota už plné. Potom, ak sa program nemá zastaviť, musíme na???? zasobník niečo pridať. Preťaženie pamäte sa bude prejavovať tak, že robot bude prepisovať svoje už priradené premenné. To potom znamená ale analýzu úložiska na existenciu premennej typu (Objekt, Integer, Real, Location ), ktorá zodpovedá požiadavke nasledujúcej inštrukcie. To je ale dost neefektívne. Tento spôsob má problém aj pri premenných zloženého typu. % a koncim:P
+Jednou z otázok je, čo sa do tohto zásobnika ukladá. Je možné pozerať sa na tento zásobník ako na pole prvkov neznámeho typu, kde inštrukcie predpokladajú správny typ pre svoju funkčnosť. Toto je zaistené už pri pokuse o preklad. Problém nastáva v okamihu, keď je úložisko robota už plné. Potom, ak sa program nemá zastaviť, musíme na vrchol zasobníka niečo pridať. Preťaženie pamäte sa bude prejavovať tak, že robot bude prepisovať svoje už priradené premenné. To potom znamená ale analýzu úložiska na existenciu premennej typu (Objekt, Integer, Real, Location ), ktorá zodpovedá požiadavke nasledujúcej inštrukcie. To je ale dosť neefektívne. Tento spôsob má problém aj pri premenných zloženého typu. % a koncim:P
 %toto je ale pekne debilny sposob
-Tento nepríjemný efekt môžeme odstránit implementovaním polymorfného zásobníka. To znamená, že sa zasobník bude  chovať ku všetkým prvkom ako k pôvodnému abstraktnému prvku a abstraktný prvok bude podporovať operácie pre uloženie a vydanie podporovaných prvkov. Ak bude mať robot preplnené úložisko, je možné na zasobník pridať akýkoľvek prvok z úložiska a následne operácie budú bezpečné. Problémom je, že  sa nebudú prepisovať už obsadené premenné. To by nám ale príliš nevadilo. Zápis do premennej obvykle znamená jej prepis na inú hodnotu, takže pri načitaní premennej by robot dostal inú hodnotu ako očakávanú, čo je tiež spôsob prepisu. Problémom tejto metódy je, že počas života algoritmu bude v úložišti často rôzny počet rôznych premenných (pri odchode z funkcie sa niektoré premenné typu Integer zničia a pri zavolaní následnej funkcie sa na uložišti objaví premenná typu Integer). Takto sa bude musieť úložisko dynamicky meniť na úrovni programu. To znamená  častú alokáciu a dealkáciu premenných za behu algoritmu. To je dosť neefekíivne obsadzovanie pamäte, keďže vieme presne, aké veľké úložisko bude robot mať.
+Tento nepríjemný efekt môžeme odstrániť implementovaním polymorfného zásobníka. To znamená, že sa zasobník bude chovať ku všetkým prvkom ako k pôvodnému abstraktnému prvku a abstraktný prvok bude podporovať operácie pre uloženie a vydanie podporovaných prvkov. Ak bude mať robot preplnené úložisko, je možné na zasobník pridať akýkoľvek prvok z úložiska a následne operácie budú bezpečné. Problémom je, že sa nebudú prepisovať už obsadené premenné. To by nám ale príliš nevadilo. Zápis do premennej obvykle znamená jej prepis na inú hodnotu, takže pri načitaní premennej by robot dostal inú hodnotu ako očakávanú, čo je tiež spôsob prepisu. Problémom tejto metódy je, že počas života algoritmu bude v úložisku často rôzny počet rôznych premenných (pri odchode z funkcie sa niektoré premenné typu Integer zničia a pri zavolaní následnej funkcie sa na uložisku objaví premenná typu Integer). Takto sa bude musieť úložisko dynamicky meniť na úrovni programu. To znamená častú alokáciu a dealokáciu premenných za behu algoritmu. To je dosť neefektívne obsadzovanie pamäte, keďže vieme presne, aké veľké úložisko bude robot mať a teda by sme si ho mohli predgenerovať.
 % a nechcelo by to obrazok?
  
-Preto bol navrhnutý nasledovný spôsob : Každa premenná bude obsahovať všetky základné typy a v prípade, že ide o pole, aj odkaz na ďalšie takéto premenné. Tým pádom sa dá celé úložisko predgenerovať a na zásobník ukladať takúto premennú. Pri nesprávnom zápise sa informácia niekde zapíše a bude prístupná opäť len pri nesprávnom použití. Tento spôsob má tú nevýhodu, že nám prakticky znásobuje pamäťt. Výsledný efekt je ale uspokojivý. \\
+Preto bol navrhnutý nasledovný spôsob : Každá premenná bude obsahovať všetky základné typy a v prípade, že ide o pole, bude obsahovať odkaz na ďalšie takéto premenné. Tým pádom sa dá celé úložisko predgenerovať a na zásobník ukladať takúto premennú. Pri nesprávnom zápise sa informácia niekde zapíše a bude prístupná opäť len pri nesprávnom použití. Tento spôsob má tú nevýhodu, že nám prakticky znásobuje pamäťt. Výsledný efekt je ale uspokojivý. \\
 
 Zásobník je na pevno obmedzený maximálnou veľkosťou 10000 prvkov, ktorá je považovaná za dostatočne veľké čislo. \\
 
 %http://java.sun.com/docs/books/jvms/second_edition/html/Overview.doc.html - zeby som tu este napisala, ze som sa ispirovakla tymto?
 
 %linearny zoznam s odkazmi skoku.
-Samotný medzikód bude mať formát spojového zoznamu. Tento formát sa vhodne konštruuje zo syntaktického stromu, ktorý je výsledkom syntaktickej analýzy prevádzanej pomocou nástrojov Flex a Bison \ref{}.\\
+Samotný medzikód bude mať formát spojového zoznamu. Tento formát sa vhodne konštruuje zo syntaktického stromu, ktorý je výsledkom syntaktickej analýzy prevádzanej pomocou nástrojov Flex a Bison \cite{flex}.\\
 
 % konkrétne inštrukcie
-Je potrebné rozhodnúť, aké inštrukcie bude medzikód používať. Tie vyplývaju zo syntaxe robotštiny a ďalej sa s nimi budeme zaoberať až v sekcií o vykonávaní medzikódu.
+V tejto fázi treba rozhodnúť, aké inštrukcie bude medzikód používať. Tie vyplývajú zo syntaxe robotštiny a ďalej sa s nimi budeme zaoberať až v sekcií o vykonávaní medzikódu.
 
 \subsubsection{Preklad jazyka}
 Sekcia popisuje, aké štrukúry sú nutné pre generovanie a uloženie jazyka. Vynecháme spôsob definovania vlastnosti a cieľov, pretože to sa priamo jazyka netýka.\\
 
 %ako vyzerajú inštrukcie
 Samotný medzikód sa skladá z inštrukcií. Inštrukcie sa zoskupia do jedného zoznamu. Ponuka sa koncept  polymorfného poľa. %to snad nemusim zdovodnovat
-Každá inštrukcia potom bude objekt odvodený od základného objektu. Instruction.\\ %mozno by som mala navrhnut aj ine moznosti?netreba
+Každá inštrukcia potom bude objekt odvodený od základného objektu\\ %mozno by som mala navrhnut aj ine moznosti?netreba
 
 Jazyk podporuje premenné a tak je nutné tieto premenné ukladať.
 %jak sa vnutorne nazyvaju premenne lokalne 
-Premenné su dvojakého typu, globálne a lokálne. Navyše je možné definovať funkcie. Premenná s rovnakým menom sa môže vyskytovať v rôznych funkciách  môže byť navyše rôzneho typu. To nám vadí najviac, pretože premenná musí byť práve jedného typu. Preto ich treba nejak odlíšiť. Názvy premenných budeme meniť nasledujúco: v okamihu, keď je definovaná funkcia F(), všetky premenné vytvorené v tejto funkcií, sa budú ukladať pod menom F\#premenná. \# bol zvolený???, pretože nie je povolený znak v jazyku. Oddeľuje názov funkcie/procedúry, kde bola definovaná premenná a tak je možné ľahko spätne rekonštruovať jej názov.\\
-Problém nastáva s premennou, ktorá bola definovaná vnútri nejakého bloku. Potom ju poznáme pod týmto menom a s už daným typom. 
+Premenné sú dvojakého typu, globálne a lokálne. Navyše je možné definovať funkcie. Premenná s rovnakým menom sa môže vyskytovať v rôznych funkciách  môže byť navyše rôzneho typu. To vadí najviac, pretože premenná musí byť práve jedného typu. Preto ich treba nejak odlíšiť. Názvy premenných budeme meniť nasledujúco: v okamihu, keď je definovaná funkcia F(), všetky premenné vytvorené v tejto funkcií, sa budú ukladať pod menom F\#premenná. Znak \# bol zvolený, pretože sa nevyskytuje v jazyku. Oddeľuje názov funkcie/procedúry, kde bola definovaná premenná a tak je možné ľahko spätne rekonštruovať jej názov.\\
+Ťažkosti nastáva s premennou, ktorá bola definovaná vnútri nejakého bloku. Potom sme ju uložili pod týmto menom a s už daným typom. Dalšia takáto premenná definovaná v rovnakej fukncii, ale v inom bloku, bude totiž reprezentovaná rozvnakým reťazcom.
 
-Pre? zisťovanie, ako a kde sa v algoritme používajú premenné, je nutné vyhlaďávať podľa reťazca. Minimálne pri parsovani by bolo vhodné nájsť takú štrukúru, ktorá nie je z najpomalších (lepšia ako lineárne prechádzanie zoznamu). Ponuka sa hash-mapa, ktorú štandartne obsahuje STL ( Standard Template Library ). Pretože sa predpokladalo (v záchvate paniky), že bude nutné premenné vyhľadávať aj počas vykonávania programu, bol zvolený Burst trie\ref{ach jaj}. Toto rozhodnutie sa žiaľ neskôr ukázalo ako predčasné z dôvodov, ktoré budú jasné pri objasneni práce interpreta medzikódu. Z dôvodu fungovania tohoto kusu kódu bolo ale ponechané???. \\
+Kvôli zisťovaniu, ako a kde sa v algoritme používajú premenné, je nutné vyhlaďávať podľa reťazca. Minimálne pri parsovani by bolo vhodné nájsť takú štrukúru, ktorá nie je z najpomalším (lepšia ako lineárne prechádzanie zoznamu). Ponuka sa hash-mapa, ktorú štandartne obsahuje STL ( Standard Template Library ). Pretože sa predpokladalo (v záchvate paniky), že bude nutné premenné vyhľadávať aj počas vykonávania programu, bol zvolený Burst trie\cite{trees}. Toto rozhodnutie sa žiaľ neskôr ukázalo ako predčasné z dôvodov, ktoré budú jasné pri objasneni práce interpreta medzikódu. Z dôvodu fungovania tohoto kusu kódu bolo ale ponechané.
 
 %typy premenných
-Podla syntaxe môžeme jednotlivé typy kombinovať do zložitejších polí. Je nutné si uchovávať štruktúry týchto nových typov, keďže premenné týchto typov môžu neskôr v algoritme nadobudnúť platnosľ. Týchto typov nebude veľa, keď užívateľl nemá právo vytvárať vlastné štruktúry, preto ani nemá zmysel robiť hlbšiu analýzu alebo optimalizovať vyhľadávanie Typy potom budú uložené v jednoduchom poli. \\
+Podla syntaxe môžeme jednotlivé typy kombinovať do zložitejších polí. Je nutné si uchovávať štruktúry týchto nových typov, keďže premenné týchto typov môžu neskôr v algoritme nadobudnúť platnosľ. Týchto typov nebude veľa, keďže užívateľ nemá právo vytvárať vlastné štruktúry, preto ani nemá zmysel robiť hlbšiu analýzu alebo optimalizovať vyhľadávanie. Typy potom budú uložené v jednoduchom poli. \\
 
 %samotný typ
 Otázka je, ako reprezentovať samotný typ. Jazyk rozoznáva len niekoľko typov premenných a typ zložený z nich. Potom je namieste reprezentovať typ ako spojitý zoznam. \\
@@ -61,17 +60,16 @@ Otázka je, ako reprezentovať samotný typ. Jazyk rozoznáva len niekoľko typo
 Samotné inštrukcie budú potomkovia jednej abstraktnej triedy Instruction. To znamená, že na simulovanie chodu jednoduchého programu nám stačí interpretovať každú jednu inštrukciu, až kým sa neminú inštrukcie. Zložitejšie programy však použivajú cykly, podmienky a podobne, ktoré menia poradie práve vykonávanej inštrukcie. Preto je nutné zaviesť {\it Program Counter (PC) }, ktorý bude ukazovať na  práve vykonavanú inštrukciu.
 
 %funkcie
-Súčasťou medzikódu su aj volané funcie a procedúry. Tie pozostávajú rovnako z inštrukcií, teda ich môžeme priradiť hneď za vygenerovanou hlavnou procedúrou main. Funkcie a procedúry teda tiež menia poradie vykonávanych inštrukcií. Na rozdiel od príkazov je nutné si zapamätať, odkiaľ bol spravneny????? skok, aby bolo možné sa vrátiť a pokračovat. Teda namiesto jedno PC budeme potrebovať opäť zásobnik PCciek.\\
+Súčasťou medzikódu sú aj volané funkcie a procedúry. Tie pozostávajú rovnako z inštrukcií, teda ich môžeme priradiť hneď za vygenerovanou hlavnou procedúrou main. Funkcie a procedúry teda tiež menia poradie vykonávanych inštrukcií. Na rozdiel od príkazov je nutné si zapamätať, odkiaľ bol spravený skok, aby bolo možné sa vrátiť a pokračovať. Teda namiesto jedno PC budeme potrebovať opäť zásobnik PCciek.\\
 
 %tuto by sme mali byt pripraveni na generovanie medzikodu, toz..
-\subsection{Interpret medzikodu}
-
-Otázkou, ktorou sa v tejto časti budeme zaoberať, je, na aké časti má byť algoritmus rozkúskovaný, a aby plánovač, ako bol popisaný, korektne vykonal príkazy a vrátil očakávaný výsledok. Prioritou je teda rozdeliť kód na čo najmenšie časti. Tu su nasledujúce robotické inštrukcie :%zoradene podla potreby, s akou boli vytvorene: ?
+\subsection{Interpret medzikódu}
+V tejto časti budeme zaoberať problémom, na aké časti má byť algoritmus rozkúskovaný, aby plánovač, ako bol popisaný, korektne vykonal príkazy a vrátil očakávaný výsledok. Prioritou je teda rozdeliť kód na čo najmenšie časti. Tu sú nasledujúce robotické inštrukcie :%zoradene podla potreby, s akou boli vytvorene: ?
 
 \begin{description} %toto by sommala popisat matematicky, ale nenapada ma jak....
 \item[InstructionCreate] pridá premennej priestor v úložisku
-\item[InstructionLoadVariable] na??? zasobník s hodnotami pridá hodnotu premennej
-\item[InstructionLoadElement] zo zásobniku vyberie $n \in N$ a premennú typu pole. Na?? zásobník pridá n-ty el;emnt tohoto poľa
+\item[InstructionLoadVariable] na vrchol zasobníka s hodnotami pridá hodnotu premennej
+\item[InstructionLoadElement] zo zásobnika vyberie $n \in N$ a premennú typu pole. Na vrchol zásobníka pridá n-tý element tohoto poľa
 \item[InstructionConversionToInt] zmení premennú z typu real na integer. Načitaná reálna reprezentácia celého čisla bude dočasne umiestnená v pamäti, pamäť sa dočasne zaplní o jedno miesto naviac %<<nie je to trivialneneni!?
 \item[InstructionConversionToReal] zmenu premennú typu Integer na Real
 \item[InstructionDuplicate] zduplikujú hodnotu na zásobníku
@@ -79,52 +77,52 @@ Otázkou, ktorou sa v tejto časti budeme zaoberať, je, na aké časti má byť
 \item[InstructionStoreInteger,InstructionStoreReal, InstructionStoreObject] uložia načitanú prislušnú hodnotu do premennej na vrchole zásobníka.
 \item[InstructionCall] spôsobí uloženie PC %<<<to je co 
 a založenie noveho
-\item[InstructionPop ] zruši hodnotu na zásobníku
-\item[InstructionMustJump] skoči na inú inštrukciu v rámci aktuálnej funkcie.
+\item[InstructionPop ] odoberie hodnotu na zásobníku
+\item[InstructionMustJump] skočí na inú inštrukciu v rámci aktuálnej funkcie.
 \item[InstructionJump] podľa vrchola zásobníka zmení vykonávanú inštrukciu
-\item[InstructionBreak] podobne ako MustJump, ale v okamihu generovania kódu nie je známe, kam má inštrukcia skočit.nie skončiť?
-\item[InstructionContinue ] podobne ako break, ale v dobre,,,,dobrom??? prekladu je jasne, kam skoči
+\item[InstructionBreak] podobne ako MustJump, ale v okamihu generovania kódu nie je známe, kam má inštrukcia skočit
+\item[InstructionContinue ] podobne ako break, ale v dobre generovanom preklade je jasne, kam skoči, už pri generovaní medzikódu
 \item[InstructionReturn] vytvorí návratovú hodnotu
 \item [InstructionRestore] obnoví stav, aký bol pred volanim funkcie
-\item [InstructionRemoveTemp] uvoli??? v úložisku poslednú premennú deklarovanú ako temp ( vysledok operacie )
-\item [Operacie] vezmú dva prvky a na??? zásobník vložia výsledok operácie
+\item [InstructionRemoveTemp] uvoľní v úložisku poslednú premennú deklarovanú ako temp ( obvykle výsledok operacie )
+\item [Operacie] vezmú dva prvky na vrchol zásobníka vložia výsledok operácie
 \begin{description}
-   \item[aritmeticke opracie pre Integer a Real]
-    \item [binarne a logicke OR a AND]
-    \item [InstructionNot ] vezme celé čislo zo zásobníka a ak je to 0, vloži tam 1, inak0  
-    \item [inštrukcie rovnosť a nerovnosť? pre objekt] vezme dva prvky zo zásobníka  a vloži tam výsledok operácie. Objekty nemajú relačne operátory na nerovnosť.
-   \item [Relačne operácie pre Integer a real] vezmu dva prvky zo zásobníka avlozia výsledok porovnánia (0 = npravdivé tvrdenie, 1 inak)
+   \item[aritmetické operácie pre Integer a Real]
+    \item [binárne a logické OR a AND]
+    \item [InstructionNot] vezme celé čislo zo zásobníka a ak je to 0, vloži tam 1, inak0  
+    \item [inštrukcie rovnosti a nerovnosti pre objekt] vezme dva prvky zo zásobníka a vloži tam výsledok operácie. Objekty nemajú relačne operátory na nerovnosť, preto sú uvedené osobitne
+   \item [Relačné operácie pre Integer a Real] vezmú dva prvky zo zásobníka a vložia na vrchol zásobníka výsledok porovnánia (0 = npravdivé tvrdenie, 1 inak)
 \end{description}
-\item [InstructionBegin] nastaví príznak, že začal novy blok, kvôli premeným a ich neskoršim dealokáciam
-\item [InstructionEndBlock ] vyčistí pamäť od premenných definovaných v tomto bloku
-\item [InstructionSee ] naplní robotove zorné pole objektami, ktoré vidí a uloží na ???zásobník počet viditeľných objektov
-\item [InstructionEye] zoberie zo zásobnika celé číislo X a uloži objekt, ktorý bol videný robotom ako X-tý v poradí. Ak žiaden objekt nevidí, uloží fiktívny objekt reprezentujúci NULL
-\item [InstructionFetchState] uloží na? zásobník výsledok poslednej akcie, ktorú robot robil ( pohyb, streľba )
-\item [InstructionStep ] vezme zo zásobníka cele čiílo a robot sa pohne prislušným smerom
+\item [InstructionBegin] nastaví príznak, že začal novy blok, kvôli premenným a ich neskoršim dealokáciam
+\item [InstructionEndBlock ] vyčistí pamäť od premenných definovaných v tomto bloku a zru)sňi prňiznak posledného bloku
+\item [InstructionSee ] naplní robotove zorné pole objektami, ktoré vidí a uloží na vrchol zásobníka počet viditeľných objektov
+\item [InstructionEye] zoberie zo zásobnika celé číslo X a uloži objekt, ktorý bol videný robotom ako X-tý v poradí. Ak žiaden objekt nevidí, uloží fiktívny objekt reprezentujúci NULL
+\item [InstructionFetchState] uloží na vrchol zásobníka výsledok poslednej akcie, ktorú robot vykonával ( pohyb, streľba )
+\item [InstructionStep ] vezme zo zásobníka cele číslo a robot sa pohne prislušným smerom
 \item [InstructionWait ] vezme celé čislo X a nastaví robota do "čakacieho" režimu po dobu X kol
-\item [InstructionShootAngle ] vezme zo zásobnika celé čislo a vystrelí v danom smere
+\item [InstructionShootAngle ] vezme zo zásobnika celé čislo prinúti robota vystreliť v danom smere
 \item [InstructionTurn] vezme zo zásobnika celé číslo a otočí sa podľa neho ( kladne doprava )
 \item [InstructionTurnR ] robot sa otočí doprava o $90^o $
 \item [InstructionTurnL] robot sa otočí doľava o $90^o$
-\item [InstructionHit] zoberie zo zásobnika objekt a uloží jeho životnosť
-\item [InstructionLocate] vyberie zo zásobnikov  objekt a uloží jeho? pozíciu (ak je robotom viditelný?a , inak uloží $[-1,1]$)
-\item [InstructionIsXXX] vyberie zo zásobníka objekt a uloží 0/1 v závislosti na vlastnosti objektu v premennej zobratej zo zásobníka. XXX môže byť missille, wall, player...
-\item [InstructionTarget] dá na zásobník cieľové miesto
-\item [InstructionSaveVariable] uloží premennú mimo zásobnik. Táto inštrukcia vznikla kvôli priradzovaniu zložených typov. Na vrchole zásobníka bude zložená premenná. Na to, aby sa dve zložené premenné priradili, potrebujú sa rozvinúť až na úroveň jednoduchých prvkov. Príkladom nech priradzujeme A = B, kde A,B sú typu integer[6][2]. A sa rozloží na 12 integerov v poradí integer[0][0].integer[0][1] atď., postupnosť takýcho príkazov vieme zabezpečiť už počas prekladu. Aby sa B správne priradilo A, potrebujeme B vhodne rozmiestniť medzi načítané hodnoty A. K tomu využijeme premennú, ktorú sme si odložili bokom, každý píislušný prvok generujeme z uloženej premennej znova cez všetky dimenzie.
-\item [InstructionLoadVariable] načíta premennú uloženú mimo, na?? zásobnik
-\item [InstructionDirection ] zoberie zo zásobníka premennú a dá na zásobník smer k pozíciíi (typ Location)
-\item [InstructionRandom] uloží na zásobník náhodne celé čislo v rozsahu 1-10 000. Toto čislo bolo zvolené ako dostatočne veľke pre veľky rozsah. %nepredpoklada sa ni ja vyssie
+\item [InstructionHit] zoberie zo zásobníka objekt a uloží na vrchol zásobníka jeho aktuálnu životnosť
+\item [InstructionLocate] vyberie zo zásobnika objekt a uloží pozíciu tohoto objektu vo svete na vrchol zásobníka, ak je tento objekt robotom viditelný, inak uloží $[-1,1]$
+\item [InstructionIsXXX] kde XXX je žiadosť o detail objektu (isMoving atď.). Vyberie zo zásobníka objekt a uloží 0/1 v závislosti na vlastnosti objektu v premennej zobratej zo zásobníka. XXX môže byť missille, wall, player...
+\item [InstructionTarget] dá na zásobník cieľové miesto robota, ak bolo nejaké definované. Inak uloží [-1, -1]
+\item [InstructionSaveVariable] uloží premennú mimo zásobnik. Táto inštrukcia vznikla kvôli priraďovaniu zložených typov. Na vrchole zásobníka bude zložená premenná. Na to, aby sa dve zložené premenné priradili, potrebujú sa rozvinúť až na úroveň jednoduchých prvkov. Príkladom nech priraďujeme A = B, kde A, B sú typu integer[6][2]. A sa rozloží na 12 integerov v poradí integer[0][0], integer[0][1] atď., postupnosť takýcho príkazov vieme zabezpečiť už počas prekladu. Aby sa B správne priradilo A, potrebujeme B vhodne rozmiestniť medzi načítané hodnoty A. K tomu využijeme premennú, ktorú sme si odložili bokom, každý príslušný prvok generujeme z uloženej premennej znova cez všetky dimenzie.
+\item [InstructionLoadVariable] načíta premennú uloženú mimo, na vrchol zásobníka
+\item [InstructionDirection] zoberie zo zásobníka premennú a dá na vrchol zásobníka smer k pozícií (typ Location)
+\item [InstructionRandom] uloží na zásobník náhodne celé čislo v rozsahu 1-10 000. Toto číslo bolo zvolené ako dostatočne veľké. %nepredpoklada sa ni ja vyssie
 \end{description}
 
 V prípade niektorých inštrukcií, ako napríklad InstructionBreak, nie je v čase analýzy zrejmé, kde ma algoritmus skočiť, preto na záver vygenerovania medzikódu je nutné tento kód ešte raz prejsť a doplniť chýbajúce informácie. \\
 
 Informácie o premenných sú uložené v trie. %<<< to su CO stromy?Ano, strom, co vyhladava posla pismen<<< to je bezne alebo tvoj napad? to je bezne
-Táto štruktúra už bude obsahovať všetky deklarované premenné, preto jej súčasťou je aj štruktúra, ktorú bude použivať algoritmus počas behu pri čitaní hodnoty premennej. Keďže premenná je známa pod svojim menom a navyše je povolené použivať rekurzívne funkcie, je možné, že rovnaká premenná bude vytvorená v rôznych hĺbkach, ale pod rovnakým menom. Táto štruktúra bude obsahovat nielen premennú známu pod konkrétnym menom, ale pole premenných, ktoré boli vytvorene v rôznych hĺbkach.\\
-Vzhľadom na to, že všetky ostatné atribúty, ktoré premennej prislúchajú (napriklad, či bola definovaná lokálne alebo globálne), už zostávaju rovnaké, stači nám ako štruktúra opäť zásobník. Pri uvoľnovaní premennej z robotovho úložiska sa potom  len odstráni vrchný prvok a požiada úložisko o uvoľnenie.
+Táto štruktúra už bude obsahovať všetky deklarované premenné, preto jej súčasťou je aj štruktúra, ktorú bude používať algoritmus počas behu pri čitaní hodnoty premennej. Keďže premenná je známa pod svojim menom a navyše je povolené použivať rekurzívne funkcie, je možné, že rovnaká premenná bude vytvorená v rôznych hĺbkach, ale pod rovnakým menom. Táto štruktúra bude obsahovat nielen premennú známu pod konkrétnym menom, ale pole premenných, ktoré boli vytvorené v rôznych hĺbkach.\\
+Vzhľadom na to, že všetky ostatné atribúty, ktoré premennej prislúchajú (napríklad, či bola definovaná lokálne alebo globálne), už zostávaju rovnaké, stači nám ako štruktúra opäť zásobník. Pri uvoľnovaní premennej z robotovho úložiska sa potom  len odstráni vrchný prvok a požiada úložisko o uvoľnenie.
 
 %chcela som nieco, ako to naraba s pamatou
 Čo sa týka obsadzovania pamäte, pri reálnych pamätiach sa dbá na to, aby jednotlivé dáta boli vedľa seba. 
-V vašom prípade nám ale nezaleží na tom, kde sú premenné uložené, nijak to neovplyvňuje výkonnosť. Teda v pamäti si stači udťžovat informácie o poslednom obsadenom prvku. Nasledujúce voľné miesto sa nájde tak, že lineárne sa budú prechádzat ďalšie miesta a keď dosiahneme koniec, kontrolujeme od začiatku. Úložisko je preplnené, keď kontrolované miesto bude rovnaké ako to, odkiaľ sme začíinali.
+V našom prípade nám ale nezaleží na tom, kde sú premenné uložené, nijak to neovplyvňuje výkonnosť robotov. Teda v pamäti si stači udržiavať informácie o poslednom obsadenom prvku. Nasledujúce voľné miesto sa nájde tak, že sa lineárne budú prechádzat ďalšie miesta a keď dosiahneme koniec, kontrolujeme od začiatku. Úložisko je preplnené, keď kontrolované miesto bude rovnaké ako to, odkiaľ sme začínali.
 
 Ďalej medzikód potrebuje prístup k úložisku. V čase vykonávania tohoto kódu sa budú premenné vytvárať, to znamená uberať voľné miesto v robotej pamäti. \\
 
