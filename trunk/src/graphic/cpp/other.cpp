@@ -10,6 +10,7 @@
 #define LAST 1
 #define TIMESTAMP 20
 
+#define HELP "Press n to load new map \n press ESC to leave \n press c to centralize robot\n, press a to chage to another robot"
 // pre debug ucelu = 0, inak = 1
 extern FILE * yyin; 
 extern void my_destroy();
@@ -219,10 +220,20 @@ void Play::resume()
 		std::string out = "";
 		recreate = false;
 		out += "Warning!(Press Enter to leave):"+robots.parseWarningList;
+		if (show)
+			delete show;
 		show = new ShowMenu(w,out);
 		w->add(show);
 		return;
 	}
+	SDL_Surface * hlp = w->g->render("Press anytime 'h' to get help");
+	SDL_Rect tempR;
+	tempR.x = w->g->screen->w / 2 - hlp->w /2;
+	tempR.y = w->g->screen->h /2 - hlp->h /2;
+	SDL_BlitSurface (hlp, NULL, w->g->screen, &tempR);
+	SDL_UpdateRect(w->g->screen, tempR.x, tempR.y, tempR.w, tempR.h);
+	SDL_Delay(500);
+	SDL_FreeSurface(hlp);
 	draw();
 }
 void Play::resize()
@@ -406,6 +417,15 @@ void Play::process()
 					show = new ShowMenu(w,out);
 					w->add(show);
 					return;
+				}
+				case SDLK_h:
+				{
+					recreate = false;
+					if (show)
+						delete show;
+					show = new ShowMenu(w, HELP);
+					w->add(show);
+					break;
 				}
 				case SDLK_n: //next map
 				{
@@ -898,9 +918,9 @@ void SetScheduller::resume()
 
 SetMaps::SetMaps(Window * w_, std::vector<std::string> * result_, std::string ext, std::string addr):Load(w_,ext, addr)
 {
-	name(w_->g, "Choose " + addr);
+	name(w_->g, "Press enter to choose " + addr + ", esc to leave");
 	result = result_;
-	}
+}
 void SetMaps::init()
 {
 	entered.clear();
