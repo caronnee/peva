@@ -37,7 +37,7 @@ PushableWall::PushableWall( Skin * s, List * abyss):Wall(s, abyss)
 }
 void PushableWall::hit(Object * attacked)
 {
-	attacked->hitted(this,movement.direction,0);
+//	attacked->hitted(this,movement.direction,0);
 	Object::bounce(attacked);
 }
 void PushableWall::hitted(Object * o, Position dir, int attack)

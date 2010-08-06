@@ -6,9 +6,10 @@
 #include "../../editor/h/snake.h"
 #include "../../graphic/h/images.h"
 #include "../../map/h/map.h"
+#include "main_menu.h"
 #include <map>
 
-#define BUTTONS 6
+#define BUTTONS 7
 
 /* struct for holding information which size (resolution) belongs to name */
 struct Resolution
@@ -36,6 +37,9 @@ private:
 	/* iterator holding informatio abou resolution in Y-axis */
 	std::map<std::string, Resolution>::iterator resolutionIterSecond;
 	
+	/* help menu*/
+	Menu * help;
+
 	/* division of screen, should be recomputed when fullscreened */
 	enum Map_divide
 	{
@@ -44,6 +48,7 @@ private:
 		SAVE,
 		LOAD,
 		GENERATE,
+		HELP,
 		EXIT,
 		VISIBILITY,
 		CHOOSE,
