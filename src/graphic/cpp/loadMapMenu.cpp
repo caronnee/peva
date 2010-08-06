@@ -14,6 +14,7 @@ Load::Load( Window * w_, std::string ext_, std::string adr_)
 	w = w_;
 	ext = ext_;	
 	adr = adr_;
+
 }
 
 void Load::resume()
@@ -247,7 +248,7 @@ Load::~Load() {}
 LoadMapMenu::LoadMapMenu(Window * window, Map * map):Load(window, ".map","./maps")
 {
 	w = window;
-	name(w->g,"Load Map");
+	name(w->g,"Load files");
 	index = 0;
 	mapToFill = map;
 }
