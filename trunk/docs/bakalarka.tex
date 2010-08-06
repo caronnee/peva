@@ -26,6 +26,116 @@
 \usepackage{color}
 %\usepackage[left=4cm]{geometry} % nastavení dané velikosti okrajů
 \begin{document}
+\begin{titlepage}
+\begin{center}
+\vspace{15mm}
+
+
+\large
+Univerzita Karlova v Praze\\
+Matematicko-fyzikální fakulta\\
+
+
+\vspace{5mm}
+
+
+{\Large\bf BAKALÁRSKA PRÁCA}
+
+
+\vspace{10mm}
+
+
+\includegraphics[scale=0.3]{logo.eps} 
+
+
+\vspace{15mm}
+
+
+{\Large Eva Pešková}\\ % doplHte vaae jméno
+\vspace{5mm}
+{\Large\bf Codewars, vojna robotov }\\ % doplHte název práce
+\vspace{5mm}
+Katedra distribuovaných a spolehlivých systémů
+\vspace{15mm}
+
+
+\large
+\noindent Vedúci bakalárskej práce: RNDr. Tomáš Poch
+\vspace{1mm} 
+
+
+\noindent Studijní program: Všeobecná informatika % doplHte odpovídající údaje
+
+
+\vspace{20mm}
+
+
+2010
+\end{center}
+\end{titlepage}
+
+
+\normalsize % nastavení normální velikosti fontu
+\setcounter{page}{2} % nastavení íslování stránek
+
+
+\vspace{10mm} 
+
+
+\noindent Ďakujem svojmu vedúcemu RNDr.Pochovi za vedenie práce, cenné rady a maximálnu ústretovosť a svojej rodine za morálnu podporu. 
+
+
+\vspace{\fill} 
+\noindent Prehlasujem, že jsem svoju bakalárskou prácu napísala samostatne a výhradne s použitím citovaných prameHov. Súhlasím so zapožičovaním práce a jej zverejňovaním.
+
+
+\bigskip
+\noindent V Praze dne 6.8.2010 \hspace{\fill}Eva Pešková
+
+%%%   Výtisk pak na tomto míste nezapomeHte PODEPSAT!
+%%%                
+
+
+\tableofcontents
+
+
+\newpage % pYechod na novou stránku
+
+
+%%% Následuje strana s abstrakty. DoplHte vlastní údaje.
+\noindent
+Název práce: Codewars, vojna robotov\\
+Autor: Eva Pešková\\
+Katedra (ústav): Katedra distribuovaných a spolehlivých systémo\\
+Vedoucí bakaláYské práce: RNDr. Tomáš Poch\\
+e-mail vedoucího: tomas.poch@d3s.mff.cuni.cz \\
+
+
+\noindent Abstrakt: V predloenej práci navrhujeme a implementujeme prostredie pre testovanie algoritmov. Tieto algoritmy majú odrá~ae stratégiu pou~ite>nú  v rozliných bojových hrách proti umelej inteligencii. Práca analyzuje mo~né podmienky pre víeazstvo a vplyvy astí kódu na vykonávanie algoritmu. Kladie sa dôraz na jednoduchose jazyka popisujúceho algoritmus, rozaírite>nose a 
+\noindent Klíová slova: robot, vojna, prostredie
+
+
+\vspace{10mm}
+
+
+\noindent
+Title: Codewars, battle of robots\\
+Author: Eva Peaková\\
+Department: Katedra distribuovaných a spolehlivých systémo\\
+Supervisor: RNDr. Tomáa Poch\\
+Supervisor's e-mail address: tomas.poch@d3s.mff.cuni.cz \\
+
+
+\noindent Abstract: In the present work we study ... Uvede se anglický abstrakt v rozsahu 80 a~ 200 slov. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut sit amet sem. Mauris nec turpis ac sem mollis pretium. Suspendisse neque massa, suscipit id, dictum in, porta at, quam. Nunc suscipit, pede vel elementum pretium, nisl urna sodales velit, sit amet auctor elit quam id tellus. Nullam sollicitudin. Donec hendrerit. Aliquam ac nibh. Vivamus mi. Sed felis. Proin pretium elit in neque. Pellentesque at turpis. Maecenas convallis. Vestibulum id lectus. Fusce dictum augue ut nibh. Etiam non urna nec mi mattis volutpat. Curabitur in tortor at magna nonummy gravida. Mauris turpis quam, volutpat quis, porttitor ut, condimentum sit amet, felis. \\
+
+
+\noindent Keywords: robot, war, enviroment
+
+
+\newpage
+
+
+
 \input uvod.tex
 \input anal1.tex
 \input anal2.tex
@@ -220,25 +330,33 @@
 %\item posielanie zprav mediz robotmi, co to zlepsi-> implementovanie pocutia
 %\item udalosti on event...
 %\end{itemize}
-%\tableofcontents
-%\addcontentsline{toc}{chapter}{\bfseries Literatúra}
-%\addcontentsline{toc}{chapter}{\bfseries Prilohy}
-%\begin{thebibliography}{99}
-%\bibitem{robocode} http://robocode.sourceforge.net/
-%\bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
-%\bibitem{trees}Steffen Heinz and Justin Zobel and Hugh E. Williams,
-%    \emph{Burst Tries: A Fast, Efficient Data Structure for String Keys},
-%    ACM Transactions on Information Systems, 2002,
-%    volume 20, pp. 192--223.
-%\bibitem{vm} Tim Lindholm, Frank Yellin :\emph{The JavaTM Virtual Machine Specification, Second Edition}
-%\bibitem{simtool}http://mpherbert.codeplex.com/
-%\bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). \emph{ Computational Geometry (2nd revised ed.) }. Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
-%\bibitem{usedPictures} Použitá galéria obrázkov: http://www.bghq.com/fft 
+\addcontentsline{toc}{chapter}{\bfseries Literatúra}
+\addcontentsline{toc}{chapter}{\bfseries Prilohy}
+\begin{thebibliography}{99}
+\bibitem{sdl} http://libsdl.org
+\bibitem{robocode} http://robocode.sourceforge.net/
+\bibitem{mlaskal} http://ulita.ms.mff.cuni.cz/pub/predn/pp/
+\bibitem{trees}Steffen Heinz and Justin Zobel and Hugh E. Williams,
+    \emph{Burst Tries: A Fast, Efficient Data Structure for String Keys},
+    ACM Transactions on Information Systems, 2002,
+    volume 20, pp. 192--223.
+\bibitem{msvl} http://msdn.microsoft.com/en-us/library/bb905470.aspx
+\bibitem{java} Tim Lindholm, Frank Yellin :\emph{The JavaTM Virtual Machine Specification, Second Edition}
+\bibitem{lua} lua.org
+\bibitem{Karel} http://karel.webz.cz/
+\bibitem{herbert}http://mpherbert.codeplex.com/
+\bibitem{quadtree}   Mark de Berg, Marc van Kreveld, Mark Overmars, and Otfried Schwarzkopf (2000). \emph{ Computational Geometry (2nd revised ed.) }. Springer-Verlag. ISBN 3-540-65620-0.  Chapter 14: Quadtrees: pp. 291–306.
+\bibitem{usedPictures} Použitá galéria obrázkov: http://www.bghq.com/fft 
+\bibitem{koth} http://sumost.ca/steve/games/ - rozcestník hie zaoberajúci sa algoritmamy prežitia
+\bibitem{ares}http://harald.ist.org/ares/ 
+\bibitem{crobots} http://www.gamerz.net/c++robots oficiálna stránka hry C++ Robots
+\bibitem{flex}Lex \& Yacc John R. Levine, Tony Mason, Doug Brown Paperback - 366 pages 2nd/updated edition (October 1992) O'Reilly \& Associates
+ISBN: 1565920007
 %\bibitem {codewars} http://thegeekdistrict.com/topic/23-ares-codewar-and-other-programming-games/
-%\end{thebibliography}
-%\appendix
-%\chapter{CD}
-%Prilohou bakalarskej prace je aj CD so zdrojovymi subormi.
+\end{thebibliography}
+\appendix
+\chapter{CD}
+Prilohou bakalárskej prace je aj CD so zdrojovymi subormi.
 %\section{behove prostredie}
 %Pre beh aplikacie je nutne mat nainstalovane SDL verzie 1.2 alebo 1,3, (kniznu QT verzie 4), XML kniznicu libxml2 a kompiler gcc verzia 4
 %\section{Instalacia}
@@ -246,19 +364,368 @@
 %\item Pre unix -> make
 %\item Pre windows -> prilozene solution ( progressing )
 %\end{itemize}
-%\section{struktura CD}
-%\begin{itemize}
-%\item sklada sa z tychto casti: language, image, vygenerovane subory (napisat az po upratani)
-%\item pre kazdy cim sa priblizne zaobera
-%\end{itemize}
-%\chapter{Zoznam pojmov}
-%\begin{description}
-%\item[objekt]
-%\item[robotstina]
-%\item[postava]
-%programovatelny robot, ktory sa objavi ako objekt vo svete
-%\item[robopamat]
-%	kvoli mylenie s pamatou fyzickou pamatou sa takto nazyva priestor, kde si postava uchovava hodnoty, ktore neskor pouzije
-%\end{description}
+\section{struktura CD}
+\begin{itemize}
+\item image obsahuje obrázky nutné pre vykjreslenie základného menu
+\item graphic obsahuje implenet=aciu tried Skina SkinWorker
+\item scheduller obsahuje implementáciu plánovača
+\item language obsahuje všetky štruktúry potrebné pre vygenerovanie medzikódu
+\item objekct obsahuje implementáciu všetkých objektov, ktoré sa môžu vyskytovať v mape.
+\end{itemize}
+Každá táto časť ďalej obsahuje podadresáre h a cpp s hlavičkovými a zdrojovými súbormi
 %%http://blogs.sun.com/yj/entry/yet_another_way_to_hack (jak na bytecode)
+\chapter {Gramatika robotštiny}
+\begin{verbatim}
+#include <iostream>
+#include <queue>
+#include "../../language/h/lval.h"
+#include "../../language/h/robot.h"
+#include "../../generatedFiles/h/hflex.h"
+#include "../../language/h/parser_functions.h"
+#include "../../add-ons/h/macros.h"
+
+#define YYSTYPE Lval 
+#define YYLTYPE unsigned
+#define YYLLOC_DEFAULT(cur, rhs, n)	do  while(0)
+#define YYERROR_VERBOSE 1		
+
+static void yyerror(YYLTYPE *line, Robots* ctx, const char *m);
+
+%}
+
+/* keywords */
+%token TOKEN_MAIN "main function"
+%token TOKEN_LOCATION "word location"
+%token TOKEN_OBJECT "keyword object"
+%token TOKEN_VAR_REAL "keyword real"
+%token TOKEN_VAR_INT "keyword integer"
+%token TOKEN_VOID "keyword void"
+%token TOKEN_FUNCTION "keyword function"
+%token TOKEN_IF "keyword if"
+%token TOKEN_ELSE "keyword else"
+%token TOKEN_WHILE "keyword while"
+%token TOKEN_DO "keyword do"
+%token TOKEN_FOR "keyword for"
+%token TOKEN_RETURN "keyword return"
+%token TOKEN_BREAK "keyword break"
+%token TOKEN_REFERENCE "keyword var"
+%token TOKEN_NULL "keyword null"
+%token TOKEN_THIS "keyword this"
+%token TOKEN_CONTINUE "keyword continue"
+%token TOKEN_ROBOT "keyword robot"
+%token TOKEN_RND "random function"
+%token TOKEN_RET_TARGET "function get_target"
+%token<op> TOKEN_OPTION "robot setings"
+%token<of> TOKEN_OBJECT_FEATURE "function asking about state"
+
+/* delimiters */
+%token TOKEN_SEMICOLON ";"
+%token TOKEN_DOT "."
+%token TOKEN_COMMA ","
+%token TOKEN_LPAR "("
+%token TOKEN_RPAR ")"
+%token TOKEN_LSBRA "["
+%token TOKEN_RSBRA "]"
+%token TOKEN_ASSIGN "="
+%token TOKEN_BEGIN "{"
+%token TOKEN_END "}"
+
+/* literals */
+%token<ident> TOKEN_IDENTIFIER " name of variable or function"
+%token<number> TOKEN_UINT "integer number"
+%token<f_number> TOKEN_REAL "real number"
+%token TOKEN_SEEN "seen function"
+
+/* target of game*/
+%token TOKEN_VISIT "keyword visit"
+%token TOKEN_VISIT_SEQUENCE "keyword visit_seq"
+%token TOKEN_KILLED "keyword killed"
+%token TOKEN_SKIN "keyword skin"
+%token TOKEN_KILL "keyword kill"
+%token TOKEN_START "keyword start"
+
+/* group tokens */
+%token<operation> TOKEN_OPER_REL "<, >, >=, =<"
+%token<operation> TOKEN_OPER_SIGNADD "sign or additive operator"
+%token<operation> TOKEN_OPER_MUL "multiplicative operator"
+%token<operation> TOKEN_PLUSPLUS "++"
+%token<operation> TOKEN_MINUSMINUS "--"
+%token<operation> TOKEN_BOOL_AND "&&"
+%token<operation> TOKEN_BOOL_OR "|| or !"
+
+%type<ident> function_name "function name"
+
+%type<type> simple_type "simple variable type"
+%type<type> complex_type "complex variable type"
+%type<type> type "variable type"
+%type<type> return_type "return type"
+
+%type<ranges> ranges "range"
+%type<ident> function_header "function header"
+
+%type<entries> parameters_empty "zero or more paramaters"
+%type<entries> parameters "paramaters"
+
+%type<instructions> names "inicializations"
+%type<instructions> names_ "inicialization"
+%type<instructions> cycle_for "for cycle"
+%type<instructions> local_variables "local variable(s)"
+%type<instructions> block_of_instructions "block of instructions"
+%type<instructions> global_variables "global variable(s)"
+%type<instructions> commands "block of commands"
+%type<instructions> command "command"
+%type<instructions> matched "if/else block"
+%type<instructions> unmatched "if block"
+%type<instructions> init "create or assign"
+%type<instructions> assign "assign"
+%type<instructions> command_var "command or vvariable declaring"
+%type<instructions> simple_command "simple command"
+%type<instructions> commands_and_empty "nothing or command"
+
+%type<array_access> array_access "[number(,number)*]"
+
+%type<defVal> values "values expression"
+
+%type<output> array "array declaring"
+%type<output> variable "variable declaring"
+%type<output> variable_left "variable to be assigned to "
+%type<output> number "number"
+%type<output> declare_functions "declaring function(s)"
+%type<output> declare_function_ "declare function"
+%type<output> unary_var "unary variable"
+%type<output> expression_bool "expression with boolean result"
+%type<output> expression "expression"
+%type<output> exps "expressions"
+%type<output> expression_base "variable or constant"
+%type<output> expression_mul "multiplying expression"
+%type<output> expression_add "plus expression"
+%type<output> expression_bool_base "variable or constant acting as 
+					boolean"
+%type<output> expression_bool_or "|| expresion"
+%type<output> call_fce "calling function"
+%type<output> call_parameters "parameters of function being called"
+%type<places> places "defining target places"
+%type<target> place "defining target place"
+
+%start program
+
+%error-verbose
+
+%pure-parser
+
+%parse-param 
+
+%lex-param 
+
+%locations
+
+%%
+
+program: program robot 
+	|robot 
+	;
+define_bot:TOKEN_ROBOT TOKEN_IDENTIFIER 
+	;
+robot:  define_bot TOKEN_BEGIN options targets global_variables 
+	declare_functions TOKEN_MAIN TOKEN_LPAR TOKEN_RPAR 
+	block_of_instructions TOKEN_END
+	;
+targets: /* default target */  
+	|targets TOKEN_VISIT TOKEN_LPAR places TOKEN_RPAR 
+	|targets TOKEN_KILL TOKEN_IDENTIFIER
+	|targets TOKEN_VISIT_SEQUENCE TOKEN_LPAR places TOKEN_RPAR 
+	;
+place: TOKEN_UINT 
+	|TOKEN_LSBRA TOKEN_UINT TOKEN_COMMA TOKEN_UINT TOKEN_RSBRA
+	| TOKEN_START TOKEN_LSBRA TOKEN_IDENTIFIER TOKEN_RSBRA 
+	;
+places: place
+	| places TOKEN_COMMA place
+	;
+options: /* nothing */
+	| options TOKEN_OPTION TOKEN_ASSIGN TOKEN_UINT 
+	| options TOKEN_SKIN TOKEN_IDENTIFIER 
+	;
+global_variables:	/*	no parameters	*/ 
+	| global_variables local_variables 
+	;
+type: simple_type 
+	| complex_type 
+	; 
+local_variables: type names TOKEN_SEMICOLON 
+	;
+simple_type: TOKEN_VAR_REAL 
+	|TOKEN_VAR_INT 
+	|TOKEN_LOCATION
+	|TOKEN_OBJECT
+	;
+complex_type: simple_type ranges 
+	;
+
+ranges: TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA 
+	|ranges TOKEN_LSBRA TOKEN_UINT TOKEN_RSBRA 
+	;
+
+names_:	TOKEN_IDENTIFIER
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN expression 
+	|TOKEN_IDENTIFIER TOKEN_ASSIGN begin_type values end_type
+	;
+names: names_ 
+	|names names_ 
+	;
+begin_type: TOKEN_BEGIN 
+	;
+end_type: TOKEN_END 
+	;
+values:	expression 
+	| values TOKEN_COMMA expression 
+	| begin_type values end_type
+	| values TOKEN_COMMA begin_type values end_type
+	;
+declare_functions: /*	no declared functions	*/ 
+		|declare_function_ 
+		;
+
+function_header:return_type function_name TOKEN_LPAR parameters_empty 
+		TOKEN_RPAR 
+		;
+function_name:	TOKEN_FUNCTION TOKEN_IDENTIFIER
+		;
+return_type:	TOKEN_VOID 
+		|type 
+		;
+
+parameters_empty:	
+		| parameters 
+		;
+parameters:	type TOKEN_IDENTIFIER 
+		| parameters TOKEN_COMMA type TOKEN_IDENTIFIER 
+		| TOKEN_REFERENCE type TOKEN_IDENTIFIER 
+		| parameters TOKEN_COMMA TOKEN_REFERENCE type TOKEN_IDENTIFIER 
+		;
+declare_function_:	function_header block_of_instructions  
+		|declare_function_ function_header block_of_instructions 
+		;
+number:		TOKEN_OPER_SIGNADD TOKEN_REAL 
+		|TOKEN_OPER_SIGNADD TOKEN_UINT 
+		|TOKEN_REAL 
+		|TOKEN_UINT 
+		|TOKEN_RND
+		;
+
+begin:	TOKEN_BEGIN 
+		;
+
+end:	TOKEN_END 
+		;
+
+block_of_instructions: begin commands_and_empty end 
+		;
+commands_and_empty:  /* empty */ 
+		| commands 
+		;
+
+commands: 	TOKEN_SEMICOLON 
+		| matched 
+		| commands matched 
+		| unmatched 
+		| commands unmatched 
+		;
+cycle_for: TOKEN_FOR 
+		;
+command:	cycle_for TOKEN_LPAR init expression_bool TOKEN_SEMICOLON 
+		simple_command TOKEN_RPAR begin commands end 
+		|TOKEN_DO begin commands end TOKEN_WHILE TOKEN_LPAR 
+		expression_bool TOKEN_RPAR TOKEN_SEMICOLON 
+		|TOKEN_WHILE TOKEN_LPAR expression_bool TOKEN_RPAR 
+		begin commands end
+		|TOKEN_RETURN expression TOKEN_SEMICOLON
+		|TOKEN_RETURN TOKEN_SEMICOLON 
+		|TOKEN_BREAK TOKEN_SEMICOLON 
+		|TOKEN_CONTINUE TOKEN_SEMICOLON  
+		|simple_command TOKEN_SEMICOLON 
+		;
+command_var: local_variables 
+		| command  
+		;
+simple_command:	assign  
+		|unary_var 
+		;
+assign: variable_left TOKEN_ASSIGN expression 
+		;
+array: TOKEN_IDENTIFIER array_access 
+		|TOKEN_SEEN TOKEN_LSBRA expression TOKEN_RSBRA
+		;
+
+call_fce:	TOKEN_IDENTIFIER TOKEN_LPAR call_parameters TOKEN_RPAR 
+		|TOKEN_OBJECT_FEATURE TOKEN_LPAR call_parameters TOKEN_RPAR 
+		;
+
+call_parameters: expression 
+		| /* ziadny parameter */ 
+		|call_parameters TOKEN_COMMA expression 
+		;
+matched:TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched 
+		TOKEN_ELSE matched 
+	| command_var  
+	|block_of_instructions 
+	;
+unmatched:	TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR 
+		block_of_instructions 
+	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR command 
+	|TOKEN_IF TOKEN_LPAR expression_bool TOKEN_RPAR matched 
+		TOKEN_ELSE unmatched 
+	;
+init: 	local_variables 
+		| assign TOKEN_SEMICOLON 
+		;
+unary_var: variable 
+		|variable TOKEN_PLUSPLUS 
+		|variable TOKEN_MINUSMINUS 
+		;
+variable_left:TOKEN_IDENTIFIER 
+		|variable_left TOKEN_DOT TOKEN_IDENTIFIER 
+		|array 
+		;
+variable: 	TOKEN_THIS 
+		| TOKEN_NULL
+		|call_fce 
+		|variable_left 
+		;
+		
+array_access: TOKEN_LSBRA exps TOKEN_RSBRA 
+		;
+exps: 		expression  
+		| exps TOKEN_COMMA expression 
+		;
+expression_base: unary_var 
+		|number
+		|TOKEN_LPAR expression_bool TOKEN_RPAR 
+		;
+expression_mul:expression_base 
+		|expression_mul TOKEN_OPER_MUL expression_base 
+		;
+expression_add: expression_mul 
+		|expression_add TOKEN_OPER_SIGNADD expression_mul
+		;
+expression:	expression_add 
+		;
+expression_bool_base: expression 
+		|expression TOKEN_OPER_REL expression 
+		;
+expression_bool_or: expression_bool_base 
+		| expression_bool_or TOKEN_BOOL_OR expression_bool_base
+		;
+expression_bool:	expression_bool_or 
+		| expression_bool TOKEN_BOOL_AND expression_bool_or 
+	;
+%%
+
+static void yyerror(unsigned *line, Robots* ctx, const char *message)
+{
+	ctx->parseError( deconvert<const char *>(message) +" at line " + 
+		deconvert<int>(*line) +"\n");
+}
+
+\end{verbatim}
 \end{document}

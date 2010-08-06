@@ -1,99 +1,90 @@
-%\chapter{Unživateľska dokumentácia} podla mna by tu mala byt!
 \chapter{Implementácia} 
-Táto kapitola pojednáva o konkrétnych implementačných technikách, ktoré  vyplývajú zo záverov  analýzy. \\
+Táto kapitola pojednáva o konkrétnych implementačných technikách, ktoré vyplývajú zo záverov analýzy. \\
 Aplikácia sa skladá z troch hlavných častí, ktoré sa dajú použivať samostatne. Sú to:
 \begin{itemize}
+\item Mapa virtuálného sveta %hm, ta potrebuje objekty
+\item Preklad napísaného algoritmu do medzikódu
 \item Systém okien 
-\item Mapa sveta %hm, ta potrebuje objekty
-\item Preklad napísanéeho algoritmu do medzikódu
-\item Modul pre generovanie diskretného bludiska
+\item Modul pre generovanie diskrétného bludiska
 \end{itemize}
 %sakra, ja by som to chcela budovat zdola! Ale neda sa kvoli obrazkom
 
-Architektúra celej aplikácie je popísaná na obrázku <OBR>. Jednotlivé časti ďalej vysvetlíme
-\section{Správa okien}
-Ako grafická knižnica bola zvolená SDL $REF$, ktorá bola vyvinutá pre rýchle zobrazovanie a je jednou z najčastejšie používaných knižníc pri tvorbe 2D hier. $<REF>$. Aplikácia bude použíívať minimálny užívateľský vstup z klávesnice. Jediný vstup rozsiahlešsieho charakteru je napísanie samotného algoritmu. Pre uživateľa v Unixe, zvyknutého na svoj obľúbený editor, makra a zkratky, bola ponechaná možnosť vytvorťt si v ňom aj  algoritmus. \\ %mozu byt rozhodnutie tu, ked je to sucast imlementacie? - jo, tot mi napisal, ze sa zaoberam prkotinami, je to tak? %<< je to vec nazoru do akych detajlov mas ist, co je zrejme...OK, vsak mi povie
-Vzhľadom na to, že zvyšok okien, ktoré ma aplikácia zvládať, má tiež minimálne požiadavky,?????? bolo v práci použité vlastné rozhranie správ okien a nebolo nutné prikompilovať žiadnu dodatočnú knižnicu, ktorá sa zaoberá uživateľskými vstupmi.\\
-V zdrojovom kode to bolo realizované pomocou triedy \bf{Window} a potomkov abstraktnej triedy \bf{Menu}. Systém práce triedy  \bf{Window} je naznačený na obrázku <OBR>. Ide o to, že ak sa má nastaviť v obrazove??? nové menu, potom treba oknu, ktorého inštancia triedy Window reprezentuje, povedať, aby toto menu pridal do ZÁSOBNÍKA. Keďže okno je v SDL povolené maximálne jedno, inštancia triedy \bf{Window} bude práve jedna. Preto ďalej v texte budeme pod označením bf{Window} myslieť práve túto jednu inštanciu a nie triedu.\\
+Architektúra celej aplikácie je popísaná na obrázku \ref{fig::architektura}. Jednotlivé časti ďalej vysvetlíme.
+\begin{figure}
+\caption{Architektura aplikácie}
+\centering
+\includegraphics{architektura}
+\label{fig::architektura}
+\end{figure}
 
-Pomocou ZÁSOBNÍIKA na pridávania menu je zrejmé, do ktorého menu sa program vráti po zrušeni obrazovky so základným Menu. Zrušenie obrazovky sa prevedie zavolaním metódy pop(). Táto metóda odoberie menu zo zásobníka a pomocou metody Menu::clean uvoľni zložky potrebné pre vykreslenie. Efektívne sa tak šetri pamäť. Pre potomka triedy Menu musia byt implementované nasledovné metódy:
-\begin{description}
-\item [Init] pre inicializáciu dynamických položiek nutných k správnej funkcií príslušného menu (načitanie obrázkov, vygenerovanie pisma a pod.)
-\item [Draw] pre vykreslenie celého okna
-\item [Process], ktorý je volaný v nekonečnom cykle  kvôli spracovaniu udalosti z klávesnice
-\item [Resume] uvedie menu do pôvodnej podoby
-\item [Resize] pre prípadné zmeny rozlišenia okna na prepočitanie premenných určujúcich pozíciu
-\item [Clean] pre deinicializáciu dynamických premenných pre čo najmenšie množstvo alokovaej pamäte. V tomto ohľade sa táto implementáacia, čo sa obsadenej pamäte týka, dokonca predčí implementáciu  pomocou grafickej knižnice QT. QT je zameraná na uživateľskú prívetivosť. Jednotlivé formuláre sa vytváraju pomocou WIDGETOV(prvkov), ktoré su vo formulári neustále prítomné. %na druhej strane, bola to praca naviac  vzdy pre programatora bude, takze to zase AZ taka vyhoda nie je.
-\end{description}
-Trieda \bf{Window} potom pri žiadosti o pridanie menu do ZÁSOBNÍKA inicializuje menu, ktoré sa má pridať a v pripade úspechu inicializácie ho pridá a vykresli. Vďaka cyklickemu volaniu metódy process objektu na vrchole zásobníka je zaistené, že reakcia na udalosť (klávesnica, myš)  sa bude týkať práve nasadeného menu.   %mozno by som sa nemusel rozpisvat ale stacilo by okazat sa na tu stranku, odkial som to pochytila? \ref{} potesi
-%http://www.earchiv.cz/a95/a506c120.php3
-\section{Svet}
+\section{Virtuálny svet}
 %najskor zacnime objektami;)
-Virutálny svet pozostáva z objektov. Každý konkrétny objekt je potomkom abstraktnej triedy Object. Navzájom riešia výsledky kolízií, výsledky príkazov na zistenie pozície a pod.\\
-Súčasťou objektu je aj spôsob, akým sa objekt vykresľuje na plochu, čim sa zaoberá trieda ImageSkinWorker. \\
+Virtuálny svet pozostáva z objektov. Každý konkrétny objekt je potomkom abstraktnej triedy Object. Navzájom riešia výsledky kolízií, výsledky príkazov na zistenie pozície a pod. Mapa slúži len ako zastrešujúca štruktúra vyhľadávajúca kolízie a riadiaca vykresľovanie.\\
+Súčasťou objektu je aj spôsob, akým sa objekt vykresľuje na plochu, čím sa zaoberá trieda ImageSkinWorker. \\
 %ImageSkinWorker
-Obrázky reprezentujúce jednotlivé objekty sú najskôr načitané triedou Skin. Počet obrázkov je presne N, kde N je počet stavov, aké môže objekt dosiahnúťt. Stavy sú nasledujúce:
+Obrázky reprezentujúce jednotlivé objekty sú najskôr načitané triedou Skin. Počet obrázkov je presne N, kde N je počet stavov, aké môže objekt dosiahnúť. Stavy sú nasledujúce:
 \begin{description}
-\item [defaultne] \hfill \newline
-Stav, ktorý má objekt, keď sa nčc nedeje.
+\item [Defaultne] \hfill \newline
+Stav, ktorý má objekt, keď sa nič nedeje.
 \begin{itemize}
 \item čakajúci objekt
-\item spiaci objekt. Tento stav sa nastavi v okamžiku, ked je objekt príliš dlho v defaultnom stave
+\item spiaci objekt. Tento stav sa nastaví v okamžiku, ked je objekt príliš dlho v defaultnom stave
 \end{itemize}
-\item [trvale]
+\item [Trvale]
 \begin{itemize}
 \item pohybujúci sa
 \item čakajúci
 \end{itemize}
-\item [dočsne]
+\item [Dočasne]
 \begin{itemize}
 \item zasiahnutý
 \item útočiaci
 \end{itemize}
 \end{description}
- Pre niektoré objekty, ako je napríklad stena, je definovanie týchto stavov veľmi veľa, preto rôzne objekty majú svoju vlastnú triedu, odvodenú od Skin. Trieda Skin berie do úvahy špeciálne požiadavky jednotlivých typov objektov. Každý nahrávaný obrázok ale obsahuje niekoľko častí - každý z obrázkov predstavuje objekt v inej fáze. Smerom doľava sa časť obrázka mení kvôli animácií, smerom dole sa vykresľovaný obrázok mení vzhľadom na to, ako má byť objekt otočený. Potrebujeme pritom vedieť veľkosč obrázka, ktorý sa má vykresľovať. Veľkosč obrázka nemusí súhlasiť s veľkosťou obrázka, ktorý spôsobí kolíziu. Preto je v každom adresári, odkiaľ sa nahrávajú obrázky, ešte súbor config. Tentp súbor hovorí ako je vykresľovaný obrazok veľký, odkiaľ začína kolízny obdĺžnik a aké má rozmery. <OBR>\\
-Trida ImageSkinWorker potom narába  s nahranými obrázkami. V jej vnútornej interpretácií sa nachádza ešte aj minizásobník, ktorý hovorí, že ktorý zo stavov "trvalý", "dočasný", "default" je aktívny. Dočasný stav ma vždy vyššiu prioritu ako trvalý a trvalý vyššiu ako default. Stavy sa nastavujú pomocou metódy { \it SetState(State, whichState) } s parametrami nadobudajúcimi hodnoty State [] a whichStat []. \\% to by mozno k vykresleniu obrazkov stacilo. Mozno by to chcelo vysvetlit, preco tam davam ()
-Objekt je základný prvok sveta, všetky ďalšie typy vzniknu len jeho dedenim. \\
-Pohyb sa v objekte rieši nastavením počtu pixelov, ktoré ma prejsť. V okamžiku,  keď je nastavený nenulový počet pixelov, objekt sa pri volaní metódy {\it move} pohne svojou rýchlosťou žiadaným smerom a odčíta sa  príslušný počet pixelov. Po skončení pohybu sa zavolá metóda {\it endMove()} , ktorá odstráni permanentný pohybujúci sa stav. U robota je situácia trochu zložitejšia, pretože potrebujeme naviac vedieť, či už náhodou nestúpil na poličcko, ktoré bolo deklarované ako cieľovéľ Preto sa v priebehu vykonávania pohybu kontroluje aj táto podmienka. \\
-Kolizie medzi objektami sa riešia pomocou virtuálnych metód {\it hit(Object *)} a {\it hitted(Object *)}. Problémom je strela, ktorá v čase, keď do nej niečo narazíi, sa musí chovať ako útočník. Ak by ale útočníkom bola opäť strela, výsledkom by bolo zacyklenie. K takej situácií ale nikdy nesmie dôjsť, čo ošetruje štruktúra zastrešujúca objekty.\\
-Objekt, ktorý pôsobením útoku zomrie, registruje, kto smrť priamo spôsobil. Je to zabezpečené premennou "Owner" vlastnika objektu. V pripade, že je obeťou robot, potom robot má možnosť poslať správu útočníkovi (vlastnikovi strely alebo tela robota). Tak sa robot dozvie, že niekoho zabil a zistí, či sa tým nespnila podmienka pre ukončenie simulácie. Objekt sa následne pridá do štruktúry, ktorá zhŕňa mŕtve objekty pre neskoršiu dealokáciu.\\
+Niektoré objekty, ako je napríklad stena, nepotrebujú toľko stavov, preto rôzne objekty majú svoju vlastnú triedu, odvodenú od Skin. Trieda Skin berie do úvahy špeciálne požiadavky jednotlivých typov objektov. Každý nahrávaný obrázok ale obsahuje niekoľko častí - každý z obrázkov predstavuje objekt v inej fázi. Smerom doľava sa časť obrázka mení kvôli animácií, smerom dole sa vykresľovaný obrázok mení vzhľadom na to, ako má byť objekt otočený. Potrebujeme pritom vedieť veľkosť obrázka, ktorý sa má vykresľovať. Veľkosť obrázka nemusí súhlasiť s veľkosťou obrázka, ktorý spôsobí kolíziu. Preto je v každom adresári, odkiaľ sa nahrávajú obrázky, ešte súbor config. Tento súbor hovorí ako je vykresľovaný obrazok veľký, odkiaľ začína kolízny obdĺžnik a aké má rozmery. 
+\\
+Trida ImageSkinWorker potom narába  s nahranými obrázkami. V jej vnútornej interpretácií sa nachádza ešte aj minizásobník, ktorý hovorí, aký zo stavov "trvalý", "dočasný", "default" je aktívny. Dočasný stav ma vždy vyššiu prioritu ako trvalý a trvalý vyššiu ako default. Stavy sa nastavujú pomocou metódy { \it SetState(State s, whichState w) }\\% to by mozno k vykresleniu obrazkov stacilo. Mozno by to chcelo vysvetlit, preco tam davam ()
+Objekt je základný prvok sveta, všetky ďalšie typy vzniknú len jeho dedením. \\
+Pohyb sa v objekte rieši nastavením počtu pixelov, ktoré má prejsť. V okamžiku,  keď je nastavený nenulový počet pixelov, objekt sa pri volaní metódy {\it move()} pohne svojou rýchlosťou žiadaným smerom a odčíta sa  príslušný počet pixelov. Po skončení pohybu sa zavolá metóda {\it endMove()} , ktorá odstráni permanentný pohybujúci sa stav. U robota je situácia trochu zložitejšia, pretože potrebujeme naviac vedieť, či už náhodou nestúpil na poličko, ktoré bolo deklarované ako cieľové. Preto sa v priebehu vykonávania pohybu kontroluje aj táto podmienka. \\
+Kolízie medzi objektami sa riešia pomocou virtuálnych metód {\it hit(Object *)} a {\it hitted(Object *)}. Problémom je strela, ktorá v čase, keď do nej niečo narazí, sa musí chovať ako útočník. Ak by ale útočníkom bola opäť strela, výsledkom by bolo zacyklenie. K takej situácií ale nikdy nesmie dôjsť, čo ošetruje štruktúra zastrešujúca objekty.\\
+Objekt, ktorý pôsobením útoku zomrie, registruje, kto smrť priamo spôsobil. Je to zabezpečené premennou "Owner" vlastníka objektu. V pripade, že je obeťou robot, tak má možnosť poslať správu útočníkovi (vlastníkovi strely alebo tela robota). Tak sa robot dozvie, že niekoho zabil a zistí, či sa tým nespnila podmienka pre ukončenie simulácie. Objekt sa následne pridá do štruktúry, ktorá zhŕňa mŕtve objekty pre neskoršiu dealokáciu.\\
 Robot na rozdiel od obyčajného objektu má aj ďaľšie metódy. Menovite je to {\it shoot()}, {\it see()}\\
 Strieľanie robota je jednoduché, pokiaľ je známy smer, v ktorom ma robot strielať. Znamená to iba pridanie objektu na miesto, kde nebude kolidovať s robotom, ktorý ju vypustil.\\
-Robotové videnie je podobne realizované pomocou triedy Seer. >>> TAK JE TO skoro vzdy Tej sa predhodia objekty, ktore ma spracovat.<<< navrhujem vyhodit K objektom, ktore boli ohodnotene ako viditelne mozno pristupovat pomocou metody {\it getObject(int index)}\\
+Robotové videnie je podobne realizované pomocou triedy Seer.  K objektom, ktoré boli ohodnotené ako viditeľné, je možno pristupovať pomocou metódy {\it getObject(int index)}\\
 %mapa?
-Vzájomné vplyvy objektov sa rieši len medzi objektami samotnými. Jediné, čo treba zistiť, je, že ktorý objekt má vplývat na ktorý. Takouto zastresujúcou štruktúrou  je mapa.<<< Digraf bez sluciek, kde vrcholmi su objekty a orientovane hrany vazby medzi nimi\\
-Mapa je riešená ako dvojrozmerné pole oblasti (obdĺžníkov) kvôli kolíziam, ako sme už spomínali v \ref{Kolizie} Oblasť je ohraničená počiatočnými súradnicami, ktoré sú pravým horným rohom jej obdĺžníka a jeho výškou a šíirkou.\\
-Každá oblasť potom obsahuje zoznam objektov, ktoré do nej patria. Pozícia týchto objektov nie je nijak obmedzovaná, takže sa môžu vyskytovat kdekoľvek v oblasti. Pozícia objektov v mape je určená ich ľavým horným rohom. Pri zisťovaní koíizií to prináša  nepríjemný jav, pretože je nutné kontrolovať všetky oblasti, kde by sa daný objekt mohol vyskytovať. Mapa ďalej obsahuje štartovacie políčka -- užívateľom definované významné políčka, ktoré sa dajú neskôr definovať ako cieľ. \\ <OBR?>
+Vzájomné vplyvy objektov sa riešia len medzi objektami samotnými. Jediné, čo reba zistiť, je, že ktorý objekt má vplývat na ktorý. Takouto zastrešujúcou štruktúrou  je mapa.\\
+Mapa je riešená ako dvojrozmerné pole oblasti (obdĺžníkov) kvôli kolíziam, ako sme už spomínali v Kolíziách.  Oblasť je ohraničená počiatočnými súradnicami, ktoré sú pravým horným rohom jej obdĺžníka a jeho výškou a šírkou.\\
+Každá oblasť potom obsahuje zoznam objektov, ktoré do nej patria. Pozícia týchto objektov nie je nijak obmedzovaná, takže sa môžu vyskytovať kdekoľvek v oblasti. Pozícia objektov v mape je určená ich ľavým horným rohom. Pri zisťovaní koíizií to prináša  nepríjemný jav, pretože je nutné kontrolovať všetky oblasti, kde by sa daný objekt mohol vyskytovať. Mapa ďalej obsahuje štartovacie políčka - užívateľom definované významné políčka, ktoré sa dajú neskôr definovať ako cieľ. \\
 %kolizie?\\
 
-Mapa počíta iba s pozíciami objektov, preto o nich nič viac nepotrebuje vedieť. Každý objekt zobraziteľný na mape je teda potomkom abstraktnej triedy Object. en si musí pamätať svoju presnú pozíciu kvôli neskorším počitaním kolíziíi//
+Mapa počíta iba s pozíciami objektov, preto o nich nič viac nepotrebuje vedieť. Každý objekt zobraziteľný na mape je teda potomkom abstraktnej triedy Object. Ten si musí pamätať svoju presnú pozíciu kvôli neskorším počitaním kolízií//
 Objekt sa pridá do mapy pomocou metódy {\it add}. Táto metóda skontroluje, či pridávaný objekt už nekoliduje s iným v mieste a ak áno, nepridá ho. \\ %mozno este nieco vyhodi
 
 %alokácia a dealokácia, odstránenie mapy 
-Pridávané objekty na mape sú odkazy na vytvorený objekt z dôvodu využitia dedičnosti a virtuálnych funkcií. Tieto objekty môžu byť vytvárané samotnou mapou???? pri nahrávaní sveta alebo užívateľom pridané???????. Potom pri dealokovaní mapy mapa samozrejme nemí možnosť zistiť, či tieto objekty boli skutočne dealokované, alebo či si ich inštancia vytvorila samostatne??????. Preto ticho predpokladá druhú možnosť a pri skočeni na všetky prvky, ktoré zostali na mape, sa použije delete. Ak bol prvkom mapy objekt, s ktorým programátor ešte počita, musí ho najskôr z mapy odobrať. %to je ale PRKOTINA ale sposobi DIVY ak sa na to zabudne
+Pridávané objekty na mape sú odkazy na vytvorený objekt z dôvodu využitia dedičnosti a virtuálnych funkcií. Tieto objekty môžu byť vytvárané samotnou mapou pri nahrávaní sveta alebo užívateľom  Potom pri dealokovaní mapy mapa samozrejme nemí možnosť zistiť, či tieto objekty boli skutočne dealokované, alebo či si ich inštancia vytvorila samostatne. Preto ticho predpokladá druhú možnosť a pri skončení na všetky prvky, ktoré zostali na mape, sa použije delete. Ak bol prvkom mapy objekt, s ktorým programátor ešte počita, musí ho najskôr z mapy odobrať. %to je ale PRKOTINA ale sposobi DIVY ak sa na to zabudne
 \\
 %jak sa mapa loaduje, format tej veci, co sa loaduje
-Program podporuje uloženie a opätovné nahranie mapy. Keďže mapa tieto objekty iba zobrazuje, postači pre každý objekt zistiť, čo to vlastne je. To kladie nárok na jednotlivé objekty, ktoré si musia pamätať unikátne čislo označujúce tento typ. Mapa potom pri načítani sveta podľa typu vytvorí objekt. Ďaľšimi položkami, ktoré je nutné uchovať a ktoré nie sú objekty, sú štartovné políčka a miesta cialov???. Tieto sa ukladajú osobitne %mozno by to chcelo konkretnejsie?
+Program podporuje uloženie a opätovné nahranie mapy. Keďže mapa tieto objekty iba zobrazuje, postačí pre každý objekt zistiť, čo to vlastne je. To kladie nárok na jednotlivé objekty, ktoré si musia pamätať unikátne čislo označujúce tento typ. Mapa potom pri načítani sveta podľa typu vytvorí objekt. Ďaľšimi položkami, ktoré je nutné uchovať a ktoré nie sú objekty, sú štartovné políčka a miesta cieľlov. Tieto sa ukladajú osobitne. %mozno by to chcelo konkretnejsie?
 Mapa musí dbať na to, aby objekty, ktoré obsahuje, neprešli mimo vykresľovanej plochy. Aby sme nemuseli kontrolovať objekt pri každom pohybe a okrem kontroly kolízií kontrolovať aj prípustnosť pozície, sú ku každej nahrávanej mape pridané steny okolo celej mapy. 
 %<OBR> %veeelmi tazkopadne, chcelo by prekopat, napisat priklad takeho subory?
 Po vytvorení prostredia (mapy, sveta) sa v mape nenáchadzaju roboti, pretože nie podporovaný žiadny ďaľší mechanizmus na ovládanie tela robota ( nic by sa nedialo ). \\
-Mapu je možné okamžite vykresliť a objekty neskôr az neskor?????.
+Mapu je možné okamžite vykresliť a objekty neskôr.
 %objekty
-Mapa ďalej nijak nevyhodnocuje výsledok kolízie, slúzi iba ako nastroj na ich detekciu. Detekuje kolíziu iba pre objekty, ktoré sa pohybujú, t.j pre každý pohybujúci sa objekt prejde lineárne všetky objekty v okolí, či nenastala kolízia. V okamžiku, keď sa objekty skolidujú, mapa vyberie najbližši objekt, s ktorým sa objekt skolidoval. Pod kolidáciou rozumiene prekrytie obrazov dvoch objektov. Kedže máme kombináciu dvoch objektov, ktoré spolu nekolidujú, je zaistiť riešenie aj pre takúto kombináciu. Na implementačnej úrovni to znamená, že sa buď:
+Mapa ďalej nijak nevyhodnocuje výsledok kolízie, slúži iba ako nástroj na ich detekciu. Detekuje kolíziu iba pre objekty, ktoré sa pohybujú, t.j pre každý pohybujúci sa objekt prejde lineárne všetky objekty v okolí, či nenastala kolízia. V okamžiku, keď sa objekty skolidujú, mapa vyberie najbližši objekt, s ktorým sa objekt skolidoval. Pod kolidáciou rozumiene prekrytie obrazov dvoch objektov. Kedže máme kombináciu dvoch objektov, ktoré spolu nekolidujú, je zaistiť riešenie aj pre takúto kombináciu. Na implementačnej úrovni to znamená, že sa buď:
 \begin{itemize} % FUJ
-\item zavolá aj tak riešenie kolízií u objektu. Až objekt, ktorý bol zasiahnutýy, spozná, že ku kolízií vlastne vôbec nedošlo. To ma nevýhodu, že objekt, ktorý sme kontrolovali na kolíziu, zostane na mieste, ktorý mu pohyb určil. Keďže ale kontrolujeme iba najblžši kolízny prvok, môže sa stať, že aj po vyriešeni kolízie bude prvok stále kolidovať
-\item nedôjde k volaniu riešenia kolízií medzi objektami. Objekt nebude uvažovaný pre kolíziu. Toto riešenie bolo zvolené, keďže má najlepšie výsledky. Pre kontrolu toho, či objekt má alebo nemá by uvažovaný pre koíiziu, bolo daný príznak Solid. Objekt, ktorého logicky súčet (or) zasiahnuteľnosti s uvažovaným objektom má priznak solid ( aspoň jeden z objektov má solid =  true),  je uvažovaný pre koíiziu
+\item zavolá aj tak riešenie kolízií u objektu. Až objekt, ktorý bol zasiahnutý, spozná, že ku kolízií vlastne vôbec nedošlo. To má nevýhodu, že objekt, ktorý sme kontrolovali na kolíziu, zostane na mieste, ktorý mu pohyb určil. Keďže ale kontrolujeme iba najblžši kolízny prvok, môže sa stať, že aj po vyriešeni kolízie bude prvok stále kolidovať
+\item nedôjde k volaniu riešenia kolízií medzi objektami. Objekt nebude uvažovaný pre kolíziu. Toto riešenie bolo zvolené, keďže má najlepšie výsledky. Pre kontrolu toho, či objekt má alebo nemá by uvažovaný pre koííziu, bol daný príznak Solid. Objekt, ktorého logicky súčet (or) zasiahnuteľnosti s uvažovaným objektom má príznak solid ( aspoň jeden z objektov má solid =  true),  je uvažovaný pre kolíziu
 \end{itemize}
-Mapa ako vykresľovacia štruktúra musí poznať, kedy by bolo vhodné objekt vykresliť a kedy naopak nie. Výrazne to šetri procesorový čas. Preto bola u každého objektu implementovaná metoda {\it changed() } 
+Mapa ako vykresľovacia štruktúra musí poznať, kedy by bolo vhodné objekt vykresliť a kedy naopak nie. Výrazne to šetri procesorový čas. Preto bola u každého objektu implementovaná metóda {\it changed() } 
 
 \subsection{Interpret a jazyk}
-Ako bolo zmienené, jazyk sa generuje pomocou parsovacích nástrojov Bison a Flex. Tieto nástroje umožňujú veľmi ľahko meniť syntax jazyka a sú ľahko udržovateľne.\\ %to podla mna patri do analyzy
+Ako bolo zmienené, jazyk sa generuje pomocou parsovacích nástrojov Bison a Flex. Tieto nástroje umožňujú veľmi ľahko meniť syntax jazyka a sú ľahko udržovateľné.\\ %to podla mna patri do analyzy
 %tu popisem, co a ako generujem
 Robotov môže byť niekoľko a vďaka cieľom, ako je KILL, je možné sa na ne odkazovať pomocou mena. Preto bolo nutné vytvoriť zastrešujúcu štruktúru. Tou je trieda Robots. Tá potom musí obsahovať:
 \begin{itemize}
 \item počet bodov, ako bol defaultne definovaný. Toto defaultne nastavenie sa tam potom dá jednoducho priradzovať vytvoreným robotom.
 \item pole generovaných robotov
-\item informacie o práve vytváranom robotovi
+\item informácie o práve vytváranom robotovi
 \item zoznam nevyriešených požiadaviek na zabitie robota
 \item zoznam nevyriešených požiadaviek na miesto na mape
 \end{itemize}
@@ -109,16 +100,32 @@ Novovytvorený robot sa skladá z týchto časti:
 \item chybové kódy
 \item štruktúra pre prácu s medzikódom ( Core )
 \end{itemize}
-Algoritmus bude zapísany v textovom súbore. Z neho sa pomocou parsovacích nástrojov vygeneruje kód, ako je popísaný v \ref{spec}. V prípade, že nastala chyba, bude potom tato zapísana pomocou stringu. Výsledny medzikód je potom zapísaný v XML-súbore, ktorého názov je kombinácia názvu robota a vstupného súboru. Napríklad ...Technológia XML bola vybraná ako jedna dobre zo zrozumiteľných dostupných zobrazení. 
+Algoritmus bude zapísany v textovom súbore. Z neho sa pomocou parsovacích nástrojov vygeneruje kód, ako je popísaný v kapitole Interpret. V prípade, že nastala chyba, bude potom tato zapísana pomocou stringu. Výsledny medzikód je potom zapísaný v XML-súbore, ktorého názov je kombinácia názvu robota a vstupného súboru. Napríklad technológia XML bola vybraná ako jedna dobre zo zrozumiteľných dostupných zobrazení. 
 
 %jak to pracuje pri generovani - to dufam nemusim vysvetlovat, to boli take program kiksy az hroza
-Po dogenerovaní všetkých inštrukcií sa na záver pridá ešte jedna inštrukcia, ktorá spôsobí opakovanie celého programu. (instructionMustJump). Po správnom vygenerovaní je robot schopný vykonávať program pomocou metódy {\it execute()) alebo {\it action()}. Tu sa prejaví vplyv plánovača. Robot ma vlastnú inštanciu plánovača, každá inštrukcia si vnútorne drži čislo skupiny, do ktorej patrí. Jednolivé názvy skupín sa volaju intuitívne podla inštrukcii.  Metóda {'\it action()} volá plánovač.???? V okamžiku, keď plánovač povolí vykonanie inštrukcie, do plánovača sa zanesie, ako moc je inštrukcia hodnotená a následne je táto vykonaná., \\
-Vykonávanie inštrukcíi pozostáva z volania metódy {\it execute(Core *) } , kde trieda Core poskytuje prostriedky pre interpretovanie medzikódu. Trieda Core tiež obsahuje telo robota, ktorým sa bude hýbat po mape úložiska. Aj  strela sa teda bude realizovať vyvolaním príslušnej metódy robota. \\
+Po dogenerovaní všetkých inštrukcií sa na záver pridá ešte jedna inštrukcia, ktorá spôsobí opakovanie celého programu. (instructionMustJump). Po správnom vygenerovaní je robot schopný vykonávať program pomocou metódy {\it execute()} alebo {\it action()}. Tu sa prejaví vplyv plánovača. Robot ma vlastnú inštanciu plánovača, každá inštrukcia si vnútorne drži čislo skupiny, do ktorej patrí. Jednolivé názvy skupín sa volaju intuitívne podla inštrukcii.  Metóda {'\it action()} volá plánovač. V okamžiku, keď plánovač povolí vykonanie inštrukcie, do plánovača sa zanesie, ako moc je inštrukcia hodnotená a následne je táto vykonaná., \\
+Vykonávanie inštrukcíi pozostáva z volania metódy {\it execute(Core *) }, kde trieda Core poskytuje prostriedky pre interpretovanie medzikódu. Trieda Core tiež obsahuje telo robota, ktorým sa bude hýbat po mape úložiska. Aj  strela sa teda bude realizovať vyvolaním príslušnej metódy robota. \\
 %kedy to konci
-Pri interpretácii algoritmu ešte ale musíme vedieť, kedy robot dosiahol splenie všetkých cieľov alebo či zostal vo svete sám. V pripade, keď zostal sám a cieľom nebolo len zničenie ostatných ,vráti metóda action  false????, ak hráč umrel, inak vracia true. Je vhodné ale sučasne kontrolovať splnenie podmienok. Metóda  {\it action } nemôže vrátit viac premenných naraz, preto ma naviac parameter odovzdávany referenciou. 
+Pri interpretácii algoritmu ešte ale musíme vedieť, kedy robot dosiahol splnenie všetkých cieľov alebo či zostal vo svete sám. V pripade, keď zostal sám a cieľom nebolo len zničenie ostatných,vráti metóda {\it action()} hodnotu false, ak hráč umrel, inak vracia true. Je vhodné ale sučasne kontrolovať splnenie podmienok. Metóda  {\it action } nemôže vrátit viac premenných naraz, preto ma naviac parameter odovzdávany referenciou. 
 
 \subsection{Generovanie bludiska}
 Generovanie bludiska
-Z dôvodov, vysvetlťných v analýze, sa vygenerujú len základné steny.  Vygenerujú sa z dôvodov vysvetlených v analýze len zakladne steny.??????? Teraz potrebujeme tieto pevné steny z diskrétneho bludiska vhodne preniest do nášho sveta. Aby sme zachovali pomer rozostavenia, ako je vo vygenerovanom bludisku, steny sa rozmiestnia rovnomerne. 
+Z dôvodov, vysvetliteľných v analýze, sa vygenerujú len základné steny.  Vygenerujú sa z dôvodov vysvetlených v analýze len zakladne steny. Teraz potrebujeme tieto pevné steny z diskrétneho bludiska vhodne preniest do nášho sveta. Aby sme zachovali pomer rozostavenia, ako je vo vygenerovanom bludisku, steny sa rozmiestnia rovnomerne. 
 %toto je vsetko o generovani algoritmu, mozno este nejaky obrazok?
 
+\section{Správa okien}
+Ako grafická knižnica bola zvolená SDL\cite{sdl}, ktorá bola vyvinutá pre rýchle zobrazovanie a je jednou z najčastejšie používaných knižníc pri tvorbe 2D hier. Aplikácia bude používať minimálny užívateľský vstup z klávesnice. Jediný vstup rozsiahlešieho charakteru je napísanie samotného algoritmu. Pre uživateľa v Unixe, zvyknutého na svoj obľúbený editor, makra a zkratky, bola ponechaná možnosť vytvoriiťsi v ňom aj  algoritmus. \\ %mozu byt rozhodnutie tu, ked je to sucast imlementacie? - jo, tot mi napisal, ze sa zaoberam prkotinami, je to tak? %<< je to vec nazoru do akych detajlov mas ist, co je zrejme...OK, vsak mi povie
+Vzhľadom na to, že zvyšok okien, ktoré ma aplikácia zvládať, má tiež minimálne požiadavky z hľadiska užívateľovho vstupu, bolo v práci použité vlastné rozhranie správ okien a nebolo nutné prikompilovať žiadnu dodatočnú knižnicu, ktorá sa zaoberá uživateľskými vstupmi.\\
+V zdrojovom kode to bolo realizované pomocou triedy \bf{Window} a potomkov abstraktnej triedy {\bf Menu}. Systém práce triedy  {\bf Window} je naznačený na obrázku <OBR>. Ide o to, že ak sa má nastaviť v obrazovke nové menu, potom treba oknu, ktorého inštancia triedy Window reprezentuje, povedať, aby toto menu pridal do ZÁSOBNÍKA. Keďže okno je v SDL povolené maximálne jedno, inštancia triedy {\bf Window} bude práve jedna. Preto ďalej v texte budeme pod označením bf{Window} myslieť práve túto jednu inštanciu a nie triedu.\\
+
+Pomocou ZÁSOBNÍKA na pridávania menu je zrejmé, do ktorého menu sa program vráti po zrušeni obrazovky so základným Menu. Zrušenie obrazovky sa prevedie zavolaním metódy pop(). Táto metóda odoberie menu zo zásobníka a pomocou metody Menu::clean uvoľni zložky potrebné pre vykreslenie. Efektívne sa tak šetrí pamäť. Pre potomka triedy Menu musia byt implementované nasledovné metódy:
+\begin{description}
+\item [Init] pre inicializáciu dynamických položiek nutných k správnej funkcií príslušného menu (načítanie obrázkov, vygenerovanie pisma a pod.)
+\item [Draw] pre vykreslenie celého okna
+\item [Process], ktorý je volaný v nekonečnom cykle  kvôli spracovaniu udalosti z klávesnice
+\item [Resume] uvedie menu do pôvodnej podoby
+\item [Resize] pre prípadné zmeny rozlíšenia okna na prepočítanie premenných určujúcich pozíciu
+\item [Clean] pre deinicializáciu dynamických premenných pre čo najmenšie množstvo alokovaej pamäte. V tomto ohľade sa táto implementáacia, čo sa obsadenej pamäte týka, dokonca predčí implementáciu  pomocou grafickej knižnice QT. QT je zameraná na uživateľskú prívetivosť. Jednotlivé formuláre sa vytváraju pomocou WIDGETOV(prvkov), ktoré su vo formulári neustále prítomné. %na druhej strane, bola to praca naviac  vzdy pre programatora bude, takze to zase AZ taka vyhoda nie je.
+\end{description}
+Trieda \bf{Window} pri žiadosti o pridanie menu do ZÁSOBNÍKA inicializuje menu, ktoré sa má pridať a v prípade úspechu inicializácie ho pridá a vykreslí. Vďaka cyklickemu volaniu metódy process objektu na vrchole zásobníka je zaistené, že reakcia na udalosť (klávesnica, myš)  sa bude týkať práve nasadeného menu.   %mozno by som sa nemusel rozpisvat ale stacilo by okazat sa na tu stranku, odkial som to pochytila? \ref{} potesi
+%http://www.earchiv.cz/a95/a506c120.php3
