@@ -50,6 +50,7 @@ Body::Body() : Object(NULL,NULL)
 	movement.position_in_map = movement.old_pos;
 	movement.speed = 30;
 	movement.angle = 0;
+	movement.direction.x = 50;
 	toKill = NULL;
 	map = NULL;
 }
