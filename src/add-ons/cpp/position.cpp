@@ -77,8 +77,8 @@ Position& Position::turn(int degree)
 }
 Position& Position::turn(int degree, int size)
 {
-	x = (int)cos( toRadians(degree) ) * size;
-	y = (int)sin( toRadians(degree) ) * size;
+	x = cos( toRadians(degree) ) * size;
+	y = sin( toRadians(degree) ) * size;
 	return *this;
 }
 
