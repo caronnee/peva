@@ -66,51 +66,30 @@ void Load::process()
 					{
 						if (size == 0)
 							break;
-						unchoose(index);
-						index++;
-						if (index == maps.size())
-						{
-							index = 0;
-							begin = 0;
-							end = size;
-						}
-						else if (index >= end)
+						if (begin + size < maps.size() )
 						{
 							begin++;
 							end++;
 							draw();
 							return;
 						}
-						choose(index);
 						break;
 					}
 					case SDLK_UP:
 					{
 						if (size == 0)
 							break;
-						unchoose(index);
-						index--;
-						if (index > maps.size())
-						{
-							index = maps.size()-1;
-							begin = index -size +1;
-							end = size;
-							draw();
+						if (begin == 0)
 							break;
-						}
-						if (index < begin)
-						{
-							begin = index;
-							end = begin + size;
-							draw();
-							return;
-						}
-						choose(index);
+						begin--;
+						end--;
+						draw();
+						return;
 						break;
 					}
 					case SDLK_RETURN:
 					{
-						enter();
+						w->pop();
 						return;
 					}
 					default:

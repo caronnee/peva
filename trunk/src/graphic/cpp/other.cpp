@@ -935,6 +935,7 @@ void SetMaps::enter()
 			{
 				entered[i] = entered.back();
 				entered.pop_back();
+				unchoose(index);
 				return;
 			}
 	entered.push_back(maps[index].name);
